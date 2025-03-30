@@ -37,8 +37,8 @@ class Profile
         #[Column(type: 'text', nullable: true)]
         private ?string $description = '',
     ) {
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
     public function getCompany(): ?Company

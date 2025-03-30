@@ -112,7 +112,7 @@ final class SalesOrderItemController
      * @param SalesOrderItemRepository $salesorderitemRepository
      * @return SalesOrderItem|null
      */
-    private function salesorderitem(CurrentRoute $currentRoute, SalesOrderItemRepository $salesorderitemRepository): SalesOrderItem|null
+    private function salesorderitem(CurrentRoute $currentRoute, SOIR $salesorderitemRepository): SalesOrderItem|null
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

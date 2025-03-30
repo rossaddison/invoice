@@ -69,11 +69,11 @@ final class ItemsCommand extends Command
     private array $invItems = [];
     /** @var InvItemAmount[] */
     private array $invItemAmounts = [];
-    
+
     private int $invId = 0;
-    
+
     private int $invItemId = 0;
-    
+
     private const DEFAULT_COUNT = 5;
 
     public function __construct(
@@ -93,7 +93,6 @@ final class ItemsCommand extends Command
     }
 
     /**
-     * 
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
@@ -115,21 +114,21 @@ final class ItemsCommand extends Command
             /* Add minimal user information */
             $this->addUsers($count);
             $this->addClients($count);
-            
+
             /* Assign one client to each user although more than one client can be assigned to each user */
             $this->addUserClients($count);
-            
+
             /* Add more extensive user information */
             $this->addUserInvs($count);
-            
+
             $this->addFamilies($count);
             $this->addTaxRates();
             $this->addUnits($count);
             /* Families and TaxRates are used to build the Product */
-            $this->addProducts($count);  
+            $this->addProducts($count);
             /* Add 3 Groups - Order, Quote, Invoice */
             $this->addGroups();
-            /* Create one invoice with 5 invoice items with Summary Taxes at the end 
+            /* Create one invoice with 5 invoice items with Summary Taxes at the end
              * and with the Summary Tax calculated by including invoice item tax
              */
             $this->addInv(5, true, true);
@@ -140,85 +139,86 @@ final class ItemsCommand extends Command
 
             return (int)$t->getCode() ?: ExitCode::UNSPECIFIED_ERROR;
         }
-        
+
         $summaryTableData = $this->renderInvItemTable($output);
         $this->renderSummaryTable($output, $summaryTableData);
-        
+
         $io->success('Done');
         return ExitCode::OK;
     }
-    
+
     private function renderSummaryTable(OutputInterface $output, array $summaryTableData): void
     {
         $table = new Table($output);
         $table->addRow([
-            'After Item Discount', 
-             "\033[34m" . $this->format((float)$summaryTableData['After Discount']) . "\033[0m",
+            'After Item Discount',
+            "\033[34m" . $this->format((float)$summaryTableData['After Discount']) . "\033[0m",
         ]);
         $table->addRow([
-            'Add: Item Tax Total', 
-             "\033[34m" . $this->format((float)$summaryTableData['Item Tax']) . "\033[0m",
+            'Add: Item Tax Total',
+            "\033[34m" . $this->format((float)$summaryTableData['Item Tax']) . "\033[0m",
         ]);
         $table->addRow(new TableSeparator());
         $withItemTax = (float)$summaryTableData['After Discount'] + (float)$summaryTableData['Item Tax'];
         $table->addRow([
-            'With Item Tax', 
-             "\033[34m" . $this->format($withItemTax) . "\033[0m",
+            'With Item Tax',
+            "\033[34m" . $this->format($withItemTax) . "\033[0m",
         ]);
         $totalInvTaxRate = 0;
         /* Assume the two InvTaxRates apply tax after item tax has been taken into account */
-        foreach ($this->invTaxRates as $invTaxRate) 
-        {
+        foreach ($this->invTaxRates as $invTaxRate) {
             $totalInvTaxRate = $totalInvTaxRate + ($invTaxRate->getInv_tax_rate_amount() ?? 0.00);
         }
         $table->addRow([
-            'Invoice Taxes (15% ' . $this->format(($this->invTaxRates[1])->getInv_tax_rate_amount()) . ', 20% ' . $this->format(($this->invTaxRates[0])->getInv_tax_rate_amount()) . ")",
-            $this->format($totalInvTaxRate)
+            'Invoice Taxes (15% ' . $this->format($this->invTaxRates[1]->getInv_tax_rate_amount()) . ', 20% ' . $this->format($this->invTaxRates[0]->getInv_tax_rate_amount()) . ')',
+            $this->format($totalInvTaxRate),
         ]);
-        $beforeDiscountTotal = ($withItemTax+$totalInvTaxRate);
+        $beforeDiscountTotal = ($withItemTax + $totalInvTaxRate);
         $table->addRow(new TableSeparator());
         $table->addRow([
             'Before Invoice Discount Total',
-            $this->format($beforeDiscountTotal)                
+            $this->format($beforeDiscountTotal),
         ]);
         $discount = 0.10 * $beforeDiscountTotal;
         $table->addRow([
             '(Invoice Discount as 10% of Before Discount Total)',
-            "\033[31m".$this->format($discount)."\033[0m",
+            "\033[31m" . $this->format($discount) . "\033[0m",
         ]);
         $total = $beforeDiscountTotal - $discount;
         $table->addRow(new TableSeparator());
         $table->addRow([
-            'Total', 
-            $this->format($total)
+            'Total',
+            $this->format($total),
         ]);
         $table->render();
     }
-    
-    private function format(float $number) : string {
-        $formatted_number = sprintf("%.2f", $number);
+
+    private function format(float $number): string
+    {
+        $formatted_number = sprintf('%.2f', $number);
         return $aligned_number = str_pad($formatted_number, 10, ' ', STR_PAD_LEFT);
-    }    
-    
-    private function renderInvItemTable(OutputInterface $output): array 
+    }
+
+    private function renderInvItemTable(OutputInterface $output): array
     {
         $table = new Table($output);
         $invItems = $this->invItems;
         $table->setHeaders(
             [
-                'Name', 
-                'Description', 
-                'Quantity', 
-                'Price/unit', 
+                'Name',
+                'Description',
+                'Quantity',
+                'Price/unit',
                 '(Discount/unit)',
-                'Subtotal', 
+                'Subtotal',
                 '(Discount)',
                 'After Discount',
-                'Tax(%)', 
-                'Tax', 
-                'Total'
-            ]);
-        
+                'Tax(%)',
+                'Tax',
+                'Total',
+            ]
+        );
+
         $itemCount = count($invItems);
         $currentIndex = 0;
         $discountedSubTotal = 0;
@@ -227,12 +227,12 @@ final class ItemsCommand extends Command
             $quantity = $invItem->getQuantity() ?? 0;
             $price = $invItem->getPrice() ?? 0;
             $percentage = $invItem->getTax_rate_id() == '1' ? 15 : 20;
-            $subTotal = $quantity*$price;
+            $subTotal = $quantity * $price;
             $discount = 1;
-            $netDiscount = ($quantity*($price-$discount));
-            $totalDiscount = $quantity*$discount;
-            $itemTax = $netDiscount*($percentage/100);
-            $itemTotal = $netDiscount+$itemTax;        
+            $netDiscount = ($quantity * ($price - $discount));
+            $totalDiscount = $quantity * $discount;
+            $itemTax = $netDiscount * ($percentage / 100);
+            $itemTotal = $netDiscount + $itemTax;
             $table->addRow(
                 [
                     $invItem->getName() ?? 'None Available',
@@ -241,22 +241,22 @@ final class ItemsCommand extends Command
                     $this->format((float)$price),
                     $this->format($discount),
                     $this->format($subTotal),
-                    "\033[31m".$this->format($totalDiscount)."\033[0m",
+                    "\033[31m" . $this->format($totalDiscount) . "\033[0m",
                     $this->format($subTotal - $totalDiscount),
                     $this->format($percentage),
                     $this->format($itemTax),
-                    $this->format($itemTotal)
+                    $this->format($itemTotal),
                 ]
             );
-            
+
             if ($currentIndex < $itemCount - 1) {
                 $table->addRow(new TableSeparator());
             }
-            
+
             $currentIndex++;
-            
+
             /* Build Summary Totals */
-            
+
             $discountedSubTotal += $netDiscount;
             $itemTaxTotal += $itemTax;
         }
@@ -264,19 +264,19 @@ final class ItemsCommand extends Command
         $table->addRow(
             [
                 '','','','','','','',
-                "\033[34m".$this->format($discountedSubTotal)."\033[0m",
+                "\033[34m" . $this->format($discountedSubTotal) . "\033[0m",
                 '',
-                "\033[34m".$this->format($itemTaxTotal)."\033[0m",
-                "\033[34m".$this->format($discountedSubTotal+$itemTaxTotal)."\033[0m",
-            ]    
+                "\033[34m" . $this->format($itemTaxTotal) . "\033[0m",
+                "\033[34m" . $this->format($discountedSubTotal + $itemTaxTotal) . "\033[0m",
+            ]
         );
 
         $table->setColumnMaxWidth(2, 15);
         $table->setColumnMaxWidth(3, 15);
         $table->render();
         return [
-            'After Discount' => $discountedSubTotal, 
-            'Item Tax' => $itemTaxTotal, 
+            'After Discount' => $discountedSubTotal,
+            'Item Tax' => $itemTaxTotal,
         ];
     }
 
@@ -295,7 +295,7 @@ final class ItemsCommand extends Command
             $this->users[] = $user;
         }
     }
-    
+
     private function addClients(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
@@ -307,7 +307,7 @@ final class ItemsCommand extends Command
             $this->clients[] = $client;
         }
     }
-    
+
     private function addUserClients(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
@@ -318,8 +318,8 @@ final class ItemsCommand extends Command
                 $this->userClients[] = $userClient;
             }
         }
-    }   
-    
+    }
+
     private function addUserInvs(int $count): void
     {
         /**
@@ -336,8 +336,8 @@ final class ItemsCommand extends Command
                 $this->userInvs[] = $userInv;
             }
         }
-    } 
-    
+    }
+
     private function addFamilies(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
@@ -347,7 +347,7 @@ final class ItemsCommand extends Command
             $this->families[] = $family;
         }
     }
-    
+
     /* Create two basic tax rates */
     private function addTaxRates(): void
     {
@@ -357,7 +357,7 @@ final class ItemsCommand extends Command
         $taxRate15->setTaxRateName($taxRateName15);
         $taxRate15->setTaxRatePercent($taxRatePercent15);
         $this->taxRates[] = $taxRate15;
-        
+
         $taxRateName20 = 'Twenty';
         $taxRatePercent20 = 20;
         $taxRate20 = new TaxRate();
@@ -365,9 +365,7 @@ final class ItemsCommand extends Command
         $taxRate20->setTaxRatePercent($taxRatePercent20);
         $this->taxRates[] = $taxRate20;
     }
-    
-        
-    
+
     private function addUnits(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
@@ -380,7 +378,7 @@ final class ItemsCommand extends Command
             $this->units[] = $unit;
         }
     }
-    
+
     private function addGroups(): void
     {
         $groups = ['Order', 'Quote', 'Invoice'];
@@ -390,19 +388,19 @@ final class ItemsCommand extends Command
          */
         foreach ($groups as $key => $value) {
             $i_group = new Group();
-            $i_group->setName($value. ' Group');
-            $i_group->setIdentifier_format(substr($value, 0, 2). '{{{id}}}');
+            $i_group->setName($value . ' Group');
+            $i_group->setIdentifier_format(substr($value, 0, 2) . '{{{id}}}');
             $i_group->setNext_id(1);
             $i_group->setLeft_pad(0);
             $this->groups[] = $i_group;
         }
-    }    
-    
+    }
+
     private function addProducts(int $count): void
     {
         for ($i = 1; $i < $count; $i++) {
             $product = new Product();
-            $product->setProduct_name((string)$this->productNames[$i-1]);
+            $product->setProduct_name((string)$this->productNames[$i - 1]);
             $product->setProduct_price($this->faker->numberBetween(20, 30));
             $product->setPurchase_price($this->faker->numberBetween(10, 19));
             $product->setFamily_id($i);
@@ -410,11 +408,13 @@ final class ItemsCommand extends Command
             $product->setUnit_id($i);
             $this->products[] = $product;
         }
-    }  
-    
-    private function addInv(int $count,
+    }
+
+    private function addInv(
+        int $count,
         bool $summaryTaxesExist = true,
-        bool $includeItemTaxesInSummaryTaxSoApplyAfter = true): void
+        bool $includeItemTaxesInSummaryTaxSoApplyAfter = true
+    ): void
     {
         if (empty($this->users)) {
             throw new Exception('No users');
@@ -436,13 +436,14 @@ final class ItemsCommand extends Command
         $invAmount = $this->addInvAmount($inv, $summaryTaxesExist, $includeItemTaxesInSummaryTaxSoApplyAfter);
         $this->invAmount[0] = $invAmount;
         $this->inv[] = $inv;
-        $this->invId =+1;
+        $this->invId = +1;
     }
-    
+
     private function addInvAmount(
-        Inv $inv, 
-        bool $summaryTaxesExist = true, 
-        bool $includeItemTaxInSummaryTaxSoApplyAfter = true) : InvAmount
+        Inv $inv,
+        bool $summaryTaxesExist = true,
+        bool $includeItemTaxInSummaryTaxSoApplyAfter = true
+    ): InvAmount
     {
         $itemSubTotal = 0;
         $itemTaxTotal = 0;
@@ -454,41 +455,42 @@ final class ItemsCommand extends Command
             $itemSubTotal = $itemSubTotal + ($invItemAmount->getSubtotal() ?? 0.00);
             $itemDiscountTotal = $itemDiscountTotal + ($invItemAmount->getDiscount() ?? 0.00);
             $itemTaxTotal = $itemTaxTotal + ($invItemAmount->getTax_total() ?? 0.00);
-        }   
-        $itemAfterDiscount = $itemSubTotal-$itemDiscountTotal;
+        }
+        $itemAfterDiscount = $itemSubTotal - $itemDiscountTotal;
         $invAmount->setItem_subtotal($itemAfterDiscount);
         $invAmount->setItem_tax_total($itemTaxTotal);
         // Assume setInclude_item_tax is true in the calculation of additional InvTaxRates
         $invTaxRateTotal = $summaryTaxesExist ? $this->addInvTaxRates(
-            $inv, 
-            ($includeItemTaxInSummaryTaxSoApplyAfter ? $itemAfterDiscount : 0.00), 
-            ($includeItemTaxInSummaryTaxSoApplyAfter ? $itemTaxTotal : 0.00)
+            $inv,
+            $includeItemTaxInSummaryTaxSoApplyAfter ? $itemAfterDiscount : 0.00,
+            $includeItemTaxInSummaryTaxSoApplyAfter ? $itemTaxTotal : 0.00
         ) : 0.00;
         return $invAmount;
-    }    
-    
+    }
+
     /* Create two Summary Table Invoice Tax Rates */
     private function addInvTaxRates(
-            Inv $inv, 
-            float $invAmountItemSubTotal, 
-            float $invAmountItemTaxTotal): void
+        Inv $inv,
+        float $invAmountItemSubTotal,
+        float $invAmountItemTaxTotal
+    ): void
     {
         /** Assume Invoice Taxes are applied after item tax has been included **/
         $invTaxRateTwenty = new InvTaxRate();
         $invTaxRateTwenty->setInv_id($this->invId);
         $invTaxRateTwenty->setTax_rate_id(2);
-        $invTaxRateAmountTwenty = ($invAmountItemSubTotal+$invAmountItemTaxTotal)*0.2;
+        $invTaxRateAmountTwenty = ($invAmountItemSubTotal + $invAmountItemTaxTotal) * 0.2;
         $invTaxRateTwenty->setInv_tax_rate_amount($invTaxRateAmountTwenty);
         $this->invTaxRates[] = $invTaxRateTwenty;
 
         $invTaxRateFifteen = new InvTaxRate();
         $invTaxRateFifteen->setInv_id($this->invId);
         $invTaxRateFifteen->setTax_rate_id(1);
-        $invTaxRateAmountFifteen = ($invAmountItemSubTotal+$invAmountItemTaxTotal)*0.15;
+        $invTaxRateAmountFifteen = ($invAmountItemSubTotal + $invAmountItemTaxTotal) * 0.15;
         $invTaxRateFifteen->setInv_tax_rate_amount($invTaxRateAmountFifteen);
         $this->invTaxRates[] = $invTaxRateFifteen;
     }
-    
+
     private function addInvItems(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
@@ -509,10 +511,10 @@ final class ItemsCommand extends Command
             $invItemAmount = $this->addInvItemAmount($invItem, $price, $quantity, $this->invItemId, $chosenTaxRateId);
             $this->invItems[] = $invItem;
             $this->invItemAmounts[] = $invItemAmount;
-            $this->invItemId =+ 1;
+            $this->invItemId = +1;
         }
     }
-    
+
     private function addInvItemAmount(InvItem $invItem, float $price, float $quantity, int $invItemId, int $chosenTaxRateId): InvItemAmount
     {
         $invItemAmount = new InvItemAmount();
@@ -521,7 +523,7 @@ final class ItemsCommand extends Command
         $invItemAmount->setSubtotal($subTotal);
         $invItemAmount->setDiscount(1 * $quantity);
         $netDiscount = $subTotal - (1 * $quantity);
-        $taxtotal = ($chosenTaxRateId == 1 ? $netDiscount * 15/100 : $netDiscount *  20/100);
+        $taxtotal = ($chosenTaxRateId == 1 ? $netDiscount * 15 / 100 : $netDiscount *  20 / 100);
         $invItemAmount->setTax_total($taxtotal);
         return $invItemAmount;
     }

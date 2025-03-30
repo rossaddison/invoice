@@ -861,7 +861,7 @@ final class InvController
      */
     public function delete(
         #[RouteArgument('id')] int $id,
-        InvRepository $invRepo,
+        IR $invRepo,
         ACIR $aciR,
         ACIIR $aciiR,
         IIAR $iiaR,
@@ -873,7 +873,7 @@ final class InvController
         InvTaxRateService $itrS,
         IAR $iaR,
         InvAmountService $iaS,
-        PAR $paR,
+        paR $paR,
         PAS $paS
     ): Response {
         try {
@@ -2622,7 +2622,7 @@ final class InvController
      * @param bool $unloaded
      * @return Inv|null
      */
-    private function inv(int $id, InvRepository $invRepo, bool $unloaded = false): Inv|null
+    private function inv(int $id, IR $invRepo, bool $unloaded = false): Inv|null
     {
         if ($id) {
             $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string)$id) : $invRepo->repoInvLoadedquery((string)$id));
@@ -2639,7 +2639,7 @@ final class InvController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function invs(InvRepository $invRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function invs(IR $invRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $invRepo->findAllWithStatus($status);
     }
@@ -2649,7 +2649,7 @@ final class InvController
      * @param icR $icR
      * @return array
      */
-    public function inv_custom_values(string|null $inv_id, icR $icR): array
+    public function inv_custom_values(string|null $inv_id, ICR $icR): array
     {
         // Get all the custom fields that have been registered with this inv on creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
@@ -3812,7 +3812,7 @@ final class InvController
      * @param string $uploads_temp_peppol_absolute_path_dot_xml
      * @return false|string
      */
-    private function peppol_output(upR $upR, string $uploads_temp_peppol_absolute_path_dot_xml): false|string
+    private function peppol_output(UPR $upR, string $uploads_temp_peppol_absolute_path_dot_xml): false|string
     {
         $path_parts = pathinfo($uploads_temp_peppol_absolute_path_dot_xml);
         /**
@@ -4285,7 +4285,7 @@ final class InvController
      * @param bool $so_exists
      * @return string
      */
-    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TaskR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, InvAmount|null $invAmount): string
+    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, InvAmount|null $invAmount): string
     {
         $inv = $this->inv($id, $iR, false);
         if ($inv) {

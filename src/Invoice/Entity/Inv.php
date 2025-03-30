@@ -130,12 +130,12 @@ class Inv
         $this->items = new ArrayCollection();
         // create also the invoice amount when the invoice is created.
         $this->invAmount = new InvAmount();
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable('now');
-        $this->date_due = new \DateTimeImmutable('2024/01/01');
-        $this->date_supplied = new \DateTimeImmutable('2024/01/01');
-        $this->date_tax_point = new \DateTimeImmutable('2024/01/01');
-        $this->time_created = new \DateTimeImmutable('now');
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable('now');
+        $this->date_due = new DateTimeImmutable('2024/01/01');
+        $this->date_supplied = new DateTimeImmutable('2024/01/01');
+        $this->date_tax_point = new DateTimeImmutable('2024/01/01');
+        $this->time_created = new DateTimeImmutable('now');
         $this->invsentlogs = new ArrayCollection();
         $this->invrecurring = new ArrayCollection();
     }
@@ -340,7 +340,7 @@ class Inv
 
     public function setDate_created(string $date_created): void
     {
-        $this->date_created = (new \DateTimeImmutable())->createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('now');
+        $this->date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('now');
     }
 
     public function setTime_created(string $time_created): void

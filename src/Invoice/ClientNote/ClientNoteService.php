@@ -17,7 +17,7 @@ final readonly class ClientNoteService
     {
         isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
 
-        $datetime = new \DateTime();
+        $datetime = new DateTime();
         /**
          * @var string $array['date_note']
          */
@@ -45,7 +45,7 @@ final readonly class ClientNoteService
 
         isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
 
-        $datetime = new \DateTime();
+        $datetime = new DateTime();
         /**
          * @var string $array['date_note']
          */

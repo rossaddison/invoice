@@ -853,7 +853,7 @@ class ReportController
     }
 
     /**
-     * @param ((float|string)[][]|float|string)[] $year $year
+     * @param (float|(float|string)[][]|string)[] $year $year
      * @param \DateTimeImmutable $immutable_from
      * @param \DateTimeImmutable $current_year
      * @param Client $client

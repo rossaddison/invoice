@@ -58,26 +58,26 @@ final readonly class InvService
          * The following fields are not set on the form but are calculated automatically
          */
 
-        $datetime_created = new \DateTimeImmutable();
+        $datetime_created = new DateTimeImmutable();
 
         /**
          * @var string $array['date_created']
          */
-        $date_created = $array['date_created'] ?? (new \DateTimeImmutable('now'))->format('Y-m-d');
+        $date_created = $array['date_created'] ?? (new DateTimeImmutable('now'))->format('Y-m-d');
         $model->setDate_created($date_created);
 
-        $datetime_supplied = new \DateTimeImmutable();
+        $datetime_supplied = new DateTimeImmutable();
         /**
          * @var string $array['date_supplied']
          */
-        $date_supplied = $array['date_supplied'] ?? (new \DateTimeImmutable('now'))->format('Y-m-d');
-        $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new \DateTimeImmutable('1901/01/01'));
+        $date_supplied = $array['date_supplied'] ?? (new DateTimeImmutable('now'))->format('Y-m-d');
+        $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'));
 
 
         $datetimeimmutable_tax_point = $this->set_tax_point(
             $model,
-            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new \DateTimeImmutable('1901/01/01'),
-            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('1901/01/01')
+            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'),
+            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('1901/01/01')
         );
         null !== $datetimeimmutable_tax_point ? $model->setDate_tax_point($datetimeimmutable_tax_point) : '';
 
@@ -126,7 +126,7 @@ final readonly class InvService
                 $model->setNumber('');
             }
             $model->setUser_id((int)$user->getId());
-            $model->setTime_created((new \DateTimeImmutable('now'))->format('H:i:s'));
+            $model->setTime_created((new DateTimeImmutable('now'))->format('H:i:s'));
             $model->setPayment_method((int)$s->getSetting('invoice_default_payment_method') ?: 4);
             $model->setDiscount_amount(0.00);
         }
@@ -148,8 +148,8 @@ final readonly class InvService
         $model->setIs_read_only((bool)$array['is_read_only']);
         $model->setPassword((string)$array['password']);
         $model->setDate_due($s);
-        $model->setDate_supplied($array['date_supplied'] instanceof \DateTimeImmutable ? $array['date_supplied'] : new DateTimeImmutable('now'));
-        $model->setDate_tax_point($array['date_tax_point'] instanceof \DateTimeImmutable ? $array['date_tax_point'] : new DateTimeImmutable('now'));
+        $model->setDate_supplied($array['date_supplied'] instanceof DateTimeImmutable ? $array['date_supplied'] : new DateTimeImmutable('now'));
+        $model->setDate_tax_point($array['date_tax_point'] instanceof DateTimeImmutable ? $array['date_tax_point'] : new DateTimeImmutable('now'));
         $model->setTime_created((string)$array['time_created']);
         $model->setStand_in_code((string)$array['stand_in_code']);
         $model->setNumber((string)$array['number']);
@@ -292,15 +292,15 @@ final readonly class InvService
     {
         $datehelper = new DateHelper($s);
         $datetime = $datehelper->get_or_set_with_style($details['date_created'] ?? new \DateTime());
-        $datetimeimmutable = new \DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format('Y-m-d H:i:s') : 'now');
+        $datetimeimmutable = new DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format('Y-m-d H:i:s') : 'now');
         $model->setDate_created($datetimeimmutable->format('Y-m-d'));
 
         $datetime_supplied = $datehelper->get_or_set_with_style($details['date_supplied'] ?? new \DateTime());
-        $datetimeimmutable_supplied = new \DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
+        $datetimeimmutable_supplied = new DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
         $model->setDate_supplied($datetimeimmutable_supplied);
 
         $datetime_tax_point = $datehelper->get_or_set_with_style($details['date_tax_point'] ?? new \DateTime());
-        $datetimeimmutable_tax_point = new \DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format('Y-m-d H:i:s') : 'now');
+        $datetimeimmutable_tax_point = new DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format('Y-m-d H:i:s') : 'now');
         $model->setDate_tax_point($datetimeimmutable_tax_point);
 
         $model->setDate_due($s);
@@ -325,11 +325,11 @@ final readonly class InvService
             $random = new Random();
             $model->setUser($user);
             $model->setUrl_key($random::string(32));
-            $model->setDate_created((new \DateTimeImmutable('now'))->format('Y-m-d'));
+            $model->setDate_created((new DateTimeImmutable('now'))->format('Y-m-d'));
             // VAT or cash basis tax system fields: ignore
-            $model->setDate_supplied(new \DateTimeImmutable('now'));
-            $model->setDate_tax_point(new \DateTimeImmutable('now'));
-            $model->setTime_created((new \DateTimeImmutable('now'))->format('H:i:s'));
+            $model->setDate_supplied(new DateTimeImmutable('now'));
+            $model->setDate_tax_point(new DateTimeImmutable('now'));
+            $model->setTime_created((new DateTimeImmutable('now'))->format('H:i:s'));
             $model->setPayment_method(0);
             $model->setDate_due($s);
             $model->setDiscount_amount(0.00);

@@ -52,8 +52,8 @@ class CompanyPrivate
         #[Column(type:'date', nullable: true)]
         private mixed $end_date = null,
     ) {
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
     //get relation $company

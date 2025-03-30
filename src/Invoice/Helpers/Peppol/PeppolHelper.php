@@ -407,7 +407,7 @@ class PeppolHelper
      * @param UPR $upR
      * @return AdditionalDocumentReference
      */
-    private function AdditionalDocumentReference(Inv $invoice, UPR $upR): AdditionalDocumentReference
+    private function AdditionalDocumentReference(Inv $invoice, upR $upR): AdditionalDocumentReference
     {
         $url_key = $invoice->getUrl_key();
         $invoice_number = $this->t->translate('invoice.peppol.document.reference.null') . ($invoice->getId() ?? 'Not Found');
@@ -1007,7 +1007,7 @@ class PeppolHelper
      * @throws PeppolClientNotFoundException
      * @return array
      */
-    private function build_invoice_lines_array(Inv $invoice, InvoicePeriod $invoice_period, iiaR $iiaR, cpR $cpR, SOIR $soiR, ACIIR $aciiR, unpR $unpR): array
+    private function build_invoice_lines_array(Inv $invoice, InvoicePeriod $invoice_period, IIAR $iiaR, cpR $cpR, SOIR $soiR, ACIIR $aciiR, unpR $unpR): array
     {
         $client = $invoice->getClient();
         if ($client) {
@@ -1574,7 +1574,7 @@ class PeppolHelper
      * @throws PeppolTaxCategoryPercentNotFoundException
      * @return array
      */
-    private function build_TaxSubtotal_array(Inv $invoice, iiaR $iiaR, TRR $trR): array
+    private function build_TaxSubtotal_array(Inv $invoice, IIAR $iiaR, TRR $trR): array
     {
         $array = [];
         $item_tax_rates = [];

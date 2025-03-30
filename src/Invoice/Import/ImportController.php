@@ -294,7 +294,7 @@ final class ImportController
          * @var array $taxRate
          */
         foreach ($taxRates as $taxRate) {
-            $newTaxRate = new \App\Invoice\Entity\TaxRate();
+            $newTaxRate = new TaxRate();
             $newTaxRate->setTaxRateName((string)$taxRate['tax_rate_name']);
             $newTaxRate->setTaxRateDefault(false);
             $this->trR->save($newTaxRate);

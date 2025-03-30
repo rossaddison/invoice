@@ -33,7 +33,7 @@ class Token
         private ?string $type = ''
     ) {
         $this->token = Random::string(32);
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
     }
 
     public function getIdentity(): ?Identity
@@ -89,6 +89,6 @@ class Token
 
     public function setCreated_at(string $created_at): void
     {
-        $this->created_at = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $created_at) ?: new \DateTimeImmutable('now');
+        $this->created_at = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
     }
 }

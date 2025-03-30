@@ -82,7 +82,7 @@ final class SalesOrderController
 {
     use FlashMessage;
     private Flash $flash;
-    
+
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private InvService $invService,
@@ -121,9 +121,9 @@ final class SalesOrderController
      */
     public function guest(
         Request $request,
-        SOAR $soaR,
+        SoAR $soaR,
         CurrentRoute $currentRoute,
-        SOR $soR,
+        SoR $soR,
         UCR $ucR,
         UIR $uiR
     ): \Yiisoft\DataResponse\DataResponse|Response {
@@ -197,7 +197,7 @@ final class SalesOrderController
      * @param SettingRepository $sR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(CurrentRoute $currentRoute, CR $clientRepo, Request $request, SoAR $soaR, SOR $soR, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, CR $clientRepo, Request $request, SoAR $soaR, SoR $soR, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
     {
         // If the language dropdown changes
         $this->session->set('_language', $currentRoute->getArgument('_language'));
@@ -243,7 +243,7 @@ final class SalesOrderController
      * @param SOR $soR
      * @return Response
      */
-    public function agree_to_terms(CurrentRoute $currentRoute, SOR $soR): Response
+    public function agree_to_terms(CurrentRoute $currentRoute, SoR $soR): Response
     {
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key) {
@@ -284,7 +284,7 @@ final class SalesOrderController
      * @param SOR $soR
      * @return Response
      */
-    public function reject(CurrentRoute $currentRoute, SOR $soR): Response
+    public function reject(CurrentRoute $currentRoute, SoR $soR): Response
     {
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key) {
@@ -320,7 +320,7 @@ final class SalesOrderController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, SalesOrder>
      */
-    private function salesorders_status_with_sort(SalesOrderRepository $soRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function salesorders_status_with_sort(SoR $soRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $soRepo->findAllWithStatus($status)
                       ->withSort($sort);
@@ -336,7 +336,7 @@ final class SalesOrderController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, SalesOrder>
      */
-    private function salesorders_status_with_sort_guest(SOR $soR, int $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function salesorders_status_with_sort_guest(SoR $soR, int $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $soR->repoGuestStatuses($status, $user_clients)
                      ->withSort($sort);
@@ -363,7 +363,7 @@ final class SalesOrderController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        SalesOrderRepository $salesorderRepository,
+        SoR $salesorderRepository,
         CR $clientRepo,
         DR $delRepo,
         GR $gR,
@@ -456,7 +456,7 @@ final class SalesOrderController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        SalesOrderRepository $salesorderRepository,
+        SoR $salesorderRepository,
         SoCR $socR,
         SoCS $socS,
         SoIR $soiR,
@@ -503,7 +503,7 @@ final class SalesOrderController
         return $custom_field_form_values;
     }
 
-    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, SOAR $soaR, SOCR $socR, SOIR $soiR, SOIAR $soiaR, SOR $soR, SOTRR $sotrR, SettingRepository $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR, SettingRepository $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the quote or not.
@@ -647,7 +647,7 @@ final class SalesOrderController
     * @param SalesOrderRepository $salesorderRepository
     * @return SalesOrder|null
     */
-    private function salesorder(CurrentRoute $currentRoute, SalesOrderRepository $salesorderRepository): SalesOrder|null
+    private function salesorder(CurrentRoute $currentRoute, SoR $salesorderRepository): SalesOrder|null
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -661,7 +661,7 @@ final class SalesOrderController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function salesorders(SalesOrderRepository $salesorderRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function salesorders(SoR $salesorderRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $salesorderRepository->findAllPreloaded();
     }
@@ -698,11 +698,11 @@ final class SalesOrderController
         IIAR $iiaR,
         IIAS $iiaS,
         PR $pR,
-        SOAR $soaR,
-        SOCR $socR,
-        SOIR $soiR,
-        SOR $soR,
-        SOTRR $sotrR,
+        SoAR $soaR,
+        SoCR $socR,
+        SoIR $soiR,
+        SoR $soR,
+        SoTRR $sotrR,
         TRR $trR,
         UNR $unR,
         SettingRepository $sR,
@@ -795,7 +795,7 @@ final class SalesOrderController
      * @param SettingRepository $sR
      * @param UNR $unR
      */
-    private function so_to_invoice_so_items(string $so_id, string $inv_id, IIAR $iiaR, IIAS $iiaS, PR $pR, SOIR $soiR, TRR $trR, FormHydrator $formHydrator, SettingRepository $sR, UNR $unR): void
+    private function so_to_invoice_so_items(string $so_id, string $inv_id, IIAR $iiaR, IIAS $iiaS, PR $pR, SoIR $soiR, TRR $trR, FormHydrator $formHydrator, SettingRepository $sR, UNR $unR): void
     {
         // Get all items that belong to the salesorder
         $items = $soiR->repoSalesOrderItemIdquery($so_id);
@@ -835,7 +835,7 @@ final class SalesOrderController
      * @param SOTRR $sotrR
      * @param FormHydrator $formHydrator
      */
-    private function so_to_invoice_so_tax_rates(string $so_id, string|null $inv_id, SOTRR $sotrR, FormHydrator $formHydrator): void
+    private function so_to_invoice_so_tax_rates(string $so_id, string|null $inv_id, SoTRR $sotrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the salesorder
         $so_tax_rates = $sotrR->repoSalesOrderquery($so_id);
@@ -865,7 +865,7 @@ final class SalesOrderController
     private function so_to_invoice_so_custom(
         string $so_id,
         string|null $inv_id,
-        SOCR $socR,
+        SoCR $socR,
         CFR $cfR,
         FormHydrator $formHydrator
     ): void {
@@ -907,7 +907,7 @@ final class SalesOrderController
      * @param SOAR $soaR
      * @param FormHydrator $formHydrator
      */
-    private function so_to_invoice_so_amount(string $so_id, string|null $inv_id, SOAR $soaR, FormHydrator $formHydrator): void
+    private function so_to_invoice_so_amount(string $so_id, string|null $inv_id, SoAR $soaR, FormHydrator $formHydrator): void
     {
         $so_amount = $soaR->repoSalesOrderquery($so_id);
         $inv_amount = [];
@@ -943,7 +943,7 @@ final class SalesOrderController
      * @param UCR $ucR
      * @return Response
      */
-    public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser, CFR $cfR, SOAR $soaR, SOIR $soiR, SOIAR $soiaR, SOR $soR, SOTRR $sotrR, UIR $uiR, UCR $ucR): Response
+    public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser, CFR $cfR, SoAR $soaR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR, UIR $uiR, UCR $ucR): Response
     {
         // Get the url key from the browser
         $url_key = $currentRoute->getArgument('key');

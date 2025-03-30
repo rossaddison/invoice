@@ -532,7 +532,7 @@ class ProductController
      * @param QIAS $qiaS
      * @param FormHydrator $formHydrator
      */
-    private function save_product_lookup_item_quote(int $order, Product $product, string $quote_id, pR $pR, trR $trR, uR $unR, QIAR $qiaR, QIAS $qiaS, FormHydrator $formHydrator): void
+    private function save_product_lookup_item_quote(int $order, Product $product, string $quote_id, pR $pR, trR $trR, uR $unR, qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm($quoteItem, $quote_id);
@@ -877,7 +877,7 @@ class ProductController
      * @param PIR $piR
      * @param sR $sR
      */
-    public function image_attachment(#[RouteArgument('id')] string $id, PR $pR, PIR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response
+    public function image_attachment(#[RouteArgument('id')] string $id, pR $pR, piR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response
     {
         $aliases = $sR->get_productimages_files_folder_aliases();
         // https://github.com/yiisoft/yii2/issues/3566
@@ -1040,7 +1040,7 @@ class ProductController
      * @param ProductRepository $pR
      * @return array
      */
-    public function optionsDataProducts(ProductRepository $pR): array
+    public function optionsDataProducts(pR $pR): array
     {
         $optionsDataProducts = [];
         $products = $pR->findAllPreloaded();

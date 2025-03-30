@@ -62,8 +62,8 @@ class Company
         #[Column(type: 'text', nullable: true)]
         private ?string $arbitrationJurisdiction = ''
     ) {
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
     public function getId(): int|null

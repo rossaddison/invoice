@@ -282,7 +282,7 @@ class DateHelper
      */
     public function datetime_zone_style(string $string_date): DateTime|false
     {
-        $datetime = new \DateTime();
+        $datetime = new DateTime();
         $datetime->setTimezone(new \DateTimeZone($this->s->getSetting('time_zone') ?: 'Europe/London'));
         $datetime->format($this->style());
         $date = $this->date_to_mysql($string_date);
@@ -302,7 +302,7 @@ class DateHelper
 
         $mysql_date = $this->date_from_mysql($date);
 
-        $new_date = new \DateTime($mysql_date);
+        $new_date = new DateTime($mysql_date);
         $new_date->add(new DateInterval('P' . $increment));
 
         return $new_date->format($this->s->getSetting('date_format'));
@@ -326,7 +326,7 @@ class DateHelper
      */
     public function increment_date(string $date, string $increment): string
     {
-        $new_date = new \DateTime($date);
+        $new_date = new DateTime($date);
         $new_date->add(new DateInterval('P' . $increment));
         return $new_date->format('Y-m-d');
     }
@@ -338,7 +338,7 @@ class DateHelper
      */
     public function incrementDateStringToDateTime(string $date, string $increment): DateTime
     {
-        $new_date = new \DateTime($date);
+        $new_date = new DateTime($date);
         $new_date->add(new DateInterval('P' . $increment));
         return $new_date;
     }
@@ -354,7 +354,7 @@ class DateHelper
         // Get with style
         if ($date instanceof \DateTimeImmutable) {
             $return_date = $this->date_from_mysql($date);
-        // Set with style
+            // Set with style
         } elseif (null !== $date) {
             $return_date = $this->datetime_zone_style((string) $date);
         } else {

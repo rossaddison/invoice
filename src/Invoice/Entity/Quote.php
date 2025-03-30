@@ -90,10 +90,10 @@ class Quote
     ) {
         $this->items = new ArrayCollection();
         $this->quoteAmount = new QuoteAmount();
-        $this->date_modified = new \DateTimeImmutable();
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_expires = new \DateTimeImmutable();
-        $this->date_required = new \DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_expires = new DateTimeImmutable();
+        $this->date_required = new DateTimeImmutable();
     }
 
     public function getClient(): ?Client
@@ -270,7 +270,7 @@ class Quote
                 $days = $setting->getSetting_value() ?: 30;
             }
         }
-        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P' . (string)$days . 'D'));
+        $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . (string)$days . 'D'));
     }
 
     public function getDate_expires(): DateTimeImmutable

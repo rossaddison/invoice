@@ -39,7 +39,7 @@ final class UserController
         $dataReader = $userRepository->findAllPreloaded();
 
         if ($pageSize === null) {
-            $pageSize = (int) ($body['pageSize'] ?? OffSetPaginator::DEFAULT_PAGE_SIZE);
+            $pageSize = (int) ($body['pageSize'] ?? OffsetPaginator::DEFAULT_PAGE_SIZE);
         }
 
         $offsetPaginator = (new OffsetPaginator($dataReader));

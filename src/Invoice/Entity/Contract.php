@@ -32,8 +32,8 @@ class Contract
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
     ) {
-        $this->period_start = new \DateTimeImmutable();
-        $this->period_end = new \DateTimeImmutable();
+        $this->period_start = new DateTimeImmutable();
+        $this->period_end = new DateTimeImmutable();
     }
 
     public function getId(): ?int

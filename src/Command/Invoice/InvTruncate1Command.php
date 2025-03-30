@@ -43,15 +43,15 @@ final class InvTruncate1Command extends Command
             ->setDescription('Truncates, i.e removes all records, in the tables related to invoices.')
             ->setHelp('inv_item_allowance_charge, inv_allowance_charge, allowance_charge, merchant, payment_custom, payment, payment_method, payment_peppol, inv_recurring, inv_sent_log, inv_item_amount, inv_amount, inv_item, inv_tax_rate, inv tables will be truncated until there are no records left in them.');
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/ 
-        
+        /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
-        
+
         $tables = ['inv_item_allowance_charge', 'inv_allowance_charge', 'allowance_charge', 'merchant', 'payment_custom', 'payment', 'payment_method', 'payment_peppol', 'inv_recurring', 'inv_sent_log', 'inv_item_amount', 'inv_amount', 'inv_item', 'inv_tax_rate', 'inv_custom', 'inv'];
-        
+
         foreach ($tables as $table) {
             $this->promise
                 ->getDatabaseProvider()
@@ -59,61 +59,59 @@ final class InvTruncate1Command extends Command
                 ->delete($table)
                 ->run();
         }
-        
-        if (0 === count(($this->promise
+
+        if (0 === count($this->promise
                 ->getORM()
-                ->getRepository(InvItemAllowanceCharge::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(InvItemAllowanceCharge::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvAllowanceCharge::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(InvAllowanceCharge::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(AllowanceCharge::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(AllowanceCharge::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(Merchant::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(Merchant::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(PaymentCustom::class))->findAll()) +     
-            count(($this->promise
+                ->getRepository(PaymentCustom::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(Payment::class))->findAll()) +    
-            count(($this->promise
+                ->getRepository(Payment::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(PaymentMethod::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(PaymentMethod::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(PaymentPeppol::class))->findAll()) +    
-            count(($this->promise
+                ->getRepository(PaymentPeppol::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvRecurring::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(InvRecurring::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvSentLog::class))->findAll()) +    
-            count(($this->promise
+                ->getRepository(InvSentLog::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvItemAmount::class))->findAll()) +    
-            count(($this->promise
+                ->getRepository(InvItemAmount::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvAmount::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(InvAmount::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvItem::class))->findAll()) +
-            count(($this->promise
+                ->getRepository(InvItem::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvTaxRate::class))->findAll()) + 
-            count(($this->promise
+                ->getRepository(InvTaxRate::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(InvCustom::class))->findAll()) +     
-            count(($this->promise
+                ->getRepository(InvCustom::class)->findAll()) +
+            count($this->promise
                 ->getORM()
-                ->getRepository(Inv::class))->findAll())) 
-        {
+                ->getRepository(Inv::class)->findAll())) {
             $io->success('Done');
             return ExitCode::OK;
-        } else {
-            $io->error('Unspecified error');
-            return ExitCode::UNSPECIFIED_ERROR;
         }
+        $io->error('Unspecified error');
+        return ExitCode::UNSPECIFIED_ERROR;
     }
 }

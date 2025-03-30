@@ -375,7 +375,7 @@ final class UserInvController
         Request $request,
         #[RouteArgument('id')] int $id,
         FormHydrator $formHydrator,
-        UserInvRepository $userinvRepository,
+        uiR $userinvRepository,
         uR $uR,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
@@ -450,7 +450,7 @@ final class UserInvController
      * @param uiR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function client(#[RouteArgument('id')] int $id, ucR $ucR, UserInvRepository $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function client(#[RouteArgument('id')] int $id, ucR $ucR, uiR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         // Use the primary key 'id' passed in userinv/index's urlGenerator to retrieve the user_id
         $userinv = $this->userinv($id, $uiR);
@@ -479,7 +479,7 @@ final class UserInvController
     public function delete(
         TranslatorInterface $translator,
         #[RouteArgument('id')] int $id,
-        UserInvRepository $userinvRepository
+        uiR $userinvRepository
     ): Response {
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
@@ -600,7 +600,7 @@ final class UserInvController
      * @param UserInvRepository $userinvRepository
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function view(#[RouteArgument('id')] int $id, UserInvRepository $userinvRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(#[RouteArgument('id')] int $id, uiR $userinvRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
@@ -643,7 +643,7 @@ final class UserInvController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function userinvs_active_with_sort(UserInvRepository $uiR, int $active, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
+    private function userinvs_active_with_sort(uiR $uiR, int $active, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface|\Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $uiR->findAllWithActive($active)
                         ->withSort($sort);
@@ -654,7 +654,7 @@ final class UserInvController
      * @param UserInvRepository $userinvRepository
      * @return UserInv|null
      */
-    private function userinv(int $id, UserInvRepository $userinvRepository): UserInv|null
+    private function userinv(int $id, uiR $userinvRepository): UserInv|null
     {
         if ($id) {
             return $userinvRepository->repoUserInvquery((string)$id);
@@ -666,7 +666,7 @@ final class UserInvController
      * @param UserInvRepository $uiR
      * @return array
      */
-    public function optionsDataFilterUserInvLogin(UserInvRepository $uiR): array
+    public function optionsDataFilterUserInvLogin(uiR $uiR): array
     {
         $optionsDataUserInvs = [];
         $userInvs = $uiR->findAllPreloaded();

@@ -22,7 +22,7 @@ final readonly class InvSentLogService
          * @var string $array['date_sent']
          */
         $date_sent = $array['date_sent'] ?? '';
-        $model->setDate_sent($datetime_created::createFromFormat('Y-m-d', $date_sent) ?: new \DateTimeImmutable('1901/01/01'));
+        $model->setDate_sent($datetime_created::createFromFormat('Y-m-d', $date_sent) ?: new DateTimeImmutable('1901/01/01'));
         $this->repository->save($model);
     }
 

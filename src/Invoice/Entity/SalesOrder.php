@@ -74,9 +74,9 @@ class SalesOrder
         #[Column(type: 'longText', nullable:true)]
         private ?string $payment_term = ''
     ) {
-        $this->date_modified = new \DateTimeImmutable();
-        $this->date_created = new \DateTimeImmutable();
-        $this->date_expires = new \DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_expires = new DateTimeImmutable();
     }
 
     public function getClient(): ?Client
@@ -230,7 +230,7 @@ class SalesOrder
     public function setDate_expires(): void
     {
         $days = (string)1;
-        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
+        $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
     }
 
     public function getDate_expires(): DateTimeImmutable
