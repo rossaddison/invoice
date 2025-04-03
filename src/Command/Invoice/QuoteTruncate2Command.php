@@ -50,7 +50,7 @@ final class QuoteTruncate2Command extends Command
                 ->delete($table)
                 ->run();
         }
-        
+
         if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(QuoteItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +

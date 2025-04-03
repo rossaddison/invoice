@@ -12,23 +12,24 @@ class CategoryPrimary
 {
     #[Column(type: 'primary')]
     private ?int $id = null;
-    
-    public function __construct(#[Column(type: 'text', nullable: true)]
+
+    public function __construct(
+        #[Column(type: 'text', nullable: true)]
         public ?string $name = ''
     ) {
         $this->name = $name;
     }
-    
-    public function getId(): int|null 
+
+    public function getId(): int|null
     {
         return $this->id;
     }
-    
+
     public function getName(): ?string
     {
         return $this->name;
     }
-    
+
     public function setName(string $name): void
     {
         $this->name = $name;

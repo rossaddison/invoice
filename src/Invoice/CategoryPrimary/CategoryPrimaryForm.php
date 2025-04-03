@@ -9,20 +9,19 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
 final class CategoryPrimaryForm extends FormModel
-{    
+{
     #[Required]
     private ?string $name = '';
-    
-    public function __construct(CategoryPrimary $categoryPrimary) 
+
+    public function __construct(CategoryPrimary $categoryPrimary)
     {
         $this->name = $categoryPrimary->getName();
     }
-        
-    public function getName() : string|null
+
+    public function getName(): string|null
     {
-      return $this->name;
+        return $this->name;
     }
-    
 
     /**
      * @return string
