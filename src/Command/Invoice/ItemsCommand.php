@@ -419,8 +419,7 @@ final class ItemsCommand extends Command
         int $count,
         bool $summaryTaxesExist = true,
         bool $includeItemTaxesInSummaryTaxSoApplyAfter = true
-    ): void
-    {
+    ): void {
         if (empty($this->users)) {
             throw new Exception('No users');
         }
@@ -448,8 +447,7 @@ final class ItemsCommand extends Command
         Inv $inv,
         bool $summaryTaxesExist = true,
         bool $includeItemTaxInSummaryTaxSoApplyAfter = true
-    ): InvAmount
-    {
+    ): InvAmount {
         $itemSubTotal = 0;
         $itemTaxTotal = 0;
         $itemDiscountTotal = 0;
@@ -478,8 +476,7 @@ final class ItemsCommand extends Command
         Inv $inv,
         float $invAmountItemSubTotal,
         float $invAmountItemTaxTotal
-    ): void
-    {
+    ): void {
         /** Assume Invoice Taxes are applied after item tax has been included **/
         $invTaxRateTwenty = new InvTaxRate();
         $invTaxRateTwenty->setInv_id($this->invId);

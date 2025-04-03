@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
@@ -17,7 +17,8 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class CategorySecondaryRepository extends Select\Repository
 {
-private EntityWriter $entityWriter;
+    private EntityWriter $entityWriter;
+
     /**
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
@@ -35,9 +36,10 @@ private EntityWriter $entityWriter;
      */
     public function findAllPreloaded(): EntityReader
     {
-        $query = $this->select()->load('category_primary');        return $this->prepareDataReader($query);
+        $query = $this->select()->load('category_primary');
+        return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -46,39 +48,37 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CategorySecondary|null $categorysecondary
      * @psalm-param TEntity $categorysecondary
-     * @throws Throwable 
-     * @return void
+     * @throws Throwable
      */
     public function save(array|CategorySecondary|null $categorysecondary): void
     {
         $this->entityWriter->write([$categorysecondary]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CategorySecondary|null $categorysecondary
-  
-     * @throws Throwable 
-     * @return void
+
+     * @throws Throwable
      */
     public function delete(array|CategorySecondary|null $categorysecondary): void
     {
         $this->entityWriter->delete([$categorysecondary]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -89,8 +89,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -101,16 +101,17 @@ private EntityWriter $entityWriter;
         $query = $this->select()
                       ->load('category_primary')
                       ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
 }
