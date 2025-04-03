@@ -13,6 +13,7 @@ class NoClientsAssignedToUserException extends \RuntimeException implements Frie
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.user.clients.assigned.not');
@@ -21,6 +22,7 @@ class NoClientsAssignedToUserException extends \RuntimeException implements Frie
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

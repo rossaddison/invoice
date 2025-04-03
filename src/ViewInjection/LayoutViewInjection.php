@@ -34,6 +34,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *
      * @psalm-return array<string, mixed>
      */
+    #[\Override]
     public function getLayoutParameters(): array
     {
         $bootstrap5OffcanvasEnable = false;

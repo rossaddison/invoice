@@ -14,6 +14,7 @@ class PeppolProductItemClassificationCodeSchemeIdNotFoundException extends \Runt
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         $product_id = $this->product->getProduct_id();
@@ -31,6 +32,7 @@ class PeppolProductItemClassificationCodeSchemeIdNotFoundException extends \Runt
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

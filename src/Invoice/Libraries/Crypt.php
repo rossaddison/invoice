@@ -7,9 +7,9 @@ namespace App\Invoice\Libraries;
 /**
  * @see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
  *
- * Class Crypt
+ * final class Crypt
  */
-class Crypt
+final class Crypt
 {
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
     private string $decrypt_key = self::DECRYPT_KEY;

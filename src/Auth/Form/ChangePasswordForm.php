@@ -92,6 +92,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
         return $this->newPasswordVerify;
     }
 
+    #[\Override]
     public function getRules(): array
     {
         return [

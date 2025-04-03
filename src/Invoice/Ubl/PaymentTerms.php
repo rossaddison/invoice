@@ -17,6 +17,7 @@ class PaymentTerms implements XmlSerializable
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentTerms
      * @param Writer $writer
      */
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         if ($this->note !== null) {

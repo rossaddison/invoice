@@ -27,7 +27,7 @@ use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\Helpers\DateHelper as DHelp;
 use App\Invoice\Helpers\NumberHelper as NHelp;
 
-class TemplateHelper
+final class TemplateHelper
 {
     private readonly DHelp $d;
     private readonly NHelp $n;

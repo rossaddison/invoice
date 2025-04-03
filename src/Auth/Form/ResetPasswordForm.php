@@ -56,6 +56,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
         return $this->newPasswordVerify;
     }
 
+    #[\Override]
     public function getRules(): array
     {
         return [

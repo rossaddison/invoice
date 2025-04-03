@@ -440,7 +440,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: 'id',
-            content: static fn (Inv $model) => $model->getId(),
+            content: static fn (Inv $model) => (string)$model->getId(),
             withSorting: true
         ),
         new DataColumn(
@@ -705,10 +705,10 @@ $toolbar = Div::tag();
         new DataColumn(
             'delivery_location_id',
             header: $translator->translate('invoice.delivery.location.global.location.number'),
-            content: static function (Inv $model) use ($dlR): string|null {
+            content: static function (Inv $model) use ($dlR): string {
                 $delivery_location_id = $model->getDelivery_location_id();
                 $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
-                return null !== $delivery_location ? Html::encode($delivery_location->getGlobal_location_number()) : null;
+                return null !== $delivery_location ? Html::encode($delivery_location->getGlobal_location_number()) : '';
             },
             visible: $visible,
             withSorting: false
@@ -718,18 +718,16 @@ $toolbar = Div::tag();
             content: static function (Inv $model) use ($s, $translator, $urlGenerator): A|Label {
                 return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? 
                         A::tag()->content(
-                    Html::tag(
-                        'button',
-                        Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                        [
-                            'type' => 'submit',
-                            'class' => 'dropdown-button',
-                            'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
-                        ]
-                    ),
-                    $urlGenerator->generate('inv/delete', ['id' => $model->getId()]),
-                    []
-                ) : Label::tag();
+                            Html::tag(
+                                'button',
+                                Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                                [
+                                    'type' => 'submit',
+                                    'class' => 'dropdown-button',
+                                    'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
+                                ]
+                            ),
+                            $urlGenerator->generate('inv/delete', ['id' => $model->getId()])) : Label::tag();
             },
             visible: $visible,
             withSorting: false

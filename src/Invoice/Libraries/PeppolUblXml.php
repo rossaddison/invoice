@@ -29,7 +29,7 @@ use Sabre\Xml\Writer;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use DateTime;
 
-class PeppolUblXml
+final class PeppolUblXml
 {
     private readonly ArrayCollection $items;
     private readonly string $currencyCode_to;

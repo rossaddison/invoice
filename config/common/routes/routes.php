@@ -26,6 +26,8 @@ use Yiisoft\Yii\RateLimiter\Counter;
 use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 use App\Invoice\AllowanceCharge\AllowanceChargeController;
+use App\Invoice\CategoryPrimary\CategoryPrimaryController;    
+use App\Invoice\CategorySecondary\CategorySecondaryController;
 use App\Invoice\Client\ClientController;
 use App\Invoice\ClientNote\ClientNoteController;
 use App\Invoice\ClientPeppol\ClientPeppolController;
@@ -365,6 +367,60 @@ return [
         ->middleware(Authentication::class)
         ->action([InvoiceController::class, 'setting_reset'])
         ->name('invoice/setting_reset'),
+        Route::get('/categoryprimary[/page/{page:\d+}]')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategoryPrimaryController::class, 'index'])
+        ->name('categoryprimary/index'),    
+        // Add
+        Route::methods([Method::GET, Method::POST], '/categoryprimary/add')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategoryPrimaryController::class, 'add'])
+        ->name('categoryprimary/add'),
+        // Edit 
+        Route::methods([Method::GET, Method::POST], '/categoryprimary/edit/{id}')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategoryPrimaryController::class, 'edit'])
+        ->name('categoryprimary/edit'), 
+        Route::methods([Method::GET, Method::POST], '/categoryprimary/delete/{id}')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategoryPrimaryController::class, 'delete'])
+        ->name('categoryprimary/delete'),
+        Route::methods([Method::GET, Method::POST], '/categoryprimary/view/{id}')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategoryPrimaryController::class, 'view'])
+        ->name('categoryprimary/view'), 
+        Route::get('/categorysecondary[/page/{page:\d+}]')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategorySecondaryController::class, 'index'])
+        ->name('categorysecondary/index'),    
+        // Add
+        Route::methods([Method::GET, Method::POST], '/categorysecondary/add')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategorySecondaryController::class, 'add'])
+        ->name('categorysecondary/add'),
+        // Edit 
+        Route::methods([Method::GET, Method::POST], '/categorysecondary/edit/{id}')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategorySecondaryController::class, 'edit'])
+        ->name('categorysecondary/edit'), 
+        Route::methods([Method::GET, Method::POST], '/categorysecondary/delete/{id}')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategorySecondaryController::class, 'delete'])
+        ->name('categorysecondary/delete'),
+        Route::methods([Method::GET, Method::POST], '/categorysecondary/view/{id}')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([CategorySecondaryController::class, 'view'])
+        ->name('categorysecondary/view'),       
         Route::get('/client[/page/{page:\d+}[/active/{active}]]')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)

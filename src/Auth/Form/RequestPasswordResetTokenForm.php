@@ -51,6 +51,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     /**
      * @return PropertyTranslatorInterface|null
      */
+    #[\Override]
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
@@ -66,6 +67,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
      *
      * @psalm-return array{email: list{Required, Email, \Closure(mixed):Result}}
      */
+    #[\Override]
     public function getRules(): array
     {
         return [

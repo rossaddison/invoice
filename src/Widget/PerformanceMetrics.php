@@ -13,6 +13,7 @@ final class PerformanceMetrics extends Widget
     {
     }
 
+    #[\Override]
     public function render(): string
     {
         $time = round($this->timer->get('overall'), 4);

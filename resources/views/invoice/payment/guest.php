@@ -103,9 +103,9 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'payment_method_id',
-            header:  $translator->translate('i.payment_method'),
-            content: static function (Payment $model): string|null {
-                return strlen($model->getPaymentMethod()?->getName() ?? '') > 0 ? $model->getPaymentMethod()?->getName() : '';
+            header: $translator->translate('i.payment_method'),
+            content: static function (Payment $model): string {
+                return $model->getPaymentMethod()?->getName() ?? '';
             }
         ),
     ]

@@ -15,6 +15,7 @@ final class FlashMessage extends Widget
     {
     }
 
+    #[\Override]
     public function render(): string
     {
         $flashes = $this->flash->getAll();

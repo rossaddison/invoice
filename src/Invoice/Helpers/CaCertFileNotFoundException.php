@@ -11,6 +11,7 @@ class CaCertFileNotFoundException extends \RuntimeException implements FriendlyE
     /**
      * @return string
      */
+    #[\Override]
     public function getName(): string
     {
         return 'Your SSL certificate cacert.pem for this version of PHP ' . PHP_VERSION . ' from https://curl.haxx.se/ca/cacert.pem  has not been assigned to php.ini or phpApache.ini curl.cainfo or does not exist under the server php directory  ...bin/php/' . PHP_VERSION;
@@ -21,6 +22,7 @@ class CaCertFileNotFoundException extends \RuntimeException implements FriendlyE
      *
      * @psalm-return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

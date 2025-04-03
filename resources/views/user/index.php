@@ -84,7 +84,9 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            content: static fn (User $data) => $data->getId()
+            content: static function (User $data): string {
+                return (string) $data->getId();
+            }
         ),
         new DataColumn(
             'login',

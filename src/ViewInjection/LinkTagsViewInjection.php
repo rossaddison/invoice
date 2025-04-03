@@ -13,6 +13,7 @@ final class LinkTagsViewInjection implements LinkTagsInjectionInterface
      *
      * @psalm-return array{favicon: array{rel: 'icon', href: '/favicon.ico'}}
      */
+    #[\Override]
     public function getLinkTags(): array
     {
         return [

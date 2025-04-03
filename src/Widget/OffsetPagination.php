@@ -52,6 +52,7 @@ final class OffsetPagination extends Widget
         return $this;
     }
 
+    #[\Override]
     public function render(): string
     {
         if ($this->paginator === null) {

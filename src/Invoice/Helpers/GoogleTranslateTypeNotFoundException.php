@@ -13,6 +13,7 @@ class GoogleTranslateTypeNotFoundException extends \RuntimeException implements 
      *
      * @psalm-return 'There appears to be no language related file selected.'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'There appears to be no language related file selected.';
@@ -21,6 +22,7 @@ class GoogleTranslateTypeNotFoundException extends \RuntimeException implements 
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

@@ -50,7 +50,7 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => $model->getClient_id(),
+        content: static fn (Client $model) => (string)$model->getClient_id(),
         withSorting: true
     ),
     new DataColumn(

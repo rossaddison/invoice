@@ -13,6 +13,7 @@ class FinancialInstitutionBranch implements XmlSerializable
     {
     }
 
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([

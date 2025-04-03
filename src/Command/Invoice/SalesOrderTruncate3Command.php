@@ -26,6 +26,7 @@ final class SalesOrderTruncate3Command extends Command
         parent::__construct();
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -33,6 +34,7 @@ final class SalesOrderTruncate3Command extends Command
             ->setHelp('sales_order_item_amount, sales_order_amount, sales_order_item, sales_order_tax_rate, sales_order tables will be truncated until there are no records left in them.');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
@@ -49,21 +51,21 @@ final class SalesOrderTruncate3Command extends Command
                 ->run();
         }
 
-        if (0 === count($this->promise
+        if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItemAmount::class)->findAll()) +
-            count($this->promise
+                ->getRepository(SalesOrderItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderAmount::class)->findAll()) +
-            count($this->promise
+                ->getRepository(SalesOrderAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItem::class)->findAll()) +
-            count($this->promise
+                ->getRepository(SalesOrderItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderTaxRate::class)->findAll()) +
-            count($this->promise
+                ->getRepository(SalesOrderTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrder::class)->findAll())
+                ->getRepository(SalesOrder::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {
             $io->success('Done');
             return ExitCode::OK;

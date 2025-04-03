@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DOMDocument;
 use DOMElement;
 
-class ZugferdXml
+final class ZugferdXml
 {
     public ArrayCollection $items;
     public string $currencyCode;

@@ -19,6 +19,7 @@ class Price implements XmlSerializable
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=Price
      * @param Writer $writer
      */
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $baseQuantityAttributes = [

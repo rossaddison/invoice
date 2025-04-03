@@ -16,6 +16,7 @@ class AllowanceCharge implements XmlSerializable
     /**
      * @param Writer $writer
      */
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([

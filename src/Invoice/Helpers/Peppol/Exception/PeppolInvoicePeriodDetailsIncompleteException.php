@@ -6,13 +6,14 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class PeppolInvoicePeriodDetailsIncompleteException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolInvoicePeriodDetailsIncompleteException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
      * @return string
      *
      * @psalm-return 'Invoice Period Details Incomplete or Non-existant. See delivery/edit/{inv_id}'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'Invoice Period Details Incomplete or Non-existant. See delivery/edit/{inv_id}';
@@ -21,6 +22,7 @@ class PeppolInvoicePeriodDetailsIncompleteException extends \RuntimeException im
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

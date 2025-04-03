@@ -12,6 +12,7 @@ use Yiisoft\DataResponse\DataResponse;
 
 final class ApiDataWrapper implements MiddlewareInterface
 {
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);

@@ -7,12 +7,13 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.peppol.tax.category.percent.not.found');
@@ -21,6 +22,7 @@ class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException implem
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

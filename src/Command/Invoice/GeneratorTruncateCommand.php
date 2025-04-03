@@ -23,6 +23,7 @@ final class GeneratorTruncateCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -30,6 +31,7 @@ final class GeneratorTruncateCommand extends Command
             ->setHelp('The specific tables Gentor and GentorRelation are truncated.');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
@@ -46,12 +48,12 @@ final class GeneratorTruncateCommand extends Command
                 ->run();
         }
 
-        if (0 === count($this->promise
+        if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(GentorRelation::class)->findAll()) +
-            count($this->promise
+                ->getRepository(GentorRelation::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Gentor::class)->findAll())
+                ->getRepository(Gentor::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {
             $io->success('Done');
             return ExitCode::OK;

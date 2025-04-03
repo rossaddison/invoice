@@ -13,6 +13,7 @@ class GoogleTranslateLocaleSettingNotFoundException extends \RuntimeException im
      *
      * @psalm-return 'Settings...View...Google Translate...Locale has not been chosen.'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'Settings...View...Google Translate...Locale has not been chosen.';
@@ -21,6 +22,7 @@ class GoogleTranslateLocaleSettingNotFoundException extends \RuntimeException im
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

@@ -50,7 +50,7 @@ final readonly class InvService
          * 2. Has no invoice number
          * 3. Has a status of 'sent'
          */
-        if ((!$model->isNewRecord()) && (strlen($model->getNumber()) == 0)  && ($array['status_id'] == 2)) {
+        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)  && ($array['status_id'] == 2)) {
             $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));
         }
 

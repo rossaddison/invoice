@@ -13,6 +13,7 @@ class GoogleTranslateNetworkException extends \RuntimeException implements Frien
      *
      * @psalm-return 'There appears to be a Network error.'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'There appears to be a Network error.';
@@ -21,6 +22,7 @@ class GoogleTranslateNetworkException extends \RuntimeException implements Frien
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

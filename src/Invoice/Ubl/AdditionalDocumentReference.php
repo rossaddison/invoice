@@ -28,6 +28,7 @@ class AdditionalDocumentReference implements XmlSerializable
     /**
      * @param Writer $writer
      */
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();

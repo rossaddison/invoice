@@ -25,6 +25,7 @@ final class TranslateCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure()
     {
         $this->addArgument('message', InputArgument::REQUIRED, 'Message that will be translated.');
@@ -34,6 +35,7 @@ final class TranslateCommand extends Command
     /**
      * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /**

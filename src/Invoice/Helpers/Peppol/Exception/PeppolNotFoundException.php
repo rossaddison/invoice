@@ -6,12 +6,13 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class PeppolNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
      * @return string
      * @psalm-return 'Client/Customer not found.'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'Client/Customer not found.';
@@ -20,6 +21,7 @@ class PeppolNotFoundException extends \RuntimeException implements FriendlyExcep
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

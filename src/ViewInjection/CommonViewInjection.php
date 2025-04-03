@@ -23,6 +23,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
      * @return array
      * @psalm-return array<string, mixed>
      */
+    #[\Override]
     public function getCommonParameters(): array
     {
         $companies = $this->companyRepository->findAllPreloaded();

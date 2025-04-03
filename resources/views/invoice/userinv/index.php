@@ -160,8 +160,8 @@ new DataColumn(
 ),
 new DataColumn(
     'name',
-    content: static function (UserInv $model): ?string {
-        return $model->getName();
+    content: static function (UserInv $model): string {
+        return (string) $model->getName();
     }
 ),
 new DataColumn(
@@ -273,8 +273,8 @@ new DataColumn(
 ),
 new DataColumn(
     'user',
-    content: static function (UserInv $model): ?string {
-        return $model->getUser()?->getEmail();
+    content: static function (UserInv $model): string {
+        return (string) $model->getUser()?->getEmail();
     }
 ),
 new DataColumn(

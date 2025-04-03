@@ -69,9 +69,9 @@ final readonly class Button
         return $string .= Html::closeTag('div');
     }
 
-    public static function save(): void
+    public static function save(): string
     {
-        echo Html::openTag('div', ['class' => 'headerbar-item pull-right']);
+        $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
                 //$translator->translate('i.save'),
@@ -83,9 +83,9 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        echo Field::buttongroup()
+        $string .= (string)Field::buttongroup()
             ->buttonsData($buttonsDataArray);
-        echo Html::closeTag('div');
+        return $string .= Html::closeTag('div');
     }
 
     public static function activeLabel(Translator $translator): Span

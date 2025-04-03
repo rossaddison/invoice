@@ -22,6 +22,7 @@ final class ListCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -32,6 +33,7 @@ final class ListCommand extends Command
     /**
      * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);

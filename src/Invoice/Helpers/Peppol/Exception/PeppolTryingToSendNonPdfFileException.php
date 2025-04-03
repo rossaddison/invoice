@@ -7,12 +7,13 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolTryingToSendNonPdfFileException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolTryingToSendNonPdfFileException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.peppol.trying.to.send.non.pdf.file');
@@ -21,6 +22,7 @@ class PeppolTryingToSendNonPdfFileException extends \RuntimeException implements
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

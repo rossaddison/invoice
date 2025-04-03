@@ -9,18 +9,19 @@ use Yiisoft\Strings\Inflector;
  */
 
 echo "<?php\n";
-$random = 99999999999999999;
+$random = rand(1000, 9999);
 ?>
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?>
+use App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?>;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -75,38 +76,41 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
             header: $translator->translate('i.id'),
             content: static fn(<?= $generator->getCamelcase_capital_name(); ?> $model) => $model->getId()
         ),
-        new ActionColumn(
-            content: static fn(<?= $generator->getCamelcase_capital_name(); ?> $model): string => Html::openTag('div', ['class' => 'btn-group']) .
-            Html::a()
-            ->addAttributes([
-                'class' => 'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.view')
-            ])
-            ->content('🔎')
-            ->encode(false)
-            ->href('<?= $generator->getSmall_singular_name(); ?>/view/'. $model->getId())
-            ->render() .
-            Html::a()
-            ->addAttributes([
-                'class' => 'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.edit')
-            ])
-            ->content('✎')
-            ->encode(false)
-            ->href('<?= $generator->getSmall_singular_name(); ?>/edit/'. $model->getId())
-            ->render() .
-            Html::a()
-            ->addAttributes([
-                'class'=>'dropdown-button text-decoration-none', 
-                'title' => $translator->translate('i.delete'),
-                'type'=>'submit', 
-                'onclick'=>"return confirm("."'".$translator->translate('i.delete_record_warning')."');"
-            ])
-            ->content('❌')
-            ->encode(false)
-            ->href('<?= $generator->getSmall_singular_name(); ?>/delete/'. $model->getId())
-            ->render() . Html::closeTag('div')
-        ), 
+        new ActionColumn(buttons: [
+            new ActionButton(
+                content: '🔎',
+                url: function (<?= $generator->getCamelcase_capital_name(); ?> $model) use ($urlGenerator): string {
+                    /** @psalm-suppress InvalidArgument */
+                    return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/view', ['id' => $model->getId()]);
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.view'),
+                ]
+            ),
+            new ActionButton(
+                content: '✎',
+                url: function (<?= $generator->getCamelcase_capital_name(); ?> $model) use ($urlGenerator): string {
+                    /** @psalm-suppress InvalidArgument */
+                    return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/edit', ['id' => $model->getId()]);
+                },
+                attributes: [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('i.edit'),
+                ]
+            ),
+            new ActionButton(
+                content: '❌',
+                url: function (<?= $generator->getCamelcase_capital_name(); ?> $model) use ($urlGenerator): string {
+                    /** @psalm-suppress InvalidArgument */
+                    return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/delete', ['id' => $model->getId()]);
+                },
+                attributes: [
+                    'title' => $translator->translate('i.delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                ]
+            ),
+        ]),
     ];
     $toolbarString = Form::tag()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
@@ -126,3 +130,4 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
       ->emptyText($translator->translate('invoice.invoice.no.records'))
       ->toolbar($toolbarString);
+?>      

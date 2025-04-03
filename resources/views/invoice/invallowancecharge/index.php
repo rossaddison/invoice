@@ -75,12 +75,16 @@ $toolbar = Div::tag();
             encodeContent: false
         ),
         new DataColumn(
-            header:  $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),
-            content: static fn (InvAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode()
+            header: $translator->translate('invoice.invoice.allowance.or.charge.reason.code'),
+            content: static function (InvAllowanceCharge $model): string {
+                return $model->getAllowanceCharge()?->getReasonCode() ?? '';
+            }
         ),
         new DataColumn(
-            header:  $translator->translate('invoice.invoice.allowance.or.charge.reason'),
-            content: static fn (InvAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason()
+            header: $translator->translate('invoice.invoice.allowance.or.charge.reason'),
+            content: static function (InvAllowanceCharge $model): string {
+                return $model->getAllowanceCharge()?->getReason() ?? '';
+            }
         ),
         new DataColumn(
             header:  $translator->translate('invoice.invoice.allowance.or.charge.amount'),

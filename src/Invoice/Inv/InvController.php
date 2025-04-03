@@ -3021,7 +3021,7 @@ final class InvController
                 $inv = $iR->repoInvUnLoadedquery($value);
                 if (null !== $inv->getInvAmount()->getTotal() && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatus_id(2);
-                    if (strlen($inv->getNumber()) == 0) {
+                    if (strlen($inv->getNumber() ?? '') == 0) {
                         $inv->setNumber((string)$gR->generate_number((int)$inv->getGroup_id(), true));
                     }
                     /**

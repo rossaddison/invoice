@@ -14,6 +14,7 @@ class NoConnectionException extends \RuntimeException implements FriendlyExcepti
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.invoice.invoiceplane.no.connection');
@@ -22,6 +23,7 @@ class NoConnectionException extends \RuntimeException implements FriendlyExcepti
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

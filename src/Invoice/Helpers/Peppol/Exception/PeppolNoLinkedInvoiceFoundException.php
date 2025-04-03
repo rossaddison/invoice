@@ -7,12 +7,13 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolNoLinkedInvoiceFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolNoLinkedInvoiceFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.client.peppol.not.found.invoice');
@@ -21,6 +22,7 @@ class PeppolNoLinkedInvoiceFoundException extends \RuntimeException implements F
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

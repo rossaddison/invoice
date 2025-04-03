@@ -26,6 +26,7 @@ final class QuoteTruncate2Command extends Command
         parent::__construct();
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -33,6 +34,7 @@ final class QuoteTruncate2Command extends Command
             ->setHelp('quote_item_amount, quote_amount, quote_item, quote_tax_rate, quote tables will be truncated until there are no records left in them.');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
@@ -48,22 +50,22 @@ final class QuoteTruncate2Command extends Command
                 ->delete($table)
                 ->run();
         }
-
-        if (0 === count($this->promise
+        
+        if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteItemAmount::class)->findAll()) +
-            count($this->promise
+                ->getRepository(QuoteItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteAmount::class)->findAll()) +
-            count($this->promise
+                ->getRepository(QuoteAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteItem::class)->findAll()) +
-            count($this->promise
+                ->getRepository(QuoteItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteTaxRate::class)->findAll()) +
-            count($this->promise
+                ->getRepository(QuoteTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Quote::class)->findAll())
+                ->getRepository(Quote::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {
             $io->success('Done');
             return ExitCode::OK;

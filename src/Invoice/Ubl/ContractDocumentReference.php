@@ -16,6 +16,7 @@ class ContractDocumentReference implements XmlSerializable
     /**
      * @param Writer $writer
      */
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         if ($this->id !== null) {

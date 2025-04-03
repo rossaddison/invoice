@@ -22,6 +22,7 @@ class PaymentMeans implements XmlSerializable
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentMeans
      * @param Writer $writer
      */
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([

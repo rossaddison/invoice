@@ -78,7 +78,7 @@ use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryPercentNotFoundExcepti
 use DateTime;
 use DateTimeImmutable;
 
-class StoreCoveHelper
+final class StoreCoveHelper
 {
     private readonly DateHelper $datehelper;
 

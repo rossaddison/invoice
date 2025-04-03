@@ -14,6 +14,7 @@ class InvoiceAsset extends AssetBundle
 
     public ?string $sourcePath = '@src/Invoice/Asset';
 
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
         'invoice/css/style.css',
         'yii3i/yii3i.css',
@@ -29,6 +30,7 @@ class InvoiceAsset extends AssetBundle
         'rebuild/css/form.css',
     ];
 
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
         /**
          * As of 9th March 2025:

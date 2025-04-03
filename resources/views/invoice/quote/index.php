@@ -227,7 +227,9 @@ echo Breadcrumbs::widget()
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (Quote $model) => $model->getId(),
+            content: static function (Quote $model): string {
+                return (string) $model->getId();
+            },
             withSorting: true
         ),
         new ActionColumn(buttons: [

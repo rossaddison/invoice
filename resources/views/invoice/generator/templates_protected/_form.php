@@ -24,10 +24,11 @@ use Yiisoft\Html\Tag\Form;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $actionName`
+ * @var string $actionName
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmall_singular_name(); ?>         
  */
 
 <?php
@@ -40,7 +41,7 @@ echo "<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong
 echo "<?= Html::openTag('div',['class'=>'card-header']); ?>";
 
 echo "<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>";
-echo '<?= $translator->translate('."'i.add'); ?>";
+echo '<?= $title; ?>';
 echo "<?= Html::closeTag('h1'); ?>";
 
 echo "<?= Form::tag()";

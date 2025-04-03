@@ -63,7 +63,9 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('i.id'),
-        content: static fn (InvSentLog $model) => $model->getId()
+        content: static function (InvSentLog $model): string {
+            return (string) $model->getId();
+        }
     ),
     new DataColumn(
         field: 'inv_id',

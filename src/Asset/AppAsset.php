@@ -15,9 +15,11 @@ final class AppAsset extends AssetBundle
 
     public ?string $sourcePath = '@resources/asset';
 
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
     ];
 
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
     ];
 

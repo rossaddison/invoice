@@ -6,13 +6,14 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class PeppolBuyerReferenceNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolBuyerReferenceNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
      * @return string
      *
      * @psalm-return 'Client/Customer Purchase Order Number ie. Buyer Reference, not found. An invoice is linked to a sales order. The sales order must have a client/customer purchase order number associated with it.'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'Client/Customer Purchase Order Number ie. Buyer Reference, not found. An invoice is linked to a sales order. The sales order must have a client/customer purchase order number associated with it.';
@@ -21,6 +22,7 @@ class PeppolBuyerReferenceNotFoundException extends \RuntimeException implements
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

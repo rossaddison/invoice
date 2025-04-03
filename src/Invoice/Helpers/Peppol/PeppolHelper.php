@@ -1054,7 +1054,7 @@ class PeppolHelper
                     $item_id = $item->getId();
                     $inv_item_amount = $this->getInvItemAmount((string) $item_id, $iiaR);
                     if (isset($inv_item_amount)) {
-                        $sub_total = $inv_item_amount->getSubtotal();
+                        $sub_total = $inv_item_amount->getSubtotal() ?? 0;
                         $convert_sub_total = $this->currency_converter($sub_total);
                         $unit_peppol_id = $item->getProduct()?->getUnit_peppol_id();
                         if (null !== $unit_peppol_id) {

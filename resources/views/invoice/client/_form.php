@@ -184,7 +184,7 @@ Html::closeTag('div')
             'class' => 'form-control',
             'id' => 'client_language'
     ])
-    ->value(strlen($form->getClient_language()) > 0 ? $form->getClient_language() : $selectedLanguage)    
+    ->value(strlen($form->getClient_language() ?? '') > 0 ? $form->getClient_language() : $selectedLanguage)    
     ->optionsData($options)
     ->required(true)
     ->hint($translator->translate('invoice.hint.this.field.is.required'));

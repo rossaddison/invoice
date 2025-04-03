@@ -1,7 +1,7 @@
 <?php
 
 /*******************
- * Cryptor Class
+ * Cryptor final class
  *******************
  * Source: https://github.com/ioncube/php-openssl-cryptor/
  * Simple example of using the openssl encrypt/decrypt functions that
@@ -30,7 +30,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
-class Cryptor
+final class Cryptor
 {
     private int $iv_num_bytes = 0;
 

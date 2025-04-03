@@ -7,12 +7,13 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolSupplierAssignedAccountIdNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolSupplierAssignedAccountIdNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.client.peppol.not.found.id.supplier.assigned');
@@ -21,6 +22,7 @@ class PeppolSupplierAssignedAccountIdNotFoundException extends \RuntimeException
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

@@ -132,6 +132,7 @@ echo '    /**'."\n";
 echo '     * @return string'."\n";
 echo "     * @psalm-return ''"."\n";
 echo '     */';
+echo '#[\Override]';
 echo "\n";
 echo '    public function getFormName(): string'."\n";
 echo '    {'."\n";

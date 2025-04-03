@@ -30,6 +30,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
      *
      * @psalm-return array{login: string, password: string, rememberMe: string}
      */
+    #[\Override]
     public function getPropertyLabels(): array
     {
         return [
@@ -50,6 +51,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
         return 'Login';
     }
 
+    #[\Override]
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
@@ -59,6 +61,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
      * @return array
      * @psalm-suppress ImplementedReturnTypeMismatch
      */
+    #[\Override]
     public function getRules(): array
     {
         return [

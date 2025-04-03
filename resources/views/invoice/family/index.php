@@ -137,7 +137,7 @@ $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->cs
     Form::tag()->close();
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-product'])
+->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-product'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])

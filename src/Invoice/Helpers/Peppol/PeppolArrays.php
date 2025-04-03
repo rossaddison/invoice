@@ -6,7 +6,7 @@ namespace App\Invoice\Helpers\Peppol;
 
 use App\Invoice\Setting\SettingRepository;
 
-class PeppolArrays
+final class PeppolArrays
 {
     /**
      * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/

@@ -84,6 +84,7 @@ final class ItemsCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -97,6 +98,7 @@ final class ItemsCommand extends Command
      * @param OutputInterface $output
      * @return int
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -165,12 +167,15 @@ final class ItemsCommand extends Command
             "\033[34m" . $this->format($withItemTax) . "\033[0m",
         ]);
         $totalInvTaxRate = 0;
+        $taxRates = $this->invTaxRates;
+        $firstRate = $taxRates[0];
+        $secondRate = $taxRates[1];
         /* Assume the two InvTaxRates apply tax after item tax has been taken into account */
-        foreach ($this->invTaxRates as $invTaxRate) {
+        foreach ($taxRates as $invTaxRate) {
             $totalInvTaxRate = $totalInvTaxRate + ($invTaxRate->getInv_tax_rate_amount() ?? 0.00);
         }
         $table->addRow([
-            'Invoice Taxes (15% ' . $this->format($this->invTaxRates[1]->getInv_tax_rate_amount()) . ', 20% ' . $this->format($this->invTaxRates[0]->getInv_tax_rate_amount()) . ')',
+            'Invoice Taxes (15% ' . $this->format($firstRate->getInv_tax_rate_amount() ?? 0.00) . ', 20% ' . $this->format($secondRate->getInv_tax_rate_amount() ?? 0.00) . ')',
             $this->format($totalInvTaxRate),
         ]);
         $beforeDiscountTotal = ($withItemTax + $totalInvTaxRate);

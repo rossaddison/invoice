@@ -19,7 +19,7 @@ use Yiisoft\Session\SessionInterface as Session;
 use DOMDocument;
 use DOMElement;
 
-class Sumex
+final class Sumex
 {
     public const array ROLES = [
         'physician',

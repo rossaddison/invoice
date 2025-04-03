@@ -6,13 +6,14 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class PeppolDeliveryLocationNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolDeliveryLocationNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
      * @return string
      *
      * @psalm-return 'Delivery Location not found.'
      */
+    #[\Override]
     public function getName(): string
     {
         return 'Delivery Location not found.';
@@ -21,6 +22,7 @@ class PeppolDeliveryLocationNotFoundException extends \RuntimeException implemen
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

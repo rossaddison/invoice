@@ -60,6 +60,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     /**
      * @return PropertyTranslatorInterface|null
      */
+    #[\Override]
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
@@ -104,6 +105,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
      *     passwordVerify: list{Required, \Closure(mixed):Result}
      * }
      */
+    #[\Override]
     public function getRules(): array
     {
         return [

@@ -13,6 +13,7 @@ final class MetaTagsViewInjection implements MetaTagsInjectionInterface
      *
      * @psalm-return array{generator: array{name: 'generator', content: 'Yii'}}
      */
+    #[\Override]
     public function getMetaTags(): array
     {
         return [

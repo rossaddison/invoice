@@ -13,6 +13,7 @@ class PayeeFinancialAccount implements XmlSerializable
     {
     }
 
+    #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([

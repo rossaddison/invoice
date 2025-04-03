@@ -13,7 +13,7 @@ class Product
 {
     #[Column(type: 'primary')]
     private ?int $id = null;
-
+    
     #[BelongsTo(target:Family::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Family $family = null;
 
@@ -23,7 +23,7 @@ class Product
 
     #[BelongsTo(target:Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
-
+    
     public function __construct(#[Column(type: 'text', nullable: true)]
         private ?string $product_sku = '', #[Column(type: 'text', nullable: true)]
         private ?string $product_sii_schemeid = '', #[Column(type: 'text', nullable: true)]
@@ -47,7 +47,7 @@ class Product
         private ?int $family_id = null)
     {
     }
-
+    
     //get relation $family
     public function getFamily(): ?Family
     {
@@ -83,7 +83,7 @@ class Product
     {
         $this->unit = $unit;
     }
-
+    
     public function getProduct_id(): string
     {
         return (string)$this->id;

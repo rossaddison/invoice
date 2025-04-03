@@ -33,6 +33,7 @@ class Identity implements CookieLoginIdentityInterface
         $this->authKey = $this->regenerateCookieLoginKey();
     }
 
+    #[\Override]
     public function getId(): ?string
     {
         return (string)$this->id;
@@ -51,6 +52,7 @@ class Identity implements CookieLoginIdentityInterface
         $this->authKey = Random::string(32);
     }
 
+    #[\Override]
     public function getCookieLoginKey(): string
     {
         return $this->authKey;
@@ -61,6 +63,7 @@ class Identity implements CookieLoginIdentityInterface
         return $this->user;
     }
 
+    #[\Override]
     public function validateCookieLoginKey(string $key): bool
     {
         return $this->authKey === $key;

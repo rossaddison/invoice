@@ -7,12 +7,13 @@ namespace App\Invoice\Helpers\Peppol\Exception;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.client.peppol.not.found.purchase.order.item.number');
@@ -21,6 +22,7 @@ class PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException extends \Runt
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

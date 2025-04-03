@@ -20,13 +20,16 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>Form $form
+ * @var App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name(); ?>Form $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
- * @var string $action
+ * @var string $actionName
  * @var string $title
+ * @psalm-var array<string, Stringable|null|scalar> $actionArguments
+ * @psalm-var array<string, list<string>> $errors
+ * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmall_singular_name(); ?>    
  */
 
 <?php
@@ -67,7 +70,7 @@ foreach ($relations as $relation) {
     echo "            ->addInputAttributes(["."\n";
     echo "                 'class' => 'form-control'"."\n";
     echo "            ])"."\n";
-    echo '            ->value($'.($relation->getLowercase_name() ?? '#').'->get'.ucfirst($relation->getLowercase_name() ?? '#')."_id())"."\n";
+    echo '            ->value($form->get'.ucfirst($relation->getLowercase_name() ?? '#')."_id())"."\n";
     echo '            ->prompt($translator->translate(\'i.none\'))'."\n";
     echo '            ->optionsData($'. ($relation->getLowercase_name() ?? '#').'s)'."\n";
     echo '        ?>'."\n";

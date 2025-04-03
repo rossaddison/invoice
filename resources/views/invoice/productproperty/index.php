@@ -52,8 +52,10 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header:  $translator->translate('i.id'),
-        content: static fn (ProductProperty $model) => $model->getProperty_id()
+        header: $translator->translate('i.id'),
+        content: static function (ProductProperty $model): string {
+            return (string) $model->getProperty_id();
+        }
     ),
     new DataColumn(
         'name',

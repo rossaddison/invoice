@@ -6,6 +6,7 @@ namespace App\Invoice\Asset\pciAsset;
 
 class stripe_v10_Asset extends __Asset
 {
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
         // stripe v10 15-11-2022  ./stripe/css/checkout.css
         // @see paymentinformation/form
@@ -13,6 +14,7 @@ class stripe_v10_Asset extends __Asset
         'stripe/css/checkout.css',
     ];
 
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
         // stripe v10 15-11-2022
         '//js.stripe.com/v3/',

@@ -22,6 +22,7 @@ final readonly class NotFoundHandler implements RequestHandlerInterface
     /**
      * @return \Yiisoft\DataResponse\DataResponse
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->viewRenderer

@@ -55,6 +55,7 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
      *
      * @psalm-return array{name: list{Required}, email: list{Required, Email}, subject: list{Required}, body: list{Required}}
      */
+    #[\Override]
     public function getRules(): array
     {
         return [
@@ -65,6 +66,7 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
         ];
     }
 
+    #[\Override]
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());

@@ -13,7 +13,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Security\Random;
 
-class ZugFerdHelper
+final class ZugFerdHelper
 {
     /**
      * @param SRepo $s

@@ -8,12 +8,13 @@ use App\Invoice\Entity\Product;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class PeppolProductUnitCodeNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class PeppolProductUnitCodeNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator, private readonly Product $product)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         $product_id = $this->product->getProduct_id();
@@ -31,6 +32,7 @@ class PeppolProductUnitCodeNotFoundException extends \RuntimeException implement
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

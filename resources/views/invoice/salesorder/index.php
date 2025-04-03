@@ -118,7 +118,9 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (SalesOrder $model) => $model->getId()
+            content: static function (SalesOrder $model): string {
+                return (string) $model->getId();
+            }
         ),
         new DataColumn(
             'status_id',

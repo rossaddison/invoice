@@ -138,7 +138,7 @@ echo $alert;
         new DataColumn(
             'id',
             header: $translator->translate('i.id'),
-            content: static fn (Inv $model) => $model->getId(),
+            content: static fn (Inv $model) => (string)$model->getId(),
             withSorting: true
         ),
         new ActionColumn(

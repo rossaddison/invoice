@@ -27,6 +27,7 @@ final readonly class ApiInfo implements MiddlewareInterface
      *     @OA\Response(response="200", description="Get api version")
      * )
      */
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $this->responseFactory->createResponse(['version' => '2.0', 'author' => 'yiisoft']);

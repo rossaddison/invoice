@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\StoreCove;
 
-class StoreCoveArrays
+final class StoreCoveArrays
 {
     /**
      * @see https://codebeautify.org/html-to-json-converter

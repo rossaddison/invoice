@@ -7,12 +7,13 @@ namespace App\Invoice\Helpers\StoreCove\Exceptions;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class ContactNameNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
+final class ContactNameNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.storecove.supplier.contact.name.not.found');
@@ -21,6 +22,7 @@ class ContactNameNotFoundException extends \RuntimeException implements Friendly
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

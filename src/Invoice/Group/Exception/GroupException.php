@@ -13,6 +13,7 @@ class GroupException extends \RuntimeException implements FriendlyExceptionInter
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('invoice.group.document.number');
@@ -21,6 +22,7 @@ class GroupException extends \RuntimeException implements FriendlyExceptionInter
     /**
      * @return string
      */
+    #[\Override]
     public function getSolution(): string
     {
         return <<<'SOLUTION'

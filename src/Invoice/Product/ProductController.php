@@ -71,7 +71,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-class ProductController
+final class ProductController
 {
     use FlashMessage;
 
@@ -164,7 +164,7 @@ class ProductController
                                 $product_custom['product_id'] = $product_id;
                                 $product_custom['custom_field_id'] = $custom_field_id;
                                 $product_custom['value'] = is_array($value) ? serialize($value) : $value;
-                                if ($formHydrator->populate($formProductCustom, $product_custom) && $formProductCustom->isValid()) {
+                                if ($formHydrator->populateAndValidate($formProductCustom, $product_custom)) {
                                     $this->productCustomService->saveProductCustom($productCustom, $product_custom);
                                 }
                                 // These two can be used to create customised labels for custom field error validation on the form

@@ -28,6 +28,7 @@ final class IdentityRepository extends Select\Repository implements IdentityRepo
      * @param string $id
      * @return Identity|null
      */
+    #[\Override]
     public function findIdentity(string $id): ?Identity
     {
         return $this->findOne(['user_id' => $id]);

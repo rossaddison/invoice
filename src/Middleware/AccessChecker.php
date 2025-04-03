@@ -23,6 +23,7 @@ final class AccessChecker implements MiddlewareInterface
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->permission === null) {

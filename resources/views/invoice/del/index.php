@@ -70,7 +70,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header:  'id',
-            content: static fn (DeliveryLocation $model) => $model->getId(),
+            content: static fn (DeliveryLocation $model) => (string)$model->getId(),
             withSorting: true
         ),
         new DataColumn(

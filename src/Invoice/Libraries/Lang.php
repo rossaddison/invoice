@@ -7,7 +7,7 @@ namespace App\Invoice\Libraries;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Log\Logger;
 
-class Lang
+final class Lang
 {
     /**
      * List of translations
@@ -26,12 +26,12 @@ class Lang
     public Logger $_logger;
 
     /**
-     * Class constructor
+     * final class constructor
      */
     public function __construct()
     {
         $this->_logger = new Logger();
-        $this->_logger->info('Language Class Initialized');
+        $this->_logger->info('Language final class Initialized');
     }
 
     // --------------------------------------------------------------------

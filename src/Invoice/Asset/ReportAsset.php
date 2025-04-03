@@ -14,6 +14,7 @@ class ReportAsset extends AssetBundle
 
     public ?string $sourcePath = '@src/Invoice/Asset';
 
+    /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
         'invoice/css/reports.css',
     ];

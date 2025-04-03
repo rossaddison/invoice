@@ -36,6 +36,7 @@ final class AssignRoleCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -48,6 +49,7 @@ final class AssignRoleCommand extends Command
     /**
      * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
