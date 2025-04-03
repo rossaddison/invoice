@@ -69,7 +69,7 @@ final class CategoryPrimaryRepository extends Select\Repository
 
     /**
      * @return CategoryPrimary|null
-     * 
+     *
      * @psalm-return TEntity|null
      */
     public function repoCategoryPrimaryQuery(string $id): CategoryPrimary|null
@@ -78,7 +78,7 @@ final class CategoryPrimaryRepository extends Select\Repository
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return array
      */
