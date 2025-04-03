@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7063dd6e844baa072ce6084a3bca07d7",
+    "content-hash": "9fe93ff17612f9f7405285afce5a89d0",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -15485,30 +15485,30 @@
         },
         {
             "name": "yiisoft/html",
-            "version": "3.9.0",
+            "version": "3.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/html.git",
-                "reference": "037b1251e6344d98211220fb97076ebe65c13e70"
+                "reference": "c8d38e11f7b6e849ec7b17fa52b324d2c114b37b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/html/zipball/037b1251e6344d98211220fb97076ebe65c13e70",
-                "reference": "037b1251e6344d98211220fb97076ebe65c13e70",
+                "url": "https://api.github.com/repos/yiisoft/html/zipball/c8d38e11f7b6e849ec7b17fa52b324d2c114b37b",
+                "reference": "c8d38e11f7b6e849ec7b17fa52b324d2c114b37b",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
-                "yiisoft/arrays": "^2.0|^3.0",
+                "php": "8.1 - 8.4",
+                "yiisoft/arrays": "^2.0 || ^3.0",
                 "yiisoft/json": "^1.0"
             },
             "require-dev": {
-                "infection/infection": "^0.27",
-                "maglnet/composer-require-checker": "^4.7",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^1.2",
+                "infection/infection": "^0.27.11 || ^0.29.10",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "phpunit/phpunit": "^10.5.45",
+                "rector/rector": "^2.0.8",
                 "spatie/phpunit-watcher": "^1.24",
-                "vimeo/psalm": "^5.26"
+                "vimeo/psalm": "^5.26.1 || ^6.10.0"
             },
             "type": "library",
             "autoload": {
@@ -15543,7 +15543,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-29T08:46:06+00:00"
+            "time": "2025-04-03T13:41:17+00:00"
         },
         {
             "name": "yiisoft/http",
