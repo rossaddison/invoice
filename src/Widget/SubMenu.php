@@ -12,13 +12,6 @@ final class SubMenu
 {
     /**
      * e.g. $items = [
-                0 = > [
-                   'levelName' => 'Ace',
-                   'items' => [
-                       'Spades' => ['actionName', 'actionArguments' => []],
-                       'Hearts' => ['actionName', 'actionArguments' => []]
-                   ]   
-                ],
             ]
      * @param string $title
      * @param UrlGenerator $urlGenerator
@@ -31,8 +24,7 @@ final class SubMenu
         /**
          * @var array $levelItem
          */
-        foreach ($items as $levelItem) 
-        {
+        foreach ($items as $levelItem) {
             $builtItems = [];
             /**
              * @var array $levelItem['items']
@@ -48,13 +40,14 @@ final class SubMenu
                  * @psalm-var array<string, \Stringable|null|scalar> $value[1]
                  */
                 $actionArguments = $value[1];
-                $builtItems[] = DropdownItem::link($key, 
+                $builtItems[] = DropdownItem::link(
+                    $key,
                     $urlGenerator->generate(
-                            $actionName, 
-                            $actionArguments
+                        $actionName,
+                        $actionArguments
                     )
                 );
-            }   
+            }
             $finalString = Dropdown::widget()
                            ->togglerContent($title)->items(...$builtItems)->render();
         }
