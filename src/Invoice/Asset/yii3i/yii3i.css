@@ -168,3 +168,8 @@ table.customTable thead {
 .breadcrumb.has-succeeds-separator li + li::before {
   content: "\0227B";
 }
+
+/** https://stackoverflow.com/questions/65658376/multi-level-dropdown-menu-in-bootstrap-5 */
+.dropdown:hover >.dropdown-menu{
+  display: block !important;
+}

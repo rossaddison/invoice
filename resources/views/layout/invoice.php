@@ -30,6 +30,7 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
  * @see ...src\ViewInjection\LayoutViewInjection
  * @var Psr\Http\Message\ServerRequestInterface $request
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\SubMenu $subMenu
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Config\Config $config
  * @var Yiisoft\Config\ConfigPaths $configPaths
@@ -176,6 +177,20 @@ echo Form::tag()
 ->class('btn btn-xs btn-warning')
 . Form::tag()->close();
 
+$subMenuPhpInfo = [
+    0 => [
+       'items' => [
+           $translator->translate('invoice.faq.php.info.all') => ['invoice/phpinfo', ['selection' => '-1']],
+           $translator->translate('invoice.faq.php.info.general') => ['invoice/phpinfo', ['selection' => '1']],
+           $translator->translate('invoice.faq.php.info.credits') => ['invoice/phpinfo', ['selection' => '2']],
+           $translator->translate('invoice.faq.php.info.configuration') => ['invoice/phpinfo', ['selection' => '4']],
+           $translator->translate('invoice.faq.php.info.modules') => ['invoice/phpinfo', ['selection' => '8']],
+           $translator->translate('invoice.faq.php.info.environment') => ['invoice/phpinfo', ['selection' => '16']],
+           $translator->translate('invoice.faq.php.info.variables') => ['invoice/phpinfo', ['selection' => '32']],
+           $translator->translate('invoice.faq.php.info.licence') => ['invoice/phpinfo', ['selection' => '64']],
+       ]   
+    ],
+];
 $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
     // nav items available in debugMode
@@ -228,16 +243,9 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link($translator->translate('invoice.faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])),
                 DropdownItem::link($translator->translate('invoice.faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])),
                 DropdownItem::link($translator->translate('invoice.faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])),
+                DropdownItem::text($subMenu->generate($translator->translate('invoice.faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),   
                 DropdownItem::link($translator->translate('invoice.faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])),
                 DropdownItem::link($translator->translate('invoice.faq.ai.callback.session'), $urlGenerator->generate('invoice/faq', ['topic' => 'ai_callback_session', 'selection' => ''])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.all'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '-1'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.general'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '1'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.credits'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '2'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.configuration'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '4'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.modules'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '8'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.environment'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '16'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.variables'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '32'])),
-                DropdownItem::link($translator->translate('invoice.faq.php.info.licence'), $urlGenerator->generate('invoice/phpinfo', ['selection' => '64'])),
             ),
             // Generator
             Dropdown::widget()

@@ -46,9 +46,32 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>4th April 2025</b></p>
+<p>Dropdown sub menu for php details within resources\views\layout\invoice.php dropdown menu</p>
+<p>Use DropdownItem::text($subMenu->generate($translator->translate('invoice.faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
+
+src\Widget\SubMenu compiles from an array specified in the layout  
+                </p>
+<p><b>3rd April 2025</b></p>
+<p>
+Introduce CategoryPrimary and CategorySecondary Class in preparation for a dependency dropdown. They have not been built into the menu yet.
+
+Psalm: Insert Final Class into all classes besides Entity Classes since these have to be non-final since they are extended by the Cycle/ORM proxy to create proxies.
+
+Remove 'Invalid Argument' from psalm since all errors have been corrected.
+
+Tip for solving difficult psalm errors: Ask Copilot online with the repository open at a specific page:  Insert Line number: Psalm Error press enter. Apply the suggestion.
+
+Run 'php vendor/bin/psalter --issues=MissingOverrideAttribute' at the command prompt to install the #Override attribute automatically.
+
+see https://psalm.dev/docs/running_psalm/issues/MissingOverrideAttribute/
+
+psalm-suppress 16 NonInvariantDocblockPropertyType errors relating to Assets $js and $css
+
+Update the \invoice\resources\views\invoice\generator\templates_protected files after creating the CategoryPrimary and CategorySecondary classes and views with the Generator.
+Improvements to the Generator will improve with use.</p>
 <p><b>30 March 2025</b></p>
 <p>html encode check of views</p>
-
 <p><b>26 March 2025</b></p>
 <p>Removed the session interface from SettingRepository because console commands that use the SettingRepository do not use Session.</p>
 <p>Only the Required red reminder hints are on the client forms. 'Not Required have been removed on the client forms. This will speed up the signing up of clients.</p>

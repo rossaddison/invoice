@@ -37,8 +37,9 @@ use App\Invoice\Quote\QuoteRepository;
 use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Widget\Button;
-use App\Widget\PageSizeLimiter;
 use App\Widget\GridComponents;
+use App\Widget\PageSizeLimiter;
+use App\Widget\SubMenu;
 
 return [
     'mailer' => [
@@ -252,6 +253,7 @@ return [
             'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
             'peppolUNECERec2011e' => Reference::to(Peppol_UNECERec20_11e::class),
             'gridComponents' => Reference::to(GridComponents::class),
+            'subMenu' => Reference::to(SubMenu::class),
             // Appear in client/view.php and duplication taken out of ClientController function view
             'cR' => Reference::to(ClientRepository::class),
             'iR' => Reference::to(InvRepository::class),
