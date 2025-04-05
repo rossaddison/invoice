@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Stringable;
 use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
