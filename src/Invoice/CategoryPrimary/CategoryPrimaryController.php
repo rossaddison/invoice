@@ -109,8 +109,7 @@ final class CategoryPrimaryController
         CategoryPrimaryRepository $categoryPrimaryRepository,
         SettingRepository $settingRepository,
         #[RouteArgument('page')] int $page = 1
-    ): Response
-    {
+    ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
@@ -158,8 +157,7 @@ final class CategoryPrimaryController
         FormHydrator $formHydrator,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): Response
-    {
+    ): Response {
         if ($id) {
             $categoryprimary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($categoryprimary) {

@@ -12,9 +12,9 @@ final class FamilyForm extends FormModel
 {
     #[Required]
     private ?string $family_name = '';
-    
+
     public ?string $category_primary_id = null;
-    
+
     public ?string $category_secondary_id = null;
 
     public function __construct(Family $family)
@@ -28,12 +28,12 @@ final class FamilyForm extends FormModel
     {
         return $this->family_name;
     }
-    
+
     public function getCategory_primary_id(): string
     {
         return (string)$this->category_primary_id;
     }
-    
+
     public function getCategory_secondary_id(): string
     {
         return (string)$this->category_secondary_id;
