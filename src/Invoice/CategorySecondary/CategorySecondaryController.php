@@ -40,7 +40,6 @@ final class CategorySecondaryController
         private TranslatorInterface $translator,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/categorysecondary')
-                                           // The Controller layout dir is now redundant: replaced with an alias
                                            ->withLayout('@invoice/layout/main.php');
 
         $this->viewRenderer = $viewRenderer;
@@ -73,7 +72,7 @@ final class CategorySecondaryController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimarys(),
+            'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -164,10 +163,10 @@ final class CategorySecondaryController
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'categorysecondary/edit',
-                'actionArguments' => ['id' => $id],
+                'actionArguments' => ['id' => $id],                
+                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
                 'errors' => [],
                 'form' => $form,
-                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimarys(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -231,7 +230,7 @@ final class CategorySecondaryController
                 'actionArguments' => ['id' => $id],
                 'form' => $form,
                 'categorysecondaries' => $categorysecondary,
-                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimarys(),
+                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

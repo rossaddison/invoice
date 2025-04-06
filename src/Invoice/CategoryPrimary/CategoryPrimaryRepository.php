@@ -82,19 +82,19 @@ final class CategoryPrimaryRepository extends Select\Repository
     /**
      * @return array
      */
-    public function optionsDataCategoryPrimarys(): array
+    public function optionsDataCategoryPrimaries(): array
     {
-        $categoryPrimarys = $this->findAllPreloaded();
-        $optionsDataCategoryPrimarys = [];
+        $categoryPrimaries = $this->findAllPreloaded();
+        $optionsDataCategoryPrimaries = [];
         /**
          * @var CategoryPrimary $categoryPrimary
          */
-        foreach ($categoryPrimarys as $categoryPrimary) {
+        foreach ($categoryPrimaries as $categoryPrimary) {
             $categoryPrimaryId = $categoryPrimary->getId();
             if (null !== $categoryPrimaryId) {
-                $optionsDataCategoryPrimarys[$categoryPrimaryId] = ($categoryPrimary->getName() ?? '');
+                $optionsDataCategoryPrimaries[$categoryPrimaryId] = ($categoryPrimary->getName() ?? '');
             }
         }
-        return $optionsDataCategoryPrimarys;
+        return $optionsDataCategoryPrimaries;
     }
 }

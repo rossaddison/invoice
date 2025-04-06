@@ -16,10 +16,10 @@ use Yiisoft\Html\Tag\Form;
  * @var string $actionName
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
- * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<string,list<string>> $errors 
  * @psalm-var array<array-key, array<array-key, string>|string> $categoryPrimaries
- * @psalm-var array<array-key, array<array-key, string>|string> $categorySecondaries 
- * 
+ * @psalm-var array<array-key, array<array-key, string>|string> $categorySecondaries
+ * @psalm-var array<array-key, array<array-key, string>|string> $familyNames
  */
 ?>
 
@@ -39,34 +39,15 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::encode($title) ?>
           <?= Html::closeTag('h1'); ?>
           <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-            <?= $button::backSave(); ?>
+            <?= $button::back(); ?>
             <?= Html::openTag('div', ['id' => 'content']); ?>
               <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?= Field::errorSummary($form)
-                    ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
-                    ->onlyProperties(...['family_name', 'category_primary_id', 'category_secondary_id'])
-                    ->onlyCommonErrors()
-                  ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?= Field::text($form, 'family_name')
-                    ->label($translator->translate('i.family_name'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('i.family_name'),
-                        'value' => Html::encode($form->getFamily_name() ?? ''),
-                        'class' => 'form-control',
-                        'id' => 'family_name',
-                    ])
-                    ->hint($translator->translate('invoice.hint.this.field.is.required'));
-                  ?>
-                <?= Html::closeTag('div'); ?>  
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_primary_id')
                       ->label($translator->translate('invoice.category.primary'))
                       ->addInputAttributes([
-                          'class' => 'form-control  alert alert-warning'
+                          'class' => 'form-control  alert alert-warning',
+                          'id' => 'family-category-primary-id',
                       ])
                       ->value($form->getCategory_primary_id())
                       ->prompt($translator->translate('i.none'))
@@ -77,11 +58,23 @@ use Yiisoft\Html\Tag\Form;
                   <?= Field::select($form, 'category_secondary_id')
                       ->label($translator->translate('invoice.category.secondary'))
                       ->addInputAttributes([
-                          'class' => 'form-control  alert alert-warning'
+                          'class' => 'form-control  alert alert-warning',
+                          'id' => 'family-category-secondary-id',
                       ])
                       ->value($form->getCategory_secondary_id())
-                      ->prompt($translator->translate('i.none'))
                       ->optionsData($categorySecondaries);
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'family_name')
+                    ->label($translator->translate('i.family_name'))
+                    ->addInputAttributes([
+                        'placeholder' => $translator->translate('i.family_name'),
+                        'class' => 'form-control',
+                        'id' => 'family-name',
+                    ])
+                    ->value($form->getFamily_name())
+                    ->optionsData($familyNames);    
                   ?>
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>

@@ -793,6 +793,30 @@ return [
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)
         ->action([FamilyController::class, 'delete']),
+        // Dependency Dropdown form Load _search form
+        Route::methods([Method::GET, Method::POST], '/family/search')
+        ->name('family/search')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([FamilyController::class, 'search']),
+        // Dependency Dropdown form Load CategorySecondary items after category_primary_id selection
+        Route::methods([Method::GET, Method::POST], '/family/secondaries/{category_primary_id}')
+        ->name('family/secondaries')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([FamilyController::class, 'secondaries']), 
+        // Dependency Dropdown form Load Family Names    
+        Route::methods([Method::GET, Method::POST], '/family/names/{category_secondary_id}')
+        ->name('family/names')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([FamilyController::class, 'names']),
+        // Dependency Dropdown form Load Products associated with family id
+        Route::methods([Method::GET, Method::POST], '/family/products/{id}')
+        ->name('family/products')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([FamilyController::class, 'products']),    
         Route::methods([Method::GET, Method::POST], '/family/view/{id}')
         ->name('family/view')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))

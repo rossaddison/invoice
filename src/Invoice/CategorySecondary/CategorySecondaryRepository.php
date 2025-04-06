@@ -90,7 +90,27 @@ final class CategorySecondaryRepository extends Select\Repository
                 ->withOrder(['id' => 'asc'])
         );
     }
+    
+    public function repoCategoryPrimaryIdQuery(string $category_primary_id): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->where(['category_primary_id' => $category_primary_id]);
+        return $this->prepareDataReader($query);
+    }
 
+    /**
+     * @param string $id
+     * @psalm-return TEntity|null
+     * @return CategorySecondary|null
+     */
+    public function repoCategorySecondaryQuery(string $id): CategorySecondary|null
+    {
+        $query = $this->select()
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
+    }
+    
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -102,6 +122,44 @@ final class CategorySecondaryRepository extends Select\Repository
                       ->load('category_primary')
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
+    }
+    
+    /**
+     * @return array
+     */
+    public function optionsDataCategorySecondaries(): array
+    {
+        $categorySecondaries = $this->findAllPreloaded();
+        $optionsDataCategorySecondaries = [];
+        /**
+         * @var CategorySecondary $categorySecondary
+         */
+        foreach ($categorySecondaries as $categorySecondary) {
+            $categorySecondaryId = $categorySecondary->getId();
+            if (null !== $categorySecondaryId) {
+                $optionsDataCategorySecondaries[$categorySecondaryId] = ($categorySecondary->getName() ?? '');
+            }
+        }
+        return $optionsDataCategorySecondaries;
+    }
+    
+    /**
+     * @return array
+     */
+    public function optionsDataCategorySecondariesWithCategoryPrimaryId(string $category_primary_id): array
+    {
+        $categorySecondaries = $this->repoCategoryPrimaryIdQuery($category_primary_id);
+        $optionsDataCategorySecondaries = [];
+        /**
+         * @var CategorySecondary $categorySecondary
+         */
+        foreach ($categorySecondaries as $categorySecondary) {
+            $categorySecondaryId = $categorySecondary->getId();
+            if (null !== $categorySecondaryId) {
+                $optionsDataCategorySecondaries[$categorySecondaryId] = ($categorySecondary->getName() ?? '');
+            }
+        }
+        return $optionsDataCategorySecondaries;
     }
 
     /**

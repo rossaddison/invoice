@@ -39,8 +39,17 @@ final class CategoryPrimaryController
         private TranslatorInterface $translator,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
+                                           ->withLayout('@invoice/layout/main.php');
+
+        $this->viewRenderer = $viewRenderer;
+        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
+                                               ->withLayout('@views/layout/guest.php');
+        }
+        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
+                                               ->withLayout('@views/layout/invoice.php');
+        }
         $this->webService = $webService;
         $this->flash = new Flash($this->session);
         $this->userService = $userService;
