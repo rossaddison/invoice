@@ -83,6 +83,47 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
+     * @param string $category_primary_id
+     * @param string $category_secondary_id
+     * @return EntityReader
+     */
+    public function repoCategoryPrimaryAndSecondaryQuery(string $category_primary_id, string $category_secondary_id): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->where(['category_primary_id' => $category_primary_id])
+                 ->andWhere(['category_secondary_id' => $category_secondary_id]);
+        return $this->prepareDataReader($query);
+    }
+
+    public function repoCategorySecondaryIdQuery(string $category_secondary_id): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->where(['category_secondary_id' => $category_secondary_id]);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
+     * @return array
+     */
+    public function optionsDataFamilyNamesWithCategorySecondaryId(string $category_secondary_id): array
+    {
+        $familyNames = $this->repoCategorySecondaryIdQuery($category_secondary_id);
+        $optionsDataFamilyNames = [];
+        /**
+         * @var Family $family
+         */
+        foreach ($familyNames as $family) {
+            $familyId = $family->getFamily_id();
+            if (null !== $familyId) {
+                $optionsDataFamilyNames[$familyId] = ($family->getFamily_name() ?? '');
+            }
+        }
+        return $optionsDataFamilyNames;
+    }
+
+    /**
      * @return Family|null
      *
      * @psalm-return TEntity|null
@@ -101,6 +142,6 @@ final class FamilyRepository extends Select\Repository
     public function repoTestDataCount(): int
     {
         return $this->select()
-                      ->count();
+                    ->count();
     }
 }

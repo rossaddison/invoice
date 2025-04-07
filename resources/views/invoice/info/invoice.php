@@ -46,12 +46,16 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>7th April 2025</b></p>
+<p>DependencyDropdown created for Family Search</p>
+<p>Product Index Family Filter introduced</p>
+<p>The Family search (2 tier) will be extended to include a product search (3 tier) later.</p>
 <p><b>4th April 2025</b></p>
 <p>Dropdown sub menu for php details within resources\views\layout\invoice.php dropdown menu</p>
 <p>Use DropdownItem::text($subMenu->generate($translator->translate('invoice.faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
 
 src\Widget\SubMenu compiles from an array specified in the layout  
-                </p>
+</p>
 <p><b>3rd April 2025</b></p>
 <p>
 Introduce CategoryPrimary and CategorySecondary Class in preparation for a dependency dropdown. They have not been built into the menu yet.

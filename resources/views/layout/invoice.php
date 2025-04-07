@@ -628,7 +628,10 @@ if ((null !== $currentPath) && !$isGuest) {
         ->items(
             DropdownItem::link($translator->translate('i.add_product'), $urlGenerator->generate('product/add')),
             DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('product/index')),
+            DropdownItem::link($translator->translate('invoice.category.primary'), $urlGenerator->generate('categoryprimary/index')),
+            DropdownItem::link($translator->translate('invoice.category.secondary'), $urlGenerator->generate('categorysecondary/index')),    
             DropdownItem::link($translator->translate('i.family'), $urlGenerator->generate('family/index')),
+            DropdownItem::link($translator->translate('invoice.family.search'), $urlGenerator->generate('family/search')),
             DropdownItem::link($translator->translate('i.unit'), $urlGenerator->generate('unit/index')),
             DropdownItem::link($translator->translate('invoice.peppol.unit'), $urlGenerator->generate('unitpeppol/index'))
         ),

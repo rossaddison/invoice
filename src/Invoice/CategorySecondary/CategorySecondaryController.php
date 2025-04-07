@@ -40,7 +40,6 @@ final class CategorySecondaryController
         private TranslatorInterface $translator,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/categorysecondary')
-                                           // The Controller layout dir is now redundant: replaced with an alias
                                            ->withLayout('@invoice/layout/main.php');
 
         $this->viewRenderer = $viewRenderer;
@@ -73,7 +72,7 @@ final class CategorySecondaryController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimarys(),
+            'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -108,8 +107,7 @@ final class CategorySecondaryController
         CategorySecondaryRepository $categorySecondaryRepository,
         SettingRepository $settingRepository,
         #[RouteArgument('page')] int $page = 1
-    ): Response
-    {
+    ): Response {
         $categorySecondary = $categorySecondaryRepository->findAllPreloaded();
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
@@ -156,8 +154,7 @@ final class CategorySecondaryController
         CategorySecondaryRepository $categorySecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): Response
-    {
+    ): Response {
         $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
         if ($categorySecondary) {
             $form = new CategorySecondaryForm($categorySecondary);
@@ -165,9 +162,9 @@ final class CategorySecondaryController
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'categorysecondary/edit',
                 'actionArguments' => ['id' => $id],
+                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
                 'errors' => [],
                 'form' => $form,
-                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimarys(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -220,8 +217,7 @@ final class CategorySecondaryController
         CategorySecondaryRepository $categorysecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): \Yiisoft\DataResponse\DataResponse|Response
-    {
+    ): \Yiisoft\DataResponse\DataResponse|Response {
         $categorysecondary = $this->categorysecondary($categorysecondaryRepository, $id);
         if ($categorysecondary) {
             $form = new CategorySecondaryForm($categorysecondary);
@@ -231,7 +227,7 @@ final class CategorySecondaryController
                 'actionArguments' => ['id' => $id],
                 'form' => $form,
                 'categorysecondaries' => $categorysecondary,
-                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimarys(),
+                'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

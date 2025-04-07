@@ -16,6 +16,8 @@ use Yiisoft\Yii\DataView\GridView;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\CategoryPrimary\CategoryPrimaryRepository $cpR
+ * @var App\Invoice\CategorySecondary\CategorySecondaryRepository $csR
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -89,6 +91,26 @@ $toolbar = Div::tag();
             header: $translator->translate('i.family'),
             content: static fn (Family $model) => Html::encode($model->getFamily_name() ?? '')
         ),
+        new DataColumn(
+            'category_primary_id',
+            header: $translator->translate('invoice.category.primary'),
+            content: static function (Family $model) use ($cpR, $translator) : string {
+                $categoryPrimaryId = $model->getCategory_primary_id();
+                $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
+                return null!==$categoryPrimary ? ($categoryPrimary->getName() ?? $translator->translate('i.not_set')) 
+                                               : $translator->translate('i.not_set');
+            }
+        ),
+        new DataColumn(
+            'category_secondary_id',
+            header: $translator->translate('invoice.category.secondary'),
+            content: static function (Family $model) use ($csR, $translator) : string {
+                $categorySecondaryId = $model->getCategory_secondary_id();
+                $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
+                return null!==$categorySecondary ? $categorySecondary->getName() ?? $translator->translate('i.not_set') 
+                                                 : $translator->translate('i.not_set');
+            }
+        ),        
         new ActionColumn(buttons: [
             new ActionButton(
                 content: '🔎',

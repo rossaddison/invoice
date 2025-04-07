@@ -6,14 +6,20 @@ namespace App\Invoice\Family;
 
 use App\Invoice\Entity\Family;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
+use App\Invoice\CategorySecondary\CategorySecondaryRepository as csR;
+use App\Invoice\Family\FamilyRepository as fR;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
+use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
@@ -24,19 +30,25 @@ final class FamilyController
 {
     use FlashMessage;
 
-    private ViewRenderer $viewRenderer;
     private Flash $flash;
 
     public function __construct(
-        ViewRenderer $viewRenderer,
+        private DataResponseFactoryInterface $factory,
+        private ViewRenderer $viewRenderer,
         private WebControllerService $webService,
         private FamilyService $familyService,
         private UserService $userService,
         private Session $session,
         private TranslatorInterface $translator
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/family')
-                                           ->withLayout('@views/layout/invoice.php');
+        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/family')
+                                               ->withLayout('@views/layout/guest.php');
+        }
+        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/family')
+                                               ->withLayout('@views/layout/invoice.php');
+        }
         $this->flash = new Flash($this->session);
     }
 
@@ -44,11 +56,15 @@ final class FamilyController
      * @param CurrentRoute $currentRoute
      * @param FamilyRepository $familyRepository
      * @param SettingRepository $settingRepository
+     * @param cpR $cpR
+     * @param csR $csR
      */
     public function index(
         CurrentRoute $currentRoute,
-        FamilyRepository $familyRepository,
-        SettingRepository $settingRepository
+        fR $familyRepository,
+        SettingRepository $settingRepository,
+        cpR $cpR,
+        csR $csR
     ): \Yiisoft\DataResponse\DataResponse {
         $familys = $this->familys($familyRepository);
         $pageNum = (int)$currentRoute->getArgument('page', '1');
@@ -61,17 +77,49 @@ final class FamilyController
             'alert' => $this->alert(),
             'familys' => $familys,
             'paginator' => $paginator,
+            /**
+             * The family repository does not include a loaded query
+             * because there are no relations (for backward compatibility purposes) therefore
+             * pass the dependent repositories so that we can identify
+             * the respective names of each repository.
+             */
+            'cpR' => $cpR,
+            'csR' => $csR,
             'defaultPageSizeOffsetPaginator' => (int)$settingRepository->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
     /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
+     * Build a 3 tiered dependency drop down search form
+     * @param cpR $cpR
+     * @param csR $csR
      * @return Response
      */
-    public function add(Request $request, FormHydrator $formHydrator): Response
+    public function search(cpR $cpR, csR $csR): Response
+    {
+        $family = new Family();
+        $form = new FamilyForm($family);
+        $parameters = [
+            'title' => $this->translator->translate('invoice.search.family'),
+            'form' => $form,
+            'actionName' => 'family/search',
+            'actionArguments' => [],
+            'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
+            'categorySecondaries' => [],
+            'familyNames' => [],
+        ];
+        return $this->viewRenderer->render('_search', $parameters);
+    }
+
+    /**
+     * @param Request $request
+     * @param FormHydrator $formHydrator
+     * @param cpR $cpR
+     * @param csR $csR
+     * @return Response
+     */
+    public function add(Request $request, FormHydrator $formHydrator, cpR $cpR, csR $csR): Response
     {
         $family = new Family();
         $form = new FamilyForm($family);
@@ -79,6 +127,8 @@ final class FamilyController
             'title' => $this->translator->translate('i.add_family'),
             'actionName' => 'family/add',
             'actionArguments' => [],
+            'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
+            'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
             'errors' => [],
             'form' => $form,
         ];
@@ -97,21 +147,83 @@ final class FamilyController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param Request $request
+     * @param fR $fR
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function names(Request $request, fR $fR): \Yiisoft\DataResponse\DataResponse
+    {
+        $queryParams = $request->getQueryParams();
+
+        $categorySecondaryId = (string)$queryParams['category_secondary_id'];
+
+        if ($categorySecondaryId) {
+            $familyNames = $fR->optionsDataFamilyNamesWithCategorySecondaryId($categorySecondaryId);
+
+            $parameters = [
+                'success' => 1,
+                'family_names' => $familyNames,
+            ];
+            return $this->factory->createResponse(Json::encode($parameters));
+        }
+
+        $parameters = [
+            'success' => 0,
+        ];
+
+        //return response to family.js
+        return $this->factory->createResponse(Json::encode($parameters));
+    }
+
+    /**
+     * @param Request $request
+     * @param csR $csR
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function secondaries(Request $request, csR $csR): \Yiisoft\DataResponse\DataResponse
+    {
+        $queryParams = $request->getQueryParams();
+
+        $categoryPrimaryId = (string)$queryParams['category_primary_id'];
+
+        if ($categoryPrimaryId) {
+            $secondaryCategories = $csR->optionsDataCategorySecondariesWithCategoryPrimaryId($categoryPrimaryId);
+
+            $parameters = [
+                'success' => 1,
+                'secondary_categories' => $secondaryCategories,
+            ];
+            return $this->factory->createResponse(Json::encode($parameters));
+        }
+
+        $parameters = [
+            'success' => 0,
+        ];
+
+        //return response to family.js to reload page at location
+        return $this->factory->createResponse(Json::encode($parameters));
+    }
+
+    /**
+     * @param string $id
      * @param Request $request
      * @param FamilyRepository $familyRepository
+     * @param cpR $cpR
+     * @param csR $csR
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit(CurrentRoute $currentRoute, Request $request, FamilyRepository $familyRepository, FormHydrator $formHydrator): Response
+    public function edit(#[RouteArgument('id')] string $id, Request $request, fR $familyRepository, cpR $cpR, csR $csR, FormHydrator $formHydrator): Response
     {
-        $family = $this->family($currentRoute, $familyRepository);
+        $family = $this->family($id, $familyRepository);
         if ($family) {
             $form = new FamilyForm($family);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'family/edit',
                 'actionArguments' => ['id' => $family->getFamily_id()],
+                'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
+                'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
                 'form' => $form,
             ];
@@ -132,14 +244,14 @@ final class FamilyController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @param FamilyRepository $familyRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, FamilyRepository $familyRepository): Response
+    public function delete(#[RouteArgument('id')] string $id, fR $familyRepository): Response
     {
         try {
-            $family = $this->family($currentRoute, $familyRepository);
+            $family = $this->family($id, $familyRepository);
             if ($family) {
                 $this->familyService->deleteFamily($family);
                 return $this->webService->getRedirectResponse('family/index');
@@ -153,18 +265,22 @@ final class FamilyController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @param FamilyRepository $familyRepository
+     * @param cpR $cpR
+     * @param csR $csR
      */
-    public function view(CurrentRoute $currentRoute, FamilyRepository $familyRepository): Response
+    public function view(#[RouteArgument('id')] string $id, fR $familyRepository, cpR $cpR, csR $csR): Response
     {
-        $family = $this->family($currentRoute, $familyRepository);
+        $family = $this->family($id, $familyRepository);
         if ($family) {
             $form = new FamilyForm($family);
             $parameters = [
                 'title' => $this->translator->translate('i.view'),
                 'actionName' => 'family/view',
                 'actionArguments' => ['id' => $family->getFamily_id()],
+                'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
+                'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
                 'family' => $family,
                 'form' => $form,
@@ -175,17 +291,13 @@ final class FamilyController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param string $id
      * @param FamilyRepository $familyRepository
      * @return Family|null
      */
-    private function family(CurrentRoute $currentRoute, FamilyRepository $familyRepository): Family|null
+    private function family(#[RouteArgument('id')] string $id, fR $familyRepository): Family|null
     {
-        $family_id = $currentRoute->getArgument('id');
-        if (null !== $family_id) {
-            return $familyRepository->repoFamilyquery($family_id);
-        }
-        return null;
+        return $familyRepository->repoFamilyquery($id);
     }
 
     /**
@@ -193,7 +305,7 @@ final class FamilyController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function familys(FamilyRepository $familyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function familys(fR $familyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $familyRepository->findAllPreloaded();
     }

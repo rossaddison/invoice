@@ -35,6 +35,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var string $csrf
  * @var string $sortString
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductsDropdownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFamiliesDropdownFilter 
  * @psalm-var positive-int $page
  */
 
@@ -98,9 +99,13 @@ $toolbar = Div::tag();
             withSorting: true,
         ),
         new DataColumn(
-            'family_id',
-            header: $translator->translate('i.family'),
+            field: 'family_id',
+            property: 'filter_family_id',    
+            header: $translator->translate('i.family_name'),
+            encodeHeader: true,    
             content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
+            filter: $optionsDataFamiliesDropdownFilter,
+            visible: true,    
             withSorting: true
         ),
         new DataColumn(

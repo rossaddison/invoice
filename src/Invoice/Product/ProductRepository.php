@@ -105,6 +105,13 @@ final class ProductRepository extends Select\Repository
         );
     }
 
+    public function filter_family_id(string $family_id): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['family_id' => ltrim(rtrim($family_id))]);
+        return $this->prepareDataReader($query);
+    }
+
     public function filter_product_sku(string $product_sku): EntityReader
     {
         $select = $this->select();

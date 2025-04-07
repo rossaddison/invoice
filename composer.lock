@@ -14861,12 +14861,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "d0db5609f8788141833b565f7799781ac30c3f77"
+                "reference": "75c5d05c6d4db4362b70e7337a74259cac7c4002"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/d0db5609f8788141833b565f7799781ac30c3f77",
-                "reference": "d0db5609f8788141833b565f7799781ac30c3f77",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/75c5d05c6d4db4362b70e7337a74259cac7c4002",
+                "reference": "75c5d05c6d4db4362b70e7337a74259cac7c4002",
                 "shasum": ""
             },
             "require": {
@@ -14936,7 +14936,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-04T03:39:42+00:00"
+            "time": "2025-04-06T16:37:37+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14944,12 +14944,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "e0d8ce871fbbb007392407ce39c8aa9d1405046b"
+                "reference": "348ccd8e165a0d7a94d569c3ff1daecc758d76e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/e0d8ce871fbbb007392407ce39c8aa9d1405046b",
-                "reference": "e0d8ce871fbbb007392407ce39c8aa9d1405046b",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/348ccd8e165a0d7a94d569c3ff1daecc758d76e1",
+                "reference": "348ccd8e165a0d7a94d569c3ff1daecc758d76e1",
                 "shasum": ""
             },
             "require": {
@@ -15011,7 +15011,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-03T02:00:58+00:00"
+            "time": "2025-04-06T16:37:44+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -18051,12 +18051,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/bootstrap5.git",
-                "reference": "d87e0a93f0415cc7c6d55781d41d8c8625c7967c"
+                "reference": "13888c96190ea1788a66b734bb6f3da02b08637b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/d87e0a93f0415cc7c6d55781d41d8c8625c7967c",
-                "reference": "d87e0a93f0415cc7c6d55781d41d8c8625c7967c",
+                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/13888c96190ea1788a66b734bb6f3da02b08637b",
+                "reference": "13888c96190ea1788a66b734bb6f3da02b08637b",
                 "shasum": ""
             },
             "require": {
@@ -18118,7 +18118,7 @@
                 }
             ],
             "abandoned": "yiisoft/bootstrap5",
-            "time": "2025-04-04T12:51:44+00:00"
+            "time": "2025-04-06T21:18:48+00:00"
         },
         {
             "name": "yiisoft/yii-console",

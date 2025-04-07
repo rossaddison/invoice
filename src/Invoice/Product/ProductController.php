@@ -424,10 +424,11 @@ final class ProductController
      * @param Request $request
      * @param pR $pR
      * @param sR $sR
+     * @param fR $fR
      * @param string $page
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, sR $sR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
+    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, sR $sR, fR $fR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('invoice.productimage.view'));
@@ -440,6 +441,9 @@ final class ProductController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int)$currentPage > 0 ? (int)$currentPage : 1;
         $products = $pR->findAllPreloaded();
+        if (isset($query_params['filter_family_id']) && !empty($query_params['filter_family_id'])) {
+            $products = $pR->filter_family_id((string)$query_params['filter_family_id']);
+        }
         if (isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) {
             $products = $pR->filter_product_sku((string)$query_params['filter_product_sku']);
         }
@@ -456,6 +460,7 @@ final class ProductController
             'page' => $currentPageNeverZero,
             'defaultPageSizeOffsetPaginator' => (int)$sR->getSetting('default_list_limit'),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
+            'optionsDataFamiliesDropdownFilter' => $this->optionsDataFamilies($fR),
             'products' => $products,
             /** @var string $query_params['sort'] */
             'sortString' => $query_params['sort'] ?? '-id',
@@ -699,16 +704,6 @@ final class ProductController
             return $pR->repoProductquery($id);
         }
         return null;
-    }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function products(pR $pR): EntityReader
-    {
-        return $pR->findAllPreloaded();
     }
 
     /**
@@ -1061,5 +1056,28 @@ final class ProductController
             }
         }
         return $optionsDataProducts;
+    }
+
+    /**
+     * @param fR $fR
+     * @return array
+     */
+    public function optionsDataFamilies(fR $fR): array
+    {
+        $optionsDataFamilies = [];
+        $families = $fR->findAllPreloaded();
+        /**
+         * @var Family $family
+         */
+        foreach ($families as $family) {
+            $familyId = $family->getFamily_id();
+            // Remove repeats
+            if (!in_array($family->getFamily_id(), $optionsDataFamilies)) {
+                if (null !== $familyId) {
+                    $optionsDataFamilies[(string)$familyId] = (string)$family->getFamily_name();
+                }
+            }
+        }
+        return $optionsDataFamilies;
     }
 }

@@ -39,8 +39,17 @@ final class CategoryPrimaryController
         private TranslatorInterface $translator,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
+                                           ->withLayout('@invoice/layout/main.php');
+
+        $this->viewRenderer = $viewRenderer;
+        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
+                                               ->withLayout('@views/layout/guest.php');
+        }
+        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
+            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
+                                               ->withLayout('@views/layout/invoice.php');
+        }
         $this->webService = $webService;
         $this->flash = new Flash($this->session);
         $this->userService = $userService;
@@ -100,8 +109,7 @@ final class CategoryPrimaryController
         CategoryPrimaryRepository $categoryPrimaryRepository,
         SettingRepository $settingRepository,
         #[RouteArgument('page')] int $page = 1
-    ): Response
-    {
+    ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
@@ -149,8 +157,7 @@ final class CategoryPrimaryController
         FormHydrator $formHydrator,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): Response
-    {
+    ): Response {
         if ($id) {
             $categoryprimary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($categoryprimary) {
