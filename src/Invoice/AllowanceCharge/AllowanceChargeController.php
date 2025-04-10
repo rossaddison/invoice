@@ -24,7 +24,7 @@ use Exception;
 
 final class AllowanceChargeController extends BaseController
 {
-    protected string $controllerName = 'invoice';
+    protected string $controllerName = 'invoice/allowancecharge';
 
     public function __construct(
         private AllowanceChargeService $allowanceChargeService,
@@ -175,6 +175,8 @@ final class AllowanceChargeController extends BaseController
             'allowanceCharges' => $this->allowanceCharges($allowanceChargeRepository),
             'alert' => $this->alert(),
             'paginator' => $paginator,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                          ? (int)$this->sR->getSetting('default_list_limit') : 1,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
