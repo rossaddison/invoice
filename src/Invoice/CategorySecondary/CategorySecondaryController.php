@@ -159,11 +159,10 @@ final class CategorySecondaryController extends BaseController
     }
 
     /**
-     * 
      * @param CategorySecondaryRepository $categorysecondaryRepository
      * @param CategoryPrimaryRepository $categoryPrimaryRepository
      * @param int $id
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
         CategorySecondaryRepository $categorysecondaryRepository,

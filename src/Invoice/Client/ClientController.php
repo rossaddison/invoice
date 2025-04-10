@@ -72,8 +72,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ClientController extends BaseController
 {
-     protected string $controllerName = 'invoice/client';
-    
+    protected string $controllerName = 'invoice/client';
+
     public function __construct(
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
@@ -83,7 +83,7 @@ final class ClientController extends BaseController
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService,    
+        WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->clientService = $clientService;
