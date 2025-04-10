@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\ClientNote;
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\ClientNote\ClientNoteService;
 use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,38 +19,33 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class ClientNoteController
+final class ClientNoteController extends BaseController
 {
-    use FlashMessage;
-
-    private ViewRenderer $viewRenderer;
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/clientnote';
+    
     public function __construct(
+        private ClientNoteService $clientNoteService,    
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private ClientNoteService $clientnoteService,
-        private SessionInterface $session,
-        private TranslatorInterface $translator
+        WebControllerService $webService,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/clientnote')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->clientNoteService = $clientNoteService;
     }
 
     /**
      * @param ClientNoteRepository $clientnoteRepository
-     * @param SettingRepository $settingRepository
      * @param Request $request
      * @param ClientNoteService $service
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(ClientNoteRepository $clientnoteRepository, SettingRepository $settingRepository, Request $request, ClientNoteService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(ClientNoteRepository $clientnoteRepository, Request $request): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
         $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
@@ -86,7 +82,7 @@ final class ClientNoteController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $this->clientnoteService->addClientNote($clientnote, $body);
+                    $this->clientNoteService->addClientNote($clientnote, $body);
                     return $this->webService->getRedirectResponse('clientnote/index');
                 }
             }
@@ -127,7 +123,7 @@ final class ClientNoteController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        $this->clientnoteService->saveClientNote($client_note, $body);
+                        $this->clientNoteService->saveClientNote($client_note, $body);
                         return $this->webService->getRedirectResponse('clientnote/index');
                     }
                     $parameters['form'] = $form;
@@ -150,7 +146,7 @@ final class ClientNoteController
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($client_note) {
-            $this->clientnoteService->deleteClientNote($client_note);
+            $this->clientNoteService->deleteClientNote($client_note);
             return $this->webService->getRedirectResponse('clientnote/index');
         }
         return $this->webService->getRedirectResponse('clientnote/index');
@@ -207,18 +203,5 @@ final class ClientNoteController
             return $clientnoteRepository->repoClientNotequery($id);
         }
         return null;
-    }
-
-    /**
-      * @return string
-      */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }
