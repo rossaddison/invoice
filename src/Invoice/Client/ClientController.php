@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Client;
 
+use App\Invoice\BaseController;
 // Entity's
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\ClientNote;
@@ -20,7 +21,6 @@ use App\Invoice\ClientCustom\ClientCustomForm;
 use App\Invoice\ClientNote\ClientNoteService as cnS;
 use App\Invoice\ClientNote\ClientNoteForm;
 use App\Invoice\Quote\QuoteForm;
-use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\User\UserService;
 // Repositories
@@ -61,7 +61,6 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -71,48 +70,25 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 // Miscellaneous
 
-final class ClientController
+final class ClientController extends BaseController
 {
-    use FlashMessage;
-
-    private ViewRenderer $viewRenderer;
-    private Flash $flash;
-
+     protected string $controllerName = 'invoice/client';
+    
     public function __construct(
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
-        private UserService $userService,
         private DataResponseFactoryInterface $factory,
-        private SessionInterface $session,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator,
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,    
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer;
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/client')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->clientService = $clientService;
+        $this->clientCustomService = $clientCustomService;
+        $this->factory = $factory;
     }
 
     /**
@@ -168,7 +144,6 @@ final class ClientController
      * @param FormHydrator $formHydrator
      * @param cfR $cfR
      * @param cvR $cvR
-     * @param sR $sR
      * @return Response
      */
     public function add(
@@ -176,8 +151,7 @@ final class ClientController
         Request $request,
         FormHydrator $formHydrator,
         cfR $cfR,
-        cvR $cvR,
-        sR $sR
+        cvR $cvR
     ): Response {
         $origin = $currentRoute->getArgument('origin');
         $countries = new CountryHelper();
@@ -195,8 +169,8 @@ final class ClientController
             'errorsCustom' => [],
             'client' => $new_client,
             'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']),
-            'selectedCountry' => $sR->getSetting('default_country'),
-            'selectedLanguage' => $sR->getSetting('default_language'),
+            'selectedCountry' => $this->sR->getSetting('default_country'),
+            'selectedLanguage' => $this->sR->getSetting('default_language'),
             'datepicker_dropdown_locale_cldr' => $this->session->get('_language') ?? 'en',
             'optionsDataGender' => $this->optionsDataGender(),
             'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
@@ -217,7 +191,7 @@ final class ClientController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $client_id = $this->clientService->saveClient($new_client, $body, $sR);
+                    $client_id = $this->clientService->saveClient($new_client, $body, $this->sR);
                     if (null !== $client_id) {
                         if (isset($body['custom'])) {
                             // Retrieve the custom array
@@ -269,7 +243,6 @@ final class ClientController
         cvR $cvR,
         FormHydrator $formHydrator,
         paR $paR,
-        sR $sR,
         CurrentRoute $currentRoute
     ): Response {
         $origin = $currentRoute->getArgument('origin');
@@ -298,8 +271,8 @@ final class ClientController
                     'optionsDataClientFrequencyDropdownFilter' => $this->optionsDataClientFrequencyDropDownFilter(),
                     'optionsDataPostalAddresses' => $this->optionsDataPostalAddress($postaladdresses),
                     'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']),
-                    'selectedCountry' => $selected_country ?? $sR->getSetting('default_country'),
-                    'selectedLanguage' => $selected_language ?? $sR->getSetting('default_language'),
+                    'selectedCountry' => $selected_country ?? $this->sR->getSetting('default_country'),
+                    'selectedLanguage' => $selected_language ?? $this->sR->getSetting('default_language'),
                     'datepicker_dropdown_locale_cldr' => $currentRoute->getArgument('_language', 'en'),
                     'postal_address_count' => $paR->repoClientCount((string)$client_id),
                     /**
@@ -316,7 +289,7 @@ final class ClientController
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
-                        $returned_form = $this->save_form_fields($body, $form, $client, $formHydrator, $sR);
+                        $returned_form = $this->save_form_fields($body, $form, $client, $formHydrator);
                         $parameters['body'] = $body;
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
@@ -441,13 +414,12 @@ final class ClientController
      * @param ClientForm $form
      * @param Client $client
      * @param FormHydrator $formHydrator
-     * @param sR $sR
      * @return ClientForm
      */
-    public function save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator, sR $sR): ClientForm
+    public function save_form_fields(array $body, ClientForm $form, Client $client, FormHydrator $formHydrator): ClientForm
     {
         if ($formHydrator->populateAndValidate($form, $body)) {
-            $this->clientService->saveClient($client, $body, $sR);
+            $this->clientService->saveClient($client, $body, $this->sR);
         }
         return $form;
     }
@@ -470,7 +442,6 @@ final class ClientController
      * @param cR $cR
      * @param iaR $iaR
      * @param iR $iR
-     * @param sR $sR
      * @param cpR $cpR
      * @param ucR $ucR
      * @return \Yiisoft\DataResponse\DataResponse
@@ -482,7 +453,6 @@ final class ClientController
         cR $cR,
         iaR $iaR,
         iR $iR,
-        sR $sR,
         cpR $cpR,
         ucR $ucR
     ): \Yiisoft\DataResponse\DataResponse {
@@ -524,7 +494,7 @@ final class ClientController
             $clients = $cR->filter_client_name_surname((string)$query_params['filter_client_name'], (string)$query_params['filter_client_surname']);
         }
         $paginator = (new DataOffsetPaginator($clients))
-            ->withPageSize($sR->positiveListLimit())
+            ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
             ->withToken(PageToken::next((string)$page));
         $parameters = [
@@ -536,8 +506,8 @@ final class ClientController
             'active' => $active,
             'cpR' => $cpR,
             'ucR' => $ucR,
-            'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
-                                                    ? (int)$sR->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
             'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
@@ -568,7 +538,6 @@ final class ClientController
         cR $cR,
         iaR $iaR,
         iR $iR,
-        sR $sR,
         cpR $cpR,
         ucR $ucR,
         uiR $uiR
@@ -613,8 +582,8 @@ final class ClientController
                             'editInv' => $this->userService->hasPermission('editInv'),
                             'active' => $active,
                             'cpR' => $cpR,
-                            'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
-                                                                ? (int)$sR->getSetting('default_list_limit') : 1,
+                            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                                ? (int)$this->sR->getSetting('default_list_limit') : 1,
                             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
                             'userInv' => $userInv,
                             'urlCreator' => $urlCreator,
@@ -727,12 +696,11 @@ final class ClientController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param cnS $cnS
-     * @param sR $sR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function save_client_note_new(Request $request, FormHydrator $formHydrator, cnS $cnS, sR $sR): \Yiisoft\DataResponse\DataResponse
+    public function save_client_note_new(Request $request, FormHydrator $formHydrator, cnS $cnS): \Yiisoft\DataResponse\DataResponse
     {
-        $datehelper = new DateHelper($sR);
+        $datehelper = new DateHelper($this->sR);
         //receive data ie. note
         $body = $request->getQueryParams();
         /**
@@ -881,7 +849,6 @@ final class ClientController
      * @param irR $irR
      * @param qR $qR
      * @param pymtR $pymtR
-     * @param sR $sR
      * @param ucR $ucR
      * @return Response
      */
@@ -900,16 +867,15 @@ final class ClientController
         irR $irR,
         qR $qR,
         pymtR $pymtR,
-        sR $sR,
         ucR $ucR
     ): Response {
         $quote = new Quote();
         $quoteForm = new QuoteForm($quote);
-        $bootstrap5ModalQuote = new Bootstrap5ModalQuote($this->translator, $this->viewRenderer, $cR, $gR, $sR, $ucR, $quoteForm);
+        $bootstrap5ModalQuote = new Bootstrap5ModalQuote($this->translator, $this->viewRenderer, $cR, $gR, $this->sR, $ucR, $quoteForm);
 
         $inv = new Inv();
         $invForm = new InvForm($inv);
-        $bootstrap5ModalInv = new Bootstrap5ModalInv($this->translator, $this->viewRenderer, $cR, $gR, $sR, $ucR, $invForm);
+        $bootstrap5ModalInv = new Bootstrap5ModalInv($this->translator, $this->viewRenderer, $cR, $gR, $this->sR, $ucR, $invForm);
 
         $optionsGroupData = [];
 
@@ -1045,7 +1011,7 @@ final class ClientController
                         'client' => $client,
                         // All payments from the client are loaded and filtered in the view with
                         // if ($payment->getInv()->getClient_id() === $client->getClient_id())
-                        'payments' => $pymtR->repoPaymentInvLoadedAll((int)$sR->getSetting('payment_list_limit') ?: 10),
+                        'payments' => $pymtR->repoPaymentInvLoadedAll((int)$this->sR->getSetting('payment_list_limit') ?: 10),
                     ]),
                     'delivery_locations' => $this->viewRenderer->renderPartialAsString('//invoice/client/client_delivery_location_list', [
                         'locations' => $delR->repoClientquery((string)$client->getClient_id()),
