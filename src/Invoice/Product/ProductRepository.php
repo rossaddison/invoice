@@ -104,7 +104,7 @@ final class ProductRepository extends Select\Repository
                 ])
         );
     }
-    
+
     public function filter_family_id(string $family_id): EntityReader
     {
         $select = $this->select();

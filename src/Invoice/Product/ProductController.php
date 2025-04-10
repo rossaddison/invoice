@@ -705,7 +705,7 @@ final class ProductController
         }
         return null;
     }
-    
+
     /**
      * @param string $product_id
      * @param pcR $pcR
@@ -1057,9 +1057,8 @@ final class ProductController
         }
         return $optionsDataProducts;
     }
-    
+
     /**
-     * 
      * @param fR $fR
      * @return array
      */

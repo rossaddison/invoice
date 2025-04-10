@@ -12,7 +12,7 @@ class Family
 {
     #[Column(type: 'primary')]
     public ?int $id = null;
-    
+
     public function __construct(
         #[Column(type: 'text', nullable: true)]
         public ?string $family_name = '',
@@ -20,8 +20,7 @@ class Family
         private ?int $category_primary_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_secondary_id = null,
-    )
-    {
+    ) {
     }
 
     public function getFamily_id(): ?int
@@ -38,7 +37,7 @@ class Family
     {
         $this->family_name = $family_name;
     }
-    
+
     public function getCategory_primary_id(): string
     {
         return (string)$this->category_primary_id;
@@ -48,7 +47,7 @@ class Family
     {
         $this->category_primary_id = $category_primary_id;
     }
-    
+
     public function getCategory_secondary_id(): string
     {
         return (string)$this->category_secondary_id;

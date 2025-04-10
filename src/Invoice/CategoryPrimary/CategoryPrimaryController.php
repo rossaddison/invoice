@@ -25,12 +25,12 @@ use Exception;
 final class CategoryPrimaryController extends BaseController
 {
     protected string $controllerName = 'invoice/categoryprimary';
-    
+
     public function __construct(
-        private CategoryPrimaryService $categoryPrimaryService,    
-        private DataResponseFactoryInterface $factory,    
+        private CategoryPrimaryService $categoryPrimaryService,
+        private DataResponseFactoryInterface $factory,
         SessionInterface $session,
-        SR $sR,
+        sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
@@ -78,8 +78,7 @@ final class CategoryPrimaryController extends BaseController
         CategoryPrimaryRepository $categoryPrimaryRepository,
         sR $settingRepository,
         #[RouteArgument('page')] int $page = 1
-    ): Response
-    {
+    ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
@@ -127,8 +126,7 @@ final class CategoryPrimaryController extends BaseController
         FormHydrator $formHydrator,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): Response
-    {
+    ): Response {
         if ($id) {
             $categoryprimary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($categoryprimary) {

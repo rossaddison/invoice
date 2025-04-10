@@ -111,7 +111,7 @@ final readonly class InvService
 
         if ($model->isNewRecord()) {
             if ($s->getSetting('mark_invoices_sent_copy') === '1') {
-                // mark the copy as sent and make it read-only 
+                // mark the copy as sent and make it read-only
                 $model->setStatus_id(2);
                 $model->setIs_read_only(true);
             } else {
