@@ -135,7 +135,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class InvController extends BaseController
 {
-    protected string $controllerName = 'invoice/inv';
+    protected string $controllerName = 'invoice';
 
     private DateHelper $date_helper;
     private NumberHelper $number_helper;

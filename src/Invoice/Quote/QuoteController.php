@@ -136,7 +136,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class QuoteController extends BaseController
 {
-    protected string $controllerName = 'invoice/quote';
+    protected string $controllerName = 'invoice';
 
     private NumberHelper $number_helper;
     private PdfHelper $pdf_helper;
