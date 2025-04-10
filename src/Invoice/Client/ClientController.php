@@ -73,7 +73,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ClientController extends BaseController
 {
     protected string $controllerName = 'invoice/client';
-    
+
     public function __construct(
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
