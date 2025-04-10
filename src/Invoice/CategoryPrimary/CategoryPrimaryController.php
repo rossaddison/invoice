@@ -24,7 +24,7 @@ use Exception;
 
 final class CategoryPrimaryController extends BaseController
 {
-    protected string $controllerName = 'invoice';
+    protected string $controllerName = 'invoice/categoryprimary';
 
     public function __construct(
         private CategoryPrimaryService $categoryPrimaryService,
