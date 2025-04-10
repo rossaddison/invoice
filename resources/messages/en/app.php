@@ -1619,6 +1619,8 @@ return [
     'invoice.security.disable.read.only.info' => 'Warning: Read Only Functionality for Invoice Protection and Deletion Prevention is enabled. Disable the \'disable_read_only\' to allow sent invoices to be reset to draft',
     'invoice.security.disable.read.only.warning' => 'Warning: Read Only Functionality for Invoice Protection and Deletion Prevention has been disabled',
     'invoice.security.disable.read.only.success' => 'Success: Read Only Functionality for Invoice Protection and Deletion Prevention has been re-enabled',
+    'invoice.security.disable.read.only.true.draft.check.and.mark' => 'Warning: You are editing a draft with the disable read-only setting on true',
+    'invoice.security.disable.read.only.true.sent.check.and.mark' => 'Warning: You are editing a sent invoice with the disable read-only setting on true',
     'invoice.setting' => 'Setting',
     'invoice.setting.assets.cleared.at' => 'Assets cleared at ',
     'invoice.setting.assets.were.not.cleared.at' => 'Assets were not cleared at ',

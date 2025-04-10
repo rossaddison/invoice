@@ -27,7 +27,6 @@ use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Task\TaskRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
-use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository;
 // Services and forms
 use App\Service\WebControllerService;
@@ -38,48 +37,25 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use App\Invoice\Libraries\Crypt;
 
-final class InvoiceController
+final class InvoiceController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected Crypt $crypt;    
+    
     public function __construct(
-        private WebControllerService $webService,
-        private UserService $userService,
-        private TranslatorInterface $translator,
-        private ViewRenderer $viewRenderer,
-        private SessionInterface $session,
-        private SettingRepository $s,
-        private Crypt $crypt
+        WebControllerService $webService,
+        UserService $userService,
+        TranslatorInterface $translator,
+        ViewRenderer $viewRenderer,
+        SessionInterface $session,
+        SettingRepository $sR,    
+        Crypt $crypt
     ) {
-        $this->flash = new Flash($this->session);
-
-        // Authenticated (Signed Up) and Unauthorised (No Permissions)
-        if (!$this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                                               ->withLayout('@views/layout/guest.php');
-            $this->flashMessage('info', $this->translator->translate('invoice.permission.unauthorised'));
-        }
-
-        // Client: Authenticated and Authorised (Permission: viewInv)
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                                               ->withLayout('@views/layout/guest.php');
-            $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.view'));
-        }
-
-        // Administrator: Authenticated and Authorised (Permission: editInv)
-        if ($this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                                                 ->withLayout('@views/layout/invoice.php');
-            $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.edit'));
-        }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->crypt = $crypt;
     }
 
     /**
@@ -221,20 +197,6 @@ final class InvoiceController
         $this->install_default_settings($default_settings, $sR);
     }
 
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
     public function faq(#[RouteArgument('topic')] string $topic): Response
     {
         $view = match ($topic) {
@@ -275,7 +237,7 @@ final class InvoiceController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
@@ -316,7 +278,7 @@ final class InvoiceController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
@@ -350,7 +312,7 @@ final class InvoiceController
         // store-cove regex: ^GB(\d{9}(\d{3})?$|^[A-Z]{2}\d{3})$ will match eg. GB000123456
 
         // eg. GB obtained from setting view storecove
-        $legal = $this->s->getSetting('storecove_country');
+        $legal = $this->sR->getSetting('storecove_country');
         // Must be a 9 digit number including preceding zeros or a 12 digit number
         // eg. 000217688
         $id = '000217793';
@@ -360,7 +322,7 @@ final class InvoiceController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -395,11 +357,11 @@ final class InvoiceController
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int)$this->s->getSetting('storecove_legal_entity_id');
+        $legal_entity_id_as_integer = (int)$this->sR->getSetting('storecove_legal_entity_id');
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -497,11 +459,11 @@ final class InvoiceController
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int)$this->s->getSetting('storecove_legal_entity_id');
+        $legal_entity_id_as_integer = (int)$this->sR->getSetting('storecove_legal_entity_id');
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $parameters = [
             'result' => '',
             'message' => '',

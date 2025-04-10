@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\AllowanceCharge;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository;
-use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,33 +18,25 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class AllowanceChargeController
+final class AllowanceChargeController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/allowancecharge';
+    
     public function __construct(
-        private SessionInterface $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private AllowanceChargeService $allowanceChargeService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,    
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
+        UserService $userService,
+        TranslatorInterface $translator
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/allowancecharge')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/allowancecharge')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->allowanceChargeService = $allowanceChargeService;
     }
 
     /**
@@ -171,25 +163,10 @@ final class AllowanceChargeController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
-    /**
      * @param AllowanceChargeRepository $allowanceChargeRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(AllowanceChargeRepository $allowanceChargeRepository, SettingRepository $settingRepository): Response
+    public function index(AllowanceChargeRepository $allowanceChargeRepository): Response
     {
         $allowanceCharges = $allowanceChargeRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($allowanceCharges));

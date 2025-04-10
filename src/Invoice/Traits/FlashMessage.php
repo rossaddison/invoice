@@ -13,7 +13,7 @@ trait FlashMessage
      * @param string $message
      * @return Flash|null
      */
-    private function flashMessage(string $level, string $message): Flash|null
+    protected function flashMessage(string $level, string $message): Flash|null
     {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
