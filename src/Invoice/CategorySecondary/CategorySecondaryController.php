@@ -107,8 +107,7 @@ final class CategorySecondaryController
         CategorySecondaryRepository $categorySecondaryRepository,
         SettingRepository $settingRepository,
         #[RouteArgument('page')] int $page = 1
-    ): Response
-    {
+    ): Response {
         $categorySecondary = $categorySecondaryRepository->findAllPreloaded();
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
@@ -155,15 +154,14 @@ final class CategorySecondaryController
         CategorySecondaryRepository $categorySecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): Response
-    {
+    ): Response {
         $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
         if ($categorySecondary) {
             $form = new CategorySecondaryForm($categorySecondary);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'categorysecondary/edit',
-                'actionArguments' => ['id' => $id],                
+                'actionArguments' => ['id' => $id],
                 'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
                 'errors' => [],
                 'form' => $form,
@@ -219,8 +217,7 @@ final class CategorySecondaryController
         CategorySecondaryRepository $categorysecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
         #[RouteArgument('id')] int $id
-    ): \Yiisoft\DataResponse\DataResponse|Response
-    {
+    ): \Yiisoft\DataResponse\DataResponse|Response {
         $categorysecondary = $this->categorysecondary($categorysecondaryRepository, $id);
         if ($categorysecondary) {
             $form = new CategorySecondaryForm($categorysecondary);

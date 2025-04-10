@@ -90,7 +90,7 @@ final class CategorySecondaryRepository extends Select\Repository
                 ->withOrder(['id' => 'asc'])
         );
     }
-    
+
     public function repoCategoryPrimaryIdQuery(string $category_primary_id): EntityReader
     {
         $select = $this->select();
@@ -110,7 +110,7 @@ final class CategorySecondaryRepository extends Select\Repository
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -123,7 +123,7 @@ final class CategorySecondaryRepository extends Select\Repository
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @return array
      */
@@ -142,7 +142,7 @@ final class CategorySecondaryRepository extends Select\Repository
         }
         return $optionsDataCategorySecondaries;
     }
-    
+
     /**
      * @return array
      */

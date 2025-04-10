@@ -25,11 +25,11 @@ use Exception;
 final class AllowanceChargeController extends BaseController
 {
     protected string $controllerName = 'invoice/allowancecharge';
-    
+
     public function __construct(
         private AllowanceChargeService $allowanceChargeService,
         SessionInterface $session,
-        sR $sR,    
+        sR $sR,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
         UserService $userService,

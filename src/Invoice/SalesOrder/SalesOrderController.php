@@ -80,7 +80,7 @@ use Exception;
 final class SalesOrderController extends BaseController
 {
     protected string $controllerName = 'invoice/salesorder';
-    
+
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private InvService $invService,

@@ -137,7 +137,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class QuoteController extends BaseController
 {
     protected string $controllerName = 'invoice/quote';
-    
+
     private NumberHelper $number_helper;
     private PdfHelper $pdf_helper;
 
@@ -182,7 +182,7 @@ final class QuoteController extends BaseController
         private QuoteItemService $quote_item_service,
         private QuoteService $quote_service,
         private QuoteTaxRateService $quote_tax_rate_service,
-        private UrlGenerator $url_generator,    
+        private UrlGenerator $url_generator,
         Session $session,
         SR $sR,
         Translator $translator,

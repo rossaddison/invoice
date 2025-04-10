@@ -43,15 +43,15 @@ use App\Invoice\Libraries\Crypt;
 
 final class InvoiceController extends BaseController
 {
-    protected Crypt $crypt;    
-    
+    protected Crypt $crypt;
+
     public function __construct(
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
         ViewRenderer $viewRenderer,
         SessionInterface $session,
-        SettingRepository $sR,    
+        SettingRepository $sR,
         Crypt $crypt
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);

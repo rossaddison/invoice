@@ -17,10 +17,10 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 abstract class BaseController
 {
     use FlashMessage;
-    
+
     // New property for controller name
     protected string $controllerName = 'invoice';
-    
+
     protected Flash $flash;
     protected ViewRenderer $viewRenderer;
     protected WebControllerService $webService;
@@ -35,7 +35,7 @@ abstract class BaseController
         TranslatorInterface $translator,
         ViewRenderer $viewRenderer,
         SessionInterface $session,
-        SettingRepository $sR    
+        SettingRepository $sR
     ) {
         $this->webService = $webService;
         $this->userService = $userService;
@@ -55,7 +55,7 @@ abstract class BaseController
     {
         if (!$this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')   
+                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/guest.php');
             $this->flashMessage('info', $this->translator->translate('invoice.permission.unauthorised'));
         } elseif ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {

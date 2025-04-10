@@ -136,11 +136,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class InvController extends BaseController
 {
     protected string $controllerName = 'invoice/inv';
-    
+
     private DateHelper $date_helper;
     private NumberHelper $number_helper;
     private PdfHelper $pdf_helper;
-    
+
     /**
      * @param Crypt $crypt
      * @param DataResponseFactoryInterface $factory
@@ -173,7 +173,7 @@ final class InvController extends BaseController
         private InvTaxRateService $inv_tax_rate_service,
         private LoggerInterface $logger,
         private MailerInterface $mailer,
-        private UrlGenerator $url_generator,    
+        private UrlGenerator $url_generator,
         SessionInterface $session,
         SR $sR,
         TranslatorInterface $translator,
