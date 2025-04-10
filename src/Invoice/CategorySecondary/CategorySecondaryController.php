@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\CategorySecondary;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -19,44 +19,27 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class CategorySecondaryController
+final class CategorySecondaryController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
+    protected string $controllerName = 'invoice/categorysecondary';
 
     public function __construct(
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private CategorySecondaryService $categorySecondaryService,
-        private UserService $userService,
         private DataResponseFactoryInterface $factory,
-        private SessionInterface $session,
-        private TranslatorInterface $translator,
+        SessionInterface $session,
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
+        sR $sR,
+        TranslatorInterface $translator
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/categorysecondary')
-                                           ->withLayout('@invoice/layout/main.php');
-
-        $this->viewRenderer = $viewRenderer;
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categorysecondary')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categorysecondary')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
-        $this->webService = $webService;
-        $this->flash = new Flash($this->session);
-        $this->userService = $userService;
-        $this->factory = $factory;
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->categorySecondaryService = $categorySecondaryService;
-        $this->translator = $translator;
+        $this->factory = $factory;
     }
 
     public function add(
@@ -84,60 +67,40 @@ final class CategorySecondaryController
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
-            } // is_array($body)
+            }
         }
         return $this->viewRenderer->render('_form', $parameters);
     }
 
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
     public function index(
         CategorySecondaryRepository $categorySecondaryRepository,
-        SettingRepository $settingRepository,
+        sR $settingRepository,
         #[RouteArgument('page')] int $page = 1
     ): Response {
         $categorySecondary = $categorySecondaryRepository->findAllPreloaded();
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new OffsetPaginator($categorySecondary))
-        ->withPageSize($settingRepository->positiveListLimit())
-        ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+            ->withPageSize($settingRepository->positiveListLimit())
+            ->withCurrentPage($currentPageNeverZero)
+            ->withToken(PageToken::next((string)$page));
         $parameters = [
             'categorysecondarys' => $this->categorysecondarys($categorySecondaryRepository),
             'paginator' => $paginator,
             'alert' => $this->alert(),
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                        ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+                ? (int)$settingRepository->getSetting('default_list_limit') : 1,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
-    /**
-     * @param CategorySecondaryRepository $categorysecondaryRepository
-     * @param int $id
-     * @return Response
-     */
     public function delete(
-        CategorySecondaryRepository $categorysecondaryRepository,
+        CategorySecondaryRepository $categorySecondaryRepository,
         #[RouteArgument('id')] int $id
     ): Response {
         try {
-            $categorysecondary = $this->categorysecondary($categorysecondaryRepository, $id);
-            if ($categorysecondary) {
-                $this->categorySecondaryService->deleteCategorySecondary($categorysecondary);
+            $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
+            if ($categorySecondary) {
+                $this->categorySecondaryService->deleteCategorySecondary($categorySecondary);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('categorysecondary/index');
             }
@@ -182,36 +145,25 @@ final class CategorySecondaryController
         return $this->webService->getRedirectResponse('categorysecondary/index');
     }
 
-    //For rbac refer to AccessChecker
-
-    /**
-     * @param CategorySecondaryRepository $categorysecondaryRepository
-     * @param int $id
-     * @return CategorySecondary|null
-     */
-    private function categorysecondary(CategorySecondaryRepository $categorysecondaryRepository, int $id): CategorySecondary|null
+    private function categorysecondary(CategorySecondaryRepository $categorySecondaryRepository, int $id): CategorySecondary|null
     {
         if ($id) {
-            return $categorysecondaryRepository->repoCategorySecondaryLoadedQuery((string)$id);
+            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery((string)$id);
         }
         return null;
     }
 
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function categorysecondarys(CategorySecondaryRepository $categorysecondaryRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function categorysecondarys(CategorySecondaryRepository $categorySecondaryRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        return $categorysecondaryRepository->findAllPreloaded();
+        return $categorySecondaryRepository->findAllPreloaded();
     }
 
     /**
+     * 
      * @param CategorySecondaryRepository $categorysecondaryRepository
-     * @param SettingRepository $settingRepository
-     * @param int id
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @param CategoryPrimaryRepository $categoryPrimaryRepository
+     * @param int $id
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
     public function view(
         CategorySecondaryRepository $categorysecondaryRepository,
