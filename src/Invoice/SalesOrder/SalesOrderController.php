@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
+use App\Invoice\BaseController;
 // Entity
 use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\DeliveryLocation;
@@ -44,7 +45,6 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository as UIR;
@@ -71,17 +71,15 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class SalesOrderController
+final class SalesOrderController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
+    protected string $controllerName = 'invoice/salesorder';
 
     public function __construct(
         private DataResponseFactoryInterface $factory,
@@ -90,24 +88,15 @@ final class SalesOrderController
         private InvAmountService $invAmountService,
         private InvItemService $invItemService,
         private InvTaxRateService $invTaxRateService,
-        private Session $session,
-        private SettingRepository $sR,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private SalesOrderService $salesorderService,
-        private TranslatorInterface $translator
+        Session $session,
+        SettingRepository $sR,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
+        UserService $userService,
+        TranslatorInterface $translator
     ) {
-        $this->flash = new Flash($session);
-        $this->session = $session;
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorder')
-                                                 ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorder')
-                                                 ->withLayout('@views/layout/invoice.php');
-        }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
     }
 
     /**
@@ -232,7 +221,7 @@ final class SalesOrderController
             'paginator' => $paginator,
             'client_count' => $clientRepo->count(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->viewRenderer->render('salesorder/index', $parameters);
     }
 
     // Sales Orders are created from Quotes see quote/approve
@@ -657,16 +646,6 @@ final class SalesOrderController
     }
 
     /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function salesorders(SoR $salesorderRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $salesorderRepository->findAllPreloaded();
-    }
-
-    /**
      * This function will be done by the Admin as soon as the sales order has 'invoice generate' status
      * The Sales Order will have the status 'invoice generated' against it
      * The Invoice will have the status 'sent' against it
@@ -1016,19 +995,6 @@ final class SalesOrderController
             } // if in_array
         } // if salesorder
         return $this->webService->getNotFoundResponse();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     private function OptionsData(

@@ -30,7 +30,6 @@ use App\Invoice\InvCustom\InvCustomService as ICS;
 use App\Invoice\InvItem\InvItemService as IIS;
 use App\Invoice\InvTaxRate\InvTaxRateService as ITRS;
 // Ancillary
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -112,10 +111,11 @@ final readonly class InvService
 
         if ($model->isNewRecord()) {
             if ($s->getSetting('mark_invoices_sent_copy') === '1') {
+                // mark the copy as sent and make it read-only
                 $model->setStatus_id(2);
-                // If the read_only_toggle is set to 'sent', set this invoice to read only
                 $model->setIs_read_only(true);
             } else {
+                // mark the invoice as a draft copy and make it editable i.e. not is read only
                 $model->setStatus_id(1);
                 $model->setIs_read_only(false);
             }
@@ -335,17 +335,5 @@ final readonly class InvService
             $model->setDiscount_amount(0.00);
         }
         $this->repository->save($model);
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash
-     */
-    private function flash(string $level, string $message): Flash
-    {
-        $flash = new Flash($this->session);
-        $flash->set($level, $message);
-        return $flash;
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategoryPrimary;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\CategoryPrimary;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,44 +18,27 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class CategoryPrimaryController
+final class CategoryPrimaryController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
+    protected string $controllerName = 'invoice/categoryprimary';
 
     public function __construct(
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private CategoryPrimaryService $categoryPrimaryService,
-        private UserService $userService,
         private DataResponseFactoryInterface $factory,
-        private SessionInterface $session,
-        private TranslatorInterface $translator,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator,
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
-                                           ->withLayout('@invoice/layout/main.php');
-
-        $this->viewRenderer = $viewRenderer;
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/categoryprimary')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
-        $this->webService = $webService;
-        $this->flash = new Flash($this->session);
-        $this->userService = $userService;
-        $this->factory = $factory;
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->categoryPrimaryService = $categoryPrimaryService;
-        $this->translator = $translator;
+        $this->factory = $factory;
     }
 
     /**
@@ -91,23 +74,9 @@ final class CategoryPrimaryController
         return $this->viewRenderer->render('_form', $parameters);
     }
 
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
     public function index(
         CategoryPrimaryRepository $categoryPrimaryRepository,
-        SettingRepository $settingRepository,
+        sR $settingRepository,
         #[RouteArgument('page')] int $page = 1
     ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();

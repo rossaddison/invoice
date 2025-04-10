@@ -377,32 +377,156 @@ $toolbar = Div::tag();
             multiple: true
         ),
         new ActionColumn(
-            buttons: [
+            buttons: [ 
                 new ActionButton(
+                    // is_read_only false, disable_read_only 0, status draft1 => ✎, not disabled
+                    // is_read_only false, disable_read_only 1, status draft1 => ❗✎, not disabled
+                    // is_read_only true, disable_read_only 0, status  sent2 => 🚫, disabled
+                    // is_read_only true, disable_read_only 1, status sent2 => ❗, not disabled     
                     content: static function (Inv $inv) use ($s): string {
-                        return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ?
-                            '✎' : '🚫';
+                        $iRO = $inv->getIs_read_only();
+                        $dRO = $s->getSetting('disable_read_only');
+                        $status = $inv->getStatus_id();
+                        $icon = '';
+                        $iconMap = [
+                            /** editable draft */
+                            'false' => [
+                                /** protection is on */
+                                '0' => [
+                                    /** draft can be editable */
+                                    '1' => '✎',
+                                ],
+                                /** protection is off */
+                                '1' => [
+                                    /** warning: editing a draft with protection off */
+                                    '1' => '❗✎',
+                                ]
+                            ],
+                            /** non editable invoice */
+                            'true' => [
+                                /** protection is on */
+                                '0' => [
+                                    /** an invoice marked as sent cannot be edited */
+                                    '2' => '🚫'
+                                ],
+                                /** protection is off */
+                                '1' => [
+                                    /** warning: you are editing an invoice whilst protection is off */
+                                    '2' => '❗'
+                                ]
+                            ]
+                        ];
+                        $iROString = $iRO ? 'true' : 'false';
+                        /**
+                         * @var array $iconMap[$iROString]
+                         * @var array $iconMap[$iROString][$dRO]
+                         * @var string $iconMap[$iROString][$dRO][$status]
+                         */
+                        $icon = $iconMap[$iROString][$dRO][$status];
+                        return !empty($icon) ? $icon : '';
                     },
                     url: static function (Inv $inv) use ($s, $urlGenerator): string {
-                        return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ?
-                            $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) : '';
+                        $iRO = $inv->getIs_read_only();
+                        $dRO = $s->getSetting('disable_read_only');
+                        $status = $inv->getStatus_id();
+                        $url = '';
+                        $urlMap = [
+                            /** editable draft **/
+                            'false' => [
+                                /** protection is on */
+                                '0' => [
+                                    '1' => $urlGenerator->generate('inv/edit', 
+                                            ['id' => $inv->getId()]),
+                                ],
+                                /** protection is off */
+                                '1' => [
+                                    /** Allow editing of draft, even though protection is off */
+                                    '1' => $urlGenerator->generate('inv/edit', 
+                                            ['id' => $inv->getId()]),
+                                ]
+                            ],
+                            /** not editable invoice */
+                            'true' => [
+                                /** protection is on */
+                                '0' => [
+                                    /** Invoice cannot be edited whilst protection is on */
+                                    '2' => ''
+                                ],
+                                /** protection is off */
+                                '1' => [
+                                    /** Allow the editing of invoice whilst protection is off */
+                                    '2' => $urlGenerator->generate('inv/edit', 
+                                            ['id' => $inv->getId()]),
+                                ]
+                            ]
+                        ];
+
+                        $iROString = $iRO ? 'true' : 'false';
+                        /**
+                         * @var array $urlMap[$iROString]
+                         * @var array $urlMap[$iROString][$dRO]
+                         * @var string $urlMap[$iROString][$dRO][$status]
+                         */
+                        $url = $urlMap[$iROString][$dRO][$status];
+                        return $url;
                     },
                     attributes: static function (Inv $inv) use ($s, $translator): array {
-                        return $inv->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ?
-                            [
-                                'data-bs-toggle' => 'tooltip',
-                                'title' => $translator->translate('i.edit')
-                            ] : [
-                                'data-bs-toggle' => 'tooltip',
-                                'title' => $translator->translate('i.sent'),
-                                'disabled' => 'disabled'
-                            ];
-                    },
+                        $iRO = $inv->getIs_read_only();
+                        $dRO = $s->getSetting('disable_read_only');
+                        $status = $inv->getStatus_id();
+                        $attributesMap = [
+                            /** editable draft **/
+                            'false' => [
+                                /** protection is on */
+                                '0' => [
+                                    /** draft invoices can be edited */
+                                    '1' => [
+                                        'data-bs-toggle' => 'tooltip', 
+                                        'title' => $translator->translate('i.edit')],
+                                ],
+                                /** protection is off */
+                                '1' => [
+                                    '1' => [
+                                        'data-bs-toggle' => 'tooltip', 
+                                        'title' => $translator->translate('invoice.security.disable.read.only.true.draft.check.and.mark'), 
+                                        ],
+                                ]
+                            ],
+                            /** not editable invoice */
+                            'true' => [
+                                /** protection is on */
+                                '0' => [
+                                    /** Invoice cannot be edited whilst protection is on */
+                                    '2' => [
+                                        'data-bs-toggle' => 'tooltip', 
+                                        'title' => $translator->translate('i.sent'), 
+                                        'disabled' => 'disabled',
+                                        'aria-disabled' => 'true',  
+                                        'style' => 'pointer-events:none'], 
+                                ],
+                                /** protection is off */
+                                '1' => [
+                                    /** Allow the editing of invoice whilst protection is off */
+                                    '2' => [
+                                        'data-bs-toggle' => 'tooltip', 
+                                        'title' => $translator->translate('invoice.security.disable.read.only.true.sent.check.and.mark')]
+                                ]
+                            ]
+                        ];
+                        $iROString = $iRO ? 'true' : 'false';
+                        /**
+                         * @var array $attributesMap[$iROString]
+                         * @var array $attributesMap[$iROString][$dRO]
+                         * @var array $attributesMap[$iROString][$dRO][$status]
+                         */
+                        $attributes = $attributesMap[$iROString][$dRO][$status];
+                        return $attributes;
+                    },      
                 ),
                 new ActionButton(
                     url: static function (Inv $inv) use ($translator, $urlGenerator): string {
                         return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf', ['id' => $inv->getId()]);
-                    },
+                    },       
                     attributes: [
                        'data-bs-toggle' => 'tooltip',
                        'target' => '_blank',
@@ -811,4 +935,3 @@ echo GridView::widget()
 <?php echo $modal_add_inv; ?>
 <?php echo $modal_create_recurring_multiple; ?>
 <?php echo $modal_copy_inv_multiple; ?>
-      
