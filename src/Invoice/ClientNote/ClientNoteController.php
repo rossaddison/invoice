@@ -8,7 +8,6 @@ use App\Invoice\BaseController;
 use App\Invoice\Entity\ClientNote;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\ClientNote\ClientNoteService;
 use App\Invoice\Helpers\DateHelper;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -25,12 +24,12 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ClientNoteController extends BaseController
 {
     protected string $controllerName = 'invoice/clientnote';
-    
+
     public function __construct(
-        private ClientNoteService $clientNoteService,    
+        private ClientNoteService $clientNoteService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
