@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\UnitPeppol;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Unit;
 use App\Invoice\Entity\UnitPeppol;
 use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Unit\UnitRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -17,33 +17,28 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class UnitPeppolController
+final class UnitPeppolController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/unitpeppol';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private UnitPeppolService $unitpeppolService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/unitpeppol')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->unitpeppolService = $unitpeppolService;
     }
 
     /**
@@ -108,30 +103,19 @@ final class UnitPeppolController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param UnitPeppolRepository $unitpeppolRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(UnitPeppolRepository $unitpeppolRepository, SettingRepository $settingRepository): Response
+    public function index(UnitPeppolRepository $unitpeppolRepository): Response
     {
         $paginator = new OffsetPaginator($this->unitpeppols($unitpeppolRepository));
         $parameters = [
             'alert' => $this->alert(),
             'unitpeppols' => $this->unitpeppols($unitpeppolRepository),
-            'grid_summary' => $settingRepository->grid_summary($paginator, $this->translator, (int)$settingRepository->getSetting('default_list_limit'), $this->translator->translate('invoice.unit.peppol'), ''),
+            'grid_summary' => $this->sR->grid_summary($paginator,
+                                   $this->translator, 
+                                   (int)$this->sR->getSetting('default_list_limit'), 
+                                   $this->translator->translate('invoice.unit.peppol'), ''),
             'paginator' => $paginator,
         ];
         return $this->viewRenderer->render('index', $parameters);
@@ -165,7 +149,6 @@ final class UnitPeppolController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param UnitPeppolRepository $unitpeppolRepository
-     * @param SettingRepository $settingRepository
      * @param UnitRepository $unitRepository
      * @return Response
      */

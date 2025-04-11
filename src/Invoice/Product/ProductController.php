@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Product;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\Product;
 use App\Invoice\Entity\ProductCustom;
@@ -51,7 +52,6 @@ use App\Invoice\Quote\QuoteRepository as qR;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Payment\PaymentRepository as pymR;
-use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 //  Psr
@@ -66,45 +66,45 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class ProductController
+final class ProductController extends BaseController
 {
-    use FlashMessage;
-
+    protected string $controllerName = 'invoice/product';
+    
     private const string FILTER_FAMILY = 'ff';
     private const string FILTER_PRODUCT = 'fp';
     private const string RESET_TRUE = 'rt';
-    public ViewRenderer $viewRenderer;
-    private Flash $flash;
     private string $ffc = self::FILTER_FAMILY;
     private string $fpc = self::FILTER_PRODUCT;
     private string $rtc = self::RESET_TRUE;
 
     public function __construct(
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
+        private DataResponseFactoryInterface $responseFactory,    
         private ProductService $productService,
         private ProductCustomService $productCustomService,
         private QuoteItemService $quoteitemService,
         private InvItemService $invitemService,
-        private UserService $userService,
-        private DataResponseFactoryInterface $responseFactory,
-        private SessionInterface $session,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/product')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->responseFactory = $responseFactory;
+        $this->productService = $productService;
+        $this->productCustomService = $productCustomService;
+        $this->quoteitemService = $quoteitemService;
+        $this->invitemService = $invitemService;
+    }   
 
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param sR $sR
      * @param fR $fR
      * @param uR $uR
      * @param trR $trR
@@ -114,7 +114,7 @@ final class ProductController
      * @param upR $upR
      * @return Response
      */
-    public function add(Request $request, FormHydrator $formHydrator, sR $sR, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR): Response
+    public function add(Request $request, FormHydrator $formHydrator, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR): Response
     {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
@@ -139,7 +139,7 @@ final class ProductController
             'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
             'customFields' => $cfR->repoTablequery('product_custom'),
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-            'cvH' => new CVH($sR),
+            'cvH' => new CVH($this->sR),
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm,
         ];
@@ -190,7 +190,6 @@ final class ProductController
      * @param string $id
      * @param FormHydrator $formHydrator
      * @param pR $pR
-     * @param sR $sR
      * @param fR $fR
      * @param uR $uR
      * @param trR $trR
@@ -205,7 +204,6 @@ final class ProductController
         #[RouteArgument('id')] string $id,
         FormHydrator $formHydrator,
         pR $pR,
-        sR $sR,
         fR $fR,
         uR $uR,
         trR $trR,
@@ -240,7 +238,7 @@ final class ProductController
                     'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
                     'customFields' => $cfR->repoTablequery('product_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                    'cvH' => new CVH($sR),
+                    'cvH' => new CVH($this->sR),
                     'productCustomValues' => $this->product_custom_values($product_id, $pcR),
                     'productCustomForm' => $productCustomForm,
                 ];
@@ -292,20 +290,7 @@ final class ProductController
         } // product
         return $this->webService->getRedirectResponse('product/index');
     }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
+    
     /**
      * @param pR $pR
      * @param string $id
@@ -423,12 +408,11 @@ final class ProductController
      * @param FastRouteGenerator $urlFastRouteGenerator
      * @param Request $request
      * @param pR $pR
-     * @param sR $sR
      * @param fR $fR
      * @param string $page
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, sR $sR, fR $fR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
+    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, fR $fR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('invoice.productimage.view'));
@@ -458,7 +442,7 @@ final class ProductController
         $parameters = [
             'alert' => $this->alert(),
             'page' => $currentPageNeverZero,
-            'defaultPageSizeOffsetPaginator' => (int)$sR->getSetting('default_list_limit'),
+            'defaultPageSizeOffsetPaginator' => (int)$this->sR->getSetting('default_list_limit'),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
             'optionsDataFamiliesDropdownFilter' => $this->optionsDataFamilies($fR),
             'products' => $products,
@@ -568,14 +552,13 @@ final class ProductController
      * @param Product $product
      * @param string $inv_id
      * @param pR $pR
-     * @param sR $sR
      * @param trR $trR
      * @param uR $unR
      * @param iiaR $iiaR
      * @param uR $uR
      * @param FormHydrator $formHydrator
      */
-    private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, sR $sR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator): void
+    private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm($invItem, (int)$inv_id);
@@ -599,7 +582,7 @@ final class ProductController
             'product_unit_id' => $product->getUnit_id(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR), $iiaR, $sR, $uR);
+            $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR), $iiaR, $this->sR, $uR);
         }
     }
 
@@ -614,7 +597,6 @@ final class ProductController
      * @param qiR $qiR
      * @param qR $qR
      * @param qtrR $qtrR
-     * @param sR $sR
      * @param trR $trR
      * @param uR $uR
      * @param qiaR $qiaR
@@ -628,7 +610,6 @@ final class ProductController
         qiR $qiR,
         qR $qR,
         qtrR $qtrR,
-        sR $sR,
         trR $trR,
         uR $uR,
         qiaR $qiaR,
@@ -641,7 +622,7 @@ final class ProductController
         $quote_id = $select_items['quote_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of products.
         $products = $pR->findinProducts($product_ids);
-        $numberHelper = new NumberHelper($sR);
+        $numberHelper = new NumberHelper($this->sR);
         // Format the product prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Product $product */
@@ -660,7 +641,6 @@ final class ProductController
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
-     * @param sR $sR
      * @param trR $trR
      * @param uR $uR
      * @param iiaR $iiaR
@@ -671,7 +651,7 @@ final class ProductController
      * @param pymR $pymR
      * @param aciR $aciR
      */
-    public function selection_inv(FormHydrator $formHydrator, Request $request, pR $pR, sR $sR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR, iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): \Yiisoft\DataResponse\DataResponse
+    public function selection_inv(FormHydrator $formHydrator, Request $request, pR $pR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR, iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): \Yiisoft\DataResponse\DataResponse
     {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
@@ -680,13 +660,13 @@ final class ProductController
         $inv_id = $select_items['inv_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of products.
         $products = $pR->findinProducts($product_ids);
-        $numberHelper = new NumberHelper($sR);
+        $numberHelper = new NumberHelper($this->sR);
         // Format the product prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
             $product->setProduct_price((float)$numberHelper->format_amount($product->getProduct_price()));
-            $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $sR, $trR, $uR, $iiaR, $uR, $formHydrator);
+            $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $trR, $uR, $iiaR, $uR, $formHydrator);
             $order++;
         }
         $numberHelper->calculate_inv((string)$this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
@@ -749,7 +729,6 @@ final class ProductController
      * @param pR $pR
      * @param pcR $pcR
      * @param ppR $ppR
-     * @param sR $sR
      * @param piR $piR
      * @param trR $trR
      * @param uR $uR
@@ -763,7 +742,6 @@ final class ProductController
         pR $pR,
         pcR $pcR,
         ppR $ppR,
-        sR $sR,
         piR $piR,
         trR $trR,
         uR $uR,
@@ -795,7 +773,7 @@ final class ProductController
                         'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
                         'custom_fields' => $cfR->repoTablequery('product_custom'),
                         'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                        'cvH' => new CVH($sR),
+                        'cvH' => new CVH($this->sR),
                         'product_custom_values' => $this->product_custom_values($product_id, $pcR),
                         'productCustomForm' => $productCustomForm,
                         'upR' => $upR,
@@ -814,7 +792,7 @@ final class ProductController
                         ]),
                     ]
                 ),
-                'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR, $sR),
+                'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR),
                 'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
                     'product' => $product,
                     'productImages' => $product_images,
@@ -833,7 +811,6 @@ final class ProductController
      * @param int $product_id
      * @param string $fileName
      * @param piR $piR
-     * @param sR $sR
      * @return bool
      */
     private function image_attachment_move_to(
@@ -841,8 +818,7 @@ final class ProductController
         string $target,
         int $product_id,
         string $fileName,
-        piR $piR,
-        sR $sR
+        piR $piR
     ): bool {
         $file_exists = file_exists($target);
         // The file does not exist yet in the target path but it exists in the tmp folder on the server
@@ -870,11 +846,10 @@ final class ProductController
      * @param string $id
      * @param PR $pR
      * @param PIR $piR
-     * @param sR $sR
      */
-    public function image_attachment(#[RouteArgument('id')] string $id, pR $pR, piR $piR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response
+    public function image_attachment(#[RouteArgument('id')] string $id, pR $pR, piR $piR): \Yiisoft\DataResponse\DataResponse|Response
     {
-        $aliases = $sR->get_productimages_files_folder_aliases();
+        $aliases = $this->sR->get_productimages_files_folder_aliases();
         // https://github.com/yiisoft/yii2/issues/3566
         // Save the image directly to the web accessible folder - assets/publc/product
         $targetPath = $aliases->get('@public_product_images');
@@ -896,7 +871,7 @@ final class ProductController
                         $original_file_name = preg_replace('/\s+/', '_', $_FILES['ImageAttachForm']['name']['attachFile']);
                         if (null !== $original_file_name) {
                             $target_path_with_filename = $targetPath . '/' . $original_file_name;
-                            if ($this->image_attachment_move_to($temporary_file, $target_path_with_filename, (int)$product_id, $original_file_name, $piR, $sR)) {
+                            if ($this->image_attachment_move_to($temporary_file, $target_path_with_filename, (int)$product_id, $original_file_name, $piR)) {
                                 return $this->responseFactory->createResponse($this->image_attachment_successfully_created((int) $product_id));
                             }
                             return $this->responseFactory->createResponse($this->image_attachment_no_file_uploaded((int) $product_id));
@@ -915,10 +890,9 @@ final class ProductController
      * @param string $_language
      * @param int $product_id
      * @param piR $piR
-     * @param sR $sR
      * @return string
      */
-    private function view_partial_product_image(string $_language, int $product_id, piR $piR, sR $sR): string
+    private function view_partial_product_image(string $_language, int $product_id, piR $piR): string
     {
         $productimages = $piR->repoProductImageProductquery($product_id);
         $paginator = new OffsetPaginator($productimages);

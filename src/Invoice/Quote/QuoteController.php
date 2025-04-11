@@ -136,7 +136,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class QuoteController extends BaseController
 {
-    protected string $controllerName = 'invoice';
+    protected string $controllerName = 'invoice/quote';
 
     private NumberHelper $number_helper;
     private PdfHelper $pdf_helper;
@@ -357,11 +357,11 @@ final class QuoteController extends BaseController
             /**
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
-            return $this->viewRenderer->render('quote/modal_add_quote_form', $parameters);
+            return $this->viewRenderer->render('modal_add_quote_form', $parameters);
         }
         // show the form inside a modal when engaging with a view
         if ($origin == 'quote') {
-            return $this->viewRenderer->render('quote/modal_layout', [
+            return $this->viewRenderer->render('modal_layout', [
                 // use type to id the quote\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
                 'type' => 'quote',
                 'form' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors),
@@ -370,7 +370,7 @@ final class QuoteController extends BaseController
         }
         // Otherwise return to client
         if (($origin != 'main') && ($origin != 'quote')) {
-            return $this->viewRenderer->render('quote/modal_layout', [
+            return $this->viewRenderer->render('modal_layout', [
                 'type' => 'client',
                 'form' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors),
                 'return_url_action' => 'add',
@@ -914,11 +914,11 @@ final class QuoteController extends BaseController
                         }
                         $parameters['form'] = $form;
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                        return $this->viewRenderer->render('quote/_form', $parameters);
+                        return $this->viewRenderer->render('_form', $parameters);
                     }
                 }
             }
-            return $this->viewRenderer->render('quote/_form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         } // $quote
         return $this->webService->getNotFoundResponse();
     }
@@ -1065,7 +1065,7 @@ final class QuoteController extends BaseController
                     'form' => new MailerQuoteForm(),
                     'custom_fields' => $custom_fields,
                 ];
-                return $this->viewRenderer->render('quote/mailer_quote', $parameters);
+                return $this->viewRenderer->render('mailer_quote', $parameters);
             } // quote
             return $this->webService->getRedirectResponse('quote/index');
         } // quote_entity
@@ -1444,7 +1444,7 @@ final class QuoteController extends BaseController
                         'status' => $status,
                         'urlCreator' => $urlCreator,
                     ];
-                    return $this->viewRenderer->render('quote/guest', $parameters);
+                    return $this->viewRenderer->render('guest', $parameters);
                 } // empty user client
                 throw new NoClientsAssignedToUserException($this->translator);
             } // userinv
@@ -1576,7 +1576,7 @@ final class QuoteController extends BaseController
                 'modal_add_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString('quote', []),
                 'urlCreator' => $urlCreator,
             ];
-            return $this->viewRenderer->render('quote/index', $parameters);
+            return $this->viewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info', $this->translator->translate('invoice.user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
@@ -2751,7 +2751,7 @@ final class QuoteController extends BaseController
                                             'modal_purchase_order_number' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_purchase_order_number', ['urlKey' => $urlKey]),
                                         ]),
                                     ];
-                                    return $this->viewRenderer->render('quote/url_key', $parameters);
+                                    return $this->viewRenderer->render('url_key', $parameters);
                                 } // if quote_amount
                             } // if there is a quote id
                         } // user_inv->getType
@@ -2924,7 +2924,7 @@ final class QuoteController extends BaseController
                             'quoteCustomForm' => new QuoteCustomForm(new QuoteCustom()),
                         ]),
                     ];
-                    return $this->viewRenderer->render('quote/_view', $parameters);
+                    return $this->viewRenderer->render('_view', $parameters);
                 } // quote_amount
                 $this->flashMessage('info', 'no quote tax');
             } // null!= $quote_id

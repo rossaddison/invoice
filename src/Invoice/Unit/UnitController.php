@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Unit;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Unit;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -16,46 +16,41 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class UnitController
+final class UnitController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
+    protected string $controllerName = 'invoice/unit';
 
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private UnitService $unitService,
-        private UserService $userService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/unit')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->unitService = $unitService;
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param UnitRepository $unitRepository
      * @param UnitPeppolRepository $upR
-     * @param SettingRepository $settingRepository
      */
-    public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR): \Yiisoft\DataResponse\DataResponse
     {
         $units = $this->units($unitRepository);
         $pageNum = (int)$currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($units))
-            ->withPageSize($settingRepository->positiveListLimit())
+            ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero);
         $parameters = [
             'alert' => $this->alert(),
@@ -198,18 +193,5 @@ final class UnitController
     private function units(UnitRepository $unitRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $unitRepository->findAllPreloaded();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

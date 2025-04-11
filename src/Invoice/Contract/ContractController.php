@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Contract;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Contract;
 use App\Invoice\Contract\ContractRepository as contractR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -21,32 +21,27 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class ContractController
+final class ContractController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private const int CONTRACTS_PER_PAGE = 1;
-
+    protected string $controllerName = 'invoice/contract';
+    
     public function __construct(
-        private SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private ContractService $contractService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/contract')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->contractService = $contractService;
+    }    
 
     /**
      * @param CurrentRoute $currentRoute
@@ -54,10 +49,9 @@ final class ContractController
      * @param Request $request
      * @param cR $cR
      * @param iR $iR
-     * @param sR $sR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(CurrentRoute $currentRoute, contractR $contractR, Request $request, cR $cR, iR $iR, sR $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, contractR $contractR, Request $request, cR $cR, iR $iR): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
         $query_params = $request->getQueryParams();
@@ -76,7 +70,7 @@ final class ContractController
         $contracts = $this->contracts_with_sort($contractR, $sort);
         $this->flashMessage('info', $this->translator->translate('invoice.invoice.contract.create'));
         $paginator = (new OffsetPaginator($contracts))
-        ->withPageSize($sR->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [
@@ -94,10 +88,9 @@ final class ContractController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param cR $cR
-     * @param sR $sR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function add(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator, cR $cR, sR $sR): \Yiisoft\DataResponse\DataResponse|Response
+    public function add(CurrentRoute $currentRoute, Request $request, FormHydrator $formHydrator, cR $cR): \Yiisoft\DataResponse\DataResponse|Response
     {
         $client_id = $currentRoute->getArgument('client_id');
         $contract = new Contract();
@@ -125,7 +118,7 @@ final class ContractController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $this->contractService->saveContract($contract, $body, $sR);
+                    $this->contractService->saveContract($contract, $body, $this->sR);
                     return $this->webService->getRedirectResponse('contract/index');
                 }
             }
@@ -140,15 +133,13 @@ final class ContractController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param contractR $contractRepository
-     * @param sR $sR
      * @return Response
      */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        contractR $contractRepository,
-        sR $sR
+        contractR $contractRepository
     ): Response {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
@@ -164,7 +155,7 @@ final class ContractController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
-                        $this->contractService->saveContract($contract, $body, $sR);
+                        $this->contractService->saveContract($contract, $body, $this->sR);
                         return $this->webService->getRedirectResponse('contract/index');
                     }
                 }
@@ -249,15 +240,6 @@ final class ContractController
     }
 
     /**
-     * @param contractR $contractRepository
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function contracts(contractR $contractRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $contractRepository->findAllPreloaded();
-    }
-
-    /**
      * @param contractR $cR
      * @param Sort $sort
      *
@@ -268,20 +250,6 @@ final class ContractController
     private function contracts_with_sort(contractR $cR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $cR->findAllPreloaded()
-                       ->withSort($sort);
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
+                  ->withSort($sort);
     }
 }

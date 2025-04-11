@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\FromDropDown;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\FromDropDown;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -15,33 +15,28 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class FromDropDownController
+final class FromDropDownController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/fromdropdown';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private FromDropDownService $fromService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/from')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->fromService = $fromService;
+    }    
 
     /**
      * @param Request $request
@@ -73,34 +68,21 @@ final class FromDropDownController
         return $this->viewRenderer->render('_form', $parameters);
     }
 
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository, SettingRepository $settingRepository): Response
+    public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): Response
     {
         $page = (int)$currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $from = $fromRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($from))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [
             'froms' => $this->froms($fromRepository),
             'paginator' => $paginator,
             'alert' => $this->alert(),
-            'max' => (int) $settingRepository->getSetting('default_list_limit'),
+            'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }

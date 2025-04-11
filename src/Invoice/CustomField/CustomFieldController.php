@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\CustomField;
 use App\Invoice\CustomValue\CustomValueRepository;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 // Psr
@@ -21,37 +21,32 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class CustomFieldController
+final class CustomFieldController extends BaseController
 {
-    use FlashMessage;
-
-    private ViewRenderer $viewRenderer;
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/customfield';
+    
     public function __construct(
+        private CustomFieldService $customFieldService,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private CustomFieldService $customfieldService,
-        private TranslatorInterface $translator,
-        private SessionInterface $session
+        WebControllerService $webService,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/customfield')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->customFieldService = $customFieldService;
+    }    
 
     /**
      * @param CustomFieldRepository $customfieldRepository
-     * @param SettingRepository $settingRepository
      * @param Request $request
      */
-    public function index(CustomFieldRepository $customfieldRepository, SettingRepository $settingRepository, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(CustomFieldRepository $customfieldRepository, Request $request): \Yiisoft\DataResponse\DataResponse
     {
         $query_params = $request->getQueryParams();
         /**
@@ -65,7 +60,7 @@ final class CustomFieldController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $customFields = $this->customFieldsWithSort($customfieldRepository, $sort);
         $paginator = (new DataOffsetPaginator($customFields))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $this->rbac();
@@ -73,8 +68,8 @@ final class CustomFieldController
         $parameters = [
             'page' => $page,
             'paginator' => $paginator,
-            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                  ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                  ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'custom_tables' => $this->custom_tables(),
             'custom_value_fields' => self::custom_value_fields(),
             'alert' => $this->alert(),
@@ -99,13 +94,11 @@ final class CustomFieldController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator,
-        SettingRepository $settingRepository
+        FormHydrator $formHydrator
     ): Response {
         $body = $request->getParsedBody() ?? [];
         $custom_field = new CustomField();
@@ -121,13 +114,13 @@ final class CustomFieldController
             'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
-            'positions' => $this->positions($settingRepository),
+            'positions' => $this->positions(),
         ];
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->customfieldService->saveCustomField($custom_field, $body);
+                    $this->customFieldService->saveCustomField($custom_field, $body);
                     return $this->webService->getRedirectResponse('customfield/index');
                 }
             }
@@ -142,15 +135,13 @@ final class CustomFieldController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param CustomFieldRepository $customfieldRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        CustomFieldRepository $customfieldRepository,
-        SettingRepository $settingRepository
+        CustomFieldRepository $customfieldRepository
     ): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
@@ -164,13 +155,13 @@ final class CustomFieldController
                 'tables' => $this->custom_tables(),
                 'user_input_types' => ['NUMBER','TEXT','DATE','BOOLEAN'],
                 'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
-                'positions' => $this->positions($settingRepository),
+                'positions' => $this->positions(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->customfieldService->saveCustomField($custom_field, $body);
+                        $this->customFieldService->saveCustomField($custom_field, $body);
                         return $this->webService->getRedirectResponse('customfield/index');
                     }
                 }
@@ -194,7 +185,7 @@ final class CustomFieldController
             $custom_values = $customvalueRepository->repoCustomFieldquery_count((int)$custom_field->getId());
             // Make sure all custom values associated with the custom field have been deleted first before commencing
             if (!($custom_values > 0)) {
-                $this->customfieldService->deleteCustomField($custom_field);
+                $this->customFieldService->deleteCustomField($custom_field);
                 return $this->webService->getRedirectResponse('customfield/index');
             }
         }
@@ -206,7 +197,6 @@ final class CustomFieldController
     /**
      * @param CurrentRoute $currentRoute
      * @param CustomFieldRepository $customfieldRepository
-     * @param SettingRepository $settingRepository
      */
     public function view(CurrentRoute $currentRoute, CustomFieldRepository $customfieldRepository): Response
     {
@@ -266,22 +256,7 @@ final class CustomFieldController
     /**
      * @return string
      */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
-    /**
-     * @param SettingRepository $s
-     * @return string
-     */
-    private function positions(SettingRepository $s): string
+    private function positions(): string
     {
         // The default position on the form is custom fields so if none of the other options are chosen then the new field
         // will appear under the default custom field section. The client form has five areas where the new field can appear.

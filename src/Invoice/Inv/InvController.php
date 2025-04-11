@@ -135,7 +135,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class InvController extends BaseController
 {
-    protected string $controllerName = 'invoice';
+    protected string $controllerName = 'invoice/inv';
 
     private DateHelper $date_helper;
     private NumberHelper $number_helper;
@@ -249,7 +249,7 @@ final class InvController extends BaseController
             'alert' => $this->alert(),
             'body' => $request->getParsedBody(),
         ];
-        return $this->viewRenderer->render('inv/archive', $parameters);
+        return $this->viewRenderer->render('archive', $parameters);
     }
 
     /**
@@ -576,11 +576,11 @@ final class InvController extends BaseController
             /**
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
-            return $this->viewRenderer->render('inv/modal_add_inv_form', $parameters);
+            return $this->viewRenderer->render('modal_add_inv_form', $parameters);
         }
         // show the form inside a modal when engaging with a view
         if ($origin == 'inv') {
-            return $this->viewRenderer->render('inv/modal_layout', [
+            return $this->viewRenderer->render('modal_layout', [
                 // use type to id the inv\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
                 'type' => 'inv',
                 'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),
@@ -589,7 +589,7 @@ final class InvController extends BaseController
         }
         // Otherwise return to client
         if (($origin != 'main') && ($origin != 'inv') && ($origin != 'dashboard')) {
-            return $this->viewRenderer->render('inv/modal_layout', [
+            return $this->viewRenderer->render('modal_layout', [
                 'type' => 'client',
                 'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),
                 'return_url_action' => 'add',
@@ -701,7 +701,7 @@ final class InvController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('inv/_form_create_confirm', $parameters);
+        return $this->viewRenderer->render('_form_create_confirm', $parameters);
     }
 
     /**
@@ -1273,7 +1273,7 @@ final class InvController extends BaseController
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                            return $this->viewRenderer->render('inv/_form_edit', $parameters);
+                            return $this->viewRenderer->render('_form_edit', $parameters);
                         }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
                         $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
@@ -1282,7 +1282,7 @@ final class InvController extends BaseController
                 } //$body
                 return $this->webService->getRedirectResponse('inv/index');
             }
-            return $this->viewRenderer->render('inv/_form_edit', $parameters);
+            return $this->viewRenderer->render('_form_edit', $parameters);
         } // if $inv_id
         return $this->webService->getRedirectResponse('inv/index');
     }
@@ -1479,7 +1479,7 @@ final class InvController extends BaseController
                     ]),
                     'form' => new MailerInvForm(),
                 ];
-                return $this->viewRenderer->render('inv/mailer_invoice', $parameters);
+                return $this->viewRenderer->render('mailer_invoice', $parameters);
             }// if invoice
             return $this->webService->getRedirectResponse('inv/index');
         } // if $inv
@@ -1918,7 +1918,7 @@ final class InvController extends BaseController
                         'sortString' => $sortString,
                         'status' => $status,
                     ];
-                    return $this->viewRenderer->render('inv/guest', $parameters);
+                    return $this->viewRenderer->render('guest', $parameters);
                 } // no clients assigned to this user
                 throw new NoClientsAssignedToUserException($this->translator);
             } // $user_inv
@@ -2114,7 +2114,7 @@ final class InvController extends BaseController
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true,
             ];
-            return $this->viewRenderer->render('inv/index', $parameters);
+            return $this->viewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info', $this->translator->translate('invoice.user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
@@ -3424,7 +3424,7 @@ final class InvController extends BaseController
                                     'userInv' => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,
                                 ]),
                             ];
-                            return $this->viewRenderer->render('inv/url_key', $parameters);
+                            return $this->viewRenderer->render('url_key', $parameters);
                         } // if inv_amount
                         $this->flashMessage('warning', $this->translator->translate('invoice.invoice.amount.no'));
                         return $this->webService->getNotFoundResponse();
@@ -4064,7 +4064,7 @@ final class InvController extends BaseController
                             'inv'
                         ),
                 ];
-                return $this->viewRenderer->render('inv/view', $parameters);
+                return $this->viewRenderer->render('view', $parameters);
             } // if $inv_amount
             return $this->webService->getNotFoundResponse();
         } // if $inv

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItemAmount;
 use App\Invoice\Helpers\NumberHelper;
@@ -12,7 +13,7 @@ use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
 use App\User\UserService;
@@ -23,33 +24,27 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class SalesOrderItemController
+final class SalesOrderItemController extends BaseController
 {
+    protected string $controllerName = 'invoice/salesorderitem';
+    
     public function __construct(
-        private readonly SessionInterface $session,
-        private ViewRenderer $viewRenderer,
-        private readonly WebControllerService $webService,
-        private readonly UserService $userService,
         private readonly SalesOrderItemService $salesorderitemService,
         private readonly DataResponseFactoryInterface $factory,
-        private readonly Flash $flash,
-        private readonly TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorderitem')
-                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                                                     ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/salesorderitem')
-                                                 ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                                                 ->withLayout('@views/layout/invoice.php');
-        }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->salesorderitemService = $salesorderitemService;
+        $this->factory = $factory;
     }
 
     public function edit(
@@ -57,7 +52,6 @@ final class SalesOrderItemController
         Request $request,
         FormHydrator $formHydrator,
         SOIR $soiR,
-        SettingRepository $sR,
         TRR $trR,
         PR $pR,
         UR $uR,
@@ -77,7 +71,7 @@ final class SalesOrderItemController
                 'products' => $pR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),
                 'units' => $uR->findAllPreloaded(),
-                'numberHelper' => new NumberHelper($sR),
+                'numberHelper' => new NumberHelper($this->sR),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -138,9 +132,8 @@ final class SalesOrderItemController
      * @param float $tax_rate_percentage
      * @param SOIAS $soias
      * @param SOIAR $soiar
-     * @param SettingRepository $sR
      */
-    public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, SOIAS $soias, SOIAR $soiar, SettingRepository $sR): void
+    public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, SOIAS $soias, SOIAR $soiar): void
     {
         $soias_array = [];
         if ($so_item_id) {
@@ -149,11 +142,11 @@ final class SalesOrderItemController
             $discount_total = ($quantity * $discount);
             $tax_total = 0.00;
             // NO VAT
-            if ($sR->getSetting('enable_vat_registration') === '0') {
+            if ($this->sR->getSetting('enable_vat_registration') === '0') {
                 $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
             }
             // VAT
-            if ($sR->getSetting('enable_vat_registration') === '1') {
+            if ($this->sR->getSetting('enable_vat_registration') === '1') {
                 // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
                 // @see https://informi.co.uk/finance/how-vat-affected-discounts
                 $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100.00));

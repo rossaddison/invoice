@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Import;
 
+use App\Invoice\BaseController;
 use App\Service\WebControllerService;
 use App\User\UserService;
 // Exceptions
@@ -14,10 +15,9 @@ use App\Invoice\Entity\TaxRate;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Product\ProductRepository;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
-use App\Invoice\Traits\FlashMessage;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
 /**
@@ -29,35 +29,34 @@ use Yiisoft\Db\Mysql\Connection;
 use Yiisoft\Db\Mysql\Driver;
 use Yiisoft\Db\Mysql\Dsn;
 use Yiisoft\Db\Query\Query;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class ImportController
+final class ImportController extends BaseController
 {
-    use FlashMessage;
-
-    private ViewRenderer $viewRenderer;
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/import';
+    
     public function __construct(
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private Session $session,
-        private TranslatorInterface $translator,
         private ClientRepository $cR,
         private UnitRepository $uR,
         private FamilyRepository $fR,
         private ProductRepository $pR,
-        private SettingRepository $sR,
-        private TaxRateRepository $trR
+        private TaxRateRepository $trR,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/import')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->cR = $cR;
+        $this->uR = $uR;
+        $this->fR = $fR;
+        $this->pR = $pR;
+        $this->trR = $trR;
+    }   
 
     private function invoiceplaneConnected(): Connection|null
     {
@@ -358,18 +357,5 @@ final class ImportController
             $this->pR->save($newProduct);
         }
         $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.products'));
-    }
-
-    /**
-    * @return string
-    */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

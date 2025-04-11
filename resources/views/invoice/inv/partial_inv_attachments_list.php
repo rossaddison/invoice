@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Invoice\Entity\Upload;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 
@@ -34,7 +35,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             ),
             new DataColumn(
                 header:  $translator->translate('i.download'),
-                content: static function (Upload $model) use ($urlGenerator): string {
+                content: static function (Upload $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -46,13 +47,13 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                         ),
                         $urlGenerator->generate('inv/download_file', ['upload_id' => $model->getId(), '_language' => 'en']),
                         []
-                    )->render();
+                    );
                 }
             ),
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.edit'),
-                content: static function (Upload $model) use ($urlGenerator): string {
+                content: static function (Upload $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -64,13 +65,13 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                         ),
                         $urlGenerator->generate('upload/edit', ['id' => $model->getId(), '_language' => 'en']),
                         []
-                    )->render();
+                    );
                 }
             ),
             new DataColumn(
                 visible: $invEdit,
                 header:  $translator->translate('i.delete'),
-                content: static function (Upload $model) use ($translator, $urlGenerator): string {
+                content: static function (Upload $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -83,7 +84,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                         ),
                         $urlGenerator->generate('upload/delete', ['id' => $model->getId(), '_language' => 'en']),
                         []
-                    )->render();
+                    );
                 }
             ),
         ];

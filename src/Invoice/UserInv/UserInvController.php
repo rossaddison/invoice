@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
+use App\Invoice\BaseController;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Entity\Client;
@@ -11,7 +12,6 @@ use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Traits\FlashMessage;
 use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Service\WebControllerService;
@@ -22,7 +22,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -33,47 +32,37 @@ use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class UserInvController
+final class UserInvController extends BaseController
 {
-    use FlashMessage;
-    private Manager $manager;
-    private Rule $rule;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/userinv';
+    
     public function __construct(
-        private Assignment $assignment,
-
         // add, save, remove, clear, children, parents
         private ItemStorage $itemstorage,
-        Rule $rule,
-        private DataResponseFactoryInterface $factory,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
+        private Assignment $assignment,
+        private Rule $rule,
+        private Manager $manager,
         private UrlGenerator $urlGenerator,
-        private UserService $userService,
         private UserInvService $userinvService,
-        private TranslatorInterface $translator,
-        private Session $session,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService    
     ) {
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         // @see yiisoft/rbac-php
-        $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
+        $this->itemstorage = $itemstorage;
+        $this->assignment = $assignment;        
         $this->rule = $rule;
-        $this->viewRenderer = $this->viewRenderer;
-        if ($this->userService->hasPermission('editUserInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/userinv')
-                                                 ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/userinv')
-                                                 ->withLayout('@views/layout/invoice.php');
-        }
-        $this->flash = new Flash($this->session);
+        $this->manager = new Manager($this->itemstorage, $this->assignment, $this->rule);
+        $this->urlGenerator = $urlGenerator;
+        $this->userinvService = $userinvService;
     }
 
     /**
@@ -81,7 +70,6 @@ final class UserInvController
      * @param Request $request
      * @param string $_language
      * @param FormHydrator $formHydrator
-     * @param sR $sR
      * @param uR $uR
      * @param uiR $uiR
      * @return Response
@@ -90,7 +78,6 @@ final class UserInvController
         Request $request,
         #[RouteArgument('_language')] string $_language,
         FormHydrator $formHydrator,
-        sR $sR,
         uR $uR,
         uiR $uiR
     ): Response {
@@ -107,8 +94,8 @@ final class UserInvController
             'errors' => [],
             'form' => $form,
             // Only include newly signed up user ids in user Table in dropdown list i.e exclude those users already added and linked with client(s)
-            'selected_country' => $sR->getSetting('default_country'),
-            'selected_language' => $sR->getSetting('default_language'),
+            'selected_country' => $this->sR->getSetting('default_country'),
+            'selected_language' => $this->sR->getSetting('default_language'),
             'countries' => $countries->get_country_list($_language),
             'uR' => $uR,
             'uiR' => $uiR,
@@ -301,19 +288,6 @@ final class UserInvController
          * @see config/common/routes.php Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
          */
         return $this->webService->getRedirectResponse(strlen($origin) > 0 ? $origin . '/guest' : 'client/guest');
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     /**

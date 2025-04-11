@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,36 +19,27 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class PostalAddressController
+final class PostalAddressController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/postaladdress'; 
+            
     public function __construct(
-        private SessionInterface $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private PostalAddressService $postaladdressService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/postaladdress')
-                                                 ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/postaladdress')
-                                                 ->withLayout('@views/layout/invoice.php');
-        }
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->postaladdressService = $postaladdressService;
+    }   
 
     /**
      * @param CurrentRoute $currentRoute
@@ -113,23 +104,9 @@ final class PostalAddressController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param FastRouteGenerator $urlFastRouteGenerator
      * @param CurrentRoute $routeCurrent
      * @param PostalAddressRepository $postaladdressRepository
-     * @param SettingRepository $settingRepository
      * @param ClientRepository $cR
      * @param string $page
      * @return Response
@@ -138,7 +115,6 @@ final class PostalAddressController
         FastRouteGenerator $urlFastRouteGenerator,
         CurrentRoute $routeCurrent,
         PostalAddressRepository $postaladdressRepository,
-        SettingRepository $settingRepository,
         ClientRepository $cR,
         #[RouteArgument('page')] string $page = '1'
     ): Response {
@@ -146,7 +122,7 @@ final class PostalAddressController
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $postaladdresses = $this->postaladdresses($postaladdressRepository);
         $paginator = (new OffsetPaginator($postaladdresses))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($page));
         $parameters = [
@@ -154,7 +130,7 @@ final class PostalAddressController
             'postaladdresses' => $postaladdresses,
             'alert' => $this->alert(),
             'paginator' => $paginator,
-            'max' => (int)$settingRepository->getSetting('default_list_limit'),
+            'max' => (int)$this->sR->getSetting('default_list_limit'),
             'cR' => $cR,
             'routeCurrent' => $routeCurrent,
             'urlFastRouteGenerator' => $urlFastRouteGenerator,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Generator;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Gentor;
 use App\Invoice\GeneratorRelation\GeneratorRelationRepository;
 use App\Invoice\Helpers\CaCertFileNotFoundException;
@@ -12,8 +13,7 @@ use App\Invoice\Helpers\GoogleTranslateJsonFileNotFoundException;
 use App\Invoice\Helpers\GoogleTranslateLocaleSettingNotFoundException;
 use App\Invoice\Helpers\GenerateCodeFileHelper;
 use App\Invoice\Libraries\Lang;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Cycle\Database\DatabaseManager;
@@ -29,19 +29,16 @@ use Yiisoft\Files\FileHelper;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\View\View;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-class GeneratorController
+class GeneratorController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private Aliases $aliases;
+    protected string $controllerName = 'invoice/generator';
+    
     public const string ENTITY = 'Entity.php';
     public const string REPO = 'Repository.php';
     public const string FORM = 'Form.php';
@@ -99,19 +96,21 @@ class GeneratorController
     public const string _DIFF = '_diff_lang.php';
 
     public function __construct(
+        private Aliases $aliases,
         private DataResponseFactoryInterface $factory,
         private GeneratorService $generatorService,
-        private Session $session,
-        private TranslatorInterface $translator,
-        private UserService $userService,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/generator')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->aliases = $this->setAliases();
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->aliases = $aliases;
+        $this->factory = $factory;
+        $this->generatorService = $generatorService;
+    }    
 
     /**
      * Compare e.g \resources\messages\de\app.php to the base \resources\messages\en\app.php
@@ -120,9 +119,9 @@ class GeneratorController
      * @throws GoogleTranslateLocaleSettingNotFoundException
      * @psalm-suppress MixedAssignment $lang
      */
-    private function rebuildLocale(SettingRepository $sR): void
+    private function rebuildLocale(): void
     {
-        $targetLanguage = $sR->getSetting('google_translate_locale');
+        $targetLanguage = $this->sR->getSetting('google_translate_locale');
         if (empty($targetLanguage)) {
             throw new GoogleTranslateLocaleSettingNotFoundException();
         }
@@ -177,13 +176,12 @@ class GeneratorController
      *          These individual files can then be combinded manually into a app.php
      *
      * @param CurrentRoute $currentRoute
-     * @param SettingRepository $sR
      * @throws CaCertFileNotFoundException
      * @throws GoogleTranslateJsonFileNotFoundException
      * @throws GoogleTranslateLocaleSettingNotFoundException
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function google_translate_lang(CurrentRoute $currentRoute, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse|Response
+    public function google_translate_lang(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
     {
         // 1. Downloaded https://curl.haxx.se/ca/cacert.pem" into c:\wamp64\bin\php\{active_php} e.g. c:\wamp64\bin\php\php8.2.0
         // 2. Symlink C:\wamp64\bin\apache\apache2.4.54.2\bin\php.ini points to C:\wamp64\bin\php\php8.2\phpForApache.ini.
@@ -196,13 +194,13 @@ class GeneratorController
                 throw new CaCertFileNotFoundException();
             }
             if ($type == 'diff') {
-                $this->rebuildLocale($sR);
+                $this->rebuildLocale();
             }
             // 1. Downloaded json file at https://console.cloud.google.com/iam-admin/serviceaccounts/details/unique_project_id/keys?project={your_project_name}
             //    into ..src/Invoice/Google_translate_unique_folder
-            $aliases = $sR->get_google_translate_json_file_aliases();
+            $aliases = $this->sR->get_google_translate_json_file_aliases();
             $targetPath = $aliases->get('@google_translate_json_file_folder');
-            $path_and_filename = $targetPath . DIRECTORY_SEPARATOR . $sR->getSetting('google_translate_json_filename');
+            $path_and_filename = $targetPath . DIRECTORY_SEPARATOR . $this->sR->getSetting('google_translate_json_filename');
             if (empty($path_and_filename)) {
                 throw new GoogleTranslateJsonFileNotFoundException();
             }
@@ -225,7 +223,7 @@ class GeneratorController
                     $request->setContents($content);
                     // Retrieve the selected new language according to locale in Settings View Google Translate
                     // eg. 'es' ie. Spanish
-                    $targetLanguage = $sR->getSetting('google_translate_locale');
+                    $targetLanguage = $this->sR->getSetting('google_translate_locale');
                     if (empty($targetLanguage)) {
                         throw new GoogleTranslateLocaleSettingNotFoundException();
                     }
@@ -338,7 +336,6 @@ class GeneratorController
 
     /**
      * @param GeneratorRepository $generatorRepository
-     * @param SettingRepository $sR
      * @param GeneratorRelationRepository $grR
      */
     public function index(
@@ -509,19 +506,6 @@ class GeneratorController
     private function generators(GeneratorRepository $generatorRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $generatorRepository->findAllPreloaded();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     /**

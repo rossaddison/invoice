@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
@@ -784,7 +783,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                     </div>
                     <div class="panel-body">
                         <textarea name="terms" id="terms" rows="3" disabled
-                            class="input-sm form-control"><?= Html::encode($inv->getTerms() ?: $paymentTermArray[0]); ?></textarea>
+                            class="input-sm form-control"><?= Html::encode($paymentTermArray[$inv->getTerms()] ?: $paymentTermArray[0]); ?></textarea>
                     </div>
                 </div>
 

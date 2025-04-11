@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\CompanyPrivate;
 
+use App\Invoice\BaseController;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Entity\CompanyPrivate;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,28 +17,25 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class CompanyPrivateController
+final class CompanyPrivateController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/companyprivate';
+    
     public function __construct(
-        private SessionInterface $session,
+        private CompanyPrivateService $companyPrivateService,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private CompanyPrivateService $companyprivateService,
-        private TranslatorInterface $translator
+        WebControllerService $webService,
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/companyprivate')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->companyPrivateService  = $companyPrivateService;
     }
 
     /**
@@ -61,14 +58,12 @@ final class CompanyPrivateController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param CompanyRepository $companyRepository
      * @return Response
      */
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        SettingRepository $settingRepository,
         CompanyRepository $companyRepository
     ): Response {
         $company_private = new CompanyPrivate();
@@ -83,7 +78,7 @@ final class CompanyPrivateController
             'companies' => $companyRepository->findAllPreloaded(),
             'company_public' => $this->translator->translate('invoice.company.public'),
         ];
-        $aliases = $settingRepository->get_company_private_logos_folder_aliases();
+        $aliases = $this->sR->get_company_private_logos_folder_aliases();
         $targetPath = $aliases->get('@company_private_logos');
         $targetPublicPath = $aliases->get('@public_logo');
         if (!is_writable($targetPath)) {
@@ -105,7 +100,7 @@ final class CompanyPrivateController
                     // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
                     if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
                         if ($formHydrator->populateAndValidate($form, $body)) {
-                            $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
+                            $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
                             $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
                             return $this->webService->getRedirectResponse('companyprivate/index');
                         }
@@ -159,24 +154,10 @@ final class CompanyPrivateController
     }
 
     /**
-    * @return string
-    */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param CompanyPrivateRepository $companyprivateRepository
-     * @param SettingRepository $settingRepository
      * @param CompanyRepository $companyRepository
      * @return Response
      */
@@ -185,7 +166,6 @@ final class CompanyPrivateController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         CompanyPrivateRepository $companyprivateRepository,
-        SettingRepository $settingRepository,
         CompanyRepository $companyRepository
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
@@ -200,7 +180,7 @@ final class CompanyPrivateController
                 'companies' => $companyRepository->findAllPreloaded(),
                 'company_public' => $this->translator->translate('invoice.setting.company'),
             ];
-            $aliases = $settingRepository->get_company_private_logos_folder_aliases();
+            $aliases = $this->sR->get_company_private_logos_folder_aliases();
             $targetPath = $aliases->get('@company_private_logos');
             $targetPublicPath = $aliases->get('@public_logo');
             if (!is_writable($targetPath)) {
@@ -225,7 +205,7 @@ final class CompanyPrivateController
                     $target_file_name = $targetPath . '/' . $modified_original_file_name;
                     $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
                     // Save the body including the logo_filename field
-                    $this->companyprivateService->saveCompanyPrivate($company_private, $body, $settingRepository);
+                    $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
 
                     // Prepare the after save for the logo_filename field
                     $after_save = $companyprivateRepository->repoCompanyPrivatequery((string)$company_private->getId());
@@ -266,26 +246,24 @@ final class CompanyPrivateController
      * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
      * @param CompanyPrivateRepository $companyprivateRepository
-     * @param SettingRepository $sR
      * @return Response
      */
     public function delete(
         CurrentRoute $currentRoute,
-        CompanyPrivateRepository $companyprivateRepository,
-        SettingRepository $sR
+        CompanyPrivateRepository $companyprivateRepository
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
         if ($company_private) {
             $logo = $company_private->getLogo_filename();
             if (isset($logo) && !empty($logo)) {
-                $aliases = $sR->get_company_private_logos_folder_aliases();
+                $aliases = $this->sR->get_company_private_logos_folder_aliases();
                 $targetPath = $aliases->get('@company_private_logos');
                 $targetPublicPath = $aliases->get('@public_logo');
                 $target_file_name = $targetPath . DIRECTORY_SEPARATOR . $logo;
                 unlink($target_file_name);
                 $target_public_logo = $targetPublicPath . DIRECTORY_SEPARATOR . $logo;
                 unlink($target_public_logo);
-                $this->companyprivateService->deleteCompanyPrivate($company_private);
+                $this->companyPrivateService->deleteCompanyPrivate($company_private);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('companyprivate/index');
             }

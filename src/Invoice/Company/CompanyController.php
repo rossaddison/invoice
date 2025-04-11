@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Company;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -15,41 +15,37 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class CompanyController
+final class CompanyController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/company';
+    
     public function __construct(
-        private SessionInterface $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private CompanyService $companyService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/company')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->companyService  = $companyService;
     }
 
     /**
      * @param CompanyRepository $companyRepository
-     * @param SettingRepository $sR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(CompanyRepository $companyRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(CompanyRepository $companyRepository): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
         $companies = $this->companies($companyRepository);
         $paginator = (new OffsetPaginator($companies))
-                         ->withPageSize($sR->positiveListLimit());
+                         ->withPageSize($this->sR->positiveListLimit());
         $parameters = [
             'paginator' => $paginator,
             'company_public' => $this->translator->translate('invoice.company.public'),
@@ -208,19 +204,5 @@ final class CompanyController
     private function companies(CompanyRepository $companyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $companyRepository->findAllPreloaded();
-    }
-
-    /**
-    * @return string
-    */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
     }
 }

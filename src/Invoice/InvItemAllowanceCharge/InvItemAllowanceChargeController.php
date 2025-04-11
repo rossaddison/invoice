@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Inv\InvRepository;
@@ -15,8 +16,7 @@ use App\Invoice\InvItem\InvItemRepository;
 use App\Invoice\InvItemAmount\InvItemAmountRepository;
 use App\Invoice\InvTaxRate\InvTaxRateRepository;
 use App\Invoice\Payment\PaymentRepository;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,39 +25,31 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class InvItemAllowanceChargeController
+final class InvItemAllowanceChargeController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private NumberHelper $numberHelper;
+    protected string $controllerName = 'invoice/invitemallowancecharge';  
 
     public function __construct(
-        private SessionInterface $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
+        private NumberHelper $numberHelper,    
         private InvItemAllowanceChargeService $aciiService,
         private InvAmountService $invAmountService,
-        private TranslatorInterface $translator,
-        private SettingRepository $sR
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invitemallowancecharge')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invitemallowancecharge')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
-        $this->numberHelper = new NumberHelper($this->sR);
-    }
-
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->numberHelper = $numberHelper;
+        $this->aciiService = $aciiService;
+        $this->invAmountService = $invAmountService;
+    } 
+    
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
@@ -166,25 +158,11 @@ final class InvItemAllowanceChargeController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param Request $request
      * @param InvItemAllowanceChargeRepository $iiacR
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(Request $request, InvItemAllowanceChargeRepository $iiacR, SettingRepository $settingRepository): Response
+    public function index(Request $request, InvItemAllowanceChargeRepository $iiacR): Response
     {
         /**
          * @see ...www\invoice\resources\views\invoice\inv\partial_item_table.php search ... Make sure to fill
@@ -225,14 +203,13 @@ final class InvItemAllowanceChargeController
         InvRepository $iR,
         InvTaxRateRepository $itrR,
         PaymentRepository $pymR,
-        SettingRepository $sR,
         CurrentRoute $currentRoute
     ): Response {
         $acii = $this->acii($currentRoute, $aciiR);
         if (null !== $acii) {
             $inv_id = $acii->getInv_id();
             // delete the inv item allowance/charge and update the related inv item amount record
-            $this->aciiService->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $sR);
+            $this->aciiService->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $this->sR);
             // update the inv amount record
             $this->numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
             $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));

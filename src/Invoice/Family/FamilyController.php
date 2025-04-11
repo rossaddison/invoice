@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Family;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Family;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as csR;
 use App\Invoice\Family\FamilyRepository as fR;
-use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -20,49 +20,39 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class FamilyController
+final class FamilyController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/family';
+    
     public function __construct(
-        private DataResponseFactoryInterface $factory,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private FamilyService $familyService,
-        private UserService $userService,
-        private Session $session,
-        private TranslatorInterface $translator
+        private DataResponseFactoryInterface $factory,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/family')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/family')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
-        $this->flash = new Flash($this->session);
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->familyService = $familyService;
+        $this->factory = $factory;
+    }    
 
     /**
      * @param CurrentRoute $currentRoute
      * @param FamilyRepository $familyRepository
-     * @param SettingRepository $settingRepository
      * @param cpR $cpR
      * @param csR $csR
      */
     public function index(
         CurrentRoute $currentRoute,
         fR $familyRepository,
-        SettingRepository $settingRepository,
         cpR $cpR,
         csR $csR
     ): \Yiisoft\DataResponse\DataResponse {
@@ -71,7 +61,7 @@ final class FamilyController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($familys))
-            ->withPageSize($settingRepository->positiveListLimit())
+            ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero);
         $parameters = [
             'alert' => $this->alert(),
@@ -85,7 +75,7 @@ final class FamilyController
              */
             'cpR' => $cpR,
             'csR' => $csR,
-            'defaultPageSizeOffsetPaginator' => (int)$settingRepository->getSetting('default_list_limit'),
+            'defaultPageSizeOffsetPaginator' => (int)$this->sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -308,18 +298,5 @@ final class FamilyController
     private function familys(fR $familyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $familyRepository->findAllPreloaded();
-    }
-
-    /**
-    * @return string
-    */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

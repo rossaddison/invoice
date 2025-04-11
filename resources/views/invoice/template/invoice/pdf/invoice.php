@@ -266,7 +266,10 @@ if ($items) {
     <div style="page-break-before: always"></div>
     <div>
         <b><?= Html::encode($translator->translate('i.terms')); ?></b><br>
-        <?php echo nl2br(Html::encode($inv->getTerms())); ?>
+        <?php
+            $paymentTermArray = $s->get_payment_term_array($translator);
+            echo nl2br(Html::encode($paymentTermArray[$inv->getTerms()])); 
+        ?>
     </div>
     <br>
     <?php } ?>

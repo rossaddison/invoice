@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting;
 
+use App\Invoice\BaseController;
 // App
 use App\Invoice\Entity\Setting;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
@@ -17,8 +18,8 @@ use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Libraries\Sumex;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
-use App\Invoice\Traits\FlashMessage;
 //use App\Invoice\Libraries\Sumex;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -38,9 +39,8 @@ use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Session\SessionInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
@@ -48,46 +48,28 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // Miscellaneous
 use DateTimeZone;
 
-final class SettingController
+final class SettingController extends BaseController
 {
-    use FlashMessage;
-
-    private ViewRenderer $viewRenderer;
-    private Flash $flash;
-    private Session $session;
-
+    protected string $controllerName = 'invoice/setting';
+    
     public function __construct(
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private SettingService $settingService,
-        private Translator $translator,
-        private UserService $userService,
         private DataResponseFactoryInterface $factory,
-        Session $session,
-        private SettingRepository $s,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/setting')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($session);
-        $this->session = $session;
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->settingService = $settingService;
+        $this->factory = $factory;
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    // The debug index is simply a list of the settings that are useful to change when debugging and appears in red
-
-    /**
+     * The debug index is simply a list of the settings that are useful to change when debugging and appears in red
+     * 
      * @param CurrentRoute $currentRoute
      */
     public function debug_index(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse
@@ -95,15 +77,15 @@ final class SettingController
         $pageNum = (int)$currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->settings($this->s)))
-        ->withPageSize($this->s->positiveListLimit())
+        $paginator = (new OffsetPaginator($this->settings()))
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero);
         $canEdit = $this->rbac();
         $parameters = [
             'paginator' => $paginator,
             'alert' => $this->alert(),
             'canEdit' => $canEdit,
-            'settings' => $this->settings($this->s),
+            'settings' => $this->settings(),
             'session' => $this->session,
         ];
         return $this->viewRenderer->render('debug_index', $parameters);
@@ -117,7 +99,6 @@ final class SettingController
      * @param ER $eR
      * @param GR $gR
      * @param PM $pm
-     * @param SettingRepository $sR
      * @param TR $tR
      * @return Response
      */
@@ -127,19 +108,18 @@ final class SettingController
         ER $eR,
         GR $gR,
         PM $pm,
-        SettingRepository $sR,
         TR $tR,
         #[Query('active')] string $active = null,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => '@invoice/Language',
             '@icon' => '@invoice/Uploads/Temp']);
-        $datehelper = new DateHelper($this->s);
-        $numberhelper = new NumberHelper($this->s);
+        $datehelper = new DateHelper($this->sR);
+        $numberhelper = new NumberHelper($this->sR);
         $countries = new CountryHelper();
         $crypt = new Crypt();
         $peppol_arrays = new PeppolArrays();
-        $languages = $sR->locale_language_array();
+        $languages = $this->sR->locale_language_array();
         $body = $request->getParsedBody();
         $parameters = [
             'actionName' => 'setting/tab_index',
@@ -159,21 +139,21 @@ final class SettingController
                  * @psalm-suppress PossiblyInvalidArgument
                  */
                 'languages' => $languages,
-                'first_days_of_weeks' => ['0' => $this->s->lang('i.sunday'), '1' => $this->s->lang('i.monday')],
+                'first_days_of_weeks' => ['0' => $this->sR->lang('i.sunday'), '1' => $this->sR->lang('i.monday')],
                 'date_formats' => $datehelper->date_formats(),
                 // Used in ClientForm
                 'time_zones' => DateTimeZone::listIdentifiers(),
                 'countries' => $countries->get_country_list((string)$this->session->get('_language')),
                 'gateway_currency_codes' => CurrencyHelper::all(),
-                'number_formats' => $this->s->number_formats(),
+                'number_formats' => $this->sR->number_formats(),
                 'current_date' => new \DateTime(),
                 'icon' => $aliases->get('@icon'),
             ]),
             'invoices' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices', [
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'payment_methods' => $pm->findAllPreloaded(),
-                'public_invoice_templates' => $this->s->get_invoice_templates('public'),
-                'pdf_invoice_templates' => $this->s->get_invoice_templates('pdf'),
+                'public_invoice_templates' => $this->sR->get_invoice_templates('public'),
+                'pdf_invoice_templates' => $this->sR->get_invoice_templates('pdf'),
                 'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),
                 'roles' => Sumex::ROLES,
                 'places' => Sumex::PLACES,
@@ -181,8 +161,8 @@ final class SettingController
             ]),
             'quotes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes', [
                 'invoice_groups' => $gR->findAllPreloaded(),
-                'public_quote_templates' => $this->s->get_quote_templates('public'),
-                'pdf_quote_templates' => $this->s->get_quote_templates('pdf'),
+                'public_quote_templates' => $this->sR->get_quote_templates('public'),
+                'pdf_quote_templates' => $this->sR->get_quote_templates('pdf'),
                 'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
             ]),
             'salesorders' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
@@ -194,12 +174,12 @@ final class SettingController
             ]),
             'email' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_email'),
             'google_translate' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_google_translate', [
-                'locales' => $this->s->locales(),
+                'locales' => $this->sR->locales(),
             ]),
             'online_payment' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_online_payment', [
-                'gateway_drivers' => $this->s->active_payment_gateways(),
+                'gateway_drivers' => $this->sR->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
-                'gateway_regions' => $this->s->amazon_regions(),
+                'gateway_regions' => $this->sR->amazon_regions(),
                 'payment_methods' => $pm->findAllPreloaded(),
                 'crypt' => $crypt,
             ]),
@@ -207,7 +187,7 @@ final class SettingController
             'projects_tasks' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
             'vat_registered' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
             'peppol_electronic_invoicing' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol', [
-                'config_tax_currency' => $this->s->get_config_peppol()['TaxCurrencyCode'] ?: $this->s->get_config_company_details()['tax_currency'],
+                'config_tax_currency' => $this->sR->get_config_peppol()['TaxCurrencyCode'] ?: $this->sR->get_config_company_details()['tax_currency'],
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
                 // because goods have not been delivered ie. no date supplied, and no invoice has been issued ie. no date issued/created after the goods have been delivered
@@ -249,7 +229,7 @@ final class SettingController
                 foreach ($settings as $key => $value) {
                     $key === 'tax_rate_decimal_places' && (int)$value !== 2 ? $this->tab_index_change_decimal_column((int)$value) : '';
                     // Deal with existing keys after first installation
-                    if ($sR->repoCount($key) > 0) {
+                    if ($this->sR->repoCount($key) > 0) {
                         if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
                             // Skip all meta fields
                             continue;
@@ -260,18 +240,18 @@ final class SettingController
                         }
                         if (isset($settings[$key . '_field_is_password']) && $value !== '') {
                             // Encrypt passwords but don't save empty passwords
-                            $this->tab_index_settings_save($key, (string)$crypt->encode(trim($value)), $sR);
+                            $this->tab_index_settings_save($key, (string)$crypt->encode(trim($value)));
                         } elseif (isset($settings[$key . '_field_is_amount'])) {
                             // Format amount inputs
-                            $this->tab_index_settings_save($key, (string)$numberhelper->standardize_amount($value), $sR);
+                            $this->tab_index_settings_save($key, (string)$numberhelper->standardize_amount($value));
                         } else {
-                            $this->tab_index_settings_save($key, $value, $sR);
+                            $this->tab_index_settings_save($key, $value);
                         }
 
                         if ($key == 'number_format') {
                             // Set thousands_separator and decimal_point according to number_format
                             // Derive the 'decimal_point' and 'thousands_separator' setting from the chosen ..number format eg. 1000,000.00 if it has a value
-                            $this->tab_index_number_format($value, $sR);
+                            $this->tab_index_number_format($value);
                         }
                     } else {
                         // The key does not exist because the repoCount is not greater than zero => add
@@ -292,14 +272,13 @@ final class SettingController
     /**
      * @param string $key
      * @param string $value
-     * @param SettingRepository $sR
      */
-    public function tab_index_settings_save(string $key, string $value, SettingRepository $sR): void
+    public function tab_index_settings_save(string $key, string $value): void
     {
-        $setting = $sR->withKey($key);
+        $setting = $this->sR->withKey($key);
         if ($setting) {
             $setting->setSetting_value($value);
-            $sR->save($setting);
+            $this->sR->save($setting);
         }
     }
 
@@ -314,24 +293,21 @@ final class SettingController
 
     /**
      * @param string $value
-     * @param SettingRepository $sR
      */
-    public function tab_index_number_format(string $value, SettingRepository $sR): void
+    public function tab_index_number_format(string $value): void
     {
         // Set thousands_separator and decimal_point according to number_format
-        $number_formats = $sR->number_formats();
-        if ($sR->repoCount('decimal_point') > 0) {
+        $number_formats = $this->sR->number_formats();
+        if ($this->sR->repoCount('decimal_point') > 0) {
             $this->tab_index_settings_save(
                 'decimal_point',
-                $number_formats[$value]['decimal_point'] ?? '.',
-                $sR
+                $number_formats[$value]['decimal_point'] ?? '.'
             );
         }
-        if ($sR->repoCount('thousands_separator') > 0) {
+        if ($this->sR->repoCount('thousands_separator') > 0) {
             $this->tab_index_settings_save(
                 'thousands_separator',
-                $number_formats[$value]['thousands_separator'] ?? ',',
-                $sR
+                $number_formats[$value]['thousands_separator'] ?? ','
             );
         }
     }
@@ -350,7 +326,7 @@ final class SettingController
             $setting = new Setting();
             $setting->setSetting_key($key);
             $setting->setSetting_value($value);
-            $this->s->save($setting);
+            $this->sR->save($setting);
         }
     }
 
@@ -395,16 +371,16 @@ final class SettingController
      */
     public function inv_draft_has_number_switch(CurrentRoute $currentRoute): Response
     {
-        $setting = $this->setting($currentRoute, $this->s);
+        $setting = $this->setting($currentRoute);
         if ($setting) {
             if ($setting->getSetting_value() == '0') {
                 $setting->setSetting_value('1');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             if ($setting->getSetting_value() == '1') {
                 $setting->setSetting_value('0');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
         }
@@ -422,16 +398,16 @@ final class SettingController
      */
     public function mark_sent(CurrentRoute $currentRoute): Response
     {
-        $setting = $this->setting($currentRoute, $this->s);
+        $setting = $this->setting($currentRoute);
         if ($setting) {
             if ($setting->getSetting_value() == '0') {
                 $setting->setSetting_value('1');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             if ($setting->getSetting_value() == '1') {
                 $setting->setSetting_value('0');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
         }
@@ -446,16 +422,16 @@ final class SettingController
      */
     public function auto_client(): Response
     {
-        $setting = $this->s->withKey('signup_automatically_assign_client');
+        $setting = $this->sR->withKey('signup_automatically_assign_client');
         if ($setting) {
             if ($setting->getSetting_value() == '0') {
                 $setting->setSetting_value('1');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('site/index');
             }
             if ($setting->getSetting_value() == '1') {
                 $setting->setSetting_value('0');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('site/index');
             }
         }
@@ -464,25 +440,25 @@ final class SettingController
 
     public function visible(): Response
     {
-        $setting = $this->s->withKey('columns_all_visible');
+        $setting = $this->sR->withKey('columns_all_visible');
         if ($setting) {
             if ($setting->getSetting_value() == '0') {
                 $setting->setSetting_value('1');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             if ($setting->getSetting_value() == '1') {
                 $setting->setSetting_value('0');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             $setting->setSetting_value('0');
-            $this->s->save($setting);
+            $this->sR->save($setting);
             return $this->webService->getRedirectResponse('inv/index');
         }
         $new_setting = new Setting();
         $new_setting->setSetting_key('columns_all_visible');
-        $this->s->save($new_setting);
+        $this->sR->save($new_setting);
 
         return $this->webService->getRedirectResponse('inv/index');
     }
@@ -493,37 +469,37 @@ final class SettingController
      */
     public function unhideOrHideToggleInvSentLogColumn(): Response
     {
-        $setting = $this->s->withKey('column_inv_sent_log_visible');
+        $setting = $this->sR->withKey('column_inv_sent_log_visible');
         if ($setting) {
             if ($setting->getSetting_value() == '0') {
                 $setting->setSetting_value('1');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             if ($setting->getSetting_value() == '1') {
                 $setting->setSetting_value('0');
-                $this->s->save($setting);
+                $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             $setting->setSetting_value('0');
-            $this->s->save($setting);
+            $this->sR->save($setting);
             return $this->webService->getRedirectResponse('inv/index');
         }
         $new_setting = new Setting();
         $new_setting->setSetting_key('column_inv_sent_log_visible');
-        $this->s->save($new_setting);
+        $this->sR->save($new_setting);
 
         return $this->webService->getRedirectResponse('inv/index');
     }
 
     public function listlimit(CurrentRoute $currentRoute): Response
     {
-        $setting = $this->setting($currentRoute, $this->s);
+        $setting = $this->setting($currentRoute);
         $origin = $currentRoute->getArgument('origin') ?? 'inv';
         $limit = $currentRoute->getArgument('limit');
         if ($setting) {
             $setting->setSetting_value((string)$limit);
-            $this->s->save($setting);
+            $this->sR->save($setting);
         }
         return $this->webService->getRedirectResponse($origin . '/index');
     }
@@ -539,7 +515,7 @@ final class SettingController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator
     ): Response {
-        $setting = $this->setting($currentRoute, $this->s);
+        $setting = $this->setting($currentRoute);
         if ($setting) {
             $form = new SettingForm($setting);
             $parameters = [
@@ -593,7 +569,7 @@ final class SettingController
      */
     public function delete(CurrentRoute $currentRoute): Response
     {
-        $setting = $this->setting($currentRoute, $this->s);
+        $setting = $this->setting($currentRoute);
         if ($setting) {
             $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             $this->settingService->deleteSetting($setting);
@@ -606,7 +582,7 @@ final class SettingController
      */
     public function view(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
     {
-        $setting = $this->setting($currentRoute, $this->s);
+        $setting = $this->setting($currentRoute);
         if ($setting) {
             $form = new SettingForm($setting);
             $parameters = [
@@ -636,30 +612,26 @@ final class SettingController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param SettingRepository $settingRepository
      * @return Setting|null
      */
     private function setting(
-        CurrentRoute $currentRoute,
-        SettingRepository $settingRepository
+        CurrentRoute $currentRoute
     ): Setting|null {
         $setting_id = $currentRoute->getArgument('setting_id');
         if (null !== $setting_id) {
-            return $settingRepository->repoSettingquery($setting_id);
+            return $this->sR->repoSettingquery($setting_id);
         }
         return null;
     }
-
-    //$settings = $this->settings();
-
+    
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function settings(SettingRepository $settingRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function settings(): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        return $settingRepository->findAllPreloaded();
+        return $this->sR->findAllPreloaded();
     }
 
     /**
@@ -699,9 +671,9 @@ final class SettingController
 
     private function invoiceplaneConnected(): bool
     {
-        $settingInvoiceplaneName = $this->s->getSetting('invoiceplane_database_name');
-        $settingInvoiceplaneUsername = $this->s->getSetting('invoiceplane_database_username');
-        $settingInvoiceplanePassword = $this->s->getSetting('invoiceplane_database_password') ?: '';
+        $settingInvoiceplaneName = $this->sR->getSetting('invoiceplane_database_name');
+        $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');
+        $settingInvoiceplanePassword = $this->sR->getSetting('invoiceplane_database_password') ?: '';
         if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0) {
             $dsn = (new Dsn(
                 'mysql',

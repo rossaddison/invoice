@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Profile;
 
+use App\Invoice\BaseController;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Entity\Profile;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -15,37 +15,32 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class ProfileController
+final class ProfileController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/profile';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private ProfileService $profileService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/profile')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->profileService = $profileService;
     }
 
     /**
      * @param ProfileRepository $profileRepository
-     * @param SettingRepository $settingRepository
      */
-    public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository, SettingRepository $settingRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository): \Yiisoft\DataResponse\DataResponse
     {
         $page = (int)$currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -53,7 +48,7 @@ final class ProfileController
         $canEdit = $this->rbac();
         $this->flashMessage('info', $this->translator->translate('invoice.profile.new'));
         $paginator = (new OffsetPaginator($this->profiles($profileRepository)))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero);
 
         $parameters = [
@@ -98,19 +93,6 @@ final class ProfileController
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     /**

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Project;
 
+use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Project;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -15,39 +15,35 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class ProjectController
+final class ProjectController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/project';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private ProjectService $projectService,
-        private TranslatorInterface $translator,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/project')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->projectService = $projectService;
     }
 
     /**
      * @param int $page
      * @param ProjectRepository $projectRepository
-     * @param SettingRepository $sR
      * @param Request $request
      * @param ProjectService $service
      */
-    public function index(ProjectRepository $projectRepository, SettingRepository $sR, Request $request, ProjectService $service, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(ProjectRepository $projectRepository, Request $request, ProjectService $service, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -93,19 +89,6 @@ final class ProjectController
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     /**

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Telegram;
 
+use App\Invoice\BaseController;
 use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Widget\Button;
@@ -21,57 +21,35 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class TelegramController
+final class TelegramController extends BaseController
 {
-    use FlashMessage;
-
     /**
      * Note: Yiisoft\Di\NotFoundException can occur if $factory is placed after $telegramBotApi i.e. in the wrong order
      * @see https://github.com/rossaddison/invoice/issues/41
-     *
-     * @param DataResponseFactoryInterface $factory
-     * @param ViewRenderer $viewRenderer
-     * @param WebControllerService $webService
-     * @param UserService $userService
-     * @param Session $session
-     * @param Flash $flash
-     * @param TranslatorInterface $translator
-     * @param Logger $logger
-     * @param sR $sR
-     * @param Update|null $update
-     * @param TelegramBotApi|null $telegramBotApi
      */
-    public function __construct(
+     
+    public function __construct(        
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
         private DataResponseFactoryInterface $factory,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private Session $session,
-        private Flash $flash,
-        private TranslatorInterface $translator,
         private Logger $logger,
-        private sR $sR,
         private ?Update $update = null,
-        private ?TelegramBotApi $telegramBotApi = null
+        private ?TelegramBotApi $telegramBotApi = null,    
     ) {
-        $this->factory = $factory;
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/telegram')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->session = $session;
-        $this->flash = new Flash($session);
-        $this->translator = $translator;
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->factory = $factory; 
         $this->logger = $logger;
-        $this->sR = $sR;
         $this->update = $update;
         $this->telegramBotApi = $telegramBotApi;
-    }
+    }    
 
     public function index(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {
@@ -417,18 +395,5 @@ final class TelegramController
             'alert' => $this->alert(),
             'updates' => $failResultUpdates,
         ]);
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

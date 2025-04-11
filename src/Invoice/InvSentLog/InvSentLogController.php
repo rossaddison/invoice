@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvSentLog;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\InvSentLog;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
-use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\User\User;
 use App\Service\WebControllerService;
@@ -17,53 +17,29 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class InvSentLogController
+final class InvSentLogController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/invsentlog';
+    
     public function __construct(
-        private Session $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private InvSentLogService $invsentlogService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invsentlog')
-                    ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invsentlog')
-                    ->withLayout('@views/layout/invoice.php');
-        }
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->invsentlogService = $invsentlogService;
+    }   
 
     /**
      * @param ISLR $islR
-     * @param SettingRepository $settingRepository
      * @param UIR $uiR
      * @param string $page
      * @param string $queryPage
@@ -73,7 +49,6 @@ final class InvSentLogController
      */
     public function guest(
         ISLR $islR,
-        SettingRepository $settingRepository,
         UIR $uiR,
         #[RouteArgument('page')] string $page = '1',
         #[Query('page')] string $queryPage = null,
@@ -123,7 +98,6 @@ final class InvSentLogController
 
     /**
      * @param ISLR $islR
-     * @param SettingRepository $settingRepository
      * @param string $page
      * @param string $queryPage
      * @param string $queryFilterInvNumber
@@ -132,7 +106,6 @@ final class InvSentLogController
      */
     public function index(
         ISLR $islR,
-        SettingRepository $settingRepository,
         #[RouteArgument('page')] string $page = '1',
         #[Query('page')] string $queryPage = null,
         #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
@@ -153,21 +126,19 @@ final class InvSentLogController
             $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClientId);
         }
         $paginator = (new OffsetPaginator($invsentlogs))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($finalPage));
         $parameters = [
             'paginator' => $paginator,
             'alert' => $this->alert(),
-            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($islR),
             'optionsDataClientsDropDownFilter' => $this->optionsDataClientsFilter($islR),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
-
-    //For rbac refer to AccessChecker
 
     /**
      * @param ISLR $islR
@@ -187,7 +158,6 @@ final class InvSentLogController
 
     /**
      * @param ISLR $islR
-     * @param SettingRepository $settingRepository
      * @param int id
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */

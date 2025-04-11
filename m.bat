@@ -11,48 +11,52 @@ echo         INVOICE SYSTEM MENU
 echo =======================================
 echo [1] Run PHP Psalm
 echo [2] Run PHP Psalm on a Specific File
+echo [2a] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
-echo [4] Run Composer Require Checker
-echo [5] Run 'serve' Command
-echo [6] Run 'user/create' Command
-echo [7] Run 'user/assignRole' Command
-echo [8] Run 'router/list' Command
-echo [9] Run 'translator/translate' Command
-echo [10] Run 'invoice/items' Command
-echo [11] Run 'invoice/setting/truncate' Command
-echo [12] Run 'invoice/generator/truncate' Command
-echo [13] Run 'invoice/inv/truncate1' Command
-echo [14] Run 'invoice/quote/truncate2' Command
-echo [15] Run 'invoice/salesorder/truncate3' Command
-echo [16] Run 'invoice/nonuserrelated/truncate4' Command
-echo [17] Exit
-echo [18] Exit to Current Directory
+echo [4] Run Composer Update
+echo [5] Run Composer Require Checker
+echo [6] Run 'serve' Command
+echo [7] Run 'user/create' Command
+echo [8] Run 'user/assignRole' Command
+echo [9] Run 'router/list' Command
+echo [10] Run 'translator/translate' Command
+echo [11] Run 'invoice/items' Command
+echo [12] Run 'invoice/setting/truncate' Command
+echo [13] Run 'invoice/generator/truncate' Command
+echo [14] Run 'invoice/inv/truncate1' Command
+echo [15] Run 'invoice/quote/truncate2' Command
+echo [16] Run 'invoice/salesorder/truncate3' Command
+echo [17] Run 'invoice/nonuserrelated/truncate4' Command
+echo [18] Exit
+echo [19] Exit to Current Directory
 echo =======================================
-set /p choice="Enter your choice [1-18]: "
+set /p choice="Enter your choice [1-19]: "
 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
+if "%choice%"=="2a" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
-if "%choice%"=="4" goto require_checker
-if "%choice%"=="5" goto serve
-if "%choice%"=="6" goto user_create
-if "%choice%"=="7" goto user_assignRole
-if "%choice%"=="8" goto router_list
-if "%choice%"=="9" goto translator_translate
-if "%choice%"=="10" goto invoice_items
-if "%choice%"=="11" goto confirm_warning_11
+if "%choice%"=="4" goto composer_update
+if "%choice%"=="5" goto require_checker
+if "%choice%"=="6" goto serve
+if "%choice%"=="7" goto user_create
+if "%choice%"=="8" goto user_assignRole
+if "%choice%"=="9" goto router_list
+if "%choice%"=="10" goto translator_translate
+if "%choice%"=="11" goto invoice_items
 if "%choice%"=="12" goto confirm_warning_12
 if "%choice%"=="13" goto confirm_warning_13
 if "%choice%"=="14" goto confirm_warning_14
 if "%choice%"=="15" goto confirm_warning_15
 if "%choice%"=="16" goto confirm_warning_16
-if "%choice%"=="17" goto exit
-if "%choice%"=="18" goto exit_to_directory
+if "%choice%"=="17" goto confirm_warning_17
+if "%choice%"=="18" goto exit
+if "%choice%"=="19" goto exit_to_directory
 echo Invalid choice. Please try again.
 pause
 goto menu
 
-:confirm_warning_11
+:confirm_warning_12
 echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
 set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_setting_truncate
@@ -61,7 +65,7 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
-:confirm_warning_12
+:confirm_warning_13
 echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
 set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_generator_truncate
@@ -70,7 +74,7 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
-:confirm_warning_13
+:confirm_warning_14
 echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
 set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_inv_truncate1
@@ -79,7 +83,7 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
-:confirm_warning_14
+:confirm_warning_15
 echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
 set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_quote_truncate2
@@ -88,7 +92,7 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
-:confirm_warning_15
+:confirm_warning_16
 echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
 set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_salesorder_truncate3
@@ -97,7 +101,7 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
-:confirm_warning_16
+:confirm_warning_17
 echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
 set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_nonuserrelated_truncate4
@@ -124,6 +128,12 @@ php vendor/bin/psalm "%file%"
 pause
 goto menu
 
+:psalm_clear_cache
+echo Running PHP Psalm...
+php vendor/bin/psalm --clear-cache
+pause
+goto menu
+
 :outdated
 echo Checking Composer Outdated...
 composer outdated
@@ -133,6 +143,12 @@ goto menu
 :require_checker
 echo Running Composer Require Checker...
 php vendor/bin/composer-require-checker
+pause
+goto menu
+
+:composer_update
+echo Running Composer Update...
+composer update
 pause
 goto menu
 
@@ -220,11 +236,11 @@ php yii invoice/nonuserrelated/truncate4
 pause
 goto menu
 
+:exit_to_directory
+echo Returning to the current directory. Goodbye!
+cmd
+
 :exit
 echo Exiting. Goodbye!
 pause
 exit
-
-:exit_to_directory
-echo Returning to the current directory. Goodbye!
-cmd

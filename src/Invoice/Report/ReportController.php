@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Report;
 
+use App\Invoice\BaseController;
 // Entites
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\InvAmount;
@@ -16,13 +17,12 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Task\TaskRepository;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 // Helpers
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\MpdfHelper;
 use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Traits\FlashMessage;
 // Services and forms
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -31,40 +31,23 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
 use Yiisoft\Http\Method;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-class ReportController
+class ReportController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/report';
+    
     public function __construct(
-        private Session $session,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private TranslatorInterface $translator
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/report')
-                                           ->withLayout('@views/layout/invoice.php');
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
     }
 
     /**
@@ -72,7 +55,6 @@ class ReportController
      * @param ViewRenderer $head
      * @param ClientRepository $cR
      * @param InvAmountRepository $iaR
-     * @param SettingRepository $sR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
@@ -81,7 +63,6 @@ class ReportController
         ViewRenderer $head,
         ClientRepository $cR,
         InvAmountRepository $iaR,
-        SettingRepository $sR
     ): Response|\Mpdf\Mpdf|array|string {
         $parameters = [
             'head' => $head,
@@ -91,9 +72,9 @@ class ReportController
         ];
         if ($request->getMethod() === Method::POST) {
             $data = [
-                'results' => $this->invoice_aging_report($cR, $iaR, $sR) ?: [],
-                'numberHelper' => new NumberHelper($sR),
-                'dueInvoices' => $this->invoice_aging_due_invoices($iaR, $sR) ?: [],
+                'results' => $this->invoice_aging_report($cR, $iaR) ?: [],
+                'numberHelper' => new NumberHelper($this->sR),
+                'dueInvoices' => $this->invoice_aging_due_invoices($iaR) ?: [],
             ];
             $mpdfhelper = new MpdfHelper();
             // Forth parameter $password is empty because these reports are intended for management only
@@ -105,7 +86,7 @@ class ReportController
                 $this->translator->translate('i.invoice_aging'),
                 true,
                 '',
-                $sR,
+                $this->sR,
                 null,
                 null,
                 false,
@@ -120,16 +101,14 @@ class ReportController
     /**
      * @param ClientRepository $cR
      * @param InvAmountRepository $iaR
-     * @param SettingRepository $sR
      * @return array
      */
     private function invoice_aging_report(
         ClientRepository $cR,
-        InvAmountRepository $iaR,
-        SettingRepository $sR
+        InvAmountRepository $iaR
     ): array {
-        $clienthelper = new ClientHelper($sR);
-        $numberhelper = new NumberHelper($sR);
+        $clienthelper = new ClientHelper($this->sR);
+        $numberhelper = new NumberHelper($this->sR);
         $clients = $cR->count() > 0 ? $cR->findAllPreloaded() : null;
         $fifteens = $iaR->AgingCount(1, 15) > 0 ? $iaR->Aging(1, 15) : null;
         $thirties = $iaR->AgingCount(16, 30) > 0 ? $iaR->Aging(16, 30) : null;
@@ -175,12 +154,11 @@ class ReportController
 
     /**
      * @param InvAmountRepository $iaR
-     * @param SettingRepository $sR
      * @return array
      */
-    private function invoice_aging_due_invoices(InvAmountRepository $iaR, SettingRepository $sR): array
+    private function invoice_aging_due_invoices(InvAmountRepository $iaR): array
     {
-        $numberhelper = new NumberHelper($sR);
+        $numberhelper = new NumberHelper($this->sR);
         $fifteens = $iaR->AgingCount(1, 15) > 0 ? $iaR->Aging(1, 15) : null;
         $thirties = $iaR->AgingCount(16, 30) > 0 ? $iaR->Aging(16, 30) : null;
         $overthirties = $iaR->AgingCount(31, 365) > 0 ? $iaR->Aging(31, 365) : null;
@@ -250,7 +228,6 @@ class ReportController
      * @param Request $request
      * @param ViewRenderer $head
      * @param PaymentRepository $pymtR
-     * @param SettingRepository $sR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
@@ -258,9 +235,8 @@ class ReportController
         Request $request,
         ViewRenderer $head,
         PaymentRepository $pymtR,
-        SettingRepository $sR
     ): Response|\Mpdf\Mpdf|array|string {
-        $dateHelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($this->sR);
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
@@ -278,10 +254,10 @@ class ReportController
                     'from_date' => $from_date,
                     'to_date' => $to_date,
                     //Date Invoice Client Payment Method Note Amount
-                    'results' => $this->payment_history_report($pymtR, $from_date, $to_date, $sR)
+                    'results' => $this->payment_history_report($pymtR, $from_date, $to_date)
                              ?: [],
                     'dateHelper' => $dateHelper,
-                    'numberHelper' => new NumberHelper($sR),
+                    'numberHelper' => new NumberHelper($this->sR),
                 ];
                 $mpdfHelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
@@ -290,7 +266,7 @@ class ReportController
                     $this->translator->translate('i.payment_history'),
                     true,
                     '',
-                    $sR,
+                    $this->sR,
                     null,
                     null,
                     false,
@@ -308,7 +284,6 @@ class ReportController
      * @param PaymentRepository $pymtR
      * @param string $from
      * @param string $to
-     * @param SettingRepository $sR
      *
      * @return (mixed|string)[][]
      *
@@ -317,10 +292,9 @@ class ReportController
     private function payment_history_report(
         PaymentRepository $pymtR,
         string $from,
-        string $to,
-        SettingRepository $sR
+        string $to
     ): array {
-        $clienthelper = new ClientHelper($sR);
+        $clienthelper = new ClientHelper($this->sR);
         $payments = $pymtR->repoPaymentLoaded_from_to_count($from, $to) > 0 ? $pymtR->repoPaymentLoaded_from_to($from, $to) : null;
         //Report Headings: Date, Invoice, Client, Payment Method, Note, Amount
         $results = [];
@@ -355,7 +329,6 @@ class ReportController
      * @param ClientRepository $cR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
-     * @param SettingRepository $sR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
@@ -365,9 +338,8 @@ class ReportController
         ClientRepository $cR,
         InvRepository $iR,
         InvAmountRepository $iaR,
-        SettingRepository $sR
     ): Response|\Mpdf\Mpdf|array|string {
-        $dateHelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($this->sR);
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
@@ -384,9 +356,9 @@ class ReportController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_client_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR, $sR),
-                    'numberHelper' => new NumberHelper($sR),
-                    'clientHelper' => new ClientHelper($sR),
+                    'results' => $this->sales_by_client_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR),
+                    'numberHelper' => new NumberHelper($this->sR),
+                    'clientHelper' => new ClientHelper($this->sR),
                 ];
                 $mpdfhelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
@@ -395,7 +367,7 @@ class ReportController
                     $this->translator->translate('i.sales_by_client'),
                     true,
                     '',
-                    $sR,
+                    $this->sR,
                     null,
                     null,
                     false,
@@ -415,7 +387,6 @@ class ReportController
      * @param string $from
      * @param string $to
      * @param InvAmountRepository $iaR
-     * @param SettingRepository $sR
      * @return array
      */
     private function sales_by_client_report(
@@ -423,8 +394,7 @@ class ReportController
         InvRepository $iR,
         string $from,
         string $to,
-        InvAmountRepository $iaR,
-        SettingRepository $sR
+        InvAmountRepository $iaR
     ): array {
         // Report Heading:  Sales by Client
         // Report Heading2: From To Date
@@ -441,7 +411,7 @@ class ReportController
             // equals
             'sales_with_tax' => 0.00,
         ];
-        $clienthelper = new ClientHelper($sR);
+        $clienthelper = new ClientHelper($this->sR);
         $clients = $cR->findAllPreloaded();
         /**
          * @var Client $client
@@ -483,7 +453,6 @@ class ReportController
      * @param ProductRepository $pR
      * @param InvRepository $iR
      * @param InvItemAmountRepository $iiaR
-     * @param SettingRepository $sR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
@@ -493,10 +462,9 @@ class ReportController
         ProductRepository $pR,
         InvRepository $iR,
         InvItemAmountRepository $iiaR,
-        SettingRepository $sR
     ): Response|\Mpdf\Mpdf|array|string {
         $this->flashMessage('info', $this->translator->translate('invoice.report.sales.by.product.info'));
-        $dateHelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($this->sR);
         $parameters = [
             'head' => $head,
             'alert' => $this->alert(),
@@ -514,7 +482,7 @@ class ReportController
                     'from_date' => $from_date,
                     'to_date' => $to_date,
                     'results' => $this->sales_by_product_report($pR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iiaR),
-                    'numberHelper' => new NumberHelper($sR),
+                    'numberHelper' => new NumberHelper($this->sR),
                 ];
                 $mpdfhelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
@@ -523,7 +491,7 @@ class ReportController
                     $this->translator->translate('invoice.report.sales.by.product'),
                     true,
                     '',
-                    $sR,
+                    $this->sR,
                     null,
                     null,
                     false,
@@ -596,7 +564,6 @@ class ReportController
      * @param TaskRepository $taskR
      * @param InvRepository $iR
      * @param InvItemAmountRepository $iiaR
-     * @param SettingRepository $sR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
@@ -605,11 +572,10 @@ class ReportController
         ViewRenderer $head,
         TaskRepository $taskR,
         InvRepository $iR,
-        InvItemAmountRepository $iiaR,
-        SettingRepository $sR
+        InvItemAmountRepository $iiaR
     ): Response|\Mpdf\Mpdf|array|string {
         $this->flashMessage('info', $this->translator->translate('invoice.report.sales.by.task.info'));
-        $dateHelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($this->sR);
         $body = $request->getParsedBody();
         $parameters = [
             'head' => $head,
@@ -629,7 +595,7 @@ class ReportController
                     'from_date' => $from_date,
                     'to_date' => $to_date,
                     'results' => $this->sales_by_task_report($taskR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iiaR),
-                    'numberHelper' => new NumberHelper($sR),
+                    'numberHelper' => new NumberHelper($this->sR),
                 ];
                 $mpdfhelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
@@ -638,7 +604,7 @@ class ReportController
                     $this->translator->translate('invoice.report.sales.by.task'),
                     true,
                     '',
-                    $sR,
+                    $this->sR,
                     null,
                     null,
                     false,
@@ -707,7 +673,6 @@ class ReportController
      * @param ClientRepository $cR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
-     * @param SettingRepository $sR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
@@ -716,10 +681,9 @@ class ReportController
         ViewRenderer $head,
         ClientRepository $cR,
         InvRepository $iR,
-        InvAmountRepository $iaR,
-        SettingRepository $sR
+        InvAmountRepository $iaR
     ): Response|\Mpdf\Mpdf|array|string {
-        $dateHelper = new DateHelper($sR);
+        $dateHelper = new DateHelper($this->sR);
         $body = $request->getParsedBody();
         $parameters = [
             'head' => $head,
@@ -738,10 +702,10 @@ class ReportController
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
-                    'results' => $this->sales_by_year_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR, $sR)
+                    'results' => $this->sales_by_year_report($cR, $iR, $dateHelper->date_to_mysql($from_date), $dateHelper->date_to_mysql($to_date), $iaR)
                              ?: [],
-                    'n' => new NumberHelper($sR),
-                    'clienthelper' => new ClientHelper($sR),
+                    'n' => new NumberHelper($this->sR),
+                    'clienthelper' => new ClientHelper($this->sR),
                 ];
                 $mpdfhelper = new MpdfHelper();
                 // Forth parameter $password is empty because these reports are intended for management only
@@ -753,7 +717,7 @@ class ReportController
                     $this->translator->translate('i.sales_by_date'),
                     true,
                     '',
-                    $sR,
+                    $this->sR,
                     null,
                     null,
                     false,
@@ -772,8 +736,7 @@ class ReportController
         InvRepository $iR,
         string $from,
         string $to,
-        InvAmountRepository $iaR,
-        SettingRepository $sR
+        InvAmountRepository $iaR
     ): array {
         $results = [];
         $year = [
@@ -828,8 +791,8 @@ class ReportController
                 ],
             ],
         ];
-        $clientHelper = new ClientHelper($sR);
-        $dateHelper = new DateHelper($sR);
+        $clientHelper = new ClientHelper($this->sR);
+        $dateHelper = new DateHelper($this->sR);
         $clients = $cR->count() > 0 ? $cR->findAllPreloaded() : null;
         if (null !== $clients) {
             /** @var Client $client */

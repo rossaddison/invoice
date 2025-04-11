@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -14,36 +15,27 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class InvAllowanceChargeController
+final class InvAllowanceChargeController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/invallowancecharge';
+    
     public function __construct(
-        private Session $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private InvAllowanceChargeService $invallowancechargeService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invallowancecharge')
-                                                ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/invallowancecharge')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->invallowancechargeService = $invallowancechargeService;
     }
 
     /**
@@ -84,19 +76,6 @@ final class InvAllowanceChargeController
             } // is_array
         }
         return $this->viewRenderer->render('modal_add_allowance_charge_form', $parameters);
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     /**

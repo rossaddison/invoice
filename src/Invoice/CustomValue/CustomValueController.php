@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomValue;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\CustomValue;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CustomField\CustomFieldForm;
 use App\Invoice\CustomField\CustomFieldRepository;
-use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,38 +16,33 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class CustomValueController
+final class CustomValueController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/customvalue';
+    
     public function __construct(
+        private CustomValueService $customValueService,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private CustomValueService $customvalueService,
-        private TranslatorInterface $translator,
-        private SessionInterface $session
+        WebControllerService $webService,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/customvalue')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->customValueService = $customValueService;
+    }  
 
     /**
      * @param CustomValueRepository $customvalueRepository
      * @param CustomFieldRepository $customfieldRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository, SettingRepository $settingRepository): Response
+    public function index(CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository): Response
     {
         $this->rbac();
         $custom_field_id = (string)$this->session->get('custom_field_id');
@@ -64,12 +59,11 @@ final class CustomValueController
     /**
      * @param CustomFieldRepository $customfieldRepository
      * @param CustomValueRepository $customvalueRepository
-     * @param SettingRepository $settingRepository
      * @param CurrentRoute $currentRoute
      * @param CustomValueService $service
      * @return Response
      */
-    public function field(CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, SettingRepository $settingRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
+    public function field(CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
     {
         $this->rbac();
         $id = $currentRoute->getArgument('id');
@@ -124,7 +118,7 @@ final class CustomValueController
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         if (is_array($body)) {
-                            $this->customvalueService->saveCustomValue($custom_value, $body);
+                            $this->customValueService->saveCustomValue($custom_value, $body);
                             return $this->webService->getRedirectResponse('customvalue/field', ['id' => $field_id]);
                         }
                     }
@@ -169,7 +163,7 @@ final class CustomValueController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->customvalueService->saveCustomValue($custom_value, $body);
+                        $this->customValueService->saveCustomValue($custom_value, $body);
                         return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
                     }
                 }
@@ -193,7 +187,7 @@ final class CustomValueController
         $custom_field_id = (string)$this->session->get('custom_field_id');
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
-            $this->customvalueService->deleteCustomValue($custom_value);
+            $this->customValueService->deleteCustomValue($custom_value);
             $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
             return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
         }

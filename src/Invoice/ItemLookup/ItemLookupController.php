@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\ItemLookup;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -14,35 +14,32 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class ItemLookupController
+final class ItemLookupController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/itemlookup';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private ItemLookupService $itemlookupService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/itemlookup')
-                                           ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->itemlookupService = $itemlookupService;
+    }   
 
     /**
      * @param ItemLookupRepository $itemlookupRepository
      */
-    public function index(ItemLookupRepository $itemlookupRepository, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(ItemLookupRepository $itemlookupRepository): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $itemLookups = $this->itemlookups($itemlookupRepository);
@@ -202,18 +199,5 @@ final class ItemLookupController
     private function itemlookups(ItemLookupRepository $itemlookupRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $itemlookupRepository->findAllPreloaded();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

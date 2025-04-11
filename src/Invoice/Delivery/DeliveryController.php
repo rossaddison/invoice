@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Delivery;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Delivery;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -21,41 +21,32 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class DeliveryController
+final class DeliveryController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/delivery';
+    
     public function __construct(
-        private SessionInterface $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private DeliveryService $deliveryService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                    ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                    ->withLayout('@views/layout/invoice.php');
-        }
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->deliveryService = $deliveryService;
+    }  
 
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param InvRepository $iR
      * @param DLR $delRepo
      * @return Response
@@ -64,7 +55,6 @@ final class DeliveryController
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
-        SettingRepository $settingRepository,
         InvRepository $iR,
         DLR $delRepo
     ): Response {
@@ -90,7 +80,7 @@ final class DeliveryController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
+                        $this->deliveryService->saveDelivery($delivery, $body, $this->sR);
                         return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                     }
                 }
@@ -101,29 +91,14 @@ final class DeliveryController
         }
         return $this->webService->getNotFoundResponse();
     }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
+    
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $dR
-     * @param SettingRepository $sR
      * @param Request $request
      * @return Response
      */
-    public function index(CurrentRoute $currentRoute, DeliveryRepository $dR, SettingRepository $sR, Request $request): Response
+    public function index(CurrentRoute $currentRoute, DeliveryRepository $dR, Request $request): Response
     {
         $query_params = $request->getQueryParams();
         /**
@@ -140,14 +115,14 @@ final class DeliveryController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $deliveries = $this->deliveries_with_sort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
-                ->withPageSize($sR->positiveListLimit())
+                ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'deliveries' => $this->deliveries($dR),
-            'max' => (int) $sR->getSetting('default_list_limit'),
+            'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('delivery/index', $parameters);
     }
@@ -194,7 +169,6 @@ final class DeliveryController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param DeliveryRepository $deliveryRepository
-     * @param SettingRepository $settingRepository
      * @param DLR $delRepo
      * @param InvRepository $iR
      * @return Response
@@ -204,7 +178,6 @@ final class DeliveryController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         DeliveryRepository $deliveryRepository,
-        SettingRepository $settingRepository,
         DLR $delRepo,
         InvRepository $iR
     ): Response {
@@ -229,7 +202,7 @@ final class DeliveryController
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         if (is_array($body)) {
-                            $this->deliveryService->saveDelivery($delivery, $body, $settingRepository);
+                            $this->deliveryService->saveDelivery($delivery, $body, $this->sR);
                             return $this->webService->getRedirectResponse('delivery/index');
                         }
                     }

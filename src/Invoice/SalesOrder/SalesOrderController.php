@@ -79,7 +79,7 @@ use Exception;
 
 final class SalesOrderController extends BaseController
 {
-    protected string $controllerName = 'invoice';
+    protected string $controllerName = 'invoice/salesorder';
 
     public function __construct(
         private DataResponseFactoryInterface $factory,
@@ -221,7 +221,7 @@ final class SalesOrderController extends BaseController
             'paginator' => $paginator,
             'client_count' => $clientRepo->count(),
         ];
-        return $this->viewRenderer->render('salesorder/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
 
     // Sales Orders are created from Quotes see quote/approve
@@ -986,7 +986,7 @@ final class SalesOrderController extends BaseController
                                             'userInv' => $uiR->repoUserInvUserIdcount($salesorder->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($salesorder->getUser_id()) : null,
                                         ]),
                                     ];
-                                    return $this->viewRenderer->render('salesorder/url_key', $parameters);
+                                    return $this->viewRenderer->render('url_key', $parameters);
                                 } // if salesorder_amount
                             } // if there is a salesorder id
                         } // user_inv->getType

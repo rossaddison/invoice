@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Upload;
 
+use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Upload;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -20,33 +20,29 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Exception;
 
-final class UploadController
+final class UploadController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/upload';
+    
     public function __construct(
-        private SettingRepository $s,
-        private SessionInterface $session,
         private DataResponseFactoryInterface $factory,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private UploadService $uploadService,
-        private TranslatorInterface $translator,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/upload')
-             ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->factory = $factory;
+        $this->uploadService = $uploadService;
     }
 
     /** Note: An Upload can only be viewed with editInv permission
@@ -83,7 +79,7 @@ final class UploadController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $uploads = $this->uploads_with_sort($uploadRepository, $sort);
         $paginator = (new OffsetPaginator($uploads))
-                ->withPageSize($this->s->positiveListLimit())
+                ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
                 ->withToken(PageToken::next((string)$page));
 
@@ -132,33 +128,18 @@ final class UploadController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param UploadRepository $uploadRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function delete(
         CurrentRoute $currentRoute,
-        UploadRepository $uploadRepository,
-        SettingRepository $settingRepository
+        UploadRepository $uploadRepository
     ): Response {
         try {
             $upload = $this->upload($currentRoute, $uploadRepository);
             if ($upload) {
-                $this->uploadService->deleteUpload($upload, $settingRepository);
+                $this->uploadService->deleteUpload($upload, $this->sR);
                 $inv_id = (string) $this->session->get('inv_id');
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
@@ -178,7 +159,6 @@ final class UploadController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param UploadRepository $uploadRepository
-     * @param SettingRepository $settingRepository
      * @param ClientRepository $clientRepository
      * @return Response
      */

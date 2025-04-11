@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\ClientPeppol;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
-use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 // Psr
@@ -19,56 +19,46 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class ClientPeppolController
+final class ClientPeppolController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/clientpeppol';
+    
     public function __construct(
-        private SessionInterface $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private ClientPeppolService $clientpeppolService,
-        private TranslatorInterface $translator,
-        private DataResponseFactoryInterface $factory
+        private ClientPeppolService $clientPeppolService,    
+        private DataResponseFactoryInterface $factory,    
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService,
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/clientpeppol')
-              ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/clientpeppol')
-              ->withLayout('@views/layout/invoice.php');
-        }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->clientPeppolService = $clientPeppolService;
+        $this->factory = $factory;
     }
-
+    
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
-        FormHydrator $formHydrator,
-        SettingRepository $settingRepository
+        FormHydrator $formHydrator
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
         $client_peppol = new ClientPeppol();
         $form = new ClientPeppolForm($client_peppol);
         $electronic_address_scheme = PeppolArrays::electronic_address_scheme();
-        $peppolarrays = new PeppolArrays();
+        $peppolArrays = new PeppolArrays();
         if (null !== $client_id) {
             $parameters = [
                 'title' => $this->translator->translate('invoice.add'),
@@ -77,18 +67,18 @@ final class ClientPeppolController
                 'errors' => [],
                 'form' => $form,
                 'pep' => $this->pep(),
-                'setting' => $settingRepository->getSetting('enable_client_peppol_defaults'),
-                'defaults' => $settingRepository->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
+                'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
+                'defaults' => $this->sR->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
                 'client_id' => $client_id,
                 'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
                 'electronic_address_scheme' => $electronic_address_scheme,
-                'iso_6523_array' => $peppolarrays->getIso_6523_icd(),
+                'iso_6523_array' => $peppolArrays->getIso_6523_icd(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->clientpeppolService->saveClientPeppol($client_peppol, $body);
+                        $this->clientPeppolService->saveClientPeppol($client_peppol, $body);
                         return $this->factory->createResponse(
                             $this->viewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
@@ -180,11 +170,9 @@ final class ClientPeppolController
 
     /**
      * @param ClientPeppolRepository $clientpeppolRepository
-     * @param Request $request
-     * @param ClientPeppolService $service
      * @return Response
      */
-    public function index(ClientPeppolRepository $clientpeppolRepository, Request $request, ClientPeppolService $service): Response
+    public function index(ClientPeppolRepository $clientpeppolRepository): Response
     {
         $parameters = [
             'clientpeppols' => $this->clientpeppols($clientpeppolRepository),
@@ -205,7 +193,7 @@ final class ClientPeppolController
         try {
             $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
             if ($clientpeppol) {
-                $this->clientpeppolService->deleteClientPeppol($clientpeppol);
+                $this->clientPeppolService->deleteClientPeppol($clientpeppol);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('clientpeppol/index');
             }
@@ -221,15 +209,13 @@ final class ClientPeppolController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param ClientPeppolRepository $clientpeppolRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        ClientPeppolRepository $clientpeppolRepository,
-        SettingRepository $settingRepository
+        ClientPeppolRepository $clientpeppolRepository
     ): Response {
         $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
         $body = $request->getParsedBody() ?? [];
@@ -247,8 +233,8 @@ final class ClientPeppolController
                 'errors' => [],
                 'form' => $form,
                 'pep' => $this->pep(),
-                'setting' => $settingRepository->getSetting('enable_client_peppol_defaults'),
-                'defaults' => $settingRepository->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
+                'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
+                'defaults' => $this->sR->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
                 'client_id' => $clientpeppol->getClient_id(),
                 'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
                 'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
@@ -257,7 +243,7 @@ final class ClientPeppolController
             if ($request->getMethod() === Method::POST) {
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        $this->clientpeppolService->saveClientPeppol($clientpeppol, $body);
+                        $this->clientPeppolService->saveClientPeppol($clientpeppol, $body);
                         // Guest user's return url to see user's clients
                         if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
                             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
@@ -278,22 +264,6 @@ final class ClientPeppolController
         }
         return $this->webService->getNotFoundResponse();
     }
-
-    /**
-      * @return string
-      */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-                'errors' => [],
-            ]
-        );
-    }
-
-    //For rbac refer to AccessChecker
 
     /**
      * @param CurrentRoute $currentRoute

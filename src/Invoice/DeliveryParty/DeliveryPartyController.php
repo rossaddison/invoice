@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryParty;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\DeliveryParty;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,35 +16,30 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class DeliveryPartyController
+final class DeliveryPartyController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/deliveryparty';
+    
     public function __construct(
-        private SessionInterface $session,
+        private DeliveryPartyService $deliveryPartyService,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private DeliveryPartyService $deliverypartyService,
-        private TranslatorInterface $translator
+        WebControllerService $webService,
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/deliveryparty')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->deliveryPartyService = $deliveryPartyService;
+    }  
 
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function add(
@@ -65,7 +60,7 @@ final class DeliveryPartyController
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->deliverypartyService->saveDeliveryParty(new DeliveryParty(), $body);
+                    $this->deliveryPartyService->saveDeliveryParty(new DeliveryParty(), $body);
                     return $this->webService->getRedirectResponse('deliveryparty/index');
                 }
             }
@@ -105,7 +100,7 @@ final class DeliveryPartyController
         try {
             $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
             if ($deliveryparty) {
-                $this->deliverypartyService->deleteDeliveryParty($deliveryparty);
+                $this->deliveryPartyService->deleteDeliveryParty($deliveryparty);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->webService->getRedirectResponse('deliveryparty/index');
             }
@@ -121,7 +116,6 @@ final class DeliveryPartyController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param DeliveryPartyRepository $deliverypartyRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function edit(
@@ -145,7 +139,7 @@ final class DeliveryPartyController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->deliverypartyService->saveDeliveryParty($deliveryparty, $body);
+                        $this->deliveryPartyService->saveDeliveryParty($deliveryparty, $body);
                         return $this->webService->getRedirectResponse('deliveryparty/index');
                     }
                 }
@@ -155,19 +149,6 @@ final class DeliveryPartyController
             return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('deliveryparty/index');
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 
     //For rbac refer to AccessChecker

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductImage;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\ProductImage;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Product\ProductRepository;
-use App\Invoice\Traits\FlashMessage;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,33 +18,29 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class ProductImageController
+final class ProductImageController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/productimage';
+    
     public function __construct(
-        private SettingRepository $s,
-        private SessionInterface $session,
         private DataResponseFactoryInterface $factory,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private ProductImageService $productimageService,
-        private TranslatorInterface $translator,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/productimage')
-             ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->factory = $factory;
+        $this->productimageService = $productimageService;
+    }   
 
     /** Note: A  productimage Upload can only be viewed with editInv permission
      *
@@ -73,7 +69,7 @@ final class ProductImageController
                 ->withOrderString($query_params['sort'] ?? '-id');
         $productimages = $this->productimages_with_sort($productimageRepository, $sort);
         $paginator = (new OffsetPaginator($productimages))
-                ->withPageSize($this->s->positiveListLimit());
+                ->withPageSize($this->sR->positiveListLimit());
 
         $parameters = [
             'paginator' => $paginator,
@@ -126,33 +122,18 @@ final class ProductImageController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param ProductImageRepository $productimageRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
     public function delete(
         CurrentRoute $currentRoute,
         ProductImageRepository $productimageRepository,
-        SettingRepository $settingRepository
     ): Response {
         try {
             $productimage = $this->productimage($currentRoute, $productimageRepository);
             if ($productimage) {
-                $this->productimageService->deleteProductImage($productimage, $settingRepository);
+                $this->productimageService->deleteProductImage($productimage, $this->sR);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(

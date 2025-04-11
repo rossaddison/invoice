@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentPeppol;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\PaymentPeppol;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,32 +16,27 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Exception;
 
-final class PaymentPeppolController
+final class PaymentPeppolController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/paymentpeppol';
+    
     public function __construct(
-        private SessionInterface $session,
+        private PaymentPeppolService $paymentpeppolService, 
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
         ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
-        private PaymentPeppolService $paymentpeppolService,
-        private TranslatorInterface $translator
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/paymentpeppol')
-                                           // The Controller layout dir is now redundant: replaced with an alias
-                                           ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->paymentpeppolService = $paymentpeppolService;
+    }   
 
     /**
      * @param Request $request
@@ -83,32 +78,18 @@ final class PaymentPeppolController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param CurrentRoute $routeCurrent
      * @param PaymentPeppolRepository $paymentpeppolRepository
-     * @param SettingRepository $settingRepository
      * @return Response
      */
-    public function index(CurrentRoute $routeCurrent, PaymentPeppolRepository $paymentpeppolRepository, SettingRepository $settingRepository): Response
+    public function index(CurrentRoute $routeCurrent, PaymentPeppolRepository $paymentpeppolRepository): Response
     {
         $page = (int)$routeCurrent->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($paymentpeppols))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         $parameters = [
@@ -186,9 +167,7 @@ final class PaymentPeppolController
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
     }
-
-    //For rbac refer to AccessChecker
-
+    
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentPeppolRepository $paymentpeppolRepository

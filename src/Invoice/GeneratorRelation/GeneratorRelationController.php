@@ -4,40 +4,38 @@ declare(strict_types=1);
 
 namespace App\Invoice\GeneratorRelation;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\GentorRelation;
 use App\Invoice\Generator\GeneratorRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class GeneratorRelationController
+final class GeneratorRelationController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/generatorrelation';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private GeneratorRelationService $generatorrelationService,
-        private UserService $userService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/generatorrelation')
-                                           ->withLayout('@views/layout/invoice.php');
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->generatorrelationService = $generatorrelationService;
+    } 
 
     /**
      * @param GeneratorRelationRepository $generatorrelationRepository
@@ -200,9 +198,7 @@ final class GeneratorRelationController
         }
         return null;
     }
-
-    //$generatorrelations = $this->generatorrelations();
-
+    
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
@@ -211,18 +207,5 @@ final class GeneratorRelationController
     private function generatorrelations(GeneratorRelationRepository $generatorrelationRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $generatorrelationRepository->findAllPreloaded();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

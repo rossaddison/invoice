@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Group;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Group;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -15,62 +15,52 @@ use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class GroupController
+final class GroupController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/group';
+    
     public function __construct(
-        private Session $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private GroupService $groupService,
-        private TranslatorInterface $translator
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                                                 ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice')
-                                                 ->withLayout('@views/layout/invoice.php');
-        }
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->groupService = $groupService;
+    }   
 
     /**
      * @param GroupRepository $groupRepository
-     * @param SettingRepository $settingRepository
      * @param Request $request
      * @param GroupService $service
      */
-    public function index(GroupRepository $groupRepository, SettingRepository $settingRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(GroupRepository $groupRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
     {
         $page = (int)$request->getAttribute('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
-        ->withPageSize($settingRepository->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string)$page));
         // Generate a flash message in the index if the user does not have permission
         $this->rbac();
         $parameters = [
-            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'paginator' => $paginator,
             'groups' => $this->groups($groupRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('group/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
 
     /**
@@ -103,7 +93,7 @@ final class GroupController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('group/_form', $parameters);
+        return $this->viewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -140,7 +130,7 @@ final class GroupController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('group/_form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }
@@ -188,7 +178,7 @@ final class GroupController
                 'form' => $form,
                 'group' => $groupRepository->repoGroupquery($group->getId()),
             ];
-            return $this->viewRenderer->render('group/_view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }
@@ -228,18 +218,5 @@ final class GroupController
     private function groups(GroupRepository $groupRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $groupRepository->findAllPreloaded();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

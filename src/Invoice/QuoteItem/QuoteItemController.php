@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\QuoteItemAmount;
 use App\Invoice\Product\ProductRepository as PR;
@@ -13,7 +14,6 @@ use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Unit\UnitRepository as UR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -27,42 +27,35 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class QuoteItemController
+final class QuoteItemController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/quoteitem';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private QuoteItemService $quoteitemService,
         private DataResponseFactoryInterface $factory,
-        private UrlGenerator $urlGenerator,
-        private TranslatorInterface $translator,
+        SessionInterface $session,
+        SR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/quoteitem')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->quoteitemService = $quoteitemService;
     }
 
-    // Quoteitem/add accessed from quote/view renderpartialasstring add_quote_item
-    // Triggered by clicking on the save button on the item view appearing above the quote view
-
     /**
+     * Quoteitem/add accessed from quote/view renderpartialasstring add_quote_item
+     * Triggered by clicking on the save button on the item view appearing above the quote view
+     * 
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param SR $sR
      * @param PR $pR
      * @param UR $uR
      * @param TRR $trR
@@ -71,7 +64,6 @@ final class QuoteItemController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        SR $sR,
         PR $pR,
         UR $uR,
         TRR $trR,
@@ -91,7 +83,7 @@ final class QuoteItemController
             'taxRates' => $trR->findAllPreloaded(),
             'products' => $pR->findAllPreloaded(),
             'units' => $uR->findAllPreloaded(),
-            'numberHelper' => new NumberHelper($sR),
+            'numberHelper' => new NumberHelper($this->sR),
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -113,7 +105,6 @@ final class QuoteItemController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param QIR $qiR
-     * @param SR $sR
      * @param TRR $trR
      * @param PR $pR
      * @param UR $uR
@@ -126,7 +117,6 @@ final class QuoteItemController
         Request $request,
         FormHydrator $formHydrator,
         QIR $qiR,
-        SR $sR,
         TRR $trR,
         PR $pR,
         UR $uR,
@@ -149,7 +139,7 @@ final class QuoteItemController
                 'products' => $pR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),
                 'units' => $uR->findAllPreloaded(),
-                'numberHelper' => new NumberHelper($sR),
+                'numberHelper' => new NumberHelper($this->sR),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -172,8 +162,7 @@ final class QuoteItemController
                                 $discount,
                                 $tax_rate_percentage,
                                 $qias,
-                                $qiar,
-                                $sR
+                                $qiar
                             );
                             $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
@@ -210,9 +199,8 @@ final class QuoteItemController
      * @param float $tax_rate_percentage
      * @param QIAS $qias
      * @param QIAR $qiar
-     * @param SR $sR
      */
-    public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, QIAS $qias, QIAR $qiar, SR $sR): void
+    public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, QIAS $qias, QIAR $qiar): void
     {
         $qias_array = [];
         if ($quote_item_id) {
@@ -221,11 +209,11 @@ final class QuoteItemController
             $discount_total = ($quantity * $discount);
             $tax_total = 0.00;
             // NO VAT
-            if ($sR->getSetting('enable_vat_registration') === '0') {
+            if ($this->sR->getSetting('enable_vat_registration') === '0') {
                 $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
             }
             // VAT
-            if ($sR->getSetting('enable_vat_registration') === '1') {
+            if ($this->sR->getSetting('enable_vat_registration') === '1') {
                 // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
                 // @see https://informi.co.uk/finance/how-vat-affected-discounts
                 $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100.00));
@@ -312,19 +300,6 @@ final class QuoteItemController
     }
 
     /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission('editInv');
-        if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
-            return $this->webService->getRedirectResponse('quote/index');
-        }
-        return $canEdit;
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param QIR $qiR
      * @return QuoteItem|null
@@ -339,15 +314,5 @@ final class QuoteItemController
             }
         }
         return null;
-    }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function quoteitems(QIR $qiR): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $qiR->findAllPreloaded();
     }
 }

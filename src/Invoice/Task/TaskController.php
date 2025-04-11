@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
+use App\Invoice\BaseController;
 use App\Invoice\Entity\Task;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Helpers\NumberHelper;
@@ -19,7 +20,6 @@ use App\Invoice\Project\ProjectRepository as prjctR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Task\TaskRepository as tR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
-use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Invoice\InvItem\InvItemService;
@@ -31,34 +31,29 @@ use Yiisoft\Json\Json;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\FormModel\FormHydrator;
 
-final class TaskController
+final class TaskController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-
+    protected string $controllerName = 'invoice/task';
+    
     public function __construct(
-        private Session $session,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private TaskService $taskService,
-        private TranslatorInterface $translator,
         private DataResponseFactoryInterface $factory,
-        private InvItemService $invitemService
+        private InvItemService $invitemService,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/task')
-                                           ->withLayout('@views/layout/invoice.php');
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->invitemService = $invitemService;
     }
-
     /**
      * @param int $page
      * @param tR $tR
@@ -80,7 +75,6 @@ final class TaskController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
-     * @param sR $sR
      * @param prjctR $pR
      * @param trR $trR
      * @return Response
@@ -88,7 +82,6 @@ final class TaskController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        sR $sR,
         prjctR $pR,
         trR $trR
     ): Response {
@@ -101,7 +94,7 @@ final class TaskController
             'alert' => $this->alert(),
             'form' => $form,
             'errors' => [],
-            'numberhelper' => new NumberHelper($sR),
+            'numberhelper' => new NumberHelper($this->sR),
             'taxRates' => $trR->optionsDataTaxRates(),
             'projects' => $pR->optionsDataProjects(),
         ];
@@ -125,7 +118,6 @@ final class TaskController
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
      * @param tR $tR
-     * @param sR $sR
      * @param prjctR $pR
      * @param trR $trR
      * @return Response
@@ -135,7 +127,6 @@ final class TaskController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         tR $tR,
-        sR $sR,
         prjctR $pR,
         trR $trR
     ): Response {
@@ -219,7 +210,6 @@ final class TaskController
      * @param Request $request
      * @param ACIR $aciR
      * @param tR $taskR
-     * @param sR $sR
      * @param trR $trR
      * @param iiaR $iiaR
      * @param iiR $iiR
@@ -233,7 +223,6 @@ final class TaskController
         Request $request,
         ACIR $aciR,
         tR $taskR,
-        sR $sR,
         trR $trR,
         iiaR $iiaR,
         iiR $iiR,
@@ -248,13 +237,13 @@ final class TaskController
         $inv_id = (string)$select_items['inv_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);
-        $numberHelper = new NumberHelper($sR);
+        $numberHelper = new NumberHelper($this->sR);
         // Format the task prices according to comma or point or other setting choice.
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
             $task->setPrice((float)$numberHelper->format_amount($task->getPrice()));
-            $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $sR, $formHydrator);
+            $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $formHydrator);
             $order++;
         }
         $numberHelper->calculate_inv((string)$this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
@@ -268,10 +257,9 @@ final class TaskController
      * @param tR $taskR
      * @param trR $trR
      * @param iiaR $iiaR
-     * @param sR $sR
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, sR $sR, FormHydrator $formHydrator): void
+    private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm($invItem, (int)$inv_id);
@@ -291,7 +279,7 @@ final class TaskController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $sR);
+            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $this->sR);
         }
     }
 
@@ -361,18 +349,5 @@ final class TaskController
     private function tasks(tR $tR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $tR->findAllPreloaded();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
     }
 }

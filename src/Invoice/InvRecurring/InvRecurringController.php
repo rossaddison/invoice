@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvRecurring;
 
+use App\Invoice\BaseController;
 // Entities
 use App\Invoice\Entity\InvRecurring;
 // Forms
@@ -18,7 +19,6 @@ use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvTaxRate\InvTaxRateService;
 use App\Invoice\InvCustom\InvCustomService;
-use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -29,53 +29,42 @@ use Yiisoft\Json\Json;
 use Yiisoft\Log\Logger;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class InvRecurringController
+final class InvRecurringController extends BaseController
 {
-    use FlashMessage;
-
-    private Flash $flash;
-    private ViewRenderer $viewRenderer;
-    private Logger $_logger;
-
+    protected string $controllerName = 'invoice/invrecurring';
+        
     public function __construct(
+        private Logger $_logger,
         private DataResponseFactoryInterface $factory,
-        ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private InvCustomService $invCustomService,
         private InvAmountService $invAmountService,
         private InvItemService $invItemService,
         private InvRecurringService $invrecurringService,
         private InvTaxRateService $invTaxRateService,
-        private Session $session,
-        private SR $s,
         private IS $iS,
-        private TranslatorInterface $translator,
         private MailerInterface $mailer,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService    
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('invoice/invrecurring')
-                                           ->withLayout('@views/layout/invoice.php');
-        $this->flash = new Flash($this->session);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->_logger = new Logger();
-    }
-
-    /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
+        $this->factory = $factory;
+        $this->invCustomService = $invCustomService;
+        $this->invAmountService = $invAmountService;
+        $this->invItemService = $invItemService;
+        $this->invrecurringService = $invrecurringService;
+        $this->invTaxRateService = $invTaxRateService;
+        $this->iS = $iS;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -88,15 +77,15 @@ final class InvRecurringController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->invrecurrings($irR)))
-        ->withPageSize($this->s->positiveListLimit())
+        ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero);
-        $numberhelper = new NumberHelper($this->s);
+        $numberhelper = new NumberHelper($this->sR);
         $canEdit = $this->rbac();
         $parameters = [
             'paginator' => $paginator,
             'canEdit' => $canEdit,
-            'defaultPageSizeOffsetPaginator' => $this->s->getSetting('default_list_limit')
-                                                      ? (int)$this->s->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                      ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'recur_frequencies' => $numberhelper->recur_frequencies(),
             'invrecurrings' => $this->invrecurrings($irR),
             'alert' => $this->alert(),
@@ -348,7 +337,7 @@ final class InvRecurringController
             $immutable_invoice_date = $base_invoice->getDate_created();
             // see InvRecurringRepository recur_frequencies eg. '8M' => 'calendar_month_8',
             $recur_frequency = (string)$body['frequency'];
-            $dateHelper = new DateHelper($this->s);
+            $dateHelper = new DateHelper($this->sR);
             $parameters = [
                 'success' => 1,
                 // Show the recur_start_date in Y-m-d format

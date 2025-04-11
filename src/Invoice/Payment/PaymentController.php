@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
+use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
@@ -23,8 +24,7 @@ use App\Invoice\PaymentMethod\PaymentMethodRepository;
 use App\Invoice\PaymentCustom\PaymentCustomRepository;
 use App\Invoice\PaymentCustom\PaymentCustomForm;
 use App\Invoice\PaymentCustom\PaymentCustomService;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository;
@@ -41,45 +41,36 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class PaymentController
+final class PaymentController extends BaseController
 {
-    use FlashMessage;
-    private Flash $flash;
-
+    protected string $controllerName = 'invoice/payment';
+            
     public function __construct(
-        private Session $session,
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
-        private UserService $userService,
         private PaymentService $paymentService,
         private PaymentCustomService $paymentCustomService,
-        private TranslatorInterface $translator,
-        private DataResponseFactoryInterface $factory
+        private DataResponseFactoryInterface $factory,
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
     ) {
-        $this->flash = new Flash($this->session);
-        if ($this->userService->hasPermission('viewPayment')
-            && !$this->userService->hasPermission('editPayment')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/payment')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewPayment')
-            && $this->userService->hasPermission('editPayment')) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName('invoice/payment')
-                                               ->withLayout('@views/layout/invoice.php');
-        }
-    }
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        $this->paymentService = $paymentService;
+        $this->paymentCustomService = $paymentCustomService;
+        $this->factory = $factory;
+    }   
 
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ACIR $aciR
-     * @param SettingRepository $settingRepository
      * @param InvRepository $invRepository
      * @param InvAmountRepository $iaR
      * @param PaymentMethodRepository $payment_methodRepository
@@ -97,7 +88,6 @@ final class PaymentController
         Request $request,
         FormHydrator $formHydrator,
         ACIR $aciR,
-        SettingRepository $settingRepository,
         InvRepository $invRepository,
         InvAmountRepository $iaR,
         PaymentMethodRepository $payment_methodRepository,
@@ -120,12 +110,12 @@ final class PaymentController
             if (null !== $open_invoice_id) {
                 $inv_amount = $iaR->repoInvquery((int)$open_invoice_id);
                 if (null !== $inv_amount) {
-                    $amounts['invoice' . $open_invoice_id] = $settingRepository->format_amount($inv_amount->getBalance());
+                    $amounts['invoice' . $open_invoice_id] = $this->sR->format_amount($inv_amount->getBalance());
                 }
                 $invoice_payment_methods['invoice' . $open_invoice_id] = $open_invoice->getPayment_method();
             }
         }
-        $numberHelper = new NumberHelper($settingRepository);
+        $numberHelper = new NumberHelper($this->sR);
         $payment = new Payment();
         $form = new PaymentForm($payment);
         $paymentCustom = new PaymentCustom();
@@ -146,7 +136,7 @@ final class PaymentController
                                 $payment_methodRepository->findAllPreloaded() : null,
             'cR' => $cR,
             'iaR' => $iaR,
-            'cvH' => new CustomValuesHelper($settingRepository),
+            'cvH' => new CustomValuesHelper($this->sR),
             'customFields' => $cfR->repoTablequery('payment_custom'),
             // Applicable to normally building up permanent selection lists eg. dropdowns
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
@@ -218,19 +208,6 @@ final class PaymentController
     }
 
     /**
-     * @return string
-     */
-    private function alert(): string
-    {
-        return $this->viewRenderer->renderPartialAsString(
-            '//invoice/layout/alert',
-            [
-                'flash' => $this->flash,
-            ]
-        );
-    }
-
-    /**
      * @param FormHydrator $formHydrator
      * @param (mixed|string)[] $array
      * @param string $payment_id
@@ -286,7 +263,6 @@ final class PaymentController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param SettingRepository $settingRepository
      * @param InvRepository $invRepository
      * @param InvAmountRepository $iaR
      * @param PaymentRepository $pmtR
@@ -298,7 +274,6 @@ final class PaymentController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        SettingRepository $settingRepository,
         InvRepository $invRepository,
         InvAmountRepository $iaR,
         PaymentRepository $pmtR,
@@ -308,7 +283,7 @@ final class PaymentController
         ITRR $itrR,
     ): Response {
         try {
-            $number_helper = new NumberHelper($settingRepository);
+            $number_helper = new NumberHelper($this->sR);
             $payment = $this->payment($currentRoute, $pmtR);
             if ($payment) {
                 $inv_id = $payment->getInv()?->getId();
@@ -329,7 +304,6 @@ final class PaymentController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param SettingRepository $settingRepository
      * @param InvRepository $invRepository
      * @param InvAmountRepository $iaR
      * @param PaymentRepository $pmtR
@@ -348,7 +322,6 @@ final class PaymentController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ACIR $aciR,
-        SettingRepository $settingRepository,
         InvRepository $invRepository,
         InvAmountRepository $iaR,
         PaymentRepository $pmtR,
@@ -369,7 +342,7 @@ final class PaymentController
             $payment_id = $payment->getId();
             $inv_id = $payment->getId();
             $open = $invRepository->open();
-            $number_helper = new NumberHelper($settingRepository);
+            $number_helper = new NumberHelper($this->sR);
             $parameters = [
                 'title' => $this->translator->translate('i.edit'),
                 'actionName' => 'payment/edit',
@@ -383,7 +356,7 @@ final class PaymentController
                 'paymentMethods' => $payment_methodRepository->findAllPreloaded(),
                 'cR' => $cR,
                 'iaR' => $iaR,
-                'cvH' => new CustomValuesHelper($settingRepository),
+                'cvH' => new CustomValuesHelper($this->sR),
                 'customFields' => $cfR->repoTablequery('payment_custom'),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
                 'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
@@ -487,14 +460,11 @@ final class PaymentController
         }
         return null;
     }
-
-    // This function is used in invoice/layout/guest
-
+    
     /**
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param PaymentRepository $paymentRepository
-     * @param SettingRepository $settingRepository
      * @param InvAmountRepository $iaR
      * @param UserClientRepository $ucR
      * @param UserInvRepository $uiR
@@ -504,7 +474,6 @@ final class PaymentController
         Request $request,
         CurrentRoute $currentRoute,
         PaymentRepository $paymentRepository,
-        SettingRepository $settingRepository,
         InvAmountRepository $iaR,
         UserClientRepository $ucR,
         UserInvRepository $uiR
@@ -568,7 +537,7 @@ final class PaymentController
                     'sortOrder' => $query_params['sort'] ?? '',
                     'iaR' => $iaR,
                     'payments' => $this->payments($paymentRepository),
-                    'max' => (int)$settingRepository->getSetting('default_list_limit'),
+                    'max' => (int)$this->sR->getSetting('default_list_limit'),
                 ];
                 return $this->viewRenderer->render('guest', $parameters);
             }
@@ -638,14 +607,12 @@ final class PaymentController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param PaymentRepository $paymentRepository
-     * @param SettingRepository $settingRepository
      * @param InvAmountRepository $iaR
      */
     public function index(
         Request $request,
         CurrentRoute $currentRoute,
         PaymentRepository $paymentRepository,
-        SettingRepository $settingRepository,
         InvAmountRepository $iaR
     ): \Yiisoft\DataResponse\DataResponse {
         $query_params = $request->getQueryParams();
@@ -681,7 +648,7 @@ final class PaymentController
             );
         }
         $paginator = (new OffsetPaginator($payments))
-         ->withPageSize($settingRepository->positiveListLimit())
+         ->withPageSize($this->sR->positiveListLimit())
          ->withCurrentPage($currentPageNeverZero)
          ->withSort($sort)
          ->withToken(PageToken::next((string)$page));
@@ -691,14 +658,14 @@ final class PaymentController
             'alert' => $this->alert(),
             'canEdit' => $canEdit,
             'canView' => $canView,
-            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'page' => $page,
             'paginator' => $paginator,
             'sortOrder' => $query_params['sort'] ?? '',
             'iaR' => $iaR,
             'payments' => $this->payments($paymentRepository),
-            'max' => (int)$settingRepository->getSetting('default_list_limit'),
+            'max' => (int)$this->sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -742,13 +709,11 @@ final class PaymentController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param MerchantRepository $merchantRepository
-     * @param SettingRepository $settingRepository
      */
     public function online_log(
         Request $request,
         CurrentRoute $currentRoute,
-        MerchantRepository $merchantRepository,
-        SettingRepository $settingRepository
+        MerchantRepository $merchantRepository
     ): \Yiisoft\DataResponse\DataResponse {
         $query_params = $request->getQueryParams();
         $page = (int)$currentRoute->getArgument('page', '1');
@@ -777,7 +742,7 @@ final class PaymentController
             $merchants = $merchantRepository->repoMerchantInvNumberWithPaymentProvider((string)$query_params['filterInvNumber'], (string)$query_params['filterPaymentProvider']);
         }
         $paginator = (new OffsetPaginator($merchants))
-         ->withPageSize($settingRepository->positiveListLimit())
+         ->withPageSize($this->sR->positiveListLimit())
          ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log
@@ -786,8 +751,8 @@ final class PaymentController
             'alert' => $this->alert(),
             'page' => $page,
             'paginator' => $paginator,
-            'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                    ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
+                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
             'merchants' => $this->merchants($merchantRepository),
         ];
         return $this->viewRenderer->render('online_log', $parameters);
@@ -885,7 +850,6 @@ final class PaymentController
      * @param CurrentRoute $currentRoute
      * @param PaymentRepository $paymentRepository
      * @param PaymentMethodRepository $paymentMethodRepository
-     * @param SettingRepository $settingRepository
      * @param CustomFieldRepository $cfR
      * @param CustomValueRepository $cvR
      */
@@ -893,7 +857,6 @@ final class PaymentController
         CurrentRoute $currentRoute,
         PaymentRepository $paymentRepository,
         PaymentMethodRepository $paymentMethodRepository,
-        SettingRepository $settingRepository,
         CustomFieldRepository $cfR,
         CustomValueRepository $cvR,
         PaymentCustomRepository $pcR
@@ -912,8 +875,7 @@ final class PaymentController
                 'viewCustomFields' => $this->view_custom_fields(
                     $cfR,
                     $cvR,
-                    $this->payment_custom_values($paymentId, $pcR),
-                    $settingRepository
+                    $this->payment_custom_values($paymentId, $pcR)
                 ),
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -925,16 +887,15 @@ final class PaymentController
      * @param CustomFieldRepository $cfR
      * @param CustomValueRepository $cvR
      * @param array $payment_custom_values
-     * @param SettingRepository $settingRepository
      * @return string
      */
-    private function view_custom_fields(CustomFieldRepository $cfR, CustomValueRepository $cvR, array $payment_custom_values, SettingRepository $settingRepository): string
+    private function view_custom_fields(CustomFieldRepository $cfR, CustomValueRepository $cvR, array $payment_custom_values): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/payment/view_custom_fields', [
             'customFields' => $cfR->repoTablequery('payment_custom'),
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
             'paymentCustomValues' => $payment_custom_values,
-            'cvH' => new CustomValuesHelper($settingRepository),
+            'cvH' => new CustomValuesHelper($this->sR),
             'paymentCustomForm' => new PaymentCustomForm(new PaymentCustom()),
         ]);
     }
