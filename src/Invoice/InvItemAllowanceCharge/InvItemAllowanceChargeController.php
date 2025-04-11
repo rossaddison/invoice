@@ -31,15 +31,15 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class InvItemAllowanceChargeController extends BaseController
 {
-    protected string $controllerName = 'invoice/invitemallowancecharge';  
+    protected string $controllerName = 'invoice/invitemallowancecharge';
 
     public function __construct(
-        private NumberHelper $numberHelper,    
+        private NumberHelper $numberHelper,
         private InvItemAllowanceChargeService $aciiService,
         private InvAmountService $invAmountService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -48,8 +48,8 @@ final class InvItemAllowanceChargeController extends BaseController
         $this->numberHelper = $numberHelper;
         $this->aciiService = $aciiService;
         $this->invAmountService = $invAmountService;
-    } 
-    
+    }
+
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request

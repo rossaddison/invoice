@@ -35,13 +35,13 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class QuoteItemController extends BaseController
 {
     protected string $controllerName = 'invoice/quoteitem';
-    
+
     public function __construct(
         private QuoteItemService $quoteitemService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         SR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -53,7 +53,7 @@ final class QuoteItemController extends BaseController
     /**
      * Quoteitem/add accessed from quote/view renderpartialasstring add_quote_item
      * Triggered by clicking on the save button on the item view appearing above the quote view
-     * 
+     *
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param PR $pR

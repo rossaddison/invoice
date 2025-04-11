@@ -23,19 +23,19 @@ use Exception;
 final class DeliveryPartyController extends BaseController
 {
     protected string $controllerName = 'invoice/deliveryparty';
-    
+
     public function __construct(
         private DeliveryPartyService $deliveryPartyService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->deliveryPartyService = $deliveryPartyService;
-    }  
+    }
 
     /**
      * @param Request $request

@@ -28,19 +28,19 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CustomFieldController extends BaseController
 {
     protected string $controllerName = 'invoice/customfield';
-    
+
     public function __construct(
         private CustomFieldService $customFieldService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->customFieldService = $customFieldService;
-    }    
+    }
 
     /**
      * @param CustomFieldRepository $customfieldRepository

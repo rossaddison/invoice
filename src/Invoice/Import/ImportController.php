@@ -36,7 +36,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ImportController extends BaseController
 {
     protected string $controllerName = 'invoice/import';
-    
+
     public function __construct(
         private ClientRepository $cR,
         private UnitRepository $uR,
@@ -45,7 +45,7 @@ final class ImportController extends BaseController
         private TaxRateRepository $trR,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -56,7 +56,7 @@ final class ImportController extends BaseController
         $this->fR = $fR;
         $this->pR = $pR;
         $this->trR = $trR;
-    }   
+    }
 
     private function invoiceplaneConnected(): Connection|null
     {

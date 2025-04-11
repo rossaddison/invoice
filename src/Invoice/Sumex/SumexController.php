@@ -23,13 +23,13 @@ use Yiisoft\FormModel\FormHydrator;
 final class SumexController extends BaseController
 {
     protected string $controllerName = 'invoice/sumex';
-    
+
     public function __construct(
         private SumexService $sumexService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -55,7 +55,7 @@ final class SumexController extends BaseController
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request

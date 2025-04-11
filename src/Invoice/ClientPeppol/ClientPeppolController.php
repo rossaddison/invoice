@@ -27,13 +27,13 @@ use Exception;
 final class ClientPeppolController extends BaseController
 {
     protected string $controllerName = 'invoice/clientpeppol';
-    
+
     public function __construct(
-        private ClientPeppolService $clientPeppolService,    
-        private DataResponseFactoryInterface $factory,    
+        private ClientPeppolService $clientPeppolService,
+        private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
@@ -42,7 +42,7 @@ final class ClientPeppolController extends BaseController
         $this->clientPeppolService = $clientPeppolService;
         $this->factory = $factory;
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request

@@ -51,13 +51,13 @@ use DateTimeZone;
 final class SettingController extends BaseController
 {
     protected string $controllerName = 'invoice/setting';
-    
+
     public function __construct(
         private SettingService $settingService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -69,7 +69,7 @@ final class SettingController extends BaseController
 
     /**
      * The debug index is simply a list of the settings that are useful to change when debugging and appears in red
-     * 
+     *
      * @param CurrentRoute $currentRoute
      */
     public function debug_index(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse
@@ -623,7 +623,7 @@ final class SettingController extends BaseController
         }
         return null;
     }
-    
+
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *

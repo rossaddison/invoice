@@ -29,7 +29,7 @@ final class UnitController extends BaseController
         private UnitService $unitService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService

@@ -29,13 +29,13 @@ use Exception;
 final class UploadController extends BaseController
 {
     protected string $controllerName = 'invoice/upload';
-    
+
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private UploadService $uploadService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
