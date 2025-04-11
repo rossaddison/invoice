@@ -39,7 +39,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserInvController extends BaseController
 {
     protected string $controllerName = 'invoice/userinv';
-    
+
     public function __construct(
         // add, save, remove, clear, children, parents
         private ItemStorage $itemstorage,
@@ -50,15 +50,15 @@ final class UserInvController extends BaseController
         private UserInvService $userinvService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService    
+        WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         // @see yiisoft/rbac-php
         $this->itemstorage = $itemstorage;
-        $this->assignment = $assignment;        
+        $this->assignment = $assignment;
         $this->rule = $rule;
         $this->manager = new Manager($this->itemstorage, $this->assignment, $this->rule);
         $this->urlGenerator = $urlGenerator;

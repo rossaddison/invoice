@@ -29,19 +29,19 @@ use Exception;
 final class ContractController extends BaseController
 {
     protected string $controllerName = 'invoice/contract';
-    
+
     public function __construct(
         private ContractService $contractService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->contractService = $contractService;
-    }    
+    }
 
     /**
      * @param CurrentRoute $currentRoute

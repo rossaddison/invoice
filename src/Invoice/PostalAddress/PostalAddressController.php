@@ -26,20 +26,20 @@ use Exception;
 
 final class PostalAddressController extends BaseController
 {
-    protected string $controllerName = 'invoice/postaladdress'; 
-            
+    protected string $controllerName = 'invoice/postaladdress';
+
     public function __construct(
         private PostalAddressService $postaladdressService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->postaladdressService = $postaladdressService;
-    }   
+    }
 
     /**
      * @param CurrentRoute $currentRoute

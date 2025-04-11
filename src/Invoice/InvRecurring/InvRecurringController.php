@@ -37,7 +37,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvRecurringController extends BaseController
 {
     protected string $controllerName = 'invoice/invrecurring';
-        
+
     public function __construct(
         private Logger $_logger,
         private DataResponseFactoryInterface $factory,
@@ -49,11 +49,11 @@ final class InvRecurringController extends BaseController
         private IS $iS,
         private MailerInterface $mailer,
         SessionInterface $session,
-        sR $sR,
-        TranslatorInterface $translator, 
+        SR $sR,
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService    
+        WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->_logger = new Logger();

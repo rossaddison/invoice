@@ -24,19 +24,19 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvSentLogController extends BaseController
 {
     protected string $controllerName = 'invoice/invsentlog';
-    
+
     public function __construct(
         private InvSentLogService $invsentlogService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->invsentlogService = $invsentlogService;
-    }   
+    }
 
     /**
      * @param ISLR $islR

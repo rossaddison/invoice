@@ -24,19 +24,19 @@ use Exception;
 final class PaymentPeppolController extends BaseController
 {
     protected string $controllerName = 'invoice/paymentpeppol';
-    
+
     public function __construct(
-        private PaymentPeppolService $paymentpeppolService, 
+        private PaymentPeppolService $paymentpeppolService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->paymentpeppolService = $paymentpeppolService;
-    }   
+    }
 
     /**
      * @param Request $request
@@ -167,7 +167,7 @@ final class PaymentPeppolController extends BaseController
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentPeppolRepository $paymentpeppolRepository

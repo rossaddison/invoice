@@ -38,11 +38,11 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 class ReportController extends BaseController
 {
     protected string $controllerName = 'invoice/report';
-    
+
     public function __construct(
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService

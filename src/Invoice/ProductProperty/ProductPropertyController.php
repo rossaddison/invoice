@@ -7,7 +7,7 @@ namespace App\Invoice\ProductProperty;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\ProductProperty;
 use App\Invoice\Product\ProductRepository;
-use App\Invoice\Setting\SettingRepository as sR; 
+use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,19 +25,19 @@ use Exception;
 final class ProductPropertyController extends BaseController
 {
     protected string $controllerName = 'invoice/productproperty';
-    
+
     public function __construct(
         private ProductPropertyService $productpropertyService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->productpropertyService = $productpropertyService;
-    }   
+    }
 
     /**
      * @param CurrentRoute $currentRoute

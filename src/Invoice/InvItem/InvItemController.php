@@ -43,13 +43,13 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class InvItemController extends BaseController
 {
     protected string $controllerName = 'invoice/invitem';
-    
+
     public function __construct(
         private InvItemService $invitemService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         SR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -57,7 +57,7 @@ final class InvItemController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->invitemService = $invitemService;
         $this->factory = $factory;
-    }  
+    }
 
     /**
      * @param Request $request

@@ -29,19 +29,19 @@ use Exception;
 final class DeliveryController extends BaseController
 {
     protected string $controllerName = 'invoice/delivery';
-    
+
     public function __construct(
         private DeliveryService $deliveryService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->deliveryService = $deliveryService;
-    }  
+    }
 
     /**
      * @param CurrentRoute $currentRoute
@@ -91,7 +91,7 @@ final class DeliveryController extends BaseController
         }
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $dR

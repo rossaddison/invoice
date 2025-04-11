@@ -24,12 +24,12 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class TaxRateController extends BaseController
 {
     protected string $controllerName = 'invoice/taxrate';
-    
+
     public function __construct(
         private TaxRateService $taxRateService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -37,6 +37,7 @@ final class TaxRateController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->taxRateService = $taxRateService;
     }
+
     /**
      * @param int $page
      * @param TaxRateRepository $taxRateRepository

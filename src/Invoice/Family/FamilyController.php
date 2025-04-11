@@ -28,13 +28,13 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class FamilyController extends BaseController
 {
     protected string $controllerName = 'invoice/family';
-    
+
     public function __construct(
         private FamilyService $familyService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -42,7 +42,7 @@ final class FamilyController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->familyService = $familyService;
         $this->factory = $factory;
-    }    
+    }
 
     /**
      * @param CurrentRoute $currentRoute

@@ -26,13 +26,13 @@ use Exception;
 final class ProductImageController extends BaseController
 {
     protected string $controllerName = 'invoice/productimage';
-    
+
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private ProductImageService $productimageService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -40,7 +40,7 @@ final class ProductImageController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->factory = $factory;
         $this->productimageService = $productimageService;
-    }   
+    }
 
     /** Note: A  productimage Upload can only be viewed with editInv permission
      *

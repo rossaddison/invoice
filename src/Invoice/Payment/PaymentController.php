@@ -49,14 +49,14 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class PaymentController extends BaseController
 {
     protected string $controllerName = 'invoice/payment';
-            
+
     public function __construct(
         private PaymentService $paymentService,
         private PaymentCustomService $paymentCustomService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -65,7 +65,7 @@ final class PaymentController extends BaseController
         $this->paymentService = $paymentService;
         $this->paymentCustomService = $paymentCustomService;
         $this->factory = $factory;
-    }   
+    }
 
     /**
      * @param Request $request
@@ -460,7 +460,7 @@ final class PaymentController extends BaseController
         }
         return null;
     }
-    
+
     /**
      * @param Request $request
      * @param CurrentRoute $currentRoute

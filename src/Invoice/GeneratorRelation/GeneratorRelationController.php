@@ -23,19 +23,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class GeneratorRelationController extends BaseController
 {
     protected string $controllerName = 'invoice/generatorrelation';
-    
+
     public function __construct(
         private GeneratorRelationService $generatorrelationService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->generatorrelationService = $generatorrelationService;
-    } 
+    }
 
     /**
      * @param GeneratorRelationRepository $generatorrelationRepository
@@ -198,7 +198,7 @@ final class GeneratorRelationController extends BaseController
         }
         return null;
     }
-    
+
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *

@@ -39,14 +39,14 @@ use Yiisoft\FormModel\FormHydrator;
 final class TaskController extends BaseController
 {
     protected string $controllerName = 'invoice/task';
-    
+
     public function __construct(
         private TaskService $taskService,
         private DataResponseFactoryInterface $factory,
         private InvItemService $invitemService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -54,6 +54,7 @@ final class TaskController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->invitemService = $invitemService;
     }
+
     /**
      * @param int $page
      * @param tR $tR

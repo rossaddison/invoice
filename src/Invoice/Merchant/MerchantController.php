@@ -23,19 +23,19 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class MerchantController extends BaseController
 {
     protected string $controllerName = 'invoice/merchant';
-    
+
     public function __construct(
         private MerchantService $merchantService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->merchantService = $merchantService;
-    }   
+    }
 
     /**
      * @param MerchantRepository $merchantRepository

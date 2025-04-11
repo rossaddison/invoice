@@ -22,18 +22,18 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CompanyController extends BaseController
 {
     protected string $controllerName = 'invoice/company';
-    
+
     public function __construct(
         private CompanyService $companyService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
-        $this->companyService  = $companyService;
+        $this->companyService = $companyService;
     }
 
     /**

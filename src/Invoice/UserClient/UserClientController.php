@@ -25,13 +25,13 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserClientController extends BaseController
 {
     protected string $controllerName = 'invoice/userclient';
-    
+
     public function __construct(
         private UserClientService $userclientService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService

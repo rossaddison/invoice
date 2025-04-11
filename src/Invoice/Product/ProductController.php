@@ -73,7 +73,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ProductController extends BaseController
 {
     protected string $controllerName = 'invoice/product';
-    
+
     private const string FILTER_FAMILY = 'ff';
     private const string FILTER_PRODUCT = 'fp';
     private const string RESET_TRUE = 'rt';
@@ -82,14 +82,14 @@ final class ProductController extends BaseController
     private string $rtc = self::RESET_TRUE;
 
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,    
+        private DataResponseFactoryInterface $responseFactory,
         private ProductService $productService,
         private ProductCustomService $productCustomService,
         private QuoteItemService $quoteitemService,
         private InvItemService $invitemService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -100,7 +100,7 @@ final class ProductController extends BaseController
         $this->productCustomService = $productCustomService;
         $this->quoteitemService = $quoteitemService;
         $this->invitemService = $invitemService;
-    }   
+    }
 
     /**
      * @param Request $request
@@ -290,7 +290,7 @@ final class ProductController extends BaseController
         } // product
         return $this->webService->getRedirectResponse('product/index');
     }
-    
+
     /**
      * @param pR $pR
      * @param string $id

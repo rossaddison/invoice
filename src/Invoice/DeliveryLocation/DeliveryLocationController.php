@@ -28,13 +28,13 @@ use Exception;
 final class DeliveryLocationController extends BaseController
 {
     protected string $controllerName = 'invoice/del';
-    
+
     public function __construct(
         private DeliveryLocationService $delService,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
@@ -42,7 +42,8 @@ final class DeliveryLocationController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->delService = $delService;
         $this->factory = $factory;
-    }    
+    }
+
     /**
      * @see ../resources/views/invoice/del/index.php
      * @param DeliveryLocationRepository $delRepository

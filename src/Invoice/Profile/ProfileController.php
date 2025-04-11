@@ -23,12 +23,12 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ProfileController extends BaseController
 {
     protected string $controllerName = 'invoice/profile';
-    
+
     public function __construct(
         private ProfileService $profileService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService

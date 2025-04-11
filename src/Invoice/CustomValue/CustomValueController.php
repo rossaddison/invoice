@@ -23,19 +23,19 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class CustomValueController extends BaseController
 {
     protected string $controllerName = 'invoice/customvalue';
-    
+
     public function __construct(
         private CustomValueService $customValueService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->customValueService = $customValueService;
-    }  
+    }
 
     /**
      * @param CustomValueRepository $customvalueRepository

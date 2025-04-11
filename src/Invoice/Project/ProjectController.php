@@ -23,12 +23,12 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class ProjectController extends BaseController
 {
     protected string $controllerName = 'invoice/project';
-    
+
     public function __construct(
         private ProjectService $projectService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService

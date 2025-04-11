@@ -21,20 +21,20 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class PaymentMethodController extends BaseController
 {
     protected string $controllerName = 'invoice/paymentmethod';
-    
+
     public function __construct(
         private PaymentMethodService $paymentmethodService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->paymentmethodService = $paymentmethodService;
-    }   
-    
+    }
+
     /**
      * @param PaymentMethodRepository $paymentmethodRepository
      * @param Request $request

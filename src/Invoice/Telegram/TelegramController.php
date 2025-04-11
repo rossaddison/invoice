@@ -31,25 +31,24 @@ final class TelegramController extends BaseController
      * Note: Yiisoft\Di\NotFoundException can occur if $factory is placed after $telegramBotApi i.e. in the wrong order
      * @see https://github.com/rossaddison/invoice/issues/41
      */
-     
-    public function __construct(        
+    public function __construct(
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
         private DataResponseFactoryInterface $factory,
         private Logger $logger,
         private ?Update $update = null,
-        private ?TelegramBotApi $telegramBotApi = null,    
+        private ?TelegramBotApi $telegramBotApi = null,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
-        $this->factory = $factory; 
+        $this->factory = $factory;
         $this->logger = $logger;
         $this->update = $update;
         $this->telegramBotApi = $telegramBotApi;
-    }    
+    }
 
     public function index(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
     {

@@ -31,13 +31,13 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class SalesOrderItemController extends BaseController
 {
     protected string $controllerName = 'invoice/salesorderitem';
-    
+
     public function __construct(
         private readonly SalesOrderItemService $salesorderitemService,
         private readonly DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService

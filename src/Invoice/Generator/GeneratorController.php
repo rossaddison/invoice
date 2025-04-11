@@ -38,7 +38,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 class GeneratorController extends BaseController
 {
     protected string $controllerName = 'invoice/generator';
-    
+
     public const string ENTITY = 'Entity.php';
     public const string REPO = 'Repository.php';
     public const string FORM = 'Form.php';
@@ -101,7 +101,7 @@ class GeneratorController extends BaseController
         private GeneratorService $generatorService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -110,7 +110,7 @@ class GeneratorController extends BaseController
         $this->aliases = $aliases;
         $this->factory = $factory;
         $this->generatorService = $generatorService;
-    }    
+    }
 
     /**
      * Compare e.g \resources\messages\de\app.php to the base \resources\messages\en\app.php

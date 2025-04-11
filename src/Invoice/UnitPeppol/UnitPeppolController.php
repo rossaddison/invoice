@@ -27,12 +27,12 @@ use Exception;
 final class UnitPeppolController extends BaseController
 {
     protected string $controllerName = 'invoice/unitpeppol';
-    
+
     public function __construct(
         private UnitPeppolService $unitpeppolService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -112,10 +112,13 @@ final class UnitPeppolController extends BaseController
         $parameters = [
             'alert' => $this->alert(),
             'unitpeppols' => $this->unitpeppols($unitpeppolRepository),
-            'grid_summary' => $this->sR->grid_summary($paginator,
-                                   $this->translator, 
-                                   (int)$this->sR->getSetting('default_list_limit'), 
-                                   $this->translator->translate('invoice.unit.peppol'), ''),
+            'grid_summary' => $this->sR->grid_summary(
+                $paginator,
+                $this->translator,
+                (int)$this->sR->getSetting('default_list_limit'),
+                $this->translator->translate('invoice.unit.peppol'),
+                ''
+            ),
             'paginator' => $paginator,
         ];
         return $this->viewRenderer->render('index', $parameters);

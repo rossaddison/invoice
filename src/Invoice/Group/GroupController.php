@@ -23,19 +23,19 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class GroupController extends BaseController
 {
     protected string $controllerName = 'invoice/group';
-    
+
     public function __construct(
         private GroupService $groupService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->groupService = $groupService;
-    }   
+    }
 
     /**
      * @param GroupRepository $groupRepository

@@ -24,19 +24,19 @@ use Exception;
 final class FromDropDownController extends BaseController
 {
     protected string $controllerName = 'invoice/fromdropdown';
-    
+
     public function __construct(
         private FromDropDownService $fromService,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->fromService = $fromService;
-    }    
+    }
 
     /**
      * @param Request $request

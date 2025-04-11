@@ -27,13 +27,13 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class EmailTemplateController extends BaseController
 {
     protected string $controllerName = 'invoice/emailtemplate';
-    
+
     public function __construct(
         private EmailTemplateService $emailTemplateService,
         private Factory $factory,
         SessionInterface $session,
         sR $sR,
-        TranslatorInterface $translator, 
+        TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService
@@ -41,7 +41,7 @@ final class EmailTemplateController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this->emailTemplateService = $emailTemplateService;
         $this->factory = $factory;
-    }    
+    }
 
     /**
      * @param CurrentRoute $currentRoute
