@@ -778,8 +778,8 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                             <?= Html::encode($translator->translate('i.terms')); ?>
                             <?php
                                 $paymentTermArray = $s->get_payment_term_array($translator);
-                                $termsKey = (int)$inv->getTerms() ?? 0;
-                                $terms = $paymentTermArray[$termsKey];
+                                $termsKey = (int)$inv->getTerms() ?: 0;
+                                $terms = (string)$paymentTermArray[$termsKey];
                             ?>    
                         </b>        
                     </div>

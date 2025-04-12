@@ -268,8 +268,8 @@ if ($items) {
         <b><?= Html::encode($translator->translate('i.terms')); ?></b><br>
         <?php
             $paymentTermArray = $s->get_payment_term_array($translator);
-            $termsKey = (int)$inv->getTerms() ?? 0;
-            $terms = $paymentTermArray[$termsKey];
+            $termsKey = (int)$inv->getTerms() ?: 0;
+            $terms = (string)$paymentTermArray[$termsKey];
             echo nl2br(Html::encode($terms)); 
         ?>
     </div>
