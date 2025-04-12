@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>;
 
+use App\Invoice\BaseController;
 use <?= $generator->getNamespace_path(). DIRECTORY_SEPARATOR. 'Entity'. DIRECTORY_SEPARATOR. $generator->getCamelcase_capital_name(); ?>;
 use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Form;
 use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Service;
 use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Repository;
-use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository as sR;
 
 <?php
   /**
@@ -44,49 +44,27 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use \Exception;
 
-final class <?= $generator->getCamelcase_capital_name(); ?>Controller
+final class <?= $generator->getCamelcase_capital_name(); ?>Controller extends BaseController
 {
-    use FlashMessage;
-    
-    private Flash $flash;
-        
-    <?= 'private const int '.strtoupper($generator->getSmall_plural_name())."_PER_PAGE = 1;"."\n"; ?>
-    
+    protected string $controllerName = 'invoice/<?= $generator->getSmall_singular_name(); ?>';
+
     public function __construct(
-        private ViewRenderer $viewRenderer,
-        private WebControllerService $webService,
         private <?= $generator->getCamelcase_capital_name(); ?>Service $<?= $generator->getSmall_singular_name(); ?>Service,
-        private UserService $userService,        
-        private DataResponseFactoryInterface $factory,
-        private SessionInterface $session,
-        private TranslatorInterface $translator,
-    )    
-    {
-        $this->viewRenderer = $viewRenderer->withControllerName('<?= $generator->getRoute_prefix().'/'.$generator->getRoute_suffix(); ?>')
-                                           // The Controller layout dir is now redundant: replaced with an alias 
-                                           ->withLayout('<?= ltrim($generator->getController_layout_dir_dot_path(), '/'); ?>');
-        
-        $this->viewRenderer = $viewRenderer;
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/<?= $generator->getSmall_singular_name(); ?>')
-                                               ->withLayout('@views/layout/guest.php');
-        }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/<?= $generator->getSmall_singular_name(); ?>')
-                                               ->withLayout('@views/layout/invoice.php');
-        }                                   
-        $this->webService = $webService;
-        $this->flash = new Flash($this->session);
-        $this->userService = $userService;
-        $this->factory = $factory;
+        SessionInterface $session,
+        sR $sR,
+        TranslatorInterface $translator, 
+        UserService $userService,
+        ViewRenderer $viewRenderer,
+        WebControllerService $webService
+    )
+    ) {
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
         $this-><?= $generator->getSmall_singular_name(); ?>Service = $<?= $generator->getSmall_singular_name(); ?>Service;
-        $this->translator = $translator;
     }
     
     public function add(Request $request, 
@@ -135,17 +113,6 @@ foreach ($relations as $relation) {
             } // is_array($body)   
         }
         return $this->viewRenderer->render('_form', $parameters);
-    }
-    
-    /**
-     * @return string
-     */
-    private function alert() : string {
-        return $this->viewRenderer->renderPartialAsString('//invoice/layout/alert',
-        [
-            'flash'=>$this->flash,
-            'errors' => [],
-        ]);
     }
         
     public function index(<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= lcfirst($generator->getCamelcase_capital_name()); ?>Repository, 

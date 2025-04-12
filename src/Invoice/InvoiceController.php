@@ -150,6 +150,7 @@ final class InvoiceController extends BaseController
             'no_microsoftonline_continue_button' => 1,
             'no_x_continue_button' => 1,
             'no_yandex_continue_button' => 1,
+            'no_vkontakte_continue_button' => 1,
             // Number format Default located in SettingsRepository
             'number_format' => 'number_format_us_uk',
             'payment_list_limit' => 20,
@@ -922,7 +923,8 @@ final class InvoiceController extends BaseController
         foreach ($default_settings as $key => $value) {
             $setting = new Setting();
             $setting->setSetting_key($key);
-            $setting->setSetting_value($value);
+            /** @psalm-suppress RedundantCastGivenDocblockType */
+            $setting->setSetting_value((string)$value);
             $sR->save($setting);
         }
     }

@@ -166,12 +166,10 @@ final class SettingRepository extends Select\Repository
     {
         // Build settings array
         $this->load_settings();
+        $setting = '';
         /** @var string $this->settings[$key] */
         if (array_key_exists($key, $this->settings)) {
             $setting = $this->settings[$key];
-        } else {
-            // Add any newly added keys from payment_gateway array
-            $setting = $this->add_setting_key($key);
         }
         return $setting;
     }

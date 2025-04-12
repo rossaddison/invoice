@@ -777,13 +777,15 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                         <b>
                             <?= Html::encode($translator->translate('i.terms')); ?>
                             <?php
-                               $paymentTermArray = $s->get_payment_term_array($translator);
-?>         
+                                $paymentTermArray = $s->get_payment_term_array($translator);
+                                $termsKey = (int)$inv->getTerms() ?? 0;
+                                $terms = $paymentTermArray[$termsKey];
+                            ?>    
                         </b>        
                     </div>
                     <div class="panel-body">
                         <textarea name="terms" id="terms" rows="3" disabled
-                            class="input-sm form-control"><?= Html::encode($paymentTermArray[$inv->getTerms()] ?: $paymentTermArray[0]); ?></textarea>
+                            class="input-sm form-control"><?= Html::encode($terms); ?></textarea>
                     </div>
                 </div>
 

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
 use App\Widget\LabelSwitch;
 
@@ -75,22 +76,44 @@ echo $modal_delete_items;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag(
                     'button',
-                    [
-                                    'class' => 'btn btn-primary',
-                                    'href' => '#modal-choose-items',
-                                    'id' => 'modal-choose-items',
-                                    'data-bs-toggle' => 'modal'
-                                ]
-                );
-        ?>
-                <?= I::tag()
-            ->addClass('fa fa-list')
-            ->addAttributes([
-                'data-bs-toggle' => 'tooltip',
-                'title' => $translator->translate('i.add_product')
-            ]);
-        ?>
-                <?= $translator->translate('i.add_product'); ?>
+                        [
+                           'class' => 'btn btn-primary',
+                           'href' => '#modal-choose-items',
+                           'id' => 'modal-choose-items',
+                           'data-bs-toggle' => 'modal'
+                        ]
+                    );
+                ?>
+                    <?= A::tag()
+                        ->addAttributes([
+                            'type' => 'reset',
+                            'onclick' => 'window.history.back()',
+                            'value' => '1',
+                            'data-bs-toggle' => 'tab',
+                            'style' => 'text-decoration:none'
+                        ])
+                        ->addClass('btn btn-danger bi bi-arrow-left')
+                        ->id('back')
+                        ->render(); ?>
+                <?= Html::closeTag('button'); ?>
+                <?= Html::openTag(
+                    'button',
+                        [
+                            'class' => 'btn btn-primary',
+                            'href' => '#modal-choose-items',
+                            'id' => 'modal-choose-items',
+                            'data-bs-toggle' => 'modal'
+                        ]
+                    );
+                ?>
+                    <?= I::tag()
+                        ->addClass('fa fa-list')
+                        ->addAttributes([
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $translator->translate('i.add_product')
+                        ]);
+                    ?>
+                    <?= $translator->translate('i.add_product'); ?>
                 <?= Html::closeTag('button'); ?>
             <?= Html::closeTag('div'); ?>
             <?= $add_quote_item; ?>

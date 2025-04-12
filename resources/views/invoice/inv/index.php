@@ -422,7 +422,7 @@ $toolbar = Div::tag();
                          * @var array $iconMap[$iROString][$dRO]
                          * @var string $iconMap[$iROString][$dRO][$status]
                          */
-                        $icon = $iconMap[$iROString][$dRO][$status];
+                        $icon = $iconMap[$iROString][$dRO][$status] ?? '';
                         return !empty($icon) ? $icon : '';
                     },
                     url: static function (Inv $inv) use ($s, $urlGenerator): string {
@@ -467,7 +467,7 @@ $toolbar = Div::tag();
                          * @var array $urlMap[$iROString][$dRO]
                          * @var string $urlMap[$iROString][$dRO][$status]
                          */
-                        $url = $urlMap[$iROString][$dRO][$status];
+                        $url = $urlMap[$iROString][$dRO][$status] ?? '';
                         return $url;
                     },
                     attributes: static function (Inv $inv) use ($s, $translator): array {
@@ -519,7 +519,7 @@ $toolbar = Div::tag();
                          * @var array $attributesMap[$iROString][$dRO]
                          * @var array $attributesMap[$iROString][$dRO][$status]
                          */
-                        $attributes = $attributesMap[$iROString][$dRO][$status];
+                        $attributes = $attributesMap[$iROString][$dRO][$status] ?? [];
                         return $attributes;
                     },      
                 ),

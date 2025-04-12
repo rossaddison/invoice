@@ -47,9 +47,6 @@ final class SettingTruncateCommand extends Command
                 ->run();
         }
 
-        /**
-         * The SettingRepository includes session
-         */
         $findAll = $this->promise
                 ->getORM()
                 ->getRepository(Setting::class)->findAll();
