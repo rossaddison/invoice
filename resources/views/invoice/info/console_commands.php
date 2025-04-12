@@ -48,7 +48,7 @@ echo Table::tag()
     ->dataStrings([
         'Removes all the settings in the Setting Table. An array in future can be passed to the InvoiceController which can be tweaked from within the config/common/params.',
         'Online deleting of settings.',
-        'yii invoice/items',
+        'yii invoice/setting/truncate',
         '{root}\src\Command\Invoice\SettingTruncateCommand.php and config\console\commands.php'
     ]),
     Tr::tag()

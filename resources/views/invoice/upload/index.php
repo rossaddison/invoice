@@ -89,19 +89,19 @@ $columns = [
     ),
     new DataColumn(
         header:  $translator->translate('i.view'),
-        content: static function (Upload $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('upload/view', ['id' => $model->getId()]), [])->render();
+        content: static function (Upload $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('upload/view', ['id' => $model->getId()]), []);
         }
     ),
     new DataColumn(
         header:  $translator->translate('i.edit'),
-        content: static function (Upload $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('upload/edit', ['id' => $model->getId()]), [])->render();
+        content: static function (Upload $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('upload/edit', ['id' => $model->getId()]), []);
         }
     ),
     new DataColumn(
         header:  $translator->translate('i.delete'),
-        content: static function (Upload $model) use ($translator, $urlGenerator): string {
+        content: static function (Upload $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -114,7 +114,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('upload/delete', ['id' => $model->getId()]),
                 []
-            )->render();
+            );
         }
     ),
 ]
