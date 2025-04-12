@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "238fedad8f7b289d7109a85617f99c83",
+    "content-hash": "4a3df9ea44f02689012923e0ad3a82af",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -13529,16 +13529,16 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.8",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "4ea18a32c76b59230667b77c50376bd2d9aadf5d"
+                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/4ea18a32c76b59230667b77c50376bd2d9aadf5d",
-                "reference": "4ea18a32c76b59230667b77c50376bd2d9aadf5d",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
+                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
                 "shasum": ""
             },
             "require": {
@@ -13553,9 +13553,10 @@
                 "ext-curl": "*",
                 "httpsoft/http-message": "^1.1.6",
                 "php-http/curl-client": "^2.3.3",
-                "phpunit/phpunit": "^11.5.7",
+                "phpunit/phpunit": "^11.5.17",
                 "psr/log": "^3.0.2",
-                "yiisoft/test-support": "^3.0.1"
+                "yiisoft/files": "^2.0",
+                "yiisoft/test-support": "^3.0.2"
             },
             "suggest": {
                 "ext-curl": "To use `CurlTransport`.",
@@ -13595,7 +13596,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2025-02-15T09:00:34+00:00"
+            "time": "2025-04-12T18:23:43+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
