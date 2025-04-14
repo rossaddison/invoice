@@ -59,14 +59,13 @@ final class UserRelatedTruncate5Command extends Command
                 ->getRepository(UserInv::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
             count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Token::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +    
+                ->getRepository(Token::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
             count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(Identity::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
             count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(User::class)->findAll()) ? $findAll : iterator_to_array($findAll))) 
-        {
+                ->getRepository(User::class)->findAll()) ? $findAll : iterator_to_array($findAll))) {
             $io->success('Done');
             return ExitCode::OK;
         }

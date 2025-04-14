@@ -68,7 +68,7 @@ final class SignupAndLoginCest
 
         $I->expectTo('see invoice page.');
         $I->dontSeeLink('login');
-        
+
         $I->amOnPage('/invoice');
     }
 
