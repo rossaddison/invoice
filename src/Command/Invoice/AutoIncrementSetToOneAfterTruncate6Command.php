@@ -33,7 +33,7 @@ final class AutoIncrementSetToOneAfterTruncate6Command extends Command
         $io = new SymfonyStyle($input, $output);
 
         $tables = $this->dbal->database('default')->getTables();
-        
+
         foreach ($tables as $table) {
             $name = $table->getName();
             $this->dbal->database('default')->execute("ALTER TABLE `{$name}` AUTO_INCREMENT = 1");
