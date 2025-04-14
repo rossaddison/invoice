@@ -7,7 +7,7 @@ namespace App\Invoice\Helpers\Telegram;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Vjik\TelegramBot\Api\FailResult;
-use Vjik\TelegramBot\Api\Transport\Curl\CurlTransport;
+use Vjik\TelegramBot\Api\Transport\CurlTransport;
 use Vjik\TelegramBot\Api\LogType;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Type\Update\Update;

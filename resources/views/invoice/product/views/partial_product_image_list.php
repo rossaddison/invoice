@@ -35,7 +35,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             ),
             new DataColumn(
                 header:  $translator->translate('i.download'),
-                content: static function (ProductImage $model) use ($urlGenerator): string {
+                content: static function (ProductImage $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -49,7 +49,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                         // route name => /image
                         $urlGenerator->generate('product/download_image_file', ['product_image_id' => $model->getId(), '_language' => 'en']),
                         []
-                    )->render();
+                    );
                 }
             ),
             new DataColumn(

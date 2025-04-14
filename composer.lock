@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "238fedad8f7b289d7109a85617f99c83",
+    "content-hash": "4a3df9ea44f02689012923e0ad3a82af",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -7383,16 +7383,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.6.1",
+            "version": "5.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "e5e784149a09bd69d9a5e3b01c5cbd2e2bd653d8"
+                "reference": "92dde6a5919e34835c506ac8c523ef095a95ed62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/e5e784149a09bd69d9a5e3b01c5cbd2e2bd653d8",
-                "reference": "e5e784149a09bd69d9a5e3b01c5cbd2e2bd653d8",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/92dde6a5919e34835c506ac8c523ef095a95ed62",
+                "reference": "92dde6a5919e34835c506ac8c523ef095a95ed62",
                 "shasum": ""
             },
             "require": {
@@ -7441,9 +7441,9 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.1"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.2"
             },
-            "time": "2024-12-07T09:39:29+00:00"
+            "time": "2025-04-13T19:20:35+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -13529,16 +13529,16 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.8",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "4ea18a32c76b59230667b77c50376bd2d9aadf5d"
+                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/4ea18a32c76b59230667b77c50376bd2d9aadf5d",
-                "reference": "4ea18a32c76b59230667b77c50376bd2d9aadf5d",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
+                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
                 "shasum": ""
             },
             "require": {
@@ -13553,9 +13553,10 @@
                 "ext-curl": "*",
                 "httpsoft/http-message": "^1.1.6",
                 "php-http/curl-client": "^2.3.3",
-                "phpunit/phpunit": "^11.5.7",
+                "phpunit/phpunit": "^11.5.17",
                 "psr/log": "^3.0.2",
-                "yiisoft/test-support": "^3.0.1"
+                "yiisoft/files": "^2.0",
+                "yiisoft/test-support": "^3.0.2"
             },
             "suggest": {
                 "ext-curl": "To use `CurlTransport`.",
@@ -13595,7 +13596,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2025-02-15T09:00:34+00:00"
+            "time": "2025-04-12T18:23:43+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -13857,12 +13858,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "0f3fd9844ef9c42554748a33b88eb4a86edaf9e4"
+                "reference": "afd2e281e43def0438cf8ce17967d6d923389e34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/0f3fd9844ef9c42554748a33b88eb4a86edaf9e4",
-                "reference": "0f3fd9844ef9c42554748a33b88eb4a86edaf9e4",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/afd2e281e43def0438cf8ce17967d6d923389e34",
+                "reference": "afd2e281e43def0438cf8ce17967d6d923389e34",
                 "shasum": ""
             },
             "require": {
@@ -13934,7 +13935,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-12T09:15:06+00:00"
+            "time": "2025-04-14T15:05:23+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14864,12 +14865,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "ae4858b92fd3fedc0faf7546b4766d86b85b2bf7"
+                "reference": "22da3a537bc4fd65e3c304d8b49bb4c8e62e33ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/ae4858b92fd3fedc0faf7546b4766d86b85b2bf7",
-                "reference": "ae4858b92fd3fedc0faf7546b4766d86b85b2bf7",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/22da3a537bc4fd65e3c304d8b49bb4c8e62e33ac",
+                "reference": "22da3a537bc4fd65e3c304d8b49bb4c8e62e33ac",
                 "shasum": ""
             },
             "require": {
@@ -14939,7 +14940,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-08T10:57:08+00:00"
+            "time": "2025-04-14T15:05:17+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -18054,12 +18055,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/bootstrap5.git",
-                "reference": "1fb4ada8067ab899f4a05831e42086406d48f74d"
+                "reference": "bdf9079b9548d00b9cd0d3a5c38c63dc4907e924"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/1fb4ada8067ab899f4a05831e42086406d48f74d",
-                "reference": "1fb4ada8067ab899f4a05831e42086406d48f74d",
+                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/bdf9079b9548d00b9cd0d3a5c38c63dc4907e924",
+                "reference": "bdf9079b9548d00b9cd0d3a5c38c63dc4907e924",
                 "shasum": ""
             },
             "require": {
@@ -18083,11 +18084,6 @@
             },
             "default-branch": true,
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Bootstrap5\\": "src"
@@ -18121,7 +18117,7 @@
                 }
             ],
             "abandoned": "yiisoft/bootstrap5",
-            "time": "2025-04-10T17:39:02+00:00"
+            "time": "2025-04-13T19:55:03+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -22099,12 +22095,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "9a519dd30df3313d2ee076579ea69a289b0a26a3"
+                "reference": "79df35d3a122bdf407423ec09377f60875fe88da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9a519dd30df3313d2ee076579ea69a289b0a26a3",
-                "reference": "9a519dd30df3313d2ee076579ea69a289b0a26a3",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/79df35d3a122bdf407423ec09377f60875fe88da",
+                "reference": "79df35d3a122bdf407423ec09377f60875fe88da",
                 "shasum": ""
             },
             "conflict": {
@@ -22361,6 +22357,7 @@
                 "gaoming13/wechat-php-sdk": "<=1.10.2",
                 "genix/cms": "<=1.1.11",
                 "georgringer/news": "<1.3.3",
+                "geshi/geshi": "<1.0.8.11-dev",
                 "getformwork/formwork": "<1.13.1|>=2.0.0.0-beta1,<2.0.0.0-beta4",
                 "getgrav/grav": "<1.7.46",
                 "getkirby/cms": "<=3.6.6.5|>=3.7,<=3.7.5.4|>=3.8,<=3.8.4.3|>=3.9,<=3.9.8.1|>=3.10,<=3.10.1|>=4,<=4.3",
@@ -23010,7 +23007,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-12T04:06:04+00:00"
+            "time": "2025-04-14T17:05:11+00:00"
         },
         {
             "name": "sanmai/later",

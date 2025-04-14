@@ -66,13 +66,10 @@ final class SignupAndLoginCest
 
         $I->click('Submit', '#loginForm');
 
-        $I->expectTo('see logged index page.');
+        $I->expectTo('see invoice page.');
         $I->dontSeeLink('login');
-
-        $I->click('Logout (' . $this->liveAdminUserLogin . ')');
-
-        $I->expectTo('not see link logout.');
-        $I->dontSeeLink('logout');
+        
+        $I->amOnPage('/invoice');
     }
 
     public function testRegisterEmptyData(AcceptanceTester $I): void

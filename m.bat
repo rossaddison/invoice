@@ -1,5 +1,6 @@
 @echo off
 :: This batch script provides a menu to run common commands for the Invoice System project.
+:: Ensure that the file is saved in Windows (CRLF) format e.g. Netbeans bottom right corner
 
 title Invoice System Command Menu
 cd /d "%~dp0"
@@ -15,9 +16,10 @@ echo [2a] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
 echo [4] Run Composer Update
 echo [5] Run Composer Require Checker
+echo [5a] Run Codeception Tests 
 echo [6] Run 'serve' Command
-echo [7] Run 'user/create' Command
-echo [8] Run 'user/assignRole' Command
+echo [7] Run 'user/create' username password
+echo [8] Run 'user/assignRole' role userId 
 echo [9] Run 'router/list' Command
 echo [10] Run 'translator/translate' Command
 echo [11] Run 'invoice/items' Command
@@ -27,10 +29,12 @@ echo [14] Run 'invoice/inv/truncate1' Command
 echo [15] Run 'invoice/quote/truncate2' Command
 echo [16] Run 'invoice/salesorder/truncate3' Command
 echo [17] Run 'invoice/nonuserrelated/truncate4' Command
-echo [18] Exit
-echo [19] Exit to Current Directory
+echo [18] Run 'invoice/userrelated/truncate5' Command
+echo [19] Run 'invoice/autoincrementsettooneafter/truncate6' Command
+echo [20] Exit
+echo [21] Exit to Current Directory
 echo =======================================
-set /p choice="Enter your choice [1-19]: "
+set /p choice="Enter your choice [1-21]: "
 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
@@ -38,8 +42,10 @@ if "%choice%"=="2a" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
 if "%choice%"=="4" goto composer_update
 if "%choice%"=="5" goto require_checker
+if "%choice%"=="5a" goto codeception_tests
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
+if "%choice%"=="7a" goto user_create
 if "%choice%"=="8" goto user_assignRole
 if "%choice%"=="9" goto router_list
 if "%choice%"=="10" goto translator_translate
@@ -50,8 +56,10 @@ if "%choice%"=="14" goto confirm_warning_14
 if "%choice%"=="15" goto confirm_warning_15
 if "%choice%"=="16" goto confirm_warning_16
 if "%choice%"=="17" goto confirm_warning_17
-if "%choice%"=="18" goto exit
-if "%choice%"=="19" goto exit_to_directory
+if "%choice%"=="18" goto confirm_warning_18
+if "%choice%"=="19" goto confirm_warning_19
+if "%choice%"=="20" goto exit
+if "%choice%"=="21" goto exit_to_directory
 echo Invalid choice. Please try again.
 pause
 goto menu
@@ -110,6 +118,24 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
+:confirm_warning_18
+echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
+set /p confirm=""
+if /i "%confirm%"=="Y" goto invoice_userrelated_truncate5
+if /i "%confirm%"=="N" goto menu
+echo Invalid input. Returning to the menu.
+pause
+goto menu
+
+:confirm_warning_19
+echo You are about to delete sensitive data! Are you sure you want to continue? (Y/N)
+set /p confirm=""
+if /i "%confirm%"=="Y" goto invoice_autoincrementsettooneafter_truncate6
+if /i "%confirm%"=="N" goto menu
+echo Invalid input. Returning to the menu.
+pause
+goto menu
+
 :psalm
 echo Running PHP Psalm...
 php vendor/bin/psalm
@@ -146,6 +172,12 @@ php vendor/bin/composer-require-checker
 pause
 goto menu
 
+:codeception_tests
+echo Running Codeception Tests...
+php vendor/bin/codecept run
+pause
+goto menu
+
 :composer_update
 echo Running Composer Update...
 composer update
@@ -159,14 +191,38 @@ pause
 goto menu
 
 :user_create
-echo Running 'user/create' Command...
-php yii user/create
+echo Creating a new user...
+set /p username="Enter the username: e.g. admin / observer: " %1
+set /p password="Enter the password: e.g. admin / observer: " %2
+if "%username%"=="" (
+    echo No username provided. Returning to the menu.
+    pause
+    goto menu
+)
+if "%password%"=="" (
+    echo No password provided. Returning to the menu.
+    pause
+    goto menu
+)
+php yii user/create "%username%" "%password%"
 pause
 goto menu
 
 :user_assignRole
-echo Running 'user/assignRole' Command...
-php yii user/assignRole
+echo Assigning a role to a user...
+set /p role="Enter the role e.g. admin or observer: " %1
+set /p userId="Enter the user ID e.g 1 or 2: " %2
+if "%role%"=="" (
+    echo No role provided. Returning to the menu.
+    pause
+    goto menu
+)
+if "%userId%"=="" (
+    echo No user ID provided. Returning to the menu.
+    pause
+    goto menu
+)
+php yii user/assignRole "%role%" "%userId%"
 pause
 goto menu
 
@@ -233,6 +289,18 @@ goto menu
 :invoice_nonuserrelated_truncate4
 echo Running 'invoice/nonuserrelated/truncate4' Command...
 php yii invoice/nonuserrelated/truncate4
+pause
+goto menu
+
+:invoice_userrelated_truncate5
+echo Running 'invoice/userrelated/truncate5' Command...
+php yii invoice/userrelated/truncate5
+pause
+goto menu
+
+:invoice_autoincrementsettooneafter_truncate6
+echo Running 'invoice/autoincrementsettooneafter/truncate6' Command...
+php yii invoice/autoincrementsettooneafter/truncate6
 pause
 goto menu
 

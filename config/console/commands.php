@@ -22,4 +22,6 @@ return [
     'invoice/quote/truncate2' => App\Command\Invoice\QuoteTruncate2Command::class,
     'invoice/salesorder/truncate3' => App\Command\Invoice\SalesOrderTruncate3Command::class,
     'invoice/nonuserrelated/truncate4' => App\Command\Invoice\NonUserRelatedTruncate4Command::class,
+    'invoice/userrelated/truncate5' => App\Command\Invoice\UserRelatedTruncate5Command::class,
+    'invoice/autoincrementsettooneafter/truncate6' => App\Command\Invoice\AutoIncrementSetToOneAfterTruncate6Command::class,
 ];
