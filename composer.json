@@ -83,7 +83,7 @@
         "yiisoft/cache": "^3.0",
         "yiisoft/cache-file": "^3.2",
         "yiisoft/config": "^1.6.0",
-        "yiisoft/cookies": "^1.2.2",
+        "yiisoft/cookies": "^1.2.3",
         "yiisoft/csrf": "^2.2.1",
         "yiisoft/data": "dev-master",
         "yiisoft/data-cycle": "dev-master",
