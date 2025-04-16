@@ -108,6 +108,7 @@ use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use App\Invoice\Helpers\TemplateHelper;
 // Widgets
 use App\Widget\Bootstrap5ModalInv;
+use App\Widget\Bootstrap5ModalPdf;
 use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
 use App\Invoice\Libraries\Crypt;
@@ -124,6 +125,7 @@ use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
@@ -596,6 +598,19 @@ final class InvController extends BaseController
             ]);
         }
         return $this->webService->getNotFoundResponse();
+    }
+    
+    /**
+     * @return string
+     */
+    private function view_modal_pdf(): string {
+        $bootstrap5ModalPdf = new Bootstrap5ModalPdf(
+            $this->translator,
+            $this->viewRenderer,
+            'inv'    
+        );
+        // show the pdf inside a modal when engaging with a view
+        return $bootstrap5ModalPdf->renderPartialLayoutWithPdfAsString();
     }
 
     // Reverse an invoice with a credit invoice /debtor/client/customer credit note
@@ -2149,7 +2164,7 @@ final class InvController extends BaseController
         return $iR->repoGuest_Clients_Post_Draft((int)$status, $user_clients);
     }
 
-    // Called from inv.js inv_to_pdf_confirm_with_custom_fields
+    // Called from ..src\Invoice\Asset\rebuild\js\inv.js inv_to_pdf_confirm_with_custom_fields
 
     /**
      * @param int $include
@@ -4052,6 +4067,8 @@ final class InvController extends BaseController
                     'modal_delete_items' => $this->view_modal_delete_items($iiR),
                     'modal_change_client' => $this->view_modal_change_client($id, $cR, $iR),
                     'modal_inv_to_pdf' => $this->view_modal_inv_to_pdf($id, $iR),
+                    'modal_inv_to_modal_pdf' => $this->view_modal_inv_to_modal_pdf($id, $iR),
+                    'modal_pdf' => $this->view_modal_pdf(),
                     'modal_inv_to_html' => $this->view_modal_inv_to_html($id, $iR),
                     'modal_create_credit' => $this->view_modal_create_credit($id, $gR, $iR),
                     'view_custom_fields' => $this->view_custom_fields($cfR, $cvR, $inv_custom_values),
@@ -4168,6 +4185,18 @@ final class InvController extends BaseController
     private function view_modal_inv_to_pdf(int $id, IR $iR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_inv_to_pdf', [
+            'inv' => $this->inv($id, $iR, true),
+        ]);
+    }
+    
+    /**
+     * @param int $id
+     * @param IR $iR
+     * @return string
+     */
+    private function view_modal_inv_to_modal_pdf(int $id, IR $iR): string
+    {
+        return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_inv_to_modal_pdf', [
             'inv' => $this->inv($id, $iR, true),
         ]);
     }

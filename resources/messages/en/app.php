@@ -1262,6 +1262,7 @@ return [
     'invoice.invoice.payments' => 'Payments',
     'invoice.invoice.pdf.archived.no' => 'Pdf NOT Archived at Uploads/Archive/Invoice',
     'invoice.invoice.pdf.archived.yes' => 'Pdf Archived at Uploads/Archive/Invoice',
+    'invoice.invoice.pdf.modal' => 'Modal Pdf',
     'invoice.invoice.per.page.total' => ' per page. Total ',
     'invoice.invoice.peppol' => 'Peppol Electronic Invoicing',
     'invoice.invoice.tax.point' => 'Date Tax Point',
@@ -1345,7 +1346,7 @@ return [
     'invoice.invoice.recurring.deleted' => 'Deleted',
     'invoice.invoice.showing.of' => 'Showing %s out of %s ',
     'invoice.invoice.storecove' => 'Storecove',
-    'invoice.invoice.stream' => 'Stream or show the pdf in the Browser',
+    'invoice.invoice.stream' => 'Stream Pdf in Browser / Modal',
     'invoice.invoice.tax.rate.percent' => 'Invoice Tax Rate Percent',
     'invoice.invoice.user.client.no.account' => 'This client has no user account associated with it and therefore this document cannot be created.',
     'invoice.invoice.vat' => 'Value Added Tax',
@@ -1451,12 +1452,9 @@ return [
     'invoice.performance.label.switch.on' => 'Slower Write Only Mode - refer to config/common/params.php search \'mode\' ',
     'invoice.performance.label.switch.off' => 'Faster Read and Write Mode - refer to config/common/params.php search \'mode\' ',
     'invoice.permission' => 'You do not have the required permission.',
-    'invoice.permission.unauthorised' => 'Ask your administator to create a User Account so that you can view Quotes and Invoices. ' .
     'Your administrator will have to assign the observor role to you as well. ' .
     'Your adminstrator will have to make sure your account is Actve as well.',
-    'invoice.permission.authorised.view' => 'You have been authorised to view quotes and invoices. ' .
     'If you cannot see them it is likely that your Administrator has NOT made your user account Active or marked the invoice as Sent.',
-    'invoice.permission.authorised.edit' => 'You have been given Administator permissions to create, edit, and update quotes and invoices.',
     'invoice.po.group' => 'Purchase Order Group',
     'invoice.platform' => 'Platform',
     'invoice.platform.editor' => 'Editor',

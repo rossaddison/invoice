@@ -48,9 +48,11 @@ use Yiisoft\Html\Tag\A;
  * @var string $modal_create_credit
  * @var string $modal_delete_inv
  * @var string $modal_delete_items
+ * @var string $modal_inv_to_modal_pdf
  * @var string $modal_inv_to_pdf
  * @var string $modal_inv_to_html
  * @var string $modal_message_no_payment_method
+ * @var string $modal_pdf
  * @var string $partial_inv_delivery_location
  * @var string $partial_inv_attachments
  * @var string $partial_item_table
@@ -74,12 +76,15 @@ echo $modal_change_client;
 echo $modal_choose_items;
 // modal_task_lookups is performed using below $modal_choose_tasks
 echo $modal_choose_tasks;
+// custom fields or no custom fields choices for non-download, modal showing pdf ... $modal_pdf
+echo $modal_inv_to_modal_pdf;
 echo $modal_inv_to_pdf;
 echo $modal_inv_to_html;
 echo $modal_copy_inv;
 echo $modal_delete_items;
 echo $modal_create_credit;
 echo $modal_message_no_payment_method;
+echo $modal_pdf;
 ?>   
 
    
@@ -372,8 +377,24 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                 ?>
                             <a href="#inv-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
-    <?= Html::encode($translator->translate('i.download_pdf')); ?>
+                                <?= Html::encode($translator->translate('i.download_pdf')); ?>
                             </a>
+                            <?php if ($s->getSetting('pdf_stream_inv') == '1') { ?>
+                            <a href="#inv-to-modal-pdf" data-bs-toggle="modal"  style="text-decoration:none">
+                                <i class="fa fa-desktop fa-margin"></i>
+                                <?= Html::encode($translator->translate('invoice.invoice.pdf.modal').' ✅'); ?>
+                            </a>
+                            <?php } else { ?>
+                            <a href="<?= $urlGenerator->generate(
+                                        'setting/tab_index',
+                                        [],
+                                        ['active' => 'invoices'],
+                                       'settings[pdf_stream_inv]')?>" style="text-decoration:none">
+                                <i class="fa fa-desktop fa-margin"></i>
+                                <?= Html::encode($translator->translate('invoice.invoice.pdf.modal').' ❌'); ?>
+                            </a>
+                            <?php } ?>
+                        
 <?php } ?>
                         <!--
                             views/invoice/inv/modal_inv_to_pdf   ... include custom fields or not on pdf
@@ -382,7 +403,6 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                             src/Invoice/Helpers/MpdfHelper ... saves folder in src/Invoice/Uploads/Archive
                             using 'pdf_invoice_template' setting or 'default' views/invoice/template/invoice/invoice.pdf
                         -->
-                        </a>
                     </li>
 <?php
 // Options ... Create Recurring Invoice

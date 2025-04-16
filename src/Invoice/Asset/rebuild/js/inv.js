@@ -391,13 +391,35 @@ $(function () {
             var url = $(location).attr('origin') + "/invoice/inv/pdf/0";    
             window.location.reload;
             window.open(url, '_blank');
-    });
+    });    
+    
+    // id="inv_to_modal_pdf_confirm_with_custom_fields button on views/inv/modal_view_inv_pdf.php
+    $(document).on('click', '#inv_to_modal_pdf_confirm_with_custom_fields', function () {
+            var url = $(location).attr('origin') + "/invoice/inv/pdf/1";    
+            
+            // Set the iframe src to the URL of the PDF
+            $('#modal-view-inv-pdf').attr('src', url);
+
+            // Open the modal
+            $('#modal-layout-modal-pdf-inv').modal('show');            
+    }); 
     
     // id="inv_to_html_confirm_with_custom_fields button on views/inv/modal_inv_to_html.php
     $(document).on('click', '#inv_to_html_confirm_with_custom_fields', function () {
             var url = $(location).attr('origin') + "/invoice/inv/html/1";    
             window.location.reload;
             window.open(url, '_blank');            
+    }); 
+    
+    // id="inv_to_modal_pdf_confirm_without_custom_fields button on views/inv/modal_view_inv_pdf.php
+    $(document).on('click', '#inv_to_modal_pdf_confirm_without_custom_fields', function () {
+            var url = $(location).attr('origin') + "/invoice/inv/pdf/0";    
+            
+            // Set the iframe src to the URL of the PDF
+            $('#modal-view-inv-pdf').attr('src', url);
+
+            // Open the modal
+            $('#modal-layout-modal-pdf-inv').modal('show');            
     }); 
 
     // id="inv_to_html_confirm_without_custom_fields button on views/inv/modal_inv_to_html.php

@@ -111,7 +111,7 @@ echo Breadcrumbs::widget()
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-             'settings[default_invoice_payment_method]'),
+             'settings[invoice_default_payment_method]'),
          active: false,
          attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -146,7 +146,7 @@ echo Breadcrumbs::widget()
                 'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌'
             ],
          encodeLabel: false
-     ),
+     ),   
      BreadcrumbLink::to(
          label: $translator->translate('i.recurring'),
          url: $urlGenerator->generate('invrecurring/index')

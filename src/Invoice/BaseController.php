@@ -57,17 +57,14 @@ abstract class BaseController
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/templates/soletrader/main.php');
-            $this->flashMessage('info', $this->translator->translate('invoice.permission.unauthorised'));
         } elseif ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/guest.php');
-            $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.view'));
         } elseif ($this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/invoice.php');
-            $this->flashMessage('info', $this->translator->translate('invoice.permission.authorised.edit'));
         }
     }
 

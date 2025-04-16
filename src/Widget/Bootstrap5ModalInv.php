@@ -60,7 +60,7 @@ final class Bootstrap5ModalInv
         ];
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_layout', $this->layoutParameters);
     }
-
+    
     /**
      * @return array
      */

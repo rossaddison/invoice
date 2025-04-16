@@ -15,7 +15,7 @@ trait FlashMessage
      */
     protected function flashMessage(string $level, string $message): Flash|null
     {
-        if (strlen($message) > 0) {
+        if ((strlen($message) > 0) && !$this->flash->has($message)) {
             $this->flash->add($level, $message, true);
             return $this->flash;
         }
