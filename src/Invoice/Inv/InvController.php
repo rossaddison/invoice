@@ -599,15 +599,16 @@ final class InvController extends BaseController
         }
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * @return string
      */
-    private function view_modal_pdf(): string {
+    private function view_modal_pdf(): string
+    {
         $bootstrap5ModalPdf = new Bootstrap5ModalPdf(
             $this->translator,
             $this->viewRenderer,
-            'inv'    
+            'inv'
         );
         // show the pdf inside a modal when engaging with a view
         return $bootstrap5ModalPdf->renderPartialLayoutWithPdfAsString();
@@ -4188,7 +4189,7 @@ final class InvController extends BaseController
             'inv' => $this->inv($id, $iR, true),
         ]);
     }
-    
+
     /**
      * @param int $id
      * @param IR $iR
