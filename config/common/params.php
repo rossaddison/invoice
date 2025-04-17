@@ -311,7 +311,7 @@ return [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
                     connection:
                     new Cycle\Database\Config\MySQL\DsnConnectionConfig(
-                        'mysql:host=localhost;dbname=yii3-i',
+                        'mysql:host=localhost;dbname=yii3_i',
                         'root',
                         null
                     ),

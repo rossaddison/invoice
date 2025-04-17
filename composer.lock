@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa4629f825bd48772f66fbd784d4bdf2",
+    "content-hash": "c8c8cb5584a2d42113555bfee63573e7",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -14239,6 +14239,74 @@
             "time": "2024-05-06T12:26:49+00:00"
         },
         {
+            "name": "yiisoft/bootstrap5",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/bootstrap5.git",
+                "reference": "f8770e4281b7dbbb33c7b695e64a52d360795fc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/f8770e4281b7dbbb33c7b695e64a52d360795fc7",
+                "reference": "f8770e4281b7dbbb33c7b695e64a52d360795fc7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "yiisoft/html": "^3.0",
+                "yiisoft/widget": "^2.0"
+            },
+            "require-dev": {
+                "maglnet/composer-require-checker": "^4.1",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^2.0",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.23",
+                "vimeo/psalm": "^5.26.1|^6.4.1",
+                "yiisoft/aliases": "^3.0",
+                "yiisoft/di": "^1.0"
+            },
+            "suggest": {
+                "yiisoft/assets": "Register assets with Yiisoft\\Assets\\AssetManager",
+                "yiisoft/files": "Use PathMatcher to filter assets"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Bootstrap5\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Yii Framework Twitter Bootstrap 5 Extension",
+            "keywords": [
+                "bootstrap5",
+                "yii"
+            ],
+            "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/bootstrap5/issues?state=open",
+                "source": "https://github.com/yiisoft/bootstrap5",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2025-04-13T19:55:03+00:00"
+        },
+        {
             "name": "yiisoft/cache",
             "version": "3.0.0",
             "source": {
@@ -14866,12 +14934,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "43abebfc68345a669093cffe4c98cc701dbd2f8f"
+                "reference": "eb98126fe869c30749cfe935ed3ccb5f709eeb49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/43abebfc68345a669093cffe4c98cc701dbd2f8f",
-                "reference": "43abebfc68345a669093cffe4c98cc701dbd2f8f",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/eb98126fe869c30749cfe935ed3ccb5f709eeb49",
+                "reference": "eb98126fe869c30749cfe935ed3ccb5f709eeb49",
                 "shasum": ""
             },
             "require": {
@@ -14941,7 +15009,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-16T12:16:32+00:00"
+            "time": "2025-04-17T09:17:17+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14949,12 +15017,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "126da4381f6495c9f4d15ec3258afbb934f75719"
+                "reference": "0dec43bb8006dab35517883d2b3d73450f639ce7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/126da4381f6495c9f4d15ec3258afbb934f75719",
-                "reference": "126da4381f6495c9f4d15ec3258afbb934f75719",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/0dec43bb8006dab35517883d2b3d73450f639ce7",
+                "reference": "0dec43bb8006dab35517883d2b3d73450f639ce7",
                 "shasum": ""
             },
             "require": {
@@ -15016,7 +15084,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-07T09:29:05+00:00"
+            "time": "2025-04-17T09:17:22+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -18049,76 +18117,6 @@
                 }
             ],
             "time": "2023-12-25T18:47:09+00:00"
-        },
-        {
-            "name": "yiisoft/yii-bootstrap5",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/bootstrap5.git",
-                "reference": "bdf9079b9548d00b9cd0d3a5c38c63dc4907e924"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/bdf9079b9548d00b9cd0d3a5c38c63dc4907e924",
-                "reference": "bdf9079b9548d00b9cd0d3a5c38c63dc4907e924",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
-                "yiisoft/html": "^3.0",
-                "yiisoft/widget": "^2.0"
-            },
-            "require-dev": {
-                "maglnet/composer-require-checker": "^4.1",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^2.0",
-                "roave/infection-static-analysis-plugin": "^1.35",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.26.1|^6.4.1",
-                "yiisoft/aliases": "^3.0",
-                "yiisoft/di": "^1.0"
-            },
-            "suggest": {
-                "yiisoft/assets": "Register assets with Yiisoft\\Assets\\AssetManager",
-                "yiisoft/files": "Use PathMatcher to filter assets"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Bootstrap5\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Yii Framework Twitter Bootstrap 5 Extension",
-            "keywords": [
-                "bootstrap5",
-                "yii"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/bootstrap5/issues?state=open",
-                "source": "https://github.com/yiisoft/bootstrap5",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "open_collective"
-                }
-            ],
-            "abandoned": "yiisoft/bootstrap5",
-            "time": "2025-04-13T19:55:03+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -24855,7 +24853,6 @@
         "yiisoft/db-mysql": 20,
         "yiisoft/rate-limiter": 20,
         "yiisoft/requirements": 20,
-        "yiisoft/yii-bootstrap5": 20,
         "yiisoft/yii-dataview": 20
     },
     "prefer-stable": true,

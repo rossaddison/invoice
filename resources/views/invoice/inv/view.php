@@ -379,7 +379,9 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                 <i class="fa fa-print fa-margin"></i>
                                 <?= Html::encode($translator->translate('i.download_pdf')); ?>
                             </a>
-                            <?php if ($s->getSetting('pdf_stream_inv') == '1') { ?>
+                            <?php 
+// Options ... Modal PDF                            
+                            if ($s->getSetting('pdf_stream_inv') == '1') { ?>
                             <a href="#inv-to-modal-pdf" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-desktop fa-margin"></i>
                                 <?= Html::encode($translator->translate('invoice.invoice.pdf.modal').' ✅'); ?>
@@ -389,7 +391,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                         'setting/tab_index',
                                         [],
                                         ['active' => 'invoices'],
-                                       'settings[pdf_stream_inv]')?>" style="text-decoration:none">
+                                       'settings[pdf_stream_inv]'); ?>" style="text-decoration:none">
                                 <i class="fa fa-desktop fa-margin"></i>
                                 <?= Html::encode($translator->translate('invoice.invoice.pdf.modal').' ❌'); ?>
                             </a>
