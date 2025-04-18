@@ -29,7 +29,7 @@ use Yiisoft\Files\FileHelper;
  * Yiisoft\Files\FileHelper::ensuredirectory static function ensures that folders exist and are writeable using the 0775 permission
  */
 
- class MpdfHelper
+class MpdfHelper
 {
     /**
      * Blank default mode
@@ -231,13 +231,13 @@ use Yiisoft\Files\FileHelper;
         }
         return '';
     }
-    
+
     private function ensure_tmp_folder_exists(SR $sR): Aliases
     {
         // Define aliases for paths
         $aliases = new Aliases([
             '@invoice' => dirname(__DIR__), // Root directory for the invoice
-            '@tmp' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Tmp' . DIRECTORY_SEPARATOR // Directory for temporary files
+            '@tmp' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Tmp' . DIRECTORY_SEPARATOR, // Directory for temporary files
         ]);
 
         // Define the Tmp directory path
@@ -374,7 +374,7 @@ use Yiisoft\Files\FileHelper;
     private function options(SR $sR): array
     {
         $aliases = $this->ensure_tmp_folder_exists($sR);
-        
+
         $this->options['mode'] = $this->mode;
         $this->options['format'] = $this->format;
         $this->options['default_font_size'] = $this->defaultFontSize;
