@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8c8cb5584a2d42113555bfee63573e7",
+    "content-hash": "2fe11d0033ea98f3acbfc48cea705233",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -4772,172 +4772,6 @@
                 "source": "https://github.com/Jean85/pretty-package-versions/tree/2.1.1"
             },
             "time": "2025-03-19T14:43:43+00:00"
-        },
-        {
-            "name": "kartik-v/dependent-dropdown",
-            "version": "v1.4.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kartik-v/dependent-dropdown.git",
-                "reference": "54a8806002ee21b744508a2edb95ed01d35c6cf9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/dependent-dropdown/zipball/54a8806002ee21b744508a2edb95ed01d35c6cf9",
-                "reference": "54a8806002ee21b744508a2edb95ed01d35c6cf9",
-                "shasum": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.4.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "kartik\\plugins\\depdrop\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kartik Visweswaran",
-                    "email": "kartikv2@gmail.com",
-                    "homepage": "http://www.krajee.com/"
-                }
-            ],
-            "description": "A multi level dependent dropdown JQuery plugin that allows nested dependencies.",
-            "homepage": "https://github.com/kartik-v/dependent-dropdown",
-            "keywords": [
-                "dependent",
-                "dropdown",
-                "jquery",
-                "option",
-                "select"
-            ],
-            "support": {
-                "issues": "https://github.com/kartik-v/dependent-dropdown/issues",
-                "source": "https://github.com/kartik-v/dependent-dropdown/tree/master"
-            },
-            "time": "2019-03-09T10:53:11+00:00"
-        },
-        {
-            "name": "kartik-v/yii2-krajee-base",
-            "version": "v3.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kartik-v/yii2-krajee-base.git",
-                "reference": "5c095126d1be47e0bb1f92779b7dc099f6feae31"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/5c095126d1be47e0bb1f92779b7dc099f6feae31",
-                "reference": "5c095126d1be47e0bb1f92779b7dc099f6feae31",
-                "shasum": ""
-            },
-            "suggest": {
-                "yiisoft/yii2-bootstrap": "for Krajee extensions to work with Bootstrap 3.x version",
-                "yiisoft/yii2-bootstrap4": "for Krajee extensions to work with Bootstrap 4.x version",
-                "yiisoft/yii2-bootstrap5": "for Krajee extensions to work with Bootstrap 5.x version"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "kartik\\base\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kartik Visweswaran",
-                    "email": "kartikv2@gmail.com",
-                    "homepage": "http://www.krajee.com/"
-                }
-            ],
-            "description": "Base library and foundation components for all Yii2 Krajee extensions.",
-            "homepage": "https://github.com/kartik-v/yii2-krajee-base",
-            "keywords": [
-                "base",
-                "extension",
-                "foundation",
-                "krajee",
-                "widget",
-                "yii2"
-            ],
-            "support": {
-                "issues": "https://github.com/kartik-v/yii2-krajee-base/issues",
-                "source": "https://github.com/kartik-v/yii2-krajee-base/tree/v3.0.5"
-            },
-            "time": "2022-06-01T14:05:39+00:00"
-        },
-        {
-            "name": "kartik-v/yii2-widget-depdrop",
-            "version": "v1.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kartik-v/yii2-widget-depdrop.git",
-                "reference": "ea347e3793fbd8273cc9bd1eb94c4b32bb55d318"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-depdrop/zipball/ea347e3793fbd8273cc9bd1eb94c4b32bb55d318",
-                "reference": "ea347e3793fbd8273cc9bd1eb94c4b32bb55d318",
-                "shasum": ""
-            },
-            "require": {
-                "kartik-v/dependent-dropdown": "~1.4",
-                "kartik-v/yii2-krajee-base": ">=2.0.0"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "kartik\\depdrop\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kartik Visweswaran",
-                    "email": "kartikv2@gmail.com",
-                    "homepage": "http://www.krajee.com/"
-                }
-            ],
-            "description": "Widget that enables setting up dependent dropdowns with nested dependencies (sub repo split from yii2-widgets)",
-            "homepage": "https://github.com/kartik-v/yii2-widget-depdrop",
-            "keywords": [
-                "dependent",
-                "dropdown",
-                "extension",
-                "form",
-                "jquery",
-                "plugin",
-                "widget",
-                "yii2"
-            ],
-            "support": {
-                "issues": "https://github.com/kartik-v/yii2-widget-depdrop/issues",
-                "source": "https://github.com/kartik-v/yii2-widget-depdrop/tree/v1.0.6"
-            },
-            "time": "2019-04-19T07:02:48+00:00"
         },
         {
             "name": "kelunik/certificate",
@@ -14934,12 +14768,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "eb98126fe869c30749cfe935ed3ccb5f709eeb49"
+                "reference": "a090d6602dd9cd55f72fe3149fc789fb93a4511d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/eb98126fe869c30749cfe935ed3ccb5f709eeb49",
-                "reference": "eb98126fe869c30749cfe935ed3ccb5f709eeb49",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/a090d6602dd9cd55f72fe3149fc789fb93a4511d",
+                "reference": "a090d6602dd9cd55f72fe3149fc789fb93a4511d",
                 "shasum": ""
             },
             "require": {
@@ -15009,7 +14843,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-17T09:17:17+00:00"
+            "time": "2025-04-18T07:46:58+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -15017,12 +14851,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "0dec43bb8006dab35517883d2b3d73450f639ce7"
+                "reference": "8a32d17e0324247db7cea9e75030e351c9be9aa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/0dec43bb8006dab35517883d2b3d73450f639ce7",
-                "reference": "0dec43bb8006dab35517883d2b3d73450f639ce7",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/8a32d17e0324247db7cea9e75030e351c9be9aa0",
+                "reference": "8a32d17e0324247db7cea9e75030e351c9be9aa0",
                 "shasum": ""
             },
             "require": {
@@ -15084,7 +14918,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-17T09:17:22+00:00"
+            "time": "2025-04-18T07:47:04+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -15231,16 +15065,16 @@
         },
         {
             "name": "yiisoft/error-handler",
-            "version": "4.0.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/error-handler.git",
-                "reference": "5f23024579af40c2086b01ab472f719207aeb4c0"
+                "reference": "c99e42f8be647740ac99964f11684aace2b96c30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/error-handler/zipball/5f23024579af40c2086b01ab472f719207aeb4c0",
-                "reference": "5f23024579af40c2086b01ab472f719207aeb4c0",
+                "url": "https://api.github.com/repos/yiisoft/error-handler/zipball/c99e42f8be647740ac99964f11684aace2b96c30",
+                "reference": "c99e42f8be647740ac99964f11684aace2b96c30",
                 "shasum": ""
             },
             "require": {
@@ -15260,16 +15094,16 @@
                 "yiisoft/injector": "^1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.8",
+                "bamarni/composer-bin-plugin": "^1.8.2",
                 "httpsoft/http-message": "^1.1.6",
-                "phpunit/phpunit": "^10.5.44",
+                "phpunit/phpunit": "^10.5.45",
                 "psr/event-dispatcher": "^1.0",
-                "rector/rector": "^2.0.7",
+                "rector/rector": "^2.0.11",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
-                "vimeo/psalm": "^5.26.1|^6.2",
+                "vimeo/psalm": "^5.26.1 || ^6.9.1",
                 "yiisoft/di": "^1.3",
-                "yiisoft/test-support": "^3.0.1"
+                "yiisoft/test-support": "^3.0.2"
             },
             "type": "library",
             "extra": {
@@ -15322,7 +15156,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-05T11:44:06+00:00"
+            "time": "2025-04-18T08:13:06+00:00"
         },
         {
             "name": "yiisoft/event-dispatcher",
@@ -18862,16 +18696,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "5.0.7",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "18457fa71f753cfd4a2b21916baf329864fdfaa6"
+                "reference": "a9b953c25f5bd11ea0542636936de04504496bd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/18457fa71f753cfd4a2b21916baf329864fdfaa6",
-                "reference": "18457fa71f753cfd4a2b21916baf329864fdfaa6",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/a9b953c25f5bd11ea0542636936de04504496bd9",
+                "reference": "a9b953c25f5bd11ea0542636936de04504496bd9",
                 "shasum": ""
             },
             "require": {
@@ -18932,8 +18766,8 @@
                     "homepage": "https://radebatz.net"
                 }
             ],
-            "description": "swagger-php - Generate interactive documentation for your RESTful API using phpdoc annotations",
-            "homepage": "https://github.com/zircote/swagger-php/",
+            "description": "Generate interactive documentation for your RESTful API using PHP attributes (preferred) or PHPDoc annotations",
+            "homepage": "https://github.com/zircote/swagger-php",
             "keywords": [
                 "api",
                 "json",
@@ -18942,9 +18776,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/5.0.7"
+                "source": "https://github.com/zircote/swagger-php/tree/5.1.0"
             },
-            "time": "2025-03-19T03:31:11+00:00"
+            "time": "2025-04-18T00:35:12+00:00"
         }
     ],
     "packages-dev": [
@@ -22094,12 +21928,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "508576e5d70b881870043c666e3e4081b474d23f"
+                "reference": "6c54d20ae795b83ecf3f826311d7f488cd1ef005"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/508576e5d70b881870043c666e3e4081b474d23f",
-                "reference": "508576e5d70b881870043c666e3e4081b474d23f",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/6c54d20ae795b83ecf3f826311d7f488cd1ef005",
+                "reference": "6c54d20ae795b83ecf3f826311d7f488cd1ef005",
                 "shasum": ""
             },
             "conflict": {
@@ -22606,6 +22440,7 @@
                 "pear/archive_tar": "<1.4.14",
                 "pear/auth": "<1.2.4",
                 "pear/crypt_gpg": "<1.6.7",
+                "pear/http_request2": "<2.7",
                 "pear/pear": "<=1.10.1",
                 "pegasus/google-for-jobs": "<1.5.1|>=2,<2.1.1",
                 "personnummer/personnummer": "<3.0.2",
@@ -23012,7 +22847,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-14T20:05:54+00:00"
+            "time": "2025-04-17T15:05:22+00:00"
         },
         {
             "name": "sanmai/later",
@@ -24841,7 +24676,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cebe/markdown": 20,
-        "kartik-v/yii2-widget-depdrop": 20,
         "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-cycle-1": 20,
@@ -24867,7 +24701,6 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
-        "ext-pdo_sqlite": "*",
         "ext-uopz": "*"
     },
     "platform-dev": {},

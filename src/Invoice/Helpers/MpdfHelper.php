@@ -12,24 +12,24 @@ use App\Invoice\Entity\Quote;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
 
-// ********************************************************
-// \Mpdf\Output\Destination::INLINE, or "I"
-// send the file inline to the browser. The plug-in is used if available.
-// The name given by $filename is used when one selects the Save as option on the link generating the PDF.
-//
-// \Mpdf\Output\Destination::DOWNLOAD, or "D"
-// send to the browser and force a file download with the name given by $filename.
-//
-// \Mpdf\Output\Destination::FILE, or "F"
-// save to a local file with the name given by $filename (may include a path).
-//
-// \Mpdf\Output\Destination::STRING_RETURN, or "S"
-// return the document as a string. $filename is ignored.
-//
-// Yiisoft\Files\FileHelper::ensuredirectory static function ensures that folders exist and are writeable using the 0775 permission
-//
-// ********************************************************
-class MpdfHelper
+/**
+ * \Mpdf\Output\Destination::INLINE, or "I"
+ * send the file inline to the browser. The plug-in is used if available.
+ * The name given by $filename is used when one selects the Save as option on the link generating the PDF.
+ *
+ * \Mpdf\Output\Destination::DOWNLOAD, or "D"
+ * send to the browser and force a file download with the name given by $filename.
+ *
+ * \Mpdf\Output\Destination::FILE, or "F"
+ * save to a local file with the name given by $filename (may include a path).
+ *
+ * \Mpdf\Output\Destination::STRING_RETURN, or "S"
+ * return the document as a string. $filename is ignored.
+ *
+ * Yiisoft\Files\FileHelper::ensuredirectory static function ensures that folders exist and are writeable using the 0775 permission
+ */
+
+ class MpdfHelper
 {
     /**
      * Blank default mode
@@ -231,6 +231,25 @@ class MpdfHelper
         }
         return '';
     }
+    
+    private function ensure_tmp_folder_exists(SR $sR): Aliases
+    {
+        // Define aliases for paths
+        $aliases = new Aliases([
+            '@invoice' => dirname(__DIR__), // Root directory for the invoice
+            '@tmp' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Tmp' . DIRECTORY_SEPARATOR // Directory for temporary files
+        ]);
+
+        // Define the Tmp directory path
+        $tmpFolder = $aliases->get('@tmp');
+
+        // Check if the Tmp directory exists, if not, create it
+        if (!(is_dir($tmpFolder) || is_link($tmpFolder))) {
+            FileHelper::ensureDirectory($tmpFolder, 0775); // Ensure the Tmp directory is created with the correct permissions
+        }
+
+        return $aliases;
+    }
 
     private function ensure_uploads_folder_exists(SR $sR): Aliases
     {
@@ -260,7 +279,8 @@ class MpdfHelper
      */
     private function initialize_pdf(string|null $password, SR $sR, string $title, object|null $quote_or_invoice, iiaR|null $iiaR, InvAmount|null $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
-        $mpdf = new \Mpdf\Mpdf($this->options);
+        $optionsArray = $this->options($sR);
+        $mpdf = new \Mpdf\Mpdf($optionsArray);
         // mPDF configuration
         $mpdf->SetDirectionality('ltr');
         $mpdf->useAdobeCJK = ($sR->getSetting('mpdf_cjk') === '1' ? true : false);
@@ -351,8 +371,10 @@ class MpdfHelper
      *
      * @version 1.0.6
      */
-    private function options(): void
+    private function options(SR $sR): array
     {
+        $aliases = $this->ensure_tmp_folder_exists($sR);
+        
         $this->options['mode'] = $this->mode;
         $this->options['format'] = $this->format;
         $this->options['default_font_size'] = $this->defaultFontSize;
@@ -364,5 +386,7 @@ class MpdfHelper
         $this->options['margin_header'] = $this->marginHeader;
         $this->options['margin_footer'] = $this->marginFooter;
         $this->options['orientation'] = $this->orientation;
+        $this->options['tempDir'] = $aliases->get('@tmp');
+        return $this->options;
     }
 }

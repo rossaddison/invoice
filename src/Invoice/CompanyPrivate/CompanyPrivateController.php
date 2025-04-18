@@ -20,6 +20,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use RuntimeException;
 
 final class CompanyPrivateController extends BaseController
 {
@@ -86,27 +87,49 @@ final class CompanyPrivateController extends BaseController
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         if ($request->getMethod() === Method::POST) {
+            if (!isset($_FILES['logo_filename']['tmp_name']) || empty($_FILES['logo_filename']['tmp_name'])) {
+                throw new RuntimeException('No file uploaded or temporary file missing.');
+            }
+
+            if ($_FILES['logo_filename']['error'] !== UPLOAD_ERR_OK) {
+                throw new RuntimeException('File upload error: ' . $_FILES['logo_filename']['error']);
+            }
+
             $tmp = $_FILES['logo_filename']['tmp_name'];
-            $spaceToUnderscore = preg_replace('/\s+/', '_', $tmp);
+            $originalFileName = basename($_FILES['logo_filename']['name']); // Extract original file name
+            $spaceToUnderscore = preg_replace('/\s+/', '_', $originalFileName); // Replace spaces with underscores
+
             if (null !== $spaceToUnderscore) {
-                // Replace filename's spaces with underscore
-                $modified_original_file_name = Random::string(4) . '_' . $spaceToUnderscore;
-                // Build a target file name
+                // Handle filename and extension
+                $fileInfo = pathinfo($spaceToUnderscore);
+                $extension = isset($fileInfo['extension']) ? '.' . $fileInfo['extension'] : '';
+                $modified_original_file_name = Random::string(4) . '_' . $fileInfo['filename'] . $extension;
+
+                // Build target paths
                 $target_file_name = $targetPath . '/' . $modified_original_file_name;
-                // Make the logo available also on the public path so that it can be viewed online
                 $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
+
                 if (is_array($body)) {
                     $body['logo_filename'] = $modified_original_file_name;
-                    // Move the logo to the private folder for storage and the publicly viewable folder for online viewing
-                    if (!$this->file_uploading_errors($tmp, $target_file_name, $target_public_logo)) {
-                        if ($formHydrator->populateAndValidate($form, $body)) {
-                            $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
-                            $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
-                            return $this->webService->getRedirectResponse('companyprivate/index');
-                        }
-                        $parameters['form'] = $form;
-                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+
+                    // Move the uploaded file
+                    if (!move_uploaded_file($tmp, $target_file_name)) {
+                        throw new RuntimeException('Failed to move uploaded file.');
                     }
+
+                    // Copy the file to the public folder
+                    if (!copy($target_file_name, $target_public_logo)) {
+                        throw new RuntimeException('Failed to copy file to public folder.');
+                    }
+
+                    // Process form data
+                    if ($formHydrator->populateAndValidate($form, $body)) {
+                        $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
+                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                        return $this->webService->getRedirectResponse('companyprivate/index');
+                    }
+                    $parameters['form'] = $form;
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
             }
         }

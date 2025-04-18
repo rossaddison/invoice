@@ -302,12 +302,6 @@ return [
                 'default' => ['connection' => 'mysql'],
             ],
             'connections' => [
-                // 'sqlite' => new SQLiteDriverConfig(
-                //     connection: new FileConnectionConfig(
-                //        database: 'runtime/database.db'
-                //    )
-                //),
-                // yii-invoice
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
                     connection:
                     new Cycle\Database\Config\MySQL\DsnConnectionConfig(
