@@ -143,7 +143,7 @@ if ((null !== $currentPath) && !$isGuest) {
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent($translator->translate('invoice.client'))
-    ->togglerSize(ButtonSize::SMALL)
+    ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('invoice.view'), $urlGenerator->generate('client/guest'))
     )
