@@ -24,7 +24,7 @@ trait Oauth2
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
 
     public const string GOOGLE_ACCESS_TOKEN = 'google-access';
-    
+
     public const string GOVUK_ACCESS_TOKEN = 'govuk-access';
 
     public const string LINKEDIN_ACCESS_TOKEN = 'linkedin-access';
@@ -41,7 +41,7 @@ trait Oauth2
         Facebook $facebook,
         GitHub $github,
         Google $google,
-        GovUk $govUk,    
+        GovUk $govUk,
         LinkedIn $linkedIn,
         MicrosoftOnline $microsoftOnline,
         VKontakte $vkontakte,
@@ -131,7 +131,7 @@ trait Oauth2
     {
         return $this->getAccessToken($user, $tR, self::GOOGLE_ACCESS_TOKEN);
     }
-    
+
     private function getGovUkAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::GOVUK_ACCESS_TOKEN);

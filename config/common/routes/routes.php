@@ -167,7 +167,7 @@ return [
     Route::methods([Method::GET, Method::POST], '/callbackGovUk')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackGovUk'])
-      ->name('auth/callbackGovUk'),  
+      ->name('auth/callbackGovUk'),
     Route::methods([Method::GET, Method::POST], '/callbackLinkedIn')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackLinkedIn'])

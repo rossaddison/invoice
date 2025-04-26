@@ -67,7 +67,7 @@ final class AuthController
         private Facebook $facebook,
         private GitHub $github,
         private Google $google,
-        private GovUk $govUk,    
+        private GovUk $govUk,
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
         private VKontakte $vkontakte,
@@ -94,7 +94,7 @@ final class AuthController
             $facebook,
             $github,
             $google,
-            $govUk,    
+            $govUk,
             $linkedIn,
             $microsoftOnline,
             $vkontakte,
@@ -178,7 +178,7 @@ final class AuthController
                 'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
                 'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
                 'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
-                    $request, 
+                    $request,
                     $params = [
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
@@ -708,24 +708,24 @@ final class AuthController
             exit(1);
             // code and state are both present
         }
-       
+
         $oAuthTokenType = $this->google->fetchAccessToken($request, $code, $params = [
-            'grant_type' => 'authorization_code'
+            'grant_type' => 'authorization_code',
         ]);
-        
+
         /**
          * @var array $userArray
          */
         $userArray = $this->google->getCurrentUserJsonArray($oAuthTokenType);
-        
+
         /**
          * @var int $userArray['id']
          */
         $googleId = $userArray['id'] ?? 0;
-        
+
         /**
          * VarDumper::dump($userArray) produces normally
-         * 
+         *
          * 'id' =>  google will produce an id here
          * 'email' => this is the email associated with google
          * 'verified_email' => true
@@ -734,7 +734,7 @@ final class AuthController
          * 'family_name' => this is your surname
          * 'picture' => 'https://lh3.googleusercontent.com/a/ACg8ocZiJZ8a-fpCKx-H4Dh8k-upEqQV3jSyQGH02--kLP_xZWQqrg=s96-c'
          */
-        
+
         if ($googleId > 0) {
             // the id will be removed in the logout button
             $login = 'google' . (string)$googleId;
@@ -793,11 +793,11 @@ final class AuthController
                 ]);
             }
         }
-        
+
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackGovUk(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -1482,7 +1482,7 @@ final class AuthController
          * @psalm-suppress MixedMethodCall,
          * @psalm-suppress MixedAssignment $sessionState
          */
-        $sessionState = match($identityProvider) {
+        $sessionState = match ($identityProvider) {
             'facebook' => $this->facebook->getSessionAuthState() ?? null,
             'github' => $this->github->getSessionAuthState() ?? null,
             'google' => $this->google->getSessionAuthState() ?? null,
@@ -1493,7 +1493,7 @@ final class AuthController
             'x' => $this->x->getSessionAuthState() ?? null,
             'yandex' => $this->yandex->getSessionAuthState() ?? null
         };
-        
+
         if (null !== $sessionState) {
             if (!$sessionState || ($state !== $sessionState)) {
                 // State is invalid, possible cross-site request forgery. Exit with an error code.

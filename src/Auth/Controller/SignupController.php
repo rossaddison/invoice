@@ -218,7 +218,7 @@ final class SignupController
             'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
             'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
-                $request, 
+                $request,
                 $params = [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
