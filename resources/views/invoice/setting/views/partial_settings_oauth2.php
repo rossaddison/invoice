@@ -49,6 +49,15 @@ use Yiisoft\Html\Tag\I;
                         </label>
                     </div>
                     <div class="checkbox">
+                        <?php $body['settings[no_govuk_continue_button]'] = $s->getSetting('no_govuk_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_govuk_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_govuk_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_govuk_continue_button]'], 1, '==', true) ?>>
+                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?= ' Gov Uk'; ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
                         <?php $body['settings[no_linkedin_continue_button]'] = $s->getSetting('no_linkedin_continue_button');?>
                         <label>
                             <input type="hidden" name="settings[no_linkedin_continue_button]" value="0">

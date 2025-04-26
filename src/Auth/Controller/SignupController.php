@@ -35,6 +35,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
+use Yiisoft\Yii\AuthClient\Client\GovUk;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
 use Yiisoft\Yii\AuthClient\Client\VKontakte;
@@ -65,6 +66,7 @@ final class SignupController
         private Facebook $facebook,
         private GitHub $github,
         private Google $google,
+        private GovUk $govUk,
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
         private VKontakte $vkontakte,
@@ -85,6 +87,7 @@ final class SignupController
         $this->facebook = $facebook;
         $this->github = $github;
         $this->google = $google;
+        $this->govUk = $govUk;
         $this->linkedIn = $linkedIn;
         $this->microsoftOnline = $microsoftOnline;
         $this->vkontakte = $vkontakte;
@@ -94,6 +97,7 @@ final class SignupController
             $facebook,
             $github,
             $google,
+            $govUk,
             $linkedIn,
             $microsoftOnline,
             $vkontakte,
@@ -193,6 +197,7 @@ final class SignupController
         }
         $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
         $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
+        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
@@ -212,6 +217,13 @@ final class SignupController
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
             'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
+            'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
+                $request, 
+                $params = [
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ]
+            ) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
             'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
@@ -244,6 +256,7 @@ final class SignupController
             'noFacebookContinueButton' => $noFacebookContinueButton,
             'noGithubContinueButton' => $noGithubContinueButton,
             'noGoogleContinueButton' => $noGoogleContinueButton,
+            'noGovUkContinueButton' => $noGovUkContinueButton,
             'noLinkedInContinueButton' => $noLinkedInContinueButton,
             'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
             'noVKontakteContinueButton' => $noVKontakteContinueButton,
@@ -278,7 +291,7 @@ final class SignupController
                        // edit their userinv details on the client side as well as the client record.
                        ->href($this->urlGenerator->generateAbsolute(
                            'userinv/signup',
-                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email']
+                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification']
                        ))
                        ->content($this->translator->translate('invoice.invoice.email.link.click.confirm'));
             return Body::tag()

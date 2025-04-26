@@ -117,6 +117,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/oauth2callbackresultunauthorised')
     ->action([SiteController::class, 'oauth2callbackresultunauthorised'])
     ->name('site/oauth2callbackresultunauthorised'),
+    Route::methods([Method::GET, Method::POST], '/usercancelledoauth2')
+    ->action([SiteController::class, 'usercancelledoauth2'])
+    ->name('site/usercancelledoauth2'),
     Route::methods([Method::GET, Method::POST], '/forgotalert')
     ->action([SiteController::class, 'forgotalert'])
     ->name('site/forgotalert'),
@@ -161,6 +164,10 @@ return [
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackGoogle'])
       ->name('auth/callbackGoogle'),
+    Route::methods([Method::GET, Method::POST], '/callbackGovUk')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackGovUk'])
+      ->name('auth/callbackGovUk'),  
     Route::methods([Method::GET, Method::POST], '/callbackLinkedIn')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackLinkedIn'])

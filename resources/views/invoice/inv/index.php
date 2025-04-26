@@ -253,8 +253,7 @@ $toggleColumnInvSentLog = A::tag()
         ->addClass('btn btn-info me-1 ajax-loader')
         ->content('↔️')
         ->href($urlGenerator->generate('setting/toggleinvsentlogcolumn'))
-        ->id('btn-all-visible')
-        ->render();
+        ->id('btn-all-visible');
 
 $enabledAddInvoiceButton = A::tag()
         ->addAttributes([
@@ -593,7 +592,23 @@ $toolbar = Div::tag();
             },
             withSorting: false
         ),
-         new DataColumn(
+        new DataColumn(
+            'invsentlogs',
+            header: $translator->translate('invoice.email.logs.with.filter'),
+            content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
+                $modelId = $model->getId();
+                if (null !== $modelId) {
+                    $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
+                    if ($count > 0) {
+                        return $toggleColumnInvSentLog;
+                    } else {
+                        return '❌';
+                    }
+                }
+                return '';
+            }
+        ),
+        new DataColumn(
             'invsentlogs',
             header: $translator->translate('invoice.email.logs.with.filter'),
             content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
@@ -606,16 +621,13 @@ $toolbar = Div::tag();
                         ->addClass('btn btn-success me-1')
                         ->content((string)$count)
                         ->href($urlGenerator->generate('invsentlog/index', [], ['filterInvNumber' => $model->getNumber()]))
-                        ->id('btn-all-visible')
-                        ->render();
-                        return $toggleColumnInvSentLog.$linkToInvSentLogWithFilterInv;
-                    } else {
-                        return '❌';
+                        ->id('btn-all-visible');
+                        return $linkToInvSentLogWithFilterInv;
                     }
                 }
                 return '';
             }
-        ), 
+        ),
         new DataColumn(
             content: static function (Inv $model) use ($islR, $urlGenerator, $gridComponents): string {
                 $modelId = $model->getId();

@@ -46,6 +46,8 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>26th April 2025</b></p>
+<p>Retested oauth2 with rossaddison/yii-auth-client and introduced a gov uk oauth2 which has not been tested.</p>
 <p><b>16th April 2025</b></p>
 <p>Removed flash messages from BaseController and messages\en\app.php</p>
 <p>Included new feature Modal Pdf for invoicing in options</p>

@@ -217,6 +217,30 @@ final readonly class Button
         ->id('btn-google')
         ->render();
     }
+    
+    /**
+     * 24/04/2025
+     * @see npm_modules/govuk-frontend
+     * @see public/img/govuk-opengraph-image.png
+     * @param string $govukAuthUrl
+     * @return string
+     */
+    public function govuk(string $govukAuthUrl): string
+    {
+        return
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
+            Img::tag()
+            ->src('/img/govuk-opengraph-image.png')
+            ->size(90, 60)
+            ->addClass('btn btn-dark')
+            ->render() . A::tag()
+            ->addClass('btn btn-dark')
+            ->content($this->translator->translate('invoice.invoice.continue.with.govuk'))
+            ->href($govukAuthUrl)
+            ->id('btn-govuk')
+            ->render() .
+        Html::closeTag('div');
+    }
 
     public function linkedin(string $linkedInAuthUrl): string
     {

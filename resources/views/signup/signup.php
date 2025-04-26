@@ -21,6 +21,7 @@ use Yiisoft\View\WebView;
  * @var bool                                    $noFacebookContinueButton
  * @var bool                                    $noGithubContinueButton
  * @var bool                                    $noGoogleContinueButton
+ * @var bool                                    $noGovUkContinueButton
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
  * @var bool                                    $noVKontakteContinueButton
@@ -29,6 +30,7 @@ use Yiisoft\View\WebView;
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
+ * @var string                                  $govUkAuthUrl  
  * @var string                                  $linkedInAuthUrl
  * @var string                                  $microsoftOnlineAuthUrl
  * @var string                                  $vkontakteAuthUrl
@@ -59,6 +61,10 @@ $this->setTitle($translator->translate('menu.signup'));
                         <br><br>
                         <?= $button->google($googleAuthUrl ?: ''); ?>
                     <?php } ?>
+                    <?php if ((strlen($govUkAuthUrl ?: '') > 0) && !$noGovUkContinueButton) { ?>
+                        <br><br>
+                        <?= $button->govuk($govUkAuthUrl ?: ''); ?>
+                    <?php } ?>    
                     <?php if ((strlen($linkedInAuthUrl ?: '') > 0) && !$noLinkedInContinueButton) { ?>
                         <br><br>
                         <?= $button->linkedin($linkedInAuthUrl ?: ''); ?>

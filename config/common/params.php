@@ -79,6 +79,12 @@ return [
                 'clientSecret' => $_ENV['GOOGLE_API_CLIENT_SECRET'] ?? '',
                 'returnUrl' => $_ENV['GOOGLE_API_CLIENT_RETURN_URL'] ?? '',
             ],
+            'govuk' => [
+                'class' => 'Yiisoft\Yii\AuthClient\Client\GovUk::class',
+                'clientId' => $_ENV['GOVUK_API_CLIENT_ID'] ?? '',
+                'clientSecret' => $_ENV['GOVUK_API_CLIENT_SECRET'] ?? '',
+                'returnUrl' => $_ENV['GOVUK_API_CLIENT_RETURN_URL'] ?? '',
+            ],
             'linkedin' => [
                 'class' => 'Yiisoft\Yii\AuthClient\Client\LinkedIn::class',
                 'clientId' => $_ENV['LINKEDIN_API_CLIENT_ID'] ?? '',
@@ -109,7 +115,7 @@ return [
                 'returnUrl' => $_ENV['X_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'yandex' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\YANDEX::class',
+                'class' => 'Yiisoft\Yii\AuthClient\Client\Yandex::class',
                 'clientId' => $_ENV['YANDEX_API_CLIENT_ID'] ?? '',
                 'clientSecret' => $_ENV['YANDEX_API_CLIENT_SECRET'] ?? '',
                 'returnUrl' => $_ENV['YANDEX_API_CLIENT_RETURN_URL'] ?? '',

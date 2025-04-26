@@ -34,6 +34,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
+use Yiisoft\Yii\AuthClient\Client\GovUk;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
 use Yiisoft\Yii\AuthClient\Client\X;
@@ -48,6 +49,7 @@ final class AuthController
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
     public const string GOOGLE_ACCESS_TOKEN = 'google-access';
+    public const string GOVUK_ACCESS_TOKEN = 'govuk-access';
     public const string LINKEDIN_ACCESS_TOKEN = 'linkedin-access';
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
     public const string X_ACCESS_TOKEN = 'x-access';
@@ -65,6 +67,7 @@ final class AuthController
         private Facebook $facebook,
         private GitHub $github,
         private Google $google,
+        private GovUk $govUk,    
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
         private VKontakte $vkontakte,
@@ -80,6 +83,7 @@ final class AuthController
         $this->facebook = $facebook;
         $this->github = $github;
         $this->google = $google;
+        $this->govUk = $govUk;
         $this->linkedIn = $linkedIn;
         $this->microsoftOnline = $microsoftOnline;
         $this->vkontakte = $vkontakte;
@@ -90,6 +94,7 @@ final class AuthController
             $facebook,
             $github,
             $google,
+            $govUk,    
             $linkedIn,
             $microsoftOnline,
             $vkontakte,
@@ -132,7 +137,7 @@ final class AuthController
                      *      and the userinv account's status field is made active i.e. 1
                      */
                     if ($status || $userId == 1) {
-                        $userId == 1 ? $this->disableToken($tR, '1', 'email') : '';
+                        $userId == 1 ? $this->disableToken($tR, '1', 'email-verification') : '';
                         if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
                             return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
                         }
@@ -143,7 +148,7 @@ final class AuthController
                      * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
                      * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
                      */
-                    $this->disableToken($tR, $userId, $this->getTokenType('email'));
+                    $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
                     return $this->redirectToAdminMustMakeActive();
                 }
             }
@@ -152,6 +157,7 @@ final class AuthController
         }
         $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
         $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
+        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
@@ -171,6 +177,13 @@ final class AuthController
                 'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
                 'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
                 'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
+                'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
+                    $request, 
+                    $params = [
+                        'code_challenge' => $codeChallenge,
+                        'code_challenge_method' => 'S256',
+                    ]
+                ) : '',
                 'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
                 'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
                 'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
@@ -202,6 +215,7 @@ final class AuthController
                 ) : '',
                 'noGithubContinueButton' => $noGithubContinueButton,
                 'noGoogleContinueButton' => $noGoogleContinueButton,
+                'noGovUkContinueButton' => $noGovUkContinueButton,
                 'noFacebookContinueButton' => $noFacebookContinueButton,
                 'noLinkedInContinueButton' => $noLinkedInContinueButton,
                 'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
@@ -305,10 +319,10 @@ final class AuthController
                         if (null !== $userInv) {
                             $status = $userInv->getActive();
                             if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('x')) : '';
+                                $userId == 1 ? $this->disableToken($tR, '1', 'x') : '';
                                 return $this->redirectToInvoiceIndex();
                             }
-                            $this->disableToken($tR, $userId, $this->getTokenType('x'));
+                            $this->disableToken($tR, $userId, 'x');
                             return $this->redirectToAdminMustMakeActive();
                         }
                     }
@@ -456,10 +470,10 @@ final class AuthController
                             // disable the github verification token as soon as the user logs in for the first time
                             $status = $userInv->getActive();
                             if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('github')) : '';
+                                $userId == 1 ? $this->disableToken($tR, '1', 'github') : '';
                                 return $this->redirectToInvoiceIndex();
                             }
-                            $this->disableToken($tR, $userId, $this->getTokenType('github'));
+                            $this->disableToken($tR, $userId, 'github');
                             return $this->redirectToAdminMustMakeActive();
                         }
                     }
@@ -605,10 +619,10 @@ final class AuthController
                             // disable our facebook access token as soon as the user logs in for the first time
                             $status = $userInv->getActive();
                             if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('facebook')) : '';
+                                $userId == 1 ? $this->disableToken($tR, '1', 'facebook') : '';
                                 return $this->redirectToInvoiceIndex();
                             }
-                            $this->disableToken($tR, $userId, $this->getTokenType('facebook'));
+                            $this->disableToken($tR, $userId, 'facebook');
                             return $this->redirectToAdminMustMakeActive();
                         }
                     }
@@ -694,15 +708,33 @@ final class AuthController
             exit(1);
             // code and state are both present
         }
-        $oAuthTokenType = $this->google->fetchAccessToken($request, $code, $params = []);
+       
+        $oAuthTokenType = $this->google->fetchAccessToken($request, $code, $params = [
+            'grant_type' => 'authorization_code'
+        ]);
+        
         /**
          * @var array $userArray
          */
         $userArray = $this->google->getCurrentUserJsonArray($oAuthTokenType);
+        
         /**
          * @var int $userArray['id']
          */
         $googleId = $userArray['id'] ?? 0;
+        
+        /**
+         * VarDumper::dump($userArray) produces normally
+         * 
+         * 'id' =>  google will produce an id here
+         * 'email' => this is the email associated with google
+         * 'verified_email' => true
+         * 'name' => this is your name in lower case letters
+         * 'given_name' => this is your first name
+         * 'family_name' => this is your surname
+         * 'picture' => 'https://lh3.googleusercontent.com/a/ACg8ocZiJZ8a-fpCKx-H4Dh8k-upEqQV3jSyQGH02--kLP_xZWQqrg=s96-c'
+         */
+        
         if ($googleId > 0) {
             // the id will be removed in the logout button
             $login = 'google' . (string)$googleId;
@@ -719,10 +751,10 @@ final class AuthController
                     if (null !== $userInv) {
                         $status = $userInv->getActive();
                         if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('google')) : '';
+                            $userId == 1 ? $this->disableToken($tR, '1', 'google') : '';
                             return $this->redirectToInvoiceIndex();
                         }
-                        $this->disableToken($tR, $userId, $this->getTokenType('google'));
+                        $this->disableToken($tR, $userId, 'google');
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -761,6 +793,117 @@ final class AuthController
                 ]);
             }
         }
+        
+        $this->authService->logout();
+        return $this->redirectToMain();
+    }
+    
+    public function callbackGovUk(
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,
+        #[Query('code')] string $code = null,
+        #[Query('state')] string $state = null,
+    ): ResponseInterface {
+        if ($code == null || $state == null) {
+            return $this->redirectToMain();
+        }
+
+        $this->blockInvalidState('govUk', $state);
+
+        /**
+         * @psalm-suppress DocblockTypeContradiction $code
+         */
+        if (strlen($code) == 0) {
+            $authorizationUrl = $this->govUk->buildAuthUrl($request, []);
+            header('Location: ' . $authorizationUrl);
+            exit;
+        }
+
+        if ($code == 401) {
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        }
+
+        /**
+         * @psalm-suppress DocblockTypeContradiction $state
+         */
+        if (strlen($state) == 0) {
+            /**
+             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             */
+            exit(1);
+            // code and state are both present
+        }
+        $oAuthTokenType = $this->govUk->fetchAccessToken($request, $code, $params = []);
+        /**
+         * @var array $userArray
+         */
+        $userArray = $this->govUk->getCurrentUserJsonArray($oAuthTokenType);
+        /**
+         * @var int $userArray['id']
+         */
+        $govUkId = $userArray['id'] ?? 0;
+        if ($govUkId > 0) {
+            // the id will be removed in the logout button
+            $login = 'govuk' . (string)$govUkId;
+            /**
+             * @var string $userArray['email']
+             */
+            $email = $userArray['email'] ?? 'noemail' . $login . '@gov.uk';
+            $password = Random::string(32);
+            if ($this->authService->oauthLogin($login)) {
+                $identity = $this->authService->getIdentity();
+                $userId = $identity->getId();
+                if (null !== $userId) {
+                    $userInv = $uiR->repoUserInvUserIdquery($userId);
+                    if (null !== $userInv) {
+                        $status = $userInv->getActive();
+                        if ($status || $userId == 1) {
+                            $userId == 1 ? $this->disableToken($tR, '1', 'govuk') : '';
+                            return $this->redirectToInvoiceIndex();
+                        }
+                        $this->disableToken($tR, $userId, 'govuk');
+                        return $this->redirectToAdminMustMakeActive();
+                    }
+                }
+                return $this->redirectToMain();
+            }
+            $user = new User($login, $email, $password);
+            $uR->save($user);
+            $userId = $user->getId();
+            if ($userId > 0) {
+                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
+                if ($uR->repoCount() == 1) {
+                    $this->manager->revokeAll($userId);
+                    $this->manager->assign('admin', $userId);
+                } else {
+                    $this->manager->revokeAll($userId);
+                    $this->manager->assign('observer', $userId);
+                }
+                $login = $user->getLogin();
+                /**
+                 * @var array $this->sR->locale_language_array()
+                 */
+                $languageArray = $this->sR->locale_language_array();
+                /**
+                 * @see Trait\Oauth2 function getGovUkAccessToken
+                 * @var array $languageArray
+                 * @var string $language
+                 */
+                $language = $languageArray[$_language];
+                $randomAndTimeToken = $this->getGovUkAccessToken($user, $tR);
+                /**
+                 * @see A new UserInv (extension table of user) for the user is created.
+                 */
+                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'govuk');
+                return $this->viewRenderer->render('proceed', [
+                    'proceedToMenuButton' => $proceedToMenuButton,
+                ]);
+            }
+        }
 
         $this->authService->logout();
         return $this->redirectToMain();
@@ -780,7 +923,7 @@ final class AuthController
             return $this->redirectToMain();
         }
 
-        $this->blockInvalidState('linkedin', $state);
+        $this->blockInvalidState('linkedIn', $state);
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -847,10 +990,10 @@ final class AuthController
                     if (null !== $userInv) {
                         $status = $userInv->getActive();
                         if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('linkedin')) : '';
+                            $userId == 1 ? $this->disableToken($tR, '1', 'linkedin') : '';
                             return $this->redirectToInvoiceIndex();
                         }
-                        $this->disableToken($tR, $userId, $this->getTokenType('linkedin'));
+                        $this->disableToken($tR, $userId, 'linkedin');
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -909,7 +1052,7 @@ final class AuthController
             return $this->redirectToMain();
         }
 
-        $this->blockInvalidState('microsoftonline', $state);
+        $this->blockInvalidState('microsoftOnline', $state);
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -963,10 +1106,10 @@ final class AuthController
                     if (null !== $userInv) {
                         $status = $userInv->getActive();
                         if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('microsoftonline')) : '';
+                            $userId == 1 ? $this->disableToken($tR, '1', 'microsoftonline') : '';
                             return $this->redirectToInvoiceIndex();
                         }
-                        $this->disableToken($tR, $userId, $this->getTokenType('microsoftonline'));
+                        $this->disableToken($tR, $userId, 'microsoftonline');
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -1091,10 +1234,10 @@ final class AuthController
                         // disable the yandex verification token as soon as the user logs in for the first time
                         $status = $userInv->getActive();
                         if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('yandex')) : '';
+                            $userId == 1 ? $this->disableToken($tR, '1', 'yandex') : '';
                             return $this->redirectToInvoiceIndex();
                         }
-                        $this->disableToken($tR, $userId, $this->getTokenType('yandex'));
+                        $this->disableToken($tR, $userId, 'yandex');
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -1270,10 +1413,10 @@ final class AuthController
                         // disable the vkontakte verification token as soon as the user logs in for the first time
                         $status = $userInv->getActive();
                         if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', $this->getTokenType('vkontakte')) : '';
+                            $userId == 1 ? $this->disableToken($tR, '1', 'vkontakte') : '';
                             return $this->redirectToInvoiceIndex();
                         }
-                        $this->disableToken($tR, $userId, $this->getTokenType('vkontakte'));
+                        $this->disableToken($tR, $userId, 'vkontakte');
                         return $this->redirectToAdminMustMakeActive();
                     }
                 }
@@ -1339,7 +1482,18 @@ final class AuthController
          * @psalm-suppress MixedMethodCall,
          * @psalm-suppress MixedAssignment $sessionState
          */
-        $sessionState = $this->$identityProvider->getSessionAuthState() ?? null;
+        $sessionState = match($identityProvider) {
+            'facebook' => $this->facebook->getSessionAuthState() ?? null,
+            'github' => $this->github->getSessionAuthState() ?? null,
+            'google' => $this->google->getSessionAuthState() ?? null,
+            'govUk' => $this->govUk->getSessionAuthState() ?? null,
+            'linkedIn' => $this->linkedIn->getSessionAuthState() ?? null,
+            'microsoftOnline' => $this->microsoftOnline->getSessionAuthState() ?? null,
+            'vkontakte' => $this->vkontakte->getSessionAuthState() ?? null,
+            'x' => $this->x->getSessionAuthState() ?? null,
+            'yandex' => $this->yandex->getSessionAuthState() ?? null
+        };
+        
         if (null !== $sessionState) {
             if (!$sessionState || ($state !== $sessionState)) {
                 // State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -1398,7 +1552,7 @@ final class AuthController
     private function getTokenType(string $provider): string
     {
         return $tokenType = match ($provider) {
-            'email' => self::EMAIL_VERIFICATION_TOKEN,
+            'email-verification' => self::EMAIL_VERIFICATION_TOKEN,
             'facebook' => self::FACEBOOK_ACCESS_TOKEN,
             'github' => self::GITHUB_ACCESS_TOKEN,
             'google' => self::GOOGLE_ACCESS_TOKEN,

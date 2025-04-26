@@ -10,6 +10,7 @@ use App\User\User;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
+use Yiisoft\Yii\AuthClient\Client\GovUk;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
 use Yiisoft\Yii\AuthClient\Client\VKontakte;
@@ -23,6 +24,8 @@ trait Oauth2
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
 
     public const string GOOGLE_ACCESS_TOKEN = 'google-access';
+    
+    public const string GOVUK_ACCESS_TOKEN = 'govuk-access';
 
     public const string LINKEDIN_ACCESS_TOKEN = 'linkedin-access';
 
@@ -38,6 +41,7 @@ trait Oauth2
         Facebook $facebook,
         GitHub $github,
         Google $google,
+        GovUk $govUk,    
         LinkedIn $linkedIn,
         MicrosoftOnline $microsoftOnline,
         VKontakte $vkontakte,
@@ -50,6 +54,7 @@ trait Oauth2
         $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
         $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
         $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
+        $govUk->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('govuk'));
         $linkedIn->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('linkedin'));
         $microsoftOnline->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('microsoftonline'));
         $vkontakte->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('vkontakte'));
@@ -59,6 +64,7 @@ trait Oauth2
         $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
         $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
         $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
+        $govUk->setClientId($this->sR->getOauth2IdentityProviderClientId('govuk'));
         $linkedIn->setClientId($this->sR->getOauth2IdentityProviderClientId('linkedin'));
         $microsoftOnline->setClientId($this->sR->getOauth2IdentityProviderClientId('microsoftonline'));
         $vkontakte->setClientId($this->sR->getOauth2IdentityProviderClientId('vkontakte'));
@@ -68,6 +74,7 @@ trait Oauth2
         $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
         $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
         $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
+        $govUk->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('govuk'));
         $linkedIn->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('linkedin'));
         $microsoftOnline->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('microsoftonline'));
         $vkontakte->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('vkontakte'));
@@ -123,6 +130,11 @@ trait Oauth2
     private function getGoogleAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::GOOGLE_ACCESS_TOKEN);
+    }
+    
+    private function getGovUkAccessToken(User $user, TokenRepository $tR): string
+    {
+        return $this->getAccessToken($user, $tR, self::GOVUK_ACCESS_TOKEN);
     }
 
     private function getLinkedInAccessToken(User $user, TokenRepository $tR): string
