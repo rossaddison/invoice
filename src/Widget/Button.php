@@ -217,7 +217,7 @@ final readonly class Button
         ->id('btn-google')
         ->render();
     }
-    
+
     /**
      * 24/04/2025
      * @see npm_modules/govuk-frontend
