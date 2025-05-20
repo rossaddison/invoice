@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc6ad3022be68813d09b596afff7771d",
+    "content-hash": "e1e085e6202e78035f73697a9f1e2461",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -18697,16 +18697,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "5.1.0",
+            "version": "5.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "a9b953c25f5bd11ea0542636936de04504496bd9"
+                "reference": "b8ba6bd99805c0ae09a38d1b26c1c92820509bd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/a9b953c25f5bd11ea0542636936de04504496bd9",
-                "reference": "a9b953c25f5bd11ea0542636936de04504496bd9",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/b8ba6bd99805c0ae09a38d1b26c1c92820509bd0",
+                "reference": "b8ba6bd99805c0ae09a38d1b26c1c92820509bd0",
                 "shasum": ""
             },
             "require": {
@@ -18777,9 +18777,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/5.1.0"
+                "source": "https://github.com/zircote/swagger-php/tree/5.1.3"
             },
-            "time": "2025-04-18T00:35:12+00:00"
+            "time": "2025-05-20T03:35:10+00:00"
         }
     ],
     "packages-dev": [
