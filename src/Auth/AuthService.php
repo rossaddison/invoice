@@ -29,7 +29,7 @@ final readonly class AuthService
         }
 
         return $this->currentUser->login($user->getIdentity());
-    }    
+    }
 
     public function oauthLogin(string $login): bool
     {

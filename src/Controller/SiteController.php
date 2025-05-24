@@ -92,22 +92,22 @@ final class SiteController
     {
         return $this->viewRenderer->render('forgotusernotfound');
     }
-    
+
     public function onetimepassworderror(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('onetimepassworderror');
     }
-        
+
     public function onetimepasswordfailure(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('onetimepasswordfailure');
     }
-    
+
     public function onetimepasswordsuccess(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('onetimepasswordsuccess');
     }
-    
+
     public function resetpasswordfailed(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('resetpasswordfailed');

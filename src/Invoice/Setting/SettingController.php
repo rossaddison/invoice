@@ -271,7 +271,7 @@ final class SettingController extends BaseController
         }
         return $this->viewRenderer->render('tab_index', $parameters);
     }
-            
+
     /**
      * @see src\Invoice\Asset\rebuild\js\setting.js
      * @see resources\views\invoice\setting\views\partial_settings_making_tax_digital.php btn_fph_generate
@@ -283,7 +283,7 @@ final class SettingController extends BaseController
         $query_params = $request->getQueryParams();
         $randomDeviceIdVersion4 = Uuid::uuid4();
         $deviceId = $randomDeviceIdVersion4->toString();
-        
+
         $randomUserIdVersion4 = Uuid::uuid4();
         $userUuid = $randomUserIdVersion4->toString();
         return $this->factory->createResponse(Json::encode([

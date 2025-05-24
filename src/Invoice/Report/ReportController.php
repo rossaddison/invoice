@@ -39,7 +39,7 @@ class ReportController extends BaseController
 {
     protected string $controllerName = 'invoice/report';
 
-    public function __construct(        
+    public function __construct(
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -49,7 +49,7 @@ class ReportController extends BaseController
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
     }
-    
+
     /**
      * @param Request $request
      * @param ViewRenderer $head

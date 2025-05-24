@@ -51,13 +51,13 @@ final class SignupController
 
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Manager $manager;
-    private Rule $rule;                   
-    public string $telegramToken;  
+    private Rule $rule;
+    public string $telegramToken;
 
     public function __construct(
         // load assignments and save assignments to resources/rbac/assignment.php
         private Assignment $assignment,
-        private Flash $flash,    
+        private Flash $flash,
         // add, save, remove, clear, children, parents
         private ItemStorage $itemstorage,
         Rule $rule,
@@ -66,7 +66,7 @@ final class SignupController
         private ViewRenderer $viewRenderer,
         private MailerInterface $mailer,
         private sR $sR,
-        private DeveloperSandboxHmrc $developerSandboxHmrc,    
+        private DeveloperSandboxHmrc $developerSandboxHmrc,
         private Facebook $facebook,
         private GitHub $github,
         private Google $google,
@@ -79,7 +79,7 @@ final class SignupController
         private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
-        private LoggerInterface $logger,  
+        private LoggerInterface $logger,
     ) {
         // @see yiisoft/rbac-php
         $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
@@ -100,7 +100,7 @@ final class SignupController
         $this->x = $x;
         $this->yandex = $yandex;
         $this->initializeOauth2IdentityProviderCredentials(
-            $developerSandboxHmrc,    
+            $developerSandboxHmrc,
             $facebook,
             $github,
             $google,
@@ -224,14 +224,14 @@ final class SignupController
         $this->session->set('code_verifier', $codeVerifier);
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
-            'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ? 
+            'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ?
                 $this->developerSandboxHmrc
                      ->buildAuthUrl(
-                    $request, 
-                    $params = [
-                        'response_type' => 'code'
-                    ]
-                ) : '',
+                         $request,
+                         $params = [
+                             'response_type' => 'code',
+                         ]
+                     ) : '',
             'sessionOtp' => $this->session->get('otp'),
             'telegramToken' => $this->telegramToken,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',

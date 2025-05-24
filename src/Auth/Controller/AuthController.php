@@ -51,8 +51,8 @@ final class AuthController
 {
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
-    
-    private Flash $flash;    
+
+    private Flash $flash;
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
@@ -64,7 +64,7 @@ final class AuthController
     public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
-    public string $telegramToken; 
+    public string $telegramToken;
 
     public function __construct(
         private readonly AuthService $authService,
@@ -84,7 +84,7 @@ final class AuthController
         private X $x,
         private Yandex $yandex,
         private UrlGenerator $urlGenerator,
-        private LoggerInterface $logger   
+        private LoggerInterface $logger
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         $this->manager = $manager;
@@ -103,7 +103,7 @@ final class AuthController
         $this->yandex = $yandex;
         // use the Oauth2 trait function
         $this->initializeOauth2IdentityProviderCredentials(
-            $developerSandboxHmrc,    
+            $developerSandboxHmrc,
             $facebook,
             $github,
             $google,
@@ -184,17 +184,18 @@ final class AuthController
 
         $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
 
-        $this->session->set('code_verifier', $codeVerifier);        
+        $this->session->set('code_verifier', $codeVerifier);
         return $this->viewRenderer->render(
             'login',
             [
                 'formModel' => $loginForm,
                 'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ? $this->developerSandboxHmrc->buildAuthUrl(
-                    $request, 
+                    $request,
                     $params = [
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
-                ]) : '',
+                    ]
+                ) : '',
                 'sessionOtp' => $this->session->has('otp') ? $this->session->get('otp') : $this->session->set('otp', 0),
                 'telegramToken' => $this->telegramToken,
                 'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
@@ -264,7 +265,7 @@ final class AuthController
             }
         }
     }
-    
+
     public function callbackDeveloperGovSandboxHmrc(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -304,47 +305,43 @@ final class AuthController
             exit(1);
             // code and state are both present
         }
-        
+
         $codeVerifier = (string)$this->session->get('code_verifier');
         /**
          * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
          * For user-restricted access, the 'Authorization Code' Grant Type is used
-         * Use the code received, to get an access_token 
+         * Use the code received, to get an access_token
          */
         $oAuthToken = $this->developerSandboxHmrc->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params = [
             'redirect_uri' => $this->developerSandboxHmrc->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
-            'grant_type' => 'authorization_code'
+            'grant_type' => 'authorization_code',
         ]);
-        
+
         // e.g. string '476425f97e53ca1124161e491bee384e'
         $this->session->set('hmrc_access_token', $oAuthToken->getParam('access_token'));
         // e.g. string 'bearer'
-        $this->session->set('hmrc_token_type', $oAuthToken->getParam('token_type')); 
+        $this->session->set('hmrc_token_type', $oAuthToken->getParam('token_type'));
         // default 'expires_in' int 14400
         $this->session->set('hmrc_token_expires', time() + (int)$oAuthToken->getParam('expires_in'));
         // e.g. read:self-assessment write:self-assessment'
         $this->session->set('hmrc_scope', $oAuthToken->getParam('scope'));
         // e.g. string 'cbe7c4f01a6bc55034237718d3e4ded2'
         $this->session->set('hmrc_refresh_token', $oAuthToken->getParam('refresh_token'));
-            
+
         if ($this->sR->getEnv() == 'dev') {
-            
             /**
              * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc function getTestUserArray;
              */
             $requestBody = [
-                'serviceNames' => ['national-insurance'] 
+                'serviceNames' => ['national-insurance'],
             ];
-            
+
             $userArray = $this->developerSandboxHmrc->createTestUserIndividual($oAuthToken, $requestBody);
-            
         } else {
-            
             exit(1);
-            
-        } 
-        
+        }
+
         /**
          * @var int $userArray['userId']
          */
@@ -355,10 +352,10 @@ final class AuthController
             $login = 'hmrc' . (string)$hmrcId;
             /**
              * Depending on the environment i.e. prod or dev, getApiBaseUrl1() will vary between 'https://api.service.hmrc.gov.uk' or 'https://test-api.service.hmrc.gov.uk' respectively
-             *  
+             *
              * @var string $userArray['emailAddress']
              */
-            $email = $userArray['emailAddress'] ?? 'noemail' . $login . '@' . str_replace("https://", "", $this->developerSandboxHmrc->getApiBaseUrl1()); 
+            $email = $userArray['emailAddress'] ?? 'noemail' . $login . '@' . str_replace('https://', '', $this->developerSandboxHmrc->getApiBaseUrl1());
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
                 $identity = $this->authService->getIdentity();
@@ -410,11 +407,11 @@ final class AuthController
                 ]);
             }
         }
-        
+
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     private function setSessionOTP(): void
     {
         $otp = rand(100000, 999999);
@@ -422,41 +419,40 @@ final class AuthController
         $otpRef = $randomUuidVersion4->toString();
         $this->session->set('otp', $otp);
         $this->session->set('otpRef', $otpRef);
-    }    
-    
+    }
+
     /**
      * Used in logout function
      */
     private function removeSessionOTP(): void
     {
         $this->session->remove('otp');
-        $this->session->remove('otpRef');        
-    }    
-    
+        $this->session->remove('otpRef');
+    }
+
     /**
      * This function is used only when the session otp value is out of range i.e. not a 6 digit number
      * because Telegram has just been setup or the otp value has been removed
-     * 
+     *
      * Used in: ..resource/views/auth/login.php Stage 2.
-     * 
+     *
      * Stage 1: Setup: Telegram must be setup before OTP can be sent
      * Stage 2: Send and Validate: One-time-password must be sent by Telegram if not a 6 digit integer and Telegram has been setup
-     *          ..resource/views/auth/login.php if ($sessionOtp < 100000 && $sessionOtp >= 0 && strlen($telegramToken) > 0) 
+     *          ..resource/views/auth/login.php if ($sessionOtp < 100000 && $sessionOtp >= 0 && strlen($telegramToken) > 0)
      *          {
      *              echo $button->developerSandboxHmrc($urlGenerator, 'auth/sendOtp', 2);
      *          }
-     * Stage 3: Continue: One-time-password 6 digit integer has been sent by Telegram. 
+     * Stage 3: Continue: One-time-password 6 digit integer has been sent by Telegram.
      *          6 digit integer has been input by user on form
-     *          MultifactorAuthentication complete: Fraud prevention headers can be submitted 
-     *  
+     *          MultifactorAuthentication complete: Fraud prevention headers can be submitted
+     *
      * @return ResponseInterface
      */
     public function sendOtp(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
-        FormHydrator $formHydrator,    
-    ): ResponseInterface
-    {
+        FormHydrator $formHydrator,
+    ): ResponseInterface {
         if (strlen($this->telegramToken) > 0) {
             $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
             $telegramBotApi = $telegramHelper->getBotApi();
@@ -481,20 +477,18 @@ final class AuthController
         }
         return $this->redirectToOneTimePasswordError();
     }
-        
+
     public function validateOtp(
-            ServerRequestInterface $request,
-            TranslatorInterface $translator,
-            FormHydrator $formHydrator,
-    ): ResponseInterface
-    {
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,
+        FormHydrator $formHydrator,
+    ): ResponseInterface {
         $otpPasswordForm = new OtpPasswordForm($translator);
 
         if ($formHydrator->populateFromPostAndValidate($otpPasswordForm, $request)) {
-
             // Ensure the parsed body is an array
             $parsedBody = $request->getParsedBody();
-           
+
             if (!is_array($parsedBody)) {
                 return $this->redirectToOneTimePasswordError();
             }
@@ -503,7 +497,7 @@ final class AuthController
             if (!array_key_exists('OtpPassword', $parsedBody) || !is_array($parsedBody['OtpPassword'])) {
                 return $this->redirectToOneTimePasswordError();
             }
-            
+
             /**
              * @var array $parsedBody['OtpPassword']
              */
@@ -519,14 +513,15 @@ final class AuthController
 
             // Redirect to the error page if the OTP does not match
             return $this->redirectToOneTimePasswordError();
-        }  
+        }
         return $this->viewRenderer->render(
             'otp',
             [
-                'formModel' => $otpPasswordForm
-        ]);     
+                'formModel' => $otpPasswordForm,
+            ]
+        );
     }
-    
+
     private function getTokenType(string $provider): string
     {
         return $tokenType = match ($provider) {
@@ -1785,8 +1780,8 @@ final class AuthController
         /**
          * @psalm-suppress MixedMethodCall,
          * @psalm-suppress MixedAssignment $sessionState
-         */       
-        $sessionState = match($identityProvider) {
+         */
+        $sessionState = match ($identityProvider) {
             'developergovsandboxhmrc' => $this->developerSandboxHmrc->getSessionAuthState() ?? null,
             'facebook' => $this->facebook->getSessionAuthState() ?? null,
             'github' => $this->github->getSessionAuthState() ?? null,
@@ -1853,32 +1848,32 @@ final class AuthController
         }
         return '';
     }
-    
+
     private function redirectToOneTimePasswordError(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/onetimepassworderror', ['_language' => 'en']);
     }
-    
+
     private function redirectToOneTimePasswordFailure(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/onetimepasswordfailure', ['_language' => 'en']);
     }
-            
+
     private function redirectToOneTimePasswordSuccess(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('auth/login', ['_language' => 'en']);
     }
-    
+
     private function redirectToTelegramNotSetup(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/telegramnotsetup', ['_language' => 'en']);
     }
-    
+
     private function redirectToUserCancelledOauth2(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);
     }
-    
+
     private function redirectToOauth2CallbackResultUnAuthorised(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/oauth2callbackresultunauthorised', ['_language' => 'en']);
