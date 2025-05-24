@@ -7,6 +7,8 @@ namespace App\Auth\Trait;
 use App\Auth\Token;
 use App\Auth\TokenRepository;
 use App\User\User;
+use App\Invoice\Setting\SettingRepository as sR;
+use Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
@@ -19,6 +21,8 @@ use Yiisoft\Yii\AuthClient\Client\Yandex;
 
 trait Oauth2
 {
+    public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
+    
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
 
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
@@ -38,6 +42,7 @@ trait Oauth2
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
 
     private function initializeOauth2IdentityProviderCredentials(
+        DeveloperSandboxHmrc $developerSandboxHmrc,    
         Facebook $facebook,
         GitHub $github,
         Google $google,
@@ -51,6 +56,7 @@ trait Oauth2
         /**
          * @see config/common/params.php
          */
+        $developerSandboxHmrc->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('developersandboxhmrc'));
         $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
         $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
         $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
@@ -61,6 +67,7 @@ trait Oauth2
         $x->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('x'));
         $yandex->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('yandex'));
 
+        $developerSandboxHmrc->setClientId($this->sR->getOauth2IdentityProviderClientId('developersandboxhmrc'));
         $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
         $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
         $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
@@ -70,7 +77,8 @@ trait Oauth2
         $vkontakte->setClientId($this->sR->getOauth2IdentityProviderClientId('vkontakte'));
         $x->setClientId($this->sR->getOauth2IdentityProviderClientId('x'));
         $yandex->setClientId($this->sR->getOauth2IdentityProviderClientId('yandex'));
-
+        
+        $developerSandboxHmrc->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('developersandboxhmrc'));
         $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
         $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
         $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
@@ -96,6 +104,25 @@ trait Oauth2
         $tokenUrl = $microsoftOnline->getTokenUrlWithTenantInserted($microsoftOnline->getTenant());
         $microsoftOnline->setTokenUrl($tokenUrl);
     }
+    
+    /**
+     * Initialize development or production urls
+     * 
+     * @param sR $sR
+     * @param DeveloperSandboxHmrc $developerSandboxHmrc
+     * @return void
+     */
+    private function initializeOauth2IdentityProviderDualUrls(
+        sR $sR,    
+        DeveloperSandboxHmrc $developerSandboxHmrc,    
+    ): void 
+    {
+        if ($sR->getEnv() == 'dev') {
+            $developerSandboxHmrc->setEnvironment('dev');
+        } else {
+            $developerSandboxHmrc->setEnvironment('prod');
+        }
+    }
 
     /**
      * @param User $user
@@ -115,6 +142,11 @@ trait Oauth2
         $timeString = (string)$token->getCreated_at()->getTimestamp();
         // build the token with a timestamp built into it for comparison later
         return null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
+    }
+    
+    private function getDeveloperSandboxHmrcAccessToken(User $user, TokenRepository $tR): string
+    {
+        return $this->getAccessToken($user, $tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);
     }
 
     private function getGithubAccessToken(User $user, TokenRepository $tR): string

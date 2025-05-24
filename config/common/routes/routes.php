@@ -129,6 +129,15 @@ return [
     Route::methods([Method::GET, Method::POST], '/forgotusernotfound')
     ->action([SiteController::class, 'forgotusernotfound'])
     ->name('site/forgotusernotfound'),
+    Route::methods([Method::GET, Method::POST], '/onetimepassworderror')
+    ->action([SiteController::class, 'onetimepassworderror'])
+    ->name('site/onetimepassworderror'),
+    Route::methods([Method::GET, Method::POST], '/onetimepasswordfailure')
+    ->action([SiteController::class, 'onetimepasswordfailure'])
+    ->name('site/onetimepasswordfailure'),
+    Route::methods([Method::GET, Method::POST], '/onetimepasswordsuccess')
+    ->action([SiteController::class, 'onetimepasswordsuccess'])
+    ->name('site/onetimepasswordsuccess'),
     Route::methods([Method::GET, Method::POST], '/privacypolicy')
     ->action([SiteController::class, 'privacypolicy'])
     ->name('site/privacypolicy'),
@@ -146,12 +155,16 @@ return [
     ->name('site/signupsuccess'),
     Route::methods([Method::GET, Method::POST], '/termsofservice')
     ->action([SiteController::class, 'termsofservice'])
-    ->name('site/termsofservice'),
+    ->name('site/termsofservice'),    
     // Auth
     Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'login'])
     ->name('auth/login'),
+    Route::methods([Method::GET, Method::POST], '/callbackDeveloperGovSandboxHmrc')
+      ->middleware(LimitRequestsMiddleware::class)
+      ->action([AuthController::class, 'callbackDeveloperGovSandboxHmrc'])
+      ->name('auth/callbackDeveloperGovSandboxHmrc'),  
     Route::methods([Method::GET, Method::POST], '/callbackFacebook')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackFacebook'])
@@ -191,6 +204,20 @@ return [
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),
+    Route::methods([Method::GET, Method::POST], '/sendOtp')
+    ->middleware(fn (
+        ResponseFactoryInterface $responseFactory,
+        StorageInterface $storage
+    ) => new LimitRequestsMiddleware(new Counter($storage, 3, 3), $responseFactory))
+    ->action([AuthController::class, 'sendOtp'])
+    ->name('auth/sendOtp'),
+    Route::methods([Method::POST], '/validateOtp')
+    ->middleware(fn (
+        ResponseFactoryInterface $responseFactory,
+        StorageInterface $storage
+    ) => new LimitRequestsMiddleware(new Counter($storage, 3, 3), $responseFactory))
+    ->action([AuthController::class, 'validateOtp'])
+    ->name('auth/validateOtp'),
     Route::methods([Method::GET, Method::POST], '/forgotpassword')
     ->middleware(fn (
         ResponseFactoryInterface $responseFactory,
@@ -2080,6 +2107,11 @@ return [
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)
         ->action([SettingController::class, 'delete']),
+        Route::get('/setting/fphgenerate')
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
+        ->middleware(Authentication::class)
+        ->action([SettingController::class, 'fphgenerate'])
+        ->name('setting/fphgenerate'),      
         Route::methods([Method::GET, Method::POST], '/setting/index')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)

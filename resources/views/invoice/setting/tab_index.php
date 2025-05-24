@@ -22,6 +22,7 @@ declare(strict_types=1);
  * @var string $google_translate
  * @var string $vat_registered
  * @var string $mpdf
+ * @var string $mtd
  * @var string $oauth2
  * @var string $peppol_electronic_invoicing
  * @var string $storecove
@@ -101,6 +102,9 @@ echo $alert;
     <li class="<?= 'nav-item'. ($active == 'bootstrap5' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'bootstrap5' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-bootstrap5" style="text-decoration: none"><i class="bi bi-bootstrap"><?= ' ' . $translator->translate('invoice.invoice.bootstrap5'); ?></i></button>
     </li>
+    <li class="<?= 'nav-item'. ($active == 'mtd' ? ' active' : ''); ?>" role="presentation">
+        <button class="<?= 'nav-link'. ($active == 'mtd' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-mtd" style="text-decoration: none"><?= $translator->translate('invoice.mtd'); ?> </button>
+    </li>
 </ul>
 
 <form method="post" id="form-settings" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>"  enctype="multipart/form-data">
@@ -133,7 +137,7 @@ echo $alert;
             <div id="settings-client-purchase-orders" class="<?= 'tab-pane'. ($active == 'client-purchase-orders' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-client-purchase-orders">
                 <?= $salesorders; ?>
             </div>
-
+            
             <div id="settings-taxes" class="<?= 'tab-pane'. ($active == 'taxes' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-taxes">
                 <?= $taxes; ?>
             </div>
@@ -184,6 +188,10 @@ echo $alert;
             
             <div id="settings-bootstrap5" class="<?= 'tab-pane'. ($active == 'bootstrap5' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-bootstrap5">
                 <?= $bootstrap5; ?>
+            </div>
+            
+            <div id="settings-mtd" class="<?= 'tab-pane'. ($active == 'mtd' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-mtd">
+                <?= $mtd; ?>
             </div>
             
         </div>

@@ -433,6 +433,8 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('Convert XML to PHP Array Online', 'https://wtools.io/convert-xml-to-php-array'),
                 DropdownItem::link('Writing XML using Sabre', 'https://sabre.io/xml/writing/'),
                 DropdownItem::link('Understanding Same Site Cookies', 'https://andrewlock.net/understanding-samesite-cookies/#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
+                DropdownItem::link('HMRC Developer Hub', 'https://developer.service.hmrc.gov.uk/developer/login'),
+                DropdownItem::link('HMRC Developer Hub - Web App Via Server', 'https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/'),
                 DropdownItem::link('Scotland - e-invoice Template - Lessons Learned', 'https://www.gov.scot/publications/einvoicing-guide/documents/'),
                 DropdownItem::link('German, and Swiss Law Amendments now prioritize Opensource in Public Sector', 'https://interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor/news/germanys-ozg-20-favors-open-source-solutions'),
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files', 'https://json-ld.org/playground/'),
@@ -677,6 +679,7 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($translator->translate('i.sales_by_date'), $urlGenerator->generate('report/sales_by_year_index')),
             DropdownItem::link($translator->translate('i.payment_history'), $urlGenerator->generate('report/payment_history_index')),
             DropdownItem::link($translator->translate('i.invoice_aging'), $urlGenerator->generate('report/invoice_aging_index')),
+            DropdownItem::link($translator->translate('invoice.report.test.fraud.prevention.headers.api'), $urlGenerator->generate('backend/hmrc/fphValidate')),    
         ),
         // Translate
         Dropdown::widget()

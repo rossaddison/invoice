@@ -13,6 +13,4 @@ use Yiisoft\VarDumper\VarDumper;
 
 <?=  $alert; ?>
 
-<?php VarDumper::dump($combined_array); ?>
-
 

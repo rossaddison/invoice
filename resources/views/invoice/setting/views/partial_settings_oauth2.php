@@ -5,6 +5,14 @@ declare(strict_types=1);
 use Yiisoft\Html\Tag\I;
 
 /**
+ * @see src\Auth\controller\AuthController
+ * @see src\Auth\Trait\Oauth2
+ * @see src\Auth\Controller\SignupController
+ * @see App\Widget\Button
+ * @see resources\views\auth\login
+ * @see resource\views\signup\signup
+ * @see App\Invoice\InvoiceController no_developer_sandbox_hmrc_continue_button
+ * @see App\Invoice\Setting\SettingController function tab_index oauth2
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -21,6 +29,15 @@ use Yiisoft\Html\Tag\I;
             </div>
             <div class="panel-body">
                 <div class="form-group">
+                    <div class="checkbox">
+                        <?php $body['settings[no_developer_sandbox_hmrc_continue_button]'] = $s->getSetting('no_developer_sandbox_hmrc_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_developer_sandbox_hmrc_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_developer_sandbox_hmrc_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_developer_sandbox_hmrc_continue_button]'], 1, '==', true) ?>>
+                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?= chr(32).$translator->translate('invoice.gov.developer.sandbox').chr(32).$translator->translate('invoice.gov.developer.sandbox.uk'); ?>
+                        </label>
+                    </div>    
                     <div class="checkbox">
                         <?php $body['settings[no_github_continue_button]'] = $s->getSetting('no_github_continue_button');?>
                         <label>

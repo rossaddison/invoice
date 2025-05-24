@@ -9,6 +9,7 @@
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
 [![StyleCI](https://github.styleci.io/repos/708781821/shield?branch=main)](https://github.styleci.io/repos/708781821?branch=main)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
+![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(209.250.232.212)-blue?logo=vultr&style=flat-square)
 
 (place the contents of this download into yii3-i's invoice folder or run as a separate repository)
 

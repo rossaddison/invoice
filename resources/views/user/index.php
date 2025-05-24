@@ -100,7 +100,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'api',
-            content: static function (User $data) use ($urlGenerator): string {
+            content: static function (User $data) use ($urlGenerator): A {
                 return Html::a(
                     'API User Data',
                     $urlGenerator->generate(
@@ -108,13 +108,13 @@ $toolbar = Div::tag();
                         ['login' => $data->getLogin()]
                     ),
                     ['target' => '_blank'],
-                )->render();
+                );
             },
             header:  $translator->translate('gridview.api')
         ),
         new DataColumn(
             'profile',
-            content: static function (User $data) use ($urlGenerator): string {
+            content: static function (User $data) use ($urlGenerator): A {
                 return Html::a(
                     Html::tag('i', '', [
                         'class' => 'bi bi-person-fill ms-1',
@@ -122,7 +122,7 @@ $toolbar = Div::tag();
                     ]),
                     $urlGenerator->generate('user/profile', ['login' => $data->getLogin()]),
                     ['class' => 'btn btn-link'],
-                )->render();
+                );
             },
             header:  $translator->translate('gridview.profile'),
         ),

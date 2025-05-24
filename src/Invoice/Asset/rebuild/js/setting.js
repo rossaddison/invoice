@@ -21,13 +21,50 @@ $(function () {
             $('#div-smtp-settings').hide();
         }
     }
+    
+    $(document).on('click', '#btn_fph_generate', function () {
+        var url = $(location).attr('origin') + "/invoice/setting/fphgenerate";
+        var userAgent = navigator.userAgent;
+        $.ajax({
+            type: 'GET',
+            data: {
+                userAgent: userAgent,
+                width: window.screen.width,
+                height: window.screen.height,
+                scalingFactor: Math.round(window.devicePixelRatio * 100) / 100,  
+                colourDepth: window.screen.colorDepth,
+                // window size: width x height
+                windowInnerWidth: window.innerWidth,
+                windowInnerHeight: window.innerHeight
+            },
+            url: url,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    $('#settings\\[fph_client_browser_js_user_agent\\]').val(response.userAgent);
+                    $('#settings\\[fph_client_device_id\\]').val(response.deviceId);
+                    $('#settings\\[fph_screen_width\\]').val(response.width);
+                    $('#settings\\[fph_screen_height\\]').val(response.height);
+                    $('#settings\\[fph_screen_scaling_factor\\]').val(response.scalingFactor);
+                    $('#settings\\[fph_screen_colour_depth\\]').val(response.colourDepth);
+                    $('#settings\\[fph_timestamp\\]').val(response.timestamp);
+                    $('#settings\\[fph_window_size\\]').val(response.windowSize);
+                    $('#settings\\[fph_gov_client_user_id\\]').val(response.userUuid);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", error);
+            }
+        });
+    });
         
     $(document).on('click', '#btn_generate_cron_key', function () {
         var btn = $('.btn_generate_cron_key');      
         btn.html('<i class="fa fa-spin fa-spinner fa-margin"></i>');
         var url = $(location).attr('origin') + "/invoice/setting/get_cron_key";
         $.ajax({ type: 'GET',
-            contentType: "application/json; charset=utf-8",
             url: url,
             cache: false,
             dataType: 'json',
@@ -54,9 +91,3 @@ $(function () {
         $('#gateway-settings-' + driver).removeClass('hidden').addClass('active-gateway');
     });
 });
-
-    
-        
-    
-
-

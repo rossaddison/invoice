@@ -1,8 +1,11 @@
 <h6 id="invoice">Development Summary: (...resources/views/invoice/info/invoice.php)</h6>
 
-<p><b>Aim: To develop a similar invoicing system to InvoicePlane integrating with the latest Jquery, and security features of Yii3 using wampserver
-        as a test platform for WAMP and also Ubuntu 22.04 LTS for LAMP.</b>
+<p><b>Aim: To develop a similar invoicing system to InvoicePlane with <s>integrating with the latest Jquery, and</s> the security features of Yii3, Snyk, CodeQl using wampserver 
+        as a test platform for WAMP and also lightweight Alpine / heavier Ubuntu 22.04 LTS for LAMP.</b>
 </p>
+<p>Less emphasis has been placed on using javascript due to security vulnerabilities with jQuery. More emphasis is being placed on using php forms instead of javascript. </p> 
+<p>Free sponsorship has been provided by vultr.com in Frankfurt on 209.250.232.212</p>
+<p>The domain yii3i.co.uk will be moved over to 209.250.232.212 in September from hosts one.com. The vultr.com site is running on alpine and copilot AI has been most useful in helping me set this up.</p>
 <p><b>To Do's - Longer Term Goals</b></p>
 <p>1. <s>Integration of Payment Gateways</s>PCI Compliant Stripe, Amazon Pay, Braintree, and Mollie have been introduced.</p>
 <p>2. Accountant Role with the ability of an accountant/bookkeeper to record payments against invoices.</p>
@@ -46,6 +49,15 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>23rd May 2025</b></p>
+<p>Making Tax Digital - UK becomes compulsory on April 2026</p>
+<p>1. Test Fraud Prevention Headers API is functional.<p>
+<p>1a. Step 1: Settings ... View ... Making Tax Digital tab ... Generate. This app uses the WEB_APP_VIA_SERVER connection method. </p>
+<p>There are approx. 13 headers that need to be generated - action 'setting/fphGenerate' and rebuild/js/settings.js.</p>
+<p>1b. Step 2. Reports ... Test Fraud Prevention Headers API. </p>
+<p>2. HmrcController.php has been setup in the backend folder and will include other API implementations. </p>   
+<p>3. https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server
+<p>Next: Docker Implementation and Testing</p>
 <p><b>26th April 2025</b></p>
 <p>Retested oauth2 with rossaddison/yii-auth-client and introduced a gov uk oauth2 which has not been tested.</p>
 <p><b>16th April 2025</b></p>

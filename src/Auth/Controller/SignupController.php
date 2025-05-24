@@ -30,8 +30,10 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\Random;
 use Yiisoft\Security\TokenMask;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
 use Yiisoft\Yii\AuthClient\Client\Google;
@@ -49,12 +51,13 @@ final class SignupController
 
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Manager $manager;
-    private Rule $rule;
+    private Rule $rule;                   
+    public string $telegramToken;  
 
     public function __construct(
         // load assignments and save assignments to resources/rbac/assignment.php
         private Assignment $assignment,
-
+        private Flash $flash,    
         // add, save, remove, clear, children, parents
         private ItemStorage $itemstorage,
         Rule $rule,
@@ -63,6 +66,7 @@ final class SignupController
         private ViewRenderer $viewRenderer,
         private MailerInterface $mailer,
         private sR $sR,
+        private DeveloperSandboxHmrc $developerSandboxHmrc,    
         private Facebook $facebook,
         private GitHub $github,
         private Google $google,
@@ -75,15 +79,17 @@ final class SignupController
         private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,  
     ) {
         // @see yiisoft/rbac-php
         $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
         $this->session = $session;
+        $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('signup');
         $this->mailer = $mailer;
         $this->sR = $sR;
+        $this->developerSandboxHmrc = $developerSandboxHmrc;
         $this->facebook = $facebook;
         $this->github = $github;
         $this->google = $google;
@@ -94,6 +100,7 @@ final class SignupController
         $this->x = $x;
         $this->yandex = $yandex;
         $this->initializeOauth2IdentityProviderCredentials(
+            $developerSandboxHmrc,    
             $facebook,
             $github,
             $google,
@@ -104,10 +111,12 @@ final class SignupController
             $x,
             $yandex
         );
+        $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
         $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
         $this->currentRoute = $currentRoute;
         $this->logger = $logger;
+        $this->telegramToken = $sR->getSetting('telegram_token');
     }
 
     /**
@@ -195,6 +204,7 @@ final class SignupController
             }
             return $this->webService->getRedirectResponse('site/signupsuccess');
         }
+        $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
         $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
         $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
         $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
@@ -214,12 +224,23 @@ final class SignupController
         $this->session->set('code_verifier', $codeVerifier);
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
+            'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ? 
+                $this->developerSandboxHmrc
+                     ->buildAuthUrl(
+                    $request, 
+                    $params = [
+                        'response_type' => 'code'
+                    ]
+                ) : '',
+            'sessionOtp' => $this->session->get('otp'),
+            'telegramToken' => $this->telegramToken,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
             'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
             'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
                 $request,
                 $params = [
+                    'return_type' => 'id_token',
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ]
@@ -253,6 +274,7 @@ final class SignupController
                     'code_challenge_method' => 'S256',
                 ]
             ) : '',
+            'noDeveloperSandboxHmrcContinueButton' => $noDeveloperSandboxHmrcContinueButton,
             'noFacebookContinueButton' => $noFacebookContinueButton,
             'noGithubContinueButton' => $noGithubContinueButton,
             'noGoogleContinueButton' => $noGoogleContinueButton,

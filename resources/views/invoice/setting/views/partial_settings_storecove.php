@@ -50,7 +50,7 @@ use Yiisoft\Html\Html;
                             </label>
                             <?php $body['settings[storecove_legal_entity_id]'] = $s->getSetting('storecove_legal_entity_id'); ?>
                             <input type="text" name="settings[storecove_legal_entity_id]" id="storecove_legal_entity_id"
-                                   class="form-control" required
+                                   class="form-control" 
                                    value="<?= $body['settings[storecove_legal_entity_id]']; ?>">
                         </div>
                     </div>

@@ -23,6 +23,7 @@ use App\Invoice\TaxRate\TaxRateRepository as TR;
 //use App\Invoice\Libraries\Sumex;
 use App\Service\WebControllerService;
 use App\User\UserService;
+use Ramsey\Uuid\Uuid;
 // Yii
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Cache\ArrayCache;
@@ -46,6 +47,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Miscellaneous
+use DateTimeImmutable;
 use DateTimeZone;
 
 final class SettingController extends BaseController
@@ -184,6 +186,7 @@ final class SettingController extends BaseController
                 'crypt' => $crypt,
             ]),
             'mpdf' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),
+            'mtd' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_making_tax_digital'),
             'projects_tasks' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
             'vat_registered' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
             'peppol_electronic_invoicing' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol', [
@@ -267,6 +270,34 @@ final class SettingController extends BaseController
             }
         }
         return $this->viewRenderer->render('tab_index', $parameters);
+    }
+            
+    /**
+     * @see src\Invoice\Asset\rebuild\js\setting.js
+     * @see resources\views\invoice\setting\views\partial_settings_making_tax_digital.php btn_fph_generate
+     * @param Request $request
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function fphgenerate(Request $request): \Yiisoft\DataResponse\DataResponse
+    {
+        $query_params = $request->getQueryParams();
+        $randomDeviceIdVersion4 = Uuid::uuid4();
+        $deviceId = $randomDeviceIdVersion4->toString();
+        
+        $randomUserIdVersion4 = Uuid::uuid4();
+        $userUuid = $randomUserIdVersion4->toString();
+        return $this->factory->createResponse(Json::encode([
+            'success' => 1,
+            'userAgent' => $query_params['userAgent'],
+            'deviceId' => $deviceId,
+            'width' => $query_params['width'],
+            'height' => $query_params['height'],
+            'scalingFactor' => $query_params['scalingFactor'],
+            'colourDepth' => $query_params['colourDepth'],
+            'timestamp' => (new DateTimeImmutable())->getTimestamp(),
+            'windowSize' => (string)$query_params['windowInnerWidth'] . 'x' . (string)$query_params['windowInnerHeight'],
+            'userUuid' => $userUuid,
+        ]));
     }
 
     /**

@@ -234,6 +234,8 @@ class GeneratorController extends BaseController
                     $result_array = [];
                     /**
                      * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
+                     * @psalm-suppress DeprecatedClass 
+                     * @see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead. 
                      */
                     $response_get_translations = $response->getTranslations();
                     /**

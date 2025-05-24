@@ -32,7 +32,7 @@ use Yiisoft\Html\Html;
                                 <?= $translator->translate('invoice.stop.logging.in'); ?>
                             </label>
                             <?php $body['settings[stop_logging_in]'] = $s->getSetting('stop_logging_in'); ?>
-                            <select name="settings[allow_logging_in]" id="settings[allow_logging_in]" class="form-control">
+                            <select name="settings[stop_logging_in]" id="settings[stop_logging_in]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('i.no'); ?>
                                 </option>
@@ -186,7 +186,7 @@ foreach ($countries as $cldr => $country) { ?>
                     
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="disable_flash_messages_quote">
+                            <label for="settings[disable_flash_messages_quote]">
                                 <?= $translator->translate('invoice.quote.disable.flash.messages'); ?>
                             </label>
                             <?php $body['settings[disable_flash_messages_quote]'] = $s->getSetting('disable_flash_messages_quote'); ?>
@@ -206,7 +206,7 @@ foreach ($countries as $cldr => $country) { ?>
                     
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="disable_flash_messages_inv">
+                            <label for="settings[disable_flash_messages_inv]">
                                 <?= $translator->translate('invoice.invoice.disable.flash.messages'); ?>
                             </label>
                             <?php $body['settings[disable_flash_messages_inv]'] = $s->getSetting('disable_flash_messages_inv'); ?>
@@ -226,7 +226,7 @@ foreach ($countries as $cldr => $country) { ?>
                     
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="signup_automatically_assign_client">
+                            <label for="settings[signup_automatically_assign_client]">
                                 <?= $translator->translate('invoice.invoice.assign.client.on.signup'); ?>
                             </label>
                             <?php $body['settings[signup_automatically_assign_client]'] = $s->getSetting('signup_automatically_assign_client'); ?>
@@ -246,7 +246,7 @@ foreach ($countries as $cldr => $country) { ?>
                     
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="signup_default_age_minimum_eighteen">
+                            <label for="settings[signup_default_age_minimum_eighteen]">
                                 <?= $translator->translate('invoice.invoice.assign.client.on.signup.default.age.minimum.eighteen'); ?>
                             </label>
                             <?php $body['settings[signup_default_age_minimum_eighteen]'] = $s->getSetting('signup_default_age_minimum_eighteen'); ?>

@@ -187,6 +187,53 @@ final readonly class Button
     {
         return $buttonHtml;
     }
+    
+    public function developerSandboxHmrc(UrlGenerator $urlGenerator, string $developerSandboxHmrcAuthUrl, int $stage): string
+    {
+        $stages = [
+            1 => [
+                'stage' => 'Setup',
+                'class' => 'btn btn-danger',
+                'content' => $this->translator->translate('invoice.invoice.continue.with.developer.gov.sandbox.uk.stage1'),
+                'href' => 'login',
+                'tooltip' => 'Hmrc requires multi-factor authentication. Setup Telegram which will send the One-time-password.',
+                'id' => 'btn-stage1'
+            ],
+            2 => [
+                'stage' => 'Send',
+                'class' => 'btn btn-warning',
+                'content' => $this->translator->translate('invoice.invoice.continue.with.developer.gov.sandbox.uk.stage2'),
+                'href' => $urlGenerator->generate('auth/sendOtp'),
+                'tooltip' => 'Send a one-time-password (OTP) 6 digit number via Telegram by clicking here.',
+                'id' => 'btn-stage2'
+            ],
+            3 => [
+                'stage' => 'Continue',
+                'class' => 'btn btn-dark',
+                'content' => $this->translator->translate('invoice.invoice.continue.with.developer.gov.sandbox.uk.stage3'),
+                'href' => $developerSandboxHmrcAuthUrl, 
+                'tooltip' => 'Multi Factor Authentication required by the HMRC successful!',
+                'id' => 'btn-stage3',
+            ]
+        ];
+        
+        return       
+            Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
+                Img::tag()
+                ->src('/img/govuk-opengraph-image.png')
+                ->size(90, 60)
+                ->addClass($stages[$stage]['class'])
+                ->render() . A::tag()
+                ->addAttributes([
+                    'tooltip' => $stages[$stage]['tooltip']
+                ])    
+                ->addClass($stages[$stage]['class'])
+                ->content($stages[$stage]['content'])
+                ->href($stages[$stage]['href'])
+                ->id($stages[$stage]['id'])
+                ->render() .
+            Html::closeTag('div'); 
+    }
 
     public function facebook(string $facebookAuthUrl): string
     {

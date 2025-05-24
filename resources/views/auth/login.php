@@ -15,15 +15,19 @@ use Yiisoft\Html\Tag\Form;
  * @var Yiisoft\Router\UrlGeneratorInterface    $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface  $translator
  * @var Yiisoft\View\WebView                    $this
+ * @var int                                     $sessionOtp
+ * @var string                                  $developerSandboxHmrcAuthUrl
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
  * @var string                                  $govUkAuthUrl 
  * @var string                                  $linkedInAuthUrl
+ * @var string                                  $telegramToken
  * @var string                                  $microsoftOnlineAuthUrl
  * @var string                                  $vkontakteAuthUrl
  * @var string                                  $xAuthUrl
  * @var string                                  $yandexAuthUrl
+ * @var bool                                    $noDeveloperSandboxHmrcContinueButton
  * @var bool                                    $noFacebookContinueButton
  * @var bool                                    $noGithubContinueButton
  * @var bool                                    $noGoogleContinueButton
@@ -49,6 +53,24 @@ $this->setTitle($translator->translate('i.login'));
                 </div>
                 <div class="text-center">
                     <?php $button = new Button($currentRoute, $translator, $urlGenerator); ?>
+                    <?php if ((strlen($developerSandboxHmrcAuthUrl ?: '') > 0) && !$noDeveloperSandboxHmrcContinueButton) { ?>
+                        <br><br>
+                        <?php
+                            // Stage 1: Setup: Telegram must be setup
+                            if ($sessionOtp == 0 && strlen($telegramToken) == 0) {
+                                echo $button->developerSandboxHmrc($urlGenerator, '', 1);
+                            }
+                            // Stage 2: Send and Validate: One-time-password must be sent by Telegram
+                            if ($sessionOtp < 100000 && $sessionOtp >= 0 && strlen($telegramToken) > 0) {
+                                echo $button->developerSandboxHmrc($urlGenerator, 'auth/sendOtp', 2);
+                            }
+                            // Stage 3: Continue: One-time-password 6 digit integer has been sent by Telegram. 6 digit integer has been input by user on form 
+                            if ($sessionOtp > 99999 && strlen($telegramToken) > 0) {
+                                echo $button->developerSandboxHmrc($urlGenerator, $developerSandboxHmrcAuthUrl, 3);
+                            }
+                            
+                        ?>
+                    <?php } ?>
                     <?php if ((strlen($facebookAuthUrl ?: '') > 0) && !$noFacebookContinueButton) { ?>
                         <br><br>
                         <?= $button->facebook($facebookAuthUrl); ?>

@@ -42,9 +42,21 @@ use App\Widget\PageSizeLimiter;
 use App\Widget\SubMenu;
 
 return [
+    'env' => $_ENV['YII_ENV'] ?? '',
+    'server' => [
+        'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
+        'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null, 
+    ],
+    'license' => [
+        'id' => 'invoice_BSD-3-Clause_20250511'
+    ],
+    'product' => [
+        'name' => 'RossAddison Invoice',
+        'version' => 'pre-release',
+    ],
     'mailer' => [
         'adminEmail' => 'admin@example.com',
-        /**
+    /**
      * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
      * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd
      * src/Auth/Controller/ForgotController function forgot
@@ -61,6 +73,12 @@ return [
     'yiisoft/yii-auth-client' => [
         'enabled' => true,
         'clients' => [
+            'developersandboxhmrc' => [
+                'class' => 'Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc::class',
+                'clientId' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '',
+                'clientSecret' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET'] ?? '',
+                'returnUrl' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL'] ?? '',
+            ],
             'facebook' => [
                 'class' => 'Yiisoft\Yii\AuthClient\Client\Facebook::class',
                 'clientId' => $_ENV['FACEBOOK_API_CLIENT_ID'] ?? '',
@@ -128,6 +146,7 @@ return [
             '@assets' => '@root/public/assets',
             '@assetsUrl' => '@baseUrl/assets',
             '@baseUrl' => '',
+            '@hmrc' => '@resources/backend/views/hmrc',
             '@messages' => '@resources/messages',
             '@npm' => '@root/node_modules',
             '@public' => '@root/public',

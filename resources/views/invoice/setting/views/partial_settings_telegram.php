@@ -128,7 +128,7 @@ use Yiisoft\Html\Html;
                 <div class='row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="settings[telegram_webhook_url]" >
+                            <label>
                                 <b><?= $translator->translate('invoice.invoice.telegram.bot.api.webhook.url.this.site'); ?></b>
                             </label>
                             <p><pre><?= $urlGenerator->generateAbsolute('telegram/webhook'); ?></pre></p>                           

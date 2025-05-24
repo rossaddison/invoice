@@ -171,8 +171,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'company'
     ])
-    ->value(Html::encode($form->getCompany() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getCompany() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -183,8 +182,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'address_1'
     ])
-    ->value(Html::encode($form->getAddress_1() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getAddress_1() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -195,8 +193,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'address_2'
     ])
-    ->value(Html::encode($form->getAddress_2() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getAddress_2() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -207,8 +204,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'city'
     ])
-    ->value(Html::encode($form->getCity() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getCity() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -219,8 +215,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'state'
     ])
-    ->value(Html::encode($form->getState() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getState() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -231,8 +226,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'zip'
     ])
-    ->value(Html::encode($form->getZip() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getZip() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -243,8 +237,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'country'
     ])
-    ->value(Html::encode($form->getCountry() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getCountry() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -255,8 +248,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'phone'
     ])
-    ->value(Html::encode($form->getPhone() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getPhone() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -267,8 +259,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'fax'
     ])
-    ->value(Html::encode($form->getFax() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getFax() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -279,8 +270,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'mobile'
     ])
-    ->value(Html::encode($form->getMobile() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getMobile() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -292,8 +282,7 @@ echo Field::select($form, 'language')
         'id' => 'email'
     ])
     ->disabled(true)
-    ->value(Html::encode($form->getUser()?->getEmail() ?? '#'))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getUser()?->getEmail() ?? '#'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -304,8 +293,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'web'
     ])
-    ->value(Html::encode($form->getWeb() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getWeb() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -316,8 +304,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'tax_code'
     ])
-    ->value(Html::encode($form->getTax_code() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getTax_code() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -328,8 +315,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'subscribernumber'
     ])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -340,8 +326,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'iban'
     ])
-    ->value(Html::encode($form->getSubscribernumber() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
          <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -352,8 +337,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'gln'
     ])
-    ->value(Html::encode($form->getGln() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getGln() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -364,8 +348,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'rcc'
     ])
-    ->value(Html::encode($form->getRcc() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getRcc() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -376,8 +359,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'listLimit'
     ])
-    ->value(Html::encode($form->getListLimit() ?? 10))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->value(Html::encode($form->getListLimit() ?? 10));
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
