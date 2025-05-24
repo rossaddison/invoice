@@ -155,7 +155,7 @@ return [
     ->name('site/signupsuccess'),
     Route::methods([Method::GET, Method::POST], '/termsofservice')
     ->action([SiteController::class, 'termsofservice'])
-    ->name('site/termsofservice'),    
+    ->name('site/termsofservice'),
     // Auth
     Route::methods([Method::GET, Method::POST], '/login')
     ->middleware(LimitRequestsMiddleware::class)
@@ -164,7 +164,7 @@ return [
     Route::methods([Method::GET, Method::POST], '/callbackDeveloperGovSandboxHmrc')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackDeveloperGovSandboxHmrc'])
-      ->name('auth/callbackDeveloperGovSandboxHmrc'),  
+      ->name('auth/callbackDeveloperGovSandboxHmrc'),
     Route::methods([Method::GET, Method::POST], '/callbackFacebook')
       ->middleware(LimitRequestsMiddleware::class)
       ->action([AuthController::class, 'callbackFacebook'])
@@ -2111,7 +2111,7 @@ return [
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)
         ->action([SettingController::class, 'fphgenerate'])
-        ->name('setting/fphgenerate'),      
+        ->name('setting/fphgenerate'),
         Route::methods([Method::GET, Method::POST], '/setting/index')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->middleware(Authentication::class)

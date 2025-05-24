@@ -55,7 +55,7 @@ class PdfHelper
         // Get the client language if set : otherwise use the locale as basis
         if ($quote_or_inv instanceof \App\Invoice\Entity\Quote ||
             $quote_or_inv instanceof Inv) {
-            return ($quote_or_inv->getClient()?->getClient_language() ?? $locale_lang);
+            return $quote_or_inv->getClient()?->getClient_language() ?? $locale_lang;
         }
         return '';
     }

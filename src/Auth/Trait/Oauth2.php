@@ -22,7 +22,7 @@ use Yiisoft\Yii\AuthClient\Client\Yandex;
 trait Oauth2
 {
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
-    
+
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
 
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
@@ -42,7 +42,7 @@ trait Oauth2
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
 
     private function initializeOauth2IdentityProviderCredentials(
-        DeveloperSandboxHmrc $developerSandboxHmrc,    
+        DeveloperSandboxHmrc $developerSandboxHmrc,
         Facebook $facebook,
         GitHub $github,
         Google $google,
@@ -77,7 +77,7 @@ trait Oauth2
         $vkontakte->setClientId($this->sR->getOauth2IdentityProviderClientId('vkontakte'));
         $x->setClientId($this->sR->getOauth2IdentityProviderClientId('x'));
         $yandex->setClientId($this->sR->getOauth2IdentityProviderClientId('yandex'));
-        
+
         $developerSandboxHmrc->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('developersandboxhmrc'));
         $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
         $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
@@ -104,19 +104,17 @@ trait Oauth2
         $tokenUrl = $microsoftOnline->getTokenUrlWithTenantInserted($microsoftOnline->getTenant());
         $microsoftOnline->setTokenUrl($tokenUrl);
     }
-    
+
     /**
      * Initialize development or production urls
-     * 
+     *
      * @param sR $sR
      * @param DeveloperSandboxHmrc $developerSandboxHmrc
-     * @return void
      */
     private function initializeOauth2IdentityProviderDualUrls(
-        sR $sR,    
-        DeveloperSandboxHmrc $developerSandboxHmrc,    
-    ): void 
-    {
+        sR $sR,
+        DeveloperSandboxHmrc $developerSandboxHmrc,
+    ): void {
         if ($sR->getEnv() == 'dev') {
             $developerSandboxHmrc->setEnvironment('dev');
         } else {
@@ -143,7 +141,7 @@ trait Oauth2
         // build the token with a timestamp built into it for comparison later
         return null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
     }
-    
+
     private function getDeveloperSandboxHmrcAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);

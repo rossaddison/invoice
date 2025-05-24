@@ -45,10 +45,10 @@ return [
     'env' => $_ENV['YII_ENV'] ?? '',
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
-        'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null, 
+        'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
     ],
     'license' => [
-        'id' => 'invoice_BSD-3-Clause_20250511'
+        'id' => 'invoice_BSD-3-Clause_20250511',
     ],
     'product' => [
         'name' => 'RossAddison Invoice',
@@ -56,7 +56,7 @@ return [
     ],
     'mailer' => [
         'adminEmail' => 'admin@example.com',
-    /**
+        /**
      * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
      * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd
      * src/Auth/Controller/ForgotController function forgot

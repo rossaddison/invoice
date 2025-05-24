@@ -39,8 +39,7 @@ class User
         #[Column(type: 'string(48)')] private string $login,
         #[Column(type: 'string(254)')] private readonly string $email,
         string $password
-    )
-    {
+    ) {
         $this->created_at = new DateTimeImmutable();
         $this->updated_at = new DateTimeImmutable();
         $this->setPassword($password);

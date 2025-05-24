@@ -12,9 +12,8 @@ use Yiisoft\Validator\RulesProviderInterface;
 final class OtpPasswordForm extends FormModel implements RulesProviderInterface
 {
     private string $otpPassword = '';
-    
 
-    public function __construct(   
+    public function __construct(
         private readonly TranslatorInterface $translator
     ) {
     }
@@ -29,7 +28,7 @@ final class OtpPasswordForm extends FormModel implements RulesProviderInterface
         return [
             'otpPassword' => $this->translator->translate('layout.password.otp'),
         ];
-    }   
+    }
 
     /**
      * @return string
@@ -46,15 +45,15 @@ final class OtpPasswordForm extends FormModel implements RulesProviderInterface
     {
         return $this->otpPassword;
     }
-    
+
     #[\Override]
     public function getRules(): array
     {
         return [
-            'otpPassword' => $this->otpPasswordRules()
+            'otpPassword' => $this->otpPasswordRules(),
         ];
     }
-    
+
     /**
      * @return (Required)[]
      *

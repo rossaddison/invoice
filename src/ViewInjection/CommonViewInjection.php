@@ -195,8 +195,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                 'emailSuccessfullySent' => $this->translator->translate('i.email_successfully_sent'),
             ],
             'telegramnotsetup' => [
-                'telegramNotSetup' => $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set')
-            ]
+                'telegramNotSetup' => $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'),
+            ],
         ];
     }
 }
