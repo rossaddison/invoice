@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use Yiisoft\Cache\Cache;
 use Yiisoft\Cache\CacheInterface as YiiCacheInterface;
 use Yiisoft\Cache\File\FileCache;
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Yii\RateLimiter\Storage\SimpleCacheStorage;
 
 return [
