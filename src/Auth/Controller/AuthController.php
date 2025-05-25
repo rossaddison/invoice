@@ -453,7 +453,7 @@ final class AuthController
         TranslatorInterface $translator,
         FormHydrator $formHydrator,
     ): ResponseInterface {
-        if (strlen($this->telegramToken) > 0) {
+        if (strlen($this->telegramToken) > 0 && $this->sR->getSetting('enable_telegram') == '1') {
             $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
             $telegramBotApi = $telegramHelper->getBotApi();
             $chatId = $this->sR->getSetting('telegram_chat_id');
@@ -522,7 +522,12 @@ final class AuthController
         );
     }
 
-    private function getTokenType(string $provider): string
+    /**
+     * @see https://github.com/rossaddison/invoice/discussions/215
+     * @param string $provider
+     * @return string
+     */
+    private function getTokenTypeVersion1(string $provider): string
     {
         return $tokenType = match ($provider) {
             'developersandboxhmrc' => self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN,
@@ -537,6 +542,25 @@ final class AuthController
             'x' => self::X_ACCESS_TOKEN,
             'yandex' => self::YANDEX_ACCESS_TOKEN
         };
+    }
+    
+    /**
+     * 
+     * @param string $provider
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    private function getTokenType(string $provider): string
+    {
+        // Convert provider name to uppercase and build constant name
+        $const = strtoupper($provider) . '_ACCESS_TOKEN';
+        if (!defined(static::class . '::' . $const)) {
+            throw new \InvalidArgumentException("Unknown provider: $provider");
+        }
+        // Dynamic class constant fetch (PHP 8.3+)
+        $value = static::{$const};
+        assert(is_string($value));
+        return $value;
     }
 
     public function callbackX(

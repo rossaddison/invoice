@@ -24,4 +24,4 @@ return [
             'periodInSeconds' => 10,
         ],
     ],
-];
+];   
