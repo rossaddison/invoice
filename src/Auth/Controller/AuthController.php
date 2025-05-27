@@ -543,22 +543,21 @@ final class AuthController
             'yandex' => self::YANDEX_ACCESS_TOKEN
         };
     }
-    
+
     /**
-     * 
      * @param string $provider
-     * @return string
      * @throws \InvalidArgumentException
+     * @return string
      */
     private function getTokenType(string $provider): string
     {
         // Convert provider name to uppercase and build constant name
         $const = strtoupper($provider) . '_ACCESS_TOKEN';
-        if (!defined(static::class . '::' . $const)) {
+        if (!defined(self::class . '::' . $const)) {
             throw new \InvalidArgumentException("Unknown provider: $provider");
         }
         // Dynamic class constant fetch (PHP 8.3+)
-        $value = static::{$const};
+        $value = self::{$const};
         assert(is_string($value));
         return $value;
     }
