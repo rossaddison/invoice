@@ -15,7 +15,7 @@ return [
     CacheInterface::class => FileCache::class,
 
     YiiCacheInterface::class => Cache::class,
-    
+
     SimpleCacheStorage::class => [
         '__construct()' => [Reference::to(CacheInterface::class)],
     ],
