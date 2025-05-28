@@ -527,7 +527,7 @@ final class AuthController
      * @param string $provider
      * @return string
      */
-    private function getTokenTypeVersion1(string $provider): string
+    private function getTokenType(string $provider): string
     {
         return $tokenType = match ($provider) {
             'developersandboxhmrc' => self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN,
@@ -549,7 +549,7 @@ final class AuthController
      * @throws \InvalidArgumentException
      * @return string
      */
-    private function getTokenType(string $provider): string
+    private function getTokenTypeProposed(string $provider): string
     {
         // Convert provider name to uppercase and build constant name
         $const = strtoupper($provider) . '_ACCESS_TOKEN';
