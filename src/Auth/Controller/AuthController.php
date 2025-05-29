@@ -450,7 +450,7 @@ final class AuthController
         ServerRequestInterface $request,
         TranslatorInterface $translator,
         FormHydrator $formHydrator,
-    ): ResponseInterface {        
+    ): ResponseInterface {
         if (strlen($this->telegramToken) > 0 && $this->sR->getSetting('enable_telegram') == '1') {
             $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
             $telegramBotApi = $telegramHelper->getBotApi();
@@ -552,7 +552,7 @@ final class AuthController
         // Map special cases
         $specialMap = [
             'developersandboxhmrc' => 'DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN',
-            'email-verification' => 'EMAIL_VERIFICATION_TOKEN'
+            'email-verification' => 'EMAIL_VERIFICATION_TOKEN',
             // add more if needed
         ];
         if (isset($specialMap[$provider])) {
@@ -560,7 +560,7 @@ final class AuthController
         } else {
             $const = strtoupper($provider) . '_ACCESS_TOKEN';
         }
-        if (!defined(static::class . '::' . $const)) {
+        if (!defined(self::class . '::' . $const)) {
             throw new \InvalidArgumentException("Unknown provider: $provider");
         }
         // Dynamic class constant fetch (PHP 8.3+)
@@ -1893,12 +1893,12 @@ final class AuthController
     {
         return $this->webService->getRedirectResponse('auth/login', ['_language' => 'en']);
     }
-    
-    private function redirectToOneTimePasswordUserNameNotExist() : ResponseInterface
+
+    private function redirectToOneTimePasswordUserNameNotExist(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/onetimepasswordusernamenotexist', ['_language' => 'en']);
-    }   
-        
+    }
+
     private function redirectToTelegramNotSetup(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/telegramnotsetup', ['_language' => 'en']);
