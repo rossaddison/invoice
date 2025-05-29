@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf483530f11d26b35e8fe826aac0ea4b",
+    "content-hash": "4929ce05e778ea5b9bdd523f586cf5ad",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -863,16 +863,16 @@
         },
         {
             "name": "amzn/amazon-pay-api-sdk-php",
-            "version": "2.6.8",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amzn/amazon-pay-api-sdk-php.git",
-                "reference": "15c0193ca07faad2a3c6af8250fef345263bc1ad"
+                "reference": "ed3416f5ae7132bdd9007f6f83f36cb541b83793"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amzn/amazon-pay-api-sdk-php/zipball/15c0193ca07faad2a3c6af8250fef345263bc1ad",
-                "reference": "15c0193ca07faad2a3c6af8250fef345263bc1ad",
+                "url": "https://api.github.com/repos/amzn/amazon-pay-api-sdk-php/zipball/ed3416f5ae7132bdd9007f6f83f36cb541b83793",
+                "reference": "ed3416f5ae7132bdd9007f6f83f36cb541b83793",
                 "shasum": ""
             },
             "require": {
@@ -912,9 +912,9 @@
             ],
             "support": {
                 "issues": "https://github.com/amzn/amazon-pay-api-sdk-php/issues",
-                "source": "https://github.com/amzn/amazon-pay-api-sdk-php/tree/2.6.8"
+                "source": "https://github.com/amzn/amazon-pay-api-sdk-php/tree/2.7.0"
             },
-            "time": "2025-02-27T08:44:05+00:00"
+            "time": "2025-05-29T10:21:22+00:00"
         },
         {
             "name": "braintree/braintree_php",
