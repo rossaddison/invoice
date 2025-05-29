@@ -107,7 +107,7 @@ final class SiteController
     {
         return $this->viewRenderer->render('onetimepasswordsuccess');
     }
-
+   
     public function resetpasswordfailed(): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('resetpasswordfailed');

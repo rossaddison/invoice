@@ -49,6 +49,10 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p><b>29th May 2025</b></p>
+<p>Preparing for TOTP authentication using AegisAuthenticator</p>
+<p>I will be trying to follow Copilot's suggestions on https://github.com/rossaddison/invoice/discussions/219</p>
+<p>https://github.com/beemdevelopment/Aegis</p>
 <p><b>23rd May 2025</b></p>
 <p>Making Tax Digital - UK becomes compulsory on April 2026</p>
 <p>1. Test Fraud Prevention Headers API is functional.<p>

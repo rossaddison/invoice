@@ -25,6 +25,7 @@ use Yiisoft\Router\Route;
 use Yiisoft\Yii\RateLimiter\Counter;
 use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
+use Yiisoft\Yii\RateLimiter\Storage\SimpleCacheStorage;
 use App\Invoice\AllowanceCharge\AllowanceChargeController;
 use App\Invoice\CategoryPrimary\CategoryPrimaryController;
 use App\Invoice\CategorySecondary\CategorySecondaryController;
@@ -207,8 +208,8 @@ return [
     Route::methods([Method::GET, Method::POST], '/sendOtp')
     ->middleware(fn (
         ResponseFactoryInterface $responseFactory,
-        StorageInterface $storage
-    ) => new LimitRequestsMiddleware(new Counter($storage, 3, 3), $responseFactory))
+        SimpleCacheStorage $storage,
+    ) => new LimitRequestsMiddleware(new Counter($storage, 3, 300), $responseFactory))
     ->action([AuthController::class, 'sendOtp'])
     ->name('auth/sendOtp'),
     Route::methods([Method::POST], '/validateOtp')

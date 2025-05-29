@@ -196,8 +196,6 @@ final class AuthController
                         'code_challenge_method' => 'S256',
                     ]
                 ) : '',
-                'sessionOtp' => $this->session->has('otp') ? $this->session->get('otp') : $this->session->set('otp', 0),
-                'telegramToken' => $this->telegramToken,
                 'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
                 'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
                 'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
@@ -448,11 +446,11 @@ final class AuthController
      *
      * @return ResponseInterface
      */
-    public function sendOtp(
+    public function sendOtpViaTelegram(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
         FormHydrator $formHydrator,
-    ): ResponseInterface {
+    ): ResponseInterface {        
         if (strlen($this->telegramToken) > 0 && $this->sR->getSetting('enable_telegram') == '1') {
             $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
             $telegramBotApi = $telegramHelper->getBotApi();
@@ -551,9 +549,18 @@ final class AuthController
      */
     private function getTokenTypeProposed(string $provider): string
     {
-        // Convert provider name to uppercase and build constant name
-        $const = strtoupper($provider) . '_ACCESS_TOKEN';
-        if (!defined(self::class . '::' . $const)) {
+        // Map special cases
+        $specialMap = [
+            'developersandboxhmrc' => 'DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN',
+            'email-verification' => 'EMAIL_VERIFICATION_TOKEN'
+            // add more if needed
+        ];
+        if (isset($specialMap[$provider])) {
+            $const = $specialMap[$provider];
+        } else {
+            $const = strtoupper($provider) . '_ACCESS_TOKEN';
+        }
+        if (!defined(static::class . '::' . $const)) {
             throw new \InvalidArgumentException("Unknown provider: $provider");
         }
         // Dynamic class constant fetch (PHP 8.3+)
@@ -1886,7 +1893,12 @@ final class AuthController
     {
         return $this->webService->getRedirectResponse('auth/login', ['_language' => 'en']);
     }
-
+    
+    private function redirectToOneTimePasswordUserNameNotExist() : ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/onetimepasswordusernamenotexist', ['_language' => 'en']);
+    }   
+        
     private function redirectToTelegramNotSetup(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/telegramnotsetup', ['_language' => 'en']);

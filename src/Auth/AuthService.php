@@ -17,7 +17,7 @@ final readonly class AuthService
         private IdentityRepository $identityRepository,
     ) {
     }
-
+    
     public function login(string $login, string $password): bool
     {
         $user = $this->userRepository->findByLoginWithAuthIdentity($login);
