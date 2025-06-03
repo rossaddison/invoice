@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b6380b98134e6a1fb86d3e0678f8d8d",
+    "content-hash": "a54911eb72cd6271cf8469fa0fa05126",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -16113,21 +16113,21 @@
         },
         {
             "name": "yiisoft/log",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/log.git",
-                "reference": "9d549952f5099a3e3081e11cccb3841c77587dac"
+                "reference": "5d561e9d58dd56fedd9b9e285a7b6730c8985d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/log/zipball/9d549952f5099a3e3081e11cccb3841c77587dac",
-                "reference": "9d549952f5099a3e3081e11cccb3841c77587dac",
+                "url": "https://api.github.com/repos/yiisoft/log/zipball/5d561e9d58dd56fedd9b9e285a7b6730c8985d76",
+                "reference": "5d561e9d58dd56fedd9b9e285a7b6730c8985d76",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.0",
-                "psr/log": "^2.0|^3.0",
+                "psr/log": "^2.0 || ^3.0",
                 "yiisoft/var-dumper": "^1.0"
             },
             "provide": {
@@ -16135,11 +16135,11 @@
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.4",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.2",
-                "roave/infection-static-analysis-plugin": "^1.18",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.25"
+                "phpunit/phpunit": "^9.6.23",
+                "rector/rector": "^2.0.17",
+                "roave/infection-static-analysis-plugin": "^1.25",
+                "spatie/phpunit-watcher": "^1.23.6",
+                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.12"
             },
             "suggest": {
                 "yiisoft/log-target-db": "Allows writing log messages to the database",
@@ -16193,7 +16193,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-07-03T10:13:44+00:00"
+            "time": "2025-06-03T11:34:47+00:00"
         },
         {
             "name": "yiisoft/log-target-file",
