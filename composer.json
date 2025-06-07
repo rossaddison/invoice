@@ -30,7 +30,7 @@
         "ext-uopz": "*",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
         "braintree/braintree_php": "^6.26",
-        "brick/math": "^0.12.3",
+        "brick/math": "^0.13.0",
         "brick/money": "^0.10.1",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.3",
