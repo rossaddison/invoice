@@ -33,16 +33,22 @@ class User
 
     #[HasOne(target: Identity::class)]
     private readonly Identity $identity;
+    
+    #[Column(type: 'bool', default: false)]
+    private bool $tfa_enabled = false;
+    
+    #[Column(type: 'string', nullable: true)]
+    private ?string $totpSecret = '';
 
     public function __construct
     (
         #[Column(type: 'string(48)')] private string $login,
-        #[Column(type: 'string(254)')] private readonly string $email,
-        string $password
+        #[Column(type: 'string(254)')] private readonly string $email,           
+        string $password,
     ) {
         $this->created_at = new DateTimeImmutable();
         $this->updated_at = new DateTimeImmutable();
-        $this->setPassword($password);
+        $this->setPassword($password); 
         // Generate a new auth key on signup
         $this->identity = new Identity();
     }
@@ -93,5 +99,21 @@ class User
     public function getIdentity(): Identity
     {
         return $this->identity;
+    }
+    
+    public function getTotpSecret(): ?string { 
+        return $this->totpSecret;
+    }
+    
+    public function setTotpSecret(?string $secret): void { 
+        $this->totpSecret = $secret;
+    }
+    
+    public function is2FAEnabled(): bool { 
+        return $this->tfa_enabled ; 
+    }
+    
+    public function set2FAEnabled(bool $enabled): void { 
+        $this->tfa_enabled = $enabled;
     }
 }

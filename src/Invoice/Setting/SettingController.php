@@ -216,6 +216,8 @@ final class SettingController extends BaseController
             ]),
             'telegram' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
             ]),
+            // two-factor-authentication 
+            'tfa' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_two_factor_authentication'),
             'bootstrap5' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_bootstrap5', [
                 'alertMessageFontSize' => '10',
                 'alertCloseButtonFontSize' => '10',
@@ -233,6 +235,11 @@ final class SettingController extends BaseController
                     $key === 'tax_rate_decimal_places' && (int)$value !== 2 ? $this->tab_index_change_decimal_column((int)$value) : '';
                     // Deal with existing keys after first installation
                     if ($this->sR->repoCount($key) > 0) {
+                        // Warn if duplicates
+                        if ($this->sR->repoCount($key) > 1) {
+                            $this->flashMessage('danger', $this->translator->translate('invoice.setting.duplicate.key') . $key);
+                            return $this->webService->getRedirectResponse('setting/tab_index');
+                        }
                         if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
                             // Skip all meta fields
                             continue;
@@ -299,7 +306,7 @@ final class SettingController extends BaseController
             'userUuid' => $userUuid,
         ]));
     }
-
+    
     /**
      * @param string $key
      * @param string $value
@@ -329,13 +336,13 @@ final class SettingController extends BaseController
     {
         // Set thousands_separator and decimal_point according to number_format
         $number_formats = $this->sR->number_formats();
-        if ($this->sR->repoCount('decimal_point') > 0) {
+        if ($this->sR->repoCount('decimal_point') == 1) {
             $this->tab_index_settings_save(
                 'decimal_point',
                 $number_formats[$value]['decimal_point'] ?? '.'
             );
         }
-        if ($this->sR->repoCount('thousands_separator') > 0) {
+        if ($this->sR->repoCount('thousands_separator') == 1) {
             $this->tab_index_settings_save(
                 'thousands_separator',
                 $number_formats[$value]['thousands_separator'] ?? ','
@@ -379,11 +386,17 @@ final class SettingController extends BaseController
             'form' => $form,
         ];
         if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody() ?? [];
+            $key = (string)($body['setting_key'] ?? '');
+            if ($this->sR->repoCount($key) == 1) {
+                $this->flashMessage('danger', $this->translator->translate('invoice.setting.duplicate.key').$key);
+                return $this->webService->getRedirectResponse('setting/debug_index');
+            }
             /**
              * @psalm-suppress PossiblyInvalidArgument
              */
-            if ($formHydrator->populateAndValidate($form, $request->getParsedBody())) {
-                $this->settingService->saveSetting($setting, $request->getParsedBody());
+            if ($formHydrator->populateAndValidate($form, $body)) {
+                $this->settingService->saveSetting($setting, $body);
                 $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }

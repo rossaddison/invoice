@@ -152,7 +152,7 @@ $this->beginPage();
         DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
     )->render();
 ?>
-        <?=
+<?=
     $isGuest ? '' : Form::tag()
                     ->post($urlGenerator->generate('auth/logout'))
                     ->csrf($csrf)
@@ -161,7 +161,7 @@ $this->beginPage();
                 . (string)Button::submit(
                     $translator->translate('i.logout', ['login' => Html::encode(null !== $user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
                 )
-                    ->class('btn btn-primary')
+                    ->class('btn btn-xs btn-warning')
                 . '</div>'
                 . Form::tag()->close();
 ?>

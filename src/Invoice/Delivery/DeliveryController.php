@@ -87,7 +87,7 @@ final class DeliveryController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('delivery/_form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -124,7 +124,7 @@ final class DeliveryController extends BaseController
             'deliveries' => $this->deliveries($dR),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('delivery/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
 
     /**
@@ -209,7 +209,7 @@ final class DeliveryController extends BaseController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('delivery/_form', $parameters);
+                return $this->viewRenderer->render('_form', $parameters);
             } // null!==$inv
         }
         return $this->webService->getRedirectResponse('delivery/index');

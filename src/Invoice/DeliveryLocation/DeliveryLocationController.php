@@ -156,7 +156,7 @@ final class DeliveryLocationController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('del/_form', $parameters);
+        return $this->viewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -217,7 +217,7 @@ final class DeliveryLocationController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('del/_form', $parameters);
+            return $this->viewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('del/index');
     }
@@ -263,7 +263,7 @@ final class DeliveryLocationController extends BaseController
                 'del' => $delRepository->repoDeliveryLocationquery((string) $del->getId()),
                 'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
             ];
-            return $this->viewRenderer->render('del/_view', $parameters);
+            return $this->viewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('delivery_location/index');
     }

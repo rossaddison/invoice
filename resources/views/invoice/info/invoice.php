@@ -49,6 +49,18 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
+<p>Retest signing up procedure</p>
+<p><b>12th June 2025</b></p>
+<p>I am not using Telegram for OTP.</p>
+<p>Two Factor Authentication using Aegis Authenticator app for android is functional</p>
+<p>Enable Two Factor Authentication under Settings ... View ... Two Factor Authentication</p>
+<p>Two options exist with this setting: </p>
+<p>Option 1: With disabling: i.e. always show Qr code. Two Factor Authentication is currently enabled for additional security and is disabled after successful authentication for an additional layer of security until the next login. The Qr code will be presented each time after login for a new secret.</p>
+<p>Option 2: Without disabling: i.e. Qr code shown once only during setup. Two Factor Authentication is currently enabled for additional security and is not disabled after successful authentication. The Qr code will not be presented each time after logging in after setting up.</p>
+<p>When tfa starts, a new permission noEntryToBaseController is created. This prevents access to the BaseController</p>
+<p>As soon as tfa ends, a new permission entryToBaseController is created. This remains until logging out.</p>
+<p>Logging-in also initializes these permissions. See functions tfaNotEnabledUnblockBaseController and tfaIsEnabledBlockBaseController</p>
+<p>Next: Docker Implementation and Testing</p>
 <p><b>29th May 2025</b></p>
 <p>Preparing for TOTP authentication using AegisAuthenticator</p>
 <p>I will be trying to follow Copilot's suggestions on https://github.com/rossaddison/invoice/discussions/219</p>
@@ -61,7 +73,6 @@
 <p>1b. Step 2. Reports ... Test Fraud Prevention Headers API. </p>
 <p>2. HmrcController.php has been setup in the backend folder and will include other API implementations. </p>   
 <p>3. https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server
-<p>Next: Docker Implementation and Testing</p>
 <p><b>26th April 2025</b></p>
 <p>Retested oauth2 with rossaddison/yii-auth-client and introduced a gov uk oauth2 which has not been tested.</p>
 <p><b>16th April 2025</b></p>

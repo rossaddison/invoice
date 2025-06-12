@@ -30,6 +30,7 @@ declare(strict_types=1);
  * @var string $qrcode
  * @var string $active
  * @var string $telegram
+ * @var string $tfa 
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
@@ -104,6 +105,9 @@ echo $alert;
     </li>
     <li class="<?= 'nav-item'. ($active == 'mtd' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'mtd' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-mtd" style="text-decoration: none"><?= $translator->translate('invoice.mtd'); ?> </button>
+    </li>
+    <li class="<?= 'nav-item'. ($active == 'tfa' ? ' active' : ''); ?>" role="presentation">
+        <button class="<?= 'nav-link'. ($active == 'tfa' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-tfa" style="text-decoration: none"><?= $translator->translate('invoice.invoice.two.factor.authentication'); ?> </button>
     </li>
 </ul>
 
@@ -192,6 +196,10 @@ echo $alert;
             
             <div id="settings-mtd" class="<?= 'tab-pane'. ($active == 'mtd' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-mtd">
                 <?= $mtd; ?>
+            </div>
+            
+            <div id="settings-tfa" class="<?= 'tab-pane'. ($active == 'tfa' ? ' active' : ''); ?>" role="tabpanel" aria-labelledby="settings-tfa">
+                <?= $tfa; ?>
             </div>
             
         </div>

@@ -16,10 +16,10 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 abstract class BaseController
 {
-    use FlashMessage;
+    use FlashMessage;    
 
     // New property for controller name
-    protected string $controllerName = 'invoice';
+    protected string $controllerName = 'base';
 
     protected Flash $flash;
     protected ViewRenderer $viewRenderer;
@@ -57,18 +57,18 @@ abstract class BaseController
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/templates/soletrader/main.php');
-        } elseif ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+        } elseif ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') && !$this->userService->hasPermission('noEntryToBaseController') && $this->userService->hasPermission('entryToBaseController')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/guest.php');
-        } elseif ($this->userService->hasPermission('editInv')) {
+        } elseif ($this->userService->hasPermission('editInv') && !$this->userService->hasPermission('noEntryToBaseController') && $this->userService->hasPermission('entryToBaseController')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/invoice.php');
-        }
-    }
-
-    /**
+        } 
+    }        
+    
+   /**
      * Render a view with common parameters.
      *
      * @param string $view

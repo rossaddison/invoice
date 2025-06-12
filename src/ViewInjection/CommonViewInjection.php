@@ -172,14 +172,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                 'oauth2callbackresultunauthorised' => $this->translator->translate('layout.page.not-authorised'),
             ],
             'onetimepassworderror' => [
-                'onetimePasswordError' => $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'),
-            ],
-            'onetimepasswordfailure' => [
-                'onetimePasswordFailure' => $this->translator->translate('invoice.invoice.telegram.bot.api.otp.notification.failure'),
-            ],
-            'onetimepasswordsuccess' => [
-                'onetimePasswordSuccess' => $this->translator->translate('invoice.invoice.telegram.bot.api.otp.notification.success'),
-            ],
+                'onetimePasswordError' => $this->translator->translate('invoice.invoice.two.factor.authentication.error'),
+            ],            
             'resetpasswordfailed' => [
                 'resetPasswordFailed' => $this->translator->translate('i.password_reset_failed'),
             ],
@@ -193,9 +187,6 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             ],
             'signupsuccess' => [
                 'emailSuccessfullySent' => $this->translator->translate('i.email_successfully_sent'),
-            ],
-            'telegramnotsetup' => [
-                'telegramNotSetup' => $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'),
             ],
         ];
     }

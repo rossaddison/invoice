@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Auth\Asset\AuthAegisTotpKeypadAsset;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
@@ -64,6 +65,7 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var string $title
  */
 $assetManager->register(AppAsset::class);
+$assetManager->register(AuthAegisTotpKeypadAsset::class);
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -292,7 +294,7 @@ $this->setTitle($title);
                     . Button::submit(
                         $translator->translate('i.logout', ['login' => Html::encode(null !== $user ? $user->getLogin() : '')])
                     )
-                    ->class('btn btn-primary')
+                    ->class('btn btn-xs btn-danger')
                     . '</div>'
                     . Form::tag()->close(),
             encodeLabel: false,

@@ -7,11 +7,11 @@ namespace App\Auth\Form;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\RulesProviderInterface;
 
-final class OtpPasswordForm extends FormModel implements RulesProviderInterface
+final class TwoFactorAuthenticationVerifyLoginForm extends FormModel
 {
-    private string $otpPassword = '';
+    #[Required]
+    private string $code = '';
 
     public function __construct(
         private readonly TranslatorInterface $translator
@@ -21,36 +21,35 @@ final class OtpPasswordForm extends FormModel implements RulesProviderInterface
     /**
      * @return string[]
      *
-     * @psalm-return array{otpPassword: string}
+     * @psalm-return array{code: string}
      */
     public function getAttributeLabels(): array
     {
         return [
-            'otpPassword' => $this->translator->translate('layout.password.otp'),
+            'code' => $this->translator->translate('layout.password.otp'),
         ];
     }
 
     /**
      * @return string
      *
-     * @psalm-return 'OtpPassword'
+     * @psalm-return 'TwoFactorAuthenticationVerifyLogin'
      */
     #[\Override]
     public function getFormName(): string
     {
-        return 'OtpPassword';
+        return 'TwoFactorAuthenticationVerifyLogin';
     }
 
-    public function getOtpPassword(): string
+    public function getCode(): string
     {
-        return $this->otpPassword;
+        return $this->code;
     }
-
-    #[\Override]
+    
     public function getRules(): array
     {
         return [
-            'otpPassword' => $this->otpPasswordRules(),
+            'code' => $this->codeRules(),
         ];
     }
 
@@ -59,7 +58,7 @@ final class OtpPasswordForm extends FormModel implements RulesProviderInterface
      *
      * @psalm-return list{Required}
      */
-    private function otpPasswordRules(): array
+    private function codeRules(): array
     {
         return [
             new Required(),

@@ -145,7 +145,7 @@ if (null !== ($number) && null !== $id) {
             'quote-view-label-switch-id',
             '16'
         ) : '';
-?>    
+        ?>    
         <div class="options btn-group">
             <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>

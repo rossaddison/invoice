@@ -94,7 +94,19 @@ $this->setTitle($translator->translate('i.login'));
                         <?= $button->yandex($yandexAuthUrl ?: ''); ?>
                     <?php } ?>       
                 </div>
-                <div class="card-body p-5 text-center">
+                <?php if (($s->getSetting('enable_tfa') == '1')) { ?>
+                <div class="card-body p-2 text-center">
+                        <?=         
+                            Html::tag('span', $s->getSetting('enable_tfa_with_disabling') == '1' ?
+                                    $translator->translate('invoice.invoice.two.factor.authentication.enabled.with.disabling') :
+                                    $translator->translate('invoice.invoice.two.factor.authentication.enabled.without.disabling'), 
+                            [
+                                'class' => 'badge bg-primary',
+                                'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
+                            ]); ?>
+                </div>
+                <?php } ?>
+                <div class="card-body p-2 text-center">
                     <?= Form::tag()
                         ->post($urlGenerator->generate('auth/login'))
                         ->class('form-floating')
@@ -110,26 +122,28 @@ $this->setTitle($translator->translate('i.login'));
                         ->addInputAttributes(['autocomplete' => 'current-password'])
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password'))
-?>
+                    ?>
                     <?= Field::checkbox($formModel, 'rememberMe')
-    ->containerClass('form-check form-switch text-start mt-2')
-    ->inputClass('form-check-input form-control')
-    ->label($translator->translate('layout.remember'))
-    ->inputLabelClass('form-check-label') ?>
+                        ->containerClass('form-check form-switch text-start mt-2')
+                        ->inputClass('form-check-input form-control')
+                        ->label($translator->translate('layout.remember'))
+                        ->inputLabelClass('form-check-label') 
+                    ?>
                     <?= Field::submitButton()
-    ->buttonId('login-button')
-    ->buttonClass('btn btn-primary')
-    ->name('login-button')
-    ->content($translator->translate('layout.submit')) ?>
+                        ->buttonId('login-button')
+                        ->buttonClass('btn btn-primary')
+                        ->name('login-button')
+                        ->content($translator->translate('layout.submit')) 
+                    ?>
                     <?= Form::tag()->close() ?>
                     <?= Html::br(); ?>
                     <?= A::tag()
-    ->attribute('style', 'color:#999;text-decoration:none')
-    ->addClass('my-1 mx-0')
-    ->href($urlGenerator->generate('auth/forgotpassword'))
-    ->content($translator->translate('i.forgot_your_password'))
-    ->render();
-?>
+                        ->attribute('style', 'color:#999;text-decoration:none')
+                        ->addClass('my-1 mx-0')
+                        ->href($urlGenerator->generate('auth/forgotpassword'))
+                        ->content($translator->translate('i.forgot_your_password'))
+                        ->render();
+                    ?>
                 </div>
             </div>
         </div>

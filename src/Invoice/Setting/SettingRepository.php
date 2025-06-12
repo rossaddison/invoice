@@ -70,8 +70,8 @@ final class SettingRepository extends Select\Repository
     public function repoCount(string $setting_key): int
     {
         return $this->select()
-                      ->where(['setting_key' => $setting_key])
-                      ->count();
+                    ->where(['setting_key' => $setting_key])
+                    ->count();
     }
 
     /**
@@ -153,8 +153,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#errors
      * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-multi-factor
-     * Telegram is used to deliver the OTP (one-time-password)
-     * @param string $mfaType
+     * @param string $mfaType e.g. TOTP (Timed One Time Password)
      * @param string $uniqueReference
      * @return string
      */
@@ -419,28 +418,6 @@ final class SettingRepository extends Select\Repository
             return $positiveInt = $defaultListLimit;
         }
         return  1;
-    }
-
-    /**
-     * Save the new setting key and make it available
-     *
-     * @param string $key
-     * @return string
-     */
-    public function add_setting_key(string $key): string
-    {
-        // Add the new setting key
-        // eg. if a new payment gateway has been added
-        // to the Payment Gateway array save all the new keys
-        // and values of the array
-        $new_setting = new Setting();
-        $new_setting->setSetting_key($key);
-        // Default value is ''
-        $new_setting->setSetting_value('');
-        $this->save($new_setting);
-        $this->load_settings();
-        /** @var string $this->settings[$key] */
-        return $this->settings[$key];
     }
 
     /**
@@ -1834,6 +1811,10 @@ final class SettingRepository extends Select\Repository
                 'This setting is enabled by default under the InvoiceController',
                 'where' => 'src/Invoice/Helpers/MailerHelper/yii_mailer_send function variable email_attachment_with_pdf_template. ' .
                 'Run with view/invoice Options...Send  using MailerInvForm',
+            ],
+            'enable_tfa' => [
+                'why' => 'Two Factor Authentication is necessary to provide an additional layer of security i.e. User logs in and then verifies  e.g. fraud prevention headers require Timed One Time Password (TOTP)',
+                'where' => 'src/Auth/Controller/AuthController function login augmenting src/Invoice/Setting/SettingRepository/function fphGeneratorMultiFactor'
             ],
             'enable_vat_registration' => [
                 'why' => 'VAT uses line item tax and applying Invoice Taxes (whether before line item or after line tax) are disabled. Hence the tax_total field in the InvAmount Entity will always equal zero if VAT is used. ' .

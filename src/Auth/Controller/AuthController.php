@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
+
 use App\Auth\AuthService;
 use App\Auth\Form\LoginForm;
-use App\Auth\Form\OtpPasswordForm;
-use App\Auth\TokenRepository;
+use App\Auth\Form\TwoFactorAuthenticationSetupForm;
+use App\Auth\Form\TwoFactorAuthenticationVerifyLoginForm;
+use App\Auth\Trait\Callback;
 use App\Auth\Trait\Oauth2;
+use App\Auth\TokenRepository;
 use App\Invoice\Entity\UserInv;
-use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
 use App\User\User;
 use App\User\UserRepository;
+use OTPHP\TOTP;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Ramsey\Uuid\Uuid;
-use Vjik\TelegramBot\Api\FailResult;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Input\Http\Attribute\Parameter\Query;
+use Yiisoft\Http\Method;
+use Yiisoft\Json\Json;
 use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
@@ -51,8 +55,9 @@ final class AuthController
 {
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
+    use Callback;
 
-    private Flash $flash;
+    private Flash $flash;    
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
@@ -65,9 +70,10 @@ final class AuthController
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     public string $telegramToken;
-
+    
     public function __construct(
         private readonly AuthService $authService,
+        private DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
         private ViewRenderer $viewRenderer,
         private Manager $manager,
@@ -86,6 +92,7 @@ final class AuthController
         private UrlGenerator $urlGenerator,
         private LoggerInterface $logger
     ) {
+        $this->factory = $factory;
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         $this->manager = $manager;
         $this->session = $session;
@@ -127,6 +134,7 @@ final class AuthController
         CookieLogin $cookieLogin,
         // use the 'active' field of the extension table userinv to verify that the user has been made active through e.g. email verificaiton
         UserInvRepository $uiR,
+        UserRepository $uR,    
         TokenRepository $tR,
     ): ResponseInterface {
         if (!$this->authService->isGuest()) {
@@ -140,34 +148,50 @@ final class AuthController
             if (null !== $userId) {
                 $userInv = $uiR->repoUserInvUserIdquery($userId);
                 if (null !== $userInv) {
-                    /**
-                     * @see UserInvController function signup where the userinv active field is made active i.e. true upon a positive email verification
-                     */
-                    $status = $userInv->getActive();
-                    /**
-                     * The admin does not automatically have a 'userinv account with status as active' IF
-                     * signing up NOT by email e.g by localhost  . The below code, '$userId == 1', => makes allowances for this.
-                     * @see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
-                     *      and the userinv account's status field is made active i.e. 1
-                     */
-                    if ($status || $userId == 1) {
-                        $userId == 1 ? $this->disableToken($tR, '1', 'email-verification') : '';
-                        if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
-                            return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
+                    $user = $userInv->getUser();
+                    if (null!==$user) {
+                        // if using two-factor-authentication
+                        if ($this->sR->getSetting('enable_tfa') == '1') {
+                            $this->tfaIsEnabledBlockBaseController($userId);
+                            $enabled = $user->is2FAEnabled();
+                            // setup if not enabled already
+                            if ($enabled == false) {
+                                $this->session->set('pending_2fa_user_id', $userId);
+                                // show the setup form so that the user can register
+                                return $this->webService->getRedirectResponse('auth/showSetup');
+                            }
+                            $this->session->set('verified_2fa_user_id', $userId);
+                            return $this->webService->getRedirectResponse('auth/verifyLogin');
                         }
-                        return $this->redirectToInvoiceIndex();
-                    }
-                    /**
-                     * If the observer user is signing up WITHOUT email (=> userinv account status is 0), e.g. by console ... yii userinv/assignRole observer 2,
-                     * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
-                     * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
-                     */
-                    $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
-                    return $this->redirectToAdminMustMakeActive();
+                        $this->tfaNotEnabledUnblockBaseController($userId);
+                        /**
+                         * @see UserInvController function signup where the userinv active field is made active i.e. true upon a positive email verification
+                         */
+                        $status = $userInv->getActive();
+                        /**
+                         * The admin does not automatically have a 'userinv account with status as active' IF
+                         * signing up NOT by email e.g by localhost  . The below code, '$userId == 1', => makes allowances for this.
+                         * @see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
+                         *      and the userinv account's status field is made active i.e. 1
+                         */
+                        if ($status || $userId == 1) {
+                            $userId == 1 ? $this->disableToken($tR, '1', 'email-verification') : '';
+                            if ($identity instanceof CookieLoginIdentityInterface && $loginForm->getPropertyValue('rememberMe')) {
+                                return $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex());
+                            }
+                            return $this->redirectToInvoiceIndex();
+                        }
+                        /**
+                         * If the observer user is signing up WITHOUT email (=> userinv account status is 0), e.g. by console ... yii userinv/assignRole observer 2,
+                         * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
+                         * Also the token that was originally assigned on signup, must now be 'disabled' because the admin is responsible for making the user active
+                         */
+                        $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
+                        return $this->redirectToAdminMustMakeActive();
+                    }    
                 }
-            }
-            $this->authService->logout();
-            return $this->redirectToMain();
+            }            
+            $this->logout($uR, $uiR);
         }
         $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
         $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
@@ -249,7 +273,218 @@ final class AuthController
             ]
         );
     }
+    
+    /**
+     * Step 1: Download Aegis 2FA app https://play.google.com/store/apps/details?id=com.beemdevelopment.aegis&hl=en-US&pli=1 onto your mobile
+     * Step 2: Add a new Qr code by pressing the plus sign at the bottom right corner
+     * Step 3: Scan the Qr code generated by the setup form with your mobile
+     *         or enter the long key into the android app 
+     *         Your app may ask you to overwrite your previous entry or you can 
+     *         hold down on your current entry (the letter next to the 6 digit code)
+     *         and delete it. 
+     * Step 4: Enter the TOTP (Timed One Time Password) within the limited time
+     * 
+     * @param ServerRequestInterface $request
+     * @param SessionInterface $session
+     * @param TranslatorInterface $translator
+     * @param UserRepository $userRepository
+     * @return ResponseInterface
+     */
+    public function showSetup(
+        ServerRequestInterface $request,
+        SessionInterface $session,
+        TranslatorInterface $translator,        
+        UserRepository $userRepository,    
+    ): ResponseInterface {
+        $userId = (int)$session->get('pending_2fa_user_id');
+        $user = $userRepository->findById((string)$userId);
+        if (null!==$user) {
+            $email = $user->getEmail();
+            if (strlen($email) > 0) {
+                $totp = TOTP::create();
+                $totp->setLabel($email);
+                $secret = $totp->getSecret();
+                $session->set('2fa_temp_secret', $secret);
+                $qrContent = $totp->getProvisioningUri();
+                $qrDataUri = $this->generateQrDataUri($qrContent);
+                $form = new TwoFactorAuthenticationSetupForm($translator);                
+                return $this->viewRenderer->render('setup', [
+                    'qrDataUri' => $qrDataUri,
+                    'totpSecret' => $secret,
+                    'error' => '',
+                    'formModel' => $form
+                ]);
+            }
+        }    
+        return $this->redirectToOneTimePasswordError();
+    }
+    
+    /**
+     * @see src\Auth\Asset\rebuild\js\keypad_copy_to_clipboard.js
+     * @return \Yiisoft\DataResponse\DataResponse
+     */
+    public function ajaxShowSetup(ServerRequestInterface $request): \Yiisoft\DataResponse\DataResponse
+    {
+        $params = $request->getQueryParams();
+        $parameters = [
+            'success' => 1,
+            'secretInputType' => $params['secretInputType'],
+            'eyeIconClass' => $params['eyeIconClass'],
+        ];
+        return $this->factory->createResponse(Json::encode($parameters));
+    }
+    
+    /**
+     * On successful setup, the User table's 'tfa_enabled' field will be set to true
+     * and the totp_secret will be set for function's verifyLogin's use 
+     * 
+     * During the verifyLogin function TFA is disabled
+     *  
+     * Verify 2FA code during setup process. 
+     * @param ServerRequestInterface $request
+     * @param SessionInterface $session
+     * @param TranslatorInterface $translator
+     * @param UserRepository $userRepository
+     * @return ResponseInterface
+     */
+    public function verifySetup(
+        ServerRequestInterface $request,
+        SessionInterface $session,
+        TranslatorInterface $translator,
+        UserRepository $userRepository 
+    ): ResponseInterface { 
+        $pendingUserId = (int)$session->get('pending_2fa_user_id');  
+        $body = $request->getParsedBody() ?? [];
+        if (is_array($body)) {
+            $inputCode = (string)($body['text'] ?? '');
+            if ($pendingUserId > 0) {
+                $user = $userRepository->findById((string)$pendingUserId);
+                if (null!==$user) {
+                    /** @var mixed $tempSecretRaw */
+                    $tempSecretRaw = $session->get('2fa_temp_secret');
+                    $tempSecret = (\is_string($tempSecretRaw) && $tempSecretRaw !== '') ? $tempSecretRaw : null;
+                    $error = '';
+                    if ($tempSecret === null) {
+                        $error = $translator->translate('invoice.invoice.two.factor.authentication.no.secret.generated');
+                    } elseif (!$this->isValidTotpCode($inputCode)) {
+                        $error = $translator->translate('invoice.invoice.two.factor.authentication.invalid.code.format');
+                    } else {
+                        /** @var non-empty-string $tempSecret */
+                        $totp = TOTP::create($tempSecret);
+                        if ($totp->verify($inputCode)) {
+                            $user->setTotpSecret($tempSecret);
+                            $user->set2FAEnabled(true);
+                            $userRepository->save($user);
+                            $session->remove('2fa_temp_secret'); 
+                            $this->session->remove('pending_2fa_user_id');
+                            $this->session->set('verified_2fa_user_id', $pendingUserId);
+                            return $this->webService->getRedirectResponse('auth/verifyLogin');
+                        }
+                        if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
+                            $error = $translator->translate('invoice.invoice.two.factor.authentication.attempt.failure.must.setup');
+                        } else {
+                            $error = $translator->translate('invoice.invoice.two.factor.authentication.attempt.failure');
+                        }   
+                    }
 
+                    // Re-render the setup page with error and QR code
+                    $safeSecret = ($tempSecret !== null) ? $tempSecret : TOTP::create()->getSecret();
+                    /** @var non-empty-string $safeSecret */
+                    $totp = TOTP::create($safeSecret);
+                    // Set the label again here!
+                    $totp->setLabel($user->getEmail());
+
+                    $qrContent = $totp->getProvisioningUri();
+                    $qrDataUri = $this->generateQrDataUri($qrContent);
+
+                    return $this->viewRenderer->render('setup', [
+                        'qrDataUri' => $qrDataUri,
+                        'totpSecret' => $totp->getSecret(),
+                        'error' => $error,
+                        'formModel' => new TwoFactorAuthenticationSetupForm($translator)
+                    ]);
+                }
+            }
+        }
+        return $this->redirectToOneTimePasswordError();
+    }
+    
+    /**
+     * Step 4: Enter a different 6-digit code than the setup 6-digit code but with the same secret
+     * derived from the original Qr Code. i.e. do not scan in an additional Qr Code.
+     * 
+     * Verify 2FA code during login process if the User:tfa_enabled field is true
+     * and the User:totpsecret field has been setup during the qrcode setup. 
+     * 
+     * Disable TFA after verification for additional layer of security.
+     * 
+     * @param ServerRequestInterface $request
+     * @param SessionInterface $session
+     * @param TranslatorInterface $translator
+     * @param UserRepository $userRepository
+     * @return ResponseInterface
+     */
+    public function verifyLogin(
+        ServerRequestInterface $request,
+        SessionInterface $session,
+        TranslatorInterface $translator,
+        UserRepository $userRepository,
+    ): ResponseInterface {
+        $verifiedUserId = (int)$session->get('verified_2fa_user_id');
+        $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
+        $parameters = [
+            'title' => $translator->translate('invoice.invoice.two.factor.authentication.form.verify.login'),
+            'actionName' => 'auth/verifyLogin',
+            'actionArguments' => [],
+            'errors' => [],
+            'error' => '',
+            'formModel' => $form,
+        ];
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody();
+            if (is_array($body)) {
+                $inputCode = (string)($body['text'] ?? '');
+                if ($verifiedUserId > 0) {
+                    $user = $userRepository->findById((string)$verifiedUserId);
+                    if (null!==$user) {
+                        $totpSecretRaw = $user->getTotpSecret();
+                        $totpSecret = (\is_string($totpSecretRaw) && $totpSecretRaw !== '') ? $totpSecretRaw : null;
+                        $error = '';
+                        if ($totpSecret !== null && $this->isValidTotpCode($inputCode)) {
+                            /** @var non-empty-string $totpSecret */
+                            $totp = TOTP::create($totpSecret);
+                            if ($totp->verify($inputCode)) {
+                                if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
+                                    $user->setTotpSecret('');
+                                    $user->set2FAEnabled(false);
+                                    $userRepository->save($user);
+                                }
+                                $this->session->remove('pending_2fa_user_id');
+                                $roles = $this->manager->getRolesByUserId($verifiedUserId);
+                                foreach ($roles as $role) {
+                                    $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
+                                    $this->manager->addChild($role->getName(), 'entryToBaseController');
+                                }
+                                /** @see HmrcController function fphValidate */
+                                $this->session->set('otp', $inputCode);
+                                $this->session->set('otpRef', TokenMask::apply($totpSecret));
+                                return $this->redirectToInvoiceIndex();
+                            }
+                            $error = $translator->translate('invoice.invoice.two.factor.authentication.attempt.failure');
+                        } else {
+                            $error = $translator->translate('invoice.invoice.two.factor.authentication.missing.code.or.secret'); 
+                        }
+                        return $this->viewRenderer->render('verify', [
+                            'error' => $error,
+                            'formModel' => $form,
+                        ]);
+                    } 
+                } 
+            }
+        }
+        return $this->viewRenderer->render('verify', $parameters);
+    }
+    
     public function disableToken(
         TokenRepository $tR,
         ?string $userId = null,
@@ -262,1539 +497,6 @@ final class AuthController
                 $tR->save($token);
             }
         }
-    }
-
-    public function callbackDeveloperGovSandboxHmrc(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('developergovsandboxhmrc', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $this->developerSandboxHmrc->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state are both present
-        }
-
-        $codeVerifier = (string)$this->session->get('code_verifier');
-        /**
-         * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
-         * For user-restricted access, the 'Authorization Code' Grant Type is used
-         * Use the code received, to get an access_token
-         */
-        $oAuthToken = $this->developerSandboxHmrc->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params = [
-            'redirect_uri' => $this->developerSandboxHmrc->getOauth2ReturnUrl(),
-            'code_verifier' => $codeVerifier,
-            'grant_type' => 'authorization_code',
-        ]);
-
-        // e.g. string '476425f97e53ca1124161e491bee384e'
-        $this->session->set('hmrc_access_token', $oAuthToken->getParam('access_token'));
-        // e.g. string 'bearer'
-        $this->session->set('hmrc_token_type', $oAuthToken->getParam('token_type'));
-        // default 'expires_in' int 14400
-        $this->session->set('hmrc_token_expires', time() + (int)$oAuthToken->getParam('expires_in'));
-        // e.g. read:self-assessment write:self-assessment'
-        $this->session->set('hmrc_scope', $oAuthToken->getParam('scope'));
-        // e.g. string 'cbe7c4f01a6bc55034237718d3e4ded2'
-        $this->session->set('hmrc_refresh_token', $oAuthToken->getParam('refresh_token'));
-
-        if ($this->sR->getEnv() == 'dev') {
-            /**
-             * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc function getTestUserArray;
-             */
-            $requestBody = [
-                'serviceNames' => ['national-insurance'],
-            ];
-
-            $userArray = $this->developerSandboxHmrc->createTestUserIndividual($oAuthToken, $requestBody);
-        } else {
-            exit(1);
-        }
-
-        /**
-         * @var int $userArray['userId']
-         */
-        $hmrcId = $userArray['userId'] ?? 0;
-
-        if ($hmrcId > 0) {
-            // the id will be removed in the logout button
-            $login = 'hmrc' . (string)$hmrcId;
-            /**
-             * Depending on the environment i.e. prod or dev, getApiBaseUrl1() will vary between 'https://api.service.hmrc.gov.uk' or 'https://test-api.service.hmrc.gov.uk' respectively
-             *
-             * @var string $userArray['emailAddress']
-             */
-            $email = $userArray['emailAddress'] ?? 'noemail' . $login . '@' . str_replace('https://', '', $this->developerSandboxHmrc->getApiBaseUrl1());
-            $password = Random::string(32);
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'developersandboxhmrc') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'developersandboxhmrc');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getDeveloperSandboxHmrcAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getDeveloperSandboxHmrcAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'developersandboxhmrc');
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    private function setSessionOTP(): void
-    {
-        $otp = rand(100000, 999999);
-        $randomUuidVersion4 = Uuid::uuid4();
-        $otpRef = $randomUuidVersion4->toString();
-        $this->session->set('otp', $otp);
-        $this->session->set('otpRef', $otpRef);
-    }
-
-    /**
-     * Used in logout function
-     */
-    private function removeSessionOTP(): void
-    {
-        $this->session->remove('otp');
-        $this->session->remove('otpRef');
-    }
-
-    /**
-     * This function is used only when the session otp value is out of range i.e. not a 6 digit number
-     * because Telegram has just been setup or the otp value has been removed
-     *
-     * Used in: ..resource/views/auth/login.php Stage 2.
-     *
-     * Stage 1: Setup: Telegram must be setup before OTP can be sent
-     * Stage 2: Send and Validate: One-time-password must be sent by Telegram if not a 6 digit integer and Telegram has been setup
-     *          ..resource/views/auth/login.php if ($sessionOtp < 100000 && $sessionOtp >= 0 && strlen($telegramToken) > 0)
-     *          {
-     *              echo $button->developerSandboxHmrc($urlGenerator, 'auth/sendOtp', 2);
-     *          }
-     * Stage 3: Continue: One-time-password 6 digit integer has been sent by Telegram.
-     *          6 digit integer has been input by user on form
-     *          MultifactorAuthentication complete: Fraud prevention headers can be submitted
-     *
-     * @return ResponseInterface
-     */
-    public function sendOtpViaTelegram(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        FormHydrator $formHydrator,
-    ): ResponseInterface {
-        if (strlen($this->telegramToken) > 0 && $this->sR->getSetting('enable_telegram') == '1') {
-            $telegramHelper = new TelegramHelper($this->telegramToken, $this->logger);
-            $telegramBotApi = $telegramHelper->getBotApi();
-            $chatId = $this->sR->getSetting('telegram_chat_id');
-            $telegramToken = $this->sR->getSetting('telegram_token');
-            if ((strlen($chatId) > 0) && strlen($telegramToken) > 0) {
-                // session otp values are out of range therefore set
-                $this->setSessionOTP();
-                // Never send the OTP reference as well
-                $failResultSendMessage = $telegramBotApi->sendMessage($chatId, (string)$this->session->get('otp'));
-                if (!$failResultSendMessage instanceof FailResult) {
-                    return $this->validateOtp($request, $translator, $formHydrator);
-                }
-                $this->removeSessionOTP();
-                return $this->redirectToOneTimePasswordFailure();
-            }
-        } else {
-            if ($this->sR->getSetting('enable_telegram') == '1') {
-                return $this->redirectToTelegramNotSetup();
-            }
-            return $this->redirectToOneTimePasswordError();
-        }
-        return $this->redirectToOneTimePasswordError();
-    }
-
-    public function validateOtp(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        FormHydrator $formHydrator,
-    ): ResponseInterface {
-        $otpPasswordForm = new OtpPasswordForm($translator);
-
-        if ($formHydrator->populateFromPostAndValidate($otpPasswordForm, $request)) {
-            // Ensure the parsed body is an array
-            $parsedBody = $request->getParsedBody();
-
-            if (!is_array($parsedBody)) {
-                return $this->redirectToOneTimePasswordError();
-            }
-
-            // Ensure the 'otp' key exists and is a string
-            if (!array_key_exists('OtpPassword', $parsedBody) || !is_array($parsedBody['OtpPassword'])) {
-                return $this->redirectToOneTimePasswordError();
-            }
-
-            /**
-             * @var array $parsedBody['OtpPassword']
-             */
-            $otp = (string)$parsedBody['OtpPassword']['otpPassword'];
-
-            // Retrieve the stored OTP from the session and ensure it is a string
-            $storedOtp = (string)$this->session->get('otp');
-
-            // Compare the provided OTP with the stored OTP
-            if ($otp == $storedOtp) {
-                return $this->redirectToOneTimePasswordSuccess();
-            }
-
-            // Redirect to the error page if the OTP does not match
-            return $this->redirectToOneTimePasswordError();
-        }
-        return $this->viewRenderer->render(
-            'otp',
-            [
-                'formModel' => $otpPasswordForm,
-            ]
-        );
-    }
-
-    /**
-     * @see https://github.com/rossaddison/invoice/discussions/215
-     * @param string $provider
-     * @return string
-     */
-    private function getTokenType(string $provider): string
-    {
-        return $tokenType = match ($provider) {
-            'developersandboxhmrc' => self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN,
-            'email-verification' => self::EMAIL_VERIFICATION_TOKEN,
-            'facebook' => self::FACEBOOK_ACCESS_TOKEN,
-            'github' => self::GITHUB_ACCESS_TOKEN,
-            'google' => self::GOOGLE_ACCESS_TOKEN,
-            'govuk' => self::GOVUK_ACCESS_TOKEN,
-            'linkedin' => self::LINKEDIN_ACCESS_TOKEN,
-            'microsoftonline' => self::MICROSOFTONLINE_ACCESS_TOKEN,
-            'vkontakte' => self::VKONTAKTE_ACCESS_TOKEN,
-            'x' => self::X_ACCESS_TOKEN,
-            'yandex' => self::YANDEX_ACCESS_TOKEN
-        };
-    }
-
-    /**
-     * @param string $provider
-     * @throws \InvalidArgumentException
-     * @return string
-     */
-    private function getTokenTypeProposed(string $provider): string
-    {
-        // Map special cases
-        $specialMap = [
-            'developersandboxhmrc' => 'DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN',
-            'email-verification' => 'EMAIL_VERIFICATION_TOKEN',
-            // add more if needed
-        ];
-        if (isset($specialMap[$provider])) {
-            $const = $specialMap[$provider];
-        } else {
-            $const = strtoupper($provider) . '_ACCESS_TOKEN';
-        }
-        if (!defined(self::class . '::' . $const)) {
-            throw new \InvalidArgumentException("Unknown provider: $provider");
-        }
-        // Dynamic class constant fetch (PHP 8.3+)
-        $value = self::{$const};
-        assert(is_string($value));
-        return $value;
-    }
-
-    public function callbackX(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('x', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $codeVerifier = Random::string(128);
-            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-
-            // Store code_verifier in session or other storage
-            $this->session->set('code_verifier', $codeVerifier);
-
-            $authorizationUrl = $this->x->buildAuthUrl(
-                $request,
-                [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ]
-            );
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            exit(1);
-        }
-        $codeVerifier = (string)$this->session->get('code_verifier');
-        $params = [
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->x->getOauth2ReturnUrl(),
-            'code_verifier' => $codeVerifier,
-        ];
-        $oAuthTokenType = $this->x->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
-        $userArray = $this->x->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
-        /**
-         * @var array $userArray['data']
-         */
-        $data = $userArray['data'] ?? [];
-        /**
-         * @var int $data['id']
-         */
-        $xId = $data['id'] ?? 0;
-        if ($xId > 0) {
-            $xLogin = (string)$data['username'];
-            if (strlen($xLogin) > 0) {
-                $login = 'twitter' . (string)$xId . $xLogin;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@x.com';
-                $password = Random::string(32);
-                if ($this->authService->oauthLogin($login)) {
-                    $identity = $this->authService->getIdentity();
-                    $userId = $identity->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            $status = $userInv->getActive();
-                            if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', 'x') : '';
-                                return $this->redirectToInvoiceIndex();
-                            }
-                            $this->disableToken($tR, $userId, 'x');
-                            return $this->redirectToAdminMustMakeActive();
-                        }
-                    }
-                    return $this->redirectToMain();
-                }
-                $user = new User($login, $email, $password);
-                $uR->save($user);
-                $userId = $user->getId();
-                if ($userId > 0) {
-                    if ($uR->repoCount() == 1) {
-                        $this->manager->revokeAll($userId);
-                        $this->manager->assign('admin', $userId);
-                    } else {
-                        $this->manager->revokeAll($userId);
-                        $this->manager->assign('observer', $userId);
-                    }
-                    $login = $user->getLogin();
-                    /**
-                     * @var array $this->sR->locale_language_array()
-                     */
-                    $languageArray = $this->sR->locale_language_array();
-                    /**
-                     * @see Trait\Oauth2 function getXAccessToken
-                     * @var array $languageArray
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getXAccessToken($user, $tR);
-                    /**
-                     * @see A new UserInv (extension table of user) for the user is created.
-                     */
-                    $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                        $translator,
-                        $user,
-                        $uiR,
-                        $language,
-                        $_language,
-                        $randomAndTimeToken,
-                        'x'
-                    );
-                    return $this->viewRenderer->render('proceed', [
-                        'proceedToMenuButton' => $proceedToMenuButton,
-                    ]);
-                }
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    /**
-     * Purpose: Once Github redirects to this callback, in this callback function:
-     * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
-     * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
-     * @see src/Invoice/UserInv/UserInvController function github
-     * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
-     * @param ServerRequestInterface $request
-     * @param TranslatorInterface $translator
-     * @param TokenRepository $tR
-     * @param UserInvRepository $uiR
-     * @param UserRepository $uR
-     * @param string $_language
-     * @param string $code
-     * @param string $state
-     * @return ResponseInterface
-     */
-    public function callbackGithub(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('github', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            // If we don't have an authorization code then get one
-            // and use the protected function oauth2->generateAuthState to generate state param 'authState'
-            // which has a session id built into it
-            $authorizationUrl = $this->github->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state are both present
-        }
-        // Try to get an access token (using the 'authorization code' grant)
-        // The 'request_uri' is included by default in $defaultParams[] and therefore not needed in $params
-        // The $response->getBody()->getContents() for each Client e.g. Github will be parsed and loaded into an OAuthToken Type
-        // For Github we know that the parameter key for the token is 'access_token' and not the default 'oauth_token'
-        $oAuthTokenType = $this->github->fetchAccessToken($request, $code, $params = []);
-        /**
-         * Every time you receive an access token, you should use the token to revalidate the user's identity.
-         * A user can change which account they are signed into when you send them to authorize your app,
-         * and you risk mixing user data if you do not validate the user's identity after every sign in.
-         * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
-         */
-        $userArray = $this->github->getCurrentUserJsonArray($oAuthTokenType);
-        /**
-         * @var int $userArray['id']
-         */
-        $githubId = $userArray['id'] ?? 0;
-        if ($githubId > 0) {
-            $githubLogin = 'g';
-            if (strlen($githubLogin) > 0) {
-                // Append github in case user has used same login for other identity providers
-                // the id will be removed in the logout button
-                $login = 'github' . (string)$githubId . $githubLogin;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@github.com';
-                $password = Random::string(32);
-                // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
-                // but it will be used later to build a passwordHash
-                if ($this->authService->oauthLogin($login)) {
-                    $identity = $this->authService->getIdentity();
-                    $userId = $identity->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            // disable the github verification token as soon as the user logs in for the first time
-                            $status = $userInv->getActive();
-                            if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', 'github') : '';
-                                return $this->redirectToInvoiceIndex();
-                            }
-                            $this->disableToken($tR, $userId, 'github');
-                            return $this->redirectToAdminMustMakeActive();
-                        }
-                    }
-                    return $this->redirectToMain();
-                }
-                $user = new User($login, $email, $password);
-                $uR->save($user);
-                $userId = $user->getId();
-                if ($userId > 0) {
-                    // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                    if ($uR->repoCount() == 1) {
-                        $this->manager->revokeAll($userId);
-                        $this->manager->assign('admin', $userId);
-                    } else {
-                        $this->manager->revokeAll($userId);
-                        $this->manager->assign('observer', $userId);
-                    }
-                    $login = $user->getLogin();
-                    /**
-                     * @var array $this->sR->locale_language_array()
-                     */
-                    $languageArray = $this->sR->locale_language_array();
-                    /**
-                     * @see Trait\Oauth2 function getGithubAccessToken
-                     * @var array $languageArray
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getGithubAccessToken($user, $tR);
-                    /**
-                     * @see A new UserInv (extension table of user) for the user is created.
-                     */
-                    $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'github');
-                    return $this->viewRenderer->render('proceed', [
-                        'proceedToMenuButton' => $proceedToMenuButton,
-                    ]);
-                }
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    /**
-     * Purpose: Once Facebook redirects to this callback, in this callback function:
-     * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
-     * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
-     * @see src/Invoice/UserInv/UserInvController function facebook
-     * @param ServerRequestInterface $request
-     * @param TranslatorInterface $translator
-     * @param TokenRepository $tR
-     * @param UserInvRepository $uiR
-     * @param UserRepository $uR
-     * @param string $_language
-     * @param string $code
-     * @param string $state
-     * @param string $error
-     * @param string $errorCode
-     * @param string $errorReason
-     * @return ResponseInterface
-     */
-    public function callbackFacebook(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-        #[Query('error')] string $error = null,
-        #[Query('error_code')] string $errorCode = null,
-        #[Query('error_reason')] string $errorReason = null
-    ): ResponseInterface {
-        // Avoid MissingRequiredArgumentException
-        if ($code == null || $state == null) {
-            // e.g. User presses cancel button: callbackFacebook?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied&state=
-            if (($errorCode == 200) && ($error == 'access_denied') && ($errorReason == 'user_denied')) {
-                return $this->redirectToUserCancelledOauth2();
-            }
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('facebook', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            // If we don't have an authorization code then get one
-            // and use the protected function oauth2->generateAuthState to generate state param
-            // which has a session id built into it
-            $authorizationUrl = $this->facebook->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state are both present
-        }
-        $oAuthTokenType = $this->facebook->fetchAccessToken($request, $code, $params = []);
-        /**
-         * @var array $userArray
-         */
-        $userArray = $this->facebook->getCurrentUserJsonArray($oAuthTokenType);
-        /**
-         * @var int $userArray['id']
-         */
-        $facebookId = $userArray['id'] ?? 0;
-        if ($facebookId > 0) {
-            /**
-             * @var string $userArray['name']
-             */
-            $facebookLogin = strtolower($userArray['name'] ?? '');
-            if (strlen($facebookLogin) > 0) {
-                // the id will be removed in the logout button
-                $login = 'facebook' . (string)$facebookId . $facebookLogin;
-                /**
-                 * @var string $userArray['email']
-                 */
-                $email = $userArray['email'] ?? 'noemail' . $login . '@facebook.com';
-                $password = Random::string(32);
-                // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
-                // but it will be used later to build a passwordHash
-                if ($this->authService->oauthLogin($login)) {
-                    $identity = $this->authService->getIdentity();
-                    $userId = $identity->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            // disable our facebook access token as soon as the user logs in for the first time
-                            $status = $userInv->getActive();
-                            if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', 'facebook') : '';
-                                return $this->redirectToInvoiceIndex();
-                            }
-                            $this->disableToken($tR, $userId, 'facebook');
-                            return $this->redirectToAdminMustMakeActive();
-                        }
-                    }
-                    return $this->redirectToMain();
-                }
-                $user = new User($login, $email, $password);
-                $uR->save($user);
-                $userId = $user->getId();
-                if ($userId > 0) {
-                    if ($uR->repoCount() == 1) {
-                        $this->manager->revokeAll($userId);
-                        $this->manager->assign('admin', $userId);
-                    } else {
-                        $this->manager->revokeAll($userId);
-                        $this->manager->assign('observer', $userId);
-                    }
-                    $login = $user->getLogin();
-                    /**
-                     * @var array $this->sR->locale_language_array()
-                     */
-                    $languageArray = $this->sR->locale_language_array();
-                    /**
-                     * @see Trait\Oauth2 function getFacebookAccessToken
-                     * @var array $languageArray
-                     * @var string $language
-                     */
-                    $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getFacebookAccessToken($user, $tR);
-                    /**
-                     * @see A new UserInv (extension table of user) for the user is created.
-                     */
-                    $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'facebook');
-                    return $this->viewRenderer->render('proceed', [
-                        'proceedToMenuButton' => $proceedToMenuButton,
-                    ]);
-                }
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    /**
-     * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
-     */
-    public function callbackGoogle(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('google', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $this->google->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state are both present
-        }
-
-        $oAuthTokenType = $this->google->fetchAccessToken($request, $code, $params = [
-            'grant_type' => 'authorization_code',
-        ]);
-
-        /**
-         * @var array $userArray
-         */
-        $userArray = $this->google->getCurrentUserJsonArray($oAuthTokenType);
-
-        /**
-         * @var int $userArray['id']
-         */
-        $googleId = $userArray['id'] ?? 0;
-
-        /**
-         * VarDumper::dump($userArray) produces normally
-         *
-         * 'id' =>  google will produce an id here
-         * 'email' => this is the email associated with google
-         * 'verified_email' => true
-         * 'name' => this is your name in lower case letters
-         * 'given_name' => this is your first name
-         * 'family_name' => this is your surname
-         * 'picture' => 'https://lh3.googleusercontent.com/a/ACg8ocZiJZ8a-fpCKx-H4Dh8k-upEqQV3jSyQGH02--kLP_xZWQqrg=s96-c'
-         */
-
-        if ($googleId > 0) {
-            // the id will be removed in the logout button
-            $login = 'google' . (string)$googleId;
-            /**
-             * @var string $userArray['email']
-             */
-            $email = $userArray['email'] ?? 'noemail' . $login . '@google.com';
-            $password = Random::string(32);
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'google') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'google');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getGoogleAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getGoogleAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    public function callbackGovUk(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('govUk', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $this->govUk->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state are both present
-        }
-        $oAuthTokenType = $this->govUk->fetchAccessToken($request, $code, $params = []);
-        /**
-         * @var array $userArray
-         */
-        $userArray = $this->govUk->getCurrentUserJsonArray($oAuthTokenType);
-        /**
-         * @var int $userArray['id']
-         */
-        $govUkId = $userArray['id'] ?? 0;
-        if ($govUkId > 0) {
-            // the id will be removed in the logout button
-            $login = 'govuk' . (string)$govUkId;
-            /**
-             * @var string $userArray['email']
-             */
-            $email = $userArray['email'] ?? 'noemail' . $login . '@gov.uk';
-            $password = Random::string(32);
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'govuk') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'govuk');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getGovUkAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getGovUkAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'govuk');
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    public function callbackLinkedIn(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('linkedIn', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $this->linkedIn->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state are both present
-        }
-        $params = [
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->linkedIn->getOauth2ReturnUrl(),
-        ];
-        $oAuthTokenType = $this->linkedIn->fetchAccessTokenWithCurl($request, $code, $params);
-        /**
-         * @var array $userArray
-         */
-        $userArray = $this->linkedIn->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
-        /**
-         * eg. [
-         *      'sub' => 'P1c9jkRFSy',
-         *      'email_verified' => true,
-         *      'name' => 'Joe Bloggs',
-         *      'locale' => ['country' => 'UK', 'language' => 'en'],
-         *      'given_name' => 'Joe',
-         *      'family_name' => 'Bloggs',
-         *      'email' => 'joe.bloggs@website.com'
-         *      ]
-         *
-         * @var string $userArray['sub'] e.g. P1c9jkRFSy   ... A sub string is returned instead of an id
-         */
-        $linkedInSub = $userArray['sub'] ?? '';
-        if (strlen($linkedInSub) > 0) {
-            /**
-             * @var string $userArray['name']
-             */
-            $linkedInName = $userArray['name'] ?? 'unknown';
-            $login = 'linkedIn' . $linkedInName;
-            /**
-             * @var string $userArray['email']
-             */
-            $email = $userArray['email'] ?? 'noemail' . $login . '@linkedin.com';
-            $password = Random::string(32);
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'linkedin') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'linkedin');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getLinkedInAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getLinkedInAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'linkedin');
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    public function callbackMicrosoftOnline(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-        #[Query('session_state')] string $sessionState = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null || $sessionState == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('microsoftOnline', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $authorizationUrl = $this->microsoftOnline->buildAuthUrl($request, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         * @psalm-suppress DocblockTypeContradiction $sessionState
-         */
-        if (strlen($state) == 0 || strlen($sessionState) == 0) {
-            /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
-             */
-            exit(1);
-            // code and state and stateSession are both present
-        }
-        $oAuthTokenType = $this->microsoftOnline->fetchAccessTokenWithCurl($request, $code, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
-        /**
-         * @var array $userArray
-         */
-        $userArray = $this->microsoftOnline->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
-        /**
-         * @var int $userArray['id']
-         */
-        $microsoftOnlineId = $userArray['id'] ?? 0;
-        if ($microsoftOnlineId > 0) {
-            // Append the last four digits of the Id
-            $login = 'ms' . substr((string)$microsoftOnlineId, strlen((string)$microsoftOnlineId) - 4, strlen((string)$microsoftOnlineId));
-            /**
-             * @var string $userArray['email']
-             */
-            $email = $userArray['email'] ?? 'noemail' . $login . '@microsoftonline.com';
-            $password = Random::string(32);
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'microsoftonline') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'microsoftonline');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getMicrosoftOnlineAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'microsoftonline');
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    public function callbackYandex(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('yandex', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $codeVerifier = Random::string(128);
-            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-
-            // Store code_verifier in session or other storage
-            $this->session->set('code_verifier', $codeVerifier);
-
-            $authorizationUrl = $this->yandex->buildAuthUrl(
-                $request,
-                [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ]
-            );
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            exit(1);
-        }
-        $codeVerifier = (string)$this->session->get('code_verifier');
-        $params = [
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->yandex->getOauth2ReturnUrl(),
-            'code_verifier' => $codeVerifier,
-        ];
-        $oAuthTokenType = $this->yandex->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
-        /**
-         * @var array $userArray
-         */
-        $userArray = $this->yandex->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
-        /**
-         * @var int $userArray['id']
-         */
-        $id = $userArray['id'] ?? 0;
-        if ($id > 0) {
-            /**
-             * @var string $userArray['login'] e.g john.doe.com
-             */
-            $userName = $userArray['login'];
-            // Append the last four digits of the Id
-            $login = 'yx' . $userName . substr((string)$id, strlen((string)$id) - 4, strlen((string)$id));
-            $email = 'noemail' . $login . '@yandex.com';
-            $password = Random::string(32);
-            // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
-            // but it will be used later to build a passwordHash
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        // disable the yandex verification token as soon as the user logs in for the first time
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'yandex') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'yandex');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getYandexAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getYandexAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                    $translator,
-                    $user,
-                    $uiR,
-                    $language,
-                    $_language,
-                    $randomAndTimeToken,
-                    'yandex'
-                );
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
-    }
-
-    public function callbackVKontakte(
-        ServerRequestInterface $request,
-        TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-        #[Query('device_id')] string $device_id = null
-    ): ResponseInterface {
-        if ($code == null || $state == null) {
-            return $this->redirectToMain();
-        }
-
-        $this->blockInvalidState('vkontakte', $state);
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $code
-         */
-        if (strlen($code) == 0) {
-            $codeVerifier = Random::string(128);
-            $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-
-            // Store code_verifier in session or other storage
-            $this->session->set('code_verifier', $codeVerifier);
-
-            $authorizationUrl = $this->vkontakte->buildAuthUrl(
-                $request,
-                [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                    'device_id' => $device_id,
-                ]
-            );
-            header('Location: ' . $authorizationUrl);
-            exit;
-        }
-        if ($code == 401) {
-            return $this->redirectToOauth2CallbackResultUnAuthorised();
-        }
-
-        /**
-         * @psalm-suppress DocblockTypeContradiction $state
-         */
-        if (strlen($state) == 0) {
-            exit(1);
-        }
-        $codeVerifier = (string)$this->session->get('code_verifier');
-        $params = [
-            'device_id' => $device_id,
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->vkontakte->getOauth2ReturnUrl(),
-            'code_verifier' => $codeVerifier,
-        ];
-
-        /**
-         * $oAuthTokenType = e.g.    'refresh_token' => '{string}'
-         *                           'access_token' => '{string}'
-         *                           'id_token' => '{string}'
-         *                           'token_type' => 'Bearer'
-         *                           'expires_in' => 3600
-         *                           'user_id' => 1023583333
-         *                           'state' => '{string}'
-         *                           'scope' => 'vkid.personal_info email'
-         */
-        $oAuthTokenType = $this->vkontakte->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
-
-        /**
-         * e.g.  'user' => [
-         *          'user_id' => '1023581111'
-         *          'first_name' => 'Joe'
-         *          'last_name' => 'Bloggs'
-         *          'avatar' => 'https://..'
-         *          'email' => ''
-         *          'sex' => 2
-         *          'verified' => false
-         *          'birthday' => '09.09.1999'
-         *       ]
-         * @var array $userArray
-         */
-        $userArray = $this->vkontakte->step8ObtainingUserDataArrayUsingCurlWithClientId($oAuthTokenType, $this->vkontakte->getClientId());
-
-        /**
-         * @var array $userArray['user']
-         */
-        $user = $userArray['user'] ?? [];
-
-        /**
-         * @var int $user['user_id']
-         */
-        $id = $user['user_id'] ?? 0;
-        if ($id > 0) {
-            /**
-             * @var string $user['first_name']
-             */
-            $userFirstName = $user['first_name'] ?? 'unknown';
-            /**
-             * @var string $user['last_name']
-             */
-            $userLastName = $user['last_name'] ?? 'unknown';
-            if (strlen($userFirstName) > 0 && strlen($userLastName) > 0) {
-                $userName = $userFirstName . ' ' . $userLastName;
-            } else {
-                $userName = 'fullname unknown';
-            }
-            // Append the last four digits of the Id
-            $login = '' . $userName . substr((string)$id, strlen((string)$id) - 4, strlen((string)$id));
-            /**
-             * @var string $userArray['email']
-             */
-            $email = $userArray['email'] ?? 'noemail' . $login . '@vk.ru';
-            $password = Random::string(32);
-            // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
-            // but it will be used later to build a passwordHash
-            if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        // disable the vkontakte verification token as soon as the user logs in for the first time
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'vkontakte') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'vkontakte');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
-            }
-            $user = new User($login, $email, $password);
-            $uR->save($user);
-            $userId = $user->getId();
-            if ($userId > 0) {
-                // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('admin', $userId);
-                } else {
-                    $this->manager->revokeAll($userId);
-                    $this->manager->assign('observer', $userId);
-                }
-                $login = $user->getLogin();
-                /**
-                 * @var array $this->sR->locale_language_array()
-                 */
-                $languageArray = $this->sR->locale_language_array();
-                /**
-                 * @see Trait\Oauth2 function getYandexAccessToken
-                 * @var array $languageArray
-                 * @var string $language
-                 */
-                $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getVKontakteAccessToken($user, $tR);
-                /**
-                 * @see A new UserInv (extension table of user) for the user is created.
-                 */
-                $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-                    $translator,
-                    $user,
-                    $uiR,
-                    $language,
-                    $_language,
-                    $randomAndTimeToken,
-                    'vkontakte'
-                );
-                return $this->viewRenderer->render('proceed', [
-                    'proceedToMenuButton' => $proceedToMenuButton,
-                ]);
-            }
-        }
-
-        $this->authService->logout();
-        return $this->redirectToMain();
     }
 
     /**
@@ -1879,45 +581,80 @@ final class AuthController
         return '';
     }
 
-    private function redirectToOneTimePasswordError(): ResponseInterface
+    public function logout(
+        UserRepository $uR,
+        UserInvRepository $uiR,    
+    ): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/onetimepassworderror', ['_language' => 'en']);
-    }
-
-    private function redirectToOneTimePasswordFailure(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/onetimepasswordfailure', ['_language' => 'en']);
-    }
-
-    private function redirectToOneTimePasswordSuccess(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('auth/login', ['_language' => 'en']);
-    }
-
-    private function redirectToOneTimePasswordUserNameNotExist(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/onetimepasswordusernamenotexist', ['_language' => 'en']);
-    }
-
-    private function redirectToTelegramNotSetup(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/telegramnotsetup', ['_language' => 'en']);
-    }
-
-    private function redirectToUserCancelledOauth2(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);
-    }
-
-    private function redirectToOauth2CallbackResultUnAuthorised(): ResponseInterface
-    {
-        return $this->webService->getRedirectResponse('site/oauth2callbackresultunauthorised', ['_language' => 'en']);
-    }
-
-    public function logout(): ResponseInterface
-    {
+        $identity = $this->authService->getIdentity();
+        $userId = $identity->getId();
+        // if enable_tfa_with_disabling setting has changed during login of admin
+        // make sure this is reflected in the user setting.
+        if (($this->sR->getSetting('enable_tfa_with_disabling') == '1') && $this->sR->getSetting('enable_tfa') == '1')  {
+            if (null !== $userId) {
+                $userInv = $uiR->repoUserInvUserIdquery($userId);
+                if (null !== $userInv) {
+                    $user = $userInv->getUser();
+                    if (null!==$user) {
+                        if ($this->sR->getSetting('enable_tfa') == '1') {
+                            $enabled = $user->is2FAEnabled();
+                            if ($enabled == true) {
+                                $user->set2FAEnabled(false);
+                                $user->setTotpSecret('');
+                                $uR->save($user);
+                            }
+                        }
+                    }
+                }
+            }
+            $this->session->remove('verified_tfa_user_id');
+        }
+        if (null!==$userId) {
+            if ($this->manager->userHasPermission($userId, 'entryToBaseController')) {
+                $roles = $this->manager->getRolesByUserId($userId);
+                foreach ($roles as $role) {
+                    $this->manager->removeChild($role->getName(), 'entryToBaseController');
+                }
+            }
+        }
         $this->authService->logout();
         return $this->redirectToMain();
+    }
+    
+    private function tfaIsEnabledBlockBaseController(string $userId): void {
+        // see config/common/routes.php 'entryToBaseController'
+        // Prevent access to the BaseController during tfa with an additional permission 'noEntryToBaseController'
+        // which has been incorporated in the BaseController
+        // Replace this permission with 'entryToBaseController' on completion
+        if (!$this->manager->userHasPermission($userId, 'noEntryToBaseController')) {
+            $roles = $this->manager->getRolesByUserId($userId);
+            foreach ($roles as $role) {
+                $this->manager->addChild($role->getName(), 'noEntryToBaseController');
+            }
+        }
+        if ($this->manager->userHasPermission($userId, 'entryToBaseController')) {
+            $roles = $this->manager->getRolesByUserId($userId);
+            foreach ($roles as $role) {
+                $this->manager->removeChild($role->getName(), 'entryToBaseController');
+            }
+        }
+    }
+    
+    private function tfaNotEnabledUnblockBaseController(string $userId): void {
+        // If tfa is not been used, the 'noEntryToBaseController' must be removed
+        if ($this->manager->userHasPermission($userId, 'noEntryToBaseController')) {
+            $roles = $this->manager->getRolesByUserId($userId);
+            foreach ($roles as $role) {
+                $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
+            }
+        }
+        // If tfa is not been used, the 'entryToBaseController' permission can be added now
+        if (!$this->manager->userHasPermission($userId, 'entryToBaseController')) {
+            $roles = $this->manager->getRolesByUserId($userId);
+            foreach ($roles as $role) {
+                $this->manager->addChild($role->getName(), 'entryToBaseController');
+            }
+        }
     }
 
     private function redirectToMain(): ResponseInterface
@@ -1933,5 +670,68 @@ final class AuthController
     private function redirectToAdminMustMakeActive(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/adminmustmakeactive', ['_language' => 'en']);
+    }
+
+    /**
+     * @see https://github.com/rossaddison/invoice/discussions/215
+     * @param string $provider
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    private function getTokenType(string $provider): string
+    {
+        // Map special cases
+        $specialMap = [
+            'developersandboxhmrc' => 'DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN',
+            'email-verification' => 'EMAIL_VERIFICATION_TOKEN',
+            // add more if needed
+        ];
+        if (isset($specialMap[$provider])) {
+            $const = $specialMap[$provider];
+        } else {
+            $const = strtoupper($provider) . '_ACCESS_TOKEN';
+        }
+        if (!defined(self::class . '::' . $const)) {
+            throw new \InvalidArgumentException("Unknown provider: $provider");
+        }
+        // Dynamic class constant fetch (PHP 8.3+)
+        $value = self::{$const};
+        assert(is_string($value));
+        return $value;
+    }
+
+    /**
+     * Validate TOTP code format (strictly: 6 digits).
+     *
+     * @param string $code
+     * @return bool
+     */
+    private function isValidTotpCode(string $code): bool
+    {
+        return \preg_match('/^\d{6}$/', $code) === 1;
+    }
+
+    /**
+     * Generate a QR code as a data URI using chillerlan/php-qrcode.
+     *
+     * @param string $content
+     * @return string
+     */
+    private function generateQrDataUri(string $content): string
+    {
+        $eccLevel = $this->sR->getSetting('qr_ecc_level');
+        // @psalm-suppress RedundantCondition
+        $options = new QROptions([
+            'eccLevel' => strlen($eccLevel) > 0 ? (int)$eccLevel : 0b01,
+            'imageBase64' => true,
+            'scale' => 4,
+        ]);
+        /** @var string */
+        return (new QRCode($options))->render($content);
+    }
+    
+    private function redirectToOneTimePasswordError(): ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/onetimepassworderror', ['_language' => 'en']);
     }
 }

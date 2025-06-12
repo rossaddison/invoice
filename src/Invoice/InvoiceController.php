@@ -44,6 +44,9 @@ use App\Invoice\Libraries\Crypt;
 final class InvoiceController extends BaseController
 {
     protected Crypt $crypt;
+    
+    // New property for controller name
+    protected string $controllerName = 'invoice';
 
     public function __construct(
         WebControllerService $webService,
@@ -112,6 +115,9 @@ final class InvoiceController extends BaseController
             'enable_peppol_client_defaults' => 1,
             'enable_telegram' => 0,
             'enable_vat_registration' => 0,
+            'enable_tfa' => 0,
+            // Qr code is always shown
+            'enable_tfa_with_disabling' => 0,
             // Archived pdfs are automatically sent to customers from view/invoice...Options...Send
             // The pdf is sent along with the attachment to the invoice on the view/invoice.
             'email_pdf_attachment' => 1,
@@ -840,6 +846,8 @@ final class InvoiceController extends BaseController
     }
 
     /**
+     * 
+     * @param CurrentRoute $currentRoute
      * @param SessionInterface $session
      * @param SettingRepository $sR
      * @param TaxRateRepository $trR
@@ -849,6 +857,7 @@ final class InvoiceController extends BaseController
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      * @param GroupRepository $gR
+     * @return \Yiisoft\DataResponse\DataResponse|Response
      */
     public function index(
         CurrentRoute $currentRoute,
@@ -861,7 +870,10 @@ final class InvoiceController extends BaseController
         ProductRepository $pR,
         ClientRepository $cR,
         GroupRepository $gR
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Yiisoft\DataResponse\DataResponse|Response {
+        if ($this->userService->hasPermission('noEntryToBaseController')) {
+            return $this->webService->getNotFoundResponse();
+        } 
         if (($sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
             $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }

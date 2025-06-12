@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'admin' => [
+    [
         'name' => 'admin',
         'type' => 'role',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
         'children' => [
             'viewInv',
             'editInv',
@@ -13,90 +13,90 @@ return [
             'editPayment',
             'editUser',
             'editClientPeppol',
-            'canChangePasswordForAnyUser'
+            'changePasswordForAnyUser',
         ],
     ],
-
-    // Accountant with the permission to create and record payments to invoices for assigned clients
-    'accountant' => [
+    [
         'name' => 'accountant',
         'type' => 'role',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
         'children' => [
-           'viewInv',
-           'viewPayment',
-           'editPayment'
-        ]
+            'viewInv',
+            'viewPayment',
+            'editPayment',
+        ],
     ],
-
-    // Users with the right to view quotes
-    'observer' => [
+    [
         'name' => 'observer',
         'type' => 'role',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
         'children' => [
-           'viewInv',
-           'viewPayment',
-           'editUserInv',
-           'editClientPeppol'
-        ]
+            'viewInv',
+            'viewPayment',
+            'editUserInv',
+            'editClientPeppol',
+        ],
     ],
-
-    'viewInv' => [
+    [
         'name' => 'viewInv',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'editInv' => [
+    [
         'name' => 'editInv',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'viewPayment' => [
+    [
         'name' => 'viewPayment',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'editPayment' => [
+    [
         'name' => 'editPayment',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'editUser' => [
+    [
         'name' => 'editUser',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'editUserInv' => [
+    [
         'name' => 'editUserInv',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'editClientPeppol' => [
+    [
         'name' => 'editClientPeppol',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
     ],
-
-    'changePasswordForAnyUser' => [
+    [
         'name' => 'changePasswordForAnyUser',
         'type' => 'permission',
-        'updatedAt' => 1599036348,
-        'createdAt' => 1599036348,
+        'updated_at' => 1748873425,
+        'created_at' => 1748873425,
+    ],
+    [
+        'name' => 'noEntryToBaseController',
+        'type' => 'permission',
+        'updated_at' => 1749663993,
+        'created_at' => 1749663993,
+    ],
+    [
+        'name' => 'entryToBaseController',
+        'type' => 'permission',
+        'updated_at' => 1749663993,
+        'created_at' => 1749663993,
     ],
 ];
