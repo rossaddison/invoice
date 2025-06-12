@@ -57,7 +57,7 @@
         "omnipay/stripe": "^3.2",
         "php-http/curl-client": "^2.3.3",
         "php-http/guzzle7-adapter": "^1.1",
-        "phpbench/phpbench": "^1.2.15",
+        "phpbench/phpbench": ">=1.2.15",
         "psalm/plugin-symfony": "^5.2.7",
         "psr/container": "^2.0.2",
         "psr/http-factory": "^1.1",
@@ -151,7 +151,7 @@
         "roave/better-reflection": "^6.59",
         "roave/infection-static-analysis-plugin": ">=1.36",
         "roave/security-advisories": "dev-latest",
-        "spatie/phpunit-watcher": "^1.23.6||^1.24",
+        "spatie/phpunit-watcher": ">=1.23.6",
         "styleci/cli": "^1.6.0",
         "vimeo/psalm": "^6.12.0",
         "yiisoft/translator-extractor": "^2.1.1"

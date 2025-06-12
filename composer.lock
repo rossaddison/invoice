@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e41c0e1cac84862b1f0d094a88b5484e",
+    "content-hash": "df96c7b4ceef98f08944cf5f071ad992",
     "packages": [
         {
             "name": "alexkart/curl-builder",
