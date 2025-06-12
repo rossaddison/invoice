@@ -162,7 +162,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     /**
      * Purpose: Once Facebook redirects to this callback, in this callback function:
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
@@ -310,7 +310,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     /**
      * Purpose: Once Github redirects to this callback, in this callback function:
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
@@ -454,7 +454,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     /**
      * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
      */
@@ -586,7 +586,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackGovUk(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -697,7 +697,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackLinkedIn(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -825,7 +825,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackMicrosoftOnline(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -941,7 +941,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackX(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -969,7 +969,7 @@ trait Callback
             $this->session->set('code_verifier', $codeVerifier);
 
             $authorizationUrl = $this->x->buildAuthUrl(
-            $request,
+                $request,
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
@@ -1075,7 +1075,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackVKontakte(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -1254,7 +1254,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackYandex(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -1390,12 +1390,12 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     private function redirectToUserCancelledOauth2(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);
     }
-    
+
     private function redirectToOauth2CallbackResultUnAuthorised(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/oauth2callbackresultunauthorised', ['_language' => 'en']);

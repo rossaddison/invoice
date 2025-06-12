@@ -216,7 +216,7 @@ final class SettingController extends BaseController
             ]),
             'telegram' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
             ]),
-            // two-factor-authentication 
+            // two-factor-authentication
             'tfa' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_two_factor_authentication'),
             'bootstrap5' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_bootstrap5', [
                 'alertMessageFontSize' => '10',
@@ -306,7 +306,7 @@ final class SettingController extends BaseController
             'userUuid' => $userUuid,
         ]));
     }
-    
+
     /**
      * @param string $key
      * @param string $value
@@ -389,7 +389,7 @@ final class SettingController extends BaseController
             $body = $request->getParsedBody() ?? [];
             $key = (string)($body['setting_key'] ?? '');
             if ($this->sR->repoCount($key) == 1) {
-                $this->flashMessage('danger', $this->translator->translate('invoice.setting.duplicate.key').$key);
+                $this->flashMessage('danger', $this->translator->translate('invoice.setting.duplicate.key') . $key);
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
             /**

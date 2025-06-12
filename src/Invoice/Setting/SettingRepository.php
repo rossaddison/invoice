@@ -1814,7 +1814,7 @@ final class SettingRepository extends Select\Repository
             ],
             'enable_tfa' => [
                 'why' => 'Two Factor Authentication is necessary to provide an additional layer of security i.e. User logs in and then verifies  e.g. fraud prevention headers require Timed One Time Password (TOTP)',
-                'where' => 'src/Auth/Controller/AuthController function login augmenting src/Invoice/Setting/SettingRepository/function fphGeneratorMultiFactor'
+                'where' => 'src/Auth/Controller/AuthController function login augmenting src/Invoice/Setting/SettingRepository/function fphGeneratorMultiFactor',
             ],
             'enable_vat_registration' => [
                 'why' => 'VAT uses line item tax and applying Invoice Taxes (whether before line item or after line tax) are disabled. Hence the tax_total field in the InvAmount Entity will always equal zero if VAT is used. ' .

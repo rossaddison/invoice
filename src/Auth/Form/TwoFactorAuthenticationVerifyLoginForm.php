@@ -45,7 +45,7 @@ final class TwoFactorAuthenticationVerifyLoginForm extends FormModel
     {
         return $this->code;
     }
-    
+
     public function getRules(): array
     {
         return [

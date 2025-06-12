@@ -16,7 +16,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 abstract class BaseController
 {
-    use FlashMessage;    
+    use FlashMessage;
 
     // New property for controller name
     protected string $controllerName = 'base';
@@ -65,16 +65,16 @@ abstract class BaseController
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/invoice.php');
-        } 
-    }        
-    
-   /**
-     * Render a view with common parameters.
-     *
-     * @param string $view
-     * @param array<string, mixed> $parameters
-     * @return Response
-     */
+        }
+    }
+
+    /**
+      * Render a view with common parameters.
+      *
+      * @param string $view
+      * @param array<string, mixed> $parameters
+      * @return Response
+      */
     protected function render(string $view, array $parameters = []): Response
     {
         return $this->viewRenderer->render($view, $parameters);
