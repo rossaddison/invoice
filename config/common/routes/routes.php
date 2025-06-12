@@ -204,19 +204,19 @@ return [
     Route::post('/logout')
     ->action([AuthController::class, 'logout'])
     ->name('auth/logout'),
-    Route::methods([Method::GET, Method::POST],'/showSetup')
+    Route::methods([Method::GET, Method::POST], '/showSetup')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'showSetup'])
     ->name('auth/showSetup'),
-    Route::methods([Method::GET, Method::POST],'/ajaxShowSetup')
+    Route::methods([Method::GET, Method::POST], '/ajaxShowSetup')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'ajaxShowSetup'])
     ->name('auth/ajaxShowSetup'),
-    Route::methods([Method::GET, Method::POST],'/verifySetup')
+    Route::methods([Method::GET, Method::POST], '/verifySetup')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifySetup'])
-    ->name('auth/verifySetup'),        
-    Route::methods([Method::GET, Method::POST],'/verifyLogin')
+    ->name('auth/verifySetup'),
+    Route::methods([Method::GET, Method::POST], '/verifyLogin')
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifyLogin'])
     ->name('auth/verifyLogin'),
@@ -277,7 +277,7 @@ return [
       ),
     Group::create('/invoice')
     ->middleware(Authentication::class)
-    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('entryToBaseController'))       
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('entryToBaseController'))
     ->routes(
         Route::get('')
         ->action([InvoiceController::class, 'index'])
@@ -650,12 +650,12 @@ return [
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->action([DeliveryController::class, 'view']),
         Route::get('/deliveryparty')
-        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))    
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->action([DeliveryPartyController::class, 'index'])
         ->name('deliveryparty/index'),
         // Add
         Route::methods([Method::GET, Method::POST], '/deliveryparty/add')
-        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))    
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->action([DeliveryPartyController::class, 'add'])
         ->name('deliveryparty/add'),
         // Edit
@@ -1859,7 +1859,7 @@ return [
         Route::methods([Method::GET, Method::POST], '/telegram/webhook')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->action([TelegramController::class, 'webhook'])
-        ->name('telegram/webhook'),        
+        ->name('telegram/webhook'),
         Route::get('/unit')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->action([UnitController::class, 'index'])

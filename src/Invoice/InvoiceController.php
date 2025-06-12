@@ -44,7 +44,7 @@ use App\Invoice\Libraries\Crypt;
 final class InvoiceController extends BaseController
 {
     protected Crypt $crypt;
-    
+
     // New property for controller name
     protected string $controllerName = 'invoice';
 
@@ -846,7 +846,6 @@ final class InvoiceController extends BaseController
     }
 
     /**
-     * 
      * @param CurrentRoute $currentRoute
      * @param SessionInterface $session
      * @param SettingRepository $sR
@@ -857,7 +856,7 @@ final class InvoiceController extends BaseController
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      * @param GroupRepository $gR
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function index(
         CurrentRoute $currentRoute,
@@ -873,7 +872,7 @@ final class InvoiceController extends BaseController
     ): \Yiisoft\DataResponse\DataResponse|Response {
         if ($this->userService->hasPermission('noEntryToBaseController')) {
             return $this->webService->getNotFoundResponse();
-        } 
+        }
         if (($sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
             $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }

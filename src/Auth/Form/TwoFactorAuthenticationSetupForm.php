@@ -8,7 +8,7 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Rule\Required;
 
-final class TwoFactorAuthenticationSetupForm extends FormModel 
+final class TwoFactorAuthenticationSetupForm extends FormModel
 {
     #[Required]
     private string $code = '';
