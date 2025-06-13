@@ -50,6 +50,14 @@
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
 <p>Retest signing up procedure</p>
+<p>13th June 2025</p>
+<p>Share Conversations: </p>
+<p>Topic: Aegis: https://github.com/copilot/share/c222033e-4904-8004-8842-1a0860c94174</p>
+<p>Topic: Most actively maintained MFA: https://github.com/copilot/share/0a23003e-4004-8420-a053-8a0040cb4936</p>
+<P>Topic: Html for textbox string length: https://github.com/copilot/share/c043023c-0824-80a0-b951-1a4064816075</p
+<p>Topic: Php based 9 digit keypad: https://github.com/copilot/share/820a01ac-4800-8ca0-8152-0800608b2024</p>
+<p>Topic: Adding an additional permission to middleware: https://github.com/copilot/share/804301be-4024-8c06-9012-0808408b6175</p>
+<p>Topic: Best practices for using OTP's: https://github.com/copilot/share/c26a133e-0024-8004-9141-0a4040892135</p>
 <p><b>12th June 2025</b></p>
 <p>I am not using Telegram for OTP.</p>
 <p>Two Factor Authentication using Aegis Authenticator app for android is functional</p>
