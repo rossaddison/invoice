@@ -26,7 +26,7 @@ final class StorageAccessApiAsset extends AssetBundle
          *
          * @see https://developers.google.com/privacy-sandbox/cookies/storage-access-api
          */
-        'storageAccessApiAsset/chrome.js',
+        'storageAccessApiAsset/chrome/chrome.js',
     ];
 
     public array $depends = [
