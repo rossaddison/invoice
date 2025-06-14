@@ -274,7 +274,7 @@ return [
           ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
           ->middleware(FormatDataResponseAsJson::class)
           ->action([ApiUserController::class, 'profile'])
-    ),
+      ),
     Group::create('/invoice')
     ->middleware(Authentication::class)
     ->middleware(fn (AccessChecker $checker) => $checker->withPermission('entryToBaseController'))
