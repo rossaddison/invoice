@@ -65,7 +65,7 @@ switch ($env) {
         $dbUser = 'root';
         $dbPassword = null;
         break;
-    // Add more as needed
+        // Add more as needed
     default:
         $dbHost = 'localhost';
         $dbUser = 'root';
