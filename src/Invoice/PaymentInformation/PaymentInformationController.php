@@ -790,7 +790,7 @@ final class PaymentInformationController
                         'client' => $cR->repoClientquery($invoice->getClient_id()),
                     ]
                 ),
-            'payment_methods' => $mollieClient->methods->allActive(),
+            'payment_methods' => $mollieClient->methods->allEnabled(),
             'invoice_payment_method' => $payment_method_for_this_invoice ?: $this->translator->translate('i.none'),
             'total' => $total,
             'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
@@ -908,7 +908,6 @@ final class PaymentInformationController
             // with our metadata invoice_url_key stored by Mollie
             $lastPayment = new MolliePayment($mollie);
             if ($this->mollieSetTestOrLiveApiKey($mollie)) {
-                $mollie->initializeEndPoints();
                 // Get all the payments made on the Mollie Website by our customer
                 $payments = $mollie->payments->page();
                 /**
@@ -1179,8 +1178,8 @@ final class PaymentInformationController
     {
         $payment_intent = \Stripe\PaymentIntent::create([
             // convert the float amount to cents
-            'amount' => ((float)$yii_invoice['balance'] ?: 0.00) * 100.00,
-            'currency' => $yii_invoice['currency'],
+            'amount' => (int) round(((float)$yii_invoice['balance'] ?: 0.00) * 100),
+            'currency' => (string) $yii_invoice['currency'],
             // include the payment methods you have chosen listed in dashboard.stripe.com eg. card, bacs direct debit,
             // googlepay etc.
             'automatic_payment_methods' => [
@@ -1188,13 +1187,13 @@ final class PaymentInformationController
             ],
             //'customer' => $yii_invoice['customer'],
             //'description' => $yii_invoice['description'],
-            'receipt_email' => $yii_invoice['customer_email'],
+            'receipt_email' => (string) $yii_invoice['customer_email'],
             'metadata' => [
-                'invoice_id' => $yii_invoice['id'],
-                'invoice_customer_id' => $yii_invoice['customer_id'],
-                'invoice_number' => $yii_invoice['number'] ?: '',
+                'invoice_id' => (string) $yii_invoice['id'],
+                'invoice_customer_id' => (string) $yii_invoice['customer_id'],
+                'invoice_number' => (string) $yii_invoice['number'] ?: '',
                 'invoice_payment_method' => '',
-                'invoice_url_key' => $yii_invoice['url_key'],
+                'invoice_url_key' => (string) $yii_invoice['url_key'],
             ],
         ]);
         return $payment_intent->client_secret;
