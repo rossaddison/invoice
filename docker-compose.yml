@@ -1,10 +1,43 @@
 services:
-    php:
-        image: yiisoftware/yii-php:8.3-apache
-        working_dir: /app
-        volumes:
-            - ./:/app
-            # host-volume for composer cache
-            - ~/.composer-docker/cache:/root/.composer/cache:delegated
-        ports:
-            - '30080:80'
+  php:
+    image: yiisoftware/yii-php:8.3-apache
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+    ports:
+      - '30080:80'
+    depends_on:
+      - db
+    environment:
+      # You can pass DB parameters as env vars if your app supports it
+      # Development Environment: Docker Desktop docker-linux image using cycle/orm database on Wampserver
+      # Step 1: Docker Desktop settings: Open Docker Desktop ... Settings ... Docker Engine
+      # Add or update the "dns" section: i.e. "dns": ["8.8.8.8", "1.1.1.1"]
+      # Step 2: Get IP v4 address at c:\wamp\www\invoice>ipconfig. Insert in DB_HOST:
+      # Step 3: Modify C:\wamp\bin\mysql\mysql8.3.0\my.ini [mysqld]bind-address=0.0.0.0
+      # Step 4: CREATE USER 'root'@'host.docker.internal' IDENTIFIED BY '';
+      #         GRANT ALL PRIVILEGES ON *.* TO 'root'@'host.docker.internal';
+      #         FLUSH PRIVILEGES;
+      DB_HOST: 192.168.0.24
+      DB_DATABASE: yii3_i
+      DB_USER: root
+      DB_PASSWORD: root
+      
+      
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yii3_i
+      # The user below is optional; root is fine for local dev
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 
+    ports:
+      - "33060:3306" # Optional: expose if you want to connect from host
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

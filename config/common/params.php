@@ -41,6 +41,37 @@ use App\Widget\GridComponents;
 use App\Widget\PageSizeLimiter;
 use App\Widget\SubMenu;
 
+$env = $_ENV['APP_ENV'] ?? 'local';
+
+switch ($env) {
+    case 'docker':
+        // Running docker with wampserver
+        $dbHost = '192.168.0.24';
+        $dbUser = 'root';
+        $dbPassword = null;
+        break;
+    case 'wamp':
+        $dbHost = 'localhost';
+        $dbUser = 'root';
+        $dbPassword = null;
+        break;
+    case 'lamp':
+        $dbHost = 'localhost';
+        $dbUser = 'root';
+        $dbPassword = null;
+        break;
+    case 'local':
+        $dbHost = 'localhost';
+        $dbUser = 'root';
+        $dbPassword = null;
+        break;
+    // Add more as needed
+    default:
+        $dbHost = 'localhost';
+        $dbUser = 'root';
+        $dbPassword = null;
+}
+
 return [
     'env' => $_ENV['YII_ENV'] ?? '',
     'server' => [
@@ -330,9 +361,9 @@ return [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
                     connection:
                     new Cycle\Database\Config\MySQL\DsnConnectionConfig(
-                        'mysql:host=localhost;dbname=yii3_i',
-                        'root',
-                        null
+                        'mysql:host=' . $dbHost . ';dbname=yii3_i',
+                        $dbUser,
+                        $dbPassword
                     ),
                     driver: Cycle\Database\Driver\MySQL\MySQLDriver::class,
                 ),

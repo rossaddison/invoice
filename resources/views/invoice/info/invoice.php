@@ -49,15 +49,205 @@
 <p>Introducing India's PayTm payment gateway's QR code method of payment and comparing this with Stripe's method.</p>
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
-<p>Retest signing up procedure</p>
-<p>13th June 2025</p>
+<p>Retest signing up procedure because middleware authentication class moved into group header</p>
+<p>Payment gateway testing on alpine</p>
+<p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>14th June 2025</b></p>
+<p>uopz has been removed from composer.json for compatibility with docker.</p>
+<p>Docker php requirement reduced to 8.3</p>
+<p>Shared Conversations:</p>
+<p><a href="https://github.com/copilot/share/022253bc-0004-88a2-b010-084860c36925" target="_blank">Topic: Setting up a repository on Docker</a></p>
+<p><h5>How to Connect 'Docker on Linux' running in Docker Desktop to WampServer Database</h5></p>
+<p><ol>
+    <li class="step">
+      <strong>Make WampServer MySQL Accessible from the Network</strong>
+      <ul>
+        <li>In your WampServer’s MySQL config file (<code>C:\wamp\bin\mysql\mysql8.3.0\my.ini</code>), set:
+            <pre><p>[mysqld]</p>
+                 <p>bind-address=0.0.0.0</p></pre>
+        </li>
+        <li>Adjust config/common/params.php docker $dbHost to a suitable local IPV4 address ... c:\>ipconfig</li>
+        <li>Restart MySQL from WampServer to apply changes.</li>
+      </ul>
+    </li>
+    <li class="step">
+      <strong>Create a MySQL User for Remote Access</strong>
+      <ul>
+        <li>Log in to MySQL (preferably phpMyAdmin or the MySQL CLI) and run:
+          <pre>
+CREATE USER 'root'@'host.docker.internal' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'host.docker.internal';
+FLUSH PRIVILEGES;
+          </pre>
+        </li>
+        <li>This allows the root user to connect from host.docker.internal (Docker-to-host bridge).</li>
+      </ul>
+    </li>
+    <li class="step">
+      <strong>Allow Windows Firewall Access</strong>
+      <ul>
+        <li>Open port <b>3306</b> (or your MySQL port) in Windows Firewall to allow inbound connections.</li>
+      </ul>
+    </li>
+    <li class="step">
+      <strong>Find Your Windows Host IP Address</strong>
+      <ul>
+        <li>On your Windows machine, run <code>ipconfig</code> to find your local IPv4 address (e.g., <code>192.168.1.100</code>).</li>
+      </ul>
+    </li>
+    <li class="step">
+      <strong>Configure Your Docker App</strong>
+      <ul>
+        <li>In your Docker container’s database configuration c:\...invoice\docker-compose.yml, use:
+          <pre>
+DB_HOST=192.168.1.100   # Use your Windows host's IP address
+DB_PORT=3306
+DB_USER=youruser
+DB_PASS=yourpassword
+          </pre>
+        </li>
+        <li>Do <b>not</b> use <code>localhost</code> or <code>host.docker.internal</code> unless specially configured.</li>
+      </ul>
+    </li>
+    <li class="step">
+      <strong>Test the Connection</strong>
+      <ul>
+        <li>From inside your Docker container, install the MySQL client if needed and run:</li>
+        <pre>
+mysql -h 192.168.1.100 -u youruser -p
+        </pre>
+        <li>If this connects, your application should work too.</li>
+      </ul>
+    </li>
+  </ol>
+  <p>
+    <strong>Summary:</strong><br>
+    By making MySQL accessible from the network, granting remote user privileges, opening the firewall, and using your Windows IP in Docker configuration, your Linux Docker container can connect to the WampServer MySQL database on your Windows host.
+  </p>
+  <pre><b>docker-composer.yml</b>
+      services:
+  php:
+    image: yiisoftware/yii-php:8.3-apache
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+    ports:
+      - '30080:80'
+    depends_on:
+      - db
+    environment:
+      # You can pass DB parameters as env vars if your app supports it
+      # Development Environment: Docker Desktop docker-linux image using cycle/orm database on Wampserver
+      # Step 1: Docker Desktop settings: Open Docker Desktop ... Settings ... Docker Engine
+      # Add or update the "dns" section: i.e. "dns": ["8.8.8.8", "1.1.1.1"]
+      # Step 2: Get IP v4 address at c:\wamp\www\invoice>ipconfig. Insert in DB_HOST:
+      # Step 3: Modify C:\wamp\bin\mysql\mysql8.3.0\my.ini [mysqld]bind-address=0.0.0.0
+      # Step 4: phpadmin: CREATE USER 'root'@'host.docker.internal' IDENTIFIED BY '';
+      #                   GRANT ALL PRIVILEGES ON *.* TO 'root'@'host.docker.internal';
+      #                   FLUSH PRIVILEGES;
+      DB_HOST: 192.168.0.1
+      DB_DATABASE: yii3_i
+      DB_USER: root
+      DB_PASSWORD: root
+      
+      
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yii3_i
+      # The user below is optional; root is fine for local dev
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 
+    ports:
+      - "33060:3306" # Optional: expose if you want to connect from host
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+  </pre>
+  <pre><b>C:\wamp\www\invoice\docker\dev\php\Dockerfile</b>
+      FROM php:8.3-fpm-alpine
+
+# Install system dependencies and PHP build tools
+RUN apk add --no-cache \
+      acl \
+      fcgi \
+      file \
+      gettext \
+      git \
+      nano \
+      curl \
+      libjpeg-turbo-dev \
+      libpng-dev \
+      libwebp-dev \
+      freetype-dev \
+      icu-dev \
+      libzip-dev \
+      zlib-dev \
+      gd-dev \
+      oniguruma-dev \
+      postgresql-dev \
+      rabbitmq-c-dev \
+      $PHPIZE_DEPS
+
+# Install and enable PECL extension (amqp)
+RUN pecl install amqp-1.11.0 \
+    && docker-php-ext-enable amqp
+
+# Clean up build dependencies and pear cache for a smaller image
+RUN apk del --purge $PHPIZE_DEPS \
+    && pecl clear-cache \
+    && rm -rf /tmp/pear \
+    && docker-php-source delete \
+    && rm -rf /var/cache/apk/*
+
+# Set up Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV PATH="${PATH}:/root/.composer/vendor/bin"
+
+# Use development php.ini as default
+RUN ln -sf $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+
+# Set the working directory
+WORKDIR /app
+
+# Copy configuration files (remove if not needed)
+COPY docker/dev/php/conf.d/ $PHP_INI_DIR/conf.d/
+COPY docker/dev/php/php-fpm.d/ /usr/local/etc/php-fpm.d/
+
+# Copy and install PHP dependencies
+COPY composer.json composer.lock* ./
+RUN composer install --no-plugins --no-scripts --prefer-dist && composer clear-cache
+
+# Copy the rest of your application code
+COPY ./ ./
+
+# Run post-install scripts
+RUN composer run-script post-install-cmd
+
+# Healthcheck for FPM
+HEALTHCHECK --interval=30s --timeout=5s --start-period=1s \
+  CMD REQUEST_METHOD=GET SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping cgi-fcgi -bind -connect 127.0.0.1:9000
+
+# Entrypoint permissions and command
+RUN chmod 0555 ./docker/docker-entrypoint.sh
+ENTRYPOINT ["docker/docker-entrypoint.sh"]
+CMD ["php-fpm"]
+  </pre>
+</p>
+<p><b>13th June 2025</b></p>
 <p>Share Conversations: </p>
-<p>Topic: Aegis: https://github.com/copilot/share/c222033e-4904-8004-8842-1a0860c94174</p>
-<p>Topic: Most actively maintained MFA: https://github.com/copilot/share/0a23003e-4004-8420-a053-8a0040cb4936</p>
-<P>Topic: Html for textbox string length: https://github.com/copilot/share/c043023c-0824-80a0-b951-1a4064816075</p
-<p>Topic: Php based 9 digit keypad: https://github.com/copilot/share/820a01ac-4800-8ca0-8152-0800608b2024</p>
-<p>Topic: Adding an additional permission to middleware: https://github.com/copilot/share/804301be-4024-8c06-9012-0808408b6175</p>
-<p>Topic: Best practices for using OTP's: https://github.com/copilot/share/c26a133e-0024-8004-9141-0a4040892135</p>
+<p><a href="https://github.com/copilot/share/c222033e-4904-8004-8842-1a0860c94174" target="_blank">Topic: Aegis: </a></p>
+<p><a href="https://github.com/copilot/share/0a23003e-4004-8420-a053-8a0040cb4936" target="_blank">Topic: Most actively maintained MFA: </a></p>
+<P><a href="https://github.com/copilot/share/c043023c-0824-80a0-b951-1a4064816075" target="_blank">Topic: Html for textbox string length: </a></p>
+<p><a href="https://github.com/copilot/share/820a01ac-4800-8ca0-8152-0800608b2024" target="_blank">Topic: Php based 9 digit keypad: </a></p>
+<p><a href="https://github.com/copilot/share/804301be-4024-8c06-9012-0808408b6175" target="_blank">Topic: Adding an additional permission to middleware: </a></p>
+<p><a href="https://github.com/copilot/share/c26a133e-0024-8004-9141-0a4040892135" target="_blank">Topic: Best practices for using OTP's: </a></p>
 <p><b>12th June 2025</b></p>
 <p>I am not using Telegram for OTP.</p>
 <p>Two Factor Authentication using Aegis Authenticator app for android is functional</p>
