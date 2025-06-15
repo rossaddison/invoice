@@ -1621,7 +1621,7 @@ final class SettingRepository extends Select\Repository
                 'version' => [
                     'type' => 'checkbox',
                     'label' => $this->translator->translate('g.online_payment_version'),
-            ],
+                ],
             ],
         ];
     }

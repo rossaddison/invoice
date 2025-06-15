@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * filter_used_translation_keys.php
  *
@@ -61,13 +63,17 @@ if (!is_array($translations)) {
 $usedKeys = [];
 if (file_exists($outputFile)) {
     $usedKeys = include $outputFile;
-    if (!is_array($usedKeys)) $usedKeys = [];
+    if (!is_array($usedKeys)) {
+        $usedKeys = [];
+    }
 }
 
 $notFoundKeys = [];
 if (file_exists($notFoundFile)) {
     $notFoundKeys = include $notFoundFile;
-    if (!is_array($notFoundKeys)) $notFoundKeys = [];
+    if (!is_array($notFoundKeys)) {
+        $notFoundKeys = [];
+    }
 }
 
 $keys = array_keys($translations);
@@ -109,7 +115,7 @@ foreach ($toProcess as $key) {
             unset($notFoundKeys[$nfIdx]);
         }
         echo "Processed and added key: $key\n";
-        echo "  Found in: " . implode(', ', $locations) . "\n";
+        echo '  Found in: ' . implode(', ', $locations) . "\n";
     } else {
         $notFoundKeys[] = $key;
         echo RED . "Key not found: $key" . RESET . "\n";

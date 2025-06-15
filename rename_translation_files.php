@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Script to rename language files in each language folder (except 'en') in resources/messages/:
  * - Renames app.php to orig_app.php (if present)
@@ -13,7 +15,9 @@ $baseDir = __DIR__ . '/resources/messages/';
 
 foreach (glob($baseDir . '*', GLOB_ONLYDIR) as $folder) {
     $lang = basename($folder);
-    if ($lang === 'en') continue;
+    if ($lang === 'en') {
+        continue;
+    }
 
     $appFile = $folder . '/app.php';
     $origFile = $folder . '/orig_app.php';

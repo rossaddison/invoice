@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Script to synchronize translation keys in app.php files across all language folders (except 'en')
  * with the master English translation (resources/messages/en/app.php).
@@ -33,14 +35,18 @@ if (!is_array($master)) {
 // Loop through each language directory except 'en'
 foreach (glob($baseDir . '*', GLOB_ONLYDIR) as $folder) {
     $lang = basename($folder);
-    if ($lang === 'en') continue;
+    if ($lang === 'en') {
+        continue;
+    }
 
     $file = $folder . '/app.php';
     $outputFile = $folder . '/1_app.php';
 
     if (file_exists($file)) {
         $existing = include $file;
-        if (!is_array($existing)) $existing = [];
+        if (!is_array($existing)) {
+            $existing = [];
+        }
 
         // Build new array: preserve translations, fill missing with English, remove extras
         $new = [];
