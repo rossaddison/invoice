@@ -29,7 +29,7 @@
         "ext-openssl": "*",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
         "braintree/braintree_php": "^6.26",
-        "brick/math": "^0.12.3",
+        "brick/math": "^0.13.1",
         "brick/money": "^0.10.1",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.3",
@@ -134,7 +134,7 @@
         "yiisoft/yii-event": "^2.1",
         "yiisoft/yii-http": "^1.0.4",
         "yiisoft/yii-runner-console": "^2.2",
-        "yiisoft/yii-runner-http": "^3.1",
+        "yiisoft/yii-runner-http": "^3.2",
         "yiisoft/yii-sentry": "^2.0.1",
         "yiisoft/yii-view-renderer": "^7.3",
         "zircote/swagger-php": "^4.11.1||^5.1.3"

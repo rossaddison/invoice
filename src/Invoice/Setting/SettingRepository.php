@@ -1554,10 +1554,6 @@ final class SettingRepository extends Select\Repository
                     'type' => 'password',
                     'label' => 'Store Id',
                 ],
-                'version' => [
-                    'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
-                ],
                 'sandbox' => [
                     'type' => 'checkbox',
                     'label' => 'Sandbox',
@@ -1577,10 +1573,6 @@ final class SettingRepository extends Select\Repository
                     'type' => 'password',
                     'label' => 'Merchant Id',
                 ],
-                'version' => [
-                    'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
-                ],
                 'sandbox' => [
                     'type' => 'checkbox',
                     'label' => 'Sandbox',
@@ -1598,10 +1590,6 @@ final class SettingRepository extends Select\Repository
                 'profileID' => [
                     'type' => 'text',
                     'label' => 'Profile ID',
-                ],
-                'version' => [
-                    'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
                 ],
                 'sandbox' => [
                     'type' => 'checkbox',
@@ -1633,7 +1621,7 @@ final class SettingRepository extends Select\Repository
                 'version' => [
                     'type' => 'checkbox',
                     'label' => $this->translator->translate('g.online_payment_version'),
-                ],
+            ],
             ],
         ];
     }

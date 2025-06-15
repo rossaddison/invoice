@@ -52,12 +52,14 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>15th June 2025</b></p>
+<p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
 <p><b>14th June 2025</b></p>
 <p>uopz has been removed from composer.json for compatibility with docker.</p>
 <p>Docker php requirement reduced to 8.3</p>
 <p>Shared Conversations:</p>
 <p><a href="https://github.com/copilot/share/022253bc-0004-88a2-b010-084860c36925" target="_blank">Topic: Setting up a repository on Docker</a></p>
-<p><h5>How to Connect 'Docker on Linux' running in Docker Desktop to WampServer Database</h5></p>
+<p><h5>How to Connect 'Docker on Linux' running in Docker Desktop to WampServer phpMyAdmin Database</h5></p>
 <p><ol>
     <li class="step">
       <strong>Make WampServer MySQL Accessible from the Network</strong>
