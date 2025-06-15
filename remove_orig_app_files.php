@@ -16,7 +16,9 @@ $baseDir = __DIR__ . '/resources/messages/';
 
 foreach (glob($baseDir . '*', GLOB_ONLYDIR) as $folder) {
     $lang = basename($folder);
-    if ($lang === 'en') continue;
+    if ($lang === 'en') {
+        continue;
+    }
 
     $file = $folder . '/orig_app.php';
     if (file_exists($file)) {
