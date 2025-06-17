@@ -44,8 +44,8 @@ Yii3 Invoice
 * Step 2:                                               ... Maximum Execution = 360
 
 Installing the database in mySql
-1. Create a database in mySql called yii3-i.
-2. The BUILD_DATABASE=true setting in the config/common/params.php file will ensure a firtrun setup of tables.
+1. Create a database in mySql called yii3_i.
+2. The BUILD_DATABASE=true setting in the config/common/params.php file will ensure a firstrun setup of tables.
 3. After the setup of tables, ensure that this setting is changed back to false otherwise you will get performmance issues.
 
 The c:\wamp64\yii3-i\config\common\params.php file line approx. 193 will automatically build up the tables under database yii3-i. 
