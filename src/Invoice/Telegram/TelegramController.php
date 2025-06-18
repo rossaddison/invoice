@@ -41,8 +41,8 @@ final class TelegramController extends BaseController
         WebControllerService $webService,
         private DataResponseFactoryInterface $factory,
         private Logger $logger,
-        private ?Update $update = null,
-        private ?TelegramBotApi $telegramBotApi = null,
+        private ?Update $update,
+        private ?TelegramBotApi $telegramBotApi,
         Flash $flash
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
