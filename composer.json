@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "8.3.*||8.4.*",
+        "php": "8.3 - 8.4",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-fileinfo": "*",
@@ -69,7 +69,6 @@
         "rossaddison/yii-auth-client": "dev-master",
         "rossaddison/yii-cycle-1": "dev-invoice",
         "rossaddison/yii-gii": "dev-phpspec-diff",
-        "rossaddison/yii-middleware": "dev-invoice",
         "sabre/xml": "^4.0.6",
         "setasign/fpdf": "^1.8.6",
         "spomky-labs/otphp": "^11.3", 
@@ -110,6 +109,7 @@
         "yiisoft/log-target-file": "^3.0",
         "yiisoft/mailer": "^6.0.1",
         "yiisoft/mailer-symfony": "^4",
+        "yiisoft/yii-middleware": "^1.1.0",
         "yiisoft/middleware-dispatcher": "^5.2",
         "yiisoft/rate-limiter": "dev-master",
         "yiisoft/rbac": "^2.1",
@@ -208,8 +208,7 @@
             "url": "https://asset-packagist.org",
             "type": "vcs",
             "url": "https://github.com/rossaddison/yii-cycle-1",
-            "url": "https://github.com/rossaddison/yii-gii",
-            "url": "https://github.com/rossaddison/yii-middleware"
+            "url": "https://github.com/rossaddison/yii-gii"
         }
     ]
 }
