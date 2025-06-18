@@ -20,7 +20,7 @@ abstract class BaseController
 
     // New property for controller name
     protected string $controllerName = 'base';
-    
+
     protected ViewRenderer $viewRenderer;
     protected WebControllerService $webService;
     protected UserService $userService;
