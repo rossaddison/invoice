@@ -17,6 +17,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Security\Random;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -34,8 +35,9 @@ final class CompanyPrivateController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->companyPrivateService = $companyPrivateService;
     }
 

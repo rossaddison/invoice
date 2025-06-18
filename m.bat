@@ -15,6 +15,7 @@ echo [2] Run PHP Psalm on a Specific File
 echo [2a] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
 echo [4] Run Composer Update
+echo [4a] Run Node Modules Update
 echo [5] Run Composer Require Checker
 echo [5a] Run Codeception Tests 
 echo [6] Run 'serve' Command
@@ -41,6 +42,7 @@ if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
 if "%choice%"=="4" goto composer_update
+if "%choice%"=="4a" goto node_modules_update
 if "%choice%"=="5" goto require_checker
 if "%choice%"=="5a" goto codeception_tests
 if "%choice%"=="6" goto serve
@@ -181,6 +183,17 @@ goto menu
 :composer_update
 echo Running Composer Update...
 composer update
+pause
+goto menu
+
+:node_modules_update
+cd node_modules
+echo Running Node Modules Update...
+npx npm-check-updates -u
+npm install
+pause
+goto menu
+
 pause
 goto menu
 

@@ -65,6 +65,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -92,9 +93,10 @@ final class ProductController extends BaseController
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService
+        WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->responseFactory = $responseFactory;
         $this->productService = $productService;
         $this->productCustomService = $productCustomService;

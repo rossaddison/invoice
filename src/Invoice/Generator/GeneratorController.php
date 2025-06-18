@@ -29,6 +29,7 @@ use Yiisoft\Files\FileHelper;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
@@ -104,9 +105,10 @@ class GeneratorController extends BaseController
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService
+        WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->aliases = $aliases;
         $this->factory = $factory;
         $this->generatorService = $generatorService;

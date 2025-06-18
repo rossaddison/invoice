@@ -123,6 +123,7 @@ use Yiisoft\Json\Json;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -189,8 +190,9 @@ final class QuoteController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->number_helper = new NumberHelper($sR);
         $this->pdf_helper = new PdfHelper($sR, $session);
     }

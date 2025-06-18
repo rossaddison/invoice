@@ -21,6 +21,7 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -42,8 +43,9 @@ final class TelegramController extends BaseController
         private Logger $logger,
         private ?Update $update = null,
         private ?TelegramBotApi $telegramBotApi = null,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->factory = $factory;
         $this->logger = $logger;
         $this->update = $update;

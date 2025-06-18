@@ -63,7 +63,7 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller extends Ba
         WebControllerService $webService
     )
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this-><?= $generator->getSmall_singular_name(); ?>Service = $<?= $generator->getSmall_singular_name(); ?>Service;
     }
     

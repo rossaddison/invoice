@@ -32,6 +32,7 @@ use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -53,9 +54,10 @@ final class UserInvController extends BaseController
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService
+        WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         // @see yiisoft/rbac-php
         $this->itemstorage = $itemstorage;
         $this->assignment = $assignment;

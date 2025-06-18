@@ -81,7 +81,7 @@ final class PaymentInformationController
         $this->merchantService = $merchantService;
         $this->paymentService = $paymentService;
         $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = $flash;
         $this->iaR = $iaR;
         $this->iR = $iR;
         $this->sR = $sR;

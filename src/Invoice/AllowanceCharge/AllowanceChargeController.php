@@ -17,6 +17,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -33,9 +34,10 @@ final class AllowanceChargeController extends BaseController
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
         UserService $userService,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->allowanceChargeService = $allowanceChargeService;
     }
 

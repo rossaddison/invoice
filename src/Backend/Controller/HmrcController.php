@@ -15,6 +15,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\AuthClient\RequestUtil;
@@ -25,6 +26,7 @@ final class HmrcController extends BaseController
     protected string $controllerName = 'hmrc';
 
     public function __construct(
+        Flash $flash,
         private HttpClient $httpClient,
         private RequestFactoryInterface $requestFactory,
         SessionInterface $session,
@@ -34,7 +36,7 @@ final class HmrcController extends BaseController
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
         $this->session = $session;

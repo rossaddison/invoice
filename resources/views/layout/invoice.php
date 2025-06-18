@@ -459,7 +459,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ->items(
                 DropdownItem::link('8.3', 'https://php.watch/versions/8.3', $debugMode, false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('8.4', 'https://php.watch/versions/8.4', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('8.4', 'https://php.watch/versions/8.5', $debugMode, false, ['style' => 'background-color: #ffcccb']),    
+                DropdownItem::link('8.5', 'https://php.watch/versions/8.5', $debugMode, false, ['style' => 'background-color: #ffcccb']),    
             ),
             // Emojipedia.org
             Dropdown::widget()

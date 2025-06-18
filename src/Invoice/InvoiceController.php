@@ -36,6 +36,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -44,7 +45,6 @@ use App\Invoice\Libraries\Crypt;
 final class InvoiceController extends BaseController
 {
     protected Crypt $crypt;
-
     // New property for controller name
     protected string $controllerName = 'invoice';
 
@@ -55,9 +55,10 @@ final class InvoiceController extends BaseController
         ViewRenderer $viewRenderer,
         SessionInterface $session,
         SettingRepository $sR,
-        Crypt $crypt
+        Crypt $crypt,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->crypt = $crypt;
     }
 

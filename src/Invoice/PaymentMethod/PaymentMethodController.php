@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
@@ -29,9 +30,10 @@ final class PaymentMethodController extends BaseController
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService
+        WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->paymentmethodService = $paymentmethodService;
     }
 

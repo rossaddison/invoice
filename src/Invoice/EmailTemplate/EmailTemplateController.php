@@ -20,6 +20,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -36,9 +37,10 @@ final class EmailTemplateController extends BaseController
         TranslatorInterface $translator,
         UserService $userService,
         ViewRenderer $viewRenderer,
-        WebControllerService $webService
+        WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->emailTemplateService = $emailTemplateService;
         $this->factory = $factory;
     }

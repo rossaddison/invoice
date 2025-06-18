@@ -125,6 +125,7 @@ use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
@@ -181,8 +182,9 @@ final class InvController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
+        Flash $flash
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR);
+        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->date_helper = new DateHelper($sR);
         $this->number_helper = new NumberHelper($sR);
         $this->pdf_helper = new PdfHelper($sR, $session);

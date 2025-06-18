@@ -55,8 +55,7 @@ final class AuthController
     use Callback;
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
-
-    private Flash $flash;
+    
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
@@ -72,41 +71,27 @@ final class AuthController
 
     public function __construct(
         private readonly AuthService $authService,
-        private DataResponseFactoryInterface $factory,
+        private readonly DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
         private ViewRenderer $viewRenderer,
-        private Manager $manager,
-        private SessionInterface $session,
-        private SettingRepository $sR,
-        private DeveloperSandboxHmrc $developerSandboxHmrc,
-        private Facebook $facebook,
-        private GitHub $github,
-        private Google $google,
-        private GovUk $govUk,
-        private LinkedIn $linkedIn,
-        private MicrosoftOnline $microsoftOnline,
-        private VKontakte $vkontakte,
-        private X $x,
-        private Yandex $yandex,
-        private UrlGenerator $urlGenerator,
-        private LoggerInterface $logger
+        private readonly Manager $manager,
+        private readonly SessionInterface $session,
+        private readonly SettingRepository $sR,
+        private readonly DeveloperSandboxHmrc $developerSandboxHmrc,
+        private readonly Facebook $facebook,
+        private readonly GitHub $github,
+        private readonly Google $google,
+        private readonly GovUk $govUk,
+        private readonly LinkedIn $linkedIn,
+        private readonly MicrosoftOnline $microsoftOnline,
+        private readonly VKontakte $vkontakte,
+        private readonly X $x,
+        private readonly Yandex $yandex,
+        private readonly UrlGenerator $urlGenerator,
+        private readonly LoggerInterface $logger,
+        private readonly Flash $flash
     ) {
-        $this->factory = $factory;
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
-        $this->manager = $manager;
-        $this->session = $session;
-        $this->flash = new Flash($this->session);
-        $this->sR = $sR;
-        $this->developerSandboxHmrc = $developerSandboxHmrc;
-        $this->facebook = $facebook;
-        $this->github = $github;
-        $this->google = $google;
-        $this->govUk = $govUk;
-        $this->linkedIn = $linkedIn;
-        $this->microsoftOnline = $microsoftOnline;
-        $this->vkontakte = $vkontakte;
-        $this->x = $x;
-        $this->yandex = $yandex;
         // use the Oauth2 trait function
         $this->initializeOauth2IdentityProviderCredentials(
             $developerSandboxHmrc,
@@ -121,8 +106,6 @@ final class AuthController
             $yandex
         );
         $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
-        $this->urlGenerator = $urlGenerator;
-        $this->logger = $logger;
         $this->telegramToken = $this->sR->getSetting('telegram_token');
     }
 

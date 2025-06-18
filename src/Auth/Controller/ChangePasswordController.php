@@ -31,7 +31,7 @@ final class ChangePasswordController
     ) {
         $this->currentUser = $currentUser;
         $this->session = $session;
-        $this->flash = new Flash($session);
+        $this->flash = $flash;
         $this->translator = $translator;
         $this->viewRenderer = $viewRenderer->withControllerName('changepassword');
     }
