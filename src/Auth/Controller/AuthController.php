@@ -55,7 +55,7 @@ final class AuthController
     use Callback;
     //initialize .env file at root with oauth2.0 settings
     use Oauth2;
-    
+
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
