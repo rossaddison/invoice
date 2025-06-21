@@ -101,7 +101,7 @@ class GeneratorController extends BaseController
         private Aliases $aliases,
         private DataResponseFactoryInterface $factory,
         private GeneratorService $generatorService,
-        private UrlGenerator $urlGenerator,    
+        private UrlGenerator $urlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -202,7 +202,7 @@ class GeneratorController extends BaseController
             match ($type) {
                 'diff' => $this->rebuildLocale(),
                 // copy the latest developments in the en folder to the working directory English
-                'app'  => $this->copyAppPhpToLangPhp(),
+                'app' => $this->copyAppPhpToLangPhp(),
                 default => null,
             };
             // 1. Downloaded json file at https://console.cloud.google.com/iam-admin/serviceaccounts/details/unique_project_id/keys?project={your_project_name}
@@ -239,7 +239,7 @@ class GeneratorController extends BaseController
                     $values = array_values($content);
                     $numItems = count($content);
                     $result_array = [];
-                    
+
                     // Loop through in batches
                     for ($i = 0; $i < $numItems; $i += $batchSize) {
                         $batchValues = array_slice($values, $i, $batchSize);
@@ -247,14 +247,14 @@ class GeneratorController extends BaseController
                         $request->setParent('projects/' . $projectId);
                         $request->setContents($batchValues);
                         $request->setTargetLanguageCode($targetLanguage);
-                        // The request will contain the authentication token based on the default credentials file        
+                        // The request will contain the authentication token based on the default credentials file
                         $response = $translationClient->translateText($request);
-                       /**
-                        * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
-                        * @psalm-suppress DeprecatedClass
-                        * @see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead.
-                        */
-                        $response_get_translations = $response->getTranslations();                        
+                        /**
+                         * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
+                         * @psalm-suppress DeprecatedClass
+                         * @see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead.
+                         */
+                        $response_get_translations = $response->getTranslations();
                         /**
                         * @psalm-suppress RawObjectIteration $response_get_translations
                         * @var \Google\Cloud\Translate\V3\Translation $translation
@@ -262,9 +262,9 @@ class GeneratorController extends BaseController
                         * @see $content = ['view.contact.form.name' => 'Name']
                         * @see $response_get_translations = ['Name' => 'Naam']
                         */
-                       foreach ($response_get_translations as $key => $translation) {
-                           $result_array[] = $translation->getTranslatedText();
-                       }
+                        foreach ($response_get_translations as $key => $translation) {
+                            $result_array[] = $translation->getTranslatedText();
+                        }
                     }
                     if (count($result_array) !== $numItems) {
                         throw new \RuntimeException('Total translation count mismatch.');
@@ -281,7 +281,7 @@ class GeneratorController extends BaseController
                     );
                     $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage . '_' . $type . '_' . (string)time();
                     $this->flashMessage(
-                        'success', 
+                        'success',
                         sprintf(
                             '%s: %d keys translated in batches of %d. Output: %s/%s',
                             $templateFile,
@@ -303,35 +303,34 @@ class GeneratorController extends BaseController
         $this->flashMessage('info', $this->translator->translate('generator.file.type.not.found'));
         return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
     }
-    
-   /**
-    * Ensure the file path ends with .json
-    *
-    * @param string $filepath
-    * @return bool
-    */
-   function ensureJsonExtension(string $filepath): bool
-   {
-       // Remove any trailing whitespace
-       $filepath = trim($filepath);
 
-       // If it already ends with .json (case-insensitive), return as-is
-       if (str_ends_with(strtolower($filepath), '.json')) {
-           return true; 
-       }
+    /**
+     * Ensure the file path ends with .json
+     *
+     * @param string $filepath
+     * @return bool
+     */
+    public function ensureJsonExtension(string $filepath): bool
+    {
+        // Remove any trailing whitespace
+        $filepath = trim($filepath);
 
-       // Otherwise, append .json and return
-       return false; 
+        // If it already ends with .json (case-insensitive), return as-is
+        return (str_ends_with(strtolower($filepath), '.json'))
+
+
+
+        // Otherwise, append .json and return
+         ;
     }
-    
-   /**
-    * Copies resources/messages/en/app.php as src/Invoice/Language/English/app_lang.php
-    * with the $lang = [...] format.
-    *
-    * @psalm-suppress MixedAssignment
-    * @psalm-suppress MixedArrayAccess
-    * @return void
-    */
+
+    /**
+     * Copies resources/messages/en/app.php as src/Invoice/Language/English/app_lang.php
+     * with the $lang = [...] format.
+     *
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArrayAccess
+     */
     private function copyAppPhpToLangPhp(): void
     {
         $source = $this->aliases->get('@messages') . '/en/app.php';

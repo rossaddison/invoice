@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Stringable;
 
 final readonly class WebControllerService
 {

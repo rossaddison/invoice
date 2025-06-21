@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Simple Translation Key Usage Reporter
  *
@@ -7,10 +9,13 @@
  * Prints summary to STDOUT only.
  */
 
-function prompt($msg, $default = null) {
+function prompt($msg, $default = null)
+{
     echo $msg;
-    if ($default !== null) echo " [$default]";
-    echo ": ";
+    if ($default !== null) {
+        echo " [$default]";
+    }
+    echo ': ';
     $input = trim(fgets(STDIN));
     return $input === '' && $default !== null ? $default : $input;
 }
@@ -18,9 +23,9 @@ function prompt($msg, $default = null) {
 date_default_timezone_set('UTC');
 
 // 1. Get translation directory and check app.php
-$baseDir = prompt("Enter translation directory", "resources/messages/en");
-$baseDir = rtrim($baseDir, "/\\") . '/';
-$translationFile = $baseDir . "app.php";
+$baseDir = prompt('Enter translation directory', 'resources/messages/en');
+$baseDir = rtrim($baseDir, '/\\') . '/';
+$translationFile = $baseDir . 'app.php';
 if (!file_exists($translationFile)) {
     echo "ERROR: $translationFile not found.\n";
     exit(1);
@@ -29,21 +34,21 @@ echo "Using translations: $translationFile\n";
 
 // 2. Get scan folders (comma-separated, or use default)
 $defaultScanFolders = [
-    "src/Invoice/",
-    "resources/views/invoice/",
-    "resources/views/auth/",
-    "resources/views/changepassword/",
-    "resources/views/forgotpassword/",
-    "resources/views/resetpassword/",
-    "resources/views/signup/",
-    "resources/views/site/",
-    "resources/views/user/",
+    'src/Invoice/',
+    'resources/views/invoice/',
+    'resources/views/auth/',
+    'resources/views/changepassword/',
+    'resources/views/forgotpassword/',
+    'resources/views/resetpassword/',
+    'resources/views/signup/',
+    'resources/views/site/',
+    'resources/views/user/',
 ];
 $scanInput = prompt(
-    "Enter code directories to scan (comma-separated, empty for default list)", 
-    implode(",", $defaultScanFolders)
+    'Enter code directories to scan (comma-separated, empty for default list)',
+    implode(',', $defaultScanFolders)
 );
-$scanFolders = array_filter(array_map('trim', explode(",", $scanInput)));
+$scanFolders = array_filter(array_map('trim', explode(',', $scanInput)));
 $existingFolders = [];
 foreach ($scanFolders as $folder) {
     if (is_dir($folder)) {
@@ -71,7 +76,9 @@ foreach ($allKeys as $key => $value) {
         $results = [];
         exec("grep -rl --include='*.php' " . escapeshellarg($key) . " $folder 2>/dev/null", $results);
         foreach ($results as $result) {
-            if (realpath($result) === realpath($translationFile)) continue; // skip app.php itself
+            if (realpath($result) === realpath($translationFile)) {
+                continue;
+            } // skip app.php itself
             // Report and break at first found instance
             printf("Key: '%s' found in: %s (under %s)\n", $key, $result, $folder);
             $found = true;
