@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This script copies resources/messages/en/app.php to resources/messages/en/app_dot.php,
  * replacing all underscores in the array keys with dots.
@@ -11,7 +13,7 @@
  */
 
 $sourceFile = __DIR__ . '/resources/messages/en/app.php';
-$destFile   = __DIR__ . '/resources/messages/en/app_dot.php';
+$destFile = __DIR__ . '/resources/messages/en/app_dot.php';
 
 if (!file_exists($sourceFile)) {
     fwrite(STDERR, "Source file not found: $sourceFile\n");

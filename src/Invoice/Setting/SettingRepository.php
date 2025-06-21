@@ -1992,11 +1992,11 @@ final class SettingRepository extends Select\Repository
         ];
     }
 
-   /**
-     * @param string $setting
-     * @param bool $debug_mode
-     * @return string
-     */
+    /**
+      * @param string $setting
+      * @param bool $debug_mode
+      * @return string
+      */
     public function where(string $setting, bool $debug_mode = true): string
     {
         $tooltip = $this->tooltip_array();

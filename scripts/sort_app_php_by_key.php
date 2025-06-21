@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This script sorts the associative array in resources/messages/en/app.php by key (alphabetically).
  * The sorted array is saved as resources/messages/en/app_sorted.php.
@@ -8,7 +10,7 @@
  */
 
 $sourceFile = __DIR__ . '/resources/messages/en/app.php';
-$destFile   = __DIR__ . '/resources/messages/en/app_sorted.php';
+$destFile = __DIR__ . '/resources/messages/en/app_sorted.php';
 
 if (!file_exists($sourceFile)) {
     fwrite(STDERR, "Source file not found: $sourceFile\n");

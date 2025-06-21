@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * For each key from app_sorted.php, search for any translate('...') or translate("...") in code
  * where the quoted key contains the current key as a substring (partial match, not exact match).
@@ -11,7 +13,8 @@
 $sortedFile = __DIR__ . '/resources/messages/en/app_sorted.php';
 $searchDirs = [__DIR__ . '/src', __DIR__ . '/resources'];
 
-function normalize_path($path) {
+function normalize_path($path)
+{
     return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
 }
 
@@ -26,9 +29,10 @@ if (!file_exists($sortedFile)) {
 }
 $keys = array_keys(include $sortedFile);
 
-function prompt($message) {
-    echo $message . " (yes/no): ";
-    $handle = fopen ("php://stdin","r");
+function prompt($message)
+{
+    echo $message . ' (yes/no): ';
+    $handle = fopen('php://stdin', 'r');
     $line = fgets($handle);
     return trim(strtolower($line));
 }
@@ -49,7 +53,9 @@ foreach ($keys as $key) {
                 }
             }
 
-            if (!in_array($file->getExtension(), ['php'])) continue;
+            if (!in_array($file->getExtension(), ['php'])) {
+                continue;
+            }
 
             $contents = file_get_contents($filePath);
 
@@ -71,7 +77,7 @@ foreach ($keys as $key) {
                         $start = max(0, $offset - 20);
                         $context = substr($contents, $start, strlen($fullMatch) + 40);
                         echo "File: $filePath\n";
-                        echo "Context: ...".str_replace("\n", "\\n", $context)."...\n";
+                        echo 'Context: ...' . str_replace("\n", '\\n', $context) . "...\n";
                         echo "Found translate('$foundKey'), replace with translate('$key')?\n";
                         $answer = prompt("Replace \"$foundKey\" with \"$key\" inside translate()?");
 
