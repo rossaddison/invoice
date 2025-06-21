@@ -316,12 +316,12 @@ class GeneratorController extends BaseController
         $filepath = trim($filepath);
 
         // If it already ends with .json (case-insensitive), return as-is
-        return (str_ends_with(strtolower($filepath), '.json'))
+        return str_ends_with(strtolower($filepath), '.json')
 
 
 
         // Otherwise, append .json and return
-         ;
+        ;
     }
 
     /**
