@@ -52,7 +52,7 @@ final class CategorySecondaryController extends BaseController
         $categorySecondary = new CategorySecondary();
         $form = new CategorySecondaryForm($categorySecondary);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'categorysecondary/add',
             'actionArguments' => [],
             'errors' => [],
@@ -103,7 +103,7 @@ final class CategorySecondaryController extends BaseController
             $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
             if ($categorySecondary) {
                 $this->categorySecondaryService->deleteCategorySecondary($categorySecondary);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('categorysecondary/index');
             }
             return $this->webService->getRedirectResponse('categorysecondary/index');
@@ -124,7 +124,7 @@ final class CategorySecondaryController extends BaseController
         if ($categorySecondary) {
             $form = new CategorySecondaryForm($categorySecondary);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'categorysecondary/edit',
                 'actionArguments' => ['id' => $id],
                 'category_primarys' => $categoryPrimaryRepository->optionsDataCategoryPrimaries(),
@@ -175,7 +175,7 @@ final class CategorySecondaryController extends BaseController
         if ($categorysecondary) {
             $form = new CategorySecondaryForm($categorysecondary);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'categorysecondary/view',
                 'actionArguments' => ['id' => $id],
                 'form' => $form,

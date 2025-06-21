@@ -16,7 +16,7 @@ declare(strict_types=1);
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('invoice.salesorder') ?></h5>
+               <h5 class="modal-title"><?= $translator->translate('salesorder') ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -27,12 +27,12 @@ declare(strict_types=1);
                                value="<?= $urlKey; ?>" hidden>
                     </div>
                     <div>
-                        <label for="quote_with_purchase_order_number"><?= $translator->translate('invoice.quote.with.purchase.order.number') ?></label>
+                        <label for="quote_with_purchase_order_number"><?= $translator->translate('quote.with.purchase.order.number') ?></label>
                         <input type="text" name="quote_with_purchase_order_number" id="quote_with_purchase_order_number" class="form-control"
                                value="" autocomplete="off">
                     </div> 
                     <div>
-                        <label for="quote_with_purchase_order_person"><?= $translator->translate('invoice.quote.with.purchase.order.person') ?></label>
+                        <label for="quote_with_purchase_order_person"><?= $translator->translate('quote.with.purchase.order.person') ?></label>
                         <input type="text" name="quote_with_purchase_order_person" id="quote_with_purchase_order_person" class="form-control"
                                value="" autocomplete="off">
                     </div>   
@@ -42,10 +42,10 @@ declare(strict_types=1);
                 <div class="btn-group">
                     <button class="quote_with_purchase_order_number_confirm btn btn-success" id="quote_with_purchase_order_number_confirm" type="button">
                         <i class="fa fa-check"></i>
-                        <?= $translator->translate('i.submit'); ?>
+                        <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

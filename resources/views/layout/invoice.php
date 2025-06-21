@@ -80,6 +80,7 @@ $locale = match ($currentRoute->getArgument('_language') ?? 'en') {
     'af-ZA' => 'AfrikaansSouthAfrican',
     'ar-BH' => 'ArabicBahrainian',
     'az' => 'Azerbaijani',
+    'bs' => 'Bosnian',
     'de' => 'German',
     'en' => 'English',
     'fil' => 'Filipino',
@@ -91,7 +92,8 @@ $locale = match ($currentRoute->getArgument('_language') ?? 'en') {
     'pt-BR' => 'PortugeseBrazil',
     'nl' => 'Dutch',
     'ru' => 'Russian',
-    'sk' => 'Slovensky',
+    'sk' => 'Slovakian',
+    'sl' => 'Slovenian',
     'es' => 'Spanish',
     'uk' => 'Ukrainian',
     'uz' => 'Uzbek',
@@ -128,7 +130,7 @@ $this->beginPage();
     </head>
     <body>
         <?php
-        Html::tag('Noscript', Html::tag('Div', $translator->translate('i.please_enable_js'), ['class' => 'alert alert-danger no-margin']));
+        Html::tag('Noscript', Html::tag('Div', $translator->translate('please.enable.js'), ['class' => 'alert alert-danger no-margin']));
 ?>
         
         <?php
@@ -180,14 +182,14 @@ echo Form::tag()
 $subMenuPhpInfo = [
     0 => [
        'items' => [
-           $translator->translate('invoice.faq.php.info.all') => ['invoice/phpinfo', ['selection' => '-1']],
-           $translator->translate('invoice.faq.php.info.general') => ['invoice/phpinfo', ['selection' => '1']],
-           $translator->translate('invoice.faq.php.info.credits') => ['invoice/phpinfo', ['selection' => '2']],
-           $translator->translate('invoice.faq.php.info.configuration') => ['invoice/phpinfo', ['selection' => '4']],
-           $translator->translate('invoice.faq.php.info.modules') => ['invoice/phpinfo', ['selection' => '8']],
-           $translator->translate('invoice.faq.php.info.environment') => ['invoice/phpinfo', ['selection' => '16']],
-           $translator->translate('invoice.faq.php.info.variables') => ['invoice/phpinfo', ['selection' => '32']],
-           $translator->translate('invoice.faq.php.info.licence') => ['invoice/phpinfo', ['selection' => '64']],
+           $translator->translate('faq.php.info.all') => ['invoice/phpinfo', ['selection' => '-1']],
+           $translator->translate('faq.php.info.general') => ['invoice/phpinfo', ['selection' => '1']],
+           $translator->translate('faq.php.info.credits') => ['invoice/phpinfo', ['selection' => '2']],
+           $translator->translate('faq.php.info.configuration') => ['invoice/phpinfo', ['selection' => '4']],
+           $translator->translate('faq.php.info.modules') => ['invoice/phpinfo', ['selection' => '8']],
+           $translator->translate('faq.php.info.environment') => ['invoice/phpinfo', ['selection' => '16']],
+           $translator->translate('faq.php.info.variables') => ['invoice/phpinfo', ['selection' => '32']],
+           $translator->translate('faq.php.info.licence') => ['invoice/phpinfo', ['selection' => '64']],
        ]   
     ],
 ];
@@ -207,7 +209,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ->items(
                 // Assets Clear
                 DropdownItem::link(
-                    $translator->translate('invoice.utility.assets.clear'),
+                    $translator->translate('utility.assets.clear'),
                     $urlGenerator->generate('setting/clear'),
                     false,
                     false,
@@ -217,9 +219,9 @@ if ((null !== $currentPath) && !$isGuest) {
                     ]
                 ),
                 // Vat exists? Show red or green background
-                DropdownItem::text($translator->translate('invoice.vat'), ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90']),
+                DropdownItem::text($translator->translate('vat'), ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90']),
                 // Debug Mode
-                DropdownItem::text($translator->translate('invoice.debug')),
+                DropdownItem::text($translator->translate('debug')),
                 // Locale
                 DropdownItem::text(
                     'Locale ➡️ ' . $locale
@@ -236,16 +238,16 @@ if ((null !== $currentPath) && !$isGuest) {
                 'style' => 'font-size: 2rem; color: cornflowerblue;'
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('invoice.faq'))
+            ->togglerContent($translator->translate('faq'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
                 DropdownItem::link('Console Commands', $urlGenerator->generate('invoice/faq', ['topic' => 'consolecommands', 'selection' => ''])),
-                DropdownItem::link($translator->translate('invoice.faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])),
-                DropdownItem::link($translator->translate('invoice.faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])),
-                DropdownItem::link($translator->translate('invoice.faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])),
-                DropdownItem::text($subMenu->generate($translator->translate('invoice.faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),   
-                DropdownItem::link($translator->translate('invoice.faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])),
-                DropdownItem::link($translator->translate('invoice.faq.ai.callback.session'), $urlGenerator->generate('invoice/faq', ['topic' => 'ai_callback_session', 'selection' => ''])),
+                DropdownItem::link($translator->translate('faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])),
+                DropdownItem::link($translator->translate('faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])),
+                DropdownItem::link($translator->translate('faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])),
+                DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),   
+                DropdownItem::link($translator->translate('faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])),
+                DropdownItem::link($translator->translate('faq.ai.callback.session'), $urlGenerator->generate('invoice/faq', ['topic' => 'ai_callback_session', 'selection' => ''])),
             ),
             // Generator
             Dropdown::widget()
@@ -254,35 +256,35 @@ if ((null !== $currentPath) && !$isGuest) {
                 'style' => 'background-color: #ffcccb'
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('invoice.generator'))
+            ->togglerContent($translator->translate('generator'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
                 DropdownItem::link(
-                    $translator->translate('invoice.generator'),
+                    $translator->translate('generator'),
                     $urlGenerator->generate('generator/index'),
                     false,
                     false
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.generator.relations'),
+                    $translator->translate('generator.relations'),
                     $urlGenerator->generate('generatorrelation/index'),
                     false,
                     false
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.generator.add'),
+                    $translator->translate('generator.add'),
                     $urlGenerator->generate('generator/add'),
                     false,
                     false
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.generator.relations.add'),
+                    $translator->translate('generator.relations.add'),
                     $urlGenerator->generate('generatorrelation/add'),
                     false,
                     false
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.development.schema'),
+                    $translator->translate('development.schema'),
                     $urlGenerator->generate('generator/quick_view_schema'),
                     false,
                     false
@@ -292,70 +294,39 @@ if ((null !== $currentPath) && !$isGuest) {
                 // Your Json file must be located in src/Invoice/google_translate_unique folder
                 // Get your downloaded Json file from
                 DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.gateway'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'gateway']),
-                    false,
-                    false
-                ),
-                DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.ip'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'ip']),
+                    $translator->translate('generator.google.translate.app'),
+                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'app']),
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename'), 'hidden' => !$debugMode]
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.latest.a'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),
-                    false,
-                    false
-                ),
-                DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.latest.b'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'b_latest']),
-                    false,
-                    false
-                ),
-                DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.common'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'common']),
-                    false,
-                    false
-                ),
-                DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.any'),
-                    $urlGenerator->generate('generator/google_translate_lang', ['type' => 'any']),
-                    false,
-                    false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\any_lang.php', 'hidden' => !$debugMode]
-                ),
-                DropdownItem::link(
-                    $translator->translate('invoice.generator.google.translate.diff'),
+                    $translator->translate('generator.google.translate.diff'),
                     $urlGenerator->generate('generator/google_translate_lang', ['type' => 'diff']),
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\diff_lang.php', 'hidden' => !$debugMode]
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.test.reset.setting'),
+                    $translator->translate('test.reset.setting'),
                     $urlGenerator->generate('invoice/setting_reset'),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.reset.setting.tooltip'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.setting.tooltip'), 'hidden' => !$debugMode]
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.test.reset'),
+                    $translator->translate('test.reset'),
                     $urlGenerator->generate('invoice/test_data_reset'),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.reset.tooltip'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.tooltip'), 'hidden' => !$debugMode]
                 ),
                 DropdownItem::link(
-                    $translator->translate('invoice.test.remove'),
+                    $translator->translate('test.remove'),
                     $urlGenerator->generate('invoice/test_data_remove'),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.test.remove.tooltip'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.remove.tooltip'), 'hidden' => !$debugMode]
                 ),
             ),
             // Performance
@@ -365,15 +336,15 @@ if ((null !== $currentPath) && !$isGuest) {
                 'style' => $read_write ? 'background-color: #ffcccb'
                                        : 'background-color: #90EE90',
                 'data-bs-toggle' => 'tooltip',
-                'title' => $read_write ? $translator->translate('invoice.performance.label.switch.on')
-                                       : $translator->translate('invoice.performance.label.switch.off'),
+                'title' => $read_write ? $translator->translate('performance.label.switch.on')
+                                       : $translator->translate('performance.label.switch.off'),
                 'hidden' => !$debugMode
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('invoice.performance'))
+            ->togglerContent($translator->translate('performance'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
-                DropdownItem::text($translator->translate('invoice.platform.xdebug') . ' ' . $xdebug, ['data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']),
+                DropdownItem::text($translator->translate('platform.xdebug') . ' ' . $xdebug, ['data-bs-toggle' => 'tooltip', 'title' => 'Via Wampserver Menu: Icon..Php 8.1.8-->Php extensions-->xdebug 3.1.5(click)-->Allow php command prompt to restart automatically-->(click)Restart All Services-->No typing in or editing of a php.ini file!!']),
                 DropdownItem::text('...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'),
                 DropdownItem::divider(),
                 DropdownItem::text('Non-CLI/Non-FCGI: Manually Edit c:\wamp64\bin\apache\apache{version}\bin php.ini then ... Wampserver Icon ... Restart All Services'),
@@ -400,19 +371,19 @@ if ((null !== $currentPath) && !$isGuest) {
                 'hidden' => !$debugMode
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent($translator->translate('invoice.platform'))
+            ->togglerContent($translator->translate('platform'))
             ->togglerSize(ButtonSize::LARGE)
             ->items(
                 DropdownItem::text('WAMP'),
-                DropdownItem::text($translator->translate('invoice.platform.editor') . ': Apache Netbeans IDE 23 64 bit'),
-                DropdownItem::text($translator->translate('invoice.platform.server') . ': Wampserver 3.3.6 64 bit'),
+                DropdownItem::text($translator->translate('platform.editor') . ': Apache Netbeans IDE 23 64 bit'),
+                DropdownItem::text($translator->translate('platform.server') . ': Wampserver 3.3.6 64 bit'),
                 DropdownItem::text('Apache: 2.4.59 64 bit'),
-                DropdownItem::text($translator->translate('invoice.platform.mySqlVersion') . ': 8.3.0 '),
-                DropdownItem::text($translator->translate('invoice.platform.windowsVersion') . ': Windows 11 Pro Edition'),
-                DropdownItem::text($translator->translate('invoice.platform.PhpVersion') . ': 8.3.0 (Compatable with PhpAdmin 5.2.1)'),
-                DropdownItem::text($translator->translate('invoice.platform.PhpMyAdmin') . ': 5.2.1 (Compatable with php 8.2.0)'),
-                DropdownItem::link($translator->translate('invoice.platform.PhpSupport'), 'https://php.net/supported-versions'),
-                DropdownItem::link($translator->translate('invoice.platform.update'), 'https://wampserver.aviatechno.net/'),
+                DropdownItem::text($translator->translate('platform.mySqlVersion') . ': 8.3.0 '),
+                DropdownItem::text($translator->translate('platform.windowsVersion') . ': Windows 11 Pro Edition'),
+                DropdownItem::text($translator->translate('platform.PhpVersion') . ': 8.3.0 (Compatable with PhpAdmin 5.2.1)'),
+                DropdownItem::text($translator->translate('platform.PhpMyAdmin') . ': 5.2.1 (Compatable with php 8.2.0)'),
+                DropdownItem::link($translator->translate('platform.PhpSupport'), 'https://php.net/supported-versions'),
+                DropdownItem::link($translator->translate('platform.update'), 'https://wampserver.aviatechno.net/'),
                 DropdownItem::link('Bootstrap 5 Icons with Filter', 'https://icons.getbootstrap.com/'),
                 DropdownItem::link('BootstrapBrain Free Wavelight Template', 'https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/'),
                 DropdownItem::link('Html to Markdown', 'https://convertsimple.com/convert-html-to-markdown/'),
@@ -510,28 +481,28 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerContent(I::tag()->addClass('fa fa-cogs'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('setting/debug_index'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
-            DropdownItem::link($translator->translate('invoice.setting.add'), $urlGenerator->generate('setting/add'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
-            DropdownItem::link($translator->translate('invoice.invoice.caution.delete.invoices'), $urlGenerator->generate('inv/flush'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('setting/tab_index')),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('setting/debug_index'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
+            DropdownItem::link($translator->translate('setting.add'), $urlGenerator->generate('setting/add'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
+            DropdownItem::link($translator->translate('caution.delete.invoices'), $urlGenerator->generate('inv/flush'), false, !$debugMode, ['style' => 'background-color: #ffcccb', 'hidden' => !$debugMode]),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('setting/tab_index')),
             DropdownItem::link($translator->translate((($s->getSetting('install_test_data') == '1') && ($s->getSetting('use_test_data') == '1'))
-            ? 'invoice.install.test.data' : 'invoice.install.test.data.goto.tab.index'), (($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')
+            ? 'install.test.data' : 'install.test.data.goto.tab.index'), (($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')
             ? $urlGenerator->generate('invoice/index') : $urlGenerator->generate('setting/tab_index')), ($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')),
-            DropdownItem::link($translator->translate('i.email_template'), $urlGenerator->generate('emailtemplate/index')),
-            DropdownItem::link($translator->translate('invoice.email.from.dropdown'), $urlGenerator->generate('from/index')),
-            DropdownItem::link($translator->translate('invoice.email.log'), $urlGenerator->generate('invsentlog/index')),
-            DropdownItem::link($translator->translate('i.custom_fields'), $urlGenerator->generate('customfield/index')),
-            DropdownItem::link($translator->translate('i.invoice_group'), $urlGenerator->generate('group/index')),
-            DropdownItem::link($translator->translate('i.invoice_archive'), $urlGenerator->generate('inv/archive')),
-            DropdownItem::link($translator->translate('i.payment_method'), $urlGenerator->generate('paymentmethod/index')),
-            DropdownItem::link($translator->translate('i.invoice_tax_rate'), $urlGenerator->generate('taxrate/index')),
-            DropdownItem::link($translator->translate('invoice.invoice.contract'), $urlGenerator->generate('contract/index')),
-            DropdownItem::link($translator->translate('invoice.user.account'), $urlGenerator->generate('userinv/index')),
+            DropdownItem::link($translator->translate('email.template'), $urlGenerator->generate('emailtemplate/index')),
+            DropdownItem::link($translator->translate('email.from.dropdown'), $urlGenerator->generate('from/index')),
+            DropdownItem::link($translator->translate('email.log'), $urlGenerator->generate('invsentlog/index')),
+            DropdownItem::link($translator->translate('custom.fields'), $urlGenerator->generate('customfield/index')),
+            DropdownItem::link($translator->translate('group'), $urlGenerator->generate('group/index')),
+            DropdownItem::link($translator->translate('archive'), $urlGenerator->generate('inv/archive')),
+            DropdownItem::link($translator->translate('payment.method'), $urlGenerator->generate('paymentmethod/index')),
+            DropdownItem::link($translator->translate('tax.rate'), $urlGenerator->generate('taxrate/index')),
+            DropdownItem::link($translator->translate('contract'), $urlGenerator->generate('contract/index')),
+            DropdownItem::link($translator->translate('user.account'), $urlGenerator->generate('userinv/index')),
             DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
-            DropdownItem::link($translator->translate('invoice.user.api.list'), $urlGenerator->generate('user/index')),
-            DropdownItem::link($translator->translate('invoice.setting.company'), $urlGenerator->generate('company/index')),
-            DropdownItem::link($translator->translate('invoice.setting.company.private'), $urlGenerator->generate('companyprivate/index')),
-            DropdownItem::link($translator->translate('invoice.setting.company.profile'), $urlGenerator->generate('profile/index')),
+            DropdownItem::link($translator->translate('user.api.list'), $urlGenerator->generate('user/index')),
+            DropdownItem::link($translator->translate('setting.company'), $urlGenerator->generate('company/index')),
+            DropdownItem::link($translator->translate('setting.company.private'), $urlGenerator->generate('companyprivate/index')),
+            DropdownItem::link($translator->translate('setting.company.profile'), $urlGenerator->generate('profile/index')),
         ),
         // peppol
         Dropdown::widget()
@@ -541,14 +512,14 @@ if ((null !== $currentPath) && !$isGuest) {
             'url' => '#'
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('invoice.peppol.abbreviation'))
+        ->togglerContent($translator->translate('peppol.abbreviation'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('invoice.invoice.allowance.or.charge.add'), $urlGenerator->generate('allowancecharge/index')),
-            DropdownItem::link($translator->translate('invoice.peppol.store.cove.1.1.1'), 'https://www.storecove.com/register/'),
-            DropdownItem::link($translator->translate('invoice.peppol.store.cove.1.1.2'), $urlGenerator->generate('setting/tab_index')),
-            DropdownItem::link($translator->translate('invoice.peppol.store.cove.1.1.3'), $urlGenerator->generate('invoice/store_cove_call_api')),
-            DropdownItem::link($translator->translate('invoice.peppol.store.cove.1.1.4'), $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')),
+            DropdownItem::link($translator->translate('allowance.or.charge.add'), $urlGenerator->generate('allowancecharge/index')),
+            DropdownItem::link($translator->translate('peppol.store.cove.1.1.1'), 'https://www.storecove.com/register/'),
+            DropdownItem::link($translator->translate('peppol.store.cove.1.1.2'), $urlGenerator->generate('setting/tab_index')),
+            DropdownItem::link($translator->translate('peppol.store.cove.1.1.3'), $urlGenerator->generate('invoice/store_cove_call_api')),
+            DropdownItem::link($translator->translate('peppol.store.cove.1.1.4'), $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')),
         ),
         // Client
         Dropdown::widget()
@@ -560,11 +531,11 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerContent(I::tag()->addClass('bi bi-people'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('invoice.client.add'), $urlGenerator->generate('client/add', ['origin' => 'main'])),
-            DropdownItem::link($translator->translate('invoice.client.view'), $urlGenerator->generate('client/index')),
-            DropdownItem::link($translator->translate('invoice.client.note.add'), $urlGenerator->generate('clientnote/add')),
-            DropdownItem::link($translator->translate('invoice.client.note.view'), $urlGenerator->generate('clientnote/index')),
-            DropdownItem::link($translator->translate('invoice.invoice.delivery.location'), $urlGenerator->generate('del/index')),
+            DropdownItem::link($translator->translate('client.add'), $urlGenerator->generate('client/add', ['origin' => 'main'])),
+            DropdownItem::link($translator->translate('client.view'), $urlGenerator->generate('client/index')),
+            DropdownItem::link($translator->translate('client.note.add'), $urlGenerator->generate('clientnote/add')),
+            DropdownItem::link($translator->translate('client.note.view'), $urlGenerator->generate('clientnote/index')),
+            DropdownItem::link($translator->translate('delivery.location'), $urlGenerator->generate('del/index')),
         ),
         // Quote
         Dropdown::widget()
@@ -573,11 +544,11 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('i.quote'))
+        ->togglerContent($translator->translate('quote'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.create_quote'), $urlGenerator->generate('quote/add', ['origin' => 'main'])),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('quote/index')),
+            DropdownItem::link($translator->translate('create.quote'), $urlGenerator->generate('quote/add', ['origin' => 'main'])),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('quote/index')),
         ),
         // SalesOrder
         Dropdown::widget()
@@ -586,10 +557,10 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('invoice.salesorder'))
+        ->togglerContent($translator->translate('salesorder'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('salesorder/index'))
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/index'))
         ),
         // Invoice
         Dropdown::widget()
@@ -598,12 +569,12 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('i.invoice'))
+        ->togglerContent($translator->translate('invoice'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.create_invoice'), $urlGenerator->generate('inv/add', ['origin' => 'main'])),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('inv/index')),
-            DropdownItem::link($translator->translate('i.recurring'), $urlGenerator->generate('invrecurring/index'))
+            DropdownItem::link($translator->translate('create.invoice'), $urlGenerator->generate('inv/add', ['origin' => 'main'])),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/index')),
+            DropdownItem::link($translator->translate('recurring'), $urlGenerator->generate('invrecurring/index'))
         ),
         // Payment
         Dropdown::widget()
@@ -615,9 +586,9 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerContent(I::tag()->addClass('bi bi-coin'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.enter_payment'), $urlGenerator->generate('payment/add')),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('payment/index')),
-            DropdownItem::link($translator->translate('i.payment_logs'), $urlGenerator->generate('payment/online_log'))
+            DropdownItem::link($translator->translate('enter.payment'), $urlGenerator->generate('payment/add')),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('payment/index')),
+            DropdownItem::link($translator->translate('payment.logs'), $urlGenerator->generate('payment/online_log'))
         ),
         // Product
         Dropdown::widget()
@@ -626,17 +597,17 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('i.product'))
+        ->togglerContent($translator->translate('product'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.add_product'), $urlGenerator->generate('product/add')),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('product/index')),
-            DropdownItem::link($translator->translate('invoice.category.primary'), $urlGenerator->generate('categoryprimary/index')),
-            DropdownItem::link($translator->translate('invoice.category.secondary'), $urlGenerator->generate('categorysecondary/index')),    
-            DropdownItem::link($translator->translate('i.family'), $urlGenerator->generate('family/index')),
-            DropdownItem::link($translator->translate('invoice.family.search'), $urlGenerator->generate('family/search')),
-            DropdownItem::link($translator->translate('i.unit'), $urlGenerator->generate('unit/index')),
-            DropdownItem::link($translator->translate('invoice.peppol.unit'), $urlGenerator->generate('unitpeppol/index'))
+            DropdownItem::link($translator->translate('add.product'), $urlGenerator->generate('product/add')),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('product/index')),
+            DropdownItem::link($translator->translate('category.primary'), $urlGenerator->generate('categoryprimary/index')),
+            DropdownItem::link($translator->translate('category.secondary'), $urlGenerator->generate('categorysecondary/index')),    
+            DropdownItem::link($translator->translate('family'), $urlGenerator->generate('family/index')),
+            DropdownItem::link($translator->translate('family.search'), $urlGenerator->generate('family/search')),
+            DropdownItem::link($translator->translate('unit'), $urlGenerator->generate('unit/index')),
+            DropdownItem::link($translator->translate('peppol.unit'), $urlGenerator->generate('unitpeppol/index'))
         ),
         // Tasks
         Dropdown::widget()
@@ -645,11 +616,11 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('i.tasks'))
+        ->togglerContent($translator->translate('tasks'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.add_task'), $urlGenerator->generate('task/add')),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('task/index')),
+            DropdownItem::link($translator->translate('add.task'), $urlGenerator->generate('task/add')),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('task/index')),
         ),
         // Projects
         Dropdown::widget()
@@ -658,11 +629,11 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('i.projects'))
+        ->togglerContent($translator->translate('projects'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.create_project'), $urlGenerator->generate('project/add')),
-            DropdownItem::link($translator->translate('i.view'), $urlGenerator->generate('project/index')),
+            DropdownItem::link($translator->translate('create.project'), $urlGenerator->generate('project/add')),
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('project/index')),
         ),
         // Reports
         Dropdown::widget()
@@ -671,23 +642,23 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($translator->translate('i.reports'))
+        ->togglerContent($translator->translate('reports'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('i.sales_by_client'), $urlGenerator->generate('report/sales_by_client_index')),
-            DropdownItem::link($translator->translate('invoice.report.sales.by.product'), $urlGenerator->generate('report/sales_by_product_index')),
-            DropdownItem::link($translator->translate('invoice.report.sales.by.task'), $urlGenerator->generate('report/sales_by_task_index')),
-            DropdownItem::link($translator->translate('i.sales_by_date'), $urlGenerator->generate('report/sales_by_year_index')),
-            DropdownItem::link($translator->translate('i.payment_history'), $urlGenerator->generate('report/payment_history_index')),
-            DropdownItem::link($translator->translate('i.invoice_aging'), $urlGenerator->generate('report/invoice_aging_index')),
-            DropdownItem::link($translator->translate('invoice.report.test.fraud.prevention.headers.api'), $urlGenerator->generate('backend/hmrc/fphValidate')),    
+            DropdownItem::link($translator->translate('sales.by.client'), $urlGenerator->generate('report/sales_by_client_index')),
+            DropdownItem::link($translator->translate('report.sales.by.product'), $urlGenerator->generate('report/sales_by_product_index')),
+            DropdownItem::link($translator->translate('report.sales.by.task'), $urlGenerator->generate('report/sales_by_task_index')),
+            DropdownItem::link($translator->translate('sales.by.date'), $urlGenerator->generate('report/sales_by_year_index')),
+            DropdownItem::link($translator->translate('payment.history'), $urlGenerator->generate('report/payment_history_index')),
+            DropdownItem::link($translator->translate('aging'), $urlGenerator->generate('report/invoice_aging_index')),
+            DropdownItem::link($translator->translate('report.test.fraud.prevention.headers.api'), $urlGenerator->generate('backend/hmrc/fphValidate')),    
         ),
         // Translate
         Dropdown::widget()
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'data-bs-toggle' => 'tooltip',
-            'title' => $translator->translate('i.language'),
+            'title' => $translator->translate('language'),
             'url' => '#'
         ])
         ->togglerVariant(ButtonVariant::INFO)
@@ -697,6 +668,7 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Bosnian / Bosanski', $urlGenerator->generateFromCurrent(['_language' => 'bs'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
             DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
@@ -711,6 +683,7 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Slovenian / Slovenski', $urlGenerator->generateFromCurrent(['_language' => 'sl'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
@@ -746,8 +719,8 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
                     </div>
                 </div>
                 <div class="text-right">
-                    <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $translator->translate('i.close'); ?>"
-                            title="<?= $translator->translate('i.close'); ?>" data-placement="left">
+                    <button type="button" class="fullpage-loader-close btn btn-link tip" aria-label="<?php $translator->translate('close'); ?>"
+                            title="<?= $translator->translate('close'); ?>" data-placement="left">
                         <span aria-hidden="true"><i class="fa fa-close"></i></span>
                     </button>
                 </div>

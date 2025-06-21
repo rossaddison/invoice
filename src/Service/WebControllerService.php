@@ -19,16 +19,12 @@ final readonly class WebControllerService
     ) {
     }
 
-    /**
-     * @param string $url
-     * @param array<string,scalar|Stringable|null> $arguments Argument-value set
-     * @return ResponseInterface
-     */
-    public function getRedirectResponse(string $url, array $arguments = []): ResponseInterface
+    /** @psalm-suppress MixedArgumentTypeCoercion $arguments **/
+    public function getRedirectResponse(string $url, array $arguments = [], array $queryParameters = [], string $hash = ''): ResponseInterface
     {
         return $this->responseFactory
             ->createResponse(Status::FOUND)
-            ->withHeader(Header::LOCATION, $this->urlGenerator->generate($url, $arguments));
+            ->withHeader(Header::LOCATION, $this->urlGenerator->generate($url, $arguments, $queryParameters, $hash));
     }
 
     public function getNotFoundResponse(): ResponseInterface

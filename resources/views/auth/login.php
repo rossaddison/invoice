@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $csrf
  */
 
-$this->setTitle($translator->translate('i.login'));
+$this->setTitle($translator->translate('login'));
 
 ?>
 
@@ -98,8 +98,8 @@ $this->setTitle($translator->translate('i.login'));
                 <div class="card-body p-2 text-center">
                         <?=         
                             Html::tag('span', $s->getSetting('enable_tfa_with_disabling') == '1' ?
-                                    $translator->translate('invoice.invoice.two.factor.authentication.enabled.with.disabling') :
-                                    $translator->translate('invoice.invoice.two.factor.authentication.enabled.without.disabling'), 
+                                    $translator->translate('two.factor.authentication.enabled.with.disabling') :
+                                    $translator->translate('two.factor.authentication.enabled.without.disabling'), 
                             [
                                 'class' => 'badge bg-primary',
                                 'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
@@ -141,7 +141,7 @@ $this->setTitle($translator->translate('i.login'));
                         ->attribute('style', 'color:#999;text-decoration:none')
                         ->addClass('my-1 mx-0')
                         ->href($urlGenerator->generate('auth/forgotpassword'))
-                        ->content($translator->translate('i.forgot_your_password'))
+                        ->content($translator->translate('forgot.your.password'))
                         ->render();
                     ?>
                 </div>

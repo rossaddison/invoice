@@ -24,9 +24,9 @@ class PeppolProductItemClassificationCodeSchemeIdNotFoundException extends \Runt
           'Product id: ' . $product_id .
           str_repeat(' ', 2) . $product_name .
           str_repeat(' ', 2) .
-          $this->translator->translate('invoice.product.item.classification.code.scheme.id.not.found')
+          $this->translator->translate('product.item.classification.code.scheme.id.not.found')
                                      :
-          $this->translator->translate('invoice.product.item.classification.code.scheme.id.not.found');
+          $this->translator->translate('product.item.classification.code.scheme.id.not.found');
     }
 
     /**

@@ -85,7 +85,7 @@ echo rtrim($rel, ",\n")."\n";
         $<?= $generator->getSmall_singular_name(); ?> = new <?= $generator->getCamelcase_capital_name(); ?>();
         $form = new <?= $generator->getCamelcase_capital_name(); ?>Form($<?= $generator->getSmall_singular_name(); ?>);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => '<?= $generator->getSmall_singular_name(); ?>/add',
             'actionArguments' => [],
             'errors' => [],
@@ -144,7 +144,7 @@ foreach ($relations as $relation) {
             $<?= $generator->getSmall_singular_name();?> = $this-><?= $generator->getSmall_singular_name();?>($<?= lcfirst($generator->getCamelcase_capital_name());?>Repository, $id);
             if ($<?= $generator->getSmall_singular_name();?>) {
                 $this-><?= $generator->getSmall_singular_name();?>Service->delete<?= $generator->getCamelcase_capital_name(); ?>($<?= $generator->getSmall_singular_name();?>);               
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name();?>/index'); 
             }
             return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name();?>/index'); 
@@ -175,7 +175,7 @@ echo rtrim($rel, ",\n").",";
         if ($<?= $generator->getSmall_singular_name(); ?>){
             $form = new <?= $generator->getCamelcase_capital_name(); ?>Form($<?= $generator->getSmall_singular_name(); ?>);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => '<?= $generator->getSmall_singular_name(); ?>/edit', 
                 'actionArguments' => ['id' => $id],
                 'errors' => [],
@@ -248,7 +248,7 @@ echo rtrim($rel, ",\n")."\n";
         if ($<?= $generator->getSmall_singular_name(); ?>) {
             $form = new <?= $generator->getCamelcase_capital_name(); ?>Form($<?= $generator->getSmall_singular_name(); ?>);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => '<?= $generator->getSmall_singular_name(); ?>/view', 
                 'actionArguments' => ['id' => $id],
                 'form' => $form,

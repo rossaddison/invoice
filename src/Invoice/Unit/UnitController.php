@@ -73,7 +73,7 @@ final class UnitController extends BaseController
         $unit = new Unit();
         $form = new UnitForm($unit);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'unit/add',
             'actionArguments' => [],
             'form' => $form,
@@ -84,7 +84,7 @@ final class UnitController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->unitService->saveUnit($unit, $body);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('unit/index');
                 }
             }
@@ -111,7 +111,7 @@ final class UnitController extends BaseController
         if ($unit) {
             $form = new UnitForm($unit);
             $parameters = [
-                'title' => $this->translator->translate('invoice.unit.edit'),
+                'title' => $this->translator->translate('unit.edit'),
                 'actionName' => 'unit/edit',
                 'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form,
@@ -122,7 +122,7 @@ final class UnitController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->unitService->saveUnit($unit, $body);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('unit/index');
                     }
                 }
@@ -145,11 +145,11 @@ final class UnitController extends BaseController
             /** @var Unit $unit */
             $unit = $this->unit($unit_id, $unitRepository);
             $this->unitService->deleteUnit($unit);
-            $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('unit/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.unit.history'));
+            $this->flashMessage('danger', $this->translator->translate('unit.history'));
             return $this->webService->getRedirectResponse('unit/index');
         }
     }
@@ -164,7 +164,7 @@ final class UnitController extends BaseController
         if ($unit) {
             $form = new UnitForm($unit);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'unit/view',
                 'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form,

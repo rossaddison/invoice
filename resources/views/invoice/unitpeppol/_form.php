@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
@@ -58,31 +58,31 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'unit_id')
-    ->label($translator->translate('i.id'))
+    ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
     ->value(Html::encode($form->getUnit_id() ?? ''))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'name')
-    ->label($translator->translate('i.name'))
+    ->label($translator->translate('name'))
     ->value(Html::encode($form->getName() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::select($form, 'code')
-    ->label($translator->translate('invoice.unit.peppol.code'))
+    ->label($translator->translate('unit.peppol.code'))
     ->optionsData($optionsDataEneces)
     ->value(Html::encode($form->getCode() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'description')
-    ->label($translator->translate('i.description'))
+    ->label($translator->translate('description'))
     ->value(Html::encode($form->getDescription() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -93,13 +93,13 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::openTag('thead'); ?>
                             <?= Html::openTag('tr'); ?>
                                 <?= Html::openTag('th'); ?>
-                                    <?php $translator->translate('i.id'); ?>
+                                    <?php $translator->translate('id'); ?>
                                 <?= Html::closeTag('th'); ?>
                                 <?= Html::openTag('th'); ?>
-                                    <?php $translator->translate('i.name'); ?>
+                                    <?php $translator->translate('name'); ?>
                                 <?= Html::closeTag('th'); ?>
                                 <?= Html::openTag('th'); ?>
-                                    <?php $translator->translate('i.description'); ?>
+                                    <?php $translator->translate('description'); ?>
                                 <?= Html::closeTag('th'); ?>
                             <?= Html::closeTag('tr'); ?>
                         <?= Html::closeTag('thead'); ?>

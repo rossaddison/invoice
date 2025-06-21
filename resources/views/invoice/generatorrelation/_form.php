@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::errorSummary($form)
     ->errors($errors)
-    ->header($translator->translate('invoice.error.summary'))
+    ->header($translator->translate('error.summary'))
     ->onlyCommonErrors()
 ?>
 <?= Html::closeTag('div'); ?>
@@ -58,57 +58,57 @@ foreach ($generators as $generator) {
 }
 
 echo Field::select($form, 'gentor_id')
-->label($translator->translate('invoice.generator.relation.form.entity.generator'))
+->label($translator->translate('generator.relation.form.entity.generator'))
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'gentor_id'
 ])
-->prompt($translator->translate('i.none'))
+->prompt($translator->translate('none'))
 ->optionsData($optionsDataGenerators)
 ->required(true)
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::text($form, 'lowercasename')
-    ->label($translator->translate('invoice.generator.relation.form.lowercase.name'))
+    ->label($translator->translate('generator.relation.form.lowercase.name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.generator.relation.form.lowercase.name'),
+        'placeholder' => $translator->translate('generator.relation.form.lowercase.name'),
         'class' => 'form-control',
         'id' => 'lowercasename'
     ])
     ->value(Html::encode($form->getLowercase_name()))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::text($form, 'camelcasename')
-    ->label($translator->translate('invoice.generator.relation.form.camelcase.name'))
+    ->label($translator->translate('generator.relation.form.camelcase.name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.generator.relation.form.camelcase.name'),
+        'placeholder' => $translator->translate('generator.relation.form.camelcase.name'),
         'class' => 'form-control',
         'id' => 'camelcasename'
     ])
     ->value(Html::encode($form->getCamelcase_name()))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::text($form, 'view_field_name')
-    ->label($translator->translate('invoice.generator.relation.form.view.field.name'))
+    ->label($translator->translate('generator.relation.form.view.field.name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.generator.relation.form.view.field.name'),
+        'placeholder' => $translator->translate('generator.relation.form.view.field.name'),
         'class' => 'form-control',
         'id' => 'view_field_name'
     ])
     ->value(Html::encode($form->getView_field_name()))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 

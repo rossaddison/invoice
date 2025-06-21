@@ -52,7 +52,7 @@ final class DeliveryPartyController extends BaseController
         $form = new DeliveryPartyForm($deliveryParty);
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'deliveryparty/add',
             'actionArguments' => [],
             'errors' => [],
@@ -103,7 +103,7 @@ final class DeliveryPartyController extends BaseController
             $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
             if ($deliveryparty) {
                 $this->deliveryPartyService->deleteDeliveryParty($deliveryparty);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('deliveryparty/index');
             }
             return $this->webService->getRedirectResponse('deliveryparty/index');
@@ -132,7 +132,7 @@ final class DeliveryPartyController extends BaseController
             $parameters = [
                 'canEdit' => $this->rbac(),
                 'form' => $form,
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'deliveryparty/edit',
                 'actionArguments' => ['id' => $deliveryparty->getId()],
                 'errors' => [],
@@ -186,7 +186,7 @@ final class DeliveryPartyController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('clientnote/index');
         }
         return $canEdit;
@@ -203,7 +203,7 @@ final class DeliveryPartyController extends BaseController
         if ($deliveryparty) {
             $form = new DeliveryPartyForm($deliveryparty);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'deliveryparty/view',
                 'actionArguments' => ['id' => $deliveryparty->getId()],
                 'form' => $form,

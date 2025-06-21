@@ -188,7 +188,7 @@ final class SignupController
                         ],
                         subject: $login . ': <' . $to . '>',
                         date: new \DateTimeImmutable('now'),
-                        from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')],
+                        from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('administrator')],
                         to: $to,
                         htmlBody: $htmlBody
                     );
@@ -315,7 +315,7 @@ final class SignupController
                            'userinv/signup',
                            ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification']
                        ))
-                       ->content($this->translator->translate('invoice.invoice.email.link.click.confirm'));
+                       ->content($this->translator->translate('email.link.click.confirm'));
             return Body::tag()
                        ->content($content)
                        ->render();

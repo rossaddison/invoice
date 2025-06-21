@@ -63,7 +63,7 @@ final class SalesOrderItemController extends BaseController
         if ($so_item) {
             $form = new SalesOrderItemForm($so_item);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'salesorderitem/edit',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
@@ -85,8 +85,8 @@ final class SalesOrderItemController extends BaseController
                         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                             '//invoice/setting/salesorder_successful',
                             [
-                                'heading' => $this->translator->translate('invoice.successful'),
-                                'message' => $this->translator->translate('i.record_successfully_updated'),
+                                'heading' => $this->translator->translate('successful'),
+                                'message' => $this->translator->translate('record.successfully.updated'),
                                 'url' => 'salesorder/view',
                                 'id' => $so_item->getSales_order_id(),
                             ]

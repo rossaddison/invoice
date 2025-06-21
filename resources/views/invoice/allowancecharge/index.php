@@ -33,7 +33,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.invoice.allowance.or.charge'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge'))
             )
     )
     ->render();
@@ -50,7 +50,7 @@ $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div');?>
     <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('invoice.invoice.allowance.or.charge'); ?>
+        <?= $translator->translate('allowance.or.charge'); ?>
     <?= Html::closeTag('h5'); ?>
     <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
@@ -77,11 +77,11 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header: $translator->translate('i.id'),
+        header: $translator->translate('id'),
         content: static fn (AllowanceCharge $model) => $model->getId()
     ),
     new DataColumn(
-        header: $translator->translate('i.view'),
+        header: $translator->translate('view'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): string {
             return Html::a(
                 Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
@@ -93,7 +93,7 @@ $columns = [
     ),
     new DataColumn(
         'identifier',
-        header: $translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'),
+        header: $translator->translate('allowance.or.charge.edit.allowance'),
         content:static function (AllowanceCharge $model) use ($urlGenerator): string {
             return !$model->getIdentifier() ?
                   Html::a(
@@ -108,7 +108,7 @@ $columns = [
     ),
     new DataColumn(
         'identifier',
-        header: $translator->translate('invoice.invoice.allowance.or.charge.edit.charge'),
+        header: $translator->translate('allowance.or.charge.edit.charge'),
         content:static function (AllowanceCharge $model) use ($urlGenerator): string {
             return $model->getIdentifier() ?
                 Html::a(
@@ -122,7 +122,7 @@ $columns = [
         }
     ),
     new DataColumn(
-        header: $translator->translate('i.delete'),
+        header: $translator->translate('delete'),
         content: static function (AllowanceCharge $model) use ($translator, $urlGenerator): string {
             return Html::a(
                 Html::tag(
@@ -131,7 +131,7 @@ $columns = [
                     [
                     'type' => 'submit',
                     'class' => 'dropdown-button',
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                     ]
                 ),
                 $urlGenerator->generate('allowancecharge/delete', ['id' => $model->getId()]),
@@ -147,7 +147,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
-    $translator->translate('invoice.invoice.allowance.or.charge'),
+    $translator->translate('allowance.or.charge'),
     ''
 );
 $toolbarString =
@@ -169,6 +169,6 @@ echo GridView::widget()
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->emptyText($translator->translate('no.records'))
     ->toolbar($toolbarString);
 ?>

@@ -54,16 +54,16 @@ use Yiisoft\Html\Tag\Form;
 foreach ($allowance_charges as $allowance_charge) {
     $optionsDataAllowanceCharge[$allowance_charge->getId()] =
     ($allowance_charge->getIdentifier()
-    ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
-    : $translator->translate('invoice.invoice.allowance.or.charge.allowance'))
+    ? $translator->translate('allowance.or.charge.charge')
+    : $translator->translate('allowance.or.charge.allowance'))
     . ' ' . ($allowance_charge->getReason())
     . ' ' . ($allowance_charge->getReasonCode())
     . ' '. ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
-    . ' ' . ($translator->translate('invoice.invoice.allowance.or.charge.allowance'));
+    . ' ' . ($translator->translate('allowance.or.charge.allowance'));
 }
 ?>
             <?= Field::select($form, 'allowance_charge_id')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.item'))
+    ->label($translator->translate('allowance.or.charge.item'))
     ->addInputAttributes([
         'class' => 'form-control',
         'readonly' => 'readonly',
@@ -71,10 +71,10 @@ foreach ($allowance_charges as $allowance_charge) {
     ])
     ->optionsData($optionsDataAllowanceCharge)
     ->value($form->getAllowance_charge_id())
-    ->prompt($translator->translate('i.none'));
+    ->prompt($translator->translate('none'));
 ?>
             <?= Field::text($form, 'amount')
-    ->label($translator->translate('i.amount').'('.$s->getSetting('currency_symbol').')')
+    ->label($translator->translate('amount').'('.$s->getSetting('currency_symbol').')')
     ->addInputAttributes([
         'class' => 'form-control',
         'readonly' => 'readonly',

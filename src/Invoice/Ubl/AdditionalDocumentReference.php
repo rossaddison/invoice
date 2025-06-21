@@ -21,7 +21,7 @@ class AdditionalDocumentReference implements XmlSerializable
     public function validate(): void
     {
         if ($this->documentDescription === null) {
-            throw new InvalidArgumentException($this->translator->translate('invoice.peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
+            throw new InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
         }
     }
 

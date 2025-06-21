@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1710437f554d42de71db81543b8d8f7a",
+    "content-hash": "a835e269a5c63a5b067f941f50fa6c94",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3331,16 +3331,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "13aa117f643cf837e9df42d59ff0dc65ddc7a05c"
+                "reference": "373ee0b0109b9628828731a6364942135c15fb74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/13aa117f643cf837e9df42d59ff0dc65ddc7a05c",
-                "reference": "13aa117f643cf837e9df42d59ff0dc65ddc7a05c",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/373ee0b0109b9628828731a6364942135c15fb74",
+                "reference": "373ee0b0109b9628828731a6364942135c15fb74",
                 "shasum": ""
             },
             "require": {
@@ -3381,9 +3381,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.0.0"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.0.1"
             },
-            "time": "2025-02-08T00:05:17+00:00"
+            "time": "2025-06-18T20:58:13+00:00"
         },
         {
             "name": "google/common-protos",
@@ -13736,12 +13736,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "9e904c4fdb9e1487b0df6fa6df1968b139c047bd"
+                "reference": "aa0b22ff6ae8c709182c47f2fa33d01763baabbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/9e904c4fdb9e1487b0df6fa6df1968b139c047bd",
-                "reference": "9e904c4fdb9e1487b0df6fa6df1968b139c047bd",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/aa0b22ff6ae8c709182c47f2fa33d01763baabbd",
+                "reference": "aa0b22ff6ae8c709182c47f2fa33d01763baabbd",
                 "shasum": ""
             },
             "require": {
@@ -13751,7 +13751,7 @@
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.7.1",
                 "phpunit/phpunit": "^10.5.45",
-                "rector/rector": "^2.0.10",
+                "rector/rector": "^2.0.18",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.8.8",
@@ -13813,7 +13813,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-12T07:39:44+00:00"
+            "time": "2025-06-20T07:43:50+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14811,12 +14811,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "bfd18e2a98089e1f4d6b9b2483b2e42befb4088d"
+                "reference": "4d3e75b6ceef3a93f37bf3b66c90bd827b9924ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/bfd18e2a98089e1f4d6b9b2483b2e42befb4088d",
-                "reference": "bfd18e2a98089e1f4d6b9b2483b2e42befb4088d",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/4d3e75b6ceef3a93f37bf3b66c90bd827b9924ed",
+                "reference": "4d3e75b6ceef3a93f37bf3b66c90bd827b9924ed",
                 "shasum": ""
             },
             "require": {
@@ -14886,7 +14886,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-12T06:00:45+00:00"
+            "time": "2025-06-20T07:42:59+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14894,12 +14894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "1ff93dcd487d6d4e1886d9402652f38b50935886"
+                "reference": "c96b8d46878099c6551e7a0c448a5d14ed20b54d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/1ff93dcd487d6d4e1886d9402652f38b50935886",
-                "reference": "1ff93dcd487d6d4e1886d9402652f38b50935886",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/c96b8d46878099c6551e7a0c448a5d14ed20b54d",
+                "reference": "c96b8d46878099c6551e7a0c448a5d14ed20b54d",
                 "shasum": ""
             },
             "require": {
@@ -14961,7 +14961,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-11T08:46:01+00:00"
+            "time": "2025-06-20T07:44:01+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -18152,12 +18152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "5f6c8899d8ee7c1f62131a7917fc73217e35fb9e"
+                "reference": "0305182696c0feb9a84ed87a02777b3accc8f6cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/5f6c8899d8ee7c1f62131a7917fc73217e35fb9e",
-                "reference": "5f6c8899d8ee7c1f62131a7917fc73217e35fb9e",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/0305182696c0feb9a84ed87a02777b3accc8f6cd",
+                "reference": "0305182696c0feb9a84ed87a02777b3accc8f6cd",
                 "shasum": ""
             },
             "require": {
@@ -18240,7 +18240,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-10T07:38:47+00:00"
+            "time": "2025-06-19T20:51:54+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -22153,12 +22153,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "2b9122a87c062376685eede1e0a0ce8e31544fe6"
+                "reference": "e3520a4c9a252831ae009f8bf79a8d2a32ba4936"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2b9122a87c062376685eede1e0a0ce8e31544fe6",
-                "reference": "2b9122a87c062376685eede1e0a0ce8e31544fe6",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e3520a4c9a252831ae009f8bf79a8d2a32ba4936",
+                "reference": "e3520a4c9a252831ae009f8bf79a8d2a32ba4936",
                 "shasum": ""
             },
             "conflict": {
@@ -22515,7 +22515,7 @@
                 "joyqi/hyper-down": "<=2.4.27",
                 "jsdecena/laracom": "<2.0.9",
                 "jsmitty12/phpwhois": "<5.1",
-                "juzaweb/cms": "<=3.4",
+                "juzaweb/cms": "<=3.4.2",
                 "jweiland/events2": "<8.3.8|>=9,<9.0.6",
                 "jweiland/kk-downloader": "<1.2.2",
                 "kazist/phpwhois": "<=4.2.6",
@@ -22742,7 +22742,7 @@
                 "processwire/processwire": "<=3.0.229",
                 "propel/propel": ">=2.0.0.0-alpha1,<=2.0.0.0-alpha7",
                 "propel/propel1": ">=1,<=1.7.1",
-                "pterodactyl/panel": "<1.11.8",
+                "pterodactyl/panel": "<=1.11.10",
                 "ptheofan/yii2-statemachine": ">=2.0.0.0-RC1-dev,<=2",
                 "ptrofimov/beanstalk_console": "<1.7.14",
                 "pubnub/pubnub": "<6.1",
@@ -23099,7 +23099,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-16T22:05:27+00:00"
+            "time": "2025-06-19T20:06:27+00:00"
         },
         {
             "name": "sanmai/later",

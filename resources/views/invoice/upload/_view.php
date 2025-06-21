@@ -43,42 +43,42 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::select($form, 'client_id')
-                    ->label($translator->translate('i.clients'))
+                    ->label($translator->translate('clients'))
                     ->optionsData($optionsDataClients)
                     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'url_key')
-    ->label($translator->translate('invoice.upload.url.key'))
+    ->label($translator->translate('upload.url.key'))
     ->value(Html::encode($form->getUrl_key()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_original')
-    ->label($translator->translate('invoice.upload.filename.original'))
+    ->label($translator->translate('upload.filename.original'))
     ->value(Html::encode($form->getFile_name_original()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_new')
-    ->label($translator->translate('invoice.upload.filename.new'))
+    ->label($translator->translate('upload.filename.new'))
     ->value(Html::encode($form->getFile_name_new()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'description')
-    ->label($translator->translate('invoice.upload.description'))
+    ->label($translator->translate('upload.description'))
     ->value(Html::encode($form->getDescription()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::date($form, 'uploaded_date')
-    ->label($translator->translate('i.date'))
+    ->label($translator->translate('date'))
     ->required(true)
     ->value($form->getUploaded_date() instanceof \DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
     ->disabled(true);

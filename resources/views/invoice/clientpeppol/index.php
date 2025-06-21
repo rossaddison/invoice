@@ -11,4 +11,4 @@ echo $alert;
 
 ?>
 
-<h1><?= $translator->translate('invoice.client.peppol'); ?></h1>
+<h1><?= $translator->translate('client.peppol'); ?></h1>

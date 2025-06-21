@@ -48,7 +48,7 @@ final readonly class Button
         $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
-                //$translator->translate('i.back'),
+                //$translator->translate('back'),
                 '',
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
@@ -68,7 +68,7 @@ final readonly class Button
         $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
-                //$translator->translate('i.back'),
+                //$translator->translate('back'),
                 '',
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
@@ -78,7 +78,7 @@ final readonly class Button
                 'value' => 'main',
             ],
             [
-                //$translator->translate('i.save'),
+                //$translator->translate('save'),
                 '',
                 'type' => 'submit',
                 'class' => 'btn btn-success bi bi-save pull-right',
@@ -97,7 +97,7 @@ final readonly class Button
         $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
-                //$translator->translate('i.save'),
+                //$translator->translate('save'),
                 '',
                 'type' => 'submit',
                 'class' => 'btn btn-success bi bi-save pull-right',
@@ -115,14 +115,14 @@ final readonly class Button
     {
         return Span::tag()
                 ->addClass('label active')
-                ->content(Html::encode($translator->translate('i.yes')));
+                ->content(Html::encode($translator->translate('yes')));
     }
 
     public static function inactiveLabel(Translator $translator): Span
     {
         return Span::tag()
                 ->addClass('label inactive')
-                ->content(Html::encode($translator->translate('i.no')));
+                ->content(Html::encode($translator->translate('no')));
     }
 
     public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator): Span
@@ -136,7 +136,7 @@ final readonly class Button
                             'class' => 'fa fa-plus',
                             'style' => 'text-decoration:none',
                             'tooltip' => 'data-bs-toggle',
-                            'title' => $translator->translate('invoice.client.has.not.user.account'),
+                            'title' => $translator->translate('client.has.not.user.account'),
                         ]
                     )
                 );
@@ -200,7 +200,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-primary')
-        ->content($translator->translate('invoice.invoice.telegram.bot.api.webhook.delete') . ' ' . '️❌')
+        ->content($translator->translate('telegram.bot.api.webhook.delete') . ' ' . '️❌')
         ->href($generator->generate('telegram/delete_webhook', ['_language' => 'en']))
         ->id('btn-primary')
         ->render();
@@ -221,7 +221,7 @@ final readonly class Button
             ->addClass('btn btn-dark')
             ->render() . A::tag()
             ->addClass('btn btn-dark')
-            ->content($this->translator->translate('invoice.invoice.continue.with.developer.sandbox.hmrc'))
+            ->content($this->translator->translate('continue.with.developer.sandbox.hmrc'))
             ->href($developerSandboxHmrcAuthUrl)
             ->id('btn-sandboxhmrc')
             ->render() .
@@ -232,7 +232,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-primary bi bi-facebook')
-        ->content(' ' . $this->translator->translate('invoice.invoice.continue.with.facebook'))
+        ->content(' ' . $this->translator->translate('continue.with.facebook'))
         ->href($facebookAuthUrl)
         ->id('btn-facebook')
         ->render();
@@ -242,7 +242,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-dark bi bi-github')
-        ->content(' ' . $this->translator->translate('invoice.invoice.continue.with.github'))
+        ->content(' ' . $this->translator->translate('continue.with.github'))
         ->href($githubAuthUrl)
         ->id('btn-github')
         ->render();
@@ -252,7 +252,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-success bi bi-google')
-        ->content(' ' . $this->translator->translate('invoice.invoice.continue.with.google'))
+        ->content(' ' . $this->translator->translate('continue.with.google'))
         ->href($googleAuthUrl)
         ->id('btn-google')
         ->render();
@@ -275,7 +275,7 @@ final readonly class Button
             ->addClass('btn btn-dark')
             ->render() . A::tag()
             ->addClass('btn btn-dark')
-            ->content($this->translator->translate('invoice.invoice.continue.with.govuk'))
+            ->content($this->translator->translate('continue.with.govuk'))
             ->href($govukAuthUrl)
             ->id('btn-govuk')
             ->render() .
@@ -286,7 +286,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-info bi bi-linkedin')
-        ->content(' ' . $this->translator->translate('invoice.invoice.continue.with.linkedin'))
+        ->content(' ' . $this->translator->translate('continue.with.linkedin'))
         ->href($linkedInAuthUrl)
         ->id('btn-linkedin')
         ->render();
@@ -296,7 +296,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-warning bi bi-microsoft')
-        ->content(' ' . $this->translator->translate('invoice.invoice.continue.with.microsoftonline'))
+        ->content(' ' . $this->translator->translate('continue.with.microsoftonline'))
         ->href($microsoftOnlineAuthUrl)
         ->id('btn-microsoftonline')
         ->render();
@@ -311,7 +311,7 @@ final readonly class Button
             ->addClass('btn btn-dark')
             ->render() . A::tag()
             ->addClass('btn btn-dark')
-            ->content($this->translator->translate('invoice.invoice.continue.with.vkontakte'))
+            ->content($this->translator->translate('continue.with.vkontakte'))
             ->href($vkontakteAuthUrl)
             ->id('btn-vkontakte')
             ->render() .
@@ -322,7 +322,7 @@ final readonly class Button
     {
         return A::tag()
         ->addClass('btn btn-dark bi bi-twitter')
-        ->content(' ' . $this->translator->translate('invoice.invoice.continue.with.x'))
+        ->content(' ' . $this->translator->translate('continue.with.x'))
         ->href($xAuthUrl)
         ->id('btn-x')
         ->render();
@@ -337,7 +337,7 @@ final readonly class Button
             ->addClass('btn btn-dark disabled')
             ->render() . A::tag()
             ->addClass('btn btn-dark')
-            ->content($this->translator->translate('invoice.invoice.continue.with.yandex'))
+            ->content($this->translator->translate('continue.with.yandex'))
             ->href($yandexAuthUrl)
             ->id('btn-vkontakte')
             ->render() .

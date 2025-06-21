@@ -20,7 +20,7 @@ declare(strict_types=1);
         <div class="mb-3 form-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><?= $translator->translate('i.custom_fields'); ?></i>
+                    <i tooltip="data-toggle" title="<?= $s->isDebugMode(4)?>"><?= $translator->translate('custom.fields'); ?></i>
                 </div>
                 <div>
                     <div class="row">

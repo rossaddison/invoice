@@ -17,8 +17,8 @@ use Yiisoft\Html\Html;
 <table class="table">
 <thead>
 <tr>
-<th><?= $translator->translate('invoice.product.property.name'); ?></th>
-<th><?= $translator->translate('invoice.product.property.value'); ?></th>
+<th><?= $translator->translate('product.property.name'); ?></th>
+<th><?= $translator->translate('product.property.value'); ?></th>
 </tr>
 </thead>
 <tbody>

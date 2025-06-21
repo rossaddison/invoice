@@ -106,7 +106,7 @@ $this->beginPage();
             ->attributes([
                 'class' => 'bi bi-person-plus-fill',
                 'data-bs-toggle' => 'tooltip',
-                'title' => str_repeat(' ', 1).$translator->translate('i.setup_create_user')
+                'title' => str_repeat(' ', 1).$translator->translate('setup.create.user')
             ])
             ->content(),
             $urlGenerator->generate('auth/signup'),
@@ -121,7 +121,7 @@ $this->beginPage();
     ->addClass('bi bi-translate')
     ->addAttributes([
         'style' => 'font-size: 1rem; color: cornflowerblue;',
-        'title' => $translator->translate('i.language'),
+        'title' => $translator->translate('language'),
         'url' => '#'
     ])
     ->togglerVariant(ButtonVariant::INFO)
@@ -159,7 +159,7 @@ $this->beginPage();
                     ->open()
                 . '<div class="mb-1">'
                 . (string)Button::submit(
-                    $translator->translate('i.logout', ['login' => Html::encode(null !== $user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
+                    $translator->translate('logout', ['login' => Html::encode(null !== $user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
                 )
                     ->class('btn btn-xs btn-warning')
                 . '</div>'

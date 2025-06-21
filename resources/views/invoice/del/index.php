@@ -49,7 +49,7 @@ $header = Div::tag()
       H5::tag()
     ->addClass('bg-primary text-white p-3 rounded-top')
     ->content(
-        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.delivery.location'))
+        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.location'))
     )
   )
   ->render();
@@ -64,7 +64,7 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 ?>
-<h1><?= $translator->translate('invoice.delivery.location'); ?></h1>
+<h1><?= $translator->translate('delivery.location'); ?></h1>
 <?php
     $columns = [
         new DataColumn(
@@ -75,7 +75,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('i.client'),
+            header:  $translator->translate('client'),
             content: static function (DeliveryLocation $model) use ($cR): string {
                 if ($cR->repoClientCount($model->getClient_id()) > 0) {
                     return $cR->repoClientquery($model->getClient_id())->getClient_name();
@@ -85,7 +85,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',
-            header:  $translator->translate('invoice.quote.delivery.location.index.button.list'),
+            header:  $translator->translate('quote.delivery.location.index.button.list'),
             content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
                 $deliveryLocationId = $model->getId();
                 if (null !== $deliveryLocationId) {
@@ -120,7 +120,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',
-            header:  $translator->translate('invoice.invoice.delivery.location.index.button.list'),
+            header:  $translator->translate('delivery.location.index.button.list'),
             content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
                 $deliveryLocationId = $model->getId();
                 if (null !== $deliveryLocationId) {
@@ -160,7 +160,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'global_location_number',
-            header:  $translator->translate('invoice.delivery.location.global.location.number'),
+            header:  $translator->translate('delivery.location.global.location.number'),
             content: static function (DeliveryLocation $model): string {
                 return $model->getGlobal_location_number() ?? '';
             },
@@ -168,13 +168,13 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'date_created',
-            header:  $translator->translate('i.date_created'),
+            header:  $translator->translate('date.created'),
             content: static fn (DeliveryLocation $model): string => ($model->getDate_created())->format(
                 'Y-m-d',
             ),
         ),
         new DataColumn(
-            header:  $translator->translate('i.view'),
+            header:  $translator->translate('view'),
             content: static function (DeliveryLocation $model) use ($urlGenerator): string {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
@@ -185,7 +185,7 @@ $toolbar = Div::tag();
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.edit'),
+            header:  $translator->translate('edit'),
             content: static function (DeliveryLocation $model) use ($urlGenerator): string {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
@@ -199,7 +199,7 @@ $toolbar = Div::tag();
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.delete'),
+            header:  $translator->translate('delete'),
             content: static function (DeliveryLocation $model) use ($translator, $urlGenerator): string {
                 return Html::a(
                     Html::tag(
@@ -208,7 +208,7 @@ $toolbar = Div::tag();
                         [
                                 'type' => 'submit',
                                 'class' => 'dropdown-button',
-                                'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
+                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
                             ]
                     ),
                     $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
@@ -238,7 +238,7 @@ $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
-    $translator->translate('invoice.delivery.location.plural'),
+    $translator->translate('delivery.location.plural'),
     ''
 );
 $toolbarString =
@@ -265,5 +265,5 @@ echo GridView::widget()
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del').' '.$grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

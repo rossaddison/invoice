@@ -85,7 +85,7 @@ class ReportController extends BaseController
             /** @psalm-suppress MixedReturnStatement */
             return $mpdfhelper->pdf_create(
                 $this->viewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
-                $this->translator->translate('i.invoice_aging'),
+                $this->translator->translate('invoice.aging'),
                 true,
                 '',
                 $this->sR,
@@ -265,7 +265,7 @@ class ReportController extends BaseController
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfHelper->pdf_create(
                     $this->viewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
-                    $this->translator->translate('i.payment_history'),
+                    $this->translator->translate('payment.history'),
                     true,
                     '',
                     $this->sR,
@@ -366,7 +366,7 @@ class ReportController extends BaseController
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
                     $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
-                    $this->translator->translate('i.sales_by_client'),
+                    $this->translator->translate('sales.by.client'),
                     true,
                     '',
                     $this->sR,
@@ -465,7 +465,7 @@ class ReportController extends BaseController
         InvRepository $iR,
         InvItemAmountRepository $iiaR,
     ): Response|\Mpdf\Mpdf|array|string {
-        $this->flashMessage('info', $this->translator->translate('invoice.report.sales.by.product.info'));
+        $this->flashMessage('info', $this->translator->translate('report.sales.by.product.info'));
         $dateHelper = new DateHelper($this->sR);
         $parameters = [
             'head' => $head,
@@ -490,7 +490,7 @@ class ReportController extends BaseController
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
                     $this->viewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
-                    $this->translator->translate('invoice.report.sales.by.product'),
+                    $this->translator->translate('report.sales.by.product'),
                     true,
                     '',
                     $this->sR,
@@ -576,7 +576,7 @@ class ReportController extends BaseController
         InvRepository $iR,
         InvItemAmountRepository $iiaR
     ): Response|\Mpdf\Mpdf|array|string {
-        $this->flashMessage('info', $this->translator->translate('invoice.report.sales.by.task.info'));
+        $this->flashMessage('info', $this->translator->translate('report.sales.by.task.info'));
         $dateHelper = new DateHelper($this->sR);
         $body = $request->getParsedBody();
         $parameters = [
@@ -603,7 +603,7 @@ class ReportController extends BaseController
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
                     $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
-                    $this->translator->translate('invoice.report.sales.by.task'),
+                    $this->translator->translate('report.sales.by.task'),
                     true,
                     '',
                     $this->sR,
@@ -716,7 +716,7 @@ class ReportController extends BaseController
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
                     $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
-                    $this->translator->translate('i.sales_by_date'),
+                    $this->translator->translate('sales.by.date'),
                     true,
                     '',
                     $this->sR,

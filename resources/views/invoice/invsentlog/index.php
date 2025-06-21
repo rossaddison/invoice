@@ -62,7 +62,7 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header: $translator->translate('i.id'),
+        header: $translator->translate('id'),
         content: static function (InvSentLog $model): string {
             return (string) $model->getId();
         }
@@ -70,7 +70,7 @@ $columns = [
     new DataColumn(
         field: 'inv_id',
         property: 'filterInvNumber',
-        header: $translator->translate('invoice.invoice.number'),
+        header: $translator->translate('number'),
         content: static function (InvSentLog $model) use ($urlGenerator): A {
             return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate(
                 'inv/view',
@@ -83,19 +83,19 @@ $columns = [
     new DataColumn(
         field: 'client_id',
         property: 'filterClient',
-        header: $translator->translate('i.client'),
+        header: $translator->translate('client'),
         content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
         filter: $optionsDataClientsDropDownFilter,
         withSorting: false
     ),
     new DataColumn(
         'inv_id',
-        header: $translator->translate('i.setup_db_username_info'),
+        header: $translator->translate('setup.db.username.info'),
         content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin()
     ),
     new DataColumn(
         'date_sent',
-        header: $translator->translate('invoice.email.date'),
+        header: $translator->translate('email.date'),
         content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
@@ -103,7 +103,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
-    $translator->translate('invoice.email.logs'),
+    $translator->translate('email.logs'),
     ''
 );
 echo '<br>';
@@ -122,5 +122,5 @@ echo GridView::widget()
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
   ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invsentlog').' '.$grid_summary)
   ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('invoice.invoice.no.records'))
+  ->emptyText($translator->translate('no.records'))
   ->toolbar($toolbarString);

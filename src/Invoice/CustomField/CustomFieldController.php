@@ -106,7 +106,7 @@ final class CustomFieldController extends BaseController
         $custom_field = new CustomField();
         $form = new CustomFieldForm($custom_field);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'customfield/add',
             'actionArguments' => [],
             'errors' => [],
@@ -149,7 +149,7 @@ final class CustomFieldController extends BaseController
         if ($custom_field) {
             $form = new CustomFieldForm($custom_field);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'customfield/edit',
                 'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
@@ -192,7 +192,7 @@ final class CustomFieldController extends BaseController
             }
         }
         // Return to the index and warn of existing custom values associated with the custom field
-        $this->flashMessage('warning', $this->translator->translate('invoice.custom.value.delete'));
+        $this->flashMessage('warning', $this->translator->translate('custom.value.delete'));
         return $this->webService->getRedirectResponse('customfield/index');
     }
 
@@ -206,7 +206,7 @@ final class CustomFieldController extends BaseController
         if ($custom_field) {
             $form = new CustomFieldForm($custom_field);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'customfield/edit',
                 'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
@@ -225,7 +225,7 @@ final class CustomFieldController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('customfield/index');
         }
         return $canEdit;

@@ -295,10 +295,10 @@ final class InvController extends BaseController
                 $uPR->save($track_file);
                 return true;
             }
-            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.possible.file.upload.attack') . $tmp);
+            $this->flashMessage('warning', $this->translator->translate('possible.file.upload.attack') . $tmp);
             return false;
         }
-        $this->flashMessage('warning', $this->translator->translate('i.error_duplicate_file'));
+        $this->flashMessage('warning', $this->translator->translate('error.duplicate.file'));
         return false;
     }
 
@@ -311,9 +311,9 @@ final class InvController extends BaseController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
-                'heading' => $this->translator->translate('i.errors'),
-                'message' => $this->translator->translate('i.path') .
-                             $this->translator->translate('i.is_not_writable'),
+                'heading' => $this->translator->translate('errors'),
+                'message' => $this->translator->translate('path') .
+                             $this->translator->translate('is.not.writable'),
                 'url' => 'inv/view', 'id' => $inv_id,
             ]
         );
@@ -329,7 +329,7 @@ final class InvController extends BaseController
             '//invoice/setting/inv_message',
             [
                 'heading' => '',
-                'message' => $this->translator->translate('i.record_successfully_created'),
+                'message' => $this->translator->translate('record.successfully.created'),
                 'url' => 'inv/view', 'id' => $inv_id]
         );
     }
@@ -343,8 +343,8 @@ final class InvController extends BaseController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
-                'heading' => $this->translator->translate('invoice.errors'),
-                'message' => $this->translator->translate('invoice.no.file.uploaded'),
+                'heading' => $this->translator->translate('errors'),
+                'message' => $this->translator->translate('no.file.uploaded'),
                 'url' => 'inv/view', 'id' => $inv_id,
             ]
         );
@@ -526,7 +526,7 @@ final class InvController extends BaseController
                                          ' ' .
                                          ($client_surname ?? '');
                     } else {
-                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('invoice.invoice.user.client.no.account'));
+                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
                     // @see UserClientRepository function get_not_assigned_to_user which ensures that only
@@ -548,13 +548,13 @@ final class InvController extends BaseController
                             $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for draft setting
                             $this->flashMessage('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
-                            ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                            : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
+                            ? $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('yes')
+                            : $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('no'));
                             $this->sR->getSetting('mark_invoices_sent_copy') === '1'
-                            ? $this->flashMessage('danger', $this->translator->translate('invoice.mark.sent.copy.on'))
+                            ? $this->flashMessage('danger', $this->translator->translate('mark.sent.copy.on'))
                             : '';
                         } //$model_id
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         if (($origin == 'main') || ($origin == 'inv')) {
                             return $this->webService->getRedirectResponse('inv/index');
                         }
@@ -564,10 +564,10 @@ final class InvController extends BaseController
                         // otherwise return to client
                         return $this->webService->getRedirectResponse('client/view', ['id' => $origin]);
                     }
-                    $this->flashMessage('warning', $this->translator->translate('invoice.user.client.active.no'));
+                    $this->flashMessage('warning', $this->translator->translate('user.client.active.no'));
                 }
             }
-            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.creation.unsuccessful'));
+            $this->flashMessage('warning', $this->translator->translate('creation.unsuccessful'));
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu
@@ -653,7 +653,7 @@ final class InvController extends BaseController
             $optionsGroupData[$group->getId()] = $group->getName();
         }
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'inv/credit',
             'actionArguments' => [],
             'errors' => [],
@@ -682,7 +682,7 @@ final class InvController extends BaseController
                                          ' ' .
                                          ($client_surname ?? '');
                     } else {
-                        $this->flashMessage('warning', $this->translator->translate('invoice.invoice.user.client.no.account'));
+                        $this->flashMessage('warning', $this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
                     // @see UserClientRepository function get_not_assigned_to_user which ensures that only
@@ -701,15 +701,15 @@ final class InvController extends BaseController
                             $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for draft setting
                             $this->flashMessage('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
-                            ? $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                            : $this->translator->translate('i.generate_invoice_number_for_draft') . '=>' . $this->translator->translate('i.no'));
+                            ? $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('yes')
+                            : $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('no'));
                         } //$model_id
                         return $this->webService->getRedirectResponse('inv/index');
                     } //null!==$user
                     // In the event of the database being manually edited (highly unlikely) present this warning anyway
                     $message = '';
                     if (!empty($client_fullname)) {
-                        $message = $this->translator->translate('invoice.user.inv.more.than.one.assigned') . ' ' . (string)$client_fullname;
+                        $message = $this->translator->translate('user.inv.more.than.one.assigned') . ' ' . (string)$client_fullname;
                         $this->flashMessage('warning', $message);
                     }
                     return $this->webService->getRedirectResponse('inv/index');
@@ -778,7 +778,7 @@ final class InvController extends BaseController
                         $this->inv_tax_rate_service->initializeCreditInvTaxRate((int) $basis_inv_id, $saved_inv_id);
                         $parameters = [
                             'success' => 1,
-                            'flash_message' => $this->translator->translate('invoice.invoice.credit.note.creation.successful'),
+                            'flash_message' => $this->translator->translate('credit.note.creation.successful'),
                         ];
                         //return response to inv.js to reload page at location
                         return $this->factory->createResponse(Json::encode($parameters));
@@ -788,7 +788,7 @@ final class InvController extends BaseController
         } //null!==$basis_inv
         return $this->factory->createResponse(Json::encode([
             'success' => 0,
-            'message' => $this->translator->translate('invoice.invoice.credit.note.creation.unsuccessful'),
+            'message' => $this->translator->translate('credit.note.creation.unsuccessful'),
         ]));
     }
 
@@ -870,7 +870,7 @@ final class InvController extends BaseController
             $inv = $this->inv($id, $invRepo);
             if ($inv) {
                 $this->inv_service->deleteInv($inv, $aciR, $aciiR, $iiaR, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('inv/index');
             }
             return $this->webService->getRedirectResponse('inv/index');
@@ -905,10 +905,10 @@ final class InvController extends BaseController
                         $this->aciis->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $sR);
                     }
                     $this->inv_item_service->deleteInvItem($invItem);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $invItem->getInv_id()]);
                 }
-                $this->flashMessage('warning', $this->translator->translate('invoice.invoice.delete.sent'));
+                $this->flashMessage('warning', $this->translator->translate('delete.sent'));
                 return $this->webService->getRedirectResponse('inv/view', ['id' => $invItem->getInv_id()]);
             }
         } catch (\Exception $e) {
@@ -918,7 +918,7 @@ final class InvController extends BaseController
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('i.invoice_items'), 'message' => $this->translator->translate('i.record_successfully_deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+            ['heading' => $this->translator->translate('invoice.items'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
         ));
     }
 
@@ -938,17 +938,17 @@ final class InvController extends BaseController
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('i.invoice_tax_rate'), 'message' => $this->translator->translate('i.record_successfully_deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+            ['heading' => $this->translator->translate('invoice.tax.rate'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
         ));
     }
 
     private function disable_read_only_status_message(): void
     {
         if ($this->sR->getSetting('disable_read_only') == '') {
-            $this->flashMessage('warning', $this->translator->translate('invoice.security.disable.read.only.empty'));
+            $this->flashMessage('warning', $this->translator->translate('security.disable.read.only.empty'));
         }
         if ($this->sR->getSetting('disable_read_only') == '1') {
-            $this->flashMessage('warning', $this->translator->translate('invoice.security.disable.read.only.warning'));
+            $this->flashMessage('warning', $this->translator->translate('security.disable.read.only.warning'));
         }
     }
 
@@ -1022,7 +1022,7 @@ final class InvController extends BaseController
         if ($form->getStatus_id() == 1) {
             $inputAttributesUrlKey['hidden'] = 'hidden';
         } else {
-            $inputAttributesUrlKey['placeholder'] = $this->translator->translate('i.url_key');
+            $inputAttributesUrlKey['placeholder'] = $this->translator->translate('url.key');
         }
         return $inputAttributesUrlKey;
     }
@@ -1279,8 +1279,8 @@ final class InvController extends BaseController
                         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                             '//invoice/setting/inv_message',
                             [
-                                'heading' => $this->translator->translate('i.errors'),
-                                'message' => $this->translator->translate('i.error') . $this->translator->translate('invoice.balance.does.not.equal.zero'),
+                                'heading' => $this->translator->translate('errors'),
+                                'message' => $this->translator->translate('error') . $this->translator->translate('balance.does.not.equal.zero'),
                                 'url' => 'inv/view', 'id' => $inv_id]
                         ));
                     }
@@ -1293,7 +1293,7 @@ final class InvController extends BaseController
                             return $this->viewRenderer->render('_form_edit', $parameters);
                         }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }
                 } //$body
@@ -1433,7 +1433,7 @@ final class InvController extends BaseController
         $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailer_configured()) {
-            $this->flashMessage('warning', $this->translator->translate('i.email_not_configured'));
+            $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
             return $this->webService->getRedirectResponse('inv/index');
         }
         $inv = $this->inv($id, $iR, true);
@@ -1454,19 +1454,19 @@ final class InvController extends BaseController
                     $custom_fields[$table] = $cfR->repoTablequery($table);
                 }
                 if ($template_helper->select_email_invoice_template($invoice) == '') {
-                    $this->flashMessage('warning', $this->translator->translate('invoice.email.template.not.configured'));
+                    $this->flashMessage('warning', $this->translator->translate('email.template.not.configured'));
                     return $this->webService->getRedirectResponse('setting/tab_index');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_invoice_template($invoice)) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('i.default_email_template') . '=>' .
-                                        $this->translator->translate('i.not_set')
+                    $this->translator->translate('default.email.template') . '=>' .
+                                        $this->translator->translate('not.set')
                 ) : '';
                 empty($template_helper->select_pdf_invoice_template($invoice)) ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('i.default_pdf_template') . '=>' .
-                                        $this->translator->translate('i.not_set')
+                    $this->translator->translate('default.pdf.template') . '=>' .
+                                        $this->translator->translate('not.set')
                 ) : '';
                 $parameters = [
                     'head' => $head,
@@ -1717,7 +1717,7 @@ final class InvController extends BaseController
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
                 if (!$mailer_helper->mailer_configured()) {
-                    $this->flashMessage('warning', $this->translator->translate('i.email_not_configured'));
+                    $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
                     return $this->webService->getRedirectResponse('inv/index');
                 }
                 /**
@@ -1727,7 +1727,7 @@ final class InvController extends BaseController
                 if (empty($to)) {
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
-                        ['heading' => '', 'message' => $this->translator->translate('i.email_to_address_missing'), 'url' => 'inv/view', 'id' => $inv_id]
+                        ['heading' => '', 'message' => $this->translator->translate('email.to.address.missing'), 'url' => 'inv/view', 'id' => $inv_id]
                     ));
                 }
                 /**
@@ -1741,7 +1741,7 @@ final class InvController extends BaseController
                 if (empty($from[0])) {
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
-                        ['heading' => '', 'message' => $this->translator->translate('i.email_to_address_missing'), 'url' => 'inv/view', 'id' => $inv_id]
+                        ['heading' => '', 'message' => $this->translator->translate('email.to.address.missing'), 'url' => 'inv/view', 'id' => $inv_id]
                     ));
                 }
                 /** @var array $body['MailerInvForm'] */
@@ -1805,7 +1805,7 @@ final class InvController extends BaseController
                         '//invoice/setting/inv_message',
                         // EMAIL SENT
                         ['heading' => '',
-                            'message' => $this->translator->translate('i.email_successfully_sent'),
+                            'message' => $this->translator->translate('email.successfully.sent'),
                             'url' => 'inv/view',
                             'id' => $inv_id]
                     ));
@@ -1814,7 +1814,7 @@ final class InvController extends BaseController
                     '//invoice/setting/inv_message',
                     // EMAIL ... NOT ... SENT
                     ['heading' => '',
-                        'message' => $this->translator->translate('invoice.invoice.email.not.sent.successfully'),
+                        'message' => $this->translator->translate('email.not.sent.successfully'),
                         'url' => 'inv/view',
                         'id' => $inv_id]
                 ));
@@ -1822,13 +1822,13 @@ final class InvController extends BaseController
             } //is_array(body)
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/inv_message',
-                ['heading' => '', 'message' => $this->translator->translate('invoice.invoice.email.not.sent.successfully'),
+                ['heading' => '', 'message' => $this->translator->translate('email.not.sent.successfully'),
                     'url' => 'inv/view', 'id' => $inv_id]
             ));
         }
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => '', 'message' => $this->translator->translate('i.email_not_sent'),
+            ['heading' => '', 'message' => $this->translator->translate('email.not.sent'),
                 'url' => 'inv/view', 'id' => $inv_id]
         ));
     }
@@ -2133,7 +2133,7 @@ final class InvController extends BaseController
             ];
             return $this->viewRenderer->render('index', $parameters);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.user.client.active.no'));
+        $this->flashMessage('info', $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
     }
 
@@ -2222,12 +2222,12 @@ final class InvController extends BaseController
         if ($this->sR->getSetting('pdf_archive_inv') == '1') {
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/pdf_close',
-                ['heading' => '', 'message' => $this->translator->translate('invoice.invoice.pdf.archived.yes')]
+                ['heading' => '', 'message' => $this->translator->translate('pdf.archived.yes')]
             ));
         }
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/pdf_close',
-            ['heading' => '', 'message' => $this->translator->translate('invoice.invoice.pdf.archived.no')]
+            ['heading' => '', 'message' => $this->translator->translate('pdf.archived.no')]
         ));
     }
 
@@ -2543,7 +2543,7 @@ final class InvController extends BaseController
         /** @var Inv $i */ foreach ($iR->findAllPreloaded() as $i) {
             $iR->delete($i);
         }
-        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.caution.deleted.invoices'));
+        $this->flashMessage('danger', $this->translator->translate('caution.deleted.invoices'));
         return $this->webService->getRedirectResponse('inv/index');
     }
 
@@ -2779,7 +2779,7 @@ final class InvController extends BaseController
                         $iR->save($copy);
                         $parameters = ['success' => 1];
                         //return response to inv.js to reload page at location
-                        $this->flashMessage('info', $this->translator->translate('invoice.draft.guest'));
+                        $this->flashMessage('info', $this->translator->translate('draft.guest'));
                         return $this->factory->createResponse(Json::encode($parameters));
                     }
                 }
@@ -3031,7 +3031,7 @@ final class InvController extends BaseController
                     $parameters['success'] = 0;
                 }
             }
-            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -3082,8 +3082,8 @@ final class InvController extends BaseController
                     $parameters['success'] = 0;
                 }
             }
-            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
-            $this->flashMessage('success', $this->translator->translate('invoice.security.disable.read.only.success'));
+            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+            $this->flashMessage('success', $this->translator->translate('security.disable.read.only.success'));
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -3443,15 +3443,15 @@ final class InvController extends BaseController
                             ];
                             return $this->viewRenderer->render('url_key', $parameters);
                         } // if inv_amount
-                        $this->flashMessage('warning', $this->translator->translate('invoice.invoice.amount.no'));
+                        $this->flashMessage('warning', $this->translator->translate('amount.no'));
                         return $this->webService->getNotFoundResponse();
                     } // null!== $user_inv
                 } // null!== $user_id
             } // if user_inv
-            $this->flashMessage('danger', $this->translator->translate('invoice.invoice.client.not.allocated.to.user'));
+            $this->flashMessage('danger', $this->translator->translate('client.not.allocated.to.user'));
             return $this->webService->getNotFoundResponse();
         } // if inv
-        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.not.found'));
+        $this->flashMessage('danger', $this->translator->translate('not.found'));
         return $this->webService->getNotFoundResponse();
     }
 
@@ -3543,7 +3543,7 @@ final class InvController extends BaseController
                   && $cp->getSupplierAssignedAccountId()) {
                     $passed = true;
                 } else {
-                    $this->flashMessage('warning', $this->translator->translate('invoice.peppol.client.check'));
+                    $this->flashMessage('warning', $this->translator->translate('peppol.client.check'));
                     $passed = false;
                 }
             } // null!==$cp
@@ -3655,7 +3655,7 @@ final class InvController extends BaseController
                              */
                             exit;
                         } // null!== $delivery_location
-                        $this->flashMessage('warning', $this->translator->translate('invoice.delivery.location.peppol.output'));
+                        $this->flashMessage('warning', $this->translator->translate('delivery.location.peppol.output'));
                     } // client_peppol fully setup
                 } // null!== $client_id
             } // invoice
@@ -3693,7 +3693,7 @@ final class InvController extends BaseController
                 }
             } // else
         } // $this->sR->repoCount
-        $this->flashMessage('info', $this->translator->translate('invoice.peppol.stream.toggle'));
+        $this->flashMessage('info', $this->translator->translate('peppol.stream.toggle'));
         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
     } // peppol stream toggle
 
@@ -3904,7 +3904,7 @@ final class InvController extends BaseController
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv = $this->inv($id, $iR, false);
         $enabled_gateways = $this->sR->payment_gateways_enabled_DriverList();
-        $this->flash_no_enabled_gateways($enabled_gateways, $this->translator->translate('invoice.payment.gateway.no'));
+        $this->flash_no_enabled_gateways($enabled_gateways, $this->translator->translate('payment.gateway.no'));
         if ($inv) {
             $sales_order_number = '';
             if ($inv->getSo_id()) {
@@ -3963,7 +3963,7 @@ final class InvController extends BaseController
                     'sales_order_number' => $sales_order_number,
                     'showButtons' => $show_buttons,
                     'sumex' => $sumex,
-                    'title' => $this->translator->translate('i.view'),
+                    'title' => $this->translator->translate('view'),
                     // Sits above options section of invoice allowing the adding of a new row to the invoice
                     'add_inv_item_product' => $this->viewRenderer->renderPartialAsString('//invoice/invitem/_item_form_product', [
                         'actionName' => 'invitem/add_product',
@@ -4036,7 +4036,7 @@ final class InvController extends BaseController
                                     'actionName' => 'invallowancecharge/add',
                                     'actionArguments' => ['inv_id' => (string) $this->session->get('inv_id')],
                                     'errors' => [],
-                                    'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
+                                    'title' => $this->translator->translate('allowance.or.charge.add'),
                                     'form' => $invAllowanceChargeForm,
                                 ]
                             ),
@@ -4078,8 +4078,8 @@ final class InvController extends BaseController
                     'partial_inv_delivery_location' => $this->view_partial_delivery_location($_language, $dlR, $delivery_location_id),
                     'modal_message_no_payment_method' => $bootstrap5ModalTranslatorMessageWithoutAction
                         ->renderPartialLayoutWithTranslatorMessageAsString(
-                            $this->translator->translate('invoice.payment.method'),
-                            $this->translator->translate('invoice.payment.information.payment.method.required'),
+                            $this->translator->translate('payment.method'),
+                            $this->translator->translate('payment.information.payment.method.required'),
                             'inv'
                         ),
                 ];
@@ -4255,7 +4255,7 @@ final class InvController extends BaseController
                 return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
                     'actionName' => 'del/view',
                     'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
-                    'title' => $this->translator->translate('invoice.invoice.delivery.location'),
+                    'title' => $this->translator->translate('delivery.location'),
                     'building_number' => $del->getBuildingNumber(),
                     'address_1' => $del->getAddress_1(),
                     'address_2' => $del->getAddress_2(),
@@ -4307,8 +4307,8 @@ final class InvController extends BaseController
                 'draft' => $draft,
                 'piR' => $piR,
                 'showButtons' => $show_buttons,
-                'included' => $this->translator->translate('invoice.invoice.item.tax.included'),
-                'excluded' => $this->translator->translate('invoice.invoice.item.tax.excluded'),
+                'included' => $this->translator->translate('item.tax.included'),
+                'excluded' => $this->translator->translate('item.tax.excluded'),
                 'products' => $pR->findAllPreloaded(),
                 // Only tasks with complete or status of 3 are made available for selection
                 'tasks' => $taskR->repoTaskStatusquery(3),
@@ -4344,7 +4344,7 @@ final class InvController extends BaseController
         }
         $level = $draft == '0' ? 'warning' : 'info';
         $on_off = $draft == '0' ? 'off' : 'on';
-        $message = $this->translator->translate('invoice.invoice.draft.number.'
+        $message = $this->translator->translate('draft.number.'
           . $on_off) . str_repeat('&nbsp;', 2)
           . (!empty($setting_url) ? (string)Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil']), $setting_url, ['class' => 'btn btn-primary'])
           : '');
@@ -4374,7 +4374,7 @@ final class InvController extends BaseController
          * @link https://emojipedia.or/check-mark
          * @link https://emojipedia.org/cross-mark  ️
          */
-        $message = ($mark_sent == '0' ? '✔' : '❌') . $this->translator->translate('invoice.invoice.mark.sent.'
+        $message = ($mark_sent == '0' ? '✔' : '❌') . $this->translator->translate('mark.sent.'
           . $on_off) . str_repeat('&nbsp;', 2)
           . (!empty($setting_url) ? (string)Html::a(
               Html::tag(

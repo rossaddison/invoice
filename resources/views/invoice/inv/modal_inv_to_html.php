@@ -17,14 +17,14 @@ declare(strict_types=1);
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('invoice.invoice.html.sumex.no'); ?></h5>
+               <h5 class="modal-title"><?= $translator->translate('html.sumex.no'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="control-label">
-                        <?= $translator->translate('i.custom_fields'); ?>?                
+                        <?= $translator->translate('custom.fields'); ?>?                
                     </div>
                     <input type="hidden" name="inv_id" id="inv_id" value="<?php echo $inv->getId(); ?>">
                 </form>    
@@ -42,13 +42,13 @@ declare(strict_types=1);
                     </div>
                     </button>
                     <button class="inv_to_html_confirm_with_custom_fields btn btn-success" id="inv_to_html_confirm_with_custom_fields" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('i.yes'); ?>
+                        <i class="fa fa-check"></i> <?= $translator->translate('yes'); ?>
                     </button>
                     <button class="inv_to_html_confirm_without_custom_fields btn btn-info" id="inv_to_html_confirm_without_custom_fields" type="button">
-                        <i class="fa fa-times"></i> <?= $translator->translate('i.no'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('no'); ?>
                     </button>                
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('i.back'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('back'); ?>
                     </button>
                 </div>
             </div>

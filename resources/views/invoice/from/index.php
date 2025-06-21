@@ -26,7 +26,7 @@ use Yiisoft\Yii\DataView\GridView;
 echo $alert;
 
 ?>
-<h1><?= $translator->translate('invoice.from.email.address'); ?></h1>
+<h1><?= $translator->translate('from.email.address'); ?></h1>
 <?= Html::a(Html::tag('i', '', ['class' => 'btn btn-primary fa fa-plus fa-margin']), $urlGenerator->generate('from/add')); ?>
 <br>
 <br>
@@ -37,7 +37,7 @@ echo $alert;
           H5::tag()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.from.email.address'))
+            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('from.email.address'))
         )
       )
       ->render();
@@ -55,28 +55,28 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header:  $translator->translate('i.id'),
+        header:  $translator->translate('id'),
         content: static fn (FromDropDown $model) => $model->getId()
     ),
     new DataColumn(
         'default_email',
-        header:  $translator->translate('invoice.email.default'),
-        content: static fn (FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('i.yes') : $translator->translate('i.no')
+        header:  $translator->translate('email.default'),
+        content: static fn (FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no')
     ),
     new DataColumn(
-        header:  $translator->translate('i.view'),
+        header:  $translator->translate('view'),
         content: static function (FromDropDown $model) use ($urlGenerator): string {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('from/view', ['id' => $model->getId()]), [])->render();
         }
     ),
     new DataColumn(
-        header:  $translator->translate('i.edit'),
+        header:  $translator->translate('edit'),
         content: static function (FromDropDown $model) use ($urlGenerator): string {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('from/edit', ['id' => $model->getId()]), [])->render();
         }
     ),
     new DataColumn(
-        header:  $translator->translate('i.delete'),
+        header:  $translator->translate('delete'),
         content: static function (FromDropDown $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
@@ -85,7 +85,7 @@ $columns = [
                     [
                     'type' => 'submit',
                     'class' => 'dropdown-button',
-                    'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
                   ]
                 ),
                 $urlGenerator->generate('from/delete', ['id' => $model->getId()]),
@@ -111,5 +111,5 @@ echo GridView::widget()
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
   ->summaryTemplate($grid_summary)
   ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('invoice.invoice.no.records'))
+  ->emptyText($translator->translate('no.records'))
   ->toolbar($toolbarString);

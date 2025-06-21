@@ -48,7 +48,7 @@ final class ProfileController extends BaseController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $canEdit = $this->rbac();
-        $this->flashMessage('info', $this->translator->translate('invoice.profile.new'));
+        $this->flashMessage('info', $this->translator->translate('profile.new'));
         $paginator = (new OffsetPaginator($this->profiles($profileRepository)))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero);
@@ -75,7 +75,7 @@ final class ProfileController extends BaseController
     ): Response {
         $form = new ProfileForm(new Profile(), $this->translator);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'profile/add',
             'actionArguments' => [],
             'errors' => [],
@@ -116,7 +116,7 @@ final class ProfileController extends BaseController
         if ($profile) {
             $form = new ProfileForm($profile, $this->translator);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'profile/edit',
                 'actionArguments' => ['id' => $profile->getId()],
                 'form' => $form,
@@ -152,15 +152,15 @@ final class ProfileController extends BaseController
             $profile = $this->profile($currentRoute, $profileRepository);
             if ($profile) {
                 if ($this->profileService->deleteProfile($profile)) {
-                    $this->flashMessage('info', $this->translator->translate('invoice.profile.deleted'));
+                    $this->flashMessage('info', $this->translator->translate('profile.deleted'));
                 } else {
-                    $this->flashMessage('info', $this->translator->translate('invoice.profile.not.deleted'));
+                    $this->flashMessage('info', $this->translator->translate('profile.not.deleted'));
                 }
             }
             return $this->webService->getRedirectResponse('profile/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.profile.history'));
+            $this->flashMessage('danger', $this->translator->translate('profile.history'));
             return $this->webService->getRedirectResponse('profile/index');
         }
     }
@@ -176,7 +176,7 @@ final class ProfileController extends BaseController
         if ($profile) {
             $form = new ProfileForm($profile, $this->translator);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'profile/view',
                 'actionArguments' => ['id' => $profile->getId()],
                 'companies' => $companyRepository->findAllPreloaded(),
@@ -196,7 +196,7 @@ final class ProfileController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('profile/index');
         }
         return $canEdit;

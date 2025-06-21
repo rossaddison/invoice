@@ -50,7 +50,7 @@ final class FromDropDownController extends BaseController
         $entity = new FromDropDown();
         $form = new FromDropDownForm($entity);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'from/add',
             'actionArguments' => [],
             'errors' => [],
@@ -102,7 +102,7 @@ final class FromDropDownController extends BaseController
             $from = $this->from($currentRoute, $fromRepository);
             if ($from) {
                 $this->fromService->deleteFromDropDown($from);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('from/index');
             }
             return $this->webService->getRedirectResponse('from/index');
@@ -129,7 +129,7 @@ final class FromDropDownController extends BaseController
         if ($from) {
             $form = new FromDropDownForm($from);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'from/edit',
                 'actionArguments' => ['id' => $from->getId()],
                 'errors' => [],
@@ -188,7 +188,7 @@ final class FromDropDownController extends BaseController
         if ($from) {
             $form = new FromDropDownForm($from);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'from/view',
                 'actionArguments' => ['id' => $from->getId()],
                 'errors' => [],

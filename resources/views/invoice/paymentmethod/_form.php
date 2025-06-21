@@ -42,19 +42,19 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-->label($translator->translate('i.name'))
+->label($translator->translate('name'))
 ->addInputAttributes([
     'class' => 'form-control  alert alert-warning'
 ])
 ->value(Html::encode($form->getName()))
-->placeholder($translator->translate('i.name'))
-->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+->placeholder($translator->translate('name'))
+->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
         <?= Html::closeTag('div'); ?>

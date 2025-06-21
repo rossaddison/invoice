@@ -43,7 +43,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.quote'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('quote'))
             )
     )
     ->render();
@@ -60,33 +60,33 @@ $toolbar = Div::tag();
 
 ?>
 <div>
-    <h5><?= $translator->translate('i.quote'); ?></h5>
+    <h5><?= $translator->translate('quote'); ?></h5>
     <br>
     <div class="submenu-row">
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 0]); ?>"
                    class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.all'); ?>
+                    <?= $translator->translate('all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.sent'); ?>
+                    <?= $translator->translate('sent'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 3]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.viewed'); ?>
+                    <?= $translator->translate('viewed'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 4]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.approved'); ?>
+                    <?= $translator->translate('approved'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 5]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.rejected'); ?>
+                    <?= $translator->translate('rejected'); ?>
                 </a>                
                 <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 6]); ?>" style="text-decoration:none"
                    class="btn  <?= $status == 6 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.canceled'); ?>
+                    <?= $translator->translate('canceled'); ?>
                 </a>
             </div>
     </div>
@@ -96,7 +96,7 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static function (Quote $model): string {
                 return (string) $model->getId();
             },
@@ -104,7 +104,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'status_id',
-            header: $translator->translate('i.status'),
+            header: $translator->translate('status'),
             content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
                 if (null !== $model->getStatus_id()) {
                     $span = $qR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
@@ -118,7 +118,7 @@ $toolbar = Div::tag();
         new DataColumn(
             field: 'number',
             property: 'filterQuoteNumber',
-            header: $translator->translate('invoice.quote.number'),
+            header: $translator->translate('quote.number'),
             content: static function (Quote $model) use ($urlGenerator): A {
                 return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
             },
@@ -127,12 +127,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'client_id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? '')
         ),
         new DataColumn(
             'date_created',
-            header: $translator->translate('i.date_created'),
+            header: $translator->translate('date.created'),
             content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
             withSorting: true
         ),
@@ -147,7 +147,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',
-            header: $translator->translate('i.total'),
+            header: $translator->translate('total'),
             content: static function (Quote $model) use ($s, $qaR): string {
                 $quote_id = $model->getId();
                 if (null !== $quote_id) {
@@ -164,7 +164,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.quotes'),
+    $translator->translate('quotes'),
     ''
 );
 $toolbarString =
@@ -185,7 +185,7 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->emptyCell($translator->translate('i.not_set'))
+->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 ->header($header)
 ->id('w7-grid')
@@ -193,6 +193,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '').' '.$grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

@@ -71,7 +71,7 @@ final class ClientNoteController extends BaseController
         $clientnote = new ClientNote();
         $form = new ClientNoteForm($clientnote);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'clientnote/add',
             'actionArguments' => [],
             'errors' => [],
@@ -113,7 +113,7 @@ final class ClientNoteController extends BaseController
         if (null !== $client_note) {
             $form = new ClientNoteForm($client_note);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientnote/edit',
                 'actionArguments' => ['id' => $client_note->getId()],
                 'errors' => [],
@@ -168,7 +168,7 @@ final class ClientNoteController extends BaseController
         if ($client_note) {
             $form = new ClientNoteForm($client_note);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'clientnote/edit',
                 'actionArguments' => ['id' => $client_note->getId()],
                 'form' => $form,
@@ -186,7 +186,7 @@ final class ClientNoteController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('clientnote/index');
         }
         return $canEdit;

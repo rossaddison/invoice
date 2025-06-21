@@ -141,7 +141,7 @@ class UserInv
 
     public function getActiveLabel(Translator $translator): string
     {
-        return $this->active ? '<span class="label active">' . $translator->translate('i.yes') . '</span>' : '<span class="label inactive">' . $translator->translate('i.no') . '</span>';
+        return $this->active ? '<span class="label active">' . $translator->translate('yes') . '</span>' : '<span class="label inactive">' . $translator->translate('no') . '</span>';
     }
 
     public function setActive(bool $active): void

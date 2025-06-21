@@ -17,16 +17,16 @@ declare(strict_types=1);
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('i.change_client'); ?></h5>
+               <h5 class="modal-title"><?= $translator->translate('change.client'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="form-group">
-                        <label for="change_client_id"><?= $translator->translate('i.client'); ?></label>
+                        <label for="change_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="change_client_id" id="change_client_id" class="form-control">
-                            <option value="0"><?= $translator->translate('i.none'); ?></option>
+                            <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\Client $client
@@ -44,7 +44,7 @@ declare(strict_types=1);
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="client_change_confirm btn btn-success" id="client_change_confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
+                        <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
                     </button>
                 </div>
             </div>

@@ -15,11 +15,11 @@ use Yiisoft\Html\Html;
     <table class="table table-hover table-bordered table-striped">
         <tr>
             <th>&nbsp;</th>
-            <th><?= $translator->translate('i.product_sku'); ?></th>
-            <th><?= $translator->translate('i.family_name'); ?></th>
-            <th><?= $translator->translate('i.product_name'); ?></th>
-            <th><?= $translator->translate('i.product_description'); ?></th>
-            <th class="text-right"><?= $translator->translate('i.product_price'); ?></th>
+            <th><?= $translator->translate('product.sku'); ?></th>
+            <th><?= $translator->translate('family.name'); ?></th>
+            <th><?= $translator->translate('product.name'); ?></th>
+            <th><?= $translator->translate('product.description'); ?></th>
+            <th class="text-right"><?= $translator->translate('product.price'); ?></th>
         </tr>
         <?php
             /**

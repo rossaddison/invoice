@@ -35,7 +35,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.generator.relations')))
+                        ->content(' ' . Html::encode($translator->translate('generator.relations')))
             )
     )
     ->render();
@@ -51,10 +51,10 @@ $toolbarReset = A::tag()
 $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div'); ?>
-    <?= Html::openTag('h5'); ?><?= $translator->translate('invoice.generator.relations'); ?><?= Html::closeTag('h5'); ?>
+    <?= Html::openTag('h5'); ?><?= $translator->translate('generator.relations'); ?><?= Html::closeTag('h5'); ?>
         <?= Html::openTag('div'); ?>
             <?= Html::a(
-                I::tag()->addClass('bi bi-plus')->content(' '.Html::encode($translator->translate('i.new'))),
+                I::tag()->addClass('bi bi-plus')->content(' '.Html::encode($translator->translate('new'))),
                 $urlGenerator->generate('generatorrelation/add'),
                 ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
             ); ?>
@@ -66,17 +66,17 @@ $toolbar = Div::tag();
                 $columns = [
                     new DataColumn(
                         'id',
-                        header: $translator->translate('i.id'),
+                        header: $translator->translate('id'),
                         content: static fn (GentorRelation $model) => Html::encode($model->getRelation_id())
                     ),
                     new DataColumn(
                         'lowercasename',
-                        header: $translator->translate('invoice.generator.relation.form.lowercase.name'),
+                        header: $translator->translate('generator.relation.form.lowercase.name'),
                         content: static fn (GentorRelation $model) => Html::encode($model->getLowercase_name())
                     ),
                     new DataColumn(
                         'camelcasename',
-                        header: $translator->translate('invoice.generator.relation.form.camelcase.name'),
+                        header: $translator->translate('generator.relation.form.camelcase.name'),
                         content: static fn (GentorRelation $model) => Html::encode($model->getCamelcase_name())
                     ),
                     new ActionColumn(buttons: [
@@ -87,7 +87,7 @@ $toolbar = Div::tag();
                             },
                             attributes: [
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => $translator->translate('i.view'),
+                                'title' => $translator->translate('view'),
                             ]
                         ),
                         new ActionButton(
@@ -97,7 +97,7 @@ $toolbar = Div::tag();
                             },
                             attributes: [
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => $translator->translate('i.edit'),
+                                'title' => $translator->translate('edit'),
                             ]
                         ),
                         new ActionButton(
@@ -106,8 +106,8 @@ $toolbar = Div::tag();
                                 return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelation_id()]);
                             },
                             attributes: [
-                                'title' => $translator->translate('i.delete'),
-                                'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                                'title' => $translator->translate('delete'),
+                                'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                             ]
                         ),
                     ]),
@@ -122,7 +122,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.generator.relations'),
+    $translator->translate('generator.relations'),
     ''
 );
 echo GridView::widget()
@@ -137,6 +137,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>    

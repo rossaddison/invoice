@@ -45,12 +45,12 @@ use Yiisoft\Yii\DataView\GridView;
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn(CategorySecondary $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'name',
-            header: $translator->translate('i.name'),
+            header: $translator->translate('name'),
             content: static fn (CategorySecondary $model) => Html::encode($model->getName() ?? '')
         ),
         new ActionColumn(buttons: [
@@ -62,7 +62,7 @@ use Yiisoft\Yii\DataView\GridView;
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -73,7 +73,7 @@ use Yiisoft\Yii\DataView\GridView;
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -83,8 +83,8 @@ use Yiisoft\Yii\DataView\GridView;
                     return $urlGenerator->generate('categorysecondary/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -104,6 +104,6 @@ use Yiisoft\Yii\DataView\GridView;
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText($translator->translate('invoice.invoice.no.records'))
+      ->emptyText($translator->translate('no.records'))
       ->toolbar($toolbarString);
 ?>      

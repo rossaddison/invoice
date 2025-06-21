@@ -82,7 +82,7 @@ final class DeliveryLocationController extends BaseController
 
     public function add_in_invoice_flash(): void
     {
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.delivery.location.add.in.invoice'));
+        $this->flashMessage('info', $this->translator->translate('delivery.location.add.in.invoice'));
     }
 
     /**
@@ -118,7 +118,7 @@ final class DeliveryLocationController extends BaseController
         $form = new DeliveryLocationForm($delivery_location);
 
         $parameters = [
-            'title' => $this->translator->translate('invoice.invoice.delivery.location.add'),
+            'title' => $this->translator->translate('delivery.location.add'),
             'actionName' => 'del/add',
             'actionArguments' => ['client_id' => $client_id],
             'actionQueryParameters' => [
@@ -138,7 +138,7 @@ final class DeliveryLocationController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->delService->saveDeliveryLocation($delivery_location, $body);
-                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                     $url = $origin . '/' . $action;
                     // Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
                     if ($origin_id) {
@@ -187,7 +187,7 @@ final class DeliveryLocationController extends BaseController
 
             $form = new DeliveryLocationForm($del);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'del/edit',
                 'actionArguments' => ['id' => $del->getId()],
                 'actionQueryParameters' => ['origin' => $origin, 'origin_id' => $origin_id, 'action' => $action],
@@ -200,7 +200,7 @@ final class DeliveryLocationController extends BaseController
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->delService->saveDeliveryLocation($del, $body);
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         $url = $origin . '/' . $action;
                         // Route::methods([Method::GET, Method::POST], '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {
@@ -237,7 +237,7 @@ final class DeliveryLocationController extends BaseController
             $del = $this->del($currentRoute, $delRepository);
             if ($del) {
                 $this->delService->deleteDeliveryLocation($del);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('del/index');
             }
             return $this->webService->getRedirectResponse('del/index');
@@ -258,7 +258,7 @@ final class DeliveryLocationController extends BaseController
         if ($del) {
             $form = new DeliveryLocationForm($del);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'del/view',
                 'actionArguments' => ['id' => $del->getId()],
                 'form' => $form,

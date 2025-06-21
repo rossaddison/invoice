@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'row']); ?>            
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('p'); ?>
-                    <?= $translator->translate('invoice.recurring.original.invoice.date').'('.$dateHelper->display().')'; ?>
+                    <?= $translator->translate('recurring.original.invoice.date').'('.$dateHelper->display().')'; ?>
                     <?= $invDateCreated->format('Y-m-d'); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -68,7 +68,7 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
      * @see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js $('#frequency').change(function () {
      */
     Field::select($form, 'frequency')
-    ->label($translator->translate('invoice.recurring.frequency'))
+    ->label($translator->translate('recurring.frequency'))
     ->value($form->getFrequency() ?? '')
     ->disabled(true)
     ->optionsData($optionsDataFrequency);
@@ -77,24 +77,24 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?php echo Field::hidden($form, 'start')
         ->hideLabel(true)
-        ->label($translator->translate('i.start') ." (".  $dateHelper->display().") ")
+        ->label($translator->translate('start') ." (".  $dateHelper->display().") ")
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
                 <?= Html::closeTag('div'); ?>                
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'next')
-    ->label($translator->translate('i.next') ." (".  $dateHelper->display().") ")
+    ->label($translator->translate('next') ." (".  $dateHelper->display().") ")
     ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
     ->addInputAttributes([
         'data-bs-toggle' => 'tooltip',
-        'title' => $translator->translate('invoice.recurring.tooltip.next')
+        'title' => $translator->translate('recurring.tooltip.next')
     ])
     ->readonly(true);
 ?>
                 <?= Html::closeTag('div'); ?>                
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'end')
-        ->label($translator->translate('i.end') ." (".  $dateHelper->display().") ")
+        ->label($translator->translate('end') ." (".  $dateHelper->display().") ")
         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
         ->readonly(true)
 ?>

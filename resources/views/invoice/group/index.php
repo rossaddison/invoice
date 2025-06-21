@@ -37,7 +37,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.group')))
+                        ->content(' ' . Html::encode($translator->translate('group')))
             )
     )
     ->render();
@@ -53,9 +53,9 @@ $toolbarReset = A::tag()
 $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div'); ?>
-    <?= Html::openTag('h5'); ?><?= $translator->translate('invoice.group'); ?><?= Html::closeTag('h5'); ?>
+    <?= Html::openTag('h5'); ?><?= $translator->translate('group'); ?><?= Html::closeTag('h5'); ?>
         <?= Html::openTag('div'); ?>
-            <?= Html::a(I::tag()->addClass('bi bi-plus')->content(' '.Html::encode($translator->translate('i.new'))), $urlGenerator->generate('group/add'), ['class' => 'btn btn-success']); ?>
+            <?= Html::a(I::tag()->addClass('bi bi-plus')->content(' '.Html::encode($translator->translate('new'))), $urlGenerator->generate('group/add'), ['class' => 'btn btn-success']); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::br(); ?>
     <?= Html::openTag('div'); ?>
@@ -64,27 +64,27 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (Group $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'name',
-            header: $translator->translate('i.name'),
+            header: $translator->translate('name'),
             content: static fn (Group $model) => Html::encode($model->getName())
         ),
         new DataColumn(
             'identifier_format',
-            header: $translator->translate('i.identifier_format'),
+            header: $translator->translate('identifier.format'),
             content: static fn (Group $model) => Html::encode($model->getIdentifier_format())
         ),
         new DataColumn(
             'left_pad',
-            header: $translator->translate('i.left_pad'),
+            header: $translator->translate('left.pad'),
             content: static fn (Group $model) => Html::encode($model->getLeft_pad())
         ),
         new DataColumn(
             'next_id',
-            header: $translator->translate('i.next_id'),
+            header: $translator->translate('next.id'),
             content: static fn (Group $model) => Html::encode($model->getNext_id())
         ),
         new ActionColumn(buttons: [
@@ -95,7 +95,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -105,7 +105,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -114,8 +114,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('group/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -130,7 +130,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.groups'),
+    $translator->translate('groups'),
     ''
 );
 echo GridView::widget()
@@ -145,6 +145,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'group').' '.$grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

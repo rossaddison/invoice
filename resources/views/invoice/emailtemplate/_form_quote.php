@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Span;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= $translator->translate('i.email_template_form'); ?>
+    <?= $translator->translate('email.template.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
@@ -62,7 +62,7 @@ use Yiisoft\Html\Tag\Span;
 
 <?= Field::errorSummary($form)
     ->errors($errors)
-    ->header($translator->translate('invoice.email.template.error.summary'))
+    ->header($translator->translate('email.template.error.summary'))
     ->onlyProperties(...['email_template_title',
                          'email_template_type',
                          'email_template_body',
@@ -85,35 +85,35 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_title', theme: 'A')
-            ->label($translator->translate('i.title'))
+            ->label($translator->translate('title'))
             ->required(true)
             ->addInputAttributes([
                 'class' => 'form-control'
             ])
             ->value(Html::encode($form->getEmail_template_title() ?? ''))
-            ->placeholder($translator->translate('i.title'))
-            ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+            ->placeholder($translator->translate('title'))
+            ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_from_name', theme: 'A')
-            ->label($translator->translate('i.from_name'))
+            ->label($translator->translate('from.name'))
             ->required(true)
             ->addInputAttributes([
                 'class' => 'form-control'
             ])
             ->value(Html::encode($form->getEmail_template_from_name() ?? ''))
-            ->placeholder($translator->translate('i.from_name'))
-            ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+            ->placeholder($translator->translate('from.name'))
+            ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
             <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
                 <?= Html::openTag('fieldset'); ?>    
                     <?= Html::openTag('h5'); ?>
-                        <?= $translator->translate('invoice.email.template.from.source'); ?>
+                        <?= $translator->translate('email.template.from.source'); ?>
                     <?= Html::closeTag('h5'); ?>
                     <?= Html::openTag('h6'); ?>
-                        <?= str_repeat("&nbsp;", 5). $translator->translate('invoice.email.template.from.email.leave.blank'); ?>
+                        <?= str_repeat("&nbsp;", 5). $translator->translate('email.template.from.email.leave.blank'); ?>
                     <?= Html::closeTag('h6'); ?>
                 <?= Html::closeTag('fieldset'); ?>
                 <?= Html::openTag('div', ['id' => 'email_option']); ?>
@@ -125,7 +125,7 @@ use Yiisoft\Html\Tag\Span;
                             'value' => $admin_email
                         ]); ?>
                         <?= Html::openTag('label', ['for' => 'adminEmail']); ?>
-                            <?= $translator->translate('invoice.email.template.from.source.admin.email'); ?>
+                            <?= $translator->translate('email.template.from.source.admin.email'); ?>
                         <?= Html::closeTag('label'); ?>
                         
                         <?= str_repeat("&nbsp;", 2); ?>
@@ -138,7 +138,7 @@ use Yiisoft\Html\Tag\Span;
                             'value' => $sender_email]); ?>
                         
                         <?= Html::openTag('label', ['for' => 'senderEmail']); ?>
-                            <?= $translator->translate('invoice.email.template.from.source.sender.email'); ?>
+                            <?= $translator->translate('email.template.from.source.sender.email'); ?>
                         <?= Html::closeTag('label'); ?>
                         
                         <?= str_repeat("&nbsp;", 2); ?>
@@ -150,17 +150,17 @@ use Yiisoft\Html\Tag\Span;
                             'value' => $from_email]); ?>
                         
                         <?= Html::openTag('label', ['for' => 'fromEmail']); ?>
-                            <?= $translator->translate('invoice.email.template.from.source.froms.email'); ?>
+                            <?= $translator->translate('email.template.from.source.froms.email'); ?>
                         <?= Html::closeTag('label'); ?>
 
                         <?= Field::text($form, 'email_template_from_email')
-                            ->label($translator->translate('i.from_email'))
+                            ->label($translator->translate('from.email'))
                             ->addInputAttributes([
                                 'class' => 'form-control'
                             ])
                             ->value(Html::encode($form->getEmail_template_from_email() ?? ''))
-                            ->placeholder($translator->translate('i.from_email'))
-                            ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+                            ->placeholder($translator->translate('from.email'))
+                            ->hint($translator->translate('hint.this.field.is.required')); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
@@ -168,36 +168,36 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::tag('br'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_cc', theme: 'A')
-            ->label($translator->translate('i.cc'))
+            ->label($translator->translate('cc'))
             ->required(false)
             ->addInputAttributes([
                 'class' => 'form-control taggable'
             ])
             ->value(Html::encode($form->getEmail_template_cc() ?? ''))
-            ->placeholder($translator->translate('i.cc'))
-            ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?>
+            ->placeholder($translator->translate('cc'))
+            ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_bcc', theme: 'A')
-            ->label($translator->translate('i.bcc'))
+            ->label($translator->translate('bcc'))
             ->required(false)
             ->addInputAttributes([
                 'class' => 'form-control taggable'
             ])
             ->value(Html::encode($form->getEmail_template_bcc() ?? ''))
-            ->placeholder($translator->translate('i.bcc'))
-            ->hint($translator->translate('invoice.hint.this.field.is.not.required')); ?>         
+            ->placeholder($translator->translate('bcc'))
+            ->hint($translator->translate('hint.this.field.is.not.required')); ?>         
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_subject', theme: 'A')
-            ->label($translator->translate('i.subject'))
+            ->label($translator->translate('subject'))
             ->required(true)
             ->addInputAttributes([
                 'class' => 'form-control taggable'
             ])
             ->value(Html::encode($form->getEmail_template_subject() ?? ''))
-            ->placeholder($translator->translate('i.subject'))
-            ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
+            ->placeholder($translator->translate('subject'))
+            ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 input-group']); ?>
         <?php echo Select::tag()
@@ -208,7 +208,7 @@ use Yiisoft\Html\Tag\Span;
             ->value(Html::encode($form->getEmail_template_pdf_template() ?? 'quote'))
             ->form('EmailTemplateForm')
             ->optionsData($quoteTemplates)
-            ->prompt($translator->translate('i.none'))
+            ->prompt($translator->translate('none'))
             ->required(true)
             ->disabled(false)
             ->multiple(false);
@@ -296,7 +296,7 @@ use Yiisoft\Html\Tag\Span;
     'rows' => '20'
 ])
 ->value($form->getEmail_template_body() ?? '')
-->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?php
         /**

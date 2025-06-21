@@ -19,22 +19,22 @@ $this->beginPage();
 $assetManager->register(ReportAsset::class);
 ?>
 <!DOCTYPE html>
-<html lang="<?= $translator->translate('i.cldr'); ?>">
+<html lang="<?= $translator->translate('cldr'); ?>">
 <head>
-    <title><?= $translator->translate('invoice.report.sales.by.task'); ?></title>
+    <title><?= $translator->translate('report.sales.by.task'); ?></title>
 </head>
 <body>
 <?php $this->beginBody() ?>
 <h3 class="report_title">
-    <?= $translator->translate('invoice.report.sales.by.task'); ?><br/>
+    <?= $translator->translate('report.sales.by.task'); ?><br/>
     <small><?= $from_date . ' - ' . $to_date ?></small>
 </h3>
 <table>
     <tr>
-        <th><?= $translator->translate('i.task'); ?></th>
-        <th class="amount"><?= $translator->translate('i.invoice_count'); ?></th>
-        <th class="amount"><?= $translator->translate('i.sales'); ?></th>
-        <th class="amount"><?= $translator->translate('i.item_tax'); ?></th>
+        <th><?= $translator->translate('task'); ?></th>
+        <th class="amount"><?= $translator->translate('invoice.count'); ?></th>
+        <th class="amount"><?= $translator->translate('sales'); ?></th>
+        <th class="amount"><?= $translator->translate('item.tax'); ?></th>
     </tr>
     <?php
         /**

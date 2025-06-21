@@ -24,7 +24,7 @@ final class PageSizeLimiter
         $adjustListLimitButton = A::tag()
         ->addAttributes([
             'data-bs-toggle' => 'tooltip',
-            'title' => $translator->translate('i.default_list_limit'),
+            'title' => $translator->translate('default.list.limit'),
         ])
         ->addClass('btn btn-success me-1')
         ->content($defaultListLimit)
@@ -76,7 +76,7 @@ final class PageSizeLimiter
         $limits_array = [$listLimit, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
         foreach ($limits_array as $value) {
             $buttons .= A::tag()
-            ->addAttributes(['type' => 'submit', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('invoice.user.inv.refer.to')])
+            ->addAttributes(['type' => 'submit', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('user.inv.refer.to')])
             ->addClass($value == $listLimit ? 'btn btn-success me-1' : 'btn btn-danger me-1')
             ->content((string)$value)
             ->href(

@@ -82,7 +82,7 @@ final class InvItemAllowanceChargeController extends BaseController
             $form = new InvItemAllowanceChargeForm($inv_item_ac, (int)$inv_item_id);
             $inv_id = $inv_item->getInv_id();
             $parameters = [
-                'title' => $this->translator->translate('invoice.add'),
+                'title' => $this->translator->translate('add'),
                 'actionName' => 'invitemallowancecharge/add',
                 'actionArguments' => ['inv_item_id' => $inv_item_id],
                 'errors' => [],
@@ -172,7 +172,7 @@ final class InvItemAllowanceChargeController extends BaseController
         $params = $request->getQueryParams();
         /** @var string $params['inv_item_id'] */
         $inv_item_id = $params['inv_item_id'] ?? '';
-        $this->flashMessage('info', $this->translator->translate('invoice.peppol.allowance.or.charge.inherit'));
+        $this->flashMessage('info', $this->translator->translate('peppol.allowance.or.charge.inherit'));
         // retrieve all the allowances or charges associated with the inv_item_id
         $invoice_item_allowances_or_charges = $iiacR->repoInvItemquery($inv_item_id);
         $paginator = (new OffsetPaginator($invoice_item_allowances_or_charges));
@@ -214,7 +214,7 @@ final class InvItemAllowanceChargeController extends BaseController
             $this->aciiService->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $this->sR);
             // update the inv amount record
             $this->numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
         }
         return $this->webService->getNotFoundResponse();
@@ -250,7 +250,7 @@ final class InvItemAllowanceChargeController extends BaseController
             $inv_id = $inv_item?->getInv_id();
             $form = new InvItemAllowanceChargeForm($acii, (int)$inv_item_id);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'invitemallowancecharge/edit',
                 'actionArguments' => ['id' => $acii->getId()],
                 'errors' => [],
@@ -372,7 +372,7 @@ final class InvItemAllowanceChargeController extends BaseController
             $inv_item_id = $acii->getInv_item_id();
             $form = new InvItemAllowanceChargeForm($acii, (int)$inv_item_id);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'invitemallowancecharge/view',
                 'actionArguments' => ['id' => $acii->getId()],
                 'allowance_charges' => $acR->findAllPreloaded(),

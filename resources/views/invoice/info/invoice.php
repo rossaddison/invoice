@@ -52,6 +52,17 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>21st June 2025</b></p>
+<p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
+<p>Include hash in WebControllerService function getRedirectResponse</p>
+<p>Remove underscores in translation keys and replace with dots</p>
+<p>resources/messages/en/app.php has simplified and sorted keys</p>
+<p>en/app.php keys replaced old underscore keys in src and resources folders</p> 
+<p>Scripts produced by Copilot stored in scripts folder</p>
+<p>After a locale is selected from Google Translate dropdown, and app.php produced, redirection to this dropdown occurs using hash</p>
+<p><b>18th June 2025</b></p>
+<p>Transfer code e.g. new Flash($session) into a di container under config/common/params/di/flash.php. 53 Controllers affected after Autowiring discussion.</p>
+<p><a href="https://github.com/copilot/c/a3f639e9-ce93-49be-96b7-dcdbd4de5f97" target="_blank">Topic: Autowiring (should have created a new conversation)</a></p>
 <p><b>15th June 2025</b></p>
 <p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
 <p><b>14th June 2025</b></p>
@@ -342,7 +353,7 @@ exit
 <p>The Family search (2 tier) will be extended to include a product search (3 tier) later.</p>
 <p><b>4th April 2025</b></p>
 <p>Dropdown sub menu for php details within resources\views\layout\invoice.php dropdown menu</p>
-<p>Use DropdownItem::text($subMenu->generate($translator->translate('invoice.faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
+<p>Use DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
 
 src\Widget\SubMenu compiles from an array specified in the layout  
 </p>

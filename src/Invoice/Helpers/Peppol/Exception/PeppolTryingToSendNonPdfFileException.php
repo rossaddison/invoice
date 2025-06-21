@@ -16,7 +16,7 @@ final class PeppolTryingToSendNonPdfFileException extends \RuntimeException impl
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.peppol.trying.to.send.non.pdf.file');
+        return $this->translator->translate('peppol.trying.to.send.non.pdf.file');
     }
 
     /**

@@ -20,7 +20,7 @@ use Yiisoft\Html\Html;
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('i.copy_quote'); ?></h5>
+               <h5 class="modal-title"><?= $translator->translate('copy.quote'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -28,7 +28,7 @@ use Yiisoft\Html\Html;
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUser_id(); ?>">
                     <div class="form-group">
-                        <label for="create_quote_client_id"><?= $translator->translate('i.client'); ?></label>
+                        <label for="create_quote_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_quote_client_id" id="create_quote_client_id" class="form-control">
                             <option value="<?= $quote->getClient()?->getClient_id(); ?>"><?= $quote->getClient()?->getClient_name() ?? '#'; ?></option>
                                 <?php
@@ -45,9 +45,9 @@ use Yiisoft\Html\Html;
                 </form>    
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('i.cancel'); ?></button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
                 <button type="button" class="quote_to_quote_confirm btn btn-success" id="quote_to_quote_confirm">
-                    <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
+                    <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

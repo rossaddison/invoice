@@ -7,7 +7,6 @@ use Yiisoft\Html\Tag\H6;
 use Yiisoft\Html\Tag\Img;
 use Yiisoft\Html\Tag\Table;
 use Yiisoft\Html\Tag\Tr;
-use chillerlan\QRCode\Output\QROutputInterface;
 use chillerlan\QRCode\Common\Version;
 use chillerlan\QRCode\QRCode;
 
@@ -25,7 +24,7 @@ use chillerlan\QRCode\QRCode;
                     <?= A::tag()
                            ->attributes(['style' => 'text-decoration:none'])
                            ->href('https://php-qrcode.readthedocs.io/en/main/')
-                           ->content($translator->translate('invoice.invoice.qr.code')); ?>
+                           ->content($translator->translate('qr.code')); ?>
                 </h6>
             </div>
             <div class="row">
@@ -33,7 +32,7 @@ use chillerlan\QRCode\QRCode;
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[qr_version]" <?= $s->where('qr_version'); ?>>
-                                <?= $translator->translate('invoice.invoice.qr.version'); ?>
+                                <?= $translator->translate('qr.version'); ?>
                             </label>
                             <?php $body['settings[qr_version]'] = $s->getSetting('qr_version') ?: '40';?>
                            <input type="text" name="settings[qr_version]" id="settings[qr_version]"
@@ -42,7 +41,7 @@ use chillerlan\QRCode\QRCode;
                         </div>
                         <div class="form-group">
                             <label for="settings[qr_ecc_level]">
-                                <?= $translator->translate('invoice.invoice.qr.ecc.level'); ?>
+                                <?= $translator->translate('qr.ecc.level'); ?>
                             </label>
                             <?php $body['settings[qr_ecc_level]'] = $s->getSetting('qr_ecc_level');?>
                             <select name="settings[qr_ecc_level]" id="settings[qr_ecc_level]"
@@ -55,7 +54,7 @@ use chillerlan\QRCode\QRCode;
                         </div>
                         <div class="form-group">
                             <label for="settings[qr_height_and_width]" <?= $s->where('qr_height_and_width'); ?>>
-                                <?= $translator->translate('invoice.invoice.qr.height.and.width'); ?>
+                                <?= $translator->translate('qr.height.and.width'); ?>
                             </label>
                             <?php $body['settings[qr_height_and_width]'] = $s->getSetting('qr_height_and_width');?>
                            <input type="text" name="settings[qr_height_and_width]" id="settings[qr_height_and_width]"
@@ -67,14 +66,14 @@ use chillerlan\QRCode\QRCode;
                         <?=
                            H6::tag()
                            ->attributes(['class' => 'label label-info'])
-                           ->content($translator->translate('invoice.invoice.qr.code.1'));
+                           ->content($translator->translate('qr.code.1'));
 ?>
                             <pre>
                                 Html::openTag('div', ['id' => 'qr_code']);<br>
                                     QrCodeWidget::absoluteUrl($urlGenerator->generateAbsolute('inv/view', [<br>
                                         'id' => $inv_id,<br> 
                                         '_language' => $_language<br>
-                                    ]), $translator->translate('invoice.invoice.qr.code'), 150);<br>
+                                    ]), $translator->translate('qr.code'), 150);<br>
                                 Html::closeTag('div');<br>
                             </pre>    
                         </div>
@@ -87,20 +86,20 @@ printf(Img::tag()
 ->width($pixels)
 ->height($pixels)
 ->src('%s')
-->alt($translator->translate('invoice.invoice.qr.code'))
+->alt($translator->translate('qr.code'))
 ->render(), (string)(new QRCode())->render('http://invoice.myhost/invoice/inv/view/6'));
 echo Table::tag()
 ->attributes([ 'class' => 'table table-info table-striped table-bordered'])
 ->rows(
     Tr::tag()
     ->headerStrings([
-        $translator->translate('invoice.invoice.qr.code.1'),
-        $translator->translate('invoice.invoice.qr.code.details'),
+        $translator->translate('qr.code.1'),
+        $translator->translate('qr.code.details'),
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.code.source'),
-        $translator->translate('invoice.invoice.qr.code.source.path'),
+        $translator->translate('qr.code.source'),
+        $translator->translate('qr.code.source.path'),
     ]),
     Tr::tag()
     ->dataStrings([
@@ -124,33 +123,33 @@ echo Table::tag()
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.code.type'),
-        $translator->translate('invoice.invoice.qr.code.type.absolute.url'),
+        $translator->translate('qr.code.type'),
+        $translator->translate('qr.code.type.absolute.url'),
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.absolute.url'),
+        $translator->translate('qr.absolute.url'),
         'http://invoice.myhost/invoice/inv/view/6',
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.meaning'),
-        $translator->translate('invoice.invoice.qr.meaning.benefit'),
+        $translator->translate('qr.meaning'),
+        $translator->translate('qr.meaning.benefit'),
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.code.widget.used'),
+        $translator->translate('qr.code.widget.used'),
         '\src\Widget\QrCode.php'
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.code.level.1'),
+        $translator->translate('qr.code.level.1'),
         '(new QRCode)->render("http://invoice.myhost/invoice/inv/view/6")'
     ]),
     Tr::tag()
     ->dataStrings([
-        $translator->translate('invoice.invoice.qr.code.settings.effect'),
-        $translator->translate('invoice.invoice.qr.code.settings.effect.explanation')
+        $translator->translate('qr.code.settings.effect'),
+        $translator->translate('qr.code.settings.effect.explanation')
     ]),
 )
 ->render();

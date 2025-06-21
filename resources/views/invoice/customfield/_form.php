@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= $translator->translate('i.custom_field_form'); ?>
+    <?= $translator->translate('custom.field.form'); ?>
     <?= Html::closeTag('h1'); ?>
         <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
@@ -55,14 +55,14 @@ use Yiisoft\Html\Tag\Form;
                 <?=
                 Field::errorSummary($form)
                 ->errors($errors)
-                ->header($translator->translate('invoice.custom.field.error.summary'))
+                ->header($translator->translate('custom.field.error.summary'))
                 ->onlyProperties(...['table', 'label', 'location', 'type'])
                 ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::select($form, 'table')
-        ->label($translator->translate('i.table'))
+        ->label($translator->translate('table'))
         ->addInputAttributes([
             'class' => 'form-control',
             'id' => 'table'
@@ -74,9 +74,9 @@ use Yiisoft\Html\Tag\Form;
 
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::text($form, 'label')
-    ->label($translator->translate('i.label'))
+    ->label($translator->translate('label'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.label'),
+        'placeholder' => $translator->translate('label'),
         'class' => 'form-control',
         'id' => 'label',
     ])
@@ -93,14 +93,14 @@ $optionsDataType = [];
  */
 foreach ($types as $type) {
     $alpha = str_replace("-", "_", strtolower($type));
-    $optionsDataType[$type] = ($translator->translate('i.'.$alpha));
+    $optionsDataType[$type] = ($translator->translate(''.$alpha));
 }
 ?>    
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::select($form, 'type')
-            ->label($translator->translate('i.type'))
+            ->label($translator->translate('type'))
             ->addInputAttributes([
-                'placeholder' => $translator->translate('i.type'),
+                'placeholder' => $translator->translate('type'),
                 'class' => 'form-control',
                 'id' => 'type'
             ])
@@ -112,13 +112,13 @@ foreach ($types as $type) {
                 <?= Field::checkbox($form, 'required')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('invoice.custom.field.required'));
+    ->ariaDescribedBy($translator->translate('custom.field.required'));
 ?>
             <?= Html::closeTag('div'); ?>    
 
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::range($form, 'order')
-    ->label($translator->translate('i.order'))
+    ->label($translator->translate('order'))
     ->addInputAttributes([
         'type' => 'range',
         'min' => 1,
@@ -131,7 +131,7 @@ foreach ($types as $type) {
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
-                <label for="location"><?= $translator->translate('i.position'); ?></label> 
+                <label for="location"><?= $translator->translate('position'); ?></label> 
                 <?php $valueSelected = Html::encode($form->getLocation() ??  ''); ?>
                 <select name="location" id="location" class="form-control"></select>
             <?= Html::closeTag('div'); ?>

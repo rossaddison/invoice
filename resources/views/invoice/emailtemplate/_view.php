@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Body;
-use Yiisoft\Html\NoEncode;
 use Yiisoft\Html\Tag\Form;
 
 /**
@@ -25,7 +23,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-     <?= $translator->translate('i.view'); ?>
+     <?= $translator->translate('view'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
@@ -41,101 +39,101 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_title')
-            ->label($translator->translate('i.title'))
+            ->label($translator->translate('title'))
             ->addInputAttributes([
                 'class' => 'form-control'
             ])
             ->value(Html::encode($form->getEmail_template_title()))
             ->readonly(true)
-            ->placeholder($translator->translate('i.title'))
+            ->placeholder($translator->translate('title'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_type')
-   ->label($translator->translate('i.type'))
+   ->label($translator->translate('type'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_type()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.type'))
+   ->placeholder($translator->translate('type'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_body')
-   ->label($translator->translate('i.body'))
+   ->label($translator->translate('body'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value($form->getEmail_template_body())
    ->readonly(true)
-   ->placeholder($translator->translate('i.body'))
+   ->placeholder($translator->translate('body'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_subject')
-   ->label($translator->translate('i.subject'))
+   ->label($translator->translate('subject'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_subject()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.subject'))
+   ->placeholder($translator->translate('subject'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_from_name')
-   ->label($translator->translate('i.from_name'))
+   ->label($translator->translate('from.name'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_from_name()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.from_name'))
+   ->placeholder($translator->translate('from.name'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_from_email')
-   ->label($translator->translate('i.from_email'))
+   ->label($translator->translate('from.email'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_from_email()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.from_email'))
+   ->placeholder($translator->translate('from.email'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_cc')
-   ->label($translator->translate('i.cc'))
+   ->label($translator->translate('cc'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_cc()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.cc'))
+   ->placeholder($translator->translate('cc'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_bcc')
-   ->label($translator->translate('i.bcc'))
+   ->label($translator->translate('bcc'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_bcc()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.bcc'))
+   ->placeholder($translator->translate('bcc'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'email_template_pdf_template')
-   ->label($translator->translate('i.pdf_template'))
+   ->label($translator->translate('pdf.template'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getEmail_template_pdf_template()))
    ->readonly(true)
-   ->placeholder($translator->translate('i.pdf_template'))
+   ->placeholder($translator->translate('pdf.template'))
 ?>
     <?= Html::closeTag('div'); ?>
     <?= $button::back(); ?>

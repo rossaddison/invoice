@@ -58,7 +58,7 @@ final class ProductPropertyController extends BaseController
         $productProperty = new ProductProperty();
         $form = new ProductPropertyForm($productProperty, (int)$product_id);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'productproperty/add',
             'actionArguments' => ['product_id' => $product_id],
             'errors' => [],
@@ -117,7 +117,7 @@ final class ProductPropertyController extends BaseController
             $productproperty = $this->productproperty($currentRoute, $productpropertyRepository);
             if ($productproperty) {
                 $this->productpropertyService->deleteProductProperty($productproperty);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('productproperty/index');
             }
             return $this->webService->getRedirectResponse('productproperty/index');
@@ -146,7 +146,7 @@ final class ProductPropertyController extends BaseController
         if ($productProperty) {
             $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'productproperty/edit',
                 'actionArguments' => ['id' => $productProperty->getProperty_id()],
                 'errors' => [],
@@ -206,7 +206,7 @@ final class ProductPropertyController extends BaseController
         if ($productProperty) {
             $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'productproperty/view',
                 'actionArguments' => ['id' => $productProperty->getProperty_id()],
                 'form' => $form,

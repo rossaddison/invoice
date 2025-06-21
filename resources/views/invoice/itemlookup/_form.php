@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['name', 'description', 'price'])
                     ->onlyCommonErrors()
 ?>
@@ -53,26 +53,26 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'name')
-    ->label($translator->translate('i.name'))
-    ->placeholder($translator->translate('i.name'))
+    ->label($translator->translate('name'))
+    ->placeholder($translator->translate('name'))
     ->value(Html::encode($form->getName() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'description')
-    ->label($translator->translate('i.description'))
-    ->placeholder($translator->translate('i.description'))
+    ->label($translator->translate('description'))
+    ->placeholder($translator->translate('description'))
     ->value(Html::encode($form->getDescription() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'price')
-    ->label($translator->translate('i.price'))
-    ->placeholder($translator->translate('i.price'))
+    ->label($translator->translate('price'))
+    ->placeholder($translator->translate('price'))
     ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

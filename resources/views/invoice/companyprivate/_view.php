@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('invoice.setting.company.private'); ?>
+<?= $translator->translate('setting.company.private'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
 
     <?= Html::openTag('div', ['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $translator->translate('i.view'); ?>
+            <?= $translator->translate('view'); ?>
         <?= Html::closeTag('h1'); ?>
         <?= Html::openTag('div', ['id' => 'content']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -63,7 +63,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'gln')
                         ->addInputAttributes(['class' => 'form-control'])
-                        ->label($translator->translate('i.gln'))
+                        ->label($translator->translate('gln'))
                         ->readonly(true)
                         ->value(Html::encode($form->getGln() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>

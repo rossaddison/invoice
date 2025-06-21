@@ -50,25 +50,25 @@ echo $alert;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('i.tasks')))
+                            ->content(' ' . Html::encode($translator->translate('tasks')))
                 )
         )
         ->render();
 $statuses = [
     1 => [
-        'label' => $translator->translate('i.not_started'),
+        'label' => $translator->translate('not.started'),
         'class' => 'draft'
     ],
     2 => [
-        'label' => $translator->translate('i.in_progress'),
+        'label' => $translator->translate('in.progress'),
         'class' => 'viewed'
     ],
     3 => [
-        'label' => $translator->translate('i.complete'),
+        'label' => $translator->translate('complete'),
         'class' => 'sent'
     ],
     4 => [
-        'label' => $translator->translate('i.invoiced'),
+        'label' => $translator->translate('invoiced'),
         'class' => 'paid'
     ]
 ];
@@ -84,10 +84,10 @@ $toolbar = Div::tag();
 ?>
 
 <div>
-    <h5><?= $translator->translate('i.tasks'); ?></h5>
+    <h5><?= $translator->translate('tasks'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('task/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('new')); ?>
         </a>
     </div>
 </div>
@@ -100,19 +100,19 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (Task $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'project_id',
-            header: $translator->translate('i.project'),
+            header: $translator->translate('project'),
             content: static function (Task $model) use ($prjctR): string {
                 return Html::encode(($prjctR->count($model->getProject_id()) > 0 ? $prjctR->repoProjectquery($model->getProject_id())?->getName() : ''));
             }
         ),
         new DataColumn(
             'status',
-            header: $translator->translate('i.status'),
+            header: $translator->translate('status'),
             withSorting: true,
             content: static function (Task $model) use ($statuses): string {
                 $status = $model->getStatus();
@@ -132,23 +132,23 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'name',
-            header: $translator->translate('i.name'),
+            header: $translator->translate('name'),
             withSorting: true,
             content: static fn (Task $model): string => Html::encode($model->getName())
         ),
         new DataColumn(
             'description',
-            header: $translator->translate('i.description'),
+            header: $translator->translate('description'),
             content: static fn (Task $model): string => Html::encode(ucfirst($model->getDescription()))
         ),
         new DataColumn(
             'price',
-            header: $translator->translate('i.price'),
+            header: $translator->translate('price'),
             content: static fn (Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00))
         ),
         new DataColumn(
             'finish_date',
-            header: $translator->translate('i.task_finish_date'),
+            header: $translator->translate('task.finish.date'),
             content: static function (Task $model): string {
                 /**
                  * @psalm-suppress PossiblyInvalidMethodCall $model->getFinish_date()->format('Y-m-d')
@@ -158,8 +158,8 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'tax_rate_id',
-            header: $translator->translate('i.tax_rate'),
-            content: static fn (Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('i.none')
+            header: $translator->translate('tax.rate'),
+            content: static fn (Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none')
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -169,7 +169,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -179,7 +179,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -188,8 +188,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('task/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -206,7 +206,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.products'),
+    $translator->translate('products'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open() .
@@ -228,7 +228,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
 </div>

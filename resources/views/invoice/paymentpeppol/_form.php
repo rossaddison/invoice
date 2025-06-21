@@ -37,7 +37,7 @@ if (!empty($errors)) {
 <form id="PaymentPeppolForm" method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.paymentpeppols_form'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('paymentpeppols.form'); ?></h1>
     <?= (string)$response->getBody(); ?>
     <div id="content">
         <div class = 'row'>
@@ -46,12 +46,12 @@ if (!empty($errors)) {
            value="<?= Html::encode($body['id'] ??  ''); ?>">
            </div>
            <div class="mb3 form-group">
-             <label for="auto_reference"><?= $translator->translate('i.auto_reference'); ?></label>
+             <label for="auto_reference"><?= $translator->translate('auto.reference'); ?></label>
              <input type="text" name="auto_reference" id="auto_reference" class="form-control"
            value="<?= Html::encode($body['auto_reference'] ??  ''); ?>">
            </div>
            <div class="mb3 form-group">
-             <label for="provider"><?= $translator->translate('i.provider'); ?></label>
+             <label for="provider"><?= $translator->translate('provider'); ?></label>
              <input type="text" name="provider" id="provider" class="form-control"
            value="<?= Html::encode($body['provider'] ??  ''); ?>">
            </div>

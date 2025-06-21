@@ -188,8 +188,8 @@ final class PaymentInformationController
                             'render' => $this->viewRenderer->renderPartialAsString(
                                 'setting/payment_message',
                                 [
-                                    'heading' => $this->translator->translate('invoice.payment.information.amazon.payment.session.complete') . $checkout_session_id,
-                                    'message' => $this->translator->translate('i.payment') . ':' . $this->translator->translate('i.complete'),
+                                    'heading' => $this->translator->translate('payment.information.amazon.payment.session.complete') . $checkout_session_id,
+                                    'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
                                     'url' => 'inv/url_key',
                                     'url_key' => $invoice_url_key,'gateway' => 'Amazon_Pay',
                                     'sandbox_url' => $sandbox_url_array['amazon_pay'],
@@ -202,8 +202,8 @@ final class PaymentInformationController
                         'render' => $this->viewRenderer->renderPartialAsString(
                             'setting/payment_message',
                             [
-                                'heading' => $this->translator->translate('invoice.payment.information.amazon.payment.session.incomplete'),
-                                'message' => $this->translator->translate('i.payment') . ':' . $this->translator->translate('i.complete'),
+                                'heading' => $this->translator->translate('payment.information.amazon.payment.session.incomplete'),
+                                'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
                                 'url' => 'inv/url_key',
                                 'url_key' => $invoice_url_key,'gateway' => 'Amazon_Pay',
                                 'sandbox_url' => $sandbox_url_array['amazon_pay'],
@@ -361,7 +361,7 @@ final class PaymentInformationController
                     ];
                     // Check if the invoice is payable
                     if ($balance == 0.00) {
-                        $this->flashMessage('warning', $this->translator->translate('i.invoice_already_paid'));
+                        $this->flashMessage('warning', $this->translator->translate('invoice.already.paid'));
                         $disable_form = true;
                     }
                     // Get additional invoice information
@@ -374,19 +374,19 @@ final class PaymentInformationController
                             if ($this->sR->getSetting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false) && ($d == 'stripe')) {
                                 $this->flashMessage(
                                     'warning',
-                                    $this->translator->translate('invoice.payment.information.stripe.api.key')
+                                    $this->translator->translate('payment.information.stripe.api.key')
                                 );
                             }
                             if ($this->sR->getSetting('gateway_amazon_pay_enabled') === '1' && ($d == 'amazon_pay')) {
                                 $this->flashMessage(
                                     'warning',
-                                    $this->translator->translate('invoice.payment.information.amazon.no.omnipay.version')
+                                    $this->translator->translate('payment.information.amazon.no.omnipay.version')
                                 );
                             }
                             if ($this->sR->getSetting('gateway_braintree_enabled') === '1' && ($d == 'braintree')) {
                                 $this->flashMessage(
                                     'warning',
-                                    $this->translator->translate('invoice.payment.information.braintree.no.omnipay.version')
+                                    $this->translator->translate('payment.information.braintree.no.omnipay.version')
                                 );
                             }
 
@@ -407,12 +407,12 @@ final class PaymentInformationController
                                         '//invoice/client/partial_client_address',
                                         ['client' => $cR->repoClientquery($invoice->getClient_id())]
                                     ),
-                                'payment_method' => $payment_method_for_this_invoice->getName() ?? $this->translator->translate('invoice.payment.information.none'),
+                                'payment_method' => $payment_method_for_this_invoice->getName() ?? $this->translator->translate('payment.information.none'),
                                 'total' => $total,
                                 'actionName' => 'paymentinformation/make_payment_omnipay',
                                 'actionArguments' => ['url_key' => $url_key],
                                 'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
-                                'title' => $this->translator->translate('invoice.payment.information.omnipay.driver.being.used'),
+                                'title' => $this->translator->translate('payment.information.omnipay.driver.being.used'),
                             ];
                             return $this->viewRenderer->render('payment_information_omnipay', $omnipay_view_data);
                         } // Omnipay version
@@ -536,7 +536,7 @@ final class PaymentInformationController
                 }
             }
         } else {
-            $this->flashMessage('danger', $this->translator->translate('invoice.invoice.number.no'));
+            $this->flashMessage('danger', $this->translator->translate('number.no'));
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -704,11 +704,11 @@ final class PaymentInformationController
                     $this->iaR->save($invoice_amount_record);
                     $this->record_online_payments_and_merchant_for_non_omnipay(
                         // Reference
-                        $invoice->getNumber() ?? $this->translator->translate('invoice.invoice.number.no'),
+                        $invoice->getNumber() ?? $this->translator->translate('number.no'),
                         (string)$invoice_id,
                         $balance ?: 0.00,
                         $payment_method,
-                        $invoice->getNumber() ?? $this->translator->translate('invoice.invoice.number.no'),
+                        $invoice->getNumber() ?? $this->translator->translate('number.no'),
                         'Braintree',
                         'braintree',
                         $url_key,
@@ -720,8 +720,8 @@ final class PaymentInformationController
             $view_data = [
                 'render' => $this->viewRenderer->renderPartialAsString('//invoice/setting/payment_message', ['heading' => '',
                     //https://developer.paypal.com/braintree/docs/reference/general/result-objects
-                    'message' => $result->success ? sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoice->getNumber() ?? '')
-                                                  : sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoice->getNumber() ?? ''),
+                    'message' => $result->success ? sprintf($this->translator->translate('online.payment.payment.successful'), $invoice->getNumber() ?? '')
+                                                  : sprintf($this->translator->translate('online.payment.payment.failed'), $invoice->getNumber() ?? ''),
                     'url' => 'inv/url_key',
                     'url_key' => $url_key,
                     'gateway' => 'Braintree',
@@ -757,11 +757,11 @@ final class PaymentInformationController
         $mollieClient = new MollieClient();
         // Return the view
         if ($this->sR->getSetting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == false)) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.payment.gateway.mollie.api.key.needs.to.be.setup'));
+            $this->flashMessage('warning', $this->translator->translate('payment.gateway.mollie.api.key.needs.to.be.setup'));
             return $this->webService->getNotFoundResponse();
         }
         if ($this->sR->getSetting('gateway_mollie_enabled') === '1' && ($this->mollieSetTestOrLiveApiKey($mollieClient) == true)) {
-            $this->flashMessage('success', $this->translator->translate('invoice.payment.gateway.mollie.api.key.has.been.setup'));
+            $this->flashMessage('success', $this->translator->translate('payment.gateway.mollie.api.key.has.been.setup'));
         }
         $payment = $this->mollieApiClientCreatePayment(
             $mollieClient,
@@ -791,7 +791,7 @@ final class PaymentInformationController
                     ]
                 ),
             'payment_methods' => $mollieClient->methods->allEnabled(),
-            'invoice_payment_method' => $payment_method_for_this_invoice ?: $this->translator->translate('i.none'),
+            'invoice_payment_method' => $payment_method_for_this_invoice ?: $this->translator->translate('none'),
             'total' => $total,
             'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
             'mollieLogo' => $this->renderPartialAsStringMollieLogo(),
@@ -938,7 +938,7 @@ final class PaymentInformationController
                     // 1 None, 2 Cash, 3 Cheque, 4 Card / Direct-debit - Succeeded, 5 Card / Direct-debit - Processing, 6 Card / Direct-debit - Customer Ready
                     $payment_method = 4;
                     $invoice->setPayment_method(4);
-                    $heading = sprintf($this->translator->translate('g.online_payment_payment_successful'), (string)$invoiceNumber);
+                    $heading = sprintf($this->translator->translate('online.payment.payment.successful'), (string)$invoiceNumber);
                     $this->iR->save($invoice);
                     /** @var int $invoice->getId() */
                     $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice->getId());
@@ -969,7 +969,7 @@ final class PaymentInformationController
                                 'paymentinformation/payment_message',
                                 [
                                     'heading' => $heading,
-                                    'message' => $this->translator->translate('i.payment') . ':' . $this->translator->translate('i.complete') . 'Payment Id: ' . $paymentId,
+                                    'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete') . 'Payment Id: ' . $paymentId,
                                     'url' => 'inv/url_key',
                                     'url_key' => $metadataInvoiceUrlKey, 'gateway' => 'Mollie',
                                     'sandbox_url' => $sandbox_url_array['mollie'],
@@ -990,10 +990,10 @@ final class PaymentInformationController
                     $payment_method = 5;
                     $invoice->setPayment_method(5);
                     $heading = sprintf(
-                        $this->translator->translate('g.online_payment_payment_failed'),
+                        $this->translator->translate('online.payment.payment.failed'),
                         (string)$invoiceNumber .
                                        ' ' .
-                                       $this->translator->translate('invoice.payment.gateway.mollie.api.payment.id') .
+                                       $this->translator->translate('payment.gateway.mollie.api.payment.id') .
                                        $paymentId
                     );
                     $this->iR->save($invoice);
@@ -1002,7 +1002,7 @@ final class PaymentInformationController
                             'paymentinformation/payment_message',
                             [
                                 'heading' => $heading,
-                                'message' => $this->translator->translate('i.payment') . ':' . $this->translator->translate('i.complete'),
+                                'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
                                 'url' => 'inv/url_key',
                                 'url_key' => $metadataInvoiceUrlKey, 'gateway' => 'Mollie',
                                 'sandbox_url' => $sandbox_url_array['mollie'],
@@ -1124,8 +1124,8 @@ final class PaymentInformationController
                 $pending_message = 'Requires a payment method. ';
             }
             $heading = $redirect_status_from_stripe == 'succeeded' ?
-              sprintf($this->translator->translate('g.online_payment_payment_successful'), (string)$invoiceNumber)
-              : sprintf($this->translator->translate('g.online_payment_payment_failed'), (string)$invoiceNumber . ' ' . ($pending_message ?: ''));
+              sprintf($this->translator->translate('online.payment.payment.successful'), (string)$invoiceNumber)
+              : sprintf($this->translator->translate('online.payment.payment.failed'), (string)$invoiceNumber . ' ' . ($pending_message ?: ''));
             $this->iR->save($invoice);
             /** @var int $invoice->getId() */
             $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice->getId());
@@ -1156,7 +1156,7 @@ final class PaymentInformationController
                         'paymentinformation/payment_message',
                         [
                             'heading' => $heading,
-                            'message' => $this->translator->translate('i.payment') . ':' . $this->translator->translate('i.complete'),
+                            'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
                             'url' => 'inv/url_key',
                             'url_key' => $invoice_url_key,'gateway' => 'Stripe',
                             'sandbox_url' => $sandbox_url_array['stripe'],
@@ -1344,7 +1344,7 @@ final class PaymentInformationController
                 // Redirect the user and display failure message
                 $this->flashMessage(
                     'error',
-                    $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage()
+                    $this->translator->translate('online.payment.card.invalid') . '<br/>' . $e->getMessage()
                 );
                 return $this->factory
                     ->createResponse($this->viewRenderer
@@ -1352,7 +1352,7 @@ final class PaymentInformationController
                                               '//invoice/setting/payment_message',
                                               [
                                                   'heading' => '',
-                                                  'message' => $this->translator->translate('g.online_payment_card_invalid') . '<br/>' . $e->getMessage(),
+                                                  'message' => $this->translator->translate('online.payment.card.invalid') . '<br/>' . $e->getMessage(),
                                                   'url' => 'paymentinformation/form',
                                                   'url_key' => $invoice_url_key,
                                                   'sandbox_url' => $sandbox_url,
@@ -1367,7 +1367,7 @@ final class PaymentInformationController
             'amount' => $balance,
             'currency' => $driver_currency,
             'card' => $credit_card,
-            'description' => sprintf($this->translator->translate('g.payment_description'), $invoice_number),
+            'description' => sprintf($this->translator->translate('payment.description'), $invoice_number),
             'metadata' => [
                 'invoice_number' => $invoice_number,
                 'invoice_guest_url' => $invoice_url_key,
@@ -1427,8 +1427,8 @@ final class PaymentInformationController
     ): Response {
         /** @var \Omnipay\Common\Message\RedirectResponseInterface $response */
         if ($response->isSuccessful()) {
-            $payment_note = $this->translator->translate('g.transaction_reference') . ': ' . $reference . "\n";
-            $payment_note .= $this->translator->translate('g.payment_provider') . ': ' . ucwords(str_replace('_', ' ', $d));
+            $payment_note = $this->translator->translate('transaction.reference') . ': ' . $reference . "\n";
+            $payment_note .= $this->translator->translate('payment.provider') . ': ' . ucwords(str_replace('_', ' ', $d));
 
             // Set invoice to paid
 
@@ -1457,17 +1457,17 @@ final class PaymentInformationController
                         if ((strlen($chatId) > 0) && strlen($telegramToken) > 0) {
                             $failResultSendMessage = $telegramBotApi->sendMessage($chatId, $clientFullName . ': ' . (string)$balance . ' : ' . $payment_note);
                             if (!$failResultSendMessage instanceof FailResult) {
-                                $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.payment.notification.success'));
+                                $this->flashMessage('success', $this->translator->translate('telegram.bot.api.payment.notification.success'));
                             }
                         }
                     } else {
                         if ($this->sR->getSetting('enable_telegram') == '1') {
-                            $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                            $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.token.not.set'));
                         }
                     }
                 }
             }
-            $payment_success_msg = sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoice_number);
+            $payment_success_msg = sprintf($this->translator->translate('online.payment.payment.successful'), $invoice_number);
 
             // Save gateway response
             $successful_merchant_response_array = [
@@ -1507,7 +1507,7 @@ final class PaymentInformationController
         } else {
             // Payment failed
             // Save the response in the database
-            $payment_failure_msg = sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoice_number);
+            $payment_failure_msg = sprintf($this->translator->translate('online.payment.payment.failed'), $invoice_number);
 
             $unsuccessful_merchant_response_array = [
                 'inv_id' => $invoice_id,
@@ -1571,8 +1571,8 @@ final class PaymentInformationController
         array $sandbox_url_array
     ): \Yiisoft\DataResponse\DataResponse {
         if ($response) {
-            $payment_note = $this->translator->translate('g.transaction_reference') . ': ' . $reference . "\n";
-            $payment_note .= $this->translator->translate('g.payment_provider') . ': ' . ucwords(str_replace('_', ' ', $d));
+            $payment_note = $this->translator->translate('transaction.reference') . ': ' . $reference . "\n";
+            $payment_note .= $this->translator->translate('payment.provider') . ': ' . ucwords(str_replace('_', ' ', $d));
 
             // Set invoice to paid
             $payment_array = [
@@ -1586,7 +1586,7 @@ final class PaymentInformationController
             $payment = new Payment();
             $this->paymentService->addPayment_via_payment_handler($payment, $payment_array);
 
-            $payment_success_msg = sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoice_number);
+            $payment_success_msg = sprintf($this->translator->translate('online.payment.payment.successful'), $invoice_number);
 
             // Save gateway response
             $successful_merchant_response_array = [
@@ -1619,7 +1619,7 @@ final class PaymentInformationController
         }
         // Payment failed
         // Save the response in the database
-        $payment_failure_msg = sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoice_number);
+        $payment_failure_msg = sprintf($this->translator->translate('online.payment.payment.failed'), $invoice_number);
 
         $unsuccessful_merchant_response_array = [
             'inv_id' => $invoice_id,
@@ -1746,15 +1746,15 @@ final class PaymentInformationController
                     $payment = new Payment();
                     $this->paymentService->addPayment_via_payment_handler($payment, $payment_array);
 
-                    $payment_msg = sprintf($this->translator->translate('g.online_payment_payment_successful'), $invoiceNumber);
+                    $payment_msg = sprintf($this->translator->translate('online.payment.payment.successful'), $invoiceNumber);
 
                     // Set the success flash message
                     $this->flashMessage('success', $payment_msg);
                 } // invoice_amount_record
             } else {
-                $payment_msg = sprintf($this->translator->translate('g.online_payment_payment_failed'), $invoiceNumber);
+                $payment_msg = sprintf($this->translator->translate('online.payment.payment.failed'), $invoiceNumber);
                 // Set the failure flash message
-                $this->flashMessage('error', $this->translator->translate('g.online_payment_payment_failed'));
+                $this->flashMessage('error', $this->translator->translate('online.payment.payment.failed'));
             }
             // Redirect to guest invoice view with flash message
             return $this->factory->createResponse(
@@ -1844,7 +1844,7 @@ final class PaymentInformationController
         $this->omnipay_payment_validate($invoice_url_key, $driver, true);
 
         // Set the cancel flash message
-        $this->flashMessage('info', $this->translator->translate('g.online_payment_payment_cancelled'));
+        $this->flashMessage('info', $this->translator->translate('online.payment.payment.cancelled'));
 
         $d = strtolower($driver);
         $sandbox_url_array = $this->sR->sandbox_url_array();
@@ -1854,7 +1854,7 @@ final class PaymentInformationController
                 'inv/payment_message',
                 [
                     'heading' => '',
-                    'message' => $this->translator->translate('g.online_payment_payment_cancelled'),
+                    'message' => $this->translator->translate('online.payment.payment.cancelled'),
                     'url' => 'inv/url_key',
                     'url_key' => $invoice_url_key,
                     'sandbox_url' => $sandbox_url_array[$d],

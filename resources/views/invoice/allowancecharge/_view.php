@@ -34,17 +34,17 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'identifier')
                     ->addInputAttributes(['style' => 'background:lightblue'])
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge'))
+                    ->label($translator->translate('allowance.or.charge'))
                     ->value(Html::encode($form->getIdentifier() == true
-                    ? $translator->translate('invoice.invoice.allowance.or.charge.charge')
-                    : $translator->translate('invoice.invoice.allowance.or.charge.allowance')))
+                    ? $translator->translate('allowance.or.charge.charge')
+                    : $translator->translate('allowance.or.charge.allowance')))
                     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'reason_code')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.reason.code'))
+    ->label($translator->translate('allowance.or.charge.reason.code'))
     ->value(Html::encode($form->getReasonCode() ?? ''))
     ->readonly(true);
 ?>
@@ -52,7 +52,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'reason')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.reason'))
+    ->label($translator->translate('allowance.or.charge.reason'))
     ->value(Html::encode($form->getReason() ?? ''))
     ->readonly(true);
 ?>
@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'multiplier_factor_numeric')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'))
+    ->label($translator->translate('allowance.or.charge.multiplier.factor.numeric'))
     ->value(Html::encode($form->getMultiplierFactorNumeric() ?? ''))
     ->readonly(true);
 ?>
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'base_amount')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
+    ->label($translator->translate('allowance.or.charge.amount'))
     ->value(Html::encode($form->getBaseAmount() ?? ''))
     ->readonly(true);
 ?>

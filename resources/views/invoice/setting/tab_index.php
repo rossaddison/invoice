@@ -38,7 +38,7 @@ echo $alert;
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.settings'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('settings'); ?></h1>
     <?php
         echo $button::backSave();
 ?>
@@ -47,67 +47,67 @@ echo $alert;
 <ul id="settings-tabs" class="nav nav-tabs nav-tabs-noborder">
     <!-- https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
     <li class="<?= 'nav-item'. ($active == 'front-page' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'front-page' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-front-page" style="text-decoration: none"><?= $translator->translate('invoice.invoice.front.page'); ?> </button>
+        <button class="<?= 'nav-link'. ($active == 'front-page' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-front-page" style="text-decoration: none"><?= $translator->translate('front.page'); ?> </button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'oauth2' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'oauth2' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-oauth2" style="text-decoration: none"><?= 'OAuth2'; ?> </button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'general' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'general' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-general" style="text-decoration: none"><?= $translator->translate('i.general'); ?> </button>
+        <button class="<?= 'nav-link'. ($active == 'general' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-general" style="text-decoration: none"><?= $translator->translate('general'); ?> </button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'invoices' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'invoices' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-invoices" style="text-decoration: none"><?= $translator->translate('i.invoices'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'invoices' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-invoices" style="text-decoration: none"><?= $translator->translate('invoices'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'quotes' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'quotes' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-quotes" style="text-decoration: none"><?= $translator->translate('i.quotes'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'quotes' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-quotes" style="text-decoration: none"><?= $translator->translate('quotes'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'client-purchase-orders' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'client-purchase-orders' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-client-purchase-orders" style="text-decoration: none"><?= $translator->translate('invoice.salesorders'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'client-purchase-orders' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-client-purchase-orders" style="text-decoration: none"><?= $translator->translate('salesorders'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'taxes' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'taxes' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-taxes" style="text-decoration: none"><?= $translator->translate('i.taxes'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'taxes' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-taxes" style="text-decoration: none"><?= $translator->translate('taxes'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'email' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'email' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-email" style="text-decoration: none"><?= $translator->translate('i.email'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'email' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-email" style="text-decoration: none"><?= $translator->translate('email'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'online-payment' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'online-payment' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-online-payment" style="text-decoration: none"><?= $translator->translate('g.online_payment'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'online-payment' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-online-payment" style="text-decoration: none"><?= $translator->translate('online.payment'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'projects-tasks' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'projects-tasks' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-projects-tasks" style="text-decoration: none"><?= $translator->translate('i.projects'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'projects-tasks' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-projects-tasks" style="text-decoration: none"><?= $translator->translate('projects'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'google-translate' ? ' active' : ''); ?>" role="presentation">
         <button class="<?= 'nav-link'. ($active == 'google-translate' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-google-translate" style="text-decoration: none"><?= 'Google Translate' ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'vat-registered' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'vat-registered' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-vat-registered" style="text-decoration: none"><?= $translator->translate('invoice.invoice.vat'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'vat-registered' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-vat-registered" style="text-decoration: none"><?= $translator->translate('vat'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'mpdf' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'mpdf' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-mpdf" style="text-decoration: none"><?= $translator->translate('invoice.invoice.mpdf'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'mpdf' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-mpdf" style="text-decoration: none"><?= $translator->translate('mpdf'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'peppol' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'peppol' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-peppol" style="text-decoration: none"><?= $translator->translate('invoice.invoice.peppol'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'peppol' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-peppol" style="text-decoration: none"><?= $translator->translate('peppol.electronic.invoicing'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'storecove' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'storecove' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-storecove" style="text-decoration: none"><?= $translator->translate('invoice.invoice.storecove'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'storecove' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-storecove" style="text-decoration: none"><?= $translator->translate('storecove'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'invoiceplane' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'invoiceplane' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-invoiceplane" style="text-decoration: none"><?= $translator->translate('invoice.invoice.invoiceplane'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'invoiceplane' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-invoiceplane" style="text-decoration: none"><?= $translator->translate('invoiceplane'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'qrcode' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'qrcode' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-qrcode" style="text-decoration: none"><?= $translator->translate('invoice.invoice.qr.code'); ?></button>
+        <button class="<?= 'nav-link'. ($active == 'qrcode' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-qrcode" style="text-decoration: none"><?= $translator->translate('qr.code'); ?></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'telegram' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'telegram' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-telegram" style="text-decoration: none"><i class="bi bi-telegram"><?= ' ' . $translator->translate('invoice.invoice.telegram'); ?></i></button>
+        <button class="<?= 'nav-link'. ($active == 'telegram' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-telegram" style="text-decoration: none"><i class="bi bi-telegram"><?= ' ' . $translator->translate('telegram'); ?></i></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'bootstrap5' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'bootstrap5' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-bootstrap5" style="text-decoration: none"><i class="bi bi-bootstrap"><?= ' ' . $translator->translate('invoice.invoice.bootstrap5'); ?></i></button>
+        <button class="<?= 'nav-link'. ($active == 'bootstrap5' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-bootstrap5" style="text-decoration: none"><i class="bi bi-bootstrap"><?= ' ' . $translator->translate('bootstrap5'); ?></i></button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'mtd' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'mtd' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-mtd" style="text-decoration: none"><?= $translator->translate('invoice.mtd'); ?> </button>
+        <button class="<?= 'nav-link'. ($active == 'mtd' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-mtd" style="text-decoration: none"><?= $translator->translate('mtd'); ?> </button>
     </li>
     <li class="<?= 'nav-item'. ($active == 'tfa' ? ' active' : ''); ?>" role="presentation">
-        <button class="<?= 'nav-link'. ($active == 'tfa' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-tfa" style="text-decoration: none"><?= $translator->translate('invoice.invoice.two.factor.authentication'); ?> </button>
+        <button class="<?= 'nav-link'. ($active == 'tfa' ? ' active' : ''); ?>" data-bs-toggle="tab" data-bs-target="#settings-tfa" style="text-decoration: none"><?= $translator->translate('two.factor.authentication'); ?> </button>
     </li>
 </ul>
 

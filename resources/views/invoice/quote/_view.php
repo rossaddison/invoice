@@ -43,7 +43,7 @@ use App\Widget\LabelSwitch;
  * @var string $view_custom_fields
  */
 
-$this->setTitle($translator->translate('i.quote'));
+$this->setTitle($translator->translate('quote'));
 
 $vat = $s->getSetting('enable_vat_registration');
 ?>
@@ -110,10 +110,10 @@ echo $modal_delete_items;
                         ->addClass('fa fa-list')
                         ->addAttributes([
                             'data-bs-toggle' => 'tooltip',
-                            'title' => $translator->translate('i.add_product')
+                            'title' => $translator->translate('add.product')
                         ]);
                     ?>
-                    <?= $translator->translate('i.add_product'); ?>
+                    <?= $translator->translate('add.product'); ?>
                 <?= Html::closeTag('button'); ?>
             <?= Html::closeTag('div'); ?>
             <?= $add_quote_item; ?>
@@ -124,7 +124,7 @@ echo $modal_delete_items;
 <div id="headerbar">
     <h1 class="headerbar-title">
     <?php
-        echo $translator->translate('i.quote') . ' ';
+        echo $translator->translate('quote') . ' ';
 $number = $quote->getNumber();
 $id = $quote->getId();
 if (null !== ($number) && null !== $id) {
@@ -140,15 +140,15 @@ if (null !== ($number) && null !== $id) {
         LabelSwitch::checkbox(
             'quote-view-label-switch',
             $s->getSetting('enable_vat_registration'),
-            $translator->translate('invoice.quote.label.switch.on'),
-            $translator->translate('invoice.quote.label.switch.off'),
+            $translator->translate('quote.label.switch.on'),
+            $translator->translate('quote.label.switch.off'),
             'quote-view-label-switch-id',
             '16'
         ) : '';
         ?>    
         <div class="options btn-group">
             <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
-                <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
+                <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
                 <?php
@@ -156,14 +156,14 @@ if (null !== ($number) && null !== $id) {
                 <li>
                     <a href="<?= $urlGenerator->generate('quote/edit', ['id' => $quote->getId()]) ?>" style="text-decoration:none">
                         <i class="fa fa-edit fa-margin"></i>
-                        <?= $translator->translate('i.edit'); ?>
+                        <?= $translator->translate('edit'); ?>
                     </a>
                 </li>
                 <li>
                     <?php if ($vat === '0') { ?>
                     <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-plus fa-margin"></i>
-                        <?= $translator->translate('i.add_quote_tax'); ?>
+                        <?= $translator->translate('add.quote.tax'); ?>
                     </a>
                     <?php }?>
                 </li>
@@ -178,14 +178,14 @@ if (null !== ($number) && null !== $id) {
                             src/Invoice/Helpers/MpdfHelper ... saves folder in src/Invoice/Uploads/Archive
                             using 'pdf_quote_template' setting or 'default' views/invoice/template/quote/quote.pdf
                         -->
-                        <?= $translator->translate('i.download_pdf'); ?>
+                        <?= $translator->translate('download.pdf'); ?>
                     </a>
                 </li>
                 <?php if ($invEdit  && $quote->getStatus_id() === 1 && ($quote_amount_total > 0)) { ?>
                 <li>
                     <a href="<?= $urlGenerator->generate('quote/email_stage_0', ['id' => $quote->getId()]); ?>" style="text-decoration:none">
                         <i class="fa fa-send fa-margin"></i>
-                        <?= $translator->translate('i.send_email'); ?>
+                        <?= $translator->translate('send.email'); ?>
                     </a>
                 </li>
                 <?php // if quote has been approved (ie status 4) by the client without po number do not show quote to sales order again
@@ -193,31 +193,31 @@ if (null !== ($number) && null !== $id) {
                 <li>
                     <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
-                        <?= $translator->translate('invoice.quote.to.so'); ?>
+                        <?= $translator->translate('quote.to.so'); ?>
                     </a>
                 </li>
                 <?php } ?>
                 <li>
                     <a href="#quote-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
-                        <?= $translator->translate('i.quote_to_invoice'); ?>
+                        <?= $translator->translate('quote.to.invoice'); ?>
                     </a>
                 </li>
                 <li>                    
                     <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-copy fa-margin"></i>
-                         <?= $translator->translate('i.copy_quote'); ?>
+                         <?= $translator->translate('copy.quote'); ?>
                     </a>
                 </li>
                 <li>
                     <a href="#delete-quote" data-bs-toggle="modal"  style="text-decoration:none">
-                        <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('i.delete_quote'); ?>
+                        <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('delete.quote'); ?>
                     </a>
                 </li>
                 <li>      
                     <a href="#delete-items"  data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-trash fa-margin"></i>
-                        <?= $translator->translate('i.delete')." ".$translator->translate('i.item'); ?>
+                        <?= $translator->translate('delete')." ".$translator->translate('item'); ?>
                     </a>
                 </li>
                 <?php } ?>
@@ -255,26 +255,26 @@ if (null !== ($number) && null !== $id) {
                             <?php
                         $countryName = $quote->getClient()?->getClient_country();
 if (null !== $countryName) {
-    echo '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $countryName);
+    echo '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), $countryName);
 } ?>
                         </span>
                     </div>
                     <hr>
                     <?php if (null !== $quote->getClient()?->getClient_phone()): ?>
                         <div class="client-phone">
-                            <?= $translator->translate('i.phone'); ?>:&nbsp;
+                            <?= $translator->translate('phone'); ?>:&nbsp;
                             <?= Html::encode($quote->getClient()?->getClient_phone()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (null !== $quote->getClient()?->getClient_mobile()): ?>
                         <div class="client-mobile">
-                            <?= $translator->translate('i.mobile'); ?>:&nbsp;
+                            <?= $translator->translate('mobile'); ?>:&nbsp;
                             <?= Html::encode($quote->getClient()?->getClient_mobile()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (null !== $quote->getClient()?->getClient_email()): ?>
                         <div class='client-email'>
-                            <?= $translator->translate('i.email'); ?>:&nbsp;
+                            <?= $translator->translate('email'); ?>:&nbsp;
                             <?php echo $quote->getClient()?->getClient_email(); ?>
                         </div>
                     <?php endif; ?>
@@ -291,16 +291,16 @@ if (null !== $countryName) {
 
                                 <div class="quote-properties">
                                     <label for="quote_number">
-                                        <?= $translator->translate('i.quote'); ?> #
+                                        <?= $translator->translate('quote'); ?> #
                                     </label>
                                     <input type="text" id="quote_number" class="form-control" readonly
                                         <?php if (null !== ($quote->getNumber())) : ?> value="<?= $quote->getNumber(); ?>"
-                                        <?php else : ?> placeholder="<?= $translator->translate('i.not_set'); ?>"
+                                        <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                                         <?php endif; ?>>
                                 </div>
                                 <div class="quote-properties has-feedback">
                                     <label for="quote_date_created">
-                                        <?= $vat == '0' ? $translator->translate('invoice.invoice.date.issued') : $translator->translate('i.quote_date'); ?>
+                                        <?= $vat == '0' ? $translator->translate('date.issued') : $translator->translate('quote.date'); ?>
                                     </label>
                                     <div class="input-group">
                                         <input name="quote_date_created" id="quote_date_created" disabled
@@ -313,7 +313,7 @@ if (null !== $countryName) {
                                 </div>
                                 <div class="quote-properties has-feedback">
                                     <label for="quote_date_expires">
-                                        <?= $translator->translate('i.expires'); ?>
+                                        <?= $translator->translate('expires'); ?>
                                     </label>
                                     <div class="input-group">
                                         <input name="quote_date_expires" id="quote_date_expires" readonly
@@ -341,7 +341,7 @@ if (null !== $countryName) {
 
                                 <div class="quote-properties">
                                     <label for="status_id">
-                                        <?= $translator->translate('i.status'); ?>
+                                        <?= $translator->translate('status'); ?>
                                     </label>
                                     <select name="status_id" id="status_id" disabled
                                             class="form-control">
@@ -362,7 +362,7 @@ if (null !== $countryName) {
                                 </div>
                                 <div class="quote-properties">
                                     <label for="quote_password" hidden>
-                                        <?= $translator->translate('i.quote_password'); ?>
+                                        <?= $translator->translate('quote.password'); ?>
                                     </label>
                                     <input type="text" id="quote_password" class="form-control" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
                                 </div>
@@ -373,7 +373,7 @@ if (null !== $countryName) {
                                     // Update: This button has been replaced with the below button
                                     if ($quote->getStatus_id() !== 1) { ?>
                                     <div class="quote-properties">
-                                        <label for="quote_guest_url" hidden><?php echo $translator->translate('i.guest_url'); ?></label>
+                                        <label for="quote_guest_url" hidden><?php echo $translator->translate('guest.url'); ?></label>
                                         <div class="input-group" hidden>
                                             <input type="text" id="quote_guest_url" readonly class="form-control" value="<?=  'quote/url_key/'.$quote->getUrl_key(); ?>" hidden>
                                             <span class="input-group-text to-clipboard cursor-pointer"
@@ -388,7 +388,7 @@ if (null !== $countryName) {
                                     <div>
                                         <br>
                                         <a href="<?= $urlGenerator->generate('quote/url_key', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-success">  
-                                            <?= $translator->translate('i.approve_this_quote') ; ?></i>    
+                                            <?= $translator->translate('approve.this.quote') ; ?></i>    
                                         </a>
                                     </div>
                                     <?php } ?>
@@ -397,13 +397,13 @@ if (null !== $countryName) {
                                     <div>
                                         <br>
                                         <a href="<?= $urlGenerator->generate('quote/url_key', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-danger">  
-                                            <?= $translator->translate('i.reject_this_quote') ; ?></i>    
+                                            <?= $translator->translate('reject.this.quote') ; ?></i>    
                                         </a>
                                     </div>
                                     <?php } ?>
                                 <?php } else {?>
                                     <div class="quote-properties">
-                                        <label for="quote_guest_url"><?php echo $translator->translate('i.guest_url'); ?></label>
+                                        <label for="quote_guest_url"><?php echo $translator->translate('guest.url'); ?></label>
                                         <div class="input-group">
                                             <input type="text" id="quote_guest_url" readonly  class="form-control" value="">                                            
                                         </div>
@@ -412,7 +412,7 @@ if (null !== $countryName) {
                                 <input type="text" id="dropzone_client_id" readonly  hidden class="form-control" value="<?= $quote->getClient()?->getClient_id(); ?>">
                                 <?php if ($quote->getSo_id()) { ?>  
                                 <div has-feedback">
-                                    <label for="salesorder_to_url"><?= $translator->translate('invoice.salesorder'); ?></label>
+                                    <label for="salesorder_to_url"><?= $translator->translate('salesorder'); ?></label>
                                     <div class="input-group">
                                         <?= Html::a($sales_order_number, $urlGenerator->generate('salesorder/view', ['id' => $quote->getSo_id()]), ['class' => 'btn btn-success']); ?>
                                     </div>
@@ -436,7 +436,7 @@ if (null !== $countryName) {
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
-                        <?= $translator->translate('i.notes'); ?>
+                        <?= $translator->translate('notes'); ?>
                     </div>
                     <div class="panel-body">
                         <textarea name="notes" id="notes" rows="3" disabled

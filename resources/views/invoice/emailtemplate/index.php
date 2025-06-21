@@ -17,15 +17,15 @@ use Yiisoft\Html\Tag\A;
 echo $alert;
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.email_templates'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('email.templates'); ?></h1>
     <div class="headerbar-item pull-right">
         <a class="btn btn-sm btn-primary" href="<?php echo $urlGenerator->generate('emailtemplate/add_invoice'); ?>">
-            <i class="fa fa-plus"></i> <?= $translator->translate('i.invoice'); ?>
+            <i class="fa fa-plus"></i> <?= $translator->translate('invoice'); ?>
         </a>
         <br>
         <br>
         <a class="btn btn-sm btn-secondary" href="<?php echo $urlGenerator->generate('emailtemplate/add_quote'); ?>">
-            <i class="fa fa-plus"></i> <?= $translator->translate('i.quote'); ?>
+            <i class="fa fa-plus"></i> <?= $translator->translate('quote'); ?>
         </a>
     </div>
     <div class="headerbar-item pull-right">
@@ -45,10 +45,10 @@ echo $alert;
     <table class="table table-hover table-striped">
         <thead>
         <tr>
-            <th><?= $translator->translate('i.title'); ?></th>
-            <th><?= $translator->translate('i.type'); ?></th>
-            <th><?= Html::openTag('h5'); ?><?= $translator->translate('i.preview'); ?><?= Html::closeTag('h5'); ?></th>
-            <th><?= $translator->translate('i.options'); ?></th>
+            <th><?= $translator->translate('title'); ?></th>
+            <th><?= $translator->translate('type'); ?></th>
+            <th><?= Html::openTag('h5'); ?><?= $translator->translate('preview'); ?><?= Html::closeTag('h5'); ?></th>
+            <th><?= $translator->translate('options'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -87,7 +87,7 @@ echo $alert;
                                         'emailtemplate/view',
                                         ['email_template_id' => $email_template->getEmail_template_id()]
                                     ); ?>" style="text-decoration: none ">
-                                            <i class="fa fa-eye fa-margin"></i><?= $translator->translate('i.view'); ?>
+                                            <i class="fa fa-eye fa-margin"></i><?= $translator->translate('view'); ?>
                                 </a>
                             </li>
                             <li>
@@ -96,7 +96,7 @@ echo $alert;
                                         'emailtemplate/edit'.($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),
                                         ['email_template_id' => $email_template->getEmail_template_id()]
                                     ); ?>" style="text-decoration: none ">
-                                            <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
+                                            <i class="fa fa-edit fa-margin"></i><?= $translator->translate('edit'); ?>
                                 </a>
                             </li>
                             <li>
@@ -105,7 +105,7 @@ echo $alert;
                                         'emailtemplate/delete',
                                         ['email_template_id' => $email_template->getEmail_template_id()]
                                     ); ?>" style="text-decoration: none ">
-                                            <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>
+                                            <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>
                                 </a>
                             </li>
                         </ul>

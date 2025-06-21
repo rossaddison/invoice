@@ -56,7 +56,7 @@ foreach ($clients as $client) {
     }
 }
 echo Field::select($form, 'client_id')
-->label($translator->translate('i.client'))
+->label($translator->translate('client'))
 ->addInputAttributes([
     'id' => 'client_id',
     'class' => 'form-control',
@@ -69,11 +69,11 @@ echo Field::select($form, 'client_id')
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'name')
-    ->label($translator->translate('i.project_name'))
+    ->label($translator->translate('project.name'))
     ->addInputAttributes([
         'id' => 'name',
         'class' => 'form-control',
-        'placeholder' => $translator->translate('i.project_name'),
+        'placeholder' => $translator->translate('project.name'),
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])

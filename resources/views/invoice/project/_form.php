@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
                 <?php
@@ -61,26 +61,26 @@ foreach ($clients as $client) {
     }
 }
 echo Field::select($form, 'client_id')
-->label($translator->translate('i.client'))
+->label($translator->translate('client'))
 ->addInputAttributes([
     'id' => 'client_id',
     'class' => 'form-control',
 ])
 ->value(Html::encode($form->getClient_id() ?? ''))
 ->optionsData($optionsDataClient)
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-    ->label($translator->translate('i.project_name'))
+    ->label($translator->translate('project.name'))
     ->addInputAttributes([
         'id' => 'name',
         'class' => 'form-control',
-        'placeholder' => $translator->translate('i.project_name')
+        'placeholder' => $translator->translate('project.name')
     ])
     ->value(Html::encode($form->getName() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

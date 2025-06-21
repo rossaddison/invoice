@@ -138,7 +138,7 @@ final class ForgotPasswordController
                                 ],
                                 subject: $login . ': <' . $to . '>',
                                 date: new \DateTimeImmutable('now'),
-                                from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('i.administrator')],
+                                from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('administrator')],
                                 to: $to,
                                 htmlBody: $htmlBody
                             );
@@ -154,7 +154,7 @@ final class ForgotPasswordController
                     }
                 }
             } else {
-                $this->logger->error($this->translator->translate('i.loginalert_user_not_found'));
+                $this->logger->error($this->translator->translate('loginalert.user.not.found'));
                 return $this->webService->getRedirectResponse('site/forgotusernotfound');
             }
             /**
@@ -202,7 +202,7 @@ final class ForgotPasswordController
                            'auth/resetpassword',
                            ['_language' => $_language, 'token' => $tokenWithMask]
                        ))
-                       ->content($this->translator->translate('i.password_reset_email'));
+                       ->content($this->translator->translate('password.reset.email'));
             return Body::tag()
                        ->content($content)
                        ->render();

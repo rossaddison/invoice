@@ -91,12 +91,12 @@ class MailerHelper
                     $from_email = $user_inv->getUser()?->getEmail() ?? '';
                     $from_name = $user_inv->getName() ?? '';
                     $subject = sprintf(
-                        $this->translator->translate('i.quote_status_email_subject'),
+                        $this->translator->translate('quote.status.email.subject'),
                         $quote->getClient()?->getClient_name() ?? '',
                         $quote->getNumber() ?? ''
                     );
                     $body = sprintf(
-                        nl2br($this->translator->translate('i.quote_status_email_body')),
+                        nl2br($this->translator->translate('quote.status.email.body')),
                         $quote->getClient()?->getClient_name() ?? '',
                         // TODO: Hyperlink for base url in Html
                         $quote->getNumber() ?? '',
@@ -220,12 +220,12 @@ class MailerHelper
         }
         try {
             $this->mailer->send($email_attachments_with_pdf_template);
-            $this->flash_message('info', $this->translator->translate('i.email_successfully_sent'));
+            $this->flash_message('info', $this->translator->translate('email.successfully.sent'));
             return true;
         } catch (\Exception $e) {
-            $this->flash_message('warning', $this->translator->translate('invoice.invoice.email.not.sent.successfully') .
+            $this->flash_message('warning', $this->translator->translate('email.not.sent.successfully') .
                                             "\n" .
-                                            $this->translator->translate('invoice.email.exception') .
+                                            $this->translator->translate('email.exception') .
                                             "\n");
             $this->logger->error($e->getMessage());
         }

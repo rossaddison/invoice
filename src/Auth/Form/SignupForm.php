@@ -40,7 +40,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     {
         return [
             'login' => $this->translator->translate('layout.login'),
-            'email' => $this->translator->translate('i.email'),
+            'email' => $this->translator->translate('email'),
             'password' => $this->translator->translate('layout.password'),
             'passwordVerify' => $this->translator->translate('layout.password-verify'),
         ];

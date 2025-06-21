@@ -16,7 +16,7 @@ final class ContactLastNameNotFoundException extends \RuntimeException implement
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.storecove.supplier.contact.lastname.not.found');
+        return $this->translator->translate('storecove.supplier.contact.lastname.not.found');
     }
 
     /**

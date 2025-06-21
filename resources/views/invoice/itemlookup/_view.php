@@ -45,34 +45,34 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('i.name'))
+                    ->label($translator->translate('name'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
                     ])
-                    ->placeholder($translator->translate('i.name'))
+                    ->placeholder($translator->translate('name'))
                     ->value(Html::encode($form->getName() ?? ''));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'description')
-    ->label($translator->translate('i.description'))
+    ->label($translator->translate('description'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
-    ->placeholder($translator->translate('i.description'))
+    ->placeholder($translator->translate('description'))
     ->value(Html::encode($form->getDescription() ?? ''));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'price')
-    ->label($translator->translate('i.price'))
+    ->label($translator->translate('price'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
-    ->placeholder($translator->translate('i.price'))
+    ->placeholder($translator->translate('price'))
     ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)));
 ?>
                 <?= Html::closeTag('div'); ?>

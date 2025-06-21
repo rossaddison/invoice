@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::checkbox($form, 'include')
                     ->inputLabelAttributes(['class' => 'form-check-label'])
                     ->inputClass('form-check-input disabled readonly')
-                    ->ariaDescribedBy($translator->translate('invoice.from.include.in.dropdown'))
+                    ->ariaDescribedBy($translator->translate('from.include.in.dropdown'))
 ?>       
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -50,14 +50,14 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::checkbox($form, 'default_email')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input disabled readonly')
-    ->ariaDescribedBy($translator->translate('invoice.from.default.in.dropdown'))
+    ->ariaDescribedBy($translator->translate('from.default.in.dropdown'))
 ?>     
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::email($form, 'email')
-    ->label($translator->translate('invoice.from.email.address'))
+    ->label($translator->translate('from.email.address'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.email'),
+        'placeholder' => $translator->translate('email'),
         'value' => Html::encode($form->getEmail() ?? ''),
         'class' => 'form-control disabled readonly',
         'id' => 'email'

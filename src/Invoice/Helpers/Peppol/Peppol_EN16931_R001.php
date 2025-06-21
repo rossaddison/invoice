@@ -18,7 +18,7 @@ final class Peppol_EN16931_R001 extends \RuntimeException implements FriendlyExc
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.rules.peppol.en16931.001');
+        return $this->translator->translate('rules.peppol.en16931.001');
     }
 
     #[\Override]

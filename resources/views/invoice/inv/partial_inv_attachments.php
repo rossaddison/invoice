@@ -22,7 +22,7 @@ use Yiisoft\Html\Tag\I;
  */
 
 if ($invEdit && $invView) {
-    $title = $translator->translate('i.add_files');
+    $title = $translator->translate('add.files');
 }
 ?>
 
@@ -35,7 +35,7 @@ if ($invEdit && $invView) {
                    'tooltip' => 'data-bs-toggle',
                    'title' => $s->isDebugMode(5)
                ])
-               ->content(' '.$translator->translate('i.attachments'));
+               ->content(' '.$translator->translate('attachments'));
 ?>
         </b>    
     </div>

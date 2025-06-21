@@ -294,7 +294,7 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $translator->translate('invoice.salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string)random_int(0, 10));
+                $filename = $translator->translate('salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string)random_int(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
             }
         }

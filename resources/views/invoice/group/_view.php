@@ -24,7 +24,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= $translator->translate('invoice.group.form'); ?>
+    <?= $translator->translate('group.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
@@ -39,18 +39,18 @@ use Yiisoft\Html\Tag\Form;
         
         <?= Html::openTag('div'); ?>
             <?= Field::text($form, 'name')
-                ->label($translator->translate('i.name'))
+                ->label($translator->translate('name'))
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled'
                 ])
                 ->value(Html::encode($form->getName()))
-                ->placeholder($translator->translate('i.name'))
-                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+                ->placeholder($translator->translate('name'))
+                ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'identifier_format')
-                ->label($translator->translate('i.identifier_format'))
+                ->label($translator->translate('identifier.format'))
                 ->addInputAttributes([
                     'class' => 'form-control taggable',
                     'id' => 'identifier_format',
@@ -60,9 +60,9 @@ use Yiisoft\Html\Tag\Form;
                 ])
                 ->value(Html::encode($form->getIdentifier_format()))
                 ->placeholder('INV-{{{id}}}')
-                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+                ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Field::text($form, 'left_pad')
-                ->label($translator->translate('i.left_pad'))
+                ->label($translator->translate('left.pad'))
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
@@ -70,10 +70,10 @@ use Yiisoft\Html\Tag\Form;
                 ])
                 ->value(Html::encode($form->getLeft_pad()) ?: '0')
                 ->placeholder('0')
-                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>
+                ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'next_id')
-                ->label($translator->translate('i.next_id'))
+                ->label($translator->translate('next.id'))
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
@@ -81,7 +81,7 @@ use Yiisoft\Html\Tag\Form;
                 ])
                 ->value(Html::encode($form->getNext_id()) ?: '1')
                 ->placeholder('1')
-                ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>    
+                ->hint($translator->translate('hint.this.field.is.required')); ?>    
             <?= Html::tag('br'); ?>
             <?= Html::closeTag('div'); ?>         
             <?= $button::back(); ?>

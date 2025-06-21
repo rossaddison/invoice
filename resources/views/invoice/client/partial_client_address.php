@@ -25,5 +25,5 @@ use Yiisoft\Html\Html;
     <?=(strlen($client->getClient_zip() ?? '') > 0 ? Html::encode($client->getClient_zip()) : ''); ?>
 </span>
 <span class="client-adress-country-line">
-    <?=(strlen($clientCountry = $client->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) : ''); ?>
+    <?=(strlen($clientCountry = $client->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), $clientCountry) : ''); ?>
 </span>

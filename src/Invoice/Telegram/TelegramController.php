@@ -94,7 +94,7 @@ final class TelegramController extends BaseController
                             $user = $this->telegramBotApi->getMe();
                             if (($user instanceof \Vjik\TelegramBot\Api\Type\User) &&
                                 ($this->sR->getSetting('telegram_test_message_use') == '1')) {
-                                $text = $this->translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message');
+                                $text = $this->translator->translate('telegram.bot.api.hello.world.test.message');
                                 $sendMessageResult = $this->telegramBotApi->sendMessage(
                                     $chatId,
                                     $text,
@@ -111,9 +111,9 @@ final class TelegramController extends BaseController
                                     $allowPaidBroadcast = null
                                 );
                                 if (!$sendMessageResult instanceof FailResult) {
-                                    $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message.sent'));
+                                    $this->flashMessage('success', $this->translator->translate('telegram.bot.api.hello.world.test.message.sent'));
                                 } else {
-                                    $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.hello.world.test.message.sent.not'));
+                                    $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.hello.world.test.message.sent.not'));
                                     if (null !== $sendMessageResult->description) {
                                         $this->flashMessage('primary', 'Fail Result: ' . $sendMessageResult->description);
                                     }
@@ -139,14 +139,14 @@ final class TelegramController extends BaseController
                             }
                         }
                     } else {
-                        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.chat.id.not.set'));
+                        $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.chat.id.not.set'));
                     }
                 } else {
-                    $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                    $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.token.not.set'));
                     $this->webService->getRedirectResponse('setting/tab_index');
                 }
             } else {
-                $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.enabled.not'));
+                $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.enabled.not'));
                 $this->webService->getRedirectResponse('setting/tab_index');
             }
         } catch (TelegramParseResultException $e) {
@@ -184,8 +184,8 @@ final class TelegramController extends BaseController
                     return $this->factory->createResponse(Json::encode($update));
                 }
             } else {
-                $this->logger->warning($this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
-                return $this->factory->createResponse(Json::encode(['fail' => $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set')]));
+                $this->logger->warning($this->translator->translate('telegram.bot.api.token.not.set'));
+                return $this->factory->createResponse(Json::encode(['fail' => $this->translator->translate('telegram.bot.api.token.not.set')]));
             }
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
@@ -213,11 +213,11 @@ final class TelegramController extends BaseController
                     );
                     $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
                 } else {
-                    $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                    $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.token.not.set'));
                     $this->webService->getRedirectResponse('setting/tab_index');
                 }
             } else {
-                $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.enabled.not'));
+                $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.enabled.not'));
                 $this->webService->getRedirectResponse('setting/tab_index');
             }
         } catch (TelegramParseResultException $e) {
@@ -258,9 +258,9 @@ final class TelegramController extends BaseController
                     );
                     $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
                     if (!$failResultSetWebhook instanceof FailResult) {
-                        $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.setup'));
+                        $this->flashMessage('success', $this->translator->translate('telegram.bot.api.webhook.setup'));
                     } else {
-                        $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.setup.already'));
+                        $this->flashMessage('success', $this->translator->translate('telegram.bot.api.webhook.setup.already'));
                         if (null !== $failResultSetWebhook->description) {
                             $this->flashMessage('primary', 'Fail Result: ' . $failResultSetWebhook->description);
                         }
@@ -269,11 +269,11 @@ final class TelegramController extends BaseController
                         }
                     }
                 } else {
-                    $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                    $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.token.not.set'));
                     $this->webService->getRedirectResponse('setting/tab_index');
                 }
             } else {
-                $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.enabled.not'));
+                $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.enabled.not'));
                 $this->webService->getRedirectResponse('setting/tab_index');
             }
         } catch (TelegramParseResultException $e) {
@@ -308,7 +308,7 @@ final class TelegramController extends BaseController
                     // messages sent from telegram users so that we can build up a database of chat_id's that we can send a test message to
                     $failResult = $telegramHelper->deleteWebhook();
                     if (!$failResult instanceof FailResult) {
-                        $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.deleted'));
+                        $this->flashMessage('success', $this->translator->translate('telegram.bot.api.webhook.deleted'));
                     } else {
                         if (null !== $failResult->description) {
                             $this->flashMessage('primary', 'Fail Result: ' . $failResult->description);
@@ -318,11 +318,11 @@ final class TelegramController extends BaseController
                         }
                     }
                 } else {
-                    $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                    $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.token.not.set'));
                     $this->webService->getRedirectResponse('setting/tab_index');
                 }
             } else {
-                $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.enabled.not'));
+                $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.enabled.not'));
                 $this->webService->getRedirectResponse('setting/tab_index');
             }
         } catch (TelegramParseResultException $e) {
@@ -359,7 +359,7 @@ final class TelegramController extends BaseController
                     $this->telegramBotApi = $telegramHelper->getBotApi();
                     $failResult = $telegramHelper->deleteWebhook();
                     if (!$failResult instanceof FailResult) {
-                        $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.webhook.deleted'));
+                        $this->flashMessage('success', $this->translator->translate('telegram.bot.api.webhook.deleted'));
                     } else {
                         if (null !== $failResult->description) {
                             $this->flashMessage('primary', 'Fail Result: ' . $failResult->description);
@@ -370,9 +370,9 @@ final class TelegramController extends BaseController
                     }
                     $failResultUpdates = $this->telegramBotApi->getUpdates($offset, $limit, $timeout, $allowedUpdates);
                     if (!$failResultUpdates instanceof FailResult) {
-                        $this->flashMessage('success', $this->translator->translate('invoice.invoice.telegram.bot.api.get.updates.success'));
+                        $this->flashMessage('success', $this->translator->translate('telegram.bot.api.get.updates.success'));
                     } else {
-                        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.get.updates.danger'));
+                        $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.get.updates.danger'));
                         if (null !== $failResultUpdates->description) {
                             $this->flashMessage('primary', 'Fail Result: ' . $failResultUpdates->description);
                         }
@@ -381,11 +381,11 @@ final class TelegramController extends BaseController
                         }
                     }
                 } else {
-                    $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.token.not.set'));
+                    $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.token.not.set'));
                     $this->webService->getRedirectResponse('setting/tab_index');
                 }
             } else {
-                $this->flashMessage('danger', $this->translator->translate('invoice.invoice.telegram.bot.api.enabled.not'));
+                $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.enabled.not'));
                 $this->webService->getRedirectResponse('setting/tab_index');
             }
         } catch (TelegramParseResultException $e) {

@@ -70,7 +70,7 @@ final class MerchantController extends BaseController
         $merchant = new Merchant();
         $form = new MerchantForm($merchant);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'merchant/add',
             'actionArguments' => [],
             'errors' => [],
@@ -111,7 +111,7 @@ final class MerchantController extends BaseController
         if ($merchant) {
             $form = new MerchantForm($merchant);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'merchant/edit',
                 'actionArguments' => ['id' => $merchant->getId()],
                 'errors' => [],
@@ -165,7 +165,7 @@ final class MerchantController extends BaseController
         if ($merchant) {
             $form = new MerchantForm($merchant);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'merchant/view',
                 'actionArguments' => ['id' => $merchant->getId()],
                 'form' => $form,
@@ -194,7 +194,7 @@ final class MerchantController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('merchant/index');
         }
         return $canEdit;

@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'party_name')
                     ->addInputAttributes(['style' => 'background:lightblue'])
-                    ->label($translator->translate('invoice.invoice.delivery.party.name'))
+                    ->label($translator->translate('delivery.party.name'))
                     ->value(Html::encode($form->getParty_name() ?? ''))
                     ->readonly(true);
 ?>

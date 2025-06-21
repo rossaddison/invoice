@@ -92,7 +92,7 @@ final class ResetPasswordController
                 }
             }
         }
-        $this->logger->error($this->translator->translate($this->translator->translate('i.password_reset_failed')));
+        $this->logger->error($this->translator->translate($this->translator->translate('password.reset.failed')));
         return $this->webService->getRedirectResponse('site/resetpasswordfailed');
     }
 }

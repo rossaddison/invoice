@@ -410,7 +410,7 @@ class PeppolHelper
     private function AdditionalDocumentReference(Inv $invoice, upR $upR): AdditionalDocumentReference
     {
         $url_key = $invoice->getUrl_key();
-        $invoice_number = $this->t->translate('invoice.peppol.document.reference.null') . ($invoice->getId() ?? 'Not Found');
+        $invoice_number = $this->t->translate('peppol.document.reference.null') . ($invoice->getId() ?? 'Not Found');
         if (null !== $invoice->getNumber()) {
             $invoice_number = $invoice->getNumber();
         }
@@ -447,7 +447,7 @@ class PeppolHelper
         $invoice_id = $invoice->getId();
         return new AdditionalDocumentReference(
             $this->t,
-            $invoice_number ?? $this->t->translate('invoice.peppol.document.reference.null') . ($invoice_id ?? 'Not Found'),
+            $invoice_number ?? $this->t->translate('peppol.document.reference.null') . ($invoice_id ?? 'Not Found'),
             '130',
             $invoice->getDocumentDescription(),
             $attachments,

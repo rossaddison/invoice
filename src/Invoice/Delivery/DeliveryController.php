@@ -69,7 +69,7 @@ final class DeliveryController extends BaseController
             $delivery->setInv_id((int)$inv_id);
             $form = new DeliveryForm($delivery);
             $parameters = [
-                'title' => $this->translator->translate('invoice.invoice.delivery.add'),
+                'title' => $this->translator->translate('delivery.add'),
                 'actionName' => 'delivery/add',
                 'actionArguments' => ['inv_id' => $inv->getId()],
                 'errors' => [],
@@ -156,7 +156,7 @@ final class DeliveryController extends BaseController
             $delivery = $this->delivery($currentRoute, $deliveryRepository);
             if ($delivery) {
                 $this->deliveryService->deleteDelivery($delivery);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('delivery/index');
             }
             return $this->webService->getRedirectResponse('delivery/index');
@@ -191,7 +191,7 @@ final class DeliveryController extends BaseController
             if (null !== $inv) {
                 $dels = $delRepo->repoClientquery($inv->getClient_id());
                 $parameters = [
-                    'title' => $this->translator->translate('i.edit'),
+                    'title' => $this->translator->translate('edit'),
                     'actionName' => 'delivery/edit',
                     'actionArguments' => ['id' => $delivery->getId()],
                     'errors' => [],
@@ -254,7 +254,7 @@ final class DeliveryController extends BaseController
         if ($delivery) {
             $form = new DeliveryForm($delivery);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'delivery/view',
                 'actionArguments' => ['id' => $delivery->getId()],
                 'errors' => [],

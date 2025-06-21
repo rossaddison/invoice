@@ -106,7 +106,7 @@ $this->setTitle($translator->translate('menu.signup'));
                         ->autofocus()
                     ?>
                     <?= Field::email($formModel, 'email')
-                        ->label($translator->translate('i.email'))
+                        ->label($translator->translate('email'))
                         ->autofocus()
                     ?>
                     <?= Field::password($formModel, 'password')

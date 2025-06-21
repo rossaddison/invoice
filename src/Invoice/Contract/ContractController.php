@@ -70,7 +70,7 @@ final class ContractController extends BaseController
             // Show the latest quotes first => -id
             ->withOrderString($query_params['sort'] ?? '-id');
         $contracts = $this->contracts_with_sort($contractR, $sort);
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.contract.create'));
+        $this->flashMessage('info', $this->translator->translate('contract.create'));
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
@@ -103,10 +103,10 @@ final class ContractController extends BaseController
         if (null !== $client_id) {
             $title = $cR->repoClientquery($client_id)->getClient_name();
         } else {
-            $title = $this->translator->translate('invoice.not.available');
+            $title = $this->translator->translate('not.available');
         }
         $parameters = [
-            'title' => $this->translator->translate('invoice.invoice.contract.add')
+            'title' => $this->translator->translate('contract.add')
                        . ': '
                        . $title,
             'actionName' => 'contract/add',
@@ -147,7 +147,7 @@ final class ContractController extends BaseController
         if ($contract) {
             $form = new ContractForm($contract);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'contract/edit',
                 'actionArguments' => ['id' => $contract->getId()],
                 'errors' => [],
@@ -176,7 +176,7 @@ final class ContractController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('contract/index');
         }
         return $canEdit;
@@ -193,7 +193,7 @@ final class ContractController extends BaseController
             $contract = $this->contract($currentRoute, $contractRepository);
             if ($contract) {
                 $this->contractService->deleteContract($contract);
-                $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('contract/index');
             }
             return $this->webService->getRedirectResponse('contract/index');
@@ -214,7 +214,7 @@ final class ContractController extends BaseController
         if ($contract) {
             $form = new ContractForm($contract);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'contract/view',
                 'actionArguments' => ['id' => $contract->getId()],
                 'errors' => [],

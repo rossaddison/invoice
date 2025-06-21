@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
     
     <?= Html::openTag('div', ['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $translator->translate('i.custom_values_new'); ?>
+            <?= $translator->translate('custom.values.new'); ?>
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
 
@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
                 <?=
                     Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.custom.value.error.summary'))
+                    ->header($translator->translate('custom.value.error.summary'))
                     // if the value is left blank the 'Value cannot be blank' message will appear
                     ->onlyProperties(...['value'])
                     ->onlyCommonErrors()
@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
        //belong to the Field Entity?> 
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $translator->translate('i.field'); ?>
+                        <?= $translator->translate('field'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
         'class' => 'form-control',
@@ -66,13 +66,13 @@ use Yiisoft\Html\Tag\Form;
     
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $translator->translate('i.type'); ?>
+                        <?= $translator->translate('type'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
     'class' => 'form-control',
     'disabled' => 'disabled',
     'id' => 'type',
-    'value' => Html::encode($translator->translate('i.'.$alpha.''))
+    'value' => Html::encode($translator->translate(''.$alpha.''))
     ]);
 ?>
                 <?= Html::closeTag('div'); ?>

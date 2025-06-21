@@ -16,7 +16,7 @@ final class PeppolInvoiceNoteNotFoundException extends \RuntimeException impleme
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.peppol.invoice.note.not.found');
+        return $this->translator->translate('peppol.invoice.note.not.found');
     }
 
     /**

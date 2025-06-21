@@ -49,13 +49,13 @@ $vat = $s->getSetting('enable_vat_registration');
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $translator->translate('i.cldr'); ?>">
+<html lang="<?= $translator->translate('cldr'); ?>">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>
         <?= $s->getSetting('custom_title'); ?>
-        - <?= $translator->translate('i.invoice'); ?> <?= $inv->getNumber(); ?>
+        - <?= $translator->translate('invoice'); ?> <?= $inv->getNumber(); ?>
     </title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
@@ -65,28 +65,28 @@ $vat = $s->getSetting('enable_vat_registration');
     <div class="container">
         <div id="content">
             <div class="webpreview-header">
-                <h2><?= $translator->translate('i.invoice'); ?>&nbsp;<?= $inv->getNumber(); ?></h2>
+                <h2><?= $translator->translate('invoice'); ?>&nbsp;<?= $inv->getNumber(); ?></h2>
                 <div class="btn-group">
                     <!-- Include custom fields -->
 
                     <?php if (null !== $sumex) : ?>
                         <a href="<?= $urlGenerator->generate('inv/key_download_pdf_non_sumex', ['url_key' => $inv_url_key]); ?>" class="btn btn-primary" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
+                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
                         </a>
                     <?php else : ?>
                         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-primary" style="text-decoration:none">
-                           <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
+                           <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
                         </a>
                     <?php endif; ?>
 
                     <!-- Exclude custom fields -->         
                     <?php if (null !== $sumex) : ?>
                         <a href="<?= $urlGenerator->generate('inv/key_download_pdf_non_sumex', ['url_key' => $inv_url_key]); ?>" class="btn btn-danger" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>    
+                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>    
                         </a>    
                     <?php else : ?>
                         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-danger" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>    
+                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>    
                         </a>    
                     <?php endif; ?>
 
@@ -96,11 +96,11 @@ $vat = $s->getSetting('enable_vat_registration');
                             ['url_key' => $inv_url_key,
                                                          'gateway' => $client_chosen_gateway]
                         ); ?>" class="btn btn-success">
-                            <i class="fa fa-credit-card"></i><?= $translator->translate('i.pay_now').' '. str_replace('_', ' ', $client_chosen_gateway); ?>
+                            <i class="fa fa-credit-card"></i><?= $translator->translate('pay.now').' '. str_replace('_', ' ', $client_chosen_gateway); ?>
                         </a>
                     <?php } ?>
                     <?php if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() == 0) { ?>
-                        <a href="" class="btn btn-success"><?= $translator->translate('i.paid'); ?></a>    
+                        <a href="" class="btn btn-success"><?= $translator->translate('paid'); ?></a>    
                     <?php } ?>
                 </div>
             </div>
@@ -124,10 +124,10 @@ $vat = $s->getSetting('enable_vat_registration');
 
                         <h4><?= Html::encode($userInv->getName()); ?></h4>
                         <p><?php if (strlen($userInv->getVat_id() ?: '') > 0) {
-                            echo $translator->translate('i.vat_id_short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
+                            echo $translator->translate('vat.id.short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
                         } ?>
                             <?php if (strlen($userInv->getTax_code() ?? '') > 0) {
-                                echo $translator->translate('i.tax_code_short') . ": " . ($userInv->getTax_code() ?? '') . '<br>';
+                                echo $translator->translate('tax.code.short') . ": " . ($userInv->getTax_code() ?? '') . '<br>';
                             } ?>
                             <?php if (strlen($userInv->getAddress_1() ?? '') > 0) {
                                 echo Html::encode($userInv->getAddress_1()) . '<br>';
@@ -144,9 +144,9 @@ $vat = $s->getSetting('enable_vat_registration');
                             <?php if (strlen($userInv->getZip() ?? '') > 0) {
                                 echo Html::encode($userInv->getZip()) . '<br>';
                             } ?>
-                            <?php if (strlen($userInv->getPhone() ?? '') > 0) { ?><?= $translator->translate('i.phone_abbr'); ?>: <?= Html::encode($userInv->getPhone()); ?>
+                            <?php if (strlen($userInv->getPhone() ?? '') > 0) { ?><?= $translator->translate('phone.abbr'); ?>: <?= Html::encode($userInv->getPhone()); ?>
                                 <br><?php } ?>
-                            <?php if (strlen($userInv->getFax() ?? '') > 0) { ?><?= $translator->translate('i.fax_abbr'); ?>: <?= Html::encode($userInv->getFax()); ?><?php } ?>
+                            <?php if (strlen($userInv->getFax() ?? '') > 0) { ?><?= $translator->translate('fax.abbr'); ?>: <?= Html::encode($userInv->getFax()); ?><?php } ?>
                         </p>
 
                     </div>
@@ -155,10 +155,10 @@ $vat = $s->getSetting('enable_vat_registration');
 
                         <h4><?= Html::encode($clientHelper->format_client($client)); ?></h4>
                         <p><?php if (strlen($client->getClient_vat_id()) > 0) {
-                            echo $translator->translate('i.vat_id_short') . ": " . ($client->getClient_vat_id()) . '<br>';
+                            echo $translator->translate('vat.id.short') . ": " . ($client->getClient_vat_id()) . '<br>';
                         } ?>
                             <?php if (strlen($client->getClient_tax_code() ?? '') > 0) {
-                                echo $translator->translate('i.tax_code_short') . ": " . ($client->getClient_tax_code() ?? '') . '<br>';
+                                echo $translator->translate('tax.code.short') . ": " . ($client->getClient_tax_code() ?? '') . '<br>';
                             } ?>
                             <?php if (strlen($client->getClient_address_1() ?? '') > 0) {
                                 echo Html::encode($client->getClient_address_1()) . '<br>';
@@ -176,7 +176,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 echo Html::encode($client->getClient_zip()) . '<br>';
                             } ?>
                             <?php if (strlen($client->getClient_phone() ?? '') > 0) {
-                                echo $translator->translate('i.phone_abbr') . ': ' . Html::encode($client->getClient_phone()); ?>
+                                echo $translator->translate('phone.abbr') . ': ' . Html::encode($client->getClient_phone()); ?>
                                 <br>
                             <?php } ?>
                         </p>
@@ -186,22 +186,22 @@ $vat = $s->getSetting('enable_vat_registration');
                         <table class="table table-condensed">
                             <tbody>
                             <tr>
-                                <td><?= $translator->translate('i.invoice_date'); ?></td>
+                                <td><?= $translator->translate('invoice.date'); ?></td>
                                 <td style="text-align:right;"><?= $inv->getDate_created()->format('Y-m-d'); ?></td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
-                                <td><?= $translator->translate('i.due_date'); ?></td>
+                                <td><?= $translator->translate('due.date'); ?></td>
                                 <td class="text-right">
                                     <?= $inv->getDate_due()->format('Y-m-d'); ?>
                                 </td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
-                                <td><?= $translator->translate('i.amount_due'); ?></td>
+                                <td><?= $translator->translate('amount.due'); ?></td>
                                 <td style="text-align:right;"><?= $numberHelper->format_currency($inv_amount->getBalance() ?? 0.00); ?></td>
                             </tr>
                             
                             <tr>
-                                <td><?= $translator->translate('i.payment_method') . ': '; ?></td>
+                                <td><?= $translator->translate('payment.method') . ': '; ?></td>
                                 <td><?= Html::encode($payment_method->getName()); ?></td>
                             </tr>
                             
@@ -218,12 +218,12 @@ $vat = $s->getSetting('enable_vat_registration');
                         <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th><?= $translator->translate('i.item'); ?></th>
-                                <th><?= $translator->translate('i.description'); ?></th>
-                                <th class="text-right"><?= $translator->translate('i.qty'); ?></th>
-                                <th class="text-right"><?= $translator->translate('i.price'); ?></th>
-                                <th class="text-right"><?= $translator->translate('i.discount'); ?></th>
-                                <th class="text-right"><?= $translator->translate('i.total'); ?></th>
+                                <th><?= $translator->translate('item'); ?></th>
+                                <th><?= $translator->translate('description'); ?></th>
+                                <th class="text-right"><?= $translator->translate('qty'); ?></th>
+                                <th class="text-right"><?= $translator->translate('price'); ?></th>
+                                <th class="text-right"><?= $translator->translate('discount'); ?></th>
+                                <th class="text-right"><?= $translator->translate('total'); ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -252,14 +252,14 @@ $vat = $s->getSetting('enable_vat_registration');
 
                             <tr>
                                 <td colspan="4"></td>
-                                <td class="text-right"><?= $translator->translate('i.subtotal'); ?>:</td>
+                                <td class="text-right"><?= $translator->translate('subtotal'); ?>:</td>
                                 <td class="amount"><?= $numberHelper->format_currency($inv_amount->getItem_subtotal()); ?></td>
                             </tr>                            
 
                             <?php if ($inv_amount->getItem_tax_total() > 0) { ?>
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
-                               <td class="text-right"><?= $vat === '0' ? $translator->translate('i.item_tax') : $translator->translate('invoice.invoice.vat.abbreviation') ?></td>
+                               <td class="text-right"><?= $vat === '0' ? $translator->translate('item.tax') : $translator->translate('vat.abbreviation') ?></td>
                                 <td class="amount">
                                     <?php
                                         $invAmountItemTaxTotal = $inv_amount->getItem_tax_total();
@@ -301,7 +301,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             <?php if ($vat  === '0') { ?>        
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
-                                <td class="text-right"><?= $translator->translate('i.discount'); ?>:</td>
+                                <td class="text-right"><?= $translator->translate('discount'); ?>:</td>
                                 <td class="amount">
                                     <?php
                                     $percent = $inv->getDiscount_percent();
@@ -320,18 +320,18 @@ $vat = $s->getSetting('enable_vat_registration');
 
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
-                                <td class="text-right"><?= $translator->translate('i.total'); ?>:</td>
+                                <td class="text-right"><?= $translator->translate('total'); ?>:</td>
                                 <td class="amount"><?= $numberHelper->format_currency($inv_amount->getTotal()); ?></td>
                             </tr>
 
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
-                                <td class="text-right"><?= $translator->translate('i.paid'); ?></td>
+                                <td class="text-right"><?= $translator->translate('paid'); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($inv_amount->getPaid()) ?></td>
                             </tr>
                             <tr class="<?= ($is_overdue) ? 'overdue' : 'text-success'; ?>">
                                 <td class="no-bottom-border" colspan="4"></td>
-                                <td class="text-right"><?= $translator->translate('i.balance'); ?></td>
+                                <td class="text-right"><?= $translator->translate('balance'); ?></td>
                                 <td class="amount">
                                     <b><?= $numberHelper->format_currency($balance ?: 0.00) ?></b>
                                 </td>
@@ -358,7 +358,7 @@ if ($is_overdue) {
                     <?php if ($inv->getTerms()) { ?>
 
                         <div class="col-xs-12 col-md-6">
-                            <h4><?= $translator->translate('i.terms'); ?></h4>
+                            <h4><?= $translator->translate('terms'); ?></h4>
                             <p><?= nl2br(Html::encode($paymentTermsArray[$inv->getTerms()] ?? '')); ?></p>
                         </div>
                     <?php } ?>

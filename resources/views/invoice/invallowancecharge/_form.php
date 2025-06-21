@@ -45,16 +45,16 @@ echo Form::tag()
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
                     echo Field::select($form, 'allowance_charge_id')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge'))
+                    ->label($translator->translate('allowance.or.charge'))
                     ->optionsData($optionsDataAllowanceCharges)
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
+    ->label($translator->translate('allowance.or.charge.amount'))
     ->value(Html::encode($form->getAmount() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

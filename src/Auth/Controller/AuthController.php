@@ -347,9 +347,9 @@ final class AuthController
                     $tempSecret = (\is_string($tempSecretRaw) && $tempSecretRaw !== '') ? $tempSecretRaw : null;
                     $error = '';
                     if ($tempSecret === null) {
-                        $error = $translator->translate('invoice.invoice.two.factor.authentication.no.secret.generated');
+                        $error = $translator->translate('two.factor.authentication.no.secret.generated');
                     } elseif (!$this->isValidTotpCode($inputCode)) {
-                        $error = $translator->translate('invoice.invoice.two.factor.authentication.invalid.code.format');
+                        $error = $translator->translate('two.factor.authentication.invalid.code.format');
                     } else {
                         /** @var non-empty-string $tempSecret */
                         $totp = TOTP::create($tempSecret);
@@ -363,9 +363,9 @@ final class AuthController
                             return $this->webService->getRedirectResponse('auth/verifyLogin');
                         }
                         if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
-                            $error = $translator->translate('invoice.invoice.two.factor.authentication.attempt.failure.must.setup');
+                            $error = $translator->translate('two.factor.authentication.attempt.failure.must.setup');
                         } else {
-                            $error = $translator->translate('invoice.invoice.two.factor.authentication.attempt.failure');
+                            $error = $translator->translate('two.factor.authentication.attempt.failure');
                         }
                     }
 
@@ -415,7 +415,7 @@ final class AuthController
         $verifiedUserId = (int)$session->get('verified_2fa_user_id');
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $parameters = [
-            'title' => $translator->translate('invoice.invoice.two.factor.authentication.form.verify.login'),
+            'title' => $translator->translate('two.factor.authentication.form.verify.login'),
             'actionName' => 'auth/verifyLogin',
             'actionArguments' => [],
             'errors' => [],
@@ -452,9 +452,9 @@ final class AuthController
                                 $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                 return $this->redirectToInvoiceIndex();
                             }
-                            $error = $translator->translate('invoice.invoice.two.factor.authentication.attempt.failure');
+                            $error = $translator->translate('two.factor.authentication.attempt.failure');
                         } else {
-                            $error = $translator->translate('invoice.invoice.two.factor.authentication.missing.code.or.secret');
+                            $error = $translator->translate('two.factor.authentication.missing.code.or.secret');
                         }
                         return $this->viewRenderer->render('verify', [
                             'error' => $error,
@@ -557,7 +557,7 @@ final class AuthController
                     ]
                 ))
                 ->addClass('btn btn-success')
-                ->content($translator->translate('invoice.invoice.identity.provider.authentication.successful'))
+                ->content($translator->translate('identity.provider.authentication.successful'))
                 ->render();
         }
         return '';

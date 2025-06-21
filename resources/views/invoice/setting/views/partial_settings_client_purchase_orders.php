@@ -14,19 +14,19 @@ use Yiisoft\Html\Html;
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('invoice.salesorders'); ?>
+                <?= $translator->translate('salesorders'); ?>
             </div>
             <div class="panel-body">
                 <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_client_purchase_order_group]" <?= $s->where('default_invoice_group'); ?>>
-                                <?= $translator->translate('invoice.salesorder.default.group'); ?>
+                                <?= $translator->translate('salesorder.default.group'); ?>
                             </label>
                             <?php $body['settings[default_client_purchase_order_group]'] = $s->getSetting('default_client_purchase_order_group');?>
                             <select name="settings[default_client_purchase_order_group]" id="settings[default_client_purchase_order_group]"
                                 class="form-control" >
-                                <option value=""><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\Group $invoice_group

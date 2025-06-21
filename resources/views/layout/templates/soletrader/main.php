@@ -272,7 +272,7 @@ $this->setTitle($title);
             ->attributes([
                 'class' => 'bi bi-person-plus-fill',
                 'data-bs-toggle' => 'tooltip',
-                'title' => str_repeat(' ', 1).$translator->translate('i.setup_create_user')
+                'title' => str_repeat(' ', 1).$translator->translate('setup.create.user')
             ])
             ->content(str_repeat(' ', 1).$translator->translate('menu.signup')),
             $urlGenerator->generate('auth/signup'),
@@ -292,7 +292,7 @@ $this->setTitle($title);
                     ->open()
                     . '<div class="mb-1">'
                     . Button::submit(
-                        $translator->translate('i.logout', ['login' => Html::encode(null !== $user ? $user->getLogin() : '')])
+                        $translator->translate('logout', ['login' => Html::encode(null !== $user ? $user->getLogin() : '')])
                     )
                     ->class('btn btn-xs btn-danger')
                     . '</div>'

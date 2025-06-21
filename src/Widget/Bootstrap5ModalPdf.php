@@ -25,7 +25,7 @@ final class Bootstrap5ModalPdf
                 'iframeWithPdf' => $this->viewRenderer->renderPartialAsString(
                     '//invoice/' . $this->type . '/modal_view_' . $this->type . '_pdf',
                     [
-                        'title' => $this->translator->translate('i.view'),
+                        'title' => $this->translator->translate('view'),
                     ]
                 ),
             ]

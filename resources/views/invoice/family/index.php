@@ -40,7 +40,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('i.family')))
+                        ->content(' ' . Html::encode($translator->translate('family')))
             )
     )
     ->render();
@@ -66,10 +66,10 @@ $toolbar = Div::tag();
 ?>
 
 <div>
-    <h5><?= $translator->translate('i.families'); ?></h5>
+    <h5><?= $translator->translate('families'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('family/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('new')); ?>
         </a>
     </div>
 </div>
@@ -82,33 +82,33 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (Family $model) => Html::encode($model->getFamily_id()),
             withSorting: true,
         ),
         new DataColumn(
             'id',
-            header: $translator->translate('i.family'),
+            header: $translator->translate('family'),
             content: static fn (Family $model) => Html::encode($model->getFamily_name() ?? '')
         ),
         new DataColumn(
             'category_primary_id',
-            header: $translator->translate('invoice.category.primary'),
+            header: $translator->translate('category.primary'),
             content: static function (Family $model) use ($cpR, $translator) : string {
                 $categoryPrimaryId = $model->getCategory_primary_id();
                 $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
-                return null!==$categoryPrimary ? ($categoryPrimary->getName() ?? $translator->translate('i.not_set')) 
-                                               : $translator->translate('i.not_set');
+                return null!==$categoryPrimary ? ($categoryPrimary->getName() ?? $translator->translate('not.set')) 
+                                               : $translator->translate('not.set');
             }
         ),
         new DataColumn(
             'category_secondary_id',
-            header: $translator->translate('invoice.category.secondary'),
+            header: $translator->translate('category.secondary'),
             content: static function (Family $model) use ($csR, $translator) : string {
                 $categorySecondaryId = $model->getCategory_secondary_id();
                 $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
-                return null!==$categorySecondary ? $categorySecondary->getName() ?? $translator->translate('i.not_set') 
-                                                 : $translator->translate('i.not_set');
+                return null!==$categorySecondary ? $categorySecondary->getName() ?? $translator->translate('not.set') 
+                                                 : $translator->translate('not.set');
             }
         ),        
         new ActionColumn(buttons: [
@@ -119,7 +119,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -129,7 +129,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -138,8 +138,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('family/delete', ['id' => $model->getFamily_id()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ])
@@ -150,7 +150,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('i.families'),
+    $translator->translate('families'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
@@ -171,7 +171,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
 </div>

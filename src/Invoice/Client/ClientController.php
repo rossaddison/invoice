@@ -162,7 +162,7 @@ final class ClientController extends BaseController
         $clientCustom = new ClientCustom();
         $clientCustomForm = new ClientCustomForm($clientCustom);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'alert' => $this->alert(),
             'actionName' => 'client/add',
             'actionArguments' => ['origin' => $origin],
@@ -220,7 +220,7 @@ final class ClientController extends BaseController
                                 $parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
                         }
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                         if ($origin == 'main' || $origin == 'add') {
                             return $this->webService->getRedirectResponse('client/index');
                         }
@@ -260,7 +260,7 @@ final class ClientController extends BaseController
             if (null !== $client_id) {
                 $postaladdresses = $paR->repoClientAll((string)$client_id);
                 $parameters = [
-                    'title' => $this->translator->translate('i.edit'),
+                    'title' => $this->translator->translate('edit'),
                     'actionName' => 'client/edit',
                     'actionArguments' => ['id' => $client_id, 'origin' => $origin],
                     'alert' => $this->alert(),
@@ -328,7 +328,7 @@ final class ClientController extends BaseController
                             } //isset
                         } // cfR
                     } // is_array
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                     if ($origin  == 'edit') {
                         return $this->webService->getRedirectResponse('client/index');
                     }
@@ -401,12 +401,12 @@ final class ClientController extends BaseController
     {
         try {
             $this->clientService->deleteClient($this->client($currentRoute, $cR));
-            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             //UserClient Entity automatically deletes the UserClient record relevant to this client
             return $this->webService->getRedirectResponse('client/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.client.delete.history.exits.no'));
+            $this->flashMessage('danger', $this->translator->translate('client.delete.history.exits.no'));
             return $this->webService->getRedirectResponse('client/index');
         }
     }
@@ -592,7 +592,7 @@ final class ClientController extends BaseController
                         ];
                         return $this->viewRenderer->render('guest', $parameters);
                     }
-                    $this->flashMessage('warning', $this->translator->translate('invoice.user.clients.assigned.not'));
+                    $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
                     throw new NoClientsAssignedToUserException($this->translator);
                 } // null!==$userInv
             } // null!== $user_id
@@ -620,7 +620,7 @@ final class ClientController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('client/index');
         }
         return $canEdit;
@@ -741,9 +741,9 @@ final class ClientController extends BaseController
     {
         $optionsDataGender = [];
         $genders_array = [
-            $this->translator->translate('invoice.gender.male'),
-            $this->translator->translate('invoice.gender.female'),
-            $this->translator->translate('invoice.gender.other'),
+            $this->translator->translate('gender.male'),
+            $this->translator->translate('gender.female'),
+            $this->translator->translate('gender.other'),
         ];
         foreach ($genders_array as $key => $val) {
             $optionsDataGender[(string)$key] = $val;
@@ -893,7 +893,7 @@ final class ClientController extends BaseController
             $client_id = $client->getClient_id();
             if (null !== $client_id) {
                 $parameters = [
-                    'title' => $this->translator->translate('i.client'),
+                    'title' => $this->translator->translate('client'),
                     'alert' => $this->alert(),
                     'custom_fields' => $cfR->repoTablequery('client_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),

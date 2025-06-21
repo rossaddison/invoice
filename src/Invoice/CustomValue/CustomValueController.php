@@ -190,7 +190,7 @@ final class CustomValueController extends BaseController
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
             $this->customValueService->deleteCustomValue($custom_value);
-            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
         }
         return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
@@ -206,7 +206,7 @@ final class CustomValueController extends BaseController
         if ($custom_value) {
             $form = new CustomValueForm($custom_value);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'customvalue/view',
                 'actionArguments' => ['id' => $custom_value->getId()],
                 'form' => $form,
@@ -223,7 +223,7 @@ final class CustomValueController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('customvalue/index');
         }
         return $canEdit;

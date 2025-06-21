@@ -44,42 +44,42 @@ use Yiisoft\Html\Html;
 
             <div id="panel-quick-actions" class="panel panel-default quick-actions">
                 <div class="panel-heading">
-                    <b><?= $translator->translate('i.quick_actions'); ?></b>
+                    <b><?= $translator->translate('quick.actions'); ?></b>
                 </div>
                 <div class="btn-group btn-group-justified no-margin">
                     <?php
                         echo $modal_create_client;
 ?>
                     <?php if ($client_count === 0) { ?>
-                    <a href="#create-client" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
-                        <i class="fa fa-plus"></i><?= $translator->translate('i.client'); ?>
+                    <a href="#create-client" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('add.client'); ?>" style="text-decoration:none">
+                        <i class="fa fa-plus"></i><?= $translator->translate('client'); ?>
                     </a>
                     <?php } else { ?>
                     <a href="<?= $urlGenerator->generate('client/add', ['origin' => 'dashboard']); ?>" class="btn btn-success" style="text-decoration:none">
-                        <i class="fa fa-plus"></i><?= $translator->translate('i.client'); ?>
+                        <i class="fa fa-plus"></i><?= $translator->translate('client'); ?>
                     </a>
                     <?php } ?>
                     <?php if ($client_count === 0) { ?>
-                    <a href="#create-quote" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
-                        <i class="fa fa-plus"></i><?= $translator->translate('i.quote'); ?>
+                    <a href="#create-quote" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('add.client'); ?>" style="text-decoration:none">
+                        <i class="fa fa-plus"></i><?= $translator->translate('quote'); ?>
                     </a>
                     <?php } else { ?>
                     <a href="<?= $urlGenerator->generate('quote/add', ['origin' => 'dashboard']);?>" class="btn btn-success" style="text-decoration:none">
-                        <i class="fa fa-plus"></i><?= $translator->translate('i.quote'); ?>
+                        <i class="fa fa-plus"></i><?= $translator->translate('quote'); ?>
                     </a>
                     <?php } ?>
                     <?php if ($client_count === 0) { ?>
-                    <a href="#create-inv" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('i.add_client'); ?>" style="text-decoration:none">
-                        <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
+                    <a href="#create-inv" class="btn btn-success" data-bs-toggle="modal" disabled data-bs-toggle = "tooltip" title="<?= $translator->translate('add.client'); ?>" style="text-decoration:none">
+                        <i class="fa fa-plus"></i><?= $translator->translate('invoice'); ?>
                     </a>
                     <?php } else { ?>
                     <a href="<?= $urlGenerator->generate('inv/add', ['origin' => 'dashboard']);?>" class="btn btn-success" style="text-decoration:none">
-                        <i class="fa fa-plus"></i><?= $translator->translate('i.invoice'); ?>
+                        <i class="fa fa-plus"></i><?= $translator->translate('invoice'); ?>
                     </a>
                     <?php } ?>
                     <a href="<?= $urlGenerator->generate('payment/add') ; ?>" class="btn btn-default" style="text-decoration:none">
                         <i class="fa fa-credit-card fa-margin"></i>
-                        <span class="hidden-xs"><?= $translator->translate('i.enter_payment'); ?></span>
+                        <span class="hidden-xs"><?= $translator->translate('enter.payment'); ?></span>
                     </a>
                 </div>
             </div>
@@ -92,7 +92,7 @@ use Yiisoft\Html\Html;
         <div class="col-xs-12 col-md-6">
             <div id="panel-quote-overview" class="panel panel-default overview">
                 <div class="panel-heading">
-                    <b><i class="fa fa-bar-chart fa-margin"></i> <?= $translator->translate('i.quote_overview'); ?></b>
+                    <b><i class="fa fa-bar-chart fa-margin"></i> <?= $translator->translate('quote.overview'); ?></b>
                     <span class="pull-right text-muted"><?= $s->lang($quote_status_period); ?></span>
                 </div>
                 <table class="table table-hover table-bordered table-condensed no-margin">
@@ -126,7 +126,7 @@ use Yiisoft\Html\Html;
             <div id="panel-invoice-overview" class="panel panel-default overview">
 
                 <div class="panel-heading">
-                    <b><i class="fa fa-bar-chart fa-margin"></i> <?= $translator->translate('i.invoice_overview'); ?></b>
+                    <b><i class="fa fa-bar-chart fa-margin"></i> <?= $translator->translate('invoice.overview'); ?></b>
                     <span class="pull-right text-muted"><?= $s->lang($invoice_status_period); ?></span>
                 </div>
 
@@ -158,18 +158,18 @@ use Yiisoft\Html\Html;
         <div class="col-xs-12 col-md-6">
             <div id="panel-recent-quotes" class="panel panel-default">
                 <div class="panel-heading">
-                    <b><i class="fa fa-history fa-margin"></i> <?= $translator->translate('i.recent_quotes'); ?></b>
+                    <b><i class="fa fa-history fa-margin"></i> <?= $translator->translate('recent.quotes'); ?></b>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped table-condensed no-margin">
                         <thead>
                         <tr>
-                            <th><?= $translator->translate('i.status'); ?></th>
-                            <th style="min-width: 15%;"><?= $translator->translate('i.date'); ?></th>
-                            <th style="min-width: 15%;"><?= $translator->translate('i.quote'); ?></th>
-                            <th style="min-width: 35%;"><?= $translator->translate('i.client'); ?></th>
-                            <th style="text-align: right;"><?= $translator->translate('i.balance'); ?></th>
-                            <th style="text-align: right;"><?= $translator->translate('i.custom_fields'); ?></th>
+                            <th><?= $translator->translate('status'); ?></th>
+                            <th style="min-width: 15%;"><?= $translator->translate('date'); ?></th>
+                            <th style="min-width: 15%;"><?= $translator->translate('quote'); ?></th>
+                            <th style="min-width: 35%;"><?= $translator->translate('client'); ?></th>
+                            <th style="text-align: right;"><?= $translator->translate('balance'); ?></th>
+                            <th style="text-align: right;"><?= $translator->translate('custom.fields'); ?></th>
                             <th></th>
                         </tr>
                         </thead>
@@ -203,13 +203,13 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate('quote/pdf_dashboard_include_cf', ['id' => $quote->getId()]); ?>"
-                                       title="<?= $translator->translate('i.download_pdf'); ?>" class="btn btn-default" style="text-decoration:none">
+                                       title="<?= $translator->translate('download.pdf'); ?>" class="btn btn-default" style="text-decoration:none">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </a>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate('quote/pdf_dashboard_exclude_cf', ['id' => $quote->getId()]); ?>"
-                                       title="<?= $translator->translate('i.download_pdf'); ?>" class="btn btn-default" style="text-decoration:none">
+                                       title="<?= $translator->translate('download.pdf'); ?>" class="btn btn-default" style="text-decoration:none">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </a>
                                 </td>
@@ -229,19 +229,19 @@ use Yiisoft\Html\Html;
             <div id="panel-recent-invoices" class="panel panel-default">
 
                 <div class="panel-heading">
-                    <b><i class="fa fa-history fa-margin"></i> <?= $translator->translate('i.recent_invoices'); ?></b>
+                    <b><i class="fa fa-history fa-margin"></i> <?= $translator->translate('recent.invoices'); ?></b>
                 </div>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-striped table-condensed no-margin">
                         <thead>
                         <tr>
-                            <th><?= $translator->translate('i.status'); ?></th>
-                            <th style="min-width: 15%;"><?= $translator->translate('i.due_date'); ?></th>
-                            <th style="min-width: 15%;"><?= $translator->translate('i.invoice'); ?></th>
-                            <th style="min-width: 35%;"><?= $translator->translate('i.client'); ?></th>
-                            <th style="text-align: right;"><?= $translator->translate('i.balance'); ?></th>
-                            <th style="text-align: right;"><?= $translator->translate('i.custom_fields'); ?></th>
+                            <th><?= $translator->translate('status'); ?></th>
+                            <th style="min-width: 15%;"><?= $translator->translate('due.date'); ?></th>
+                            <th style="min-width: 15%;"><?= $translator->translate('invoice'); ?></th>
+                            <th style="min-width: 35%;"><?= $translator->translate('client'); ?></th>
+                            <th style="text-align: right;"><?= $translator->translate('balance'); ?></th>
+                            <th style="text-align: right;"><?= $translator->translate('custom.fields'); ?></th>
                             <th></th>
                         </tr>
                         </thead>
@@ -262,14 +262,14 @@ use Yiisoft\Html\Html;
 
                                             <?= $iR->getSpecificStatusArrayLabel((string)$statusId);
                                         if (null !== $iaR->repoCreditInvoicequery((string)$invoice->getId())) { ?>
-                                                &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('i.credit_invoice') ?>"></i>
+                                                &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('credit.invoice') ?>"></i>
                                             <?php } ?>
 
                                             <?php if ($invoice->getIs_read_only()) { ?>
-                                                &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('i.read_only') ?>"></i>
+                                                &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('read.only') ?>"></i>
                                             <?php } ?>
                                             <?php if (($irR->repoCount((string)$invoice->getId()) > 0)) { ?>
-                                                &nbsp;<i class="fa fa-refresh" title="<?php $translator->translate('i.recurring') ?>"></i>
+                                                &nbsp;<i class="fa fa-refresh" title="<?php $translator->translate('recurring') ?>"></i>
                                             <?php } ?>
                                         </span>
                                     <?php } ?>
@@ -296,13 +296,13 @@ use Yiisoft\Html\Html;
                                 </td>                               
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate('inv/pdf_dashboard_include_cf', ['id' => $invoice->getId()]); ?>"
-                                       title="<?= $translator->translate('i.download_pdf'); ?>" class="btn btn-default" style="text-decoration:none">
+                                       title="<?= $translator->translate('download.pdf'); ?>" class="btn btn-default" style="text-decoration:none">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </a>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate('quote/pdf_dashboard_exclude_cf', ['id' => $invoice->getId()]); ?>"
-                                       title="<?= $translator->translate('i.download_pdf'); ?>" class="btn btn-default" style="text-decoration:none">
+                                       title="<?= $translator->translate('download.pdf'); ?>" class="btn btn-default" style="text-decoration:none">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </a>
                                 </td>
@@ -328,14 +328,14 @@ use Yiisoft\Html\Html;
                 <div id="panel-projects" class="panel panel-default">
 
                     <div class="panel-heading">
-                        <b><i class="fa fa-list fa-margin"></i> <?= $translator->translate('i.projects'); ?></b>
+                        <b><i class="fa fa-list fa-margin"></i> <?= $translator->translate('projects'); ?></b>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-condensed no-margin">
                             <thead>
                             <tr>
-                                <th><?= $translator->translate('i.project_name'); ?></th>
-                                <th><?= $translator->translate('i.client_name'); ?></th>
+                                <th><?= $translator->translate('project.name'); ?></th>
+                                <th><?= $translator->translate('client.name'); ?></th>
                             </tr>
                             </thead>
 
@@ -361,7 +361,7 @@ use Yiisoft\Html\Html;
                                 <tr>
                                     <td colspan="6" class="text-right small">
                                         <a href="<?= $urlGenerator->generate('project/index'); ?>">
-                                            <?= $translator->translate('i.view_all'); ?>
+                                            <?= $translator->translate('view.all'); ?>
                                         </a>    
                                     </td>
                                 </tr>
@@ -380,7 +380,7 @@ use Yiisoft\Html\Html;
                 <div id="panel-recent-invoices" class="panel panel-default">
 
                     <div class="panel-heading">
-                        <b><i class="fa fa-check-square-o fa-margin"></i> <?= $translator->translate('i.tasks'); ?></b>
+                        <b><i class="fa fa-check-square-o fa-margin"></i> <?= $translator->translate('tasks'); ?></b>
                     </div>
 
                     <div class="table-responsive">
@@ -388,10 +388,10 @@ use Yiisoft\Html\Html;
 
                             <thead>
                             <tr>
-                                <th><?= $translator->translate('i.status'); ?></th>
-                                <th><?= $translator->translate('i.task_name'); ?></th>
-                                <th><?= $translator->translate('i.task_finish_date'); ?></th>
-                                <th><?= $translator->translate('i.project'); ?></th>
+                                <th><?= $translator->translate('status'); ?></th>
+                                <th><?= $translator->translate('task.name'); ?></th>
+                                <th><?= $translator->translate('task.finish.date'); ?></th>
+                                <th><?= $translator->translate('project'); ?></th>
                             </tr>
                             </thead>
 
@@ -426,7 +426,7 @@ use Yiisoft\Html\Html;
                             <?php } ?>
                                     <tr>
                                     <td colspan="6" class="text-right small">
-                                        <a href="<?= $urlGenerator->generate('task/index'); ?>"><?= Html::encode($translator->translate('i.view_all')); ?></a>                                        
+                                        <a href="<?= $urlGenerator->generate('task/index'); ?>"><?= Html::encode($translator->translate('view.all')); ?></a>                                        
                                     </td>
                                     </tr>
                             </tbody>

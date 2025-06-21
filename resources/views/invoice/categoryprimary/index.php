@@ -40,7 +40,7 @@ use Yiisoft\Yii\DataView\GridView;
         H5::tag()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-          I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.category.primary'))
+          I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('category.primary'))
         )
       )
       ->render();
@@ -58,12 +58,12 @@ use Yiisoft\Yii\DataView\GridView;
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn(CategoryPrimary $model) => (string)$model->getId()
         ),
         new DataColumn(
             'name',
-            header: $translator->translate('i.name'),
+            header: $translator->translate('name'),
             content: static fn (CategoryPrimary $model) => Html::encode($model->getName() ?? '')
         ),
         new ActionColumn(buttons: [
@@ -74,7 +74,7 @@ use Yiisoft\Yii\DataView\GridView;
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -84,7 +84,7 @@ use Yiisoft\Yii\DataView\GridView;
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -93,8 +93,8 @@ use Yiisoft\Yii\DataView\GridView;
                     return $urlGenerator->generate('categoryprimary/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -102,7 +102,7 @@ use Yiisoft\Yii\DataView\GridView;
     $toolbarString = Form::tag()->post($urlGenerator->generate('categoryprimary/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
-    $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
+    $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default.list.limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
       ->bodyRowAttributes(['class' => 'align-middle'])
       ->tableAttributes(['class' => 'table table-striped text-center', 'id' => 'table-categoryprimary'])
@@ -114,6 +114,6 @@ use Yiisoft\Yii\DataView\GridView;
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText($translator->translate('invoice.invoice.no.records'))
+      ->emptyText($translator->translate('no.records'))
       ->toolbar($toolbarString);
 ?>    

@@ -36,7 +36,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.invoice.company')))
+                        ->content(' ' . Html::encode($translator->translate('company')))
             )
     )
     ->render();
@@ -52,7 +52,7 @@ $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('invoice.invoice.company'); ?>
+        <?= $translator->translate('company'); ?>
     <?= Html::closeTag('h5'); ?>    
 <?= Html::closeTag('div'); ?>
 
@@ -72,27 +72,27 @@ $toolbar = Div::tag();
         $columns = [
             new DataColumn(
                 'id',
-                header: $translator->translate('i.id'),
+                header: $translator->translate('id'),
                 content: static fn (Company $model) => Html::encode($model->getId())
             ),
             new DataColumn(
                 'current',
-                header: $translator->translate('i.active'),
-                content: static fn (Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('i.active').' '.'✔️') : $translator->translate('i.inactive').' '.'❌')
+                header: $translator->translate('active'),
+                content: static fn (Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active').' '.'✔️') : $translator->translate('inactive').' '.'❌')
             ),
             new DataColumn(
                 'name',
-                header: $translator->translate('i.name'),
+                header: $translator->translate('name'),
                 content: static fn (Company $model) => Html::encode($model->getName())
             ),
             new DataColumn(
                 'email',
-                header: $translator->translate('i.email_address'),
+                header: $translator->translate('email.address'),
                 content: static fn (Company $model) => Html::encode($model->getEmail())
             ),
             new DataColumn(
                 'phone',
-                header: $translator->translate('i.phone'),
+                header: $translator->translate('phone'),
                 content: static fn (Company $model) => Html::encode($model->getPhone())
             ),
             new ActionColumn(buttons: [
@@ -103,7 +103,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('i.view'),
+                        'title' => $translator->translate('view'),
                     ]
                 ),
                 new ActionButton(
@@ -113,7 +113,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('i.edit'),
+                        'title' => $translator->translate('edit'),
                     ]
                 ),
                 new ActionButton(
@@ -122,8 +122,8 @@ $toolbar = Div::tag();
                         return $urlGenerator->generate('company/delete', ['id' => $model->getId()]);
                     },
                     attributes: [
-                        'title' => $translator->translate('i.delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                        'title' => $translator->translate('delete'),
+                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                     ]
                 ),
             ]),
@@ -138,7 +138,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.company.public'),
+    $translator->translate('company.public'),
     ''
 );
 echo GridView::widget()
@@ -153,6 +153,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

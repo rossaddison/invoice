@@ -37,7 +37,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.merchant')))
+                        ->content(' ' . Html::encode($translator->translate('merchant')))
             )
     )
     ->render();
@@ -54,10 +54,10 @@ $toolbar = Div::tag();
 ?>
 
 <div>
-    <h5><?= $translator->translate('invoice.merchant'); ?></h5>
+    <h5><?= $translator->translate('merchant'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('merchant/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('new')); ?>
         </a>
     </div>
 </div>
@@ -70,32 +70,32 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (Merchant $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'inv',
-            header: $translator->translate('invoice.invoice'),
+            header: $translator->translate('invoice'),
             content: static fn (Merchant $model): string => Html::encode($model->getInv()?->getNumber())
         ),
         new DataColumn(
             'date',
-            header: $translator->translate('i.date'),
+            header: $translator->translate('date'),
             content: static fn (Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '')
         ),
         new DataColumn(
             'driver',
-            header: $translator->translate('invoice.merchant.driver'),
+            header: $translator->translate('merchant.driver'),
             content: static fn (Merchant $model): string => Html::encode($model->getDriver())
         ),
         new DataColumn(
             'response',
-            header: $translator->translate('invoice.merchant.response'),
+            header: $translator->translate('merchant.response'),
             content: static fn (Merchant $model): string => Html::encode($model->getResponse())
         ),
         new DataColumn(
             'reference',
-            header: $translator->translate('invoice.merchant.reference'),
+            header: $translator->translate('merchant.reference'),
             content: static fn (Merchant $model): string => Html::encode($model->getReference())
         ),
         new ActionColumn(buttons: [
@@ -106,7 +106,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -116,7 +116,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -125,8 +125,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('merchant/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -137,7 +137,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.merchant'),
+    $translator->translate('merchant'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('merchant/index'))->csrf($csrf)->open() .
@@ -155,6 +155,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString); ?>
 </div>

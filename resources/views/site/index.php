@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Img;
 use Yiisoft\Bootstrap5\Carousel;
 use Yiisoft\Bootstrap5\CarouselItem;

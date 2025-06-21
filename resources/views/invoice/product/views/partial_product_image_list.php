@@ -25,16 +25,16 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         $columns = [
             new DataColumn(
                 'file_name_original',
-                header:  $translator->translate('i.name'),
+                header:  $translator->translate('name'),
                 content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original())
             ),
             new DataColumn(
                 'uploaded_date',
-                header:  $translator->translate('i.date'),
+                header:  $translator->translate('date'),
                 content: static fn (ProductImage $model): string => ($model->getUploaded_date())->format('Y-m-d')
             ),
             new DataColumn(
-                header:  $translator->translate('i.download'),
+                header:  $translator->translate('download'),
                 content: static function (ProductImage $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
@@ -54,7 +54,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             ),
             new DataColumn(
                 visible: $invEdit,
-                header:  $translator->translate('i.edit'),
+                header:  $translator->translate('edit'),
                 content: static function (ProductImage $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
@@ -72,7 +72,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
             ),
             new DataColumn(
                 visible: $invEdit,
-                header:  $translator->translate('i.delete'),
+                header:  $translator->translate('delete'),
                 content: static function (ProductImage $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
@@ -81,7 +81,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
                             [
                                         'type' => 'submit',
                                         'class' => 'dropdown-button',
-                                        'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
+                                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
                                     ]
                         ),
                         $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']),
@@ -96,7 +96,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         $paginator,
         $translator,
         (int)$s->getSetting('default_list_limit'),
-        $translator->translate('invoice.productimage.list'),
+        $translator->translate('productimage.list'),
         ''
     );
 echo GridView::widget()
@@ -107,6 +107,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.attachments'))
+->emptyText($translator->translate('no.attachments'))
 ?>
 </div>

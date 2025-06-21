@@ -44,19 +44,19 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'inv')
-    ->label($translator->translate('invoice.invoice.number'))
+    ->label($translator->translate('number'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
-    ->placeholder($translator->translate('invoice.successful'))
-    ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('i.reason.uknown')))
+    ->placeholder($translator->translate('successful'))
+    ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('reason.uknown')))
 ?>
                 <?= Html::closeTag('div'); ?>    
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -67,12 +67,12 @@ use Yiisoft\Html\Tag\Form;
             'disabled' => 'disabled'
     ])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('invoice.successful'))
+    ->ariaDescribedBy($translator->translate('successful'))
 ?>        
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'date')
-    ->label($translator->translate('i.date'))
+    ->label($translator->translate('date'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
@@ -82,8 +82,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'driver')
-    ->label($translator->translate('invoice.merchant.driver'))
-    ->placeholder($translator->translate('invoice.merchant.driver'))
+    ->label($translator->translate('merchant.driver'))
+    ->placeholder($translator->translate('merchant.driver'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
@@ -93,8 +93,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'response')
-    ->label($translator->translate('invoice.merchant.response'))
-    ->placeholder($translator->translate('invoice.merchant.response'))
+    ->label($translator->translate('merchant.response'))
+    ->placeholder($translator->translate('merchant.response'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
@@ -104,8 +104,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'reference')
-    ->label($translator->translate('invoice.merchant.reference'))
-    ->placeholder($translator->translate('invoice.merchant.reference'))
+    ->label($translator->translate('merchant.reference'))
+    ->placeholder($translator->translate('merchant.reference'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'

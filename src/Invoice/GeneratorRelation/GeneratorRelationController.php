@@ -65,7 +65,7 @@ final class GeneratorRelationController extends BaseController
         $generatorrelation = new GentorRelation();
         $form = new GeneratorRelationForm($generatorrelation);
         $parameters = [
-            'title' => $this->translator->translate('invoice.generator.relation.form'),
+            'title' => $this->translator->translate('generator.relation.form'),
             'actionName' => 'generatorrelation/add',
             'actionArguments' => [],
             'form' => $form,
@@ -106,7 +106,7 @@ final class GeneratorRelationController extends BaseController
         if ($generatorrelation) {
             $form = new GeneratorRelationForm($generatorrelation);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'generatorrelation/edit',
                 'actionArguments' => ['id' => $generatorrelation->getRelation_id()],
                 'errors' => [],
@@ -160,7 +160,7 @@ final class GeneratorRelationController extends BaseController
         if ($generatorrelation) {
             $form = new GeneratorRelationForm($generatorrelation);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'generatorrelation/view',
                 'actionArguments' => ['id' => $generatorrelation->getRelation_id()],
                 'errors' => [],
@@ -181,7 +181,7 @@ final class GeneratorRelationController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('generatorrelation/index');
         }
         return $canEdit;

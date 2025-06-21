@@ -73,7 +73,7 @@ final class SumexController extends BaseController
         $model = new Sumex();
         $form = new SumexForm($model);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'sumex/add',
             'actionArguments' => ['inv_id' => $inv_id],
             'inv_id' => $inv_id,
@@ -113,7 +113,7 @@ final class SumexController extends BaseController
         if ($sumex) {
             $form = new SumexForm($sumex);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'sumex/edit',
                 'actionArguments' => ['id' => $sumex->getId()],
                 'form' => $form,
@@ -125,7 +125,7 @@ final class SumexController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body) && isset($body['invoice'])) {
                         $this->sumexService->saveSumex($sumex, $body);
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                         $id = (string)$body['invoice'];
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
                     }
@@ -150,7 +150,7 @@ final class SumexController extends BaseController
         $sumex = $this->sumex($currentRoute, $sumexRepository);
         if ($sumex) {
             $this->sumexService->deleteSumex($sumex);
-            $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
         }
         return $this->webService->getRedirectResponse('sumex/index');
     }
@@ -166,7 +166,7 @@ final class SumexController extends BaseController
         if ($sumex) {
             $form = new SumexForm($sumex);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'sumex/view',
                 'actionArguments' => ['id' => $sumex->getId()],
                 'optionsDataReasons' => $this->optionsDataReasons(),
@@ -185,7 +185,7 @@ final class SumexController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('sumex/index');
         }
         return $canEdit;
@@ -227,7 +227,7 @@ final class SumexController extends BaseController
         ];
         $optionsDataReasons = [];
         foreach ($reasons as $key => $value) {
-            $optionsDataReasons[$key] = $this->translator->translate('i.reason_' . $value);
+            $optionsDataReasons[$key] = $this->translator->translate('reason.' . $value);
         }
         return $optionsDataReasons;
     }

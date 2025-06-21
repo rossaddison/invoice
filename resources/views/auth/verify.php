@@ -23,10 +23,10 @@ use Yiisoft\Html\Tag\Form;
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">                
                 <div class="card-header bg-dark text-white">
-                    <h5 class="fw-normal h3 text-center"><?= $translator->translate('invoice.invoice.two.factor.authentication'); ?></h5>
+                    <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication'); ?></h5>
                 </div>
                 <div class="card-body p-2 text-center">
-                    <h6><?= $translator->translate('invoice.invoice.two.factor.authentication.new.six.digit.code'); ?></h6>
+                    <h6><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
                     <div class="card-body p-2 text-center">
                         <?php if ((null!==$error) && (strlen($error) > 0)) { ?>
                             <?=         

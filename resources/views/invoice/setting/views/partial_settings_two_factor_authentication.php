@@ -12,7 +12,7 @@ declare(strict_types=1);
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('invoice.invoice.two.factor.authentication'); ?>
+                <?= $translator->translate('two.factor.authentication'); ?>
             </div>
             <div class="panel-body">
                 <div class='row'>
@@ -24,25 +24,25 @@ declare(strict_types=1);
                                     <input type="hidden" name="settings[enable_tfa]" value="0">
                                     <input type="checkbox" name="settings[enable_tfa]" value="1"
                                         <?php $s->check_select($body['settings[enable_tfa]'], 1, '==', true); ?>>
-                                    <?= $translator->translate('invoice.invoice.two.factor.authentication.enable'); ?>
+                                    <?= $translator->translate('two.factor.authentication.enable'); ?>
                                 </label>
                             </div>    
                         </div>
                         <div class="form-group">
                             <label for="settings[enable_tfa_with_disabling]">
-                                <p><?= $translator->translate('i.yes').' = '; ?><?= $translator->translate('invoice.invoice.two.factor.authentication.enabled.with.disabling'); ?></p>
-                                <p><?= $translator->translate('i.no').' = '; ?><?= $translator->translate('invoice.invoice.two.factor.authentication.enabled.without.disabling'); ?></p>
+                                <p><?= $translator->translate('yes').' = '; ?><?= $translator->translate('two.factor.authentication.enabled.with.disabling'); ?></p>
+                                <p><?= $translator->translate('no').' = '; ?><?= $translator->translate('two.factor.authentication.enabled.without.disabling'); ?></p>
                             </label>
                             <?php $body['settings[enable_tfa_with_disabling]'] = $s->getSetting('enable_tfa_with_disabling'); ?>
                             <select name="settings[enable_tfa_with_disabling]" id="settings[enable_tfa_with_disabling]" class="form-control">
                                 <option value="0">
-                                    <?= $translator->translate('i.no'); ?>
+                                    <?= $translator->translate('no'); ?>
                                 </option>
                                 <option value="1" 
                                     <?php
                                         $s->check_select($body['settings[enable_tfa_with_disabling]'], '1');
                                     ?>>
-                                    <?= $translator->translate('i.yes'); ?>
+                                    <?= $translator->translate('yes'); ?>
                                 </option>
                             </select>
                         </div>

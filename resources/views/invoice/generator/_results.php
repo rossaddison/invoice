@@ -18,7 +18,7 @@ echo $alert;
 
 ?>
 <?= Html::tag('h1')
-    ->content(Html::encode($translator->translate('invoice.generator')));
+    ->content(Html::encode($translator->translate('generator')));
 ?>
 <?= Html::openTag('div'); ?>    
     <?php

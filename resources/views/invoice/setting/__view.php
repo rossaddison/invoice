@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('invoice.setting.form'); ?>
+<?= $translator->translate('setting.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
     Form::tag()
@@ -41,18 +41,18 @@ use Yiisoft\Html\Tag\Form;
 <?= $button::backSave(); ?>
 <?= Html::openTag('div', ['class' => 'card']); ?>
 <?= Field::text($form, 'setting_key')
-    ->label($translator->translate('invoice.setting.key'))
+    ->label($translator->translate('setting.key'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.setting.key'),
+        'placeholder' => $translator->translate('setting.key'),
         'value' => Html::encode($form->getSetting_key() ?? ''),
         'id' => 'setting_key'
     ])
     ->disabled(true);
 ?>
 <?= Field::text($form, 'setting_value')
-    ->label($translator->translate('invoice.setting.value'))
+    ->label($translator->translate('setting.value'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.setting.value'),
+        'placeholder' => $translator->translate('setting.value'),
         'value' => Html::encode($form->getSetting_value() ?? ''),
         'id' => 'setting_value'
     ])

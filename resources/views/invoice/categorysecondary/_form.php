@@ -50,17 +50,17 @@ use Yiisoft\Html\Tag\Form;
                                              <?= Field::select($form, 'category_primary_id')
                                                 ->addInputAttributes(['class' => 'form-control'])
                                                 ->value($form->getCategory_primary_id())
-                                                ->prompt($translator->translate('i.none'))
+                                                ->prompt($translator->translate('none'))
                                                 ->optionsData($category_primarys); ?>
                                        <?= Html::closeTag('div'); ?>
                                        <?= Html::openTag('div'); ?>
                                             <?= Field::text($form,'name')
-                                                ->label($translator->translate('i.name'))
+                                                ->label($translator->translate('name'))
                                                 ->addInputAttributes([
                                                     'class' => 'form-control'
                                                 ])
                                                ->value(Html::encode($form->getname()))
-                                               ->placeholder($translator->translate('i.name')); ?>
+                                               ->placeholder($translator->translate('name')); ?>
                                        <?= Html::closeTag('div'); ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>

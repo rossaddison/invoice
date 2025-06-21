@@ -80,7 +80,7 @@ declare(strict_types=1);
     public function linkedin(string $linkedInAuthUrl) : string {       
         return A::tag()
         ->addClass('btn btn-info bi bi-linkedin')
-        ->content(' '.$this->translator->translate('invoice.invoice.continue.with.linkedin'))
+        ->content(' '.$this->translator->translate('continue.with.linkedin'))
         ->href($linkedInAuthUrl)
         ->id('btn-linkedin')
         ->render();

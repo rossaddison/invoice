@@ -28,13 +28,13 @@ class ClientHelper
     public function format_gender(int $gender, Translator $t): string
     {
         if ($gender == 0) {
-            return $t->translate('i.gender_male');
+            return $t->translate('gender.male');
         }
 
         if ($gender == 1) {
-            return $t->translate('i.gender_female');
+            return $t->translate('gender.female');
         }
 
-        return $t->translate('i.gender_other');
+        return $t->translate('gender.other');
     }
 }

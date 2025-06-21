@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('i.tasks_form'); ?>
+<?= $translator->translate('tasks.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
@@ -39,62 +39,62 @@ use Yiisoft\Html\Tag\Form;
 ?> 
 <?= Html::openTag('div'); ?>
     <?= Field::text($form, 'name')
-        ->label($translator->translate('i.name'))
+        ->label($translator->translate('name'))
         ->required(true)
         ->addInputAttributes([
             'readonly' => 'readonly',
             'disabled' => 'disabled'
         ])
         ->value(Html::encode($form->getName()))
-        ->placeholder($translator->translate('i.name'));
+        ->placeholder($translator->translate('name'));
 ?>
     <?= Html::tag('br'); ?>
     <?= Field::text($form, 'description')
-    ->label($translator->translate('i.description'))
+    ->label($translator->translate('description'))
     ->required(true)
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
     ->value(Html::encode($form->getDescription()))
-    ->placeholder($translator->translate('i.description'))
+    ->placeholder($translator->translate('description'))
 ?>                    
     <?= Html::tag('br'); ?>
     <?= Field::select($form, 'project_id')
-    ->label($translator->translate('i.project'))
+    ->label($translator->translate('project'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
     ->optionsData($projects)
     ->value($form->getProject_id())
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
 ?>
     <?= Html::tag('br'); ?>
     <?= Field::select($form, 'tax_rate_id')
-    ->label($translator->translate('i.tax_rate'))
+    ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
     ->optionsData($taxRates)
     ->value($form->getTax_rate_id())
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
 ?>
     <?= Html::tag('br'); ?>
     <?= Field::text($form, 'price')
-    ->label($translator->translate('i.price'))
+    ->label($translator->translate('price'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
     ])
     ->value($s->format_amount(($form->getPrice() ?? 0.00)))
-    ->placeholder($translator->translate('i.price'))
-    ->hint($translator->translate('invoice.hint.this.field.is.required')); ?>         
+    ->placeholder($translator->translate('price'))
+    ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::tag('br'); ?>
     <?=
     Field::date($form, 'finish_date')
-    ->label($translator->translate('i.task_finish_date'))
+    ->label($translator->translate('task.finish.date'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
@@ -110,19 +110,19 @@ use Yiisoft\Html\Tag\Form;
     $optionsDataStatus = [];
 $statuses = [
     1 => [
-        'label' => $translator->translate('i.not_started'),
+        'label' => $translator->translate('not.started'),
         'class' => 'draft'
     ],
     2 => [
-        'label' => $translator->translate('i.in_progress'),
+        'label' => $translator->translate('in.progress'),
         'class' => 'viewed'
     ],
     3 => [
-        'label' => $translator->translate('i.complete'),
+        'label' => $translator->translate('complete'),
         'class' => 'sent'
     ],
     4 => [
-        'label' => $translator->translate('i.invoiced'),
+        'label' => $translator->translate('invoiced'),
         'class' => 'paid'
     ]
 ];
@@ -139,7 +139,7 @@ foreach ($statuses as $key => $status) {
 }
 ?>
     <?= Field::select($form, 'status')
-    ->label($translator->translate('i.status'))
+    ->label($translator->translate('status'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'

@@ -103,7 +103,7 @@ final class PaymentController extends BaseController
         ITRR $itrR,
     ): Response {
         $open = $invRepository->open();
-        $invRepository->open_count() == 0 ? $this->flashMessage('danger', $this->translator->translate('invoice.payment.no.invoice.sent')) : '';
+        $invRepository->open_count() == 0 ? $this->flashMessage('danger', $this->translator->translate('payment.no.invoice.sent')) : '';
         $amounts = [];
         $invoice_payment_methods = [];
         /** @var Inv $open_invoice */
@@ -158,7 +158,7 @@ final class PaymentController extends BaseController
                     $inv_id = $payment->getInv_id();
                     // Recalculate the invoice
                     $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     if (isset($body['custom'])) {
                         // Retrieve the custom array
                         /** @var array $custom */
@@ -291,13 +291,13 @@ final class PaymentController extends BaseController
                 $inv_id = $payment->getInv()?->getId();
                 $this->paymentService->deletePayment($payment);
                 $number_helper->calculate_inv((string)$inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                $this->flashMessage('success', $this->translator->translate('invoice.payment.deleted'));
+                $this->flashMessage('success', $this->translator->translate('payment.deleted'));
                 return $this->webService->getRedirectResponse('payment/index');
             }
             return $this->webService->getRedirectResponse('payment/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.payment.cannot.delete'));
+            $this->flashMessage('danger', $this->translator->translate('payment.cannot.delete'));
             return $this->webService->getRedirectResponse('payment/index');
         }
     }
@@ -346,7 +346,7 @@ final class PaymentController extends BaseController
             $open = $invRepository->open();
             $number_helper = new NumberHelper($this->sR);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'payment/edit',
                 'actionArguments' => ['id' => $payment_id],
                 'alert' => $this->alert(),
@@ -391,7 +391,7 @@ final class PaymentController extends BaseController
                             }
                         }
                         $number_helper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('payment/index');
                     }
                     if (null !== $form) {
@@ -868,7 +868,7 @@ final class PaymentController extends BaseController
             $paymentId = $payment->getId();
             $form = new PaymentForm($payment);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'payment/edit',
                 'actionArguments' => ['id' => $paymentId],
                 'errors' => [],

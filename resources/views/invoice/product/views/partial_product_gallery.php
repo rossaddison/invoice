@@ -14,14 +14,14 @@ declare(strict_types=1);
  */
 
 if ($invEdit && $invView) {
-    $this->setTitle($translator->translate('invoice.productimage.gallery'));
+    $this->setTitle($translator->translate('productimage.gallery'));
 }
 ?>
 
 <div class="panel panel-default no-margin">
   <div class="panel-heading">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(9);?>">
-        <?= $translator->translate('invoice.productimage.gallery'); ?>
+        <?= $translator->translate('productimage.gallery'); ?>
         <?= $product->getProduct_name(); ?></i>
   </div>
   <div class="panel-body clearfix">

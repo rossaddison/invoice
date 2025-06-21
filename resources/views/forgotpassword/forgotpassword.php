@@ -35,7 +35,7 @@ $this->setTitle($translator->translate('password.reset.request.token'));
                         ->open();
 ?>
                     <?= Field::email($formModel, 'email')
-    ->label($translator->translate('i.email'))
+    ->label($translator->translate('email'))
     ->autofocus()
 ?>
                     <?= Field::submitButton()

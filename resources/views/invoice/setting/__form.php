@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('invoice.setting.form'); ?>
+<?= $translator->translate('setting.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
     Form::tag()
@@ -45,32 +45,32 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card']); ?>
 <?= Field::errorSummary($form)
     ->errors($errors)
-    ->header($translator->translate('invoice.setting.error.summary'))
+    ->header($translator->translate('setting.error.summary'))
     ->onlyProperties(...['setting_key', 'setting_value'])
     ->onlyCommonErrors()
 ?>
 
 <?= Field::text($form, 'setting_key')
-    ->label($translator->translate('invoice.setting.key'))
+    ->label($translator->translate('setting.key'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.setting.key'),
+        'placeholder' => $translator->translate('setting.key'),
         'value' => Html::encode($form->getSetting_key() ?? ''),
         'class' => 'form-control',
         'id' => 'setting_key'
     ])
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Field::text($form, 'setting_value')
-    ->label($translator->translate('invoice.setting.value'))
+    ->label($translator->translate('setting.value'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.setting.value'),
+        'placeholder' => $translator->translate('setting.value'),
         'value' => Html::encode($form->getSetting_value() ?? ''),
         'class' => 'form-control',
         'id' => 'setting_value'
     ])
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
 <?= Form::tag()->close(); ?>

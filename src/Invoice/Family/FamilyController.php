@@ -93,7 +93,7 @@ final class FamilyController extends BaseController
         $family = new Family();
         $form = new FamilyForm($family);
         $parameters = [
-            'title' => $this->translator->translate('invoice.search.family'),
+            'title' => $this->translator->translate('search.family'),
             'form' => $form,
             'actionName' => 'family/search',
             'actionArguments' => [],
@@ -116,7 +116,7 @@ final class FamilyController extends BaseController
         $family = new Family();
         $form = new FamilyForm($family);
         $parameters = [
-            'title' => $this->translator->translate('i.add_family'),
+            'title' => $this->translator->translate('add.family'),
             'actionName' => 'family/add',
             'actionArguments' => [],
             'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
@@ -211,7 +211,7 @@ final class FamilyController extends BaseController
         if ($family) {
             $form = new FamilyForm($family);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
                 'actionArguments' => ['id' => $family->getFamily_id()],
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
@@ -251,7 +251,7 @@ final class FamilyController extends BaseController
             return $this->webService->getRedirectResponse('family/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.family.history'));
+            $this->flashMessage('danger', $this->translator->translate('family.history'));
             return $this->webService->getRedirectResponse('family/index');
         }
     }
@@ -268,7 +268,7 @@ final class FamilyController extends BaseController
         if ($family) {
             $form = new FamilyForm($family);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'family/view',
                 'actionArguments' => ['id' => $family->getFamily_id()],
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),

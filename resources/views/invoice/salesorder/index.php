@@ -43,7 +43,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.salesorder'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('salesorder'))
             )
     )
     ->render();
@@ -66,14 +66,14 @@ $toolbar = Div::tag();
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 0]); ?>"
                    class="btn <?php echo $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.all'); ?>
+                    <?= $translator->translate('all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 1]); ?>" style="text-decoration:none"
                    class="btn <?php echo $status == 1 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(1) ?>">
                     <?= $soR->getSpecificStatusArrayLabel('1');  ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
-                   data-bs-toggle = "tooltip" title="<?= $s->getSetting('debug_mode') === '1' ? $translator->translate('invoice.payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
+                   data-bs-toggle = "tooltip" title="<?= $s->getSetting('debug_mode') === '1' ? $translator->translate('payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
                    class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(2) ?>">
                     <?= $soR->getSpecificStatusArrayLabel('2'); ?>
                 </a>
@@ -117,14 +117,14 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static function (SalesOrder $model): string {
                 return (string) $model->getId();
             }
         ),
         new DataColumn(
             'status_id',
-            header: $translator->translate('i.status'),
+            header: $translator->translate('status'),
             content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
                 $statusId = $model->getStatus_id();
                 if (null !== $statusId) {
@@ -158,7 +158,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'date_created',
-            header: $translator->translate('i.date_created'),
+            header: $translator->translate('date.created'),
             content: static function (SalesOrder $model) use ($dateHelper): string {
                 /**
                  * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
@@ -171,7 +171,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'client_id',
-            header: $translator->translate('i.client'),
+            header: $translator->translate('client'),
             content:static function (SalesOrder $model): string {
                 $clientName = $model->getClient()?->getClient_name();
                 if (null !== $clientName) {
@@ -183,7 +183,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'id',
-            header: $translator->translate('i.total'),
+            header: $translator->translate('total'),
             content: function (SalesOrder $model) use ($s, $soaR): string {
                 $so_id = $model->getId();
                 $so_amount = (($soaR->repoSalesOrderAmountCount((string)$so_id) > 0) ? $soaR->repoSalesOrderquery((string)$so_id) : null);
@@ -191,7 +191,7 @@ $toolbar = Div::tag();
             }
         ),
         new DataColumn(
-            header: $translator->translate('i.view'),
+            header: $translator->translate('view'),
             content: static function (SalesOrder $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), []);
             }
@@ -203,7 +203,7 @@ $grid_summary =  $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.salesorders'),
+    $translator->translate('salesorders'),
     (string)$so_statuses[$status]['label']
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open() .
@@ -221,7 +221,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'salesorder').' '.$grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
 

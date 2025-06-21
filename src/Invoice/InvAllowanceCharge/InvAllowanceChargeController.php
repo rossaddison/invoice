@@ -57,7 +57,7 @@ final class InvAllowanceChargeController extends BaseController
         $inv_id = $currentRoute->getArgument('inv_id');
         $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'invallowancecharge/add',
             'actionArguments' => ['inv_id' => $inv_id],
             'errors' => [],
@@ -108,7 +108,7 @@ final class InvAllowanceChargeController extends BaseController
             $invallowancecharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
             if ($invallowancecharge) {
                 $this->invallowancechargeService->deleteInvAllowanceCharge($invallowancecharge);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('invallowancecharge/index');
             }
             return $this->webService->getRedirectResponse('invallowancecharge/index');
@@ -138,7 +138,7 @@ final class InvAllowanceChargeController extends BaseController
             $inv_id = $invAllowanceCharge->getInv_id();
             $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
             $parameters = [
-                'title' => $this->translator->translate('invoice.invoice.allowance.or.charge'),
+                'title' => $this->translator->translate('allowance.or.charge'),
                 'action' => ['invallowancecharge/edit', ['id' => $invAllowanceCharge->getId()]],
                 'errors' => [],
                 'form' => $form,
@@ -201,7 +201,7 @@ final class InvAllowanceChargeController extends BaseController
             $inv_id = $invAllowanceCharge->getInv_id();
             $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'action' => ['invallowancecharge/view', ['id' => $invAllowanceCharge->getId()]],
                 'form' => $form,
                 'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),

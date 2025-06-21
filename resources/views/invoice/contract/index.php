@@ -40,7 +40,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.invoice.contract')))
+                        ->content(' ' . Html::encode($translator->translate('contract')))
                         ->encode(true)
             )
     )
@@ -57,7 +57,7 @@ $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('invoice.invoice.contract.contracts'); ?>
+        <?= $translator->translate('contract.contracts'); ?>
     <?= Html::closeTag('h5'); ?>    
 <?= Html::closeTag('div'); ?>
 
@@ -66,12 +66,12 @@ $toolbar = Div::tag();
         $columns = [
             new DataColumn(
                 'id',
-                header: $translator->translate('i.id'),
+                header: $translator->translate('id'),
                 content: static fn (Contract $model) => Html::encode($model->getId())
             ),
             new DataColumn(
                 'id',
-                header: $translator->translate('invoice.invoice.contract.index.button.list'),
+                header: $translator->translate('contract.index.button.list'),
                 content: static function (Contract $model) use ($urlGenerator, $iR): string {
                     $modelId = $model->getId();
                     if (null !== $modelId) {
@@ -101,7 +101,7 @@ $toolbar = Div::tag();
             ),
             new DataColumn(
                 'client_id',
-                header: $translator->translate('i.client'),
+                header: $translator->translate('client'),
                 content: static function (Contract $model) use ($cR): string {
                     $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
                     return $client;
@@ -109,22 +109,22 @@ $toolbar = Div::tag();
             ),
             new DataColumn(
                 'name',
-                header: $translator->translate('invoice.invoice.contract.name'),
+                header: $translator->translate('contract.name'),
                 content: static fn (Contract $model): string => Html::encode($model->getName())
             ),
             new DataColumn(
                 'reference',
-                header: $translator->translate('invoice.invoice.contract.reference'),
+                header: $translator->translate('contract.reference'),
                 content: static fn (Contract $model): string => Html::encode($model->getReference())
             ),
             new DataColumn(
                 'period_start',
-                header: $translator->translate('invoice.invoice.contract.period.start'),
+                header: $translator->translate('contract.period.start'),
                 content: static fn (Contract $model): string => ($model->getPeriod_start())->format('Y-m-d')
             ),
             new DataColumn(
                 'period_end',
-                header: $translator->translate('invoice.invoice.contract.period.end'),
+                header: $translator->translate('contract.period.end'),
                 content: static fn (Contract $model): string => ($model->getPeriod_end())->format('Y-m-d')
             ),
             new ActionColumn(buttons: [
@@ -135,7 +135,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('i.view'),
+                        'title' => $translator->translate('view'),
                     ]
                 ),
                 new ActionButton(
@@ -145,7 +145,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('i.edit'),
+                        'title' => $translator->translate('edit'),
                     ]
                 ),
                 new ActionButton(
@@ -154,8 +154,8 @@ $toolbar = Div::tag();
                         return $urlGenerator->generate('contract/delete', ['id' => $model->getId()]);
                     },
                     attributes: [
-                        'title' => $translator->translate('i.delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                        'title' => $translator->translate('delete'),
+                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                     ]
                 ),
             ]),
@@ -170,7 +170,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.invoice.contracts'),
+    $translator->translate('contracts'),
     ''
 );
 echo GridView::widget()
@@ -185,6 +185,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

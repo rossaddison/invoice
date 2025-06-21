@@ -71,7 +71,7 @@ final class ProjectController extends BaseController
         $project = new Project();
         $form = new ProjectForm($project);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'project/add',
             'actionArguments' => [],
             'errors' => [],
@@ -112,7 +112,7 @@ final class ProjectController extends BaseController
         if ($project) {
             $form = new ProjectForm($project);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'project/edit',
                 'actionArguments' => ['id' => $project->getId()],
                 'errors' => [],
@@ -147,7 +147,7 @@ final class ProjectController extends BaseController
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
             $this->projectService->deleteProject($project);
-            $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
         }
         return $this->webService->getRedirectResponse('project/index');
     }
@@ -163,7 +163,7 @@ final class ProjectController extends BaseController
         if ($project) {
             $form = new ProjectForm($project);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'project/view',
                 'actionArguments' => ['id' => $project->getId()],
                 'form' => $form,
@@ -181,7 +181,7 @@ final class ProjectController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('project/index');
         }
         return $canEdit;

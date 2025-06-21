@@ -224,65 +224,65 @@ final class SalesOrderRepository extends Select\Repository
     {
         return [
             '0' => [
-                'label' => $translator->translate('i.all'),
+                'label' => $translator->translate('all'),
                 'class' => 'all',
                 'href' => 0,
             ],
             '1' => [
-                'label' => $translator->translate('i.draft'),
+                'label' => $translator->translate('draft'),
                 'class' => 'draft',
                 'href' => 1,
             ],
             '2' => [
                 // Terms Agreement required
-                'label' => $translator->translate('invoice.salesorder.sent.to.customer'),
+                'label' => $translator->translate('salesorder.sent.to.customer'),
                 'class' => 'sent',
                 'href' => 2,
             ],
             '3' => [
                 // Client Confirmed Terms
-                'label' => $translator->translate('invoice.salesorder.client.confirmed.terms'),
+                'label' => $translator->translate('salesorder.client.confirmed.terms'),
                 'class' => 'viewed',
                 'href' => 3,
             ],
             '4' => [
                 // Assembled/Packaged/Prepared
-                'label' => $translator->translate('invoice.salesorder.assembled.packaged.prepared'),
+                'label' => $translator->translate('salesorder.assembled.packaged.prepared'),
                 'class' => 'assembled',
                 'href' => 4,
             ],
             '5' => [
                 // Goods/Services Delivered
-                'label' => $translator->translate('invoice.salesorder.goods.services.delivered'),
+                'label' => $translator->translate('salesorder.goods.services.delivered'),
                 'class' => 'approved',
                 'href' => 5,
             ],
             '6' => [
                 // Customer Confirmed Delivery
-                'label' => $translator->translate('invoice.salesorder.goods.services.confirmed'),
+                'label' => $translator->translate('salesorder.goods.services.confirmed'),
                 // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'confirmed',
                 'href' => 6,
             ],
             '7' => [
-                'label' => $translator->translate('invoice.salesorder.invoice.generate'),
+                'label' => $translator->translate('salesorder.invoice.generate'),
                 // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'generate',
                 'href' => 7,
             ],
             '8' => [
-                'label' => $translator->translate('invoice.salesorder.invoice.generated'),
+                'label' => $translator->translate('salesorder.invoice.generated'),
                 // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'generated',
                 'href' => 8,
             ],
             '9' => [
-                'label' => $translator->translate('i.rejected'),
+                'label' => $translator->translate('rejected'),
                 'class' => 'rejected',
                 'href' => 9,
             ],
             '10' => [
-                'label' => $translator->translate('i.canceled'),
+                'label' => $translator->translate('canceled'),
                 'class' => 'canceled',
                 'href' => 10,
             ],

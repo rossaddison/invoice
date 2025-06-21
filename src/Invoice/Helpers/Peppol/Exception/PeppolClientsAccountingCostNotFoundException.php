@@ -19,7 +19,7 @@ final class PeppolClientsAccountingCostNotFoundException extends \RuntimeExcepti
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.client.peppol.not.found.accounting.cost');
+        return $this->translator->translate('client.peppol.not.found.accounting.cost');
     }
 
     /**

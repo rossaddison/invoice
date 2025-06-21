@@ -47,13 +47,13 @@ final class PostalAddressForm extends FormModel
     public function getPropertyLabels(): array
     {
         return [
-            'street_name' => $this->translator->translate('invoice.client.postaladdress.street.name'),
-            'additional_street_name' => $this->translator->translate('invoice.client.postaladdress.additional.street.name'),
-            'building_number' => $this->translator->translate('invoice.client.postaladdress.building.number'),
-            'city_name' => $this->translator->translate('invoice.client.postaladdress.city.name'),
-            'postalzone' => $this->translator->translate('invoice.client.postaladdress.postalzone'),
-            'countrysubentity' => $this->translator->translate('invoice.client.postaladdress.countrysubentity'),
-            'country' => $this->translator->translate('invoice.client.postaladdress.country'),
+            'street_name' => $this->translator->translate('client.postaladdress.street.name'),
+            'additional_street_name' => $this->translator->translate('client.postaladdress.additional.street.name'),
+            'building_number' => $this->translator->translate('client.postaladdress.building.number'),
+            'city_name' => $this->translator->translate('client.postaladdress.city.name'),
+            'postalzone' => $this->translator->translate('client.postaladdress.postalzone'),
+            'countrysubentity' => $this->translator->translate('client.postaladdress.countrysubentity'),
+            'country' => $this->translator->translate('client.postaladdress.country'),
         ];
     }
 

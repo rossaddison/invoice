@@ -169,7 +169,7 @@ final class InvSentLogController extends BaseController
         if ($invsentlog) {
             $form = new InvSentLogForm($invsentlog);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'invsentlog/view',
                 'actionArguments' => ['id' => $id],
                 'form' => $form,

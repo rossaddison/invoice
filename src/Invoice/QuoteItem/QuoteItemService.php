@@ -50,7 +50,7 @@ final readonly class QuoteItemService
                                       (string)$array['description'] :
                                       $product->getProduct_description());
 
-            null !== $description ? $model->setDescription($description) : $model->setDescription($translator->translate('invoice.not.available')) ;
+            null !== $description ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available')) ;
         }
         isset($array['quantity']) ? $model->setQuantity((float)$array['quantity']) : '';
         isset($array['price']) ? $model->setPrice((float)$array['price']) : '';
@@ -101,7 +101,7 @@ final readonly class QuoteItemService
                 // If the user has changed the description on the form => override default product description
                 $description = ((isset($array['description'])) ?
                                           (string)$array['description'] :
-                                          ($product->getProduct_description() ?? $translator->translate('invoice.not.available')));
+                                          ($product->getProduct_description() ?? $translator->translate('not.available')));
                 $model->setDescription($description);
             }
         }

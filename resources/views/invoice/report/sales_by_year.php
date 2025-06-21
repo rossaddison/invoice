@@ -25,25 +25,25 @@ $this->beginPage();
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $translator->translate('i.cldr'); ?>">
+<html lang="<?= $translator->translate('cldr'); ?>">
 
 <body>
 <?php $this->beginBody() ?>   
 <h3 class="report_title">
-    <?= Html::encode($translator->translate('i.sales_by_date')); ?>
+    <?= Html::encode($translator->translate('sales.by.date')); ?>
     <br/>
     <small><?= Html::encode($from_date  . ' - ' . $to_date); ?></small>
 </h3>
 
 <table>
     <tr>
-        <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.vat_id')); ?></th>
-        <th style="width:50%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.name')); ?></th>
-        <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.sales')); ?></th>
-        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.item_tax')); ?></th>
-        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.invoice_tax')); ?></th>
-        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.sales_with_tax')); ?></th>
-        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('i.paid')); ?></th>
+        <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('vat.id')); ?></th>
+        <th style="width:50%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('name')); ?></th>
+        <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('sales')); ?></th>
+        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('item.tax')); ?></th>
+        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('invoice.tax')); ?></th>
+        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('sales.with.tax')); ?></th>
+        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('paid')); ?></th>
     </tr>
     <?php
         /**
@@ -75,7 +75,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q1'). '/'.(string)$result['year']); ?></td>
+            <?= Html::encode($translator->translate('Q1'). '/'.(string)$result['year']); ?></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->format_currency($result['quarters']['first']['sales_no_tax'] ?? 0.00)); ?></td>
@@ -90,7 +90,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q2').'/'.(string)$result['year']); ?>
+            <?= Html::encode($translator->translate('Q2').'/'.(string)$result['year']); ?>
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
@@ -106,7 +106,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q3').'/'.(string)$result['year']); ?>
+            <?= Html::encode($translator->translate('Q3').'/'.(string)$result['year']); ?>
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
@@ -122,7 +122,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td  style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('i.Q4').'/'.(string)$result['year']); ?>
+            <?= Html::encode($translator->translate('Q4').'/'.(string)$result['year']); ?>
         </td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">

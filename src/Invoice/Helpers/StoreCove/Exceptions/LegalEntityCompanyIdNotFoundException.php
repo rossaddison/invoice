@@ -16,7 +16,7 @@ final class LegalEntityCompanyIdNotFoundException extends \RuntimeException impl
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.storecove.legal.entity.identifier.not.found');
+        return $this->translator->translate('storecove.legal.entity.identifier.not.found');
     }
 
     /**

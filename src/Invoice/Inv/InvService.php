@@ -103,7 +103,7 @@ final readonly class InvService
         isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
         isset($array['payment_method']) ? $model->setPayment_method((int)$array['payment_method']) : '';
         isset($array['terms']) ? $model->setTerms((string)$array['terms'])
-                                 : $this->translator->translate('invoice.payment.term.general');
+                                 : $this->translator->translate('payment.term.general');
         isset($array['note']) ? $model->setNote((string)$array['note']) : '';
         isset($array['document_description']) ? $model->setDocumentDescription((string)$array['document_description']) : '';
         isset($array['creditinvoice_parent_id']) ? $model->setCreditinvoice_parent_id((int)$array['creditinvoice_parent_id'] ?: 0) : '';
@@ -155,7 +155,7 @@ final readonly class InvService
         $model->setNumber((string)$array['number']);
         $model->setDiscount_amount((float)$array['discount_amount']);
         $model->setDiscount_percent((float)$array['discount_percent']);
-        $model->setTerms((string)$array['terms'] ?: $this->translator->translate('invoice.payment.term.general'));
+        $model->setTerms((string)$array['terms'] ?: $this->translator->translate('payment.term.general'));
         $model->setNote((string)$array['note']);
         $model->setDocumentDescription((string)$array['document_description']);
         $model->setUrl_key((string)$array['url_key']);

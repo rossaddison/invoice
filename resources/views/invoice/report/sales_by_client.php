@@ -25,24 +25,24 @@ $assetManager->register(ReportAsset::class);
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html lang="<?= $translator->translate('i.cldr'); ?>">
+<html lang="<?= $translator->translate('cldr'); ?>">
 <head>
-    <title><?= $translator->translate('i.sales_by_client'); ?></title>
+    <title><?= $translator->translate('sales.by.client'); ?></title>
 </head>
 <body>
 <?php $this->beginBody() ?>
 <h3 class="report_title">
-    <?= $translator->translate('i.sales_by_client'); ?><br/>
+    <?= $translator->translate('sales.by.client'); ?><br/>
     <small><?= $from_date . ' - ' . $to_date ?></small>
 </h3>
 <table>
     <tr>
-        <th><?= $translator->translate('i.client'); ?></th>
-        <th class="amount"><?= $translator->translate('i.invoice_count'); ?></th>
-        <th class="amount"><?= $translator->translate('i.sales'); ?></th>
-        <th class="amount"><?= $translator->translate('i.item_tax'); ?></th>
-        <th class="amount"><?= $translator->translate('i.invoice_tax'); ?></th>
-        <th class="amount"><?= $translator->translate('i.sales_with_tax'); ?></th>
+        <th><?= $translator->translate('client'); ?></th>
+        <th class="amount"><?= $translator->translate('invoice.count'); ?></th>
+        <th class="amount"><?= $translator->translate('sales'); ?></th>
+        <th class="amount"><?= $translator->translate('item.tax'); ?></th>
+        <th class="amount"><?= $translator->translate('invoice.tax'); ?></th>
+        <th class="amount"><?= $translator->translate('sales.with.tax'); ?></th>
     </tr>
     <?php
         /**

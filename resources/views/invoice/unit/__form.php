@@ -43,30 +43,30 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_id')
-        ->label($translator->translate('i.id'))
+        ->label($translator->translate('id'))
         ->value(Html::encode($form->getUnit_id() ?? ''))
         ->disabled(true)
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name')
-    ->label($translator->translate('i.unit_name'))
+    ->label($translator->translate('unit.name'))
     ->value(Html::encode($form->getUnit_name() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name_plrl')
-    ->label($translator->translate('i.unit_name_plrl'))
+    ->label($translator->translate('unit.name.plrl'))
     ->value(Html::encode($form->getUnit_name_plrl() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

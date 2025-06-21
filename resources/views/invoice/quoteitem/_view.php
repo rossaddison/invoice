@@ -19,7 +19,7 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
 
  <div class="mb3 form-group">
-   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.tax_rate'); ?></label>
+   <label for="tax_rate_id" class="form-label" style="background:lightblue"><?= $translator->translate('tax.rate'); ?></label>
    <?php  $actionNameTax = 'taxrate/view';
 $actionArgumentsTax = ['tax_rate_id' => $quoteitem->getTaxRate()?->getTaxRateId()];
 $taxRateName = $quoteitem->getTaxRate()?->getTaxRateName();
@@ -29,7 +29,7 @@ if (null !== $taxRateName) {
 ?>
  </div>
  <div class="mb3 form-group">
-   <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.product'); ?></label>
+   <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('product'); ?></label>
    <?php  $actionNameProduct = 'product/view';
 $actionArgumentsProduct = ['id' => $quoteitem->getProduct()?->getProduct_id()];
 $productName = $quoteitem->getProduct()?->getProduct_name();
@@ -39,7 +39,7 @@ if (null !== $productName) {
 ?>
  </div>
  <div class="mb3 form-group">
-   <label for="quote_id" class="form-label" style="background:lightblue"><?= $translator->translate('i.quote'); ?></label>
+   <label for="quote_id" class="form-label" style="background:lightblue"><?= $translator->translate('quote'); ?></label>
    <?php  $actionNameQuote = 'quote/view';
 $actionArgumentsQuote = ['id' => $quoteitem->getQuote()?->getId()];
 $quoteNumber = $quoteitem->getQuote()?->getNumber();

@@ -23,13 +23,13 @@ use Yiisoft\Html\Tag\Form;
  */
 
 if ($invEdit && $invView) {
-    $this->setTitle($translator->translate('i.add_files'));
+    $this->setTitle($translator->translate('add.files'));
 }
 ?>
 
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
-        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(8);?>"><?= $translator->translate('invoice.productimage.upload'); ?></i>
+        <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(8);?>"><?= $translator->translate('productimage.upload'); ?></i>
     </div>
     <div class="panel-body clearfix">
         <div class="container">

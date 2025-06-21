@@ -20,7 +20,7 @@ use Yiisoft\Html\Html;
         <div class="mb-3 form-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <?= $translator->translate('i.custom_fields'); ?>
+                    <?= $translator->translate('custom.fields'); ?>
                 </div>
                 <div>
                     <?= Html::openTag('div', ['class' => 'row']); ?>

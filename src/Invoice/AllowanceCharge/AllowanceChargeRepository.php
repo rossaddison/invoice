@@ -124,8 +124,8 @@ final class AllowanceChargeRepository extends Select\Repository
         foreach ($allowanceCharges as $allowanceCharge) {
             $key = $allowanceCharge->getId();
             $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
-            ? $this->translator->translate('invoice.invoice.allowance.or.charge.charge')
-            : $this->translator->translate('invoice.invoice.allowance.or.charge.allowance')) .
+            ? $this->translator->translate('allowance.or.charge.charge')
+            : $this->translator->translate('allowance.or.charge.allowance')) .
             '  ' . $allowanceCharge->getReasonCode() .
             ' ' .
             $allowanceCharge->getReason()) : '';

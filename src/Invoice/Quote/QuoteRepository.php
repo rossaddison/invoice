@@ -254,37 +254,37 @@ final class QuoteRepository extends Select\Repository
     {
         return [
             '0' => [
-                'label' => $translator->translate('i.all'),
+                'label' => $translator->translate('all'),
                 'class' => 'all',
                 'href' => 0,
             ],
             '1' => [
-                'label' => $translator->translate('i.draft'),
+                'label' => $translator->translate('draft'),
                 'class' => 'draft',
                 'href' => 1,
             ],
             '2' => [
-                'label' => $translator->translate('i.sent'),
+                'label' => $translator->translate('sent'),
                 'class' => 'sent',
                 'href' => 2,
             ],
             '3' => [
-                'label' => $translator->translate('i.viewed'),
+                'label' => $translator->translate('viewed'),
                 'class' => 'viewed',
                 'href' => 3,
             ],
             '4' => [
-                'label' => $translator->translate('i.approved'),
+                'label' => $translator->translate('approved'),
                 'class' => 'approved',
                 'href' => 4,
             ],
             '5' => [
-                'label' => $translator->translate('i.rejected'),
+                'label' => $translator->translate('rejected'),
                 'class' => 'rejected',
                 'href' => 5,
             ],
             '6' => [
-                'label' => $translator->translate('i.canceled'),
+                'label' => $translator->translate('canceled'),
                 'class' => 'canceled',
                 'href' => 6,
             ],

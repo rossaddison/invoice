@@ -33,7 +33,7 @@ class Party implements XmlSerializable
              * XPath test: cbc:EndpointID
              * Error message: Buyer electronic address MUST be provided
              */
-            throw new InvalidArgumentException($this->translator->translate('invoice.peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
+            throw new InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
         }
     }
 

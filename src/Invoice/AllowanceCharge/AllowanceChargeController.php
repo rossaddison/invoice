@@ -57,7 +57,7 @@ final class AllowanceChargeController extends BaseController
         $peppolArrays = new PeppolArrays();
         $allowances = $peppolArrays->getAllowancesSubsetArray();
         $parameters = [
-            'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
+            'title' => $this->translator->translate('allowance.or.charge.add'),
             'actionName' => 'allowancecharge/add_allowance',
             'actionArguments' => [],
             'allowances' => $allowances,
@@ -93,7 +93,7 @@ final class AllowanceChargeController extends BaseController
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             $parameters['form'] = $form;
@@ -118,7 +118,7 @@ final class AllowanceChargeController extends BaseController
         $peppolArrays = new PeppolArrays();
         $charges = $peppolArrays->getChargesArray();
         $parameters = [
-            'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.add'),
+            'title' => $this->translator->translate('allowance.or.charge.add'),
             'actionName' => 'allowancecharge/add_charge',
             'actionArguments' => [],
             'errors' => [],
@@ -155,7 +155,7 @@ final class AllowanceChargeController extends BaseController
             $form = new AllowanceChargeForm($allowanceCharge);
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             $parameters['form'] = $form;
@@ -196,7 +196,7 @@ final class AllowanceChargeController extends BaseController
             $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
             if ($allowanceCharge) {
                 $this->allowanceChargeService->deleteAllowanceCharge($allowanceCharge);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             return $this->webService->getRedirectResponse('allowancecharge/index');
@@ -229,7 +229,7 @@ final class AllowanceChargeController extends BaseController
                 $peppolArrays = new PeppolArrays();
                 $allowances = $peppolArrays->getAllowancesSubsetArray();
                 $parameters = [
-                    'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.allowance'),
+                    'title' => $this->translator->translate('allowance.or.charge.edit.allowance'),
                     'actionName' => 'allowancecharge/edit_allowance',
                     'actionArguments' => ['id' => $allowanceCharge->getId()],
                     'errors' => [],
@@ -240,7 +240,7 @@ final class AllowanceChargeController extends BaseController
                 if ($request->getMethod() === Method::POST) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('allowancecharge/index');
                     }
                     $parameters['form'] = $form;
@@ -274,7 +274,7 @@ final class AllowanceChargeController extends BaseController
             $peppolArrays = new PeppolArrays();
             $charges = $peppolArrays->getChargesArray();
             $parameters = [
-                'title' => $this->translator->translate('invoice.invoice.allowance.or.charge.edit.charge'),
+                'title' => $this->translator->translate('allowance.or.charge.edit.charge'),
                 'actionName' => 'allowancecharge/edit_allowance',
                 'actionArguments' => ['id' => $allowanceCharge->getId()],
                 'errors' => [],
@@ -287,7 +287,7 @@ final class AllowanceChargeController extends BaseController
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('allowancecharge/index');
                     }
                     $parameters['form'] = $form;
@@ -336,7 +336,7 @@ final class AllowanceChargeController extends BaseController
         if ($allowanceCharge) {
             $form = new AllowanceChargeForm($allowanceCharge);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'allowancecharge/view',
                 'actionArguments' => ['id' => $allowanceCharge->getId()],
                 'form' => $form,

@@ -179,6 +179,8 @@ return [
             '@baseUrl' => '',
             '@hmrc' => '@resources/backend/views/hmrc',
             '@messages' => '@resources/messages',
+            '@English' => '@src/Invoice/Language/English',
+            '@generated' => '@views/invoice/generator/output_overwrite',
             '@npm' => '@root/node_modules',
             '@public' => '@root/public',
             '@resources' => '@root/resources',

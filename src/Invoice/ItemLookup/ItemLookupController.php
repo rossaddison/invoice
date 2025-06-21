@@ -66,7 +66,7 @@ final class ItemLookupController extends BaseController
         $itemLookup = new ItemLookup();
         $form = new ItemLookupForm($itemLookup);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'itemlookup/add',
             'actionArguments' => [],
             'errors' => [],
@@ -103,7 +103,7 @@ final class ItemLookupController extends BaseController
         if (null !== $lookup) {
             $form = new ItemLookupForm($lookup);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'itemlookup/edit',
                 'actionArguments' => ['id' => $lookup->getId()],
                 'errors' => [],
@@ -155,7 +155,7 @@ final class ItemLookupController extends BaseController
         if (null !== $itemLookup) {
             $form = new ItemLookupForm($itemLookup);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'itemlookup/view',
                 'actionArguments' => ['id' => $itemLookup->getId()],
                 'form' => $form,
@@ -172,7 +172,7 @@ final class ItemLookupController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('itemlookup/index');
         }
         return $canEdit;
