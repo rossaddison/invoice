@@ -15,7 +15,7 @@ use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
 final class GeneratorTruncateCommand extends Command
 {
-    protected static $defaultName = 'invoice/generator/truncate';
+    protected static string $defaultName = 'invoice/generator/truncate';
 
     public function __construct(
         private CycleDependencyProxy $promise,

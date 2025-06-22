@@ -8,6 +8,7 @@ use App\User\User;
 use InvalidArgumentException;
 use Stringable;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +27,7 @@ use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
 final class AssignRoleCommand extends Command
 {
-    protected static $defaultName = 'user/assignRole';
+    protected static string $defaultName = 'user/assignRole';
 
     public function __construct(
         private readonly CycleDependencyProxy $promise,
@@ -46,11 +47,8 @@ final class AssignRoleCommand extends Command
             ->addArgument('userId', InputArgument::REQUIRED, 'User id');
     }
 
-    /**
-     * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
-     */
     #[\Override]
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -83,6 +81,9 @@ final class AssignRoleCommand extends Command
 
             if (null === $role) {
                 $helper = $this->getHelper('question');
+                if (!$helper instanceof QuestionHelper) {
+                    throw new \LogicException('The "question" helper is not an instance of QuestionHelper');
+                }
                 $question = new ConfirmationQuestion('Role doesn\'t exist. Create new one? ', false);
 
                 if (!$helper->ask($input, $output, $question)) {

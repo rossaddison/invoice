@@ -19,7 +19,7 @@ use Yiisoft\Yii\Console\ExitCode;
 
 final class CreateCommand extends Command
 {
-    protected static $defaultName = 'user/create';
+    protected static string $defaultName = 'user/create';
 
     public function __construct(
         private readonly SignupForm $signupForm,

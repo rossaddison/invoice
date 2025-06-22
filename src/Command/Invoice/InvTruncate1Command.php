@@ -29,7 +29,7 @@ use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
 final class InvTruncate1Command extends Command
 {
-    protected static $defaultName = 'invoice/inv/truncate1';
+    protected static string $defaultName = 'invoice/inv/truncate1';
 
     public function __construct(
         private CycleDependencyProxy $promise,

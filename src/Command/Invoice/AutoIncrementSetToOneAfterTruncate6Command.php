@@ -13,7 +13,7 @@ use Yiisoft\Yii\Console\ExitCode;
 
 final class AutoIncrementSetToOneAfterTruncate6Command extends Command
 {
-    protected static $defaultName = 'invoice/autoincrementsettooneafter/truncate6';
+    protected static string $defaultName = 'invoice/autoincrementsettooneafter/truncate6';
 
     public function __construct(
         private DatabaseManager $dbal

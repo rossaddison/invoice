@@ -37,7 +37,7 @@ use Yiisoft\Yii\Console\ExitCode;
 
 final class ItemsCommand extends Command
 {
-    protected static $defaultName = 'invoice/items';
+    protected static string $defaultName = 'invoice/items';
 
     /** @var User[] */
     private array $users = [];
