@@ -14,8 +14,10 @@ echo [1] Run PHP Psalm
 echo [2] Run PHP Psalm on a Specific File
 echo [2a] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
+echo [3a] Composer why-not {repository eg. yiisoft/yii-demo} {patch/minor version e.g. 1.1.1}
 echo [4] Run Composer Update
 echo [4a] Run Node Modules Update
+echo [4b] Run Install or update nvm-windows to the latest version
 echo [5] Run Composer Require Checker
 echo [5a] Run Codeception Tests 
 echo [6] Run 'serve' Command
@@ -41,8 +43,10 @@ if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
+if "%choice%"=="3a" goto composerwhynot
 if "%choice%"=="4" goto composer_update
 if "%choice%"=="4a" goto node_modules_update
+if "%choice%"=="4b" goto nvm_install_or_update
 if "%choice%"=="5" goto require_checker
 if "%choice%"=="5a" goto codeception_tests
 if "%choice%"=="6" goto serve
@@ -168,6 +172,14 @@ composer outdated
 pause
 goto menu
 
+:composerwhynot
+@echo off
+set /p repo="Enter the package name (e.g. vendor/package): "
+set /p version="Enter the version (e.g. 1.0.0): "
+composer why-not %repo% %version%
+pause
+goto menu
+
 :require_checker
 echo Running Composer Require Checker...
 php vendor/bin/composer-require-checker
@@ -187,13 +199,22 @@ pause
 goto menu
 
 :node_modules_update
-cd node_modules
+pushd node_modules
 echo Running Node Modules Update...
 npx npm-check-updates -u
 npm install
+popd
+cd ..
 pause
 goto menu
 
+:nvm_install_or_update
+echo Downloading the latest nvm-windows installer...
+powershell -Command "Invoke-WebRequest -Uri https://github.com/coreybutler/nvm-windows/releases/latest/download/nvm-setup.exe -OutFile nvm-setup.exe"
+echo Running the nvm-windows installer...
+start /wait nvm-setup.exe /SILENT
+del nvm-setup.exe
+echo nvm-windows installation/update complete.
 pause
 goto menu
 

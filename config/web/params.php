@@ -54,7 +54,7 @@ return [
     'middlewares' => [
         RequestCatcherMiddleware::class,
         ErrorCatcher::class,
-        SentryMiddleware::class,
+        //SentryMiddleware::class,
         SessionMiddleware::class,
         CsrfTokenMiddleware::class,
         CookieMiddleware::class,
