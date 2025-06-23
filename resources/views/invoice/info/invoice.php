@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>24th June 2025</b></p>
+<p>Restore Sentry using vcs rossaddison/yii-sentry.</p>
+<p>Next Signup for performance testing with Sentry.</p>
+<p><a href="https://github.com/copilot/share/8a22503c-0024-80a0-8943-1a01404b4166" target="_blank">Topic: Adjusting error handling for PHP 8.4</a></p>
 <p><b>21st June 2025</b></p>
 <p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
 <p>Include hash in WebControllerService function getRedirectResponse</p>

@@ -316,12 +316,7 @@ class GeneratorController extends BaseController
         $filepath = trim($filepath);
 
         // If it already ends with .json (case-insensitive), return as-is
-        return str_ends_with(strtolower($filepath), '.json')
-
-
-
-        // Otherwise, append .json and return
-        ;
+        return str_ends_with(strtolower($filepath), '.json');
     }
 
     /**
@@ -360,12 +355,6 @@ class GeneratorController extends BaseController
     {
         $file = '';
         switch ($type) {
-            case 'ip':
-                $file = self::_IP;
-                break;
-            case 'gateway':
-                $file = self::_GATEWAY;
-                break;
             case 'app':
                 $file = self::_APP;
                 break;
@@ -373,18 +362,6 @@ class GeneratorController extends BaseController
                  * @see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
                  *      $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
                  */
-            case 'a_latest':
-                $file = self::_A_LATEST;
-                break;
-            case 'b_latest':
-                $file = self::_B_LATEST;
-                break;
-            case 'common':
-                $file = self::_COMMON;
-                break;
-            case 'any':
-                $file = self::_ANY;
-                break;
             case 'diff':
                 $file = self::_DIFF;
                 break;

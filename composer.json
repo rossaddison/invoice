@@ -68,6 +68,7 @@
         "rector/rector": "^2.0.18",
         "rossaddison/yii-auth-client": "dev-master",
         "rossaddison/yii-gii": "dev-phpspec-diff",
+        "rossaddison/yii-sentry": "dev-master",
         "sabre/xml": "^4.0.6",
         "setasign/fpdf": "^1.8.6",
         "spomky-labs/otphp": "^11.3", 
@@ -206,7 +207,8 @@
             "type": "composer",
             "url": "https://asset-packagist.org",
             "type": "vcs",
-            "url": "https://github.com/rossaddison/yii-gii"
+            "url": "https://github.com/rossaddison/yii-gii",
+            "url": "https://github.com/rossaddison/yii-sentry"
         }
     ]
 }
