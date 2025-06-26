@@ -83,13 +83,13 @@ final class SalesOrderController extends BaseController
     protected string $controllerName = 'invoice/salesorder';
 
     public function __construct(
-        private DataResponseFactoryInterface $factory,
-        private InvService $invService,
-        private InvCustomService $inv_custom_service,
-        private InvAmountService $invAmountService,
-        private InvItemService $invItemService,
-        private InvTaxRateService $invTaxRateService,
-        private SalesOrderService $salesorderService,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly InvService $invService,
+        private readonly InvCustomService $inv_custom_service,
+        private readonly InvAmountService $invAmountService,
+        private readonly InvItemService $invItemService,
+        private readonly InvTaxRateService $invTaxRateService,
+        private readonly SalesOrderService $salesorderService,
         Session $session,
         SettingRepository $sR,
         ViewRenderer $viewRenderer,

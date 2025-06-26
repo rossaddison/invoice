@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>26th June 2025</b></p>
+<p>Applied rector and included 2 rector options in m.bat</p>
+<p>Removed files no longer needed for Google Translate e.g. ip_lang.php</p>
+<p>Use option 5c with caution i.e. all code is subject to change. First apply 5b i.e. process --dry-run.</p>
 <p><b>24th June 2025</b></p>
 <p>Restore Sentry using vcs rossaddison/yii-sentry.</p>
 <p>Next Signup for performance testing with Sentry.</p>

@@ -42,8 +42,8 @@ final class TaskController extends BaseController
     protected string $controllerName = 'invoice/task';
 
     public function __construct(
-        private TaskService $taskService,
-        private DataResponseFactoryInterface $factory,
+        private readonly TaskService $taskService,
+        private readonly DataResponseFactoryInterface $factory,
         private InvItemService $invitemService,
         SessionInterface $session,
         sR $sR,

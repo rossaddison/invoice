@@ -19,7 +19,9 @@ echo [4] Run Composer Update
 echo [4a] Run Node Modules Update
 echo [4b] Run Install or update nvm-windows to the latest version
 echo [5] Run Composer Require Checker
-echo [5a] Run Codeception Tests 
+echo [5a] Run Codeception Tests
+echo [5b] Run Rector See Potential Changes
+echo [5c] Run Rector Make Changes 
 echo [6] Run 'serve' Command
 echo [7] Run 'user/create' username password
 echo [8] Run 'user/assignRole' role userId 
@@ -49,6 +51,8 @@ if "%choice%"=="4a" goto node_modules_update
 if "%choice%"=="4b" goto nvm_install_or_update
 if "%choice%"=="5" goto require_checker
 if "%choice%"=="5a" goto codeception_tests
+if "%choice%"=="5b" goto rector_see_changes
+if "%choice%"=="5c" goto rector_make_changes
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="7a" goto user_create
@@ -189,6 +193,18 @@ goto menu
 :codeception_tests
 echo Running Codeception Tests...
 php vendor/bin/codecept run
+pause
+goto menu
+
+:rector_see_changes
+echo See changes that Rector Proposes
+php vendor/bin/rector process --dry-run
+pause
+goto menu
+
+:rector_make_changes
+echo Make changes that Rector Proposed 
+php vendor/bin/rector
 pause
 goto menu
 

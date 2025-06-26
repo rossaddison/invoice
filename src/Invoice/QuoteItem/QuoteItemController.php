@@ -39,7 +39,7 @@ final class QuoteItemController extends BaseController
 
     public function __construct(
         private QuoteItemService $quoteitemService,
-        private DataResponseFactoryInterface $factory,
+        private readonly DataResponseFactoryInterface $factory,
         SessionInterface $session,
         SR $sR,
         TranslatorInterface $translator,

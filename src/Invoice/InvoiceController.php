@@ -44,7 +44,6 @@ use App\Invoice\Libraries\Crypt;
 
 final class InvoiceController extends BaseController
 {
-    protected Crypt $crypt;
     // New property for controller name
     protected string $controllerName = 'invoice';
 
@@ -55,11 +54,10 @@ final class InvoiceController extends BaseController
         ViewRenderer $viewRenderer,
         SessionInterface $session,
         SettingRepository $sR,
-        Crypt $crypt,
+        protected Crypt $crypt,
         Flash $flash
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->crypt = $crypt;
     }
 
     /**

@@ -78,22 +78,22 @@ use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryPercentNotFoundExcepti
 use DateTime;
 use DateTimeImmutable;
 
-final class StoreCoveHelper
+final readonly class StoreCoveHelper
 {
-    private readonly DateHelper $datehelper;
+    private DateHelper $datehelper;
 
     public function __construct(
-        private readonly SRepo $s,
-        private readonly DelRepo $delRepo,
-        private readonly IIAR $iiaR,
-        private readonly InvAmount $inv_amount,
-        private readonly DL $delivery_location,
-        private readonly Translator $t,
-        private readonly string $from_currency,
-        private readonly string $to_currency,
-        private readonly string $from_to_manual_input,
-        private readonly string $to_from_manual_input,
-        private readonly Crypt $crypt
+        private SRepo $s,
+        private DelRepo $delRepo,
+        private IIAR $iiaR,
+        private InvAmount $inv_amount,
+        private DL $delivery_location,
+        private Translator $t,
+        private string $from_currency,
+        private string $to_currency,
+        private string $from_to_manual_input,
+        private string $to_from_manual_input,
+        private Crypt $crypt
     ) {
         $this->datehelper = new DateHelper($this->s);
     }

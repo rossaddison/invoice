@@ -139,9 +139,9 @@ final class InvController extends BaseController
 {
     protected string $controllerName = 'invoice/inv';
 
-    private DateHelper $date_helper;
-    private NumberHelper $number_helper;
-    private PdfHelper $pdf_helper;
+    private readonly DateHelper $date_helper;
+    private readonly NumberHelper $number_helper;
+    private readonly PdfHelper $pdf_helper;
 
     /**
      * @param Crypt $crypt
@@ -164,18 +164,18 @@ final class InvController extends BaseController
      * @param WebControllerService $webService
      */
     public function __construct(
-        private Crypt $crypt,
-        private DataResponseFactoryInterface $factory,
-        private DelRepo $delRepo,
-        private InvAmountService $inv_amount_service,
-        private InvService $inv_service,
-        private InvCustomService $inv_custom_service,
-        private InvItemService $inv_item_service,
-        private InvItemAllowanceChargeService $aciis,
-        private InvTaxRateService $inv_tax_rate_service,
-        private LoggerInterface $logger,
-        private MailerInterface $mailer,
-        private UrlGenerator $url_generator,
+        private readonly Crypt $crypt,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly DelRepo $delRepo,
+        private readonly InvAmountService $inv_amount_service,
+        private readonly InvService $inv_service,
+        private readonly InvCustomService $inv_custom_service,
+        private readonly InvItemService $inv_item_service,
+        private readonly InvItemAllowanceChargeService $aciis,
+        private readonly InvTaxRateService $inv_tax_rate_service,
+        private readonly LoggerInterface $logger,
+        private readonly MailerInterface $mailer,
+        private readonly UrlGenerator $url_generator,
         SessionInterface $session,
         SR $sR,
         TranslatorInterface $translator,

@@ -139,8 +139,8 @@ final class QuoteController extends BaseController
 {
     protected string $controllerName = 'invoice/quote';
 
-    private NumberHelper $number_helper;
-    private PdfHelper $pdf_helper;
+    private readonly NumberHelper $number_helper;
+    private readonly PdfHelper $pdf_helper;
 
     /**
      * @param DataResponseFactoryInterface $factory
@@ -165,25 +165,25 @@ final class QuoteController extends BaseController
      * @param WebControllerService $webService
      */
     public function __construct(
-        private DataResponseFactoryInterface $factory,
-        private InvAmountService $inv_amount_service,
-        private InvService $inv_service,
-        private InvCustomService $inv_custom_service,
-        private InvItemService $inv_item_service,
-        private InvTaxRateService $inv_tax_rate_service,
-        private LoggerInterface $logger,
-        private MailerInterface $mailer,
-        private soAS $so_amount_service,
-        private soCS $so_custom_service,
-        private soIS $so_item_service,
-        private soS $so_service,
-        private soTRS $so_tax_rate_service,
-        private QuoteAmountService $quote_amount_service,
-        private QuoteCustomService $quote_custom_service,
-        private QuoteItemService $quote_item_service,
-        private QuoteService $quote_service,
-        private QuoteTaxRateService $quote_tax_rate_service,
-        private UrlGenerator $url_generator,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly InvAmountService $inv_amount_service,
+        private readonly InvService $inv_service,
+        private readonly InvCustomService $inv_custom_service,
+        private readonly InvItemService $inv_item_service,
+        private readonly InvTaxRateService $inv_tax_rate_service,
+        private readonly LoggerInterface $logger,
+        private readonly MailerInterface $mailer,
+        private readonly soAS $so_amount_service,
+        private readonly soCS $so_custom_service,
+        private readonly soIS $so_item_service,
+        private readonly soS $so_service,
+        private readonly soTRS $so_tax_rate_service,
+        private readonly QuoteAmountService $quote_amount_service,
+        private readonly QuoteCustomService $quote_custom_service,
+        private readonly QuoteItemService $quote_item_service,
+        private readonly QuoteService $quote_service,
+        private readonly QuoteTaxRateService $quote_tax_rate_service,
+        private readonly UrlGenerator $url_generator,
         Session $session,
         SR $sR,
         Translator $translator,

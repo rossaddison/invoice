@@ -498,23 +498,13 @@ class PdfHelper
      */
     public function generate_inv_pdf_template_normal_paid_overdue_watermark(int $status_id): string
     {
-        switch ($status_id) {
-            case $status_id == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid')):
-                $return = $this->s->getSetting('pdf_invoice_template_paid');
-                break;
-            case $status_id == 4 && empty($this->s->getSetting('pdf_invoice_template_paid')):
-                $return = 'paid';
-                break;
-            case $status_id == 5 && !empty($this->s->getSetting('pdf_invoice_template_overdue')):
-                $return = $this->s->getSetting('pdf_invoice_template_overdue');
-                break;
-            case $status_id == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue')):
-                $return = 'overdue';
-                break;
-            default:
-                $return = strlen($this->s->getSetting('pdf_invoice_template')) > 0 ? $this->s->getSetting('pdf_invoice_template') : 'invoice';
-                break;
-        }
+        $return = match (true) {
+            $status_id == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid')) => $this->s->getSetting('pdf_invoice_template_paid'),
+            $status_id == 4 && empty($this->s->getSetting('pdf_invoice_template_paid')) => 'paid',
+            $status_id == 5 && !empty($this->s->getSetting('pdf_invoice_template_overdue')) => $this->s->getSetting('pdf_invoice_template_overdue'),
+            $status_id == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue')) => 'overdue',
+            default => strlen($this->s->getSetting('pdf_invoice_template')) > 0 ? $this->s->getSetting('pdf_invoice_template') : 'invoice',
+        };
         return $return;
     }
 

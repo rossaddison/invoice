@@ -21,7 +21,7 @@ final class UserRelatedTruncate5Command extends Command
     protected static string $defaultName = 'invoice/userrelated/truncate5';
 
     public function __construct(
-        private CycleDependencyProxy $promise,
+        private readonly CycleDependencyProxy $promise,
     ) {
         parent::__construct();
     }

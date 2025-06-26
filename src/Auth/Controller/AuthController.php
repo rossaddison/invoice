@@ -370,7 +370,7 @@ final class AuthController
                     }
 
                     // Re-render the setup page with error and QR code
-                    $safeSecret = ($tempSecret !== null) ? $tempSecret : TOTP::create()->getSecret();
+                    $safeSecret = $tempSecret ?? TOTP::create()->getSecret();
                     /** @var non-empty-string $safeSecret */
                     $totp = TOTP::create($safeSecret);
                     // Set the label again here!

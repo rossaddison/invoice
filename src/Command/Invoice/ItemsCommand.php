@@ -74,10 +74,10 @@ final class ItemsCommand extends Command
 
     private int $invItemId = 0;
 
-    private const DEFAULT_COUNT = 5;
+    private const int DEFAULT_COUNT = 5;
 
     public function __construct(
-        private EntityManager $entityManager,
+        private readonly EntityManager $entityManager,
         private readonly LoggerInterface $logger,
         private Generator $faker
     ) {

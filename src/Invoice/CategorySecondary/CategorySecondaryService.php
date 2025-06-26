@@ -6,13 +6,10 @@ namespace App\Invoice\CategorySecondary;
 
 use App\Invoice\Entity\CategorySecondary;
 
-final class CategorySecondaryService
+final readonly class CategorySecondaryService
 {
-    private CategorySecondaryRepository $repository;
-
-    public function __construct(CategorySecondaryRepository $repository)
+    public function __construct(private CategorySecondaryRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function saveCategorySecondary(CategorySecondary $model, array $array): void

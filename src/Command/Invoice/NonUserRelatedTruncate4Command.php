@@ -45,7 +45,7 @@ final class NonUserRelatedTruncate4Command extends Command
     protected static string $defaultName = 'invoice/nonuserrelated/truncate4';
 
     public function __construct(
-        private CycleDependencyProxy $promise,
+        private readonly CycleDependencyProxy $promise,
     ) {
         parent::__construct();
     }

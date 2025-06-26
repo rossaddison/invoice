@@ -13,14 +13,14 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Security\Random;
 
-final class ZugFerdHelper
+final readonly class ZugFerdHelper
 {
     /**
      * @param SRepo $s
      * @param IIAR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(private readonly SRepo $s, private readonly IIAR $iiaR, private readonly InvAmount $inv_amount)
+    public function __construct(private SRepo $s, private IIAR $iiaR, private InvAmount $inv_amount)
     {
     }
 

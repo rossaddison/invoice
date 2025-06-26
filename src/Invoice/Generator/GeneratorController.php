@@ -72,25 +72,9 @@ class GeneratorController extends BaseController
      * The files located in the templates_protected folder are array 'php shells' which receive the arrays from the English folder.
      * Any changes to the ./resources/messages/en/app.php during development, requires changes to the English folder files.
      */
-    // e.g. i.this_is_a_sentence
-    public const string  _IP = '_ip_lang.php';
-
-    // e.g. g.this_is_a_gateway
-    public const string  _GATEWAY = '_gateway_lang.php';
-
-    // e.g. a complete file that is too big for Google to translate
+    
+    // e.g. a complete file that is now easy for Google to translate
     public const string _APP = '_app.php';
-
-    // e.g. invoice.invoice.this.is.a.sentence
-    public const string _A_LATEST = '_a_latest_lang.php';
-
-    public const string _B_LATEST = '_b_latest_lang.php';
-
-    // e.g. site.soletrader.contact.address
-    public const string _COMMON = '_common_lang.php';
-
-    // e.g. miscellaneous
-    public const string _ANY = '_any_lang.php';
 
     // e.g. compare resources/messages/en.php with de.php with function rebuildLocale.
     // The missing keys in de.php are input into an array into an overwritable file
@@ -101,7 +85,7 @@ class GeneratorController extends BaseController
         private Aliases $aliases,
         private DataResponseFactoryInterface $factory,
         private GeneratorService $generatorService,
-        private UrlGenerator $urlGenerator,
+        private readonly UrlGenerator $urlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
