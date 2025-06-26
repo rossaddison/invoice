@@ -72,7 +72,7 @@ class GeneratorController extends BaseController
      * The files located in the templates_protected folder are array 'php shells' which receive the arrays from the English folder.
      * Any changes to the ./resources/messages/en/app.php during development, requires changes to the English folder files.
      */
-    
+
     // e.g. a complete file that is now easy for Google to translate
     public const string _APP = '_app.php';
 
