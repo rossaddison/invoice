@@ -39,7 +39,7 @@ final class InstallCommand extends Command
         // Welcome message with styling
         $io->title('🚀 Invoice Application Installer');
         $io->text([
-            'Welcome to the interactive installer for RossAddison Invoice!',
+            'Welcome to the interactive installer!',
             'This installer will guide you through the setup process.',
             ''
         ]);
