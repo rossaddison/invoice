@@ -94,7 +94,9 @@ final class InstallCommand extends Command
 
     private function isAlreadyInstalled(): bool
     {
-        return file_exists('.env') && file_exists('runtime/install.lock');
+        $envExists = file_exists('.env');
+        $lockExists = file_exists('runtime/install.lock');
+        return $envExists && $lockExists;
     }
 
     /**
@@ -222,7 +224,7 @@ final class InstallCommand extends Command
             $output = [];
             $returnVar = 0;
             
-            exec($commandString, $output, $returnVar);
+            $execResult = exec($commandString, $output, $returnVar);
             
             if ($returnVar !== 0) {
                 $errorMessage = sprintf('Command failed: %s (exit code: %d)', $commandString, $returnVar);
