@@ -11,7 +11,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
+//use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Process\Process as SymfonyProcess;
 
 /**
  * Interactive installer command for setting up the invoice application
@@ -25,6 +26,7 @@ final class InstallCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -32,6 +34,7 @@ final class InstallCommand extends Command
             ->setHelp('This command guides you through the complete setup process for the invoice application.');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -121,8 +124,8 @@ final class InstallCommand extends Command
     private function isComposerInstalled(): bool
     {
         // Try using Symfony Process if available, otherwise use exec
-        if (class_exists('Symfony\Component\Process\Process')) {
-            $process = new \Symfony\Component\Process\Process(['composer', '--version']);
+        if (class_exists('SymfonyProcess')) {
+            $process = new SymfonyProcess(['composer', '--version']);
             $process->run();
             return $process->isSuccessful();
         } else {
@@ -156,7 +159,7 @@ final class InstallCommand extends Command
 
         $io->text('Running: ' . implode(' ', $command));
         
-        if (class_exists('Symfony\Component\Process\Process')) {
+        if (class_exists('SymfonyProcess')) {
             return $this->runComposerWithProcess($command, $io);
         } else {
             return $this->runComposerWithExec($command, $io);
@@ -167,11 +170,11 @@ final class InstallCommand extends Command
     {
         $io->progressStart();
 
-        $process = new \Symfony\Component\Process\Process($command);
+        $process = new SymfonyProcess($command);
         $process->setTimeout(300); // 5 minutes timeout
         
         try {
-            $process->run(function ($type, $buffer) use ($io) {
+            $process->run(function (string $type, string $buffer) use ($io) {
                 // Progress feedback without showing actual output
                 $io->progressAdvance();
             });
@@ -181,7 +184,7 @@ final class InstallCommand extends Command
             if (!$process->isSuccessful()) {
                 $io->error([
                     'Composer command failed!',
-                    'Exit code: ' . $process->getExitCode(),
+                    'Exit code: ' . (string)$process->getExitCode(),
                     'Error output: ' . $process->getErrorOutput()
                 ]);
                 $io->note('You can run the composer command manually and then re-run this installer.');
@@ -202,7 +205,7 @@ final class InstallCommand extends Command
     {
         $io->text('Executing command...');
         
-        $commandStr = implode(' ', array_map('escapeshellarg', $command));
+        $commandStr = implode(' ', array_map(fn($arg) => escapeshellarg((string)$arg), $command));
         $output = [];
         $returnCode = 0;
         
@@ -213,7 +216,13 @@ final class InstallCommand extends Command
             $io->error([
                 'Composer command failed!',
                 'Exit code: ' . $returnCode,
-                'Output: ' . implode("\n", $output)
+                'Output: ' . implode(
+                    "\n",
+                    array_map(
+                        fn($line) => is_scalar($line) || is_null($line) ? (string)$line : '',
+                        $output
+                    )
+                )
             ]);
             $io->note('You can run the composer command manually and then re-run this installer.');
             return false;
@@ -232,13 +241,13 @@ final class InstallCommand extends Command
             
             $io->text([
                 'Database configuration found:',
-                'Host: ' . $dbConfig['host'],
-                'User: ' . $dbConfig['user'], 
-                'Database: ' . $dbConfig['database'],
+                'Host: ' . (string)$dbConfig['host'],
+                'User: ' . (string)$dbConfig['user'], 
+                'Database: ' . (string)$dbConfig['database'],
                 ''
             ]);
 
-            if (!$io->confirm('Create database "' . $dbConfig['database'] . '" if it doesn\'t exist?', true)) {
+            if (!$io->confirm('Create database "' . (string)$dbConfig['database'] . '" if it doesn\'t exist?', true)) {
                 $io->note('Database creation skipped.');
                 return true;
             }
@@ -266,6 +275,9 @@ final class InstallCommand extends Command
 
         // Parse the file to extract the database variables
         $content = file_get_contents($paramsFile);
+        if ($content === false) {
+            throw new Exception('Failed to read configuration file: ' . $paramsFile);
+        }
         
         // Extract the switch statement values for the current environment
         $env = $_ENV['APP_ENV'] ?? 'local';
@@ -274,7 +286,7 @@ final class InstallCommand extends Command
         $dbHost = 'localhost';
         $dbUser = 'root';
         $dbPassword = null;
-        $dbName = 'yii3_i'; // This is hardcoded in the DSN
+        $dbName = 'yii3_i'; // This is hardcoded in the DSN       
         
         // Try to extract values by parsing the switch statement
         if (preg_match('/case\s+[\'"]' . preg_quote($env) . '[\'"]:\s*(.*?)break;/s', $content, $matches)) {
@@ -306,26 +318,31 @@ final class InstallCommand extends Command
 
     private function createDatabase(array $config, SymfonyStyle $io): bool
     {
+        
+        $host = (string)$config['host'];
+        $password = (string)$config['password'];
+        $database = (string)$config['database'];
+        $user = (string)$config['user'];
         try {
             // Connect without specifying database to create it
-            $dsn = sprintf('mysql:host=%s', $config['host']);
-            $pdo = new PDO($dsn, $config['user'], $config['password']);
+            $dsn = sprintf('mysql:host=%s', $host);
+            $pdo = new PDO($dsn, $user, $password);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Check if database exists
             $stmt = $pdo->prepare('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?');
-            $stmt->execute([$config['database']]);
+            $stmt->execute([$database]);
             
             if ($stmt->fetch()) {
-                $io->note('Database "' . $config['database'] . '" already exists.');
+                $io->note('Database "' . $database . '" already exists.');
                 return true;
             }
 
             // Create database
-            $sql = sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $config['database']);
+            $sql = sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $database);
             $pdo->exec($sql);
             
-            $io->success('Database "' . $config['database'] . '" created successfully!');
+            $io->success('Database "' . $database . '" created successfully!');
             return true;
 
         } catch (PDOException $e) {

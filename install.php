@@ -18,7 +18,7 @@ if (!file_exists('config/common/params.php')) {
 $_ENV['APP_ENV'] = $_ENV['APP_ENV'] ?? 'local';
 
 echo "\n";
-echo "🚀 RossAddison Invoice - Standalone Installer\n";
+echo "🚀 Invoice - Standalone Installer\n";
 echo "=============================================\n\n";
 
 echo "This installer will guide you through the setup process.\n";
