@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use Exception;
 use PDO;
 use PDOException;
-use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Yiisoft\Yii\Console\ExitCode;
+//use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Process\Process as SymfonyProcess;
 
+/**
+ * Interactive installer command for setting up the invoice application
+ */
 final class InstallCommand extends Command
 {
     protected static string $defaultName = 'install';
@@ -27,227 +30,374 @@ final class InstallCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Install and setup the invoice application')
-            ->setHelp('This command sets up the application by creating necessary directories, copying configuration files, and initializing the database.')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force installation even if already installed')
-            ->addOption('db-host', null, InputOption::VALUE_REQUIRED, 'Database host', 'localhost')
-            ->addOption('db-name', null, InputOption::VALUE_REQUIRED, 'Database name', 'invoice')
-            ->addOption('db-user', null, InputOption::VALUE_REQUIRED, 'Database user', 'root')
-            ->addOption('db-password', null, InputOption::VALUE_OPTIONAL, 'Database password', '');
+            ->setDescription('Interactive installer for the invoice application')
+            ->setHelp('This command guides you through the complete setup process for the invoice application.');
     }
 
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        
-        $force = (bool) $input->getOption('force');
-        $dbHost = $this->getStringOption($input, 'db-host');
-        $dbName = $this->getStringOption($input, 'db-name');
-        $dbUser = $this->getStringOption($input, 'db-user');
-        $dbPassword = $this->getStringOption($input, 'db-password');
 
-        $io->title('Invoice Application Installation');
-
-        try {
-            // Check if already installed
-            if (!$force && $this->isAlreadyInstalled()) {
-                $io->warning('Application appears to be already installed. Use --force to reinstall.');
-                return ExitCode::OK;
-            }
-
-            // Create necessary directories
-            $this->createDirectories($io);
-
-            // Copy environment file
-            $this->copyEnvironmentFile($io, $force);
-
-            // Set permissions
-            $this->setPermissions($io);
-
-            // Test database connection
-            $this->testDatabaseConnection($io, $dbHost, $dbName, $dbUser, $dbPassword);
-
-            // Execute shell commands for setup
-            $this->executeSetupCommands($io);
-
-            $io->success('Installation completed successfully!');
-            return ExitCode::OK;
-
-        } catch (RuntimeException $e) {
-            $io->error('Installation failed: ' . $e->getMessage());
-            return ExitCode::SOFTWARE;
-        } catch (PDOException $e) {
-            $io->error('Database connection failed: ' . $e->getMessage());
-            return ExitCode::CONFIG;
-        }
-    }
-
-    private function getStringOption(InputInterface $input, string $name): string
-    {
-        $value = $input->getOption($name);
-        if ($value === null) {
-            return '';
-        }
-        return (string) $value;
-    }
-
-    private function isAlreadyInstalled(): bool
-    {
-        $envExists = file_exists('.env');
-        $lockExists = file_exists('runtime/install.lock');
-        return $envExists && $lockExists;
-    }
-
-    /**
-     * @throws RuntimeException
-     */
-    private function createDirectories(SymfonyStyle $io): void
-    {
-        $directories = [
-            'runtime',
-            'runtime/cache',
-            'runtime/logs',
-            'public/assets',
-            'private/uploads'
-        ];
-
-        foreach ($directories as $dir) {
-            $directoryPath = (string) $dir;
-            if (!is_dir($directoryPath)) {
-                $result = mkdir($directoryPath, 0755, true);
-                if ($result === false) {
-                    throw new RuntimeException(sprintf('Failed to create directory: %s', $directoryPath));
-                }
-                $io->writeln(sprintf('Created directory: %s', $directoryPath));
-            }
-        }
-    }
-
-    /**
-     * @throws RuntimeException
-     */
-    private function copyEnvironmentFile(SymfonyStyle $io, bool $force): void
-    {
-        if (!file_exists('.env') || $force) {
-            if (!file_exists('.env.example')) {
-                throw new RuntimeException('.env.example file not found');
-            }
-
-            $content = file_get_contents('.env.example');
-            if ($content === false) {
-                throw new RuntimeException('Failed to read .env.example file');
-            }
-
-            $result = file_put_contents('.env', $content);
-            if ($result === false) {
-                throw new RuntimeException('Failed to create .env file');
-            }
-
-            $io->writeln('Copied .env.example to .env');
-        }
-    }
-
-    /**
-     * @throws RuntimeException
-     */
-    private function setPermissions(SymfonyStyle $io): void
-    {
-        /** @var array<string, int> $paths */
-        $paths = [
-            'runtime' => 0777,
-            'public/assets' => 0777,
-            'private/uploads' => 0755
-        ];
-
-        foreach ($paths as $path => $mode) {
-            $pathString = (string) $path;
-            $modeInt = (int) $mode;
-            
-            if (file_exists($pathString)) {
-                $result = chmod($pathString, $modeInt);
-                if ($result === false) {
-                    throw new RuntimeException(sprintf('Failed to set permissions for: %s', $pathString));
-                }
-                $io->writeln(sprintf('Set permissions %o for: %s', $modeInt, $pathString));
-            }
-        }
-    }
-
-    /**
-     * @throws PDOException
-     */
-    private function testDatabaseConnection(SymfonyStyle $io, string $host, string $dbName, string $user, string $password): void
-    {
-        $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', (string) $host, (string) $dbName);
-        
-        $pdo = new PDO($dsn, (string) $user, (string) $password, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        // Welcome message with styling
+        $io->title('🚀 Invoice Application Installer');
+        $io->text([
+            'Welcome to the interactive installer!',
+            'This installer will guide you through the setup process.',
+            '',
         ]);
 
-        // Test connection with a simple query
-        $stmt = $pdo->prepare('SELECT 1 as test');
-        if ($stmt === false) {
-            throw new PDOException('Failed to prepare test query');
-        }
-        
-        $executeResult = $stmt->execute();
-        if ($executeResult === false) {
-            throw new PDOException('Failed to execute test query');
-        }
-        
-        $result = $stmt->fetch();
-        
-        if ($result === false || !is_array($result) || !isset($result['test'])) {
-            throw new PDOException('Database connection test failed');
+        // Preflight checks
+        if (!$this->performPreflightChecks($io)) {
+            return Command::FAILURE;
         }
 
-        $io->writeln('Database connection test successful');
+        // Step 1: Composer install
+        if (!$this->handleComposerInstall($io)) {
+            return Command::FAILURE;
+        }
+
+        // Step 2: Database setup
+        if (!$this->handleDatabaseSetup($io)) {
+            return Command::FAILURE;
+        }
+
+        // Step 3: Manual checklist
+        $this->displayManualChecklist($io);
+
+        $io->success([
+            'Installation setup completed successfully!',
+            'Please follow the manual steps above to complete the setup.',
+        ]);
+
+        return Command::SUCCESS;
     }
 
-    /**
-     * @throws RuntimeException
-     */
-    private function executeSetupCommands(SymfonyStyle $io): void
+    private function performPreflightChecks(SymfonyStyle $io): bool
     {
-        $commands = [
-            'php yii migrate/up --interactive=0' => 'Running database migrations',
-            'php yii cache/flush' => 'Flushing cache',
-        ];
+        $io->section('🔍 Preflight Checks');
 
-        foreach ($commands as $command => $description) {
-            $io->writeln((string) $description);
-            
-            $commandString = (string) $command;
-            /** @var array<int, string> $output */
-            $output = [];
-            $returnVar = 0;
-            
-            $execResult = exec($commandString, $output, $returnVar);
-            
-            if ($returnVar !== 0) {
-                $errorMessage = sprintf('Command failed: %s (exit code: %d)', $commandString, $returnVar);
-                if (count($output) > 0) {
-                    $outputString = implode("\n", array_map(
-                        static fn (string $line): string => (string) $line,
-                        $output
-                    ));
-                    $errorMessage .= sprintf("\nOutput: %s", $outputString);
-                }
-                throw new RuntimeException($errorMessage);
+        $checks = [];
+        $allPassed = true;
+
+        // PHP version check
+        $phpVersion = PHP_VERSION;
+        $requiredPhp = '8.3';
+        $phpOk = version_compare($phpVersion, $requiredPhp, '>=');
+        $checks[] = [
+            'PHP version (' . $phpVersion . ')',
+            $phpOk ? '✅ OK' : '❌ FAIL (requires >= ' . $requiredPhp . ')',
+        ];
+        if (!$phpOk) {
+            $allPassed = false;
+        }
+
+        // Required extensions
+        $requiredExtensions = ['curl', 'dom', 'fileinfo', 'filter', 'gd', 'intl', 'json', 'mbstring', 'openssl', 'pdo', 'pdo_mysql'];
+        foreach ($requiredExtensions as $ext) {
+            $loaded = extension_loaded($ext);
+            $checks[] = [
+                'PHP extension: ' . $ext,
+                $loaded ? '✅ OK' : '❌ MISSING',
+            ];
+            if (!$loaded) {
+                $allPassed = false;
             }
         }
 
-        // Create install lock file
-        $lockContent = date('Y-m-d H:i:s');
-        if ($lockContent === false) {
-            throw new RuntimeException('Failed to generate lock file content');
+        // Composer check
+        $composerInstalled = $this->isComposerInstalled();
+        $checks[] = [
+            'Composer',
+            $composerInstalled ? '✅ OK' : '❌ NOT FOUND',
+        ];
+        if (!$composerInstalled) {
+            $allPassed = false;
         }
-        
-        $result = file_put_contents('runtime/install.lock', $lockContent);
-        if ($result === false) {
-            throw new RuntimeException('Failed to create install lock file');
+
+        // Display results in a table
+        $io->table(['Check', 'Status'], $checks);
+
+        if (!$allPassed) {
+            $io->error('Some preflight checks failed. Please resolve the issues above before continuing.');
+            return false;
         }
+
+        $io->success('All preflight checks passed!');
+        return true;
+    }
+
+    private function isComposerInstalled(): bool
+    {
+        // Try using Symfony Process if available, otherwise use exec
+        if (class_exists('SymfonyProcess')) {
+            $process = new SymfonyProcess(['composer', '--version']);
+            $process->run();
+            return $process->isSuccessful();
+        }
+        // Fallback to exec
+        $output = [];
+        $returnCode = 0;
+        exec('composer --version 2>/dev/null', $output, $returnCode);
+        return $returnCode === 0;
+    }
+
+    private function handleComposerInstall(SymfonyStyle $io): bool
+    {
+        $io->section('📦 Dependencies Installation');
+
+        // Check if vendor directory exists
+        if (is_dir('vendor') && file_exists('vendor/autoload.php')) {
+            $io->note('Dependencies appear to already be installed.');
+            if (!$io->confirm('Would you like to update dependencies?', false)) {
+                return true;
+            }
+            $command = ['composer', 'update', '--no-dev', '--optimize-autoloader'];
+        } else {
+            $io->text('Dependencies need to be installed using Composer.');
+            if (!$io->confirm('Run "composer install --no-dev --optimize-autoloader"?', true)) {
+                $io->warning('Dependencies installation skipped. You will need to run composer install manually.');
+                return true;
+            }
+            $command = ['composer', 'install', '--no-dev', '--optimize-autoloader'];
+        }
+
+        $io->text('Running: ' . implode(' ', $command));
+
+        if (class_exists('SymfonyProcess')) {
+            return $this->runComposerWithProcess($command, $io);
+        }
+        return $this->runComposerWithExec($command, $io);
+    }
+
+    private function runComposerWithProcess(array $command, SymfonyStyle $io): bool
+    {
+        $io->progressStart();
+
+        $process = new SymfonyProcess($command);
+        $process->setTimeout(300); // 5 minutes timeout
+
+        try {
+            $process->run(function (string $type, string $buffer) use ($io) {
+                // Progress feedback without showing actual output
+                $io->progressAdvance();
+            });
+
+            $io->progressFinish();
+
+            if (!$process->isSuccessful()) {
+                $io->error([
+                    'Composer command failed!',
+                    'Exit code: ' . (string)$process->getExitCode(),
+                    'Error output: ' . $process->getErrorOutput(),
+                ]);
+                $io->note('You can run the composer command manually and then re-run this installer.');
+                return false;
+            }
+
+            $io->success('Dependencies installed successfully!');
+            return true;
+        } catch (Exception $e) {
+            $io->progressFinish();
+            $io->error('Failed to run composer: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function runComposerWithExec(array $command, SymfonyStyle $io): bool
+    {
+        $io->text('Executing command...');
+
+        $commandStr = implode(' ', array_map(fn($arg) => escapeshellarg((string)$arg), $command));
+        $output = [];
+        $returnCode = 0;
+
+        // Run the command and capture output
+        exec($commandStr . ' 2>&1', $output, $returnCode);
+
+        if ($returnCode !== 0) {
+            $io->error([
+                'Composer command failed!',
+                'Exit code: ' . $returnCode,
+                'Output: ' . implode(
+                    "\n",
+                    array_map(
+                        fn($line) => is_scalar($line) || null === $line ? (string)$line : '',
+                        $output
+                    )
+                ),
+            ]);
+            $io->note('You can run the composer command manually and then re-run this installer.');
+            return false;
+        }
+
+        $io->success('Dependencies installed successfully!');
+        return true;
+    }
+
+    private function handleDatabaseSetup(SymfonyStyle $io): bool
+    {
+        $io->section('🗄️ Database Setup');
+
+        try {
+            $dbConfig = $this->parseDatabaseConfig();
+
+            $io->text([
+                'Database configuration found:',
+                'Host: ' . (string)$dbConfig['host'],
+                'User: ' . (string)$dbConfig['user'],
+                'Database: ' . (string)$dbConfig['database'],
+                '',
+            ]);
+
+            if (!$io->confirm('Create database "' . (string)$dbConfig['database'] . '" if it doesn\'t exist?', true)) {
+                $io->note('Database creation skipped.');
+                return true;
+            }
+
+            return $this->createDatabase($dbConfig, $io);
+        } catch (Exception $e) {
+            $io->error('Failed to setup database: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function parseDatabaseConfig(): array
+    {
+        $paramsFile = __DIR__ . '/../../config/common/params.php';
+
+        if (!file_exists($paramsFile)) {
+            throw new Exception('Configuration file not found: ' . $paramsFile);
+        }
+
+        // Set environment variables if not set to get proper config
+        if (!isset($_ENV['APP_ENV'])) {
+            $_ENV['APP_ENV'] = 'local';
+        }
+
+        // Parse the file to extract the database variables
+        $content = file_get_contents($paramsFile);
+        if ($content === false) {
+            throw new Exception('Failed to read configuration file: ' . $paramsFile);
+        }
+
+        // Extract the switch statement values for the current environment
+        $env = $_ENV['APP_ENV'] ?? 'local';
+
+        // Default values that match the params.php structure
+        $dbHost = 'localhost';
+        $dbUser = 'root';
+        $dbPassword = null;
+        $dbName = 'yii3_i'; // This is hardcoded in the DSN
+
+        // Try to extract values by parsing the switch statement
+        if (preg_match('/case\s+[\'"]' . preg_quote($env) . '[\'"]:\s*(.*?)break;/s', $content, $matches)) {
+            $caseContent = $matches[1];
+
+            if (preg_match('/\$dbHost\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $hostMatch)) {
+                $dbHost = $hostMatch[1];
+            }
+            if (preg_match('/\$dbUser\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $userMatch)) {
+                $dbUser = $userMatch[1];
+            }
+            if (preg_match('/\$dbPassword\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $passMatch)) {
+                $dbPassword = $passMatch[1];
+            }
+        }
+
+        // Extract database name from DSN pattern
+        if (preg_match('/[\'"]mysql:host=.*?;dbname=([^\'";,]+)/', $content, $dbMatch)) {
+            $dbName = $dbMatch[1];
+        }
+
+        return [
+            'host' => $dbHost,
+            'database' => $dbName,
+            'user' => $dbUser,
+            'password' => $dbPassword,
+        ];
+    }
+
+    private function createDatabase(array $config, SymfonyStyle $io): bool
+    {
+        $host = (string)$config['host'];
+        $password = (string)$config['password'];
+        $database = (string)$config['database'];
+        $user = (string)$config['user'];
+        try {
+            // Connect without specifying database to create it
+            $dsn = sprintf('mysql:host=%s', $host);
+            $pdo = new PDO($dsn, $user, $password);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Check if database exists
+            $stmt = $pdo->prepare('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?');
+            $stmt->execute([$database]);
+
+            if ($stmt->fetch()) {
+                $io->note('Database "' . $database . '" already exists.');
+                return true;
+            }
+
+            // Create database
+            $sql = sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $database);
+            $pdo->exec($sql);
+
+            $io->success('Database "' . $database . '" created successfully!');
+            return true;
+        } catch (PDOException $e) {
+            $io->error([
+                'Failed to create database:',
+                $e->getMessage(),
+                '',
+                'Please ensure:',
+                '- MySQL server is running',
+                '- Database credentials are correct',
+                '- User has permission to create databases',
+            ]);
+            return false;
+        }
+    }
+
+    private function displayManualChecklist(SymfonyStyle $io): void
+    {
+        $io->section('📋 Manual Setup Checklist');
+
+        $io->text([
+            'Please complete the following steps manually:',
+            '',
+        ]);
+
+        $steps = [
+            '1. Edit the .env file in the project root',
+            '   Set: BUILD_DATABASE=true',
+            '',
+            '2. Start the application to trigger table creation:',
+            '   Run: ./yii serve',
+            '   Or visit your web server URL',
+            '',
+            '3. After tables are created, reset the BUILD_DATABASE setting:',
+            '   Edit .env and set: BUILD_DATABASE=false',
+            '   (This improves performance by disabling schema rebuilding)',
+            '',
+            '4. Create your first admin user by visiting the signup page',
+            '   The first user will automatically get admin privileges',
+            '',
+        ];
+
+        foreach ($steps as $step) {
+            if (empty($step)) {
+                $io->text('');
+            } elseif (str_starts_with($step, '   ')) {
+                $io->text('<comment>' . $step . '</comment>');
+            } else {
+                $io->text('<info>' . $step . '</info>');
+            }
+        }
+
+        $io->warning([
+            'IMPORTANT: Remember to set BUILD_DATABASE=false after initial setup!',
+            'Leaving it as true will impact application performance.',
+        ]);
     }
 }
