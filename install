@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Convenience installer script
+ * Allows running: php install
+ */
+
+declare(strict_types=1);
+
+// Check if we have the yii console available
+$yiiPath = __DIR__ . '/yii';
+
+if (!file_exists($yiiPath)) {
+    echo "Error: yii console script not found.\n";
+    echo "Please ensure you are in the correct directory.\n";
+    exit(1);
+}
+
+// Make sure it's executable
+if (!is_executable($yiiPath)) {
+    chmod($yiiPath, 0755);
+}
+
+// Run the install command
+$command = escapeshellarg($yiiPath) . ' install';
+echo "Running: {$command}\n\n";
+
+// Execute and pass through exit code
+passthru($command, $exitCode);
+exit($exitCode);
