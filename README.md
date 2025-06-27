@@ -32,6 +32,40 @@ Yii3 Invoice
 **Installing with Composer in Windows**
 *````composer update````*
 
+## 🚀 Quick Setup with Interactive Installer
+
+For new installations, use one of these interactive installers:
+
+### Option 1: Standalone Installer (Recommended for first-time setup)
+```bash
+php install.php
+```
+This works without any dependencies and guides you through the complete setup.
+
+### Option 2: Full-Featured Installer (After dependencies are installed)
+```bash
+# Using the convenience script
+php install
+
+# Or using the yii console directly  
+./yii install
+```
+
+Both installers will:
+- ✅ Perform preflight checks (PHP version, extensions, Composer)
+- 📦 Install dependencies with `composer install` (with your confirmation)
+- 🗄️ Parse database configuration and create the database if needed
+- 📋 Provide a checklist for final manual steps
+
+After running either installer, you'll need to manually:
+1. Set `BUILD_DATABASE=true` in your `.env` file
+2. Start the application to trigger table creation
+3. Reset `BUILD_DATABASE=false` for better performance
+
+## Manual Installation
+
+If you prefer manual setup or encounter issues with the installer:
+
 **Installing npm_modules folder containing bootstrap as mentioned in package.json**
 * Step 1: Download node.js at https://nodejs.org/en/download
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
