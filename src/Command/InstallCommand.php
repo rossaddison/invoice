@@ -5,27 +5,13 @@ declare(strict_types=1);
 namespace App\Command;
 
 use Exception;
-
-// Check if Symfony Console is available
-if (!class_exists('Symfony\Component\Console\Command\Command')) {
-    echo "Error: Symfony Console is not installed.\n";
-    echo "Please run 'composer install' first to install dependencies.\n";
-    exit(1);
-}
-
+use PDO;
+use PDOException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use PDO;
-use PDOException;
-
-// Check if Process class is available, use alternative if not
-$useSymfonyProcess = class_exists('Symfony\Component\Process\Process');
-if ($useSymfonyProcess) {
-    use Symfony\Component\Process\Process;
-}
 
 /**
  * Interactive installer command for setting up the invoice application
@@ -135,10 +121,8 @@ final class InstallCommand extends Command
     private function isComposerInstalled(): bool
     {
         // Try using Symfony Process if available, otherwise use exec
-        global $useSymfonyProcess;
-        
-        if ($useSymfonyProcess) {
-            $process = new Process(['composer', '--version']);
+        if (class_exists('Symfony\Component\Process\Process')) {
+            $process = new \Symfony\Component\Process\Process(['composer', '--version']);
             $process->run();
             return $process->isSuccessful();
         } else {
@@ -152,8 +136,6 @@ final class InstallCommand extends Command
 
     private function handleComposerInstall(SymfonyStyle $io): bool
     {
-        global $useSymfonyProcess;
-        
         $io->section('📦 Dependencies Installation');
 
         // Check if vendor directory exists
@@ -174,7 +156,7 @@ final class InstallCommand extends Command
 
         $io->text('Running: ' . implode(' ', $command));
         
-        if ($useSymfonyProcess) {
+        if (class_exists('Symfony\Component\Process\Process')) {
             return $this->runComposerWithProcess($command, $io);
         } else {
             return $this->runComposerWithExec($command, $io);
@@ -185,7 +167,7 @@ final class InstallCommand extends Command
     {
         $io->progressStart();
 
-        $process = new Process($command);
+        $process = new \Symfony\Component\Process\Process($command);
         $process->setTimeout(300); // 5 minutes timeout
         
         try {
