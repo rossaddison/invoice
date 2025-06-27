@@ -44,7 +44,7 @@ final class InstallCommand extends Command
         $io->text([
             'Welcome to the interactive installer!',
             'This installer will guide you through the setup process.',
-            ''
+            '',
         ]);
 
         // Preflight checks
@@ -67,7 +67,7 @@ final class InstallCommand extends Command
 
         $io->success([
             'Installation setup completed successfully!',
-            'Please follow the manual steps above to complete the setup.'
+            'Please follow the manual steps above to complete the setup.',
         ]);
 
         return Command::SUCCESS;
@@ -86,9 +86,11 @@ final class InstallCommand extends Command
         $phpOk = version_compare($phpVersion, $requiredPhp, '>=');
         $checks[] = [
             'PHP version (' . $phpVersion . ')',
-            $phpOk ? '✅ OK' : '❌ FAIL (requires >= ' . $requiredPhp . ')'
+            $phpOk ? '✅ OK' : '❌ FAIL (requires >= ' . $requiredPhp . ')',
         ];
-        if (!$phpOk) $allPassed = false;
+        if (!$phpOk) {
+            $allPassed = false;
+        }
 
         // Required extensions
         $requiredExtensions = ['curl', 'dom', 'fileinfo', 'filter', 'gd', 'intl', 'json', 'mbstring', 'openssl', 'pdo', 'pdo_mysql'];
@@ -96,18 +98,22 @@ final class InstallCommand extends Command
             $loaded = extension_loaded($ext);
             $checks[] = [
                 'PHP extension: ' . $ext,
-                $loaded ? '✅ OK' : '❌ MISSING'
+                $loaded ? '✅ OK' : '❌ MISSING',
             ];
-            if (!$loaded) $allPassed = false;
+            if (!$loaded) {
+                $allPassed = false;
+            }
         }
 
         // Composer check
         $composerInstalled = $this->isComposerInstalled();
         $checks[] = [
             'Composer',
-            $composerInstalled ? '✅ OK' : '❌ NOT FOUND'
+            $composerInstalled ? '✅ OK' : '❌ NOT FOUND',
         ];
-        if (!$composerInstalled) $allPassed = false;
+        if (!$composerInstalled) {
+            $allPassed = false;
+        }
 
         // Display results in a table
         $io->table(['Check', 'Status'], $checks);
@@ -128,13 +134,12 @@ final class InstallCommand extends Command
             $process = new SymfonyProcess(['composer', '--version']);
             $process->run();
             return $process->isSuccessful();
-        } else {
-            // Fallback to exec
-            $output = [];
-            $returnCode = 0;
-            exec('composer --version 2>/dev/null', $output, $returnCode);
-            return $returnCode === 0;
         }
+        // Fallback to exec
+        $output = [];
+        $returnCode = 0;
+        exec('composer --version 2>/dev/null', $output, $returnCode);
+        return $returnCode === 0;
     }
 
     private function handleComposerInstall(SymfonyStyle $io): bool
@@ -158,21 +163,20 @@ final class InstallCommand extends Command
         }
 
         $io->text('Running: ' . implode(' ', $command));
-        
+
         if (class_exists('SymfonyProcess')) {
             return $this->runComposerWithProcess($command, $io);
-        } else {
-            return $this->runComposerWithExec($command, $io);
         }
+        return $this->runComposerWithExec($command, $io);
     }
-    
+
     private function runComposerWithProcess(array $command, SymfonyStyle $io): bool
     {
         $io->progressStart();
 
         $process = new SymfonyProcess($command);
         $process->setTimeout(300); // 5 minutes timeout
-        
+
         try {
             $process->run(function (string $type, string $buffer) use ($io) {
                 // Progress feedback without showing actual output
@@ -185,7 +189,7 @@ final class InstallCommand extends Command
                 $io->error([
                     'Composer command failed!',
                     'Exit code: ' . (string)$process->getExitCode(),
-                    'Error output: ' . $process->getErrorOutput()
+                    'Error output: ' . $process->getErrorOutput(),
                 ]);
                 $io->note('You can run the composer command manually and then re-run this installer.');
                 return false;
@@ -193,25 +197,24 @@ final class InstallCommand extends Command
 
             $io->success('Dependencies installed successfully!');
             return true;
-
         } catch (Exception $e) {
             $io->progressFinish();
             $io->error('Failed to run composer: ' . $e->getMessage());
             return false;
         }
     }
-    
+
     private function runComposerWithExec(array $command, SymfonyStyle $io): bool
     {
         $io->text('Executing command...');
-        
+
         $commandStr = implode(' ', array_map(fn($arg) => escapeshellarg((string)$arg), $command));
         $output = [];
         $returnCode = 0;
-        
+
         // Run the command and capture output
         exec($commandStr . ' 2>&1', $output, $returnCode);
-        
+
         if ($returnCode !== 0) {
             $io->error([
                 'Composer command failed!',
@@ -219,15 +222,15 @@ final class InstallCommand extends Command
                 'Output: ' . implode(
                     "\n",
                     array_map(
-                        fn($line) => is_scalar($line) || is_null($line) ? (string)$line : '',
+                        fn($line) => is_scalar($line) || null === $line ? (string)$line : '',
                         $output
                     )
-                )
+                ),
             ]);
             $io->note('You can run the composer command manually and then re-run this installer.');
             return false;
         }
-        
+
         $io->success('Dependencies installed successfully!');
         return true;
     }
@@ -238,13 +241,13 @@ final class InstallCommand extends Command
 
         try {
             $dbConfig = $this->parseDatabaseConfig();
-            
+
             $io->text([
                 'Database configuration found:',
                 'Host: ' . (string)$dbConfig['host'],
-                'User: ' . (string)$dbConfig['user'], 
+                'User: ' . (string)$dbConfig['user'],
                 'Database: ' . (string)$dbConfig['database'],
-                ''
+                '',
             ]);
 
             if (!$io->confirm('Create database "' . (string)$dbConfig['database'] . '" if it doesn\'t exist?', true)) {
@@ -253,7 +256,6 @@ final class InstallCommand extends Command
             }
 
             return $this->createDatabase($dbConfig, $io);
-
         } catch (Exception $e) {
             $io->error('Failed to setup database: ' . $e->getMessage());
             return false;
@@ -263,7 +265,7 @@ final class InstallCommand extends Command
     private function parseDatabaseConfig(): array
     {
         $paramsFile = __DIR__ . '/../../config/common/params.php';
-        
+
         if (!file_exists($paramsFile)) {
             throw new Exception('Configuration file not found: ' . $paramsFile);
         }
@@ -278,20 +280,20 @@ final class InstallCommand extends Command
         if ($content === false) {
             throw new Exception('Failed to read configuration file: ' . $paramsFile);
         }
-        
+
         // Extract the switch statement values for the current environment
         $env = $_ENV['APP_ENV'] ?? 'local';
-        
+
         // Default values that match the params.php structure
         $dbHost = 'localhost';
         $dbUser = 'root';
         $dbPassword = null;
-        $dbName = 'yii3_i'; // This is hardcoded in the DSN       
-        
+        $dbName = 'yii3_i'; // This is hardcoded in the DSN
+
         // Try to extract values by parsing the switch statement
         if (preg_match('/case\s+[\'"]' . preg_quote($env) . '[\'"]:\s*(.*?)break;/s', $content, $matches)) {
             $caseContent = $matches[1];
-            
+
             if (preg_match('/\$dbHost\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $hostMatch)) {
                 $dbHost = $hostMatch[1];
             }
@@ -302,7 +304,7 @@ final class InstallCommand extends Command
                 $dbPassword = $passMatch[1];
             }
         }
-        
+
         // Extract database name from DSN pattern
         if (preg_match('/[\'"]mysql:host=.*?;dbname=([^\'";,]+)/', $content, $dbMatch)) {
             $dbName = $dbMatch[1];
@@ -312,13 +314,12 @@ final class InstallCommand extends Command
             'host' => $dbHost,
             'database' => $dbName,
             'user' => $dbUser,
-            'password' => $dbPassword
+            'password' => $dbPassword,
         ];
     }
 
     private function createDatabase(array $config, SymfonyStyle $io): bool
     {
-        
         $host = (string)$config['host'];
         $password = (string)$config['password'];
         $database = (string)$config['database'];
@@ -332,7 +333,7 @@ final class InstallCommand extends Command
             // Check if database exists
             $stmt = $pdo->prepare('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?');
             $stmt->execute([$database]);
-            
+
             if ($stmt->fetch()) {
                 $io->note('Database "' . $database . '" already exists.');
                 return true;
@@ -341,10 +342,9 @@ final class InstallCommand extends Command
             // Create database
             $sql = sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $database);
             $pdo->exec($sql);
-            
+
             $io->success('Database "' . $database . '" created successfully!');
             return true;
-
         } catch (PDOException $e) {
             $io->error([
                 'Failed to create database:',
@@ -353,7 +353,7 @@ final class InstallCommand extends Command
                 'Please ensure:',
                 '- MySQL server is running',
                 '- Database credentials are correct',
-                '- User has permission to create databases'
+                '- User has permission to create databases',
             ]);
             return false;
         }
@@ -362,10 +362,10 @@ final class InstallCommand extends Command
     private function displayManualChecklist(SymfonyStyle $io): void
     {
         $io->section('📋 Manual Setup Checklist');
-        
+
         $io->text([
             'Please complete the following steps manually:',
-            ''
+            '',
         ]);
 
         $steps = [
@@ -382,7 +382,7 @@ final class InstallCommand extends Command
             '',
             '4. Create your first admin user by visiting the signup page',
             '   The first user will automatically get admin privileges',
-            ''
+            '',
         ];
 
         foreach ($steps as $step) {
@@ -397,7 +397,7 @@ final class InstallCommand extends Command
 
         $io->warning([
             'IMPORTANT: Remember to set BUILD_DATABASE=false after initial setup!',
-            'Leaving it as true will impact application performance.'
+            'Leaving it as true will impact application performance.',
         ]);
     }
 }
