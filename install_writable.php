@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 /**
  * Convenience installer script
- * Allows running: php install_writable.php 
+ * Allows running: php install_writable.php
  * Application: Checks if yiipath is executable
  */
 
@@ -30,7 +30,7 @@ if (!file_exists($composerAutoload)) {
         $defaultComposer = 'C:\ProgramData\ComposerSetup\bin\composer.bat';
         $composerCmd = file_exists($defaultComposer)
             ? "\"$defaultComposer\" install"
-            : "composer install";
+            : 'composer install';
     } else {
         $composerCmd = 'composer install';
     }

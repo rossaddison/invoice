@@ -11,8 +11,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
 //use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Process\Process as SymfonyProcess;
 
 /**
  * Interactive installer command for setting up the invoice application
@@ -99,7 +99,7 @@ final class InstallCommand extends Command
             }
         }
 
-        $autoloadPath = dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+        $autoloadPath = dirname(__DIR__, 2) . '/vendor/autoload.php';
         if (!file_exists($autoloadPath)) {
             $checks[] = [
                 'Composer',
@@ -115,7 +115,7 @@ final class InstallCommand extends Command
                 '✅ OK',
             ];
         }
-        
+
         // Display results in a table
         $io->table(['Check', 'Status'], $checks);
 
@@ -127,7 +127,7 @@ final class InstallCommand extends Command
         $io->success('All preflight checks passed!');
         return true;
     }
-    
+
     private function handleDatabaseSetup(SymfonyStyle $io): bool
     {
         $io->section('🗄️ Database Setup');
