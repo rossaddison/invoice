@@ -23,6 +23,7 @@ phpunit.phar
 
 # evolving files
 /vendor
+/vendor_backup
 /node_modules
 
 # Codeception
