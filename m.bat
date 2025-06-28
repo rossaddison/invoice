@@ -10,6 +10,7 @@ cls
 echo =======================================
 echo         INVOICE SYSTEM MENU
 echo =======================================
+echo [0] Goto Installation Menu
 echo [1] Run PHP Psalm
 echo [2] Run PHP Psalm on a Specific File
 echo [2a] Clear Psalm's cache (in the event of stubborn errors)
@@ -39,8 +40,9 @@ echo [19] Run 'invoice/autoincrementsettooneafter/truncate6' Command
 echo [20] Exit
 echo [21] Exit to Current Directory
 echo =======================================
-set /p choice="Enter your choice [1-21]: "
+set /p choice="Enter your choice [0-21]: "
 
+if "%choice%"=="0" goto installation_menu 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_clear_cache
@@ -143,6 +145,12 @@ set /p confirm=""
 if /i "%confirm%"=="Y" goto invoice_autoincrementsettooneafter_truncate6
 if /i "%confirm%"=="N" goto menu
 echo Invalid input. Returning to the menu.
+pause
+goto menu
+
+:installation_menu
+echo Installation menu...
+install.bat
 pause
 goto menu
 

@@ -52,6 +52,16 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>28th June 2025</b></p>
+<p>Installation testing</p>
+<p>The invoice autoload.php function has been adjusted to check for composer. This simplifies the InstallCommand run with Symfony</p>
+<p>The m.bat has been updated to include a submenu for installation</p>
+<p>The installation submenu includes options Post Composer Install with Symfony, Pre Composer Install, and a yiipath existance check mainly for Unix and runs independently as install.bat.</p>
+<p><a href="https://github.com/copilot/share/824a52be-4824-8000-8952-8848404b6135" target="_blank"> Troubleshooting hanging install</a></p>
+<p><a href="https://github.com/copilot/share/0a03032c-4024-8c22-8100-1a0044c14925" target="_blank"> Checking folder existance in php</a></p>
+<p><a href="https://github.com/copilot/share/0a4a002e-4804-8c24-9043-180940832164" target="_blank"> Automating installation testing with Github Copilot</a></p>
+<p><b>27th June 2025</b></p>
+<p><a href="https://github.com/copilot/share/8a22503c-0024-80a0-8943-1a01404b4166" target="_blank">Topic: Adjusting error handling for PHP 8.4</a></p>
 <p><b>26th June 2025</b></p>
 <p>Applied rector and included 2 rector options in m.bat</p>
 <p>Removed files no longer needed for Google Translate e.g. ip_lang.php</p>

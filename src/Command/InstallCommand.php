@@ -29,9 +29,8 @@ final class InstallCommand extends Command
     #[\Override]
     protected function configure(): void
     {
-        $this
-            ->setDescription('Interactive installer for the invoice application')
-            ->setHelp('This command guides you through the complete setup process for the invoice application.');
+        $this->setDescription('Interactive installer for the invoice application')
+             ->setHelp('This command guides you through the complete setup process for the invoice application.');
     }
 
     #[\Override]
@@ -52,17 +51,12 @@ final class InstallCommand extends Command
             return Command::FAILURE;
         }
 
-        // Step 1: Composer install
-        if (!$this->handleComposerInstall($io)) {
-            return Command::FAILURE;
-        }
-
-        // Step 2: Database setup
+        // Step 1: Database setup
         if (!$this->handleDatabaseSetup($io)) {
             return Command::FAILURE;
         }
 
-        // Step 3: Manual checklist
+        // Step 2: Manual checklist
         $this->displayManualChecklist($io);
 
         $io->success([
@@ -105,16 +99,23 @@ final class InstallCommand extends Command
             }
         }
 
-        // Composer check
-        $composerInstalled = $this->isComposerInstalled();
-        $checks[] = [
-            'Composer',
-            $composerInstalled ? '✅ OK' : '❌ NOT FOUND',
-        ];
-        if (!$composerInstalled) {
+        $autoloadPath = dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+        if (!file_exists($autoloadPath)) {
+            $checks[] = [
+                'Composer',
+                '❌ NOT FOUND',
+            ];
             $allPassed = false;
+        } else {
+            /**
+             * @see {root}/autoload.php
+             */
+            $checks[] = [
+                'Composer',
+                '✅ OK',
+            ];
         }
-
+        
         // Display results in a table
         $io->table(['Check', 'Status'], $checks);
 
@@ -126,115 +127,7 @@ final class InstallCommand extends Command
         $io->success('All preflight checks passed!');
         return true;
     }
-
-    private function isComposerInstalled(): bool
-    {
-        // Try using Symfony Process if available, otherwise use exec
-        if (class_exists('SymfonyProcess')) {
-            $process = new SymfonyProcess(['composer', '--version']);
-            $process->run();
-            return $process->isSuccessful();
-        }
-        // Fallback to exec
-        $output = [];
-        $returnCode = 0;
-        exec('composer --version 2>/dev/null', $output, $returnCode);
-        return $returnCode === 0;
-    }
-
-    private function handleComposerInstall(SymfonyStyle $io): bool
-    {
-        $io->section('📦 Dependencies Installation');
-
-        // Check if vendor directory exists
-        if (is_dir('vendor') && file_exists('vendor/autoload.php')) {
-            $io->note('Dependencies appear to already be installed.');
-            if (!$io->confirm('Would you like to update dependencies?', false)) {
-                return true;
-            }
-            $command = ['composer', 'update', '--no-dev', '--optimize-autoloader'];
-        } else {
-            $io->text('Dependencies need to be installed using Composer.');
-            if (!$io->confirm('Run "composer install --no-dev --optimize-autoloader"?', true)) {
-                $io->warning('Dependencies installation skipped. You will need to run composer install manually.');
-                return true;
-            }
-            $command = ['composer', 'install', '--no-dev', '--optimize-autoloader'];
-        }
-
-        $io->text('Running: ' . implode(' ', $command));
-
-        if (class_exists('SymfonyProcess')) {
-            return $this->runComposerWithProcess($command, $io);
-        }
-        return $this->runComposerWithExec($command, $io);
-    }
-
-    private function runComposerWithProcess(array $command, SymfonyStyle $io): bool
-    {
-        $io->progressStart();
-
-        $process = new SymfonyProcess($command);
-        $process->setTimeout(300); // 5 minutes timeout
-
-        try {
-            $process->run(function (string $type, string $buffer) use ($io) {
-                // Progress feedback without showing actual output
-                $io->progressAdvance();
-            });
-
-            $io->progressFinish();
-
-            if (!$process->isSuccessful()) {
-                $io->error([
-                    'Composer command failed!',
-                    'Exit code: ' . (string)$process->getExitCode(),
-                    'Error output: ' . $process->getErrorOutput(),
-                ]);
-                $io->note('You can run the composer command manually and then re-run this installer.');
-                return false;
-            }
-
-            $io->success('Dependencies installed successfully!');
-            return true;
-        } catch (Exception $e) {
-            $io->progressFinish();
-            $io->error('Failed to run composer: ' . $e->getMessage());
-            return false;
-        }
-    }
-
-    private function runComposerWithExec(array $command, SymfonyStyle $io): bool
-    {
-        $io->text('Executing command...');
-
-        $commandStr = implode(' ', array_map(fn($arg) => escapeshellarg((string)$arg), $command));
-        $output = [];
-        $returnCode = 0;
-
-        // Run the command and capture output
-        exec($commandStr . ' 2>&1', $output, $returnCode);
-
-        if ($returnCode !== 0) {
-            $io->error([
-                'Composer command failed!',
-                'Exit code: ' . $returnCode,
-                'Output: ' . implode(
-                    "\n",
-                    array_map(
-                        fn($line) => is_scalar($line) || null === $line ? (string)$line : '',
-                        $output
-                    )
-                ),
-            ]);
-            $io->note('You can run the composer command manually and then re-run this installer.');
-            return false;
-        }
-
-        $io->success('Dependencies installed successfully!');
-        return true;
-    }
-
+    
     private function handleDatabaseSetup(SymfonyStyle $io): bool
     {
         $io->section('🗄️ Database Setup');

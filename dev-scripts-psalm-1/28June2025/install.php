@@ -4,7 +4,6 @@
 /**
  * Standalone installer that works without Symfony Console dependencies.
  * Provides a fallback for when dependencies aren't installed yet.
- * Run: php install.php
  */
 
 declare(strict_types=1);
@@ -49,7 +48,6 @@ foreach ($requiredExtensions as $ext) {
     }
 }
 
-// Robust Composer check with fallback if vendor/autoload.php exists
 $composerInstalled = false;
 $composerCmdFound = null;
 $composerFoundMsg = '';
