@@ -45,7 +45,7 @@ This works without any dependencies and guides you through the complete setup.
 ### Option 2: Full-Featured Installer (After dependencies are installed)
 ```bash
 # Using the convenience script
-php install
+php install_writable.php
 
 # Or using the yii console directly  
 ./yii install
