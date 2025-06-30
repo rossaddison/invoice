@@ -95,7 +95,7 @@ class GeneratorController extends BaseController
         Flash $flash
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->aliases = $aliases;
+        $this->aliases = $this->setAliases();
         $this->factory = $factory;
         $this->generatorService = $generatorService;
     }
