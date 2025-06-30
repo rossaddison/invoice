@@ -8770,12 +8770,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-sentry.git",
-                "reference": "18bf5811e43c5b82fab7880827abfc6e0d9d675b"
+                "reference": "305f1949c24eae4d92b5c9ed1c3666bdf81693b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-sentry/zipball/18bf5811e43c5b82fab7880827abfc6e0d9d675b",
-                "reference": "18bf5811e43c5b82fab7880827abfc6e0d9d675b",
+                "url": "https://api.github.com/repos/rossaddison/yii-sentry/zipball/305f1949c24eae4d92b5c9ed1c3666bdf81693b6",
+                "reference": "305f1949c24eae4d92b5c9ed1c3666bdf81693b6",
                 "shasum": ""
             },
             "require": {
@@ -8784,7 +8784,7 @@
                 "psr/http-server-handler": "^1.0.2",
                 "psr/http-server-middleware": "^1.0.2",
                 "sentry/sentry": "^4.14.1",
-                "symfony/console": "^7.3",
+                "symfony/console": "^7.3.1",
                 "yiisoft/di": "^1.4"
             },
             "require-dev": {
@@ -8792,8 +8792,8 @@
                 "httpsoft/http-message": "^1.1.6",
                 "maglnet/composer-require-checker": "^4.16.1",
                 "php-http/guzzle7-adapter": "^1.1",
-                "phpunit/phpunit": "^12.2.3",
-                "rector/rector": "^2.0.18",
+                "phpunit/phpunit": "^12.2.5",
+                "rector/rector": "^2.1.0",
                 "roave/infection-static-analysis-plugin": ">=1.38",
                 "spatie/phpunit-watcher": ">=1.24.0",
                 "vimeo/psalm": "^6.12.0",
@@ -8864,7 +8864,7 @@
                     "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2025-06-23T23:09:10+00:00"
+            "time": "2025-06-30T23:06:28+00:00"
         },
         {
             "name": "sabre/uri",
