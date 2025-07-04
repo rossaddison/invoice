@@ -650,14 +650,14 @@ final class AuthController
     private function blockInvalidState(string $identityProvider, string $state): void
     {
         // Validate and sanitize the state parameter
-        if ($state === '' || $state === null) {
+        if ($state === '') {
             $this->logger->log(LogLevel::ALERT, 'Invalid or empty OAuth2 state parameter from provider: ' . $identityProvider);
             exit(1);
         }
         
         // Sanitize state parameter to prevent injection attacks
         $state = preg_replace('/[^a-zA-Z0-9\-_]/', '', $state);
-        if ($state === '' || $state === null) {
+        if ($state === '') {
             $this->logger->log(LogLevel::ALERT, 'State parameter contains invalid characters from provider: ' . $identityProvider);
             exit(1);
         }
@@ -1019,7 +1019,9 @@ final class AuthController
     private function checkRateLimit(string $key): bool
     {
         try {
-            return $this->rateLimiter->hit($key);
+            $result = $this->rateLimiter->hit($key);
+            // The hit method returns a CounterState object, check if the limit is not exceeded
+            return !$result->isLimitExceeded();
         } catch (\Exception $e) {
             // Log error but don't block authentication if rate limiter fails
             $this->logger->log(LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
@@ -1046,7 +1048,7 @@ final class AuthController
         ];
         
         foreach ($ipHeaders as $header) {
-            if (!empty($serverParams[$header])) {
+            if (!empty($serverParams[$header]) && is_string($serverParams[$header])) {
                 $ip = trim($serverParams[$header]);
                 
                 // Handle comma-separated IPs (X-Forwarded-For can contain multiple IPs)
@@ -1063,6 +1065,7 @@ final class AuthController
         }
         
         // Fallback to REMOTE_ADDR or default
-        return $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
+        $remoteAddr = $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
+        return is_string($remoteAddr) ? $remoteAddr : '127.0.0.1';
     }
 }
