@@ -1002,11 +1002,9 @@ final class AuthController
         // Overwrite sensitive variables with random data before unsetting
         /** @var string[] $sensitiveVars */
         foreach ($sensitiveVars as &$var) {
-            if (is_string($var)) {
-                /** @var string $var */
-                $var = str_repeat('0', strlen($var));
-                $var = Random::string(strlen($var));
-            }
+            /** @var string $var */
+            $var = str_repeat('0', strlen($var));
+            $var = Random::string(strlen($var));
             unset($var);
         }
     }
@@ -1068,6 +1066,6 @@ final class AuthController
         // Fallback to REMOTE_ADDR or default
         /** @var string|null $remoteAddr */
         $remoteAddr = $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
-        return $remoteAddr ?: '127.0.0.1';
+        return strlen($remoteAddr) > 0 ? $remoteAddr : '127.0.0.1';
     }
 }
