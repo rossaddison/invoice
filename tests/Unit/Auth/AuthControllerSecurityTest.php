@@ -67,7 +67,7 @@ final class AuthControllerSecurityTest extends TestCase
 
         // Mock ViewRenderer to return itself for method chaining
         $viewRenderer->method('withControllerName')->willReturn($viewRenderer);
-        
+
         // Mock rate limiter to always allow requests in tests
         $rateLimiter->method('hit')->willReturn(true);
 
@@ -105,12 +105,12 @@ final class AuthControllerSecurityTest extends TestCase
     public function testSanitizeAndValidateCodeValidTotp(): void
     {
         $method = $this->getPrivateMethod('sanitizeAndValidateCode');
-        
+
         // Valid 6-digit TOTP codes
         $this->assertEquals('123456', $method->invoke($this->authController, '123456'));
         $this->assertEquals('000000', $method->invoke($this->authController, '000000'));
         $this->assertEquals('999999', $method->invoke($this->authController, '999999'));
-        
+
         // Valid with whitespace that should be trimmed
         $this->assertEquals('123456', $method->invoke($this->authController, ' 123456 '));
         $this->assertEquals('123456', $method->invoke($this->authController, "\t123456\n"));
@@ -122,7 +122,7 @@ final class AuthControllerSecurityTest extends TestCase
     public function testSanitizeAndValidateCodeValidBackup(): void
     {
         $method = $this->getPrivateMethod('sanitizeAndValidateCode');
-        
+
         // Valid 8-character backup codes
         $this->assertEquals('ABCD1234', $method->invoke($this->authController, 'ABCD1234'));
         $this->assertEquals('12345678', $method->invoke($this->authController, '12345678'));
@@ -136,7 +136,7 @@ final class AuthControllerSecurityTest extends TestCase
     public function testSanitizeAndValidateCodeInvalid(): void
     {
         $method = $this->getPrivateMethod('sanitizeAndValidateCode');
-        
+
         // Invalid formats
         $this->assertNull($method->invoke($this->authController, ''));
         $this->assertNull($method->invoke($this->authController, '12345')); // Too short
@@ -155,12 +155,12 @@ final class AuthControllerSecurityTest extends TestCase
     public function testIsValidTotpCode(): void
     {
         $method = $this->getPrivateMethod('isValidTotpCode');
-        
+
         // Valid TOTP codes
         $this->assertTrue($method->invoke($this->authController, '123456'));
         $this->assertTrue($method->invoke($this->authController, '000000'));
         $this->assertTrue($method->invoke($this->authController, '999999'));
-        
+
         // Invalid TOTP codes
         $this->assertFalse($method->invoke($this->authController, '12345')); // Too short
         $this->assertFalse($method->invoke($this->authController, '1234567')); // Too long
@@ -175,13 +175,13 @@ final class AuthControllerSecurityTest extends TestCase
     public function testIsValidBackupCode(): void
     {
         $method = $this->getPrivateMethod('isValidBackupCode');
-        
+
         // Valid backup codes
         $this->assertTrue($method->invoke($this->authController, 'ABCD1234'));
         $this->assertTrue($method->invoke($this->authController, '12345678'));
         $this->assertTrue($method->invoke($this->authController, 'abcdefgh'));
         $this->assertTrue($method->invoke($this->authController, 'MixEd123'));
-        
+
         // Invalid backup codes
         $this->assertFalse($method->invoke($this->authController, 'ABCD123')); // Too short
         $this->assertFalse($method->invoke($this->authController, 'ABCD12345')); // Too long
@@ -196,25 +196,25 @@ final class AuthControllerSecurityTest extends TestCase
     public function testValidateSessionIntegrity(): void
     {
         $method = $this->getPrivateMethod('validateSessionIntegrity');
-        
+
         // Mock session to return valid user ID
         $session = $this->createMock(SessionInterface::class);
         $session->method('get')
                ->with('verified_2fa_user_id')
                ->willReturn(123);
-        
+
         // Use reflection to set the session property
         $sessionProperty = $this->reflection->getProperty('session');
         $sessionProperty->setAccessible(true);
         $sessionProperty->setValue($this->authController, $session);
-        
+
         // Test valid session
         $this->assertTrue($method->invoke($this->authController, 123));
-        
+
         // Test invalid user ID
         $this->assertFalse($method->invoke($this->authController, 0));
         $this->assertFalse($method->invoke($this->authController, -1));
-        
+
         // Test mismatched user ID
         $this->assertFalse($method->invoke($this->authController, 456));
     }
@@ -225,7 +225,7 @@ final class AuthControllerSecurityTest extends TestCase
     public function testInputSanitizationRemovesSpecialChars(): void
     {
         $method = $this->getPrivateMethod('sanitizeAndValidateCode');
-        
+
         // Test removal of special characters
         $this->assertEquals('123456', $method->invoke($this->authController, '1-2-3-4-5-6'));
         $this->assertEquals('ABCD1234', $method->invoke($this->authController, 'A.B.C.D.1.2.3.4'));
@@ -238,7 +238,7 @@ final class AuthControllerSecurityTest extends TestCase
     public function testNumericInputHandling(): void
     {
         $method = $this->getPrivateMethod('sanitizeAndValidateCode');
-        
+
         // Test numeric inputs
         $this->assertEquals('123456', $method->invoke($this->authController, 123456));
         $this->assertNull($method->invoke($this->authController, 12345)); // Too short

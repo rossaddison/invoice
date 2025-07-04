@@ -56,7 +56,7 @@ final class TwoFactorAuthenticationSetupForm extends FormModel
     }
 
     /**
-     * @return (Required|Length|Regex)[]
+     * @return (Length|Regex|Required)[]
      *
      * @psalm-return list{Required, Length, Regex}
      */
