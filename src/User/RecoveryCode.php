@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\User;
 
-use App\User\RecoveryCodeRepository;
-use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -18,11 +16,11 @@ class RecoveryCode
 {
     #[Column(type: 'primary')]
     private ?int $id = null;
-    
+
     #[Column(type: 'datetime', nullable: false)]
     private readonly DateTimeImmutable $date_created;
 
-    public function __construct(        
+    public function __construct(
         #[BelongsTo(target: User::class, nullable: false)]
         private User $user,
         #[Column(type: 'string(255)', nullable: false)]

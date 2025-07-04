@@ -222,7 +222,7 @@ final class CompanyPrivateController extends BaseController
                  * @var array $_FILES['logo_filename']
                  * @var array $body
                  */
-                $body['logo_filename'] = (string)($_FILES['logo_filename']['name']);
+                $body['logo_filename'] = (string)$_FILES['logo_filename']['name'];
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
                     $modified_original_file_name = Random::string(4) . '_' . (string)preg_replace('/\s+/', '_', $body['logo_filename']);

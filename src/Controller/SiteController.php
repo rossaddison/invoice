@@ -58,11 +58,11 @@ final class SiteController
     {
         return $this->viewRenderer->render('testimonial');
     }
-    
+
     public function oauth2autherror(#[RouteArgument('message')] string $message): \Yiisoft\DataResponse\DataResponse
     {
         return $this->viewRenderer->render('oauth2autherror', ['message' => $message]);
-    }    
+    }
 
     public function oauth2callbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
     {

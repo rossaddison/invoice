@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\User;
 
-use App\User\RecoveryCode;
-use App\User\User;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -18,10 +16,10 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class RecoveryCodeRepository extends Select\Repository
 {
-/**
-     * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
-     */
+    /**
+         * @param Select<TEntity> $select
+         * @param EntityWriter $entityWriter
+         */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
@@ -37,7 +35,7 @@ final class RecoveryCodeRepository extends Select\Repository
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -46,15 +44,15 @@ final class RecoveryCodeRepository extends Select\Repository
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }  
-    
+    }
+
     /**
      * @param User $user
      * @return EntityReader
@@ -66,7 +64,7 @@ final class RecoveryCodeRepository extends Select\Repository
                 ->where(['user_id' => $userId]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @param User $user
      * @return int
@@ -78,31 +76,29 @@ final class RecoveryCodeRepository extends Select\Repository
                     ->where(['user_id' => $userId])
                     ->count();
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|RecoveryCode|null $backup
      * @psalm-param TEntity $backup
-     * @throws Throwable 
-     * @return void
+     * @throws Throwable
      */
     public function save(array|RecoveryCode|null $backup): void
     {
         $this->entityWriter->write([$backup]);
     }
-    
+
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|RecoveryCode|null $backup
-  
-     * @throws Throwable 
-     * @return void
+
+     * @throws Throwable
      */
     public function delete(array|RecoveryCode|null $backup): void
     {
         $this->entityWriter->delete([$backup]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -113,8 +109,8 @@ final class RecoveryCodeRepository extends Select\Repository
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -122,17 +118,18 @@ final class RecoveryCodeRepository extends Select\Repository
      */
     public function repoRecoveryCodeLoadedquery(string $id): RecoveryCode|null
     {
-        $query = $this->select()->where(['id' =>$id]);
-        return  $query->fetchOne() ?: null;        
+        $query = $this->select()->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
      */
-    public function repoCount(string $id) : int {
+    public function repoCount(string $id): int
+    {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
 }
