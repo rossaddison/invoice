@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c00bcd589b41176200fbebe94b64198",
+    "content-hash": "55ae543ff282d87baad4dc6e41f06606",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -13010,20 +13010,20 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.9",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8"
+                "reference": "84929bce2345c06b77c03dfa88849303142c03e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
-                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/84929bce2345c06b77c03dfa88849303142c03e5",
+                "reference": "84929bce2345c06b77c03dfa88849303142c03e5",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2",
+                "php-64bit": "^8.2",
                 "php-http/multipart-stream-builder": "^1.4.2",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.1",
@@ -13034,7 +13034,7 @@
                 "ext-curl": "*",
                 "httpsoft/http-message": "^1.1.6",
                 "php-http/curl-client": "^2.3.3",
-                "phpunit/phpunit": "^11.5.17",
+                "phpunit/phpunit": "^11.5.25",
                 "psr/log": "^3.0.2",
                 "yiisoft/files": "^2.0",
                 "yiisoft/test-support": "^3.0.2"
@@ -13077,7 +13077,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2025-04-12T18:23:43+00:00"
+            "time": "2025-07-04T07:44:15+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
