@@ -1066,6 +1066,6 @@ final class AuthController
         // Fallback to REMOTE_ADDR or default
         /** @var string|null $remoteAddr */
         $remoteAddr = $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
-        return strlen($remoteAddr) > 0 ? $remoteAddr : '127.0.0.1';
+        return strlen($remoteAddr ?? '') > 0 ? $remoteAddr : '127.0.0.1';
     }
 }
