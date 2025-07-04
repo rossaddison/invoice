@@ -680,7 +680,7 @@ final class AuthController
             default => null
         };
 
-        if (null !== $sessionState) {
+        if (null !== $sessionState && null !== $state) {
             // Use constant-time comparison to prevent timing attacks
             if (!$sessionState || !hash_equals((string)$sessionState, $state)) {
                 // State is invalid, possible cross-site request forgery. Exit with an error code.
@@ -1000,6 +1000,7 @@ final class AuthController
         }
         
         // Overwrite sensitive variables with random data before unsetting
+        /** @var string[] $sensitiveVars */
         foreach ($sensitiveVars as &$var) {
             if (is_string($var)) {
                 /** @var string $var */
@@ -1021,7 +1022,7 @@ final class AuthController
         try {
             $result = $this->rateLimiter->hit($key);
             // The hit method returns a CounterState object, check if the limit is not exceeded
-            return !$result->isLimitExceeded();
+            return !$result->isLimitReached();
         } catch (\Exception $e) {
             // Log error but don't block authentication if rate limiter fails
             $this->logger->log(LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
@@ -1065,7 +1066,8 @@ final class AuthController
         }
         
         // Fallback to REMOTE_ADDR or default
+        /** @var string|null $remoteAddr */
         $remoteAddr = $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
-        return is_string($remoteAddr) ? $remoteAddr : '127.0.0.1';
+        return $remoteAddr ?: '127.0.0.1';
     }
 }
