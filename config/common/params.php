@@ -77,6 +77,7 @@ return [
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
+        'http_client_ip' => $_SERVER['HTTP_CLIENT_IP'] ?? null,
     ],
     'license' => [
         'id' => 'invoice_BSD-3-Clause_20250511',

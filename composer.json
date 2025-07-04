@@ -154,7 +154,7 @@
         "roave/security-advisories": "dev-latest",
         "spatie/phpunit-watcher": ">=1.24.0",
         "styleci/cli": "^1.6.0",
-        "vimeo/psalm": "^6.12.0",
+        "vimeo/psalm": "^6.12.1",
         "yiisoft/translator-extractor": "^2.1.1"
     },      
     "autoload": {
