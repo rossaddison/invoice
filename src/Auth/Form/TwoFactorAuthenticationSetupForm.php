@@ -7,6 +7,8 @@ namespace App\Auth\Form;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Regex;
 
 final class TwoFactorAuthenticationSetupForm extends FormModel
 {
@@ -54,14 +56,18 @@ final class TwoFactorAuthenticationSetupForm extends FormModel
     }
 
     /**
-     * @return (Required)[]
+     * @return (Required|Length|Regex)[]
      *
-     * @psalm-return list{Required}
+     * @psalm-return list{Required, Length, Regex}
      */
     private function codeRules(): array
     {
         return [
             new Required(),
+            // TOTP codes are exactly 6 digits during setup
+            new Length(min: 6, max: 6),
+            // Only allow digits for TOTP codes during setup
+            new Regex('/^\d{6}$/', message: $this->translator->translate('layout.password.otp.setup.invalid.format')),
         ];
     }
 }
