@@ -50,7 +50,7 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. 
+             * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
@@ -361,7 +361,7 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. 
+             * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
@@ -858,7 +858,7 @@ trait Callback
          */
         if (strlen($state) == 0 || strlen($sessionState) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. 
+             * State is invalid, possible cross-site request forgery.
              */
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state and stateSession are both present
@@ -1380,14 +1380,14 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     private function redirectToOauth2AuthError(string $message): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/oauth2autherror', [
             'message' => $message,
         ]);
-    }   
-    
+    }
+
     private function redirectToUserCancelledOauth2(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);

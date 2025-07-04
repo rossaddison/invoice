@@ -17,10 +17,10 @@ final readonly class WebControllerService
         private UrlGeneratorInterface $urlGenerator
     ) {
     }
-    
-    /** Bug: Trailing # at end of browser url if ... string $hash = ''; 
+
+    /** Bug: Trailing # at end of browser url if ... string $hash = '';
      *  Fix: ?string $hash = null
-     *  @see 
+     *  @see
      */
     /** @psalm-suppress MixedArgumentTypeCoercion $arguments **/
     public function getRedirectResponse(string $url, array $arguments = [], array $queryParameters = [], ?string $hash = null): ResponseInterface

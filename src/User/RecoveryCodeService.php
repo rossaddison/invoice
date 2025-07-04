@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\User;
 
-use App\User\RecoveryCode;
-use App\User\User;
-use App\User\RecoveryCodeRepository;
-
 final class RecoveryCodeService
 {
     public function __construct(private RecoveryCodeRepository $repository)
@@ -36,7 +32,7 @@ final class RecoveryCodeService
     {
         $this->repository->delete($model);
     }
-    
+
     public function removeBackupRecoveryCodes(User $user): void
     {
         $codes = $this->repository->findByUser($user);
@@ -46,15 +42,16 @@ final class RecoveryCodeService
         foreach ($codes as $code) {
             $this->deleteRecoveryCode($code);
         }
-    }    
-    
+    }
+
     public function userHasBackupCodes(User $user): bool
     {
         $count = $this->repository->findByUserCount($user);
         return $count > 0;
-    }   
-    
-    public function generateBackupCodes(int $count = 5, int $length = 8): array {
+    }
+
+    public function generateBackupCodes(int $count = 5, int $length = 8): array
+    {
         $codes = [];
         // Ensure length is at least 2 and even
         $length = ($length < 2) ? 2 : (($length % 2 === 0) ? $length : $length + 1);
@@ -67,7 +64,7 @@ final class RecoveryCodeService
         }
         return $codes;
     }
-    
+
     public function persistBackupCodes(User $user, array $plainCodes): void
     {
         /** @var string[] $plainCodes */
@@ -77,7 +74,7 @@ final class RecoveryCodeService
             $this->repository->save($recoveryCode);
         }
     }
-    
+
     public function validateAndMarkCodeAsUsed(User $user, string $inputCode): bool
     {
         // Fetch all recovery codes for the user

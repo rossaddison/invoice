@@ -412,7 +412,7 @@ final class AuthController
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
         $user = $userRepository->findById((string)$verifiedUserId);
-        if (null!==$user) {
+        if (null !== $user) {
             // Only display the recovery codes once i.e. if the user does not have any
             if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
                 $codes = $this->generateBackupRecoveryCodes($user);
@@ -424,7 +424,7 @@ final class AuthController
                 $this->session->set('backup_recovery_codes', $codes);
                 $this->session->set('regenerate_codes', false);
             }
-        }    
+        }
         $parameters = [
             'title' => $translator->translate('two.factor.authentication.form.verify.login'),
             'actionName' => 'auth/verifyLogin',
@@ -459,23 +459,22 @@ final class AuthController
                                 $this->session->set('otp', $inputCode);
                                 $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                 return $this->redirectToInvoiceIndex();
-                            
                             }
                             $error = $translator->translate('two.factor.authentication.attempt.failure');
                         } else {
-                            // The user has forgotten their $inputCode so try a backup code    
+                            // The user has forgotten their $inputCode so try a backup code
                             if ($totpSecret !== null && $this->recoveryCodeService->validateAndMarkCodeAsUsed($user, $inputCode)) {
                                 $this->removeSessionTempsAndPermitEntryToBaseController($verifiedUserId);
                                 $this->session->set('otp', $inputCode);
                                 $this->session->set('otpRef', TokenMask::apply($totpSecret));
-                                return $this->redirectToInvoiceIndex();    
+                                return $this->redirectToInvoiceIndex();
                             }
                             $error = $translator->translate('two.factor.authentication.missing.code.or.secret');
                         }
                         return $this->viewRenderer->render('verify', [
                             'error' => $error,
                             'formModel' => $form,
-                            'codes' => $codes
+                            'codes' => $codes,
                         ]);
                     }
                 }
@@ -483,8 +482,8 @@ final class AuthController
         }
         return $this->viewRenderer->render('verify', $parameters);
     }
-    
-    private function removeSessionTempsAndPermitEntryToBaseController(int $verifiedUserId): void 
+
+    private function removeSessionTempsAndPermitEntryToBaseController(int $verifiedUserId): void
     {
         $this->session->remove('pending_2fa_user_id');
         $this->session->remove('backup_recovery_codes');
@@ -629,8 +628,9 @@ final class AuthController
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
-    public function regenerateCodes(UserRepository $uR): ResponseInterface {
+
+    public function regenerateCodes(UserRepository $uR): ResponseInterface
+    {
         $this->session->set('regenerate_codes', true);
         return $this->webService->getRedirectResponse('auth/verifyLogin');
     }
@@ -750,14 +750,16 @@ final class AuthController
     {
         return $this->webService->getRedirectResponse('site/onetimepassworderror', ['_language' => 'en']);
     }
-    
-    private function removeBackupRecoveryCodes(User $user): void {
+
+    private function removeBackupRecoveryCodes(User $user): void
+    {
         if ($this->recoveryCodeService->userHasBackupCodes($user)) {
             $this->recoveryCodeService->removeBackupRecoveryCodes($user);
         }
     }
-    
-    private function generateBackupRecoveryCodes(User $user): array {
+
+    private function generateBackupRecoveryCodes(User $user): array
+    {
         $codes = $this->recoveryCodeService->generateBackupCodes(5, 8);
         $this->recoveryCodeService->persistBackupCodes($user, $codes);
         return $codes;

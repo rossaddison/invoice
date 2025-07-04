@@ -343,7 +343,7 @@ final readonly class Button
             ->render() .
         Html::closeTag('div');
     }
-    
+
     public function regenerateRecoveryCodes(string $regenerateCodesUrl): string
     {
         return A::tag()
@@ -352,5 +352,5 @@ final readonly class Button
         ->href($regenerateCodesUrl)
         ->id('btn-regenerate-codes')
         ->render();
-    }    
+    }
 }
