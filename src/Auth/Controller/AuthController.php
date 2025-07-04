@@ -50,6 +50,7 @@ use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
 use Yiisoft\Yii\AuthClient\Client\X;
 use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
+use Yiisoft\Yii\RateLimiter\CounterInterface;
 
 final class AuthController
 {
@@ -91,7 +92,8 @@ final class AuthController
         private readonly Yandex $yandex,
         private readonly UrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
-        private readonly Flash $flash
+        private readonly Flash $flash,
+        private readonly CounterInterface $rateLimiter
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
@@ -339,6 +341,15 @@ final class AuthController
         TranslatorInterface $translator,
         UserRepository $userRepository
     ): ResponseInterface {
+        // Apply rate limiting for setup verification attempts
+        $clientIp = $this->getClientIpAddress($request);
+        $rateLimitKey = 'auth_setup_' . hash('sha256', $clientIp);
+        
+        if (!$this->checkRateLimit($rateLimitKey)) {
+            $this->logger->log(LogLevel::WARNING, 'Rate limit exceeded for 2FA setup from IP: ' . $clientIp);
+            return $this->redirectToOneTimePasswordError();
+        }
+        
         $pendingUserId = (int)$this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
         if (is_array($body)) {
@@ -472,6 +483,20 @@ final class AuthController
             'codes' => $codes,
         ];
         if ($request->getMethod() === Method::POST) {
+            // Apply rate limiting for authentication attempts
+            $clientIp = $this->getClientIpAddress($request);
+            $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
+            
+            if (!$this->checkRateLimit($rateLimitKey)) {
+                $this->logger->log(LogLevel::WARNING, 'Rate limit exceeded for 2FA verification from IP: ' . $clientIp);
+                $error = $translator->translate('two.factor.authentication.rate.limit.exceeded');
+                return $this->viewRenderer->render('verify', [
+                    'error' => $error,
+                    'formModel' => $form,
+                    'codes' => $codes,
+                ]);
+            }
+            
             $body = $request->getParsedBody();
             if (is_array($body)) {
                 $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
@@ -971,5 +996,61 @@ final class AuthController
             }
             unset($var);
         }
+    }
+
+    /**
+     * Check rate limit for authentication operations.
+     *
+     * @param string $key Rate limit key
+     * @return bool True if within rate limit, false if exceeded
+     */
+    private function checkRateLimit(string $key): bool
+    {
+        try {
+            return $this->rateLimiter->hit($key);
+        } catch (\Exception $e) {
+            // Log error but don't block authentication if rate limiter fails
+            $this->logger->log(LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
+            return true;
+        }
+    }
+
+    /**
+     * Extract client IP address from request with security considerations.
+     *
+     * @param ServerRequestInterface $request
+     * @return string
+     */
+    private function getClientIpAddress(ServerRequestInterface $request): string
+    {
+        $serverParams = $request->getServerParams();
+        
+        // Check for IP address from headers in order of preference
+        $ipHeaders = [
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_REAL_IP',
+            'HTTP_CLIENT_IP',
+            'REMOTE_ADDR'
+        ];
+        
+        foreach ($ipHeaders as $header) {
+            if (!empty($serverParams[$header])) {
+                $ip = trim($serverParams[$header]);
+                
+                // Handle comma-separated IPs (X-Forwarded-For can contain multiple IPs)
+                if (strpos($ip, ',') !== false) {
+                    $ips = explode(',', $ip);
+                    $ip = trim($ips[0]); // Use the first IP
+                }
+                
+                // Validate IP address format
+                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    return $ip;
+                }
+            }
+        }
+        
+        // Fallback to REMOTE_ADDR or default
+        return $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
     }
 }
