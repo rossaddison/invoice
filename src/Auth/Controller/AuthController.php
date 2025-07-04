@@ -158,8 +158,14 @@ final class AuthController
                          * Check if the user is active through proper authorization
                          * instead of hardcoded user ID check for better security
                          */
-                        $isAdminUser = $this->manager->userHasRole($userId, 'administrator') || 
-                                      $this->manager->userHasPermission($userId, 'admin');
+                        $userRoles = $this->manager->getRolesByUserId($userId);
+                        $isAdminUser = false;
+                        foreach ($userRoles as $role) {
+                            if ($role->getName() === 'administrator' || $role->getName() === 'admin') {
+                                $isAdminUser = true;
+                                break;
+                            }
+                        }
                         
                         if ($status || $isAdminUser) {
                             // Disable email verification token for admin users who don't need email verification
@@ -562,7 +568,8 @@ final class AuthController
         // Validate session integrity before proceeding
         if (!$this->validateSessionIntegrity($verifiedUserId)) {
             $this->logger->log(LogLevel::WARNING, 'Session integrity validation failed for user ID: ' . $verifiedUserId);
-            $this->session->invalidate();
+            // Clear all session data instead of invalidate which doesn't exist
+            $this->session->clear();
             return;
         }
         
@@ -590,6 +597,7 @@ final class AuthController
         }
         
         // Verify session has required 2FA data
+        /** @var int|null $verifiedUserId */
         $verifiedUserId = $this->session->get('verified_2fa_user_id');
         if ($verifiedUserId !== $userId) {
             return false;
@@ -618,12 +626,15 @@ final class AuthController
             $token = $tR->findTokenByIdentityIdAndType($userId, $this->getTokenType($identityProvider));
             if (null !== $token) {
                 // Use cryptographically secure method to mark token as used
-                $disabledToken = 'disabled_' . hash('sha256', $token->getToken() . time() . Random::string(16));
-                $token->setToken($disabledToken);
-                $tR->save($token);
-                
-                // Log the token disabling for security audit
-                $this->logger->log(LogLevel::INFO, 'Token disabled for user ID: ' . $userId . ', provider: ' . $identityProvider);
+                $tokenValue = $token->getToken();
+                if ($tokenValue !== null) {
+                    $disabledToken = 'disabled_' . hash('sha256', $tokenValue . time() . Random::string(16));
+                    $token->setToken($disabledToken);
+                    $tR->save($token);
+                    
+                    // Log the token disabling for security audit
+                    $this->logger->log(LogLevel::INFO, 'Token disabled for user ID: ' . $userId . ', provider: ' . $identityProvider);
+                }
             }
         }
     }
@@ -639,14 +650,14 @@ final class AuthController
     private function blockInvalidState(string $identityProvider, string $state): void
     {
         // Validate and sanitize the state parameter
-        if (empty($state) || !is_string($state)) {
+        if ($state === '' || $state === null) {
             $this->logger->log(LogLevel::ALERT, 'Invalid or empty OAuth2 state parameter from provider: ' . $identityProvider);
             exit(1);
         }
         
         // Sanitize state parameter to prevent injection attacks
         $state = preg_replace('/[^a-zA-Z0-9\-_]/', '', $state);
-        if (empty($state)) {
+        if ($state === '' || $state === null) {
             $this->logger->log(LogLevel::ALERT, 'State parameter contains invalid characters from provider: ' . $identityProvider);
             exit(1);
         }
@@ -771,8 +782,8 @@ final class AuthController
         // Secure cleanup of session data
         $this->secureClearSensitiveData();
         
-        // Invalidate session completely for security
-        $this->session->invalidate();
+        // Clear all session data completely for security
+        $this->session->clear();
         
         $this->authService->logout();
         return $this->redirectToMain();
@@ -991,6 +1002,7 @@ final class AuthController
         // Overwrite sensitive variables with random data before unsetting
         foreach ($sensitiveVars as &$var) {
             if (is_string($var)) {
+                /** @var string $var */
                 $var = str_repeat('0', strlen($var));
                 $var = Random::string(strlen($var));
             }
