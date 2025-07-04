@@ -646,19 +646,14 @@ final class ClientController extends BaseController
             /**
              * @var array $custom_field_body['custom']
              * @var array $custom
-             * @var string $custom['name']
              */
             foreach ($custom_field_body['custom'] as $custom) {
-                if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
-                    /**
-                     * @var string $custom['value']
-                     */
-                    $values[$matches[1]][] = $custom['value'];
+                $customName = (string)$custom['name'];
+                $customValue = (string)$custom['value'];
+                if (preg_match("/^(.*)\[\]$/i", $customName, $matches)) {
+                    $values[$matches[1]][] = $customValue;
                 } else {
-                    /**
-                     * @var string $custom['value']
-                     */
-                    $values[$custom['name']] = $custom['value'];
+                    $values[$customName] = $customValue;
                 }
             }
             foreach ($values as $key => $value) {

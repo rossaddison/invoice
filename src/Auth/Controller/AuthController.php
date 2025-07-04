@@ -19,6 +19,7 @@ use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
 use App\User\User;
 use App\User\UserRepository;
+use App\User\RecoveryCodeService;
 use OTPHP\TOTP;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,6 +72,7 @@ final class AuthController
 
     public function __construct(
         private readonly AuthService $authService,
+        private readonly RecoveryCodeService $recoveryCodeService,
         private readonly DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
         private ViewRenderer $viewRenderer,
@@ -267,18 +269,16 @@ final class AuthController
      * Step 4: Enter the TOTP (Timed One Time Password) within the limited time
      *
      * @param ServerRequestInterface $request
-     * @param SessionInterface $session
      * @param TranslatorInterface $translator
      * @param UserRepository $userRepository
      * @return ResponseInterface
      */
     public function showSetup(
         ServerRequestInterface $request,
-        SessionInterface $session,
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
-        $userId = (int)$session->get('pending_2fa_user_id');
+        $userId = (int)$this->session->get('pending_2fa_user_id');
         $user = $userRepository->findById((string)$userId);
         if (null !== $user) {
             $email = $user->getEmail();
@@ -286,7 +286,7 @@ final class AuthController
                 $totp = TOTP::create();
                 $totp->setLabel($email);
                 $secret = $totp->getSecret();
-                $session->set('2fa_temp_secret', $secret);
+                $this->session->set('2fa_temp_secret', $secret);
                 $qrContent = $totp->getProvisioningUri();
                 $qrDataUri = $this->generateQrDataUri($qrContent);
                 $form = new TwoFactorAuthenticationSetupForm($translator);
@@ -324,18 +324,16 @@ final class AuthController
      *
      * Verify 2FA code during setup process.
      * @param ServerRequestInterface $request
-     * @param SessionInterface $session
      * @param TranslatorInterface $translator
      * @param UserRepository $userRepository
      * @return ResponseInterface
      */
     public function verifySetup(
         ServerRequestInterface $request,
-        SessionInterface $session,
         TranslatorInterface $translator,
         UserRepository $userRepository
     ): ResponseInterface {
-        $pendingUserId = (int)$session->get('pending_2fa_user_id');
+        $pendingUserId = (int)$this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
         if (is_array($body)) {
             $inputCode = (string)($body['text'] ?? '');
@@ -343,7 +341,7 @@ final class AuthController
                 $user = $userRepository->findById((string)$pendingUserId);
                 if (null !== $user) {
                     /** @var mixed $tempSecretRaw */
-                    $tempSecretRaw = $session->get('2fa_temp_secret');
+                    $tempSecretRaw = $this->session->get('2fa_temp_secret');
                     $tempSecret = (\is_string($tempSecretRaw) && $tempSecretRaw !== '') ? $tempSecretRaw : null;
                     $error = '';
                     if ($tempSecret === null) {
@@ -357,10 +355,10 @@ final class AuthController
                             $user->setTotpSecret($tempSecret);
                             $user->set2FAEnabled(true);
                             $userRepository->save($user);
-                            $session->remove('2fa_temp_secret');
+                            $this->session->remove('2fa_temp_secret');
                             $this->session->remove('pending_2fa_user_id');
                             $this->session->set('verified_2fa_user_id', $pendingUserId);
-                            return $this->webService->getRedirectResponse('auth/verifyLogin');
+                            return $this->webService->getRedirectResponse('auth/verifyLogin', );
                         }
                         if ($this->sR->getSetting('enable_tfa_with_disabling') == '1') {
                             $error = $translator->translate('two.factor.authentication.attempt.failure.must.setup');
@@ -401,19 +399,32 @@ final class AuthController
      * Disable TFA after verification for additional layer of security.
      *
      * @param ServerRequestInterface $request
-     * @param SessionInterface $session
      * @param TranslatorInterface $translator
      * @param UserRepository $userRepository
      * @return ResponseInterface
      */
     public function verifyLogin(
         ServerRequestInterface $request,
-        SessionInterface $session,
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
-        $verifiedUserId = (int)$session->get('verified_2fa_user_id');
+        $verifiedUserId = (int)$this->session->get('verified_2fa_user_id');
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
+        $codes = [];
+        $user = $userRepository->findById((string)$verifiedUserId);
+        if (null!==$user) {
+            // Only display the recovery codes once i.e. if the user does not have any
+            if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
+                $codes = $this->generateBackupRecoveryCodes($user);
+                $this->session->set('backup_recovery_codes', $codes);
+            }
+            if ($this->session->get('regenerate_codes') == true) {
+                $this->removeBackupRecoveryCodes($user);
+                $codes = $this->generateBackupRecoveryCodes($user);
+                $this->session->set('backup_recovery_codes', $codes);
+                $this->session->set('regenerate_codes', false);
+            }
+        }    
         $parameters = [
             'title' => $translator->translate('two.factor.authentication.form.verify.login'),
             'actionName' => 'auth/verifyLogin',
@@ -421,6 +432,8 @@ final class AuthController
             'errors' => [],
             'error' => '',
             'formModel' => $form,
+            // empty $codes => show button to regenerate
+            'codes' => $codes,
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
@@ -441,30 +454,45 @@ final class AuthController
                                     $user->set2FAEnabled(false);
                                     $userRepository->save($user);
                                 }
-                                $this->session->remove('pending_2fa_user_id');
-                                $roles = $this->manager->getRolesByUserId($verifiedUserId);
-                                foreach ($roles as $role) {
-                                    $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
-                                    $this->manager->addChild($role->getName(), 'entryToBaseController');
-                                }
+                                $this->removeSessionTempsAndPermitEntryToBaseController($verifiedUserId);
                                 /** @see HmrcController function fphValidate */
                                 $this->session->set('otp', $inputCode);
                                 $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                 return $this->redirectToInvoiceIndex();
+                            
                             }
                             $error = $translator->translate('two.factor.authentication.attempt.failure');
                         } else {
+                            // The user has forgotten their $inputCode so try a backup code    
+                            if ($totpSecret !== null && $this->recoveryCodeService->validateAndMarkCodeAsUsed($user, $inputCode)) {
+                                $this->removeSessionTempsAndPermitEntryToBaseController($verifiedUserId);
+                                $this->session->set('otp', $inputCode);
+                                $this->session->set('otpRef', TokenMask::apply($totpSecret));
+                                return $this->redirectToInvoiceIndex();    
+                            }
                             $error = $translator->translate('two.factor.authentication.missing.code.or.secret');
                         }
                         return $this->viewRenderer->render('verify', [
                             'error' => $error,
                             'formModel' => $form,
+                            'codes' => $codes
                         ]);
                     }
                 }
             }
         }
         return $this->viewRenderer->render('verify', $parameters);
+    }
+    
+    private function removeSessionTempsAndPermitEntryToBaseController(int $verifiedUserId): void 
+    {
+        $this->session->remove('pending_2fa_user_id');
+        $this->session->remove('backup_recovery_codes');
+        $roles = $this->manager->getRolesByUserId($verifiedUserId);
+        foreach ($roles as $role) {
+            $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
+            $this->manager->addChild($role->getName(), 'entryToBaseController');
+        }
     }
 
     public function disableToken(
@@ -601,6 +629,11 @@ final class AuthController
         $this->authService->logout();
         return $this->redirectToMain();
     }
+    
+    public function regenerateCodes(UserRepository $uR): ResponseInterface {
+        $this->session->set('regenerate_codes', true);
+        return $this->webService->getRedirectResponse('auth/verifyLogin');
+    }
 
     private function tfaIsEnabledBlockBaseController(string $userId): void
     {
@@ -716,5 +749,17 @@ final class AuthController
     private function redirectToOneTimePasswordError(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/onetimepassworderror', ['_language' => 'en']);
+    }
+    
+    private function removeBackupRecoveryCodes(User $user): void {
+        if ($this->recoveryCodeService->userHasBackupCodes($user)) {
+            $this->recoveryCodeService->removeBackupRecoveryCodes($user);
+        }
+    }
+    
+    private function generateBackupRecoveryCodes(User $user): array {
+        $codes = $this->recoveryCodeService->generateBackupCodes(5, 8);
+        $this->recoveryCodeService->persistBackupCodes($user, $codes);
+        return $codes;
     }
 }

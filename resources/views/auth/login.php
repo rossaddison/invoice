@@ -44,6 +44,11 @@ $this->setTitle($translator->translate('login'));
 
 ?>
 
+<!-- Fade-out CSS for TFA badge -->
+<?= \Yiisoft\Html\Tag\Style::tag()->content(
+    '.fade-out { opacity: 1; transition: opacity 40s ease-in; } .fade-out.hidden { opacity: 0; }'
+) ?>
+
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -95,7 +100,7 @@ $this->setTitle($translator->translate('login'));
                     <?php } ?>       
                 </div>
                 <?php if (($s->getSetting('enable_tfa') == '1')) { ?>
-                <div class="card-body p-2 text-center">
+                <div id="tfa-badge" class="card-body p-2 text-center fade-out">
                         <?=         
                             Html::tag('span', $s->getSetting('enable_tfa_with_disabling') == '1' ?
                                     $translator->translate('two.factor.authentication.enabled.with.disabling') :
@@ -149,3 +154,19 @@ $this->setTitle($translator->translate('login'));
         </div>
     </div>
 </div>
+
+<!-- Fade-out JS: this will fade out the badge after 2 seconds; adjust as needed -->
+<?php
+$fadeOutScript = <<<JS
+document.addEventListener('DOMContentLoaded', function() {
+    var badge = document.getElementById('tfa-badge');
+    if (badge) {
+        setTimeout(function() {
+            badge.classList.add('hidden');
+        }, 2000);
+    }
+});
+JS;
+
+echo \Yiisoft\Html\Html::script($fadeOutScript)->type('text/javascript')->charset('utf-8');
+?>

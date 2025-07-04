@@ -52,6 +52,12 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>4th July 2025</b></p>
+<p>Recovery Code Entity and Service supports the user.</p>
+<p>Option of entering the 8 digit recovery code on the verify login screen only i.e. not during setup.</p>
+<p>Fade out 40 seconds script on auth login. Ai generated scripts converted to php.</p>
+<p><a href="https://github.com/copilot/share/002343be-4100-8480-a050-0a09444b6875" target="_blank"> Fade-out effect using php and vanilla javascript</a></p>
+<p>Url's no longer carrying annoying trailing hash. src/Service/WebControllerService Bugfix: ?string = null and not string = ''</p>
 <p><b>28th June 2025</b></p>
 <p>Installation testing</p>
 <p>The invoice autoload.php function has been adjusted to check for composer. This simplifies the InstallCommand run with Symfony</p>

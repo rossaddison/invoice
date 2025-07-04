@@ -2,17 +2,25 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Table;
+use Yiisoft\Html\Tag\Tr;
+use Yiisoft\Html\Tag\Thead;
+use Yiisoft\Html\Tag\Td;
 
 /**
+ * @var array $codes
  * @var string $csrf
  * @var string|null $error 
  * @var App\Auth\Form\TwoFactorAuthenticationVerifyLoginForm $formModel
  * @var Yiisoft\View\WebView $this
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\CurrentRoute             $currentRoute
+ * @var Yiisoft\Router\UrlGeneratorInterface    $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface  $translator
  */
 
 ?>
@@ -27,7 +35,8 @@ use Yiisoft\Html\Tag\Form;
                 </div>
                 <div class="card-body p-2 text-center">
                     <h6><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
-                    <div class="card-body p-2 text-center">
+                </div>
+                <div class="card-body p-2 text-center">
                         <?php if ((null!==$error) && (strlen($error) > 0)) { ?>
                             <?=         
                                 Html::tag('span', $error, 
@@ -37,13 +46,81 @@ use Yiisoft\Html\Tag\Form;
                                 ]); 
                             ?>
                         <?php } ?>
-                    </div>     
+                </div>
+                <div class="card-body p-2 text-center">
+                    <?php
+                        // Custom CSS styles (inline for demonstration)
+                        $style = <<<CSS
+                        <style>
+                        .recovery-table {
+                            border-collapse: collapse;
+                            width: 100%;
+                            background: #f9f9fb;
+                            font-family: 'Segoe UI', Arial, sans-serif;
+                            margin-top: 1em;
+                            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+                        }
+                        .recovery-table th, .recovery-table td {
+                            border: 1px solid #e3e3e3;
+                            padding: 12px 18px;
+                            text-align: left;
+                        }
+                        .recovery-table th {
+                            background: #4F8EF7;
+                            color: #fff;
+                            letter-spacing: 1px;
+                            font-size: 1.05em;
+                        }
+                        .recovery-table tr:nth-child(even) {
+                            background: #f0f4fa;
+                        }
+                        .recovery-table tr:hover td {
+                            background: #e6f2ff;
+                        }
+                        </style>
+                        CSS;
+
+                        // Table header
+                        $headerRow = Thead::tag()
+                            ->rows(
+                                Tr::tag()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
+                            );
+                        $rows = [];
+                        /**
+                         * @var string $index
+                         * @var string $code
+                         */
+                        foreach ($codes as $index => $code) {
+                            $rows[] = Tr::tag()->cells(
+                                Td::tag()->content((string)((int)$index + 1)),
+                                Td::tag()->content(Html::encode($code))
+                            );
+                        }
+                        
+                        // Render the table with a custom class for styling
+                        echo $style;
+                        
+                        if (!empty($codes)) {
+                            echo Table::tag()
+                                ->header($headerRow)    
+                                ->rows(...$rows)    
+                                ->addAttributes(['class' => 'recovery-table'])
+                                ->render();
+                        }
+                    ?>
+                    <?php
+                        $button = new Button($currentRoute, $translator, $urlGenerator);
+                        $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
+                        echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
+                    ?>
+                </div>    
+                <div class="card-body p-2 text-center">    
                     <?= Form::tag()
                         ->post($urlGenerator->generate('auth/verifyLogin'))
                         ->class('form-floating')
                         ->csrf($csrf)
                         ->id('twoFactorAuthenticationVerfiyForm')
-                        ->open(); ?>                    
+                        ->open(); ?>
                     <?= Field::text($formModel, 'code')
                         ->addInputAttributes(
                             [
@@ -51,12 +128,13 @@ use Yiisoft\Html\Tag\Form;
                                 'id' => 'code', 
                                 'name' => 'text',
                                 'minlength' => 6,
-                                'maxlength' => 6,
+                                // otp = 6 digits, backup recovery code = 8 digits
+                                'maxlength' => 8,
                                 'type' => 'tel',
                             ]
                         )
                         ->inputClass('form-control')
-                        ->label($translator->translate('layout.password.otp'))
+                        ->label($translator->translate('layout.password.otp.6.8'))
                         ->autofocus();
                     ?>
                     <?= Field::submitButton()

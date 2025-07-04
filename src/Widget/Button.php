@@ -343,4 +343,14 @@ final readonly class Button
             ->render() .
         Html::closeTag('div');
     }
+    
+    public function regenerateRecoveryCodes(string $regenerateCodesUrl): string
+    {
+        return A::tag()
+        ->addClass('btn btn-success')
+        ->content(' ' . $this->translator->translate('oauth2.backup.recovery.codes.regenerate'))
+        ->href($regenerateCodesUrl)
+        ->id('btn-regenerate-codes')
+        ->render();
+    }    
 }

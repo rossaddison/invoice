@@ -96,6 +96,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/accreditations')
     ->action([SiteController::class, 'accreditations'])
     ->name('site/accreditations'),
+    Route::methods([Method::GET, Method::POST], '/oauth2autherror/{message}')
+    ->action([SiteController::class, 'oauth2autherror'])
+    ->name('site/oauth2autherror'),
     Route::methods([Method::GET, Method::POST], '/adminmustmakeactive')
     ->action([SiteController::class, 'adminmustmakeactive'])
     ->name('site/adminmustmakeactive'),
@@ -220,6 +223,11 @@ return [
     ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifyLogin'])
     ->name('auth/verifyLogin'),
+    Route::methods([Method::GET, Method::POST], '/regenerateCodes')
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('viewInv')
+                                                        ->withPermission('noEntryToBaseController'))
+    ->action([AuthController::class, 'regenerateCodes'])
+    ->name('auth/regenerateCodes'),
     Route::methods([Method::GET, Method::POST], '/forgotpassword')
     ->middleware(fn (
         ResponseFactoryInterface $responseFactory,

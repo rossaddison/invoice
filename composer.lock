@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c00bcd589b41176200fbebe94b64198",
+    "content-hash": "ca40eefa814989a3c740efc7616421ad",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -8557,12 +8557,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "4183481c5bb4516bd9a19c006b176d3abf120e68"
+                "reference": "97aee9880f998fbf2392186285eeeea48997af17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/4183481c5bb4516bd9a19c006b176d3abf120e68",
-                "reference": "4183481c5bb4516bd9a19c006b176d3abf120e68",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/97aee9880f998fbf2392186285eeeea48997af17",
+                "reference": "97aee9880f998fbf2392186285eeeea48997af17",
                 "shasum": ""
             },
             "require": {
@@ -8571,7 +8571,7 @@
                 "guzzlehttp/psr7": "^2.7.1",
                 "maglnet/composer-require-checker": "^4.16.1",
                 "php": "8.3 - 8.4",
-                "phpseclib/phpseclib": ">=3.0.45",
+                "phpseclib/phpseclib": ">=3.0.46",
                 "psr/container": "^2.0.2",
                 "psr/http-client": "^1.0.3",
                 "psr/http-factory": "^1.1",
@@ -8656,7 +8656,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-29T09:21:46+00:00"
+            "time": "2025-07-04T06:57:42+00:00"
         },
         {
             "name": "rossaddison/yii-gii",
@@ -10223,16 +10223,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v17.3.0",
+            "version": "v17.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "cfe8244f7e5f910b7fdb5c2cf77428c0acbb9f7c"
+                "reference": "893946057e43b145826b0dfd7f398673e381e2ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/cfe8244f7e5f910b7fdb5c2cf77428c0acbb9f7c",
-                "reference": "cfe8244f7e5f910b7fdb5c2cf77428c0acbb9f7c",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/893946057e43b145826b0dfd7f398673e381e2ae",
+                "reference": "893946057e43b145826b0dfd7f398673e381e2ae",
                 "shasum": ""
             },
             "require": {
@@ -10276,9 +10276,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v17.3.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v17.4.0"
             },
-            "time": "2025-05-28T18:59:29+00:00"
+            "time": "2025-07-01T20:23:15+00:00"
         },
         {
             "name": "symfony/cache",
@@ -13010,20 +13010,20 @@
         },
         {
             "name": "vjik/telegram-bot-api",
-            "version": "0.9",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vjik/telegram-bot-api.git",
-                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8"
+                "reference": "84929bce2345c06b77c03dfa88849303142c03e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
-                "reference": "f22eec9d4ae0633c3f45566f5c8a0635a5ccb9d8",
+                "url": "https://api.github.com/repos/vjik/telegram-bot-api/zipball/84929bce2345c06b77c03dfa88849303142c03e5",
+                "reference": "84929bce2345c06b77c03dfa88849303142c03e5",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2",
+                "php-64bit": "^8.2",
                 "php-http/multipart-stream-builder": "^1.4.2",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.1",
@@ -13034,7 +13034,7 @@
                 "ext-curl": "*",
                 "httpsoft/http-message": "^1.1.6",
                 "php-http/curl-client": "^2.3.3",
-                "phpunit/phpunit": "^11.5.17",
+                "phpunit/phpunit": "^11.5.25",
                 "psr/log": "^3.0.2",
                 "yiisoft/files": "^2.0",
                 "yiisoft/test-support": "^3.0.2"
@@ -13077,7 +13077,7 @@
                 "issues": "https://github.com/vjik/telegram-bot-api/issues?state=open",
                 "source": "https://github.com/vjik/telegram-bot-api"
             },
-            "time": "2025-04-12T18:23:43+00:00"
+            "time": "2025-07-04T07:44:15+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -13339,12 +13339,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "6cc90d0cad0105edccd2deba405c52cca3f03706"
+                "reference": "46f8cf3ae471d896d9ac9a4e121e610978978109"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/6cc90d0cad0105edccd2deba405c52cca3f03706",
-                "reference": "6cc90d0cad0105edccd2deba405c52cca3f03706",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/46f8cf3ae471d896d9ac9a4e121e610978978109",
+                "reference": "46f8cf3ae471d896d9ac9a4e121e610978978109",
                 "shasum": ""
             },
             "require": {
@@ -13416,7 +13416,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-27T08:26:21+00:00"
+            "time": "2025-07-04T04:19:43+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -21016,16 +21016,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.2.5",
+            "version": "12.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b71849b29f7a8d7574e4401873cb8b539896613f"
+                "reference": "638644c62a58f04974da115f98981c9b48564021"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b71849b29f7a8d7574e4401873cb8b539896613f",
-                "reference": "b71849b29f7a8d7574e4401873cb8b539896613f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/638644c62a58f04974da115f98981c9b48564021",
+                "reference": "638644c62a58f04974da115f98981c9b48564021",
                 "shasum": ""
             },
             "require": {
@@ -21093,7 +21093,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.5"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.6"
             },
             "funding": [
                 {
@@ -21117,7 +21117,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-27T04:37:55+00:00"
+            "time": "2025-07-04T06:00:16+00:00"
         },
         {
             "name": "psy/psysh",
@@ -21855,12 +21855,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "d4ca0cc4c49ba3437778e201d35844715d9b1bd9"
+                "reference": "e798e1676cbc3fa2f63b439b844fe30645b1e052"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d4ca0cc4c49ba3437778e201d35844715d9b1bd9",
-                "reference": "d4ca0cc4c49ba3437778e201d35844715d9b1bd9",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e798e1676cbc3fa2f63b439b844fe30645b1e052",
+                "reference": "e798e1676cbc3fa2f63b439b844fe30645b1e052",
                 "shasum": ""
             },
             "conflict": {
@@ -22538,7 +22538,8 @@
                 "spoonity/tcpdf": "<6.2.22",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
                 "ssddanbrown/bookstack": "<24.05.1",
-                "starcitizentools/citizen-skin": ">=2.4.2,<3.3.1",
+                "starcitizentools/citizen-skin": ">=1.9.4,<3.4",
+                "starcitizentools/short-description": ">=4,<4.0.1",
                 "starcitizentools/tabber-neue": ">=1.9.1,<2.7.2|>=3,<3.1.1",
                 "statamic/cms": "<=5.16",
                 "stormpath/sdk": "<9.9.99",
@@ -22801,7 +22802,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-27T21:05:09+00:00"
+            "time": "2025-07-03T22:05:19+00:00"
         },
         {
             "name": "sanmai/later",
@@ -22869,16 +22870,16 @@
         },
         {
             "name": "sanmai/pipeline",
-            "version": "6.17",
+            "version": "6.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sanmai/pipeline.git",
-                "reference": "491b172349d77c9e2f2f2aa1791c9de95bfd1abe"
+                "reference": "d9fbdf2a4a363f44f4d8155f71766f35d49b8fb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/491b172349d77c9e2f2f2aa1791c9de95bfd1abe",
-                "reference": "491b172349d77c9e2f2f2aa1791c9de95bfd1abe",
+                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/d9fbdf2a4a363f44f4d8155f71766f35d49b8fb2",
+                "reference": "d9fbdf2a4a363f44f4d8155f71766f35d49b8fb2",
                 "shasum": ""
             },
             "require": {
@@ -22922,7 +22923,7 @@
             "description": "General-purpose collections pipeline",
             "support": {
                 "issues": "https://github.com/sanmai/pipeline/issues",
-                "source": "https://github.com/sanmai/pipeline/tree/6.17"
+                "source": "https://github.com/sanmai/pipeline/tree/v6.12"
             },
             "funding": [
                 {
@@ -22930,7 +22931,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-16T07:09:33+00:00"
+            "time": "2025-06-30T23:36:16+00:00"
         },
         {
             "name": "sebastian/cli-parser",

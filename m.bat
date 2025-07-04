@@ -206,7 +206,7 @@ goto menu
 
 :rector_see_changes
 echo See changes that Rector Proposes
-php vendor/bin/rector process --dry-run
+php vendor/bin/rector process --dry-run --output-format=console
 pause
 goto menu
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SiteController
@@ -57,6 +58,11 @@ final class SiteController
     {
         return $this->viewRenderer->render('testimonial');
     }
+    
+    public function oauth2autherror(#[RouteArgument('message')] string $message): \Yiisoft\DataResponse\DataResponse
+    {
+        return $this->viewRenderer->render('oauth2autherror', ['message' => $message]);
+    }    
 
     public function oauth2callbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
     {

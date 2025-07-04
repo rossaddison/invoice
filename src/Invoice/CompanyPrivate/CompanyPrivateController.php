@@ -89,6 +89,7 @@ final class CompanyPrivateController extends BaseController
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         if ($request->getMethod() === Method::POST) {
+            $logoFileName = $_FILES['logo_filename']['name'];
             if (!isset($_FILES['logo_filename']['tmp_name']) || empty($_FILES['logo_filename']['tmp_name'])) {
                 throw new RuntimeException('No file uploaded or temporary file missing.');
             }
@@ -98,7 +99,7 @@ final class CompanyPrivateController extends BaseController
             }
 
             $tmp = $_FILES['logo_filename']['tmp_name'];
-            $originalFileName = basename($_FILES['logo_filename']['name']); // Extract original file name
+            $originalFileName = basename($logoFileName); // Extract original file name
             $spaceToUnderscore = preg_replace('/\s+/', '_', $originalFileName); // Replace spaces with underscores
 
             if (null !== $spaceToUnderscore) {
@@ -219,10 +220,9 @@ final class CompanyPrivateController extends BaseController
                 // the file that has just been selected
                 /**
                  * @var array $_FILES['logo_filename']
-                 * @var string $_FILES['logo_filename']['name']
                  * @var array $body
                  */
-                $body['logo_filename'] = $_FILES['logo_filename']['name'];
+                $body['logo_filename'] = (string)($_FILES['logo_filename']['name']);
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
                     $modified_original_file_name = Random::string(4) . '_' . (string)preg_replace('/\s+/', '_', $body['logo_filename']);

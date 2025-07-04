@@ -761,7 +761,8 @@ There should be no existing data in these tables prior to importing and no exist
   'layout.password-verify' => 'Confirm your password',
   'layout.password-verify.new' => 'Confirm your new password',
   'layout.password.new' => 'New Password',
-  'layout.password.otp' => 'OTP Password',
+  'layout.password.otp.6' => 'OTP Password (6 digits)',
+  'layout.password.otp.6.8' => 'OTP Password (6 digits) / Backup Recovery Codes (8 digits)',
   'layout.rbac.assign-role' => 'Assign RBAC role to user',
   'layout.remember' => 'Remember me',
   'layout.reset' => 'Reset',
@@ -908,8 +909,13 @@ There should be no existing data in these tables prior to importing and no exist
   'number.missing.therefore.use.invoice.id' => 'invoice-number-missing-therefore-invoice-id-',
   'number.no' => 'No Invoice Number',
   'oauth2' => 'OAuth 2.0',
+  'oauth2.backup.recovery.codes' => 'Backup recovery codes. Keep in a safe place.',
+  'oauth2.backup.recovery.codes.regenerate' => 'Regenerate Backup Recovery Codes', 
   'oauth2.google.people.api.v1.client.id' => 'Client Id',
   'oauth2.google.people.api.v1.client.secret' => 'Client Secret',
+  'oauth2.missing.authentication.code.or.state.parameter' => 'Missing authentication code or state parameter.',
+  'oauth2.missing.state.parameter.possible.csrf.attack' => 'State Parameter missing. Possible csrf attack',
+  'oauth2.test.user.creation.not.allowed.prod.env' => 'Test user creation not allowed in production environment.',
   'online.log' => 'Online Log',
   'online.payment' => 'Online Payment',
   'online.payment.3dauth.redirect' => 'Please wait while we redirect you to your card issuer for authentication...',
@@ -1704,10 +1710,10 @@ There should be no existing data in these tables prior to importing and no exist
   'two.factor.authentication.enable' => 'Enable Two Factor Authentication',
   'two.factor.authentication.enabled.with.disabling' => 'Two Factor Authentication is currently enabled for additional security
  and is disabled after successful authentication
-for an additional layer of security until the next login. Compulsory scanning of Qr code, after each login, for a new secret.',
+for an additional layer of security until the next login. Compulsory scanning of Qr code, after each login, for a new secret. + ... Scan the Qr Code ... save ... delete previous entry. (Not recommended)',
   'two.factor.authentication.enabled.without.disabling' => 'Two Factor Authentication is currently enabled for additional security
  and is not disabled after successful authentication
-The Qr code will not be seen again for scanning, after logging in, after having setup two factor authentication.',
+The Qr code will not be seen again for scanning, after logging in, after having setup two factor authentication. (Recommended)',
   'two.factor.authentication.error' => 'Two Factor Authentication Error',
   'two.factor.authentication.form.verify.login' => 'Verify Login',
   'two.factor.authentication.invalid.code.format' => 'Invalid code format. Please enter the 6-digit code from your app.',
