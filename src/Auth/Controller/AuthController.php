@@ -569,16 +569,7 @@ final class AuthController
         // Verify session has required 2FA data
         /** @var int $verifiedUserId */
         $verifiedUserId = (int)$this->session->get('verified_2fa_user_id');
-        return !($verifiedUserId !== $userId)
-
-
-
-        // Additional session validation could include:
-        // - IP address consistency (if desired)
-        // - User agent consistency (if desired)
-        // - Session age limits
-
-         ;
+        return $verifiedUserId === $userId;
     }
 
     public function disableToken(
