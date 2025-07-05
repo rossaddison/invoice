@@ -216,11 +216,9 @@ return [
     ->action([AuthController::class, 'ajaxShowSetup'])
     ->name('auth/ajaxShowSetup'),
     Route::methods([Method::GET, Method::POST], '/verifySetup')
-    ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifySetup'])
     ->name('auth/verifySetup'),
     Route::methods([Method::GET, Method::POST], '/verifyLogin')
-    ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifyLogin'])
     ->name('auth/verifyLogin'),
     Route::methods([Method::GET, Method::POST], '/regenerateCodes')

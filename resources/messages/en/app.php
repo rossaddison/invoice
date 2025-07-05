@@ -1721,6 +1721,7 @@ The Qr code will not be seen again for scanning, after logging in, after having 
   'two.factor.authentication.new.six.digit.code' => 'Please enter a new 6-digit authentication code (different to the setup code) from your app.',
   'two.factor.authentication.no.secret.generated' => 'No secret generated. Please restart setup.',
   'two.factor.authentication.qr.code.enter.manually' => 'Or enter this code into the android app manually: ',
+  'two.factor.authentication.rate.limit.reached' => 'Rate Limit reached. Please wait 10 seconds.',
   'two.factor.authentication.scan' => 'Scan this QR code with your Aegis app:',
   'two.factor.authentication.setup' => 'Setup Two Factor Authentication',
   'type' => 'Type',
