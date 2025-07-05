@@ -545,7 +545,7 @@ final class AuthController
 
         $this->session->remove('pending_2fa_user_id');
         $this->session->remove('backup_recovery_codes');
-        $this->session->remove('verified_tfa_user_id');
+        $this->session->remove('verified_2fa_user_id');
         $roles = $this->manager->getRolesByUserId($verifiedUserId);
         foreach ($roles as $role) {
             $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
@@ -722,7 +722,7 @@ final class AuthController
                     }
                 }
             }
-            $this->session->remove('verified_tfa_user_id');
+            $this->session->remove('verified_2fa_user_id');
         }
 
         if (null !== $userId) {
