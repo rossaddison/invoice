@@ -157,7 +157,6 @@ final class AuthController
                         /**
                          * The admin does not automatically have a 'userinv account with status as active' IF
                          * signing up NOT by email e.g by localhost  . The below code, if ($isAdminUser) {
-                                $this->disableToken($tR, $userId, 'email-verification');
                             }, => makes allowances for this.
                          * @see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
                          *      and the userinv account's status field is made active i.e. 1
@@ -170,7 +169,7 @@ final class AuthController
                                 break;
                             }
                         }
-                        
+
                         if ($status || $isAdminUser) {
                             // Disable email verification token for admin users who don't need email verification
                             if ($isAdminUser) {
@@ -183,7 +182,7 @@ final class AuthController
                             }
                             return $this->redirectToInvoiceIndex();
                         }
-                        
+
                         /**
                          * If the observer user is signing up WITHOUT email (=> userinv account status is 0), e.g. by console ... yii userinv/assignRole observer 2,
                          * the admin will have to make the user active via Settings Invoice User Account AND assign the user an added client
@@ -355,17 +354,17 @@ final class AuthController
         // Apply rate limiting for setup verification attempts
         $clientIp = $this->getClientIpAddress($request);
         $rateLimitKey = 'auth_setup_' . hash('sha256', $clientIp);
-        
+
         if (!$this->checkRateLimit($rateLimitKey)) {
             $this->logger->log(LogLevel::WARNING, 'Rate limit reached for 2FA setup from IP: ' . $clientIp);
             return $this->redirectToOneTimePasswordError();
         }
-        
+
         $pendingUserId = (int)$this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
         if (is_array($body)) {
             $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
-            if ($inputCode !==null) {
+            if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
                     $user = $userRepository->findById((string)$pendingUserId);
                     if (null !== $user) {
@@ -481,11 +480,11 @@ final class AuthController
                     'codes' => $codes,
                 ]);
             }
-            
+
             $body = $request->getParsedBody();
             if (is_array($body)) {
                 $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
-                if (null!==$inputCode) {
+                if (null !== $inputCode) {
                     if ($verifiedUserId > 0) {
                         $user = $userRepository->findById((string)$verifiedUserId);
                         if (null !== $user) {
@@ -543,7 +542,7 @@ final class AuthController
             $this->session->clear();
             return;
         }
-        
+
         $this->session->remove('pending_2fa_user_id');
         $this->session->remove('backup_recovery_codes');
         $this->session->remove('verified_tfa_user_id');
@@ -566,22 +565,22 @@ final class AuthController
         if ($userId <= 0) {
             return false;
         }
-        
+
         // Verify session has required 2FA data
         /** @var int $verifiedUserId */
         $verifiedUserId = (int)$this->session->get('verified_2fa_user_id');
-        if ($verifiedUserId !== $userId) {
-            return false;
-        }
-        
+        return !($verifiedUserId !== $userId)
+
+
+
         // Additional session validation could include:
         // - IP address consistency (if desired)
         // - User agent consistency (if desired)
         // - Session age limits
-        
-        return true;
+
+         ;
     }
-    
+
     public function disableToken(
         TokenRepository $tR,
         ?string $userId = null,
@@ -611,14 +610,14 @@ final class AuthController
             $this->logger->log(LogLevel::ALERT, 'Invalid or empty OAuth2 state parameter from provider: ' . $identityProvider);
             exit(1);
         }
-        
+
         // Sanitize state parameter to prevent injection attacks
         $state = preg_replace('/[^a-zA-Z0-9\-_]/', '', $state);
         if ($state === '') {
             $this->logger->log(LogLevel::ALERT, 'State parameter contains invalid characters from provider: ' . $identityProvider);
             exit(1);
         }
-        
+
         /**
          * @psalm-suppress MixedMethodCall,
          * @psalm-suppress MixedAssignment $sessionState
@@ -698,7 +697,7 @@ final class AuthController
     ): ResponseInterface {
         $identity = $this->authService->getIdentity();
         $userId = $identity->getId();
-        
+
         // if enable_tfa_with_disabling setting has changed during login of admin
         // make sure this is reflected in the user setting.
         if (($this->sR->getSetting('enable_tfa_with_disabling') == '1') && $this->sR->getSetting('enable_tfa') == '1') {
@@ -715,7 +714,7 @@ final class AuthController
                                 $totpSecret = $user->getTotpSecret();
                                 $user->setTotpSecret('');
                                 $uR->save($user);
-                                
+
                                 // Clear secret from memory
                                 $this->secureClearSensitiveData([&$totpSecret]);
                             }
@@ -725,7 +724,7 @@ final class AuthController
             }
             $this->session->remove('verified_tfa_user_id');
         }
-        
+
         if (null !== $userId) {
             if ($this->manager->userHasPermission($userId, 'entryToBaseController')) {
                 $roles = $this->manager->getRolesByUserId($userId);
@@ -734,17 +733,16 @@ final class AuthController
                 }
             }
         }
-        
+
         // Secure cleanup of session data
         $this->secureClearSensitiveData();
-        
+
         // Clear all session data completely for security
         $this->session->clear();
-        
+
         $this->authService->logout();
         return $this->redirectToMain();
     }
-
 
     public function regenerateCodes(UserRepository $uR): ResponseInterface
     {
@@ -843,7 +841,7 @@ final class AuthController
     {
         return \preg_match('/^\d{6}$/', $code) === 1;
     }
-   
+
     /**
      * Validate backup recovery code format (8 alphanumeric characters).
      *
@@ -854,7 +852,7 @@ final class AuthController
     {
         return \preg_match('/^[A-Za-z0-9]{8}$/', $code) === 1;
     }
-    
+
     /**
      * Sanitize and validate user input code (TOTP or backup recovery code).
      *
@@ -866,36 +864,35 @@ final class AuthController
         if (!is_string($input) && !is_numeric($input)) {
             return null;
         }
-        
+
         // Convert to string and trim whitespace
         $code = trim((string)$input);
-        
+
         // Remove any non-alphanumeric characters
         $code = preg_replace('/[^A-Za-z0-9]/', '', $code);
-        
+
         if ($code === null || $code === '') {
             return null;
         }
-        
+
         // Validate length (6 for TOTP, 8 for backup codes)
         $length = strlen($code);
         if ($length !== 6 && $length !== 8) {
             return null;
         }
-        
+
         // Validate format
         if ($length === 6 && !$this->isValidTotpCode($code)) {
             return null;
         }
-        
+
         if ($length === 8 && !$this->isValidBackupCode($code)) {
             return null;
         }
-        
+
         return $code;
     }
 
-    
     /**
      * Generate a QR code as a data URI using chillerlan/php-qrcode.
      *
@@ -929,9 +926,8 @@ final class AuthController
 
     /**
      * Securely clear sensitive data from memory and session.
-     * 
+     *
      * @param array $sensitiveVars Array of variable references to clear
-     * @return void
      */
     private function secureClearSensitiveData(array $sensitiveVars = []): void
     {
@@ -941,15 +937,15 @@ final class AuthController
             'otp',
             'otpRef',
             'code_verifier',
-            'backup_recovery_codes'
+            'backup_recovery_codes',
         ];
-        
+
         foreach ($sensitiveSessionKeys as $key) {
             if ($this->session->has($key)) {
                 $this->session->remove($key);
             }
         }
-        
+
         // Overwrite sensitive variables with random data before unsetting
         /** @var string[] $sensitiveVars */
         foreach ($sensitiveVars as &$var) {
@@ -959,14 +955,14 @@ final class AuthController
             unset($var);
         }
     }
-    
+
     private function generateBackupRecoveryCodes(User $user): array
     {
         $codes = $this->recoveryCodeService->generateBackupCodes(5, 8);
         $this->recoveryCodeService->persistBackupCodes($user, $codes);
         return $codes;
     }
-    
+
     /**
      * Check rate limit for authentication operations.
      *
@@ -986,7 +982,7 @@ final class AuthController
             return true;
         }
     }
-    
+
     /**
      * Extract client IP address from request with security considerations.
      *
@@ -996,32 +992,32 @@ final class AuthController
     private function getClientIpAddress(ServerRequestInterface $request): string
     {
         $serverParams = $request->getServerParams();
-        
+
         // Check for IP address from headers in order of preference
         $ipHeaders = [
             'HTTP_X_FORWARDED_FOR',
             'HTTP_X_REAL_IP',
             'HTTP_CLIENT_IP',
-            'REMOTE_ADDR'
+            'REMOTE_ADDR',
         ];
-        
+
         foreach ($ipHeaders as $header) {
             if (!empty($serverParams[$header]) && is_string($serverParams[$header])) {
                 $ip = trim($serverParams[$header]);
-                
+
                 // Handle comma-separated IPs (X-Forwarded-For can contain multiple IPs)
                 if (strpos($ip, ',') !== false) {
                     $ips = explode(',', $ip);
                     $ip = trim($ips[0]); // Use the first IP
                 }
-                
+
                 // Validate IP address format
                 if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
                     return $ip;
                 }
             }
         }
-        
+
         // Fallback to REMOTE_ADDR or default
         /** @var string|null $serverParams['REMOTE_ADDR'] */
         return $serverParams['REMOTE_ADDR'] ?? '127.0.0.1';
