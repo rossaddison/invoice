@@ -6,7 +6,6 @@ namespace App\Auth\Form;
 
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Validator\Rule\Required;
 
 final class TwoFactorAuthenticationVerifyLoginForm extends FormModel
 {
