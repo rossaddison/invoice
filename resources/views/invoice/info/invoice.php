@@ -52,6 +52,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>7th July 2025</b></p>
+<p>Add more appropriate error messages to the AuthController.php</p>
 <p><b>5th July 2025</b></p>
 <p>1. routes.php - A non-middleware ratelimiter is applied within the functions verifySetup and verifyLogin.</p>
 <p>2. config\web\di\rate-limit reduced to 2 for strictness and security.</p>

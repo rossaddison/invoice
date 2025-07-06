@@ -363,7 +363,7 @@ final class AuthController
         $pendingUserId = (int)$this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
         if (is_array($body)) {
-            $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
+            $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
             if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
                     $user = $userRepository->findById((string)$pendingUserId);
@@ -483,7 +483,7 @@ final class AuthController
 
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
+                $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
                 if (null !== $inputCode) {
                     if ($verifiedUserId > 0) {
                         $user = $userRepository->findById((string)$verifiedUserId);
@@ -507,8 +507,9 @@ final class AuthController
                                     $this->session->set('otp', $inputCode);
                                     $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                     return $this->redirectToInvoiceIndex();
-                                }
-                                $error = $translator->translate('two.factor.authentication.attempt.failure');
+                                } else { 
+                                    $error = $translator->translate('two.factor.authentication.invalid.totp.code');
+                                }    
                             } else {
                                 // The user has forgotten their $inputCode so try a backup code
                                 if ($totpSecret !== null && $this->recoveryCodeService->validateAndMarkCodeAsUsed($user, $inputCode)) {
@@ -516,8 +517,9 @@ final class AuthController
                                     $this->session->set('otp', $inputCode);
                                     $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                     return $this->redirectToInvoiceIndex();
+                                } else {
+                                    $error = $translator->translate('two.factor.authentication.invalid.backup.recovery.code');
                                 }
-                                $error = $translator->translate('two.factor.authentication.missing.code.or.secret');
                             }
                             return $this->viewRenderer->render('verify', [
                                 'error' => $error,
@@ -527,7 +529,7 @@ final class AuthController
                         }
                     }
                 } // null!==$inputCode
-                $parameters['error'] = $translator->translate('two.factor.authentication.missing.code.or.secret');
+                $parameters['error'] = $translator->translate('two.factor.authentication.attempt.failure');
             }
         }
         return $this->viewRenderer->render('verify', $parameters);

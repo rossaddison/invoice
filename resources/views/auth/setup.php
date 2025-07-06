@@ -76,13 +76,14 @@ use Yiisoft\Html\Tag\Img;
                         ->addInputAttributes([
                             'autocomplete' => 'current-code', 
                             'id' => 'code', 
-                            'name' => 'text',
+                            'name' => 'code',
                             'minlength' => 6,
                             // Only the otp is entered here (6 digit). 
                             // Not the recovery code (8 digit).
                             'maxlength' => 6,
                             'type' => 'tel',
                         ])
+                        ->required(true)
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password.otp.6'))
                         ->autofocus();

@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Table;
 use Yiisoft\Html\Tag\Tr;
@@ -126,13 +125,14 @@ use Yiisoft\Html\Tag\Td;
                             [
                                 'autocomplete' => 'current-code', 
                                 'id' => 'code', 
-                                'name' => 'text',
+                                'name' => 'code',
                                 'minlength' => 6,
                                 // otp = 6 digits, backup recovery code = 8 digits
                                 'maxlength' => 8,
                                 'type' => 'tel',
                             ]
                         )
+                        ->required(true)        
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password.otp.6.8'))
                         ->autofocus();
