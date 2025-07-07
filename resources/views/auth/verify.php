@@ -36,17 +36,6 @@ use Yiisoft\Html\Tag\Td;
                     <h6><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
                 </div>
                 <div class="card-body p-2 text-center">
-                        <?php if ((null!==$error) && (strlen($error) > 0)) { ?>
-                            <?=         
-                                Html::tag('span', $error, 
-                                [
-                                    'class' => 'badge bg-primary',
-                                    'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
-                                ]); 
-                            ?>
-                        <?php } ?>
-                </div>
-                <div class="card-body p-2 text-center">
                     <?php
                         // Custom CSS styles (inline for demonstration)
                         $style = <<<CSS
@@ -132,6 +121,7 @@ use Yiisoft\Html\Tag\Td;
                                 'type' => 'tel',
                             ]
                         )
+                        ->error($error ?? '')
                         ->required(true)        
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password.otp.6.8'))
