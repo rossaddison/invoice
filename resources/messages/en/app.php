@@ -1717,6 +1717,8 @@ The Qr code will not be seen again for scanning, after logging in, after having 
   'two.factor.authentication.error' => 'Two Factor Authentication Error',
   'two.factor.authentication.form.verify.login' => 'Verify Login',
   'two.factor.authentication.invalid.code.format' => 'Invalid code format. Please enter the 6-digit code from your app.',
+  'two.factor.authentication.invalid.backup.recovery.code' => 'Invalid 8 digit backup recovery code',
+  'two.factor.authentication.invalid.totp.code' => 'Invalid 6 digit timed one-time authentication code',
   'two.factor.authentication.missing.code.or.secret' => 'Missing authentication code or 2FA secret.',
   'two.factor.authentication.new.six.digit.code' => 'Please enter a new 6-digit authentication code (different to the setup code) from your app.',
   'two.factor.authentication.no.secret.generated' => 'No secret generated. Please restart setup.',

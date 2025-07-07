@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Widget\Button;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Table;
 use Yiisoft\Html\Tag\Tr;
@@ -35,17 +34,6 @@ use Yiisoft\Html\Tag\Td;
                 </div>
                 <div class="card-body p-2 text-center">
                     <h6><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
-                </div>
-                <div class="card-body p-2 text-center">
-                        <?php if ((null!==$error) && (strlen($error) > 0)) { ?>
-                            <?=         
-                                Html::tag('span', $error, 
-                                [
-                                    'class' => 'badge bg-primary',
-                                    'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
-                                ]); 
-                            ?>
-                        <?php } ?>
                 </div>
                 <div class="card-body p-2 text-center">
                     <?php
@@ -126,13 +114,15 @@ use Yiisoft\Html\Tag\Td;
                             [
                                 'autocomplete' => 'current-code', 
                                 'id' => 'code', 
-                                'name' => 'text',
+                                'name' => 'code',
                                 'minlength' => 6,
                                 // otp = 6 digits, backup recovery code = 8 digits
                                 'maxlength' => 8,
                                 'type' => 'tel',
                             ]
                         )
+                        ->error($error ?? '')
+                        ->required(true)        
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password.otp.6.8'))
                         ->autofocus();

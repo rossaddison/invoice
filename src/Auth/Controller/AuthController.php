@@ -363,7 +363,7 @@ final class AuthController
         $pendingUserId = (int)$this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
         if (is_array($body)) {
-            $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
+            $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
             if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
                     $user = $userRepository->findById((string)$pendingUserId);
@@ -483,7 +483,7 @@ final class AuthController
 
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $inputCode = $this->sanitizeAndValidateCode($body['text'] ?? '');
+                $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
                 if (null !== $inputCode) {
                     if ($verifiedUserId > 0) {
                         $user = $userRepository->findById((string)$verifiedUserId);
@@ -508,7 +508,7 @@ final class AuthController
                                     $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                     return $this->redirectToInvoiceIndex();
                                 }
-                                $error = $translator->translate('two.factor.authentication.attempt.failure');
+                                $error = $translator->translate('two.factor.authentication.invalid.totp.code');
                             } else {
                                 // The user has forgotten their $inputCode so try a backup code
                                 if ($totpSecret !== null && $this->recoveryCodeService->validateAndMarkCodeAsUsed($user, $inputCode)) {
@@ -517,7 +517,7 @@ final class AuthController
                                     $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                     return $this->redirectToInvoiceIndex();
                                 }
-                                $error = $translator->translate('two.factor.authentication.missing.code.or.secret');
+                                $error = $translator->translate('two.factor.authentication.invalid.backup.recovery.code');
                             }
                             return $this->viewRenderer->render('verify', [
                                 'error' => $error,
@@ -527,7 +527,7 @@ final class AuthController
                         }
                     }
                 } // null!==$inputCode
-                $parameters['error'] = $translator->translate('two.factor.authentication.missing.code.or.secret');
+                $parameters['error'] = $translator->translate('two.factor.authentication.attempt.failure');
             }
         }
         return $this->viewRenderer->render('verify', $parameters);
@@ -545,7 +545,7 @@ final class AuthController
 
         $this->session->remove('pending_2fa_user_id');
         $this->session->remove('backup_recovery_codes');
-        $this->session->remove('verified_tfa_user_id');
+        $this->session->remove('verified_2fa_user_id');
         $roles = $this->manager->getRolesByUserId($verifiedUserId);
         foreach ($roles as $role) {
             $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
@@ -569,16 +569,8 @@ final class AuthController
         // Verify session has required 2FA data
         /** @var int $verifiedUserId */
         $verifiedUserId = (int)$this->session->get('verified_2fa_user_id');
-        return !($verifiedUserId !== $userId)
 
-
-
-        // Additional session validation could include:
-        // - IP address consistency (if desired)
-        // - User agent consistency (if desired)
-        // - Session age limits
-
-        ;
+        return $verifiedUserId === $userId;
     }
 
     public function disableToken(
@@ -722,7 +714,7 @@ final class AuthController
                     }
                 }
             }
-            $this->session->remove('verified_tfa_user_id');
+            $this->session->remove('verified_2fa_user_id');
         }
 
         if (null !== $userId) {
