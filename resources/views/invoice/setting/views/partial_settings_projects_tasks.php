@@ -12,7 +12,7 @@ declare(strict_types=1);
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('i.projects'); ?>
+                <?= $translator->translate('projects'); ?>
             </div>
             <div class="panel-body">
 
@@ -21,15 +21,15 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[projects_enabled]">
-                                <?= $translator->translate('i.enable_projects'); ?>
+                                <?= $translator->translate('enable.projects'); ?>
                             </label>
                             <?php $body['settings[projects_enabled]'] = $s->getSetting('projects_enabled');?>
                             <select name="settings[projects_enabled]" class="form-control" id="settings[projects_enabled]">
                                 <option value="0">
-                                    <?= $translator->translate('i.no'); ?>
+                                    <?= $translator->translate('no'); ?>
                                 </option>
                                 <option value="1" <?php $s->check_select($body['settings[projects_enabled]'], '1'); ?>>
-                                    <?= $translator->translate('i.yes'); ?>
+                                    <?= $translator->translate('yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -39,7 +39,7 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[default_hourly_rate]">
-                                <?= $translator->translate('i.default_hourly_rate'); ?>
+                                <?= $translator->translate('default.hourly.rate'); ?>
                             </label>
                             <?php $body['settings[default_hourly_rate]'] = $s->getSetting('default_hourly_rate');?>
                             <div class="input-group">

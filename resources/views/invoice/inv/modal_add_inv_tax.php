@@ -20,7 +20,7 @@ declare(strict_types=1);
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('i.add_invoice_tax'); ?></h5>
+               <h5 class="modal-title"><?= $translator->translate('add.invoice.tax'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -28,11 +28,11 @@ declare(strict_types=1);
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="mb3 form-group">
                         <label for="inv_tax_rate_id">
-                            <?= $translator->translate('i.tax_rate'); ?>
+                            <?= $translator->translate('tax.rate'); ?>
                         </label>
                         <div>
                             <select name="inv_tax_rate_id" id="inv_tax_rate_id" class="form-control" required>
-                                <option value="0"><?= $translator->translate('i.none'); ?></option>
+                                <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\TaxRate $taxRate
@@ -54,17 +54,17 @@ declare(strict_types=1);
 
                     <div class="mb3 form-group">
                         <label for="include_inv_item_tax">
-                            <?= $translator->translate('i.tax_rate_placement'); ?>
+                            <?= $translator->translate('tax.rate.placement'); ?>
                         </label>
 
                         <div>
                             <select name="include_inv_item_tax" id="include_inv_item_tax" class="form-control">
                                 <?php if ($s->getSetting('enable_vat_registration') === '0') { ?>
                                 <option value="0">
-                                    <?php echo $translator->translate('i.apply_before_item_tax'); ?>
+                                    <?php echo $translator->translate('apply.before.item.tax'); ?>
                                 </option>
                                 <option value="1">
-                                    <?php echo $translator->translate('i.apply_after_item_tax'); ?>
+                                    <?php echo $translator->translate('apply.after.item.tax'); ?>
                                 </option>
                                 <?php } ?>
                             </select>
@@ -76,10 +76,10 @@ declare(strict_types=1);
                 <div class="btn-group">
                     <!-- see src/Invoice/Asset/rebuild-1.13/js/inv.js $(document).on('click', '#inv_tax_submit', function -->
                     <button class="inv_tax_submit btn btn-success" id="inv_tax_submit" type="button">
-                        <i class="fa fa-check"></i><?= $translator->translate('i.submit'); ?>
+                        <i class="fa fa-check"></i><?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

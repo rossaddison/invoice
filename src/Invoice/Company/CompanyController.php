@@ -50,7 +50,7 @@ final class CompanyController extends BaseController
                          ->withPageSize($this->sR->positiveListLimit());
         $parameters = [
             'paginator' => $paginator,
-            'company_public' => $this->translator->translate('invoice.company.public'),
+            'company_public' => $this->translator->translate('company.public'),
             'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
@@ -68,12 +68,12 @@ final class CompanyController extends BaseController
         $body = $request->getParsedBody() ?? [];
         $form = new CompanyForm(new Company());
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'company/add',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'companyPublic' => $this->translator->translate('invoice.company.public'),
+            'companyPublic' => $this->translator->translate('company.public'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -106,12 +106,12 @@ final class CompanyController extends BaseController
         if ($company) {
             $form = new CompanyForm($company);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'company/edit',
                 'actionArguments' => ['id' => $company->getId()],
                 'errors' => [],
                 'form' => $form,
-                'companyPublic' => $this->translator->translate('invoice.company.public'),
+                'companyPublic' => $this->translator->translate('company.public'),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -141,7 +141,7 @@ final class CompanyController extends BaseController
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
             if ($this->companyService->deleteCompany($company)) {
-                $this->flashMessage('info', $this->translator->translate('invoice.company.deleted'));
+                $this->flashMessage('info', $this->translator->translate('company.deleted'));
             }
         }
         return $this->webService->getRedirectResponse('company/index');
@@ -160,10 +160,10 @@ final class CompanyController extends BaseController
         if ($company) {
             $form = new CompanyForm($company);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'company/view',
                 'actionArguments' => ['id' => $company->getId()],
-                'companyPublic' => $this->translator->translate('invoice.company.public'),
+                'companyPublic' => $this->translator->translate('company.public'),
                 'form' => $form,
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -178,7 +178,7 @@ final class CompanyController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('company/index');
         }
         return $canEdit;

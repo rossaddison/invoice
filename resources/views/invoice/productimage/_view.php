@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
     'readonly' => 'readonly',
     'disabled' => 'disabled'
 ])
-->label($translator->translate('i.date'))
+->label($translator->translate('date'))
 ->required(true)
 ->value($form->getUploaded_date() instanceof DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
 ?>

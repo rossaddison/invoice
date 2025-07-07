@@ -156,37 +156,37 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                 'phone' => $this->translator->translate('site.soletrader.contact.phone'),
             ],
             'forgotalert' => [
-                'passwordResetEmail' => $this->translator->translate('i.password_reset_email'),
+                'passwordResetEmail' => $this->translator->translate('password_reset_email'),
             ],
             'adminmustmakeactive' => [
-                'adminMustMakeActive' => $this->translator->translate('i.loginalert_user_inactive'),
+                'adminMustMakeActive' => $this->translator->translate('loginalert_user_inactive'),
             ],
             'forgotemailfailed' => [
-                'passwordResetFailed' => $this->translator->translate('i.password_reset_failed'),
-                'invoiceEmailException' => $this->translator->translate('invoice.email.exception'),
+                'passwordResetFailed' => $this->translator->translate('password_reset_failed'),
+                'invoiceEmailException' => $this->translator->translate('email.exception'),
             ],
             'forgotusernotfound' => [
-                'loginAlertUserNotFound' => $this->translator->translate('i.loginalert_user_not_found'),
+                'loginAlertUserNotFound' => $this->translator->translate('loginalert_user_not_found'),
             ],
             'oauth2callbackresultunauthorised' => [
                 'oauth2callbackresultunauthorised' => $this->translator->translate('layout.page.not-authorised'),
             ],
             'onetimepassworderror' => [
-                'onetimePasswordError' => $this->translator->translate('invoice.invoice.two.factor.authentication.error'),
+                'onetimePasswordError' => $this->translator->translate('two.factor.authentication.error'),
             ],
             'resetpasswordfailed' => [
-                'resetPasswordFailed' => $this->translator->translate('i.password_reset_failed'),
+                'resetPasswordFailed' => $this->translator->translate('password_reset_failed'),
             ],
             'resetpasswordsuccess' => [
-                'resetPasswordSuccess' => $this->translator->translate('i.password_reset'),
+                'resetPasswordSuccess' => $this->translator->translate('password_reset'),
             ],
             'signupfailed' => [
-                'emailNotSentSuccessfully' => $this->translator->translate('invoice.invoice.email.not.sent.successfully'),
-                'invoiceEmailException' => $this->translator->translate('invoice.email.exception'),
-                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('i.loginalert_user_inactive'),
+                'emailNotSentSuccessfully' => $this->translator->translate('email.not.sent.successfully'),
+                'invoiceEmailException' => $this->translator->translate('email.exception'),
+                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('loginalert_user_inactive'),
             ],
             'signupsuccess' => [
-                'emailSuccessfullySent' => $this->translator->translate('i.email_successfully_sent'),
+                'emailSuccessfullySent' => $this->translator->translate('email_successfully_sent'),
             ],
         ];
     }

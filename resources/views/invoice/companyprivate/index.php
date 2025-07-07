@@ -38,7 +38,7 @@ echo $alert;
 <?php
 if ($canEdit) {
     echo Html::a(
-        $translator->translate('i.add'),
+        $translator->translate('add'),
         $urlGenerator->generate('companyprivate/add'),
         ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
     );
@@ -54,7 +54,7 @@ if ($canEdit) {
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.setting.company.private')))
+                        ->content(' ' . Html::encode($translator->translate('setting.company.private')))
             )
     )
     ->render();
@@ -70,7 +70,7 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'company_public_name',
-        header: $translator->translate('invoice.company.public'),
+        header: $translator->translate('company.public'),
         content: static fn (CompanyPrivate $model) => Html::encode($model->getCompany()?->getName())
     ),
     new DataColumn(
@@ -85,7 +85,7 @@ $columns = [
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
-                'title' => $translator->translate('i.view'),
+                'title' => $translator->translate('view'),
             ]
         ),
         new ActionButton(
@@ -95,7 +95,7 @@ $columns = [
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
-                'title' => $translator->translate('i.edit'),
+                'title' => $translator->translate('edit'),
             ]
         ),
         new ActionButton(
@@ -104,8 +104,8 @@ $columns = [
                 return $urlGenerator->generate('companyprivate/delete', ['id' => $model->getId()]);
             },
             attributes: [
-                'title' => $translator->translate('i.delete'),
-                'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                'title' => $translator->translate('delete'),
+                'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
             ]
         ),
     ])
@@ -118,7 +118,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.setting.company.private'),
+    $translator->translate('setting.company.private'),
     ''
 );
 echo GridView::widget()
@@ -133,6 +133,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

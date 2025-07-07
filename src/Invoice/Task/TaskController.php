@@ -42,8 +42,8 @@ final class TaskController extends BaseController
     protected string $controllerName = 'invoice/task';
 
     public function __construct(
-        private TaskService $taskService,
-        private DataResponseFactoryInterface $factory,
+        private readonly TaskService $taskService,
+        private readonly DataResponseFactoryInterface $factory,
         private InvItemService $invitemService,
         SessionInterface $session,
         sR $sR,
@@ -91,7 +91,7 @@ final class TaskController extends BaseController
         $task = new Task();
         $form = new TaskForm($task);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'task/add',
             'actionArguments' => [],
             'alert' => $this->alert(),
@@ -106,7 +106,7 @@ final class TaskController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->taskService->saveTask($task, $body);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('task/index');
                 }
             }
@@ -137,7 +137,7 @@ final class TaskController extends BaseController
         if ($task) {
             $form = new TaskForm($task);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'task/edit',
                 'actionArguments' => ['id' => $task->getId()],
                 'alert' => $this->alert(),
@@ -151,7 +151,7 @@ final class TaskController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->taskService->saveTask($task, $body);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('task/index');
                     }
                 }
@@ -175,7 +175,7 @@ final class TaskController extends BaseController
         $task = $this->task($currentRoute, $tR);
         /** @var Task $task */
         $this->taskService->deleteTask($task);
-        $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+        $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
         return $this->webService->getRedirectResponse('task/index');
     }
 
@@ -188,19 +188,19 @@ final class TaskController extends BaseController
     {
         return [
             1 => [
-                'label' => $translator->translate('i.not_started'),
+                'label' => $translator->translate('not.started'),
                 'class' => 'draft',
             ],
             2 => [
-                'label' => $translator->translate('i.in_progress'),
+                'label' => $translator->translate('in.progress'),
                 'class' => 'viewed',
             ],
             3 => [
-                'label' => $translator->translate('i.complete'),
+                'label' => $translator->translate('complete'),
                 'class' => 'sent',
             ],
             4 => [
-                'label' => $translator->translate('i.invoiced'),
+                'label' => $translator->translate('invoiced'),
                 'class' => 'paid',
             ],
         ];
@@ -303,7 +303,7 @@ final class TaskController extends BaseController
         if ($task) {
             $taskForm = new TaskForm($task);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'task/view',
                 'actionArguments' => ['id' => $task->getId()],
                 'errors' => [],
@@ -324,7 +324,7 @@ final class TaskController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('task/index');
         }
         return $canEdit;

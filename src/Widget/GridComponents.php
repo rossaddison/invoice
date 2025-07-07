@@ -102,7 +102,7 @@ final readonly class GridComponents
                         ((null !== $invNumber && null !== $invId)
                               ? $invNumber
                               : $this->translator
-                                     ->translate('invoice.invoice.number.missing.therefore.use.invoice.id') .
+                                     ->translate('number.missing.therefore.use.invoice.id') .
                                        ($invId ?? '')) .
                                        ' ' .
                                        (null !== $invBalance

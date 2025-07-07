@@ -58,12 +58,12 @@ class CustomValuesHelper
     public function format_boolean(Translator $translator, string $txt): string
     {
         if ($txt === '1') {
-            return $translator->translate('i.true');
+            return $translator->translate('true');
         }
         if ($txt === '0') {
-            return $translator->translate('i.false');
+            return $translator->translate('false');
         }
-        return $translator->translate('i.false');
+        return $translator->translate('false');
     }
 
     /**
@@ -111,8 +111,8 @@ class CustomValuesHelper
                 ])
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
-                       ? $translator->translate('invoice.hint.this.field.is.required')
-                       : $translator->translate('invoice.hint.this.field.is.not.required'))
+                       ? $translator->translate('hint.this.field.is.required')
+                       : $translator->translate('hint.this.field.is.not.required'))
                 ->value($dateValue);
 
                 break;
@@ -212,8 +212,8 @@ class CustomValuesHelper
                 ->value((int)$fieldValue ?: 0)
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
-                    ? $translator->translate('invoice.hint.this.field.is.required')
-                    : $translator->translate('invoice.hint.this.field.is.not.required'));
+                    ? $translator->translate('hint.this.field.is.required')
+                    : $translator->translate('hint.this.field.is.not.required'));
                 break;
 
             default:
@@ -226,8 +226,8 @@ class CustomValuesHelper
                 ])
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
-                   ? $translator->translate('invoice.hint.this.field.is.required')
-                   : $translator->translate('invoice.hint.this.field.is.not.required'))
+                   ? $translator->translate('hint.this.field.is.required')
+                   : $translator->translate('hint.this.field.is.not.required'))
                 ->value(Html::encode((string)$fieldValue ?: ''));
         }
     }
@@ -394,8 +394,8 @@ class CustomValuesHelper
             case 'BOOLEAN':
                 echo Label::tag()
                 ->content(null !== $this->form_value($entity_custom_values, $custom_field->getId())
-                                  ? $translator->translate('i.true')
-                                  : $translator->translate('i.false'));
+                                  ? $translator->translate('true')
+                                  : $translator->translate('false'));
                 echo Br::tag();
                 break;
             case 'NUMBER':

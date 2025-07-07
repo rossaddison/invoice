@@ -48,69 +48,69 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::select($form, 'reason')
-                    ->label($translator->translate('i.reason'))
+                    ->label($translator->translate('reason'))
                     ->optionsData($optionsDataReasons)
-                    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+                    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'casenumber')
-->label($translator->translate('i.case_number'))
-->placeholder($translator->translate('i.case_number'))
+->label($translator->translate('case.number'))
+->placeholder($translator->translate('case.number'))
 ->value(Html::encode($form->getCasenumber() ?? ''))
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+->hint($translator->translate('hint.this.field.is.required'));
 ?>    
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::textarea($form, 'diagnosis')
-    ->label($translator->translate('i.invoice_sumex_diagnosis'))
-    ->placeholder($translator->translate('i.invoice_sumex_diagnosis'))
+    ->label($translator->translate('invoice.sumex.diagnosis'))
+    ->placeholder($translator->translate('invoice.sumex.diagnosis'))
     ->value(Html::encode($form->getDiagnosis() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::textarea($form, 'observations')
-    ->label($translator->translate('i.sumex_observations'))
-    ->placeholder($translator->translate('i.sumex_observations'))
+    ->label($translator->translate('sumex.observations'))
+    ->placeholder($translator->translate('sumex.observations'))
     ->value(Html::encode($form->getObservations() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::date($form, 'treatmentstart')
-    ->label($translator->translate('i.treatment_start'))
+    ->label($translator->translate('treatment.start'))
     ->value(Html::encode($form->getTreatmentstart() instanceof \DateTimeImmutable ?
                  $form->getTreatmentstart()->format('Y-m-d') : (is_string(
                      $form->getTreatmentstart()
                  ) ?
                  $form->getTreatmentstart() : '')))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::date($form, 'treatmentend')
-    ->label($translator->translate('i.treatment_end'))
+    ->label($translator->translate('treatment.end'))
     ->value(Html::encode($form->getTreatmentend() instanceof \DateTimeImmutable ?
                  $form->getTreatmentend()->format('Y-m-d') : (is_string(
                      $form->getTreatmentend()
                  ) ?
                  $form->getTreatmentend() : '')))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::date($form, 'casedate')
-    ->label($translator->translate('i.case_date'))
+    ->label($translator->translate('case.date'))
     ->value(Html::encode($form->getCasedate() instanceof \DateTimeImmutable ?
                  $form->getCasedate()->format('Y-m-d') : (is_string(
                      $form->getCasedate()
                  ) ?
                  $form->getCasedate() : '')))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

@@ -28,14 +28,14 @@ use Yiisoft\Html\Html;
 
         <thead>
         <tr>
-            <th><?= $translator->translate('i.payment_date'); ?></th>
-            <th><?= $translator->translate('i.invoice_date'); ?></th>
-            <th><?= $translator->translate('i.invoice'); ?></th>
-            <th><?= $translator->translate('i.client'); ?></th>
-            <th><?= $translator->translate('i.amount'); ?></th>
-            <th><?= $translator->translate('i.payment_method'); ?></th>
-            <th><?= $translator->translate('i.note'); ?></th>
-            <th><?= $translator->translate('i.options'); ?></th>
+            <th><?= $translator->translate('payment.date'); ?></th>
+            <th><?= $translator->translate('invoice.date'); ?></th>
+            <th><?= $translator->translate('invoice'); ?></th>
+            <th><?= $translator->translate('client'); ?></th>
+            <th><?= $translator->translate('amount'); ?></th>
+            <th><?= $translator->translate('payment.method'); ?></th>
+            <th><?= $translator->translate('note'); ?></th>
+            <th><?= $translator->translate('options'); ?></th>
         </tr>
         </thead>
 
@@ -56,7 +56,7 @@ use Yiisoft\Html\Html;
                 </td>
                 <td>
                     <a href="<?=  $urlGenerator->generate('client/view', ['id' => $payment->getInv()?->getClient_id()]); ?>"
-                       title="<?= $translator->translate('i.view_client'); ?>">
+                       title="<?= $translator->translate('view.client'); ?>">
                        <?= Html::encode($clientHelper->format_client($payment->getInv()?->getClient())); ?>
                     </a>
                 </td>
@@ -66,25 +66,25 @@ use Yiisoft\Html\Html;
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?=  $urlGenerator->generate('client/view', ['id' => $payment->getInv()?->getClient_id()]); ?>"
-                                    title="<?= $translator->translate('i.view_client'); ?>">
+                                    title="<?= $translator->translate('view.client'); ?>">
                                     <?= Html::encode($clientHelper->format_client($payment->getInv()?->getClient())); ?>
                                 </a>
                                 <a href="<?=  $urlGenerator->generate('payment/edit', ['id' => $payment->getId()]); ?>">
                                     <i class="fa fa-edit fa-margin"></i>
-                                    <?= $translator->translate('i.edit'); ?>
+                                    <?= $translator->translate('edit'); ?>
                                 </a>
                             </li>
                             <li>
                                 <form action="<?= $urlGenerator->generate('payment/delete', ['id' => $payment->getId()]); ?>" method="POST">
                                     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>"> 
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
+                                            onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');">
+                                        <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
                                     </button>
                                 </form>
                             </li>

@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('i.delivery_form'); ?>
+<?= $translator->translate('delivery.form'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
@@ -53,9 +53,9 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
             <?php
             Field::hidden($form, 'date_created')
-            ->label($translator->translate('invoice.invoice.delivery.date.created') . ' (' . $dateHelper->display() . ')')
+            ->label($translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')')
             ->addInputAttributes([
-                'placeholder' => $translator->translate('invoice.invoice.delivery.date.created') . ' (' . $dateHelper->display() . ')',
+                'placeholder' => $translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')',
                 'id' => 'date_created',
                 'role' => 'presentation',
                 'autocomplete' => 'off'
@@ -64,9 +64,9 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?=
     Field::hidden($form, 'date_modified')
-    ->label($translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')')
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $dateHelper->display() . ')',
+        'placeholder' => $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
         'id' => 'date_modified',
         'role' => 'presentation',
         'autocomplete' => 'off'
@@ -76,7 +76,7 @@ use Yiisoft\Html\Tag\Form;
             
             <?=
     Field::date($form, 'start_date')
-    ->label($translator->translate('invoice.invoice.delivery.start.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
     ->value(!is_string($startDate = $form->getStart_date()) ? $startDate->format('Y-m-d') : '')
     ->readonly(true);
@@ -84,14 +84,14 @@ use Yiisoft\Html\Tag\Form;
            
             <?=
     Field::date($form, 'actual_delivery_date')
-    ->label($translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
     ->value(Html::encode(!is_string($actualDeliveryDate = $form->getActual_delivery_date()) ? $actualDeliveryDate->format('Y-m-d') : ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'))
+    ->hint($translator->translate('hint.this.field.is.not.required'))
     ->readonly(true);
 ?>
             <?=
     Field::date($form, 'end_date')
-    ->label($translator->translate('invoice.invoice.delivery.end.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')')
     ->value(Html::encode(!is_string($endDate = $form->getEnd_date()) ? $endDate->format('Y-m-d') : ''))
     ->readonly(true)
 ?>
@@ -121,7 +121,7 @@ use Yiisoft\Html\Tag\Form;
             }
         }
         echo Field::select($form, 'delivery_location_id')
-        ->label($translator->translate('invoice.invoice.delivery.location'))
+        ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
             'class' => 'form-control',
             'id' => 'delivery_location_id'
@@ -129,7 +129,7 @@ use Yiisoft\Html\Tag\Form;
         ->optionsData($optionsDataDel)
         ->value(Html::encode($form->getDelivery_location_id()));
     } else {
-        echo Html::a($translator->translate('invoice.invoice.delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-danger btn-lg mt-3']);
+        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-danger btn-lg mt-3']);
     }
 ?>
         <?= Html::closeTag('div'); ?>

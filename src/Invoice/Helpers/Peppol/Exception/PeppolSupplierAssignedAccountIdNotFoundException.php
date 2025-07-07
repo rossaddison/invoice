@@ -16,7 +16,7 @@ final class PeppolSupplierAssignedAccountIdNotFoundException extends \RuntimeExc
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.client.peppol.not.found.id.supplier.assigned');
+        return $this->translator->translate('client.peppol.not.found.id.supplier.assigned');
     }
 
     /**

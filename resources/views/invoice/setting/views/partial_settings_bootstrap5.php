@@ -44,7 +44,7 @@ $fontSizes = ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16',
                                         <input type="hidden" name="settings[bootstrap5_offcanvas_enable]" value="0">
                                         <input type="checkbox" name="settings[bootstrap5_offcanvas_enable]" value="1"
                                             <?php $s->check_select($body['settings[bootstrap5_offcanvas_enable]'], 1, '==', true) ?>>
-                                        <?= $translator->translate('invoice.invoice.bootstrap5.offcanvas.enable'); ?>
+                                        <?= $translator->translate('bootstrap5.offcanvas.enable'); ?>
                                     </label>
                                 </div>
                             </div>
@@ -52,11 +52,11 @@ $fontSizes = ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16',
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="settings[bootstrap5_offcanvas_placement]" <?= $s->where('bootstrap5_offcanvas_placement'); ?> >
-                                    <?= $translator->translate('invoice.invoice.bootstrap5.offcanvas.placement'); ?>
+                                    <?= $translator->translate('bootstrap5.offcanvas.placement'); ?>
                                 </label>
                                 <?php $body['settings[bootstrap5_offcanvas_placement]'] = $s->getSetting('bootstrap5_offcanvas_placement'); ?>
                                 <select name="settings[bootstrap5_offcanvas_placement]" id="settings[bootstrap5_offcanvas_placement]" class="form-control">
-                                    <option value="0"><?= $translator->translate('i.none'); ?></option>
+                                    <option value="0"><?= $translator->translate('none'); ?></option>
                                     <?php
                                         $placements = ['top', 'bottom', 'start', 'end'];
 /**
@@ -78,7 +78,7 @@ foreach ($placements as $placement) { ?>
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="settings[bootstrap5_alert_message_font]" <?= $s->where('bootstrap5_alert_message_font'); ?> >
-                                    <?= $translator->translate('invoice.invoice.bootstrap5.alert.message.font'); ?>
+                                    <?= $translator->translate('bootstrap5.alert.message.font'); ?>
                                 </label>
                                 <?php $body['settings[bootstrap5_alert_message_font]'] = $s->getSetting('bootstrap5_alert_message_font'); ?>
                                 <select name="settings[bootstrap5_alert_message_font]" id="settings[bootstrap5_alert_message_font]" class="form-control">
@@ -98,7 +98,7 @@ foreach ($fonts as $font) { ?>
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="settings[bootstrap5_alert_message_font_size]" <?= $s->where('bootstrap5_alert_message_font_size'); ?> >
-                                    <?= $translator->translate('invoice.invoice.bootstrap5.alert.message.font.size'); ?>
+                                    <?= $translator->translate('bootstrap5.alert.message.font.size'); ?>
                                 </label>
                                 <?php $body['settings[bootstrap5_alert_message_font_size]'] = $s->getSetting('bootstrap5_alert_message_font_size'); ?>
                                 <select name="settings[bootstrap5_alert_message_font_size]" id="settings[bootstrap5_alert_message_font_size]" class="form-control">
@@ -118,7 +118,7 @@ foreach ($fontSizes as $fontSize) { ?>
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="settings[bootstrap5_alert_close_button_font_size]" <?= $s->where('bootstrap5_alert_close_button_font_size'); ?> >
-                                    <?= $translator->translate('invoice.invoice.bootstrap5.alert.close.button.font.size'); ?>
+                                    <?= $translator->translate('bootstrap5.alert.close.button.font.size'); ?>
                                 </label>
                                 <?php $body['settings[bootstrap5_alert_close_button_font_size]'] = $s->getSetting('bootstrap5_alert_close_button_font_size'); ?>
                                 <select name="settings[bootstrap5_alert_close_button_font_size]" id="settings[bootstrap5_alert_close_button_font_size]" class="form-control">
@@ -143,7 +143,7 @@ foreach ($fontSizes as $fontSize) { ?>
                        <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="settings[bootstrap5_layout_invoice_navbar_font]" <?= $s->where('bootstrap5_layout_invoice_navbar_font'); ?> >
-                                    <?= $translator->translate('invoice.invoice.bootstrap5.layout.invoice.navbar.font'); ?>
+                                    <?= $translator->translate('bootstrap5.layout.invoice.navbar.font'); ?>
                                 </label>
                                 <?php $body['settings[bootstrap5_layout_invoice_navbar_font]'] = $s->getSetting('bootstrap5_layout_invoice_navbar_font'); ?>
                                 <select name="settings[bootstrap5_layout_invoice_navbar_font]" id="settings[bootstrap5_layout_invoice_navbar_font]" class="form-control">
@@ -163,7 +163,7 @@ foreach ($fonts as $font) { ?>
                        <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="settings[bootstrap5_layout_invoice_navbar_font_size]" <?= $s->where('bootstrap5_alert_message_font_size'); ?> >
-                                    <?= $translator->translate('invoice.invoice.bootstrap5.layout.invoice.navbar.font.size'); ?>
+                                    <?= $translator->translate('bootstrap5.layout.invoice.navbar.font.size'); ?>
                                 </label>
                                 <?php $body['settings[bootstrap5_layout_invoice_navbar_font_size]'] = $s->getSetting('bootstrap5_layout_invoice_navbar_font_size'); ?>
                                 <select name="settings[bootstrap5_layout_invoice_navbar_font_size]" id="settings[bootstrap5_layout_invoice_navbar_font_size]" class="form-control">

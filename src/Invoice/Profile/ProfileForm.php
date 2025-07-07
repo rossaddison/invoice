@@ -79,10 +79,10 @@ final class ProfileForm extends FormModel
     public function getPropertyLabels(): array
     {
         return [
-            'current' => $this->translator->translate('invoice.profile.property.label.current'),
-            'mobile' => $this->translator->translate('invoice.profile.property.label.mobile'),
-            'email' => $this->translator->translate('invoice.profile.property.label.email'),
-            'description' => $this->translator->translate('invoice.profile.property.label.description'),
+            'current' => $this->translator->translate('profile.property.label.current'),
+            'mobile' => $this->translator->translate('profile.property.label.mobile'),
+            'email' => $this->translator->translate('profile.property.label.email'),
+            'description' => $this->translator->translate('profile.property.label.description'),
         ];
     }
 

@@ -45,13 +45,13 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header:  $translator->translate('i.id'),
+        header:  $translator->translate('id'),
         content: static fn (Merchant $model) => $model->getId()
     ),
     new DataColumn(
         field: 'inv_id',
         property: 'filterInvNumber',
-        header:  $translator->translate('i.invoice'),
+        header:  $translator->translate('invoice'),
         content: static function (Merchant $model) use ($urlGenerator): string|A {
             $return = '';
             if (null !== $model->getInv()) {
@@ -63,32 +63,32 @@ $columns = [
     ),
     new DataColumn(
         'successful',
-        header:  $translator->translate('g.transaction_successful'),
+        header:  $translator->translate('transaction.successful'),
         content: static function (Merchant $model) use ($translator): Yiisoft\Html\Tag\CustomTag {
-            return $model->getSuccessful() ? Html::tag('Label', $translator->translate('i.yes'), ['class' => 'btn btn-success']) : Html::tag('Label', $translator->translate('i.no'), ['class' => 'btn btn-danger']);
+            return $model->getSuccessful() ? Html::tag('Label', $translator->translate('yes'), ['class' => 'btn btn-success']) : Html::tag('Label', $translator->translate('no'), ['class' => 'btn btn-danger']);
         }
     ),
     new DataColumn(
         'date',
-        header:  $translator->translate('i.payment_date'),
+        header:  $translator->translate('payment.date'),
         content: static fn (Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate())
                                                                           ? $date->format('Y-m-d') : ''
     ),
     new DataColumn(
         field: 'driver',
         property: 'filterPaymentProvider',
-        header:  $translator->translate('g.payment_provider'),
+        header:  $translator->translate('payment.provider'),
         content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
         filter: true
     ),
     new DataColumn(
         'response',
-        header:  $translator->translate('g.provider_response'),
+        header:  $translator->translate('provider.response'),
         content: static fn (Merchant $model): string => Html::encode($model->getResponse())
     ),
     new DataColumn(
         'reference',
-        header:  $translator->translate('g.transaction_reference'),
+        header:  $translator->translate('transaction.reference'),
         content: static fn (Merchant $model): string => Html::encode($model->getReference())
     ),
 ];
@@ -98,7 +98,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
-    $translator->translate('i.payment_logs'),
+    $translator->translate('payment.logs'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
@@ -110,7 +110,7 @@ echo GridView::widget()
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($gridComponents->header(' ' . $translator->translate('i.payment_logs')))
+->header($gridComponents->header(' ' . $translator->translate('payment.logs')))
 ->id('w79-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

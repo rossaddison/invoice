@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Stringable;
 
 final readonly class WebControllerService
 {
@@ -19,16 +18,16 @@ final readonly class WebControllerService
     ) {
     }
 
-    /**
-     * @param string $url
-     * @param array<string,scalar|Stringable|null> $arguments Argument-value set
-     * @return ResponseInterface
+    /** Bug: Trailing # at end of browser url if ... string $hash = '';
+     *  Fix: ?string $hash = null
+     *  @see
      */
-    public function getRedirectResponse(string $url, array $arguments = []): ResponseInterface
+    /** @psalm-suppress MixedArgumentTypeCoercion $arguments **/
+    public function getRedirectResponse(string $url, array $arguments = [], array $queryParameters = [], ?string $hash = null): ResponseInterface
     {
         return $this->responseFactory
             ->createResponse(Status::FOUND)
-            ->withHeader(Header::LOCATION, $this->urlGenerator->generate($url, $arguments));
+            ->withHeader(Header::LOCATION, $this->urlGenerator->generate($url, $arguments, $queryParameters, $hash));
     }
 
     public function getNotFoundResponse(): ResponseInterface

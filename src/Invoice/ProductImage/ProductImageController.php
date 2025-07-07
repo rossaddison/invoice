@@ -100,7 +100,7 @@ final class ProductImageController extends BaseController
         $productImage = new ProductImage();
         $productImageForm = new ProductImageForm($productImage, (int)$product_id);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'productimage/add',
             'actionArguments' => [],
             'errors' => [],
@@ -137,12 +137,12 @@ final class ProductImageController extends BaseController
             if ($productimage) {
                 $this->productimageService->deleteProductImage($productimage, $this->sR);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     [
                         'heading' => '',
-                        'message' => $this->translator->translate('i.record_successfully_deleted'),
+                        'message' => $this->translator->translate('record.successfully.deleted'),
                         'url' => 'product/view',
                         'id' => $product_id,
                     ]
@@ -175,7 +175,7 @@ final class ProductImageController extends BaseController
             $product_id = $productImage->getProduct_id();
             $form = new ProductImageForm($productImage, (int)$product_id);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'productimage/edit',
                 'actionArguments' => ['id' => $productImage->getId()],
                 'errors' => [],
@@ -208,7 +208,7 @@ final class ProductImageController extends BaseController
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'productimage/view',
                 'actionArguments' => ['id' => $productImage->getId()],
                 'form' => new ProductImageForm($productImage, (int)$productImage->getProduct_id()),

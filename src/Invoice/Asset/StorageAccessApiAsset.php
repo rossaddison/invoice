@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Asset;
+namespace App\Invoice\Asset;
 
 use Yiisoft\Assets\AssetBundle;
 

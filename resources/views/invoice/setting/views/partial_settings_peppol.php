@@ -17,7 +17,7 @@ use Yiisoft\Html\Html;
         
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('invoice.peppol'); ?>
+                <?= $translator->translate('peppol.electronic.invoicing'); ?>
             </div>
             <div class="panel-body">
                 <div class='row'>
@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
                                     <input type="hidden" name="settings[enable_peppol]" value="0">
                                     <input type="checkbox" name="settings[enable_peppol]" value="1"
                                         <?php $s->check_select($body['settings[enable_peppol]'], 1, '==', true) ?>>
-                                        <?= Html::a($translator->translate('invoice.peppol.enable'), 'http://www.datypic.com/sc/ubl21/ss.html', ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']); ?>
+                                        <?= Html::a($translator->translate('peppol.enable'), 'http://www.datypic.com/sc/ubl21/ss.html', ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']); ?>
                                 </label>
                             </div>                            
                         </div>
@@ -42,20 +42,20 @@ use Yiisoft\Html\Html;
                                     <input type="hidden" name="settings[enable_client_peppol_defaults]" value="0">
                                     <input type="checkbox" name="settings[enable_client_peppol_defaults]" value="1"
                                         <?php $s->check_select($body['settings[enable_client_peppol_defaults]'], 1, '==', true) ?>>
-                                        <?= $translator->translate('invoice.peppol.client.defaults'); ?>
+                                        <?= $translator->translate('peppol.client.defaults'); ?>
                                 </label>
                             </div>                            
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="settings[currency_code_from]" >
-                            <?= $translator->translate('invoice.peppol.currency.code.from'); ?>
+                            <?= $translator->translate('peppol.currency.code.from'); ?>
                         </label>
                         <?php $body['settings[currency_code_from]'] = $s->getSetting('currency_code_from') ?: $config_tax_currency; ?>
                         <select name="settings[currency_code_from]" disabled
                             id="settings[currency_code_from]"
                             class="input-sm form-control">
-                            <option value="0"><?= $translator->translate('i.none'); ?></option>
+                            <option value="0"><?= $translator->translate('none'); ?></option>
                             <?php
                                 /**
                                  * @var string $val
@@ -73,13 +73,13 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="form-group">
                         <label for="settings[currency_code_to]" >
-                            <?= $translator->translate('invoice.peppol.currency.code.to'); ?>
+                            <?= $translator->translate('peppol.currency.code.to'); ?>
                         </label>
                         <?php $body['settings[currency_code_to]'] = $s->getSetting('currency_code_to') ?: $config_tax_currency; ?>
                         <select name="settings[currency_code_to]"
                             id="settings[currency_code_to]"
                             class="input-sm form-control">
-                            <option value="0"><?= $translator->translate('i.none'); ?></option>
+                            <option value="0"><?= $translator->translate('none'); ?></option>
                             <?php
                                 /**
                                  * @var string $val
@@ -97,7 +97,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="form-group">
                         <label for="settings[currency_from_to]" <?= $s->where('currency_code_from_to'); ?>>
-                            <?= $translator->translate('invoice.peppol.currency.from.to'); ?>
+                            <?= $translator->translate('peppol.currency.from.to'); ?>
                             <?= '('. (string)Html::a('xe.com', 'https://www.xe.com/') . ')'; ?>
                         </label>
                         <?php $body['settings[currency_from_to]'] = $s->getSetting('currency_from_to') ?: '1.00'; ?>
@@ -108,7 +108,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="form-group">
                         <label for="settings[currency_to_from]" >
-                            <?= $translator->translate('invoice.peppol.currency.to.from'); ?>
+                            <?= $translator->translate('peppol.currency.to.from'); ?>
                         </label>
                         <?php $body['settings[currency_to_from]'] = $s->getSetting('currency_to_from') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_to_from]" id="settings[currency_to_from]"
@@ -125,7 +125,7 @@ use Yiisoft\Html\Html;
                                     <input type="checkbox" name="settings[include_delivery_period]" value="1"
                                         <?php $s->check_select($body['settings[include_delivery_period]'], 1, '==', true) ?>>
                                         <?= Html::a(
-                                            $translator->translate('invoice.peppol.include.delivery.period'),
+                                            $translator->translate('peppol.include.delivery.period'),
                                             'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/',
                                             ['style' => 'text-decoration:none']
                                         ); ?>
@@ -135,7 +135,7 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="form-group">
                         <label for="settings[stand_in_code]" <?= $s->where('stand_in_code'); ?>>
-                            <?= Html::a($translator->translate('invoice.peppol.stand.in.code'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/', ['style' => 'text-decoration:none']); ?>
+                            <?= Html::a($translator->translate('peppol.stand.in.code'), 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/', ['style' => 'text-decoration:none']); ?>
                         </label>
                         <div class="input-group">
                             <?php $body['settings[stand_in_code]'] = $s->getSetting('stand_in_code') ?: ''; ?>
@@ -165,18 +165,18 @@ use Yiisoft\Html\Html;
                     </div>
                     <div class="form-group">
                         <label for="settings[peppol_xml_stream]" <?= $s->where('peppol_xml_stream'); ?>>
-                            <?= $translator->translate('invoice.peppol.xml.stream'); ?>
+                            <?= $translator->translate('peppol.xml.stream'); ?>
                         </label>
                         <?php $body['settings[peppol_xml_stream]'] = $s->getSetting('peppol_xml_stream'); ?>
                         <select name="settings[peppol_xml_stream]" id="settings[peppol_xml_stream]" class="form-control">
                             <option value="0">
-                                <?= $translator->translate('i.no'); ?>
+                                <?= $translator->translate('no'); ?>
                             </option>
                             <option value="1" 
                                 <?php
                                     $s->check_select($body['settings[peppol_xml_stream]'], '1');
 ?>>
-                                <?= $translator->translate('i.yes'); ?>
+                                <?= $translator->translate('yes'); ?>
                             </option>
                         </select>
                     </div>

@@ -42,7 +42,7 @@ use App\Invoice\Helpers\NumberHelper;
  * @var bool $invView
  * */
 
-$this->setTitle($translator->translate('invoice.salesorder'));
+$this->setTitle($translator->translate('salesorder'));
 
 $vat = $s->getSetting('enable_vat_registration');
 ?>
@@ -66,7 +66,7 @@ echo $modal_so_to_invoice;
 <div id="headerbar">
     <h1 class="headerbar-title">
     <?php
-    echo $translator->translate('invoice.salesorder');
+    echo $translator->translate('salesorder');
 $soNumber = $so->getNumber();
 echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
 ?>
@@ -74,7 +74,7 @@ echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
         <div class="headerbar-item pull-right">
         <div class="options btn-group">
             <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
-                <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
+                <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
                 <?php
@@ -82,14 +82,14 @@ echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
                 <li>
                     <a href="<?= $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>" style="text-decoration:none">
                         <i class="fa fa-edit fa-margin"></i>
-                        <?= $translator->translate('i.edit'); ?>
+                        <?= $translator->translate('edit'); ?>
                     </a>
                 </li>
                 <?php } ?>
                 <li>
                     <a href="#so-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-print fa-margin"></i>
-                        <?= $translator->translate('i.download_pdf'); ?>
+                        <?= $translator->translate('download.pdf'); ?>
                     </a>
                 </li>
                 <?php
@@ -102,7 +102,7 @@ echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
                         <li>
                             <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
-                                <?= $translator->translate('invoice.salesorder.to.invoice'); ?>
+                                <?= $translator->translate('salesorder.to.invoice'); ?>
                             </a>
                         </li>
                     <?php } ?>    
@@ -140,25 +140,25 @@ echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
                         <span class="client-address-country-line">
                             <?php
                             $soCountry = $so->getClient()?->getClient_country();
-echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator->translate('i.cldr'), $soCountry) : ''); ?>
+echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator->translate('cldr'), $soCountry) : ''); ?>
                         </span>
                     </div>
                     <hr>
                     <?php if (null !== $so->getClient()?->getClient_phone()): ?>
                         <div class="client-phone">
-                            <?= $translator->translate('i.phone'); ?>:&nbsp;
+                            <?= $translator->translate('phone'); ?>:&nbsp;
                             <?= Html::encode($so->getClient()?->getClient_phone()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (null !== $so->getClient()?->getClient_mobile()): ?>
                         <div class="client-mobile">
-                            <?= $translator->translate('i.mobile'); ?>:&nbsp;
+                            <?= $translator->translate('mobile'); ?>:&nbsp;
                             <?= Html::encode($so->getClient()?->getClient_mobile()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (null !== $so->getClient()?->getClient_email()): ?>
                         <div class='client-email'>
-                            <?= $translator->translate('i.email'); ?>:&nbsp;
+                            <?= $translator->translate('email'); ?>:&nbsp;
                             <?= Html::encode($so->getClient()?->getClient_email()); ?>
                         </div>
                     <?php endif; ?>
@@ -175,16 +175,16 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
 
                                 <div>
                                     <label for="salesorder_number">
-                                        <?= $translator->translate('invoice.salesorder'); ?> #
+                                        <?= $translator->translate('salesorder'); ?> #
                                     </label>
                                     <input type="text" id="salesorder_number" class="form-control" readonly
                                         <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
-                                        <?php else : ?> placeholder="<?= $translator->translate('i.not_set'); ?>"
+                                        <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                                         <?php endif; ?>>
                                 </div>
                                 <div has-feedback">
                                     <label for="salesorder_date_created">
-                                        <?= $vat == '0' ? $translator->translate('invoice.invoice.date.issued') : $translator->translate('invoice.salesorder.date.created'); ?>
+                                        <?= $vat == '0' ? $translator->translate('date.issued') : $translator->translate('salesorder.date.created'); ?>
                                     </label>
                                     <div class="input-group">
                                         <input name="salesorder_date_created" id="salesorder_date_created" disabled
@@ -201,7 +201,7 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                 </div>
                                 <?php if ($invNumber) { ?>  
                                 <div has-feedback">
-                                    <label for="salesorder_to_url"><?= $translator->translate('invoice.salesorder.invoice'); ?></label>
+                                    <label for="salesorder_to_url"><?= $translator->translate('salesorder.invoice'); ?></label>
                                     <div class="input-group">
                                         <?= Html::a($invNumber, $urlGenerator->generate('inv/view', ['id' => $so->getInv_id()]), ['class' => 'btn btn-success']); ?>
                                     </div>
@@ -224,7 +224,7 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
 
                                 <div>
                                     <label for="status_id">
-                                        <?= $translator->translate('i.status'); ?>
+                                        <?= $translator->translate('status'); ?>
                                     </label>
                                     <select name="status_id" id="status_id" disabled
                                             class="form-control">
@@ -245,19 +245,19 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                 </div>
                                 <div>
                                     <label for="salesorder_password" hidden>
-                                        <?= $translator->translate('invoice.salesorder.password'); ?>
+                                        <?= $translator->translate('salesorder.password'); ?>
                                     </label>
                                     <input type="text" id="salesorder_password" class="form-control" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_number">
-                                        <?= $translator->translate('invoice.salesorder.clients.purchase.order.number'); ?>
+                                        <?= $translator->translate('salesorder.clients.purchase.order.number'); ?>
                                     </label>
                                     <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($body['client_po_number'] ?? ''); ?>">
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_person">
-                                        <?= $translator->translate('invoice.salesorder.clients.purchase.order.person'); ?>
+                                        <?= $translator->translate('salesorder.clients.purchase.order.person'); ?>
                                     </label>
                                     <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($body['client_po_person'] ?? ''); ?>">
                                 </div>
@@ -268,7 +268,7 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                         <div>
                                             <br>
                                             <a href="<?= $urlGenerator->generate('salesorder/url_key', ['key' => $so->getUrl_key()]); ?>" class="btn btn-success">  
-                                                <?= $translator->translate('invoice.salesorder.agree.to.terms').'/'.$translator->translate('invoice.salesorder.reject'); ?>    
+                                                <?= $translator->translate('salesorder.agree.to.terms').'/'.$translator->translate('salesorder.reject'); ?>    
                                             </a>
                                         </div>
                                     <?php } ?>
@@ -290,7 +290,7 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
-                        <?= $translator->translate('i.notes'); ?>
+                        <?= $translator->translate('notes'); ?>
                     </div>
                     <div class="panel-body">
                         <textarea name="notes" id="notes" rows="3" disabled

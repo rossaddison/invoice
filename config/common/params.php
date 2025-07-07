@@ -77,6 +77,7 @@ return [
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
+        'http_client_ip' => $_SERVER['HTTP_CLIENT_IP'] ?? null,
     ],
     'license' => [
         'id' => 'invoice_BSD-3-Clause_20250511',
@@ -179,6 +180,8 @@ return [
             '@baseUrl' => '',
             '@hmrc' => '@resources/backend/views/hmrc',
             '@messages' => '@resources/messages',
+            '@English' => '@src/Invoice/Language/English',
+            '@generated' => '@views/invoice/generator/output_overwrite',
             '@npm' => '@root/node_modules',
             '@public' => '@root/public',
             '@resources' => '@root/resources',
@@ -202,7 +205,7 @@ return [
                 'validClass' => 'is-valid',
                 'template' => '{input}{label}{hint}{error}',
                 'labelClass' => 'floatingInput h6',
-                'errorClass' => 'fw-bold fst-italic',
+                'errorClass' => 'fw-bold fst-italic badge bg-danger text-wrap',
                 /**
                 * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
                 */

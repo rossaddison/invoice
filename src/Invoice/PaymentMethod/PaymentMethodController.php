@@ -62,7 +62,7 @@ final class PaymentMethodController extends BaseController
     {
         $form = new PaymentMethodForm(new PaymentMethod());
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'paymentmethod/add',
             'actionArguments' => [],
             'errors' => [],
@@ -100,7 +100,7 @@ final class PaymentMethodController extends BaseController
         if ($payment_method) {
             $form = new PaymentMethodForm($payment_method);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'paymentmethod/edit',
                 'actionArguments' => ['id' => $payment_method->getId()],
                 'errors' => [],
@@ -140,7 +140,7 @@ final class PaymentMethodController extends BaseController
             return $this->webService->getRedirectResponse('paymentmethod/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.payment.method.history'));
+            $this->flashMessage('danger', $this->translator->translate('payment.method.history'));
             return $this->webService->getRedirectResponse('paymentmethod/index');
         }
     }
@@ -157,7 +157,7 @@ final class PaymentMethodController extends BaseController
         if ($payment_method) {
             $form = new PaymentMethodForm($payment_method);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'paymentmethod/view',
                 'actionArguments' => ['id' => $payment_method->getId()],
                 'form' => $form,
@@ -175,7 +175,7 @@ final class PaymentMethodController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('paymentmethod/index');
         }
         return $canEdit;

@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div'); ?>        
         <?= Field::errorSummary($form)
             ->errors($errors)
-            ->header($translator->translate('invoice.error.summary'))
+            ->header($translator->translate('error.summary'))
             ->onlyCommonErrors()
 ?>    
         <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -66,54 +66,54 @@ foreach ($charges as $key => $value) {
 }
 ?>
             <?= Field::select($form, 'reason')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.reason'))
+    ->label($translator->translate('allowance.or.charge.reason'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'reason'
     ])
     ->value(Html::encode($form->getReason() ?? ''))
     ->optionsData($optionsDataReason, true)
-    ->prompt($translator->translate('i.none'))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->prompt($translator->translate('none'))
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?=
     Field::text($form, 'multiplier_factor_numeric')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'))
+    ->label($translator->translate('allowance.or.charge.multiplier.factor.numeric'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.multiplier.factor.numeric'),
+        'placeholder' => $translator->translate('allowance.or.charge.multiplier.factor.numeric'),
         'class' => 'form-control',
         'id' => 'multiplier_factor_numeric',
     ])
     ->value(Html::encode($form->getMultiplierFactorNumeric() ??  '20'))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>   
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?=
     Field::text($form, 'amount')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
+    ->label($translator->translate('allowance.or.charge.amount'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.amount'),
+        'placeholder' => $translator->translate('allowance.or.charge.amount'),
         'class' => 'form-control',
         'id' => 'amount',
     ])
     ->value(Html::encode($form->getAmount() ??  ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?=
     Field::text($form, 'base_amount')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.base.amount'))
+    ->label($translator->translate('allowance.or.charge.base.amount'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.invoice.allowance.or.charge.base.amount'),
+        'placeholder' => $translator->translate('allowance.or.charge.base.amount'),
         'class' => 'form-control',
         'id' => 'base_amount',
     ])
     ->value(Html::encode($form->getBaseAmount() ??  '1000'))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
@@ -134,15 +134,15 @@ foreach ($taxRates as $taxRate) {
 }
 ?>
             <?= Field::select($form, 'tax_rate_id')
-    ->label($translator->translate('invoice.invoice.tax.rate'))
+    ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'tax_rate_id'
     ])
     ->value($form->getTaxRateId() ?? '')
     ->optionsData($optionsDataTax, true)
-    ->prompt($translator->translate('i.none'))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->prompt($translator->translate('none'))
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

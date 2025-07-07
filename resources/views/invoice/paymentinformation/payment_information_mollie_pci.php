@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\A;
     <div class="card-header bg-dark text-white">
         <h2 class="fw-normal h3 text-center">
             <?php echo Html::tag('br');
-    echo $companyLogo; ?><?= $translator->translate('g.online_payment_for_invoice'); ?> #
+    echo $companyLogo; ?><?= $translator->translate('online.payment.for.invoice'); ?> #
                 <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
              Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
              Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
@@ -55,10 +55,10 @@ use Yiisoft\Html\Tag\A;
             
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.yes').' '.$translator->translate('i.custom_fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('i.download_pdf').'=>'.$translator->translate('i.no').' '.$translator->translate('i.custom_fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>
         </a>
     </div> 
     <br><?= Html::tag('Div', Html::tag('H4', $title)); ?><br>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\A;
         // open in a separate window
         ->target('_blank')
         ->addClass('btn btn-lg btn-primary bi bi-info-circle')
-        ->content(' '.$translator->translate('invoice.read.this.please'))
+        ->content(' '.$translator->translate('read.this.please'))
         ->render();
     ?>        
     <?php
@@ -82,7 +82,7 @@ use Yiisoft\Html\Tag\A;
         ->href($paymentCheckoutUrl)
         ->target('_blank')
         ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')
-        ->content(' '. $translator->translate('i.pay_now') . ': ' . $numberHelper->format_currency($balance))
+        ->content(' '. $translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance))
         ->render();
     }
     ?>
@@ -98,26 +98,26 @@ use Yiisoft\Html\Tag\A;
     <table class="table table-bordered table-condensed no-margin">
     <tbody>
     <tr>
-        <td><?= $translator->translate('i.invoice_date'); ?></td>
+        <td><?= $translator->translate('invoice.date'); ?></td>
         <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
-        <td><?= $translator->translate('i.due_date'); ?></td>
+        <td><?= $translator->translate('due.date'); ?></td>
         <td class="text-right">
             <?= Html::encode($invoice->getDate_due()->format('Y-m-d')); ?>
         </td>
     </tr>
     <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
-        <td><?= $translator->translate('i.total'); ?></td>
+        <td><?= $translator->translate('total'); ?></td>
         <td class="text-right"><?= Html::encode($numberHelper->format_currency($total)); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
-        <td><?= $translator->translate('i.balance'); ?></td>
+        <td><?= $translator->translate('balance'); ?></td>
         <td class="text-right"><?= Html::encode($numberHelper->format_currency($balance)); ?></td>
     </tr>
     <?php if ($invoice_payment_method): ?>
         <tr>
-            <td><?= $translator->translate('i.payment_method') . ': '; ?></td>
+            <td><?= $translator->translate('payment.method') . ': '; ?></td>
             <td class="text-right"><?= $invoice_payment_method; ?></td>
         </tr>
     <?php endif; ?>
@@ -128,7 +128,7 @@ use Yiisoft\Html\Tag\A;
     <div class="col-xs-12 text-muted">
     <?php $paymentTermArray = $s->get_payment_term_array($translator); ?>    
         <br>
-        <h4><?= $translator->translate('i.terms'); ?></h4>
+        <h4><?= $translator->translate('terms'); ?></h4>
         <div><?= nl2br(Html::encode($paymentTermArray[$invoice->getTerms()] ?? '')); ?></div>
     </div>
 <?php endif; ?>

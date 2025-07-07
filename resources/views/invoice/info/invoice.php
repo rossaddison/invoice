@@ -52,6 +52,48 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>7th July 2025</b></p>
+<p>Add more appropriate error messages to the AuthController.php</p>
+<p><b>5th July 2025</b></p>
+<p>1. routes.php - A non-middleware ratelimiter is applied within the functions verifySetup and verifyLogin.</p>
+<p>2. config\web\di\rate-limit reduced to 2 for strictness and security.</p>
+<p>3. The expression 'rate limit exceeded' is replaced with 'rate limit reached'.</p>
+<p>4. Apply recommendations from https://github.com/rossaddison/invoice/pull/273</p>
+<p><b>4th July 2025</b></p>
+<p>Recovery Code Entity and Service supports the user.</p>
+<p>Option of entering the 8 digit recovery code on the verify login screen only i.e. not during setup.</p>
+<p>Fade out 40 seconds script on auth login. Ai generated scripts converted to php.</p>
+<p><a href="https://github.com/copilot/share/002343be-4100-8480-a050-0a09444b6875" target="_blank"> Fade-out effect using php and vanilla javascript</a></p>
+<p>Url's no longer carrying annoying trailing hash. src/Service/WebControllerService Bugfix: ?string = null and not string = ''</p>
+<p><b>28th June 2025</b></p>
+<p>Installation testing</p>
+<p>The invoice autoload.php function has been adjusted to check for composer. This simplifies the InstallCommand run with Symfony</p>
+<p>The m.bat has been updated to include a submenu for installation</p>
+<p>The installation submenu includes options Post Composer Install with Symfony, Pre Composer Install, and a yiipath existance check mainly for Unix and runs independently as install.bat.</p>
+<p><a href="https://github.com/copilot/share/824a52be-4824-8000-8952-8848404b6135" target="_blank"> Troubleshooting hanging install</a></p>
+<p><a href="https://github.com/copilot/share/0a03032c-4024-8c22-8100-1a0044c14925" target="_blank"> Checking folder existance in php</a></p>
+<p><a href="https://github.com/copilot/share/0a4a002e-4804-8c24-9043-180940832164" target="_blank"> Automating installation testing with Github Copilot</a></p>
+<p><b>27th June 2025</b></p>
+<p><a href="https://github.com/copilot/share/8a22503c-0024-80a0-8943-1a01404b4166" target="_blank">Topic: Adjusting error handling for PHP 8.4</a></p>
+<p><b>26th June 2025</b></p>
+<p>Applied rector and included 2 rector options in m.bat</p>
+<p>Removed files no longer needed for Google Translate e.g. ip_lang.php</p>
+<p>Use option 5c with caution i.e. all code is subject to change. First apply 5b i.e. process --dry-run.</p>
+<p><b>24th June 2025</b></p>
+<p>Restore Sentry using vcs rossaddison/yii-sentry.</p>
+<p>Next Signup for performance testing with Sentry.</p>
+<p><a href="https://github.com/copilot/share/8a22503c-0024-80a0-8943-1a01404b4166" target="_blank">Topic: Adjusting error handling for PHP 8.4</a></p>
+<p><b>21st June 2025</b></p>
+<p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
+<p>Include hash in WebControllerService function getRedirectResponse</p>
+<p>Remove underscores in translation keys and replace with dots</p>
+<p>resources/messages/en/app.php has simplified and sorted keys</p>
+<p>en/app.php keys replaced old underscore keys in src and resources folders</p> 
+<p>Scripts produced by Copilot stored in scripts folder</p>
+<p>After a locale is selected from Google Translate dropdown, and app.php produced, redirection to this dropdown occurs using hash</p>
+<p><b>18th June 2025</b></p>
+<p>Transfer code e.g. new Flash($session) into a di container under config/common/params/di/flash.php. 53 Controllers affected after Autowiring discussion.</p>
+<p><a href="https://github.com/copilot/c/a3f639e9-ce93-49be-96b7-dcdbd4de5f97" target="_blank">Topic: Autowiring (should have created a new conversation)</a></p>
 <p><b>15th June 2025</b></p>
 <p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
 <p><b>14th June 2025</b></p>
@@ -342,7 +384,7 @@ exit
 <p>The Family search (2 tier) will be extended to include a product search (3 tier) later.</p>
 <p><b>4th April 2025</b></p>
 <p>Dropdown sub menu for php details within resources\views\layout\invoice.php dropdown menu</p>
-<p>Use DropdownItem::text($subMenu->generate($translator->translate('invoice.faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
+<p>Use DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
 
 src\Widget\SubMenu compiles from an array specified in the layout  
 </p>

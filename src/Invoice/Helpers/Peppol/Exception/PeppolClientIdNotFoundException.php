@@ -16,7 +16,7 @@ final class PeppolClientIdNotFoundException extends \RuntimeException implements
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.client.peppol.not.found.id');
+        return $this->translator->translate('client.peppol.not.found.id');
     }
 
     /**

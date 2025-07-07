@@ -39,7 +39,7 @@ final class QuoteItemController extends BaseController
 
     public function __construct(
         private QuoteItemService $quoteitemService,
-        private DataResponseFactoryInterface $factory,
+        private readonly DataResponseFactoryInterface $factory,
         SessionInterface $session,
         SR $sR,
         TranslatorInterface $translator,
@@ -76,7 +76,7 @@ final class QuoteItemController extends BaseController
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'quoteitem/add',
             'actionArguments' => [],
             'errors' => [],
@@ -92,7 +92,7 @@ final class QuoteItemController extends BaseController
                 $body = $request->getParsedBody() ?? '';
                 if (is_array($body)) {
                     $this->quoteitemService->addQuoteItem($quoteItem, $body, $quote_id, $pR, $qiar, new QIAS($qiar), $uR, $trR, $this->translator);
-                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }
             }
@@ -131,7 +131,7 @@ final class QuoteItemController extends BaseController
         if (null !== $quoteItem) {
             $form = new QuoteItemForm($quoteItem, $quote_id);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'quoteitem/edit',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
@@ -166,7 +166,7 @@ final class QuoteItemController extends BaseController
                                 $qias,
                                 $qiar
                             );
-                            $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                         }
                     } // is_array
@@ -287,7 +287,7 @@ final class QuoteItemController extends BaseController
         if ($quoteItem) {
             $form = new QuoteItemForm($quoteItem, $quoteItem->getQuote_id());
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'action' => ['quoteitem/edit', ['id' => $quoteItem->getId()]],
                 'errors' => [],
                 'form' => $form,

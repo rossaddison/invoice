@@ -139,8 +139,8 @@ final class QuoteController extends BaseController
 {
     protected string $controllerName = 'invoice/quote';
 
-    private NumberHelper $number_helper;
-    private PdfHelper $pdf_helper;
+    private readonly NumberHelper $number_helper;
+    private readonly PdfHelper $pdf_helper;
 
     /**
      * @param DataResponseFactoryInterface $factory
@@ -165,25 +165,25 @@ final class QuoteController extends BaseController
      * @param WebControllerService $webService
      */
     public function __construct(
-        private DataResponseFactoryInterface $factory,
-        private InvAmountService $inv_amount_service,
-        private InvService $inv_service,
-        private InvCustomService $inv_custom_service,
-        private InvItemService $inv_item_service,
-        private InvTaxRateService $inv_tax_rate_service,
-        private LoggerInterface $logger,
-        private MailerInterface $mailer,
-        private soAS $so_amount_service,
-        private soCS $so_custom_service,
-        private soIS $so_item_service,
-        private soS $so_service,
-        private soTRS $so_tax_rate_service,
-        private QuoteAmountService $quote_amount_service,
-        private QuoteCustomService $quote_custom_service,
-        private QuoteItemService $quote_item_service,
-        private QuoteService $quote_service,
-        private QuoteTaxRateService $quote_tax_rate_service,
-        private UrlGenerator $url_generator,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly InvAmountService $inv_amount_service,
+        private readonly InvService $inv_service,
+        private readonly InvCustomService $inv_custom_service,
+        private readonly InvItemService $inv_item_service,
+        private readonly InvTaxRateService $inv_tax_rate_service,
+        private readonly LoggerInterface $logger,
+        private readonly MailerInterface $mailer,
+        private readonly soAS $so_amount_service,
+        private readonly soCS $so_custom_service,
+        private readonly soIS $so_item_service,
+        private readonly soS $so_service,
+        private readonly soTRS $so_tax_rate_service,
+        private readonly QuoteAmountService $quote_amount_service,
+        private readonly QuoteCustomService $quote_custom_service,
+        private readonly QuoteItemService $quote_item_service,
+        private readonly QuoteService $quote_service,
+        private readonly QuoteTaxRateService $quote_tax_rate_service,
+        private readonly UrlGenerator $url_generator,
         Session $session,
         SR $sR,
         Translator $translator,
@@ -316,7 +316,7 @@ final class QuoteController extends BaseController
                                          ' ' .
                                          ($client_surname ?? '');
                     } else {
-                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('invoice.invoice.user.client.no.account'));
+                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this quote
                     // @see UserClientRepository function get_not_assigned_to_user which ensures that only
@@ -335,10 +335,10 @@ final class QuoteController extends BaseController
                             $this->default_taxes($quote, $trR, $formHydrator);
                             // Inform the user of generated quote number for draft setting
                             $this->flashMessage('info', $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                            ? $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                            : $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.no'));
+                            ? $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('yes')
+                            : $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('no'));
                         } //$model_id
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         if ($origin == 'main' || $origin == 'quote') {
                             return $this->webService->getRedirectResponse('quote/index');
                         }
@@ -451,7 +451,7 @@ final class QuoteController extends BaseController
                             'password' => $quote->getPassword() ?? '',
                             'notes' => $quote->getNotes(),
                         ];
-                        $this->flashMessage('info', $this->translator->translate('invoice.salesorder.agree.to.terms'));
+                        $this->flashMessage('info', $this->translator->translate('salesorder.agree.to.terms'));
                         $new_so = new SoEntity();
                         $form = new SoForm($new_so);
                         if ($formHydrator->populateAndValidate($form, $so_body) && ($quote->getSo_id() === (string)0)) {
@@ -511,7 +511,7 @@ final class QuoteController extends BaseController
                     $qR->save($quote);
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_successful',
-                        ['heading' => $this->translator->translate('i.record_successfully_updated'),'url' => 'quote/view','id' => $quote_id]
+                        ['heading' => $this->translator->translate('record.successfully.updated'),'url' => 'quote/view','id' => $quote_id]
                     ));
                 }
                 return $this->webService->getNotFoundResponse();
@@ -582,7 +582,7 @@ final class QuoteController extends BaseController
             'password' => $body['quote_password'],
             'notes' => '',
         ];
-        $unsuccessful = $this->translator->translate('invoice.quote.creation.unsuccessful');
+        $unsuccessful = $this->translator->translate('quote.creation.unsuccessful');
         $quote = new Quote();
         $ajax_content = new QuoteForm($quote);
         if ($formHydrator->populate($ajax_content, $ajax_body) && $ajax_content->isValid()) {
@@ -611,8 +611,8 @@ final class QuoteController extends BaseController
                             $this->flashMessage(
                                 'info',
                                 $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                                  ? $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.yes')
-                                  : $this->translator->translate('i.generate_quote_number_for_draft') . '=>' . $this->translator->translate('i.no')
+                                  ? $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('yes')
+                                  : $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('no')
                             );
                             //return response to quote.js to reload page at location
                             return $this->factory->createResponse(Json::encode($parameters));
@@ -624,7 +624,7 @@ final class QuoteController extends BaseController
             } // null!== $user_client && $user_client_count==1
             // In the event of the database being manually edited (highly unlikely) present this warning anyway
             if ($user_client_count > 1) {
-                $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.more.than.one.assigned'));
+                $this->flashMessage('warning', $this->translator->translate('user.inv.more.than.one.assigned'));
             }
             return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $unsuccessful]));
         }
@@ -763,13 +763,13 @@ final class QuoteController extends BaseController
             $quote = $this->quote($id, $quoteRepo);
             if ($quote) {
                 $this->quote_service->deleteQuote($quote, $qcR, $qcS, $qiR, $qiS, $qtrR, $qtrS, $qaR, $qaS);
-                $this->flashMessage('success', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('quote/index');
             }
             return $this->webService->getNotFoundResponse();
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.quote.delete.not'));
+            $this->flashMessage('danger', $this->translator->translate('quote.delete.not'));
             return $this->webService->getRedirectResponse('quote/index');
         }
     }
@@ -787,18 +787,18 @@ final class QuoteController extends BaseController
 
             if ($quoteItem) {
                 $this->quote_item_service->deleteQuoteItem($quoteItem);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
             }
-            $this->flashMessage('danger', $this->translator->translate('invoice.quote.item.cannot.delete'));
+            $this->flashMessage('danger', $this->translator->translate('quote.item.cannot.delete'));
             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.quote.item.cannot.delete'));
+            $this->flashMessage('danger', $this->translator->translate('quote.item.cannot.delete'));
         }
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/quote_successful',
-            ['heading' => '','message' => $this->translator->translate('i.record_successfully_deleted'),'url' => 'quote/view','id' => $quote_id]
+            ['heading' => '','message' => $this->translator->translate('record.successfully.deleted'),'url' => 'quote/view','id' => $quote_id]
         ));
     }
 
@@ -813,12 +813,12 @@ final class QuoteController extends BaseController
             $this->quote_tax_rate_service->deleteQuoteTaxRate($this->quotetaxrate($id, $quotetaxrateRepository));
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.quote.tax.rate.cannot.delete'));
+            $this->flashMessage('danger', $this->translator->translate('quote.tax.rate.cannot.delete'));
         }
         $quote_id = (string)$this->session->get('quote_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('i.quote_tax_rate'),'message' => $this->translator->translate('i.record_successfully_deleted'),'url' => 'quote/view','id' => $quote_id]
+            ['heading' => $this->translator->translate('quote.tax.rate'),'message' => $this->translator->translate('record.successfully.deleted'),'url' => 'quote/view','id' => $quote_id]
         ));
     }
 
@@ -899,7 +899,7 @@ final class QuoteController extends BaseController
                 'delCount' => $delRepo->repoClientCount($quote->getClient_id()),
                 'returnUrlAction' => 'edit',
             ];
-            $delRepo->repoClientCount($quote->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('invoice.quote.delivery.location.none'));
+            $delRepo->repoClientCount($quote->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('quote.delivery.location.none'));
             if ($request->getMethod() === Method::POST) {
                 $body = (array)$request->getParsedBody();
                 $quote = $this->quote($id, $quoteRepo, false);
@@ -911,7 +911,7 @@ final class QuoteController extends BaseController
                         if ($formHydrator->populateAndValidate($form, $body)) {
                             $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $groupRepo);
                             $this->edit_save_custom_fields($body, $formHydrator, $qcR, $quote_id);
-                            $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                         }
                         $parameters['form'] = $form;
@@ -1005,7 +1005,7 @@ final class QuoteController extends BaseController
         $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailer_configured()) {
-            $this->flashMessage('warning', $this->translator->translate('i.email_not_configured'));
+            $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
             return $this->webService->getRedirectResponse('quote/index');
         }
         $quote_entity = $this->quote($id, $qR, true);
@@ -1027,21 +1027,21 @@ final class QuoteController extends BaseController
                     $custom_fields[$table] = $cfR->repoTablequery($table);
                 }
                 if ($template_helper->select_email_quote_template() == '') {
-                    $this->flashMessage('warning', $this->translator->translate('invoice.quote.email.templates.not.configured'));
+                    $this->flashMessage('warning', $this->translator->translate('quote.email.templates.not.configured'));
                     return $this->webService->getRedirectResponse('setting/tab_index');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_quote_template())
                                                ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('i.default_email_template') . '=>' .
-                                                  $this->translator->translate('i.not_set')
+                    $this->translator->translate('default.email.template') . '=>' .
+                                                  $this->translator->translate('not.set')
                 ) : '';
 
                 empty($template_helper->select_pdf_quote_template()) ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('i.default_pdf_template') . '=>' .
-                                                  $this->translator->translate('i.not_set')
+                    $this->translator->translate('default.pdf.template') . '=>' .
+                                                  $this->translator->translate('not.set')
                 ) : '';
                 $parameters = [
                     'head' => $head,
@@ -1261,7 +1261,7 @@ final class QuoteController extends BaseController
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
                 if (!$mailer_helper->mailer_configured()) {
-                    $this->flashMessage('warning', $this->translator->translate('i.email_not_configured'));
+                    $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
                     return $this->webService->getRedirectResponse('quote/index');
                 }
 
@@ -1272,7 +1272,7 @@ final class QuoteController extends BaseController
                 if (empty($to)) {
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_message',
-                        ['heading' => '','message' => $this->translator->translate('i.email_to_address_missing'),'url' => 'quote/view','id' => $quote_id]
+                        ['heading' => '','message' => $this->translator->translate('email.to.address.missing'),'url' => 'quote/view','id' => $quote_id]
                     ));
                 }
 
@@ -1288,7 +1288,7 @@ final class QuoteController extends BaseController
                 if (empty($from[0])) {
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_message',
-                        ['heading' => '','message' => $this->translator->translate('i.email_to_address_missing'),'url' => 'quote/view','id' => $quote_id]
+                        ['heading' => '','message' => $this->translator->translate('email.to.address.missing'),'url' => 'quote/view','id' => $quote_id]
                     ));
                 }
 
@@ -1314,12 +1314,12 @@ final class QuoteController extends BaseController
                 // Custom fields are automatically included on the quote
                 if ($this->email_stage_1((string)$quote_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles, $cR, $ccR, $cfR, $cvR, $iaR, $icR, $qiaR, $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR, $uiR, $this->viewRenderer)) {
                     $this->sR->quote_mark_sent((string)$quote_id, $qR);
-                    $this->flashMessage('success', $this->translator->translate('i.email_successfully_sent'));
+                    $this->flashMessage('success', $this->translator->translate('email.successfully.sent'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }
             }
         } // quote_id
-        $this->flashMessage('danger', $this->translator->translate('invoice.invoice.email.not.sent.successfully'));
+        $this->flashMessage('danger', $this->translator->translate('email.not.sent.successfully'));
         return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
     }
 
@@ -1433,7 +1433,7 @@ final class QuoteController extends BaseController
                             $paginator,
                             $this->translator,
                             (int)$this->sR->getSetting('default_list_limit'),
-                            $this->translator->translate('invoice.quotes'),
+                            $this->translator->translate('quotes'),
                             $qR->getSpecificStatusArrayLabel((string)$status)
                         ),
                         'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
@@ -1561,7 +1561,7 @@ final class QuoteController extends BaseController
                     $paginator,
                     $this->translator,
                     (int)$sR->getSetting('default_list_limit'),
-                    $this->translator->translate('invoice.quotes'),
+                    $this->translator->translate('quotes'),
                     $quoteRepo->getSpecificStatusArrayLabel((string)$status)
                 ),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
@@ -1580,7 +1580,7 @@ final class QuoteController extends BaseController
             ];
             return $this->viewRenderer->render('index', $parameters);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.user.client.active.no'));
+        $this->flashMessage('info', $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
     }
 
@@ -1676,10 +1676,10 @@ final class QuoteController extends BaseController
             'client_address_2' => ($client->getClient_address_2() ?? '') . '<br>',
             'client_townline' => ($client->getClient_city() ?? '') . '<br>' . ($client->getClient_state() ?? '') . '<br>' . ($client->getClient_zip() ?? '') . '<br>',
             'client_country' => $client->getClient_country() ?? '',
-            'client_phone' => $this->translator->translate('i.phone') . '&nbsp;' . ($client->getClient_phone() ?? ''),
-            'client_mobile' => $this->translator->translate('i.mobile') . '&nbsp;' . ($client->getClient_mobile() ?? ''),
-            'client_fax' => $this->translator->translate('i.fax') . '&nbsp;' . ($client->getClient_fax() ?? ''),
-            'client_email' => $this->translator->translate('i.email') . '&nbsp;' . (string)Html::link($client->getClient_email()),
+            'client_phone' => $this->translator->translate('phone') . '&nbsp;' . ($client->getClient_phone() ?? ''),
+            'client_mobile' => $this->translator->translate('mobile') . '&nbsp;' . ($client->getClient_mobile() ?? ''),
+            'client_fax' => $this->translator->translate('fax') . '&nbsp;' . ($client->getClient_fax() ?? ''),
+            'client_email' => $this->translator->translate('email') . '&nbsp;' . (string)Html::link($client->getClient_email()),
             // Reset the a href id="after_client_change_url" link to the new client url
             'after_client_change_url' => 'client/view/' . (string)$body['client_id'],
             'after_client_change_name' => $client->getClient_name(),
@@ -1997,7 +1997,7 @@ final class QuoteController extends BaseController
                                 $qR->save($quote);
                                 $parameters = [
                                     'success' => 1,
-                                    'flash_message' => $this->translator->translate('invoice.quote.copied.to.invoice'),
+                                    'flash_message' => $this->translator->translate('quote.copied.to.invoice'),
                                 ];
                                 return $this->factory->createResponse(Json::encode($parameters));
                             } //null!==$inv_id
@@ -2007,7 +2007,7 @@ final class QuoteController extends BaseController
             } else {
                 $parameters = [
                     'success' => 0,
-                    'flash_message' => $this->translator->translate('invoice.quote.not.copied.to.invoice'),
+                    'flash_message' => $this->translator->translate('quote.not.copied.to.invoice'),
                 ];
                 //return response to quote.js to reload page at location
                 return $this->factory->createResponse(Json::encode($parameters));
@@ -2107,7 +2107,7 @@ final class QuoteController extends BaseController
                             $qR->save($quote);
                             $parameters = [
                                 'success' => 1,
-                                'flash_message' => $this->translator->translate('invoice.quote.sales.order.created.from.quote'),
+                                'flash_message' => $this->translator->translate('quote.sales.order.created.from.quote'),
                             ];
                             //return response to quote.js to reload page at location
                             return $this->factory->createResponse(Json::encode($parameters));
@@ -2117,7 +2117,7 @@ final class QuoteController extends BaseController
             } else {
                 $parameters = [
                     'success' => 0,
-                    'flash_message' => $this->translator->translate('invoice.quote.sales.order.not.created.from.quote'),
+                    'flash_message' => $this->translator->translate('quote.sales.order.not.created.from.quote'),
                 ];
                 //return response to quote.js to reload page at location
                 return $this->factory->createResponse(Json::encode($parameters));
@@ -2444,7 +2444,7 @@ final class QuoteController extends BaseController
                                 $qR->save($copy);
                                 $parameters = [
                                     'success' => 1,
-                                    'flash_message' => $this->translator->translate('invoice.quote.copied.to.quote'),
+                                    'flash_message' => $this->translator->translate('quote.copied.to.quote'),
                                 ];
                                 //return response to quote.js to reload page at location
                                 return $this->factory->createResponse(Json::encode($parameters));
@@ -2667,14 +2667,14 @@ final class QuoteController extends BaseController
             $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate, $ajax_body);
             $parameters = [
                 'success' => 1,
-                'flash_message' => $this->translator->translate('invoice.quote.tax.rate.saved'),
+                'flash_message' => $this->translator->translate('quote.tax.rate.saved'),
             ];
             //return response to quote.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
         }
         $parameters = [
             'success' => 0,
-            'flash_message' => $this->translator->translate('invoice.quote.tax.rate.incomplete.fields'),
+            'flash_message' => $this->translator->translate('quote.tax.rate.incomplete.fields'),
         ];
         //return response to quote.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));
@@ -2854,8 +2854,8 @@ final class QuoteController extends BaseController
                         'quoteStatuses' => $qR->getStatuses($this->translator),
                         'quote' => $quote,
                         'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_item_table', [
-                            'included' => $this->translator->translate('invoice.invoice.item.tax.included'),
-                            'excluded' => $this->translator->translate('invoice.invoice.item.tax.excluded'),
+                            'included' => $this->translator->translate('item.tax.included'),
+                            'excluded' => $this->translator->translate('item.tax.excluded'),
                             'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
                             'piR' => $piR,
                             'products' => $pR->findAllPreloaded(),

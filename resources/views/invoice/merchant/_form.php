@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
@@ -56,51 +56,51 @@ use Yiisoft\Html\Tag\Form;
     foreach ($invs as $inv) {
         $invId = $inv->getId();
         if (null !== $invId) {
-            $optionsDataInv[$invId] = $inv->getNumber() ?? $translator->translate('invoice.invoice.number.no');
+            $optionsDataInv[$invId] = $inv->getNumber() ?? $translator->translate('number.no');
         }
     }
 echo Field::select($form, 'inv_id')
-->label($translator->translate('invoice.invoice'))
+->label($translator->translate('invoice'))
 ->optionsData($optionsDataInv)
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::checkbox($form, 'successful')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('invoice.successful'))
+    ->ariaDescribedBy($translator->translate('successful'))
 ?>        
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::date($form, 'date')
-    ->label($translator->translate('i.date'))
+    ->label($translator->translate('date'))
     ->required(true)
     ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '')
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'driver')
-    ->label($translator->translate('invoice.merchant.driver'))
-    ->placeholder($translator->translate('invoice.merchant.driver'))
+    ->label($translator->translate('merchant.driver'))
+    ->placeholder($translator->translate('merchant.driver'))
     ->value(Html::encode($form->getDriver() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'response')
-    ->label($translator->translate('invoice.merchant.response'))
-    ->placeholder($translator->translate('invoice.merchant.response'))
+    ->label($translator->translate('merchant.response'))
+    ->placeholder($translator->translate('merchant.response'))
     ->value(Html::encode($form->getResponse() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'reference')
-    ->label($translator->translate('invoice.merchant.reference'))
-    ->placeholder($translator->translate('invoice.merchant.reference'))
+    ->label($translator->translate('merchant.reference'))
+    ->placeholder($translator->translate('merchant.reference'))
     ->value(Html::encode($form->getReference() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

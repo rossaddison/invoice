@@ -17,7 +17,7 @@ declare(strict_types=1);
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('i.delete')." ".$translator->translate('i.item'); ?></h5>
+               <h5 class="modal-title"><?= $translator->translate('delete')." ".$translator->translate('item'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">                
@@ -27,10 +27,10 @@ declare(strict_types=1);
                 <div class="btn-group">
                     <!--inv.js delete-items-confirm-inv function  -->
                     <button class="delete-items-confirm-inv btn btn-success" id="delete-items-confirm-inv" type="button">
-                                <i class="fa fa-check"></i><?= $translator->translate('i.yes'); ?>
+                                <i class="fa fa-check"></i><?= $translator->translate('yes'); ?>
                     </button>                
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>            

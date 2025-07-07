@@ -57,7 +57,7 @@ echo $alert;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
-    <?= Html::encode($translator->translate('i.payment_form')) ?>
+    <?= Html::encode($translator->translate('payment.form')) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= $button::backSave(); ?>
@@ -66,12 +66,12 @@ echo $alert;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
                 <?= Field::errorSummary($form)
     ->errors($errorsCustom)
-    ->header($translator->translate('invoice.error.summary'))
+    ->header($translator->translate('error.summary'))
     ->onlyCommonErrors()
 ?>
                 <?php
@@ -88,9 +88,9 @@ foreach ($paymentMethods as $paymentMethod) {
     }
 }
 echo Field::select($form, 'payment_method_id')
-->label($translator->translate('i.payment_method'))
+->label($translator->translate('payment.method'))
 ->optionsData($optionsDataPaymentMethod)
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?php
     $optionsDataInvId = [];
@@ -102,7 +102,7 @@ if ($openInvsCount > 0) {
         $invAmount = $iaR->repoInvquery((int)$inv->getId());
         if (null !== $invAmount) {
             $optionsDataInvId[(int)$inv->getId()] =
-               ($inv->getNumber() ?? $translator->translate('invoice.invoice.number.no')) .
+               ($inv->getNumber() ?? $translator->translate('number.no')) .
                ' - ' .
                ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id()))) .
                ' - ' .
@@ -110,43 +110,43 @@ if ($openInvsCount > 0) {
         }
     }
 } else {
-    $optionsDataInvId[0] = $translator->translate('i.none');
+    $optionsDataInvId[0] = $translator->translate('none');
 }
 ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?=
         Field::select($form, 'inv_id')
-        ->label($translator->translate('invoice.invoice'))
+        ->label($translator->translate('invoice'))
         ->optionsData($optionsDataInvId)
-        ->hint($translator->translate('invoice.hint.this.field.is.required'))
+        ->hint($translator->translate('hint.this.field.is.required'))
 ?>
                 <?= Html::closeTag('div'); ?>    
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
-    ->label($translator->translate('i.date'))
+    ->label($translator->translate('date'))
     ->required(true)
     ->value($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : '')
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::textarea($form, 'note')
-    ->label($translator->translate('i.note'))
+    ->label($translator->translate('note'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.note'),
+        'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
         'class' => 'form-control',
         'id' => 'note',
     ])
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-    ->label($translator->translate('i.amount'))
-    ->placeholder($translator->translate('i.amount'))
+    ->label($translator->translate('amount'))
+    ->placeholder($translator->translate('amount'))
     ->value(Html::encode($form->getAmount() ?? ''))
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

@@ -125,7 +125,7 @@ final class ProductController extends BaseController
         $productCustom = new ProductCustom();
         $productCustomForm = new ProductCustomForm($productCustom);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'product/add',
             'actionArguments' => [],
             'countries' => $countries->get_country_list((string)$this->session->get('_language')),
@@ -175,7 +175,7 @@ final class ProductController extends BaseController
                                 $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
                         }
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                         return $this->webService->getRedirectResponse('product/index');
                     }
                 }
@@ -224,7 +224,7 @@ final class ProductController extends BaseController
             $productCustomForm = new ProductCustomForm($productCustom);
             if ($product_id) {
                 $parameters = [
-                    'title' => $this->translator->translate('i.edit'),
+                    'title' => $this->translator->translate('edit'),
                     'actionName' => 'product/edit',
                     'actionArguments' => ['id' => $product_id],
                     'alert' => $this->alert(),
@@ -284,7 +284,7 @@ final class ProductController extends BaseController
                             } //isset
                         } // cfR
                     } // is_array
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                     return $this->webService->getRedirectResponse('product/index');
                 }
                 return $this->viewRenderer->render('_form', $parameters);
@@ -304,12 +304,12 @@ final class ProductController extends BaseController
             $product = $this->product($id, $pR);
             if ($product) {
                 $this->productService->deleteProduct($product);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             }
             return $this->webService->getRedirectResponse('product/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.product.history'));
+            $this->flashMessage('danger', $this->translator->translate('product.history'));
             return $this->webService->getRedirectResponse('product/index');
         }
     }
@@ -417,7 +417,7 @@ final class ProductController extends BaseController
     public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, fR $fR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
     {
         $this->rbac();
-        $this->flashMessage('info', $this->translator->translate('invoice.productimage.view'));
+        $this->flashMessage('info', $this->translator->translate('productimage.view'));
         $query_params = $request->getQueryParams();
 
         /**
@@ -468,12 +468,12 @@ final class ProductController extends BaseController
         if ($product_sku) {
             $parameters = [
                 'success' => 1,
-                'message' => $this->translator->translate('invoice.product.found'),
+                'message' => $this->translator->translate('product.found'),
             ];
         } else {
             $parameters = [
                 'success' => 0,
-                'messeage' => $this->translator->translate('invoice.product.not.found'),
+                'messeage' => $this->translator->translate('product.not.found'),
             ];
         }
         return $this->responseFactory->createResponse(Json::encode($parameters));
@@ -718,7 +718,7 @@ final class ProductController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('product/index');
         }
         return $canEdit;
@@ -760,7 +760,7 @@ final class ProductController extends BaseController
             $product_id = $product->getProduct_id();
             $product_images = $piR->repoProductImageProductquery((int)$product_id);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'product/view',
                 'actionArguments' => ['id' => $product_id],
                 'partial_product_details' => $this->viewRenderer->renderPartialAsString(
@@ -832,13 +832,13 @@ final class ProductController extends BaseController
                 $track_file->setFile_name_new($fileName);
                 $track_file->setUploaded_date(new \DateTimeImmutable());
                 $piR->save($track_file);
-                $this->flashMessage('info', $this->translator->translate('invoice.productimage.uploaded.to') . $target);
+                $this->flashMessage('info', $this->translator->translate('productimage.uploaded.to') . $target);
                 return true;
             }
-            $this->flashMessage('warning', $this->translator->translate('invoice.productimage.possible.file.upload.attack') . $tmp);
+            $this->flashMessage('warning', $this->translator->translate('productimage.possible.file.upload.attack') . $tmp);
             return false;
         }
-        $this->flashMessage('warning', $this->translator->translate('i.error_duplicate_file'));
+        $this->flashMessage('warning', $this->translator->translate('error_duplicate_file'));
         return false;
     }
 
@@ -923,8 +923,8 @@ final class ProductController extends BaseController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
-                'heading' => $this->translator->translate('i.errors'),
-                'message' => $this->translator->translate('i.path') . $this->translator->translate('i.is_not_writable'),
+                'heading' => $this->translator->translate('errors'),
+                'message' => $this->translator->translate('path') . $this->translator->translate('is.not.writable'),
                 'url' => 'product/view', 'id' => $product_id,
             ]
         );
@@ -940,7 +940,7 @@ final class ProductController extends BaseController
             '//invoice/setting/inv_message',
             [
                 'heading' => '',
-                'message' => $this->translator->translate('i.record_successfully_created'),
+                'message' => $this->translator->translate('record.successfully.created'),
                 'url' => 'product/view', 'id' => $product_id,
             ]
         );
@@ -955,8 +955,8 @@ final class ProductController extends BaseController
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
-                'heading' => $this->translator->translate('i.errors'),
-                'message' => $this->translator->translate('invoice.productimage.no.file.uploaded'),
+                'heading' => $this->translator->translate('errors'),
+                'message' => $this->translator->translate('productimage.no.file.uploaded'),
                 'url' => 'product/view', 'id' => $product_id,
             ]
         );

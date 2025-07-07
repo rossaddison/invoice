@@ -73,7 +73,7 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn(<?= $generator->getCamelcase_capital_name(); ?> $model) => $model->getId()
         ),
         new ActionColumn(buttons: [
@@ -85,7 +85,7 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -96,7 +96,7 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -106,8 +106,8 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
                     return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -128,6 +128,6 @@ echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-m
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
       ->summaryTemplate($grid_summary)
       ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-      ->emptyText($translator->translate('invoice.invoice.no.records'))
+      ->emptyText($translator->translate('no.records'))
       ->toolbar($toolbarString);
 ?>      

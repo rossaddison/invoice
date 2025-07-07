@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('invoice.invoice.delivery.add'); ?>
+<?= $translator->translate('delivery.add'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
@@ -48,13 +48,13 @@ use Yiisoft\Html\Tag\Form;
     ->addContainerClass('btn-group btn-toolbar float-end')
     ->buttonsData([
         [
-            $translator->translate('invoice.cancel'),
+            $translator->translate('cancel'),
             'type' => 'reset',
             'class' => 'btn btn-sm btn-danger',
             'name' => 'btn_cancel'
         ],
         [
-            $translator->translate('invoice.submit'),
+            $translator->translate('submit'),
             'type' => 'submit',
             'class' => 'btn btn-sm btn-primary',
             'name' => 'btn_send'
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['date_created', 'date_modified'])
                     ->onlyCommonErrors()
 ?>
@@ -75,55 +75,55 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
             <?php
 Field::hidden($form, 'date_created')
-->label($translator->translate('invoice.invoice.delivery.date.created') . ' (' . $dateHelper->display() . ')')
+->label($translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')')
 ->addInputAttributes([
-    'placeholder' => $translator->translate('invoice.invoice.delivery.date.created') . ' (' . $dateHelper->display() . ')',
+    'placeholder' => $translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')',
     'id' => 'date_created',
     'role' => 'presentation',
     'autocomplete' => 'off'
 ])
 ->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '')
-->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
         Field::hidden($form, 'date_modified')
-        ->label($translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $dateHelper->display() . ')')
+        ->label($translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')')
         ->addInputAttributes([
-            'placeholder' => $translator->translate('invoice.invoice.delivery.date.modified') . ' (' . $dateHelper->display() . ')',
+            'placeholder' => $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
             'id' => 'date_modified',
             'role' => 'presentation',
             'autocomplete' => 'off'
         ])
         ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '')
-        ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+        ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
     echo Field::date($form, 'start_date')
-    ->label($translator->translate('invoice.invoice.delivery.start.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
     ->value(!is_string($startDate = $form->getStart_date()) ? $startDate->format('Y-m-d') : '')
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
     echo Field::date($form, 'actual_delivery_date')
-    ->label($translator->translate('invoice.invoice.delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
     ->value(!is_string($actualDeliveryDate = $form->getActual_delivery_date()) ? $actualDeliveryDate->format('Y-m-d') : '')
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
     echo Field::date($form, 'end_date')
-    ->label($translator->translate('invoice.invoice.delivery.end.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
     ->value(!is_string($endDate = $form->getEnd_date()) ? $endDate->format('Y-m-d') : '')
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
@@ -139,7 +139,7 @@ Field::hidden($form, 'date_created')
             }
         }
         echo Field::select($form, 'delivery_location_id')
-        ->label($translator->translate('invoice.invoice.delivery.location'))
+        ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
             'class' => 'form-control',
             'id' => 'delivery_location_id'
@@ -148,7 +148,7 @@ Field::hidden($form, 'date_created')
         ->value(Html::encode($form->getDelivery_location_id()));
     } else {
         echo Html::a(
-            $translator->translate('invoice.invoice.delivery.location.add'),
+            $translator->translate('delivery.location.add'),
             $urlGenerator->generate(
                 'del/add',
                 ['client_id' => $inv->getClient_id()],

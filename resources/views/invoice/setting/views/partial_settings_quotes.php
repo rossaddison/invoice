@@ -15,19 +15,19 @@ declare(strict_types=1);
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('i.quote'); ?>
+                <?= $translator->translate('quote'); ?>
             </div>
             <div class="panel-body">
                 <div class='row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_quote_group]">
-                                <?= $translator->translate('i.default_quote_group'); ?>
+                                <?= $translator->translate('default.quote.group'); ?>
                             </label>
                             <?php $body['settings[default_quote_group]'] = $s->getSetting('default_quote_group');?>
                             <select name="settings[default_quote_group]" id="settings[default_quote_group]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\Group $invoice_group
@@ -43,7 +43,7 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[default_quote_notes]">
-                                <?= $translator->translate('i.default_notes'); ?>
+                                <?= $translator->translate('default.notes'); ?>
                             </label>
                             <?php $body['settings[default_quote_notes]'] = $s->getSetting('default_quote_notes');?>
                             <textarea name="settings[default_quote_notes]" id="settings[default_quote_notes]" rows="3"
@@ -54,7 +54,7 @@ declare(strict_types=1);
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[quotes_expire_after]">
-                                <?= $translator->translate('i.quotes_expire_after'); ?>
+                                <?= $translator->translate('quotes.expire.after'); ?>
                             </label>
                             <?php $body['settings[quotes_expire_after]'] = $s->getSetting('quotes_expire_after');?>
                             <input type="number" name="settings[quotes_expire_after]" id="settings[quotes_expire_after]"
@@ -63,16 +63,16 @@ declare(strict_types=1);
                         </div>
                         <div class="form-group">
                             <label for="settings[generate_quote_number_for_draft]">
-                                <?= $translator->translate('i.generate_quote_number_for_draft'); ?>
+                                <?= $translator->translate('generate.quote.number.for.draft'); ?>
                             </label>                            
                             <?php $body['settings[generate_quote_number_for_draft]'] = $s->getSetting('generate_quote_number_for_draft');?>
                             <select name="settings[generate_quote_number_for_draft]" class="form-control"
                                 id="settings[generate_quote_number_for_draft]" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?= $translator->translate('i.no'); ?>
+                                    <?= $translator->translate('no'); ?>
                                 </option>
                                 <option value="1" <?php $s->check_select($body['settings[generate_quote_number_for_draft]'], '1'); ?>>
-                                    <?= $translator->translate('i.yes'); ?>
+                                    <?= $translator->translate('yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -83,23 +83,23 @@ declare(strict_types=1);
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('i.pdf_settings'); ?>
+                <?= $translator->translate('pdf.settings'); ?>
             </div>
             <div class="panel-body">
                 <div class='row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[mark_quotes_sent_pdf]">
-                                <?= $translator->translate('i.mark_quotes_sent_pdf'); ?>
+                                <?= $translator->translate('mark.quotes.sent.pdf'); ?>
                             </label>
                             <?php $body['settings[mark_quotes_sent_pdf]'] = $s->getSetting('mark_quotes_sent_pdf');?>
                             <select name="settings[mark_quotes_sent_pdf]" id="settings[mark_quotes_sent_pdf]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?= $translator->translate('i.no'); ?>
+                                    <?= $translator->translate('no'); ?>
                                 </option>
                                 <option value="1" <?php $s->check_select($body['settings[mark_quotes_sent_pdf]'], '1'); ?>>
-                                    <?= $translator->translate('i.yes'); ?>
+                                    <?= $translator->translate('yes'); ?>
                                 </option>
                             </select>
                         </div>
@@ -107,7 +107,7 @@ declare(strict_types=1);
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[quote_pre_password]">
-                                <?= $translator->translate('i.quote_pre_password'); ?>
+                                <?= $translator->translate('quote.pre.password'); ?>
                             </label>
                             <?php $body['settings[quote_pre_password]'] = $s->getSetting('quote_pre_password');?>
                             <input type="text" name="settings[quote_pre_password]" id="settings[quote_pre_password]"
@@ -119,19 +119,19 @@ declare(strict_types=1);
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('i.quote_templates'); ?>
+                <?= $translator->translate('quote.templates'); ?>
             </div>
             <div class="panel-body">
                 <div class='div'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[pdf_quote_template]">
-                                <?= $translator->translate('i.default_pdf_template'); ?>
+                                <?= $translator->translate('default.pdf.template'); ?>
                             </label>                            
                             <?php $body['settings[pdf_quote_template]'] = $s->getSetting('pdf_quote_template');?>
                             <select name="settings[pdf_quote_template]" id="settings[pdf_quote_template]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var string $quote_template
@@ -147,12 +147,12 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[public_quote_template]">
-                                <?= $translator->translate('i.default_public_template'); ?>
+                                <?= $translator->translate('default.public.template'); ?>
                             </label>                            
                             <?php $body['settings[public_quote_template]'] = $s->getSetting('public_quote_template');?>
                             <select name="settings[public_quote_template]" id="settings[public_quote_template]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var string $quote_template
@@ -171,12 +171,12 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[email_quote_template]">
-                                <?= $translator->translate('i.default_email_template'); ?>
+                                <?= $translator->translate('default.email.template'); ?>
                             </label>                                                        
                             <?php $body['settings[email_quote_template]'] = $s->getSetting('email_quote_template');?>
                             <select name="settings[email_quote_template]" id="settings[email_quote_template]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\EmailTemplate $email_template
@@ -195,12 +195,12 @@ declare(strict_types=1);
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[pdf_quote_footer]">
-                                <?= $translator->translate('i.pdf_quote_footer'); ?>
+                                <?= $translator->translate('pdf.quote.footer'); ?>
                             </label>                                                                                    
                             <?php $body['settings[pdf_quote_footer]'] = $s->getSetting('pdf_quote_footer');?>
                             <textarea name="settings[pdf_quote_footer]" id="settings[pdf_quote_footer]"
                                 class="form-control no-margin"><?= $body['settings[pdf_quote_footer]']; ?></textarea>
-                            <p class="help-block"><?= $translator->translate('i.pdf_quote_footer_hint'); ?></p>
+                            <p class="help-block"><?= $translator->translate('pdf.quote.footer.hint'); ?></p>
                         </div>
                     </div>
                 </div>

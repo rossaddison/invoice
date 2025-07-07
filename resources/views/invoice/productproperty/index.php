@@ -26,7 +26,7 @@ use Yiisoft\Yii\DataView\GridView;
 echo $alert;
 
 ?>
-<h1><?= $translator->translate('invoice.product.property'); ?></h1>
+<h1><?= $translator->translate('product.property'); ?></h1>
 <?php
     $header = Div::tag()
       ->addClass('row')
@@ -34,7 +34,7 @@ echo $alert;
           H5::tag()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.product.property'))
+            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('product.property'))
         )
       )
       ->render();
@@ -52,35 +52,35 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header: $translator->translate('i.id'),
+        header: $translator->translate('id'),
         content: static function (ProductProperty $model): string {
             return (string) $model->getProperty_id();
         }
     ),
     new DataColumn(
         'name',
-        header:  $translator->translate('invoice.product.property.name'),
+        header:  $translator->translate('product.property.name'),
         content: static fn (ProductProperty $model) => Html::encode($model->getName())
     ),
     new DataColumn(
         'value',
-        header:  $translator->translate('invoice.product.property.value'),
+        header:  $translator->translate('product.property.value'),
         content: static fn (ProductProperty $model) => Html::encode($model->getValue())
     ),
     new DataColumn(
-        header:  $translator->translate('i.view'),
+        header:  $translator->translate('view'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), []);
         }
     ),
     new DataColumn(
-        header:  $translator->translate('i.edit'),
+        header:  $translator->translate('edit'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), []);
         }
     ),
     new DataColumn(
-        header:  $translator->translate('i.delete'),
+        header:  $translator->translate('delete'),
         content: static function (ProductProperty $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
@@ -89,7 +89,7 @@ $columns = [
                     [
                     'type' => 'submit',
                     'class' => 'dropdown-button',
-                    'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
                 ]
                 ),
                 $urlGenerator->generate('productproperty/delete', ['id' => $model->getProperty_id()]),
@@ -102,7 +102,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.product.property'),
+    $translator->translate('product.property'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('productproperty/index'))->csrf($csrf)->open() .
@@ -120,5 +120,5 @@ echo GridView::widget()
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
   ->summaryTemplate($grid_summary)
   ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('invoice.invoice.no.records'))
+  ->emptyText($translator->translate('no.records'))
   ->toolbar($toolbarString);

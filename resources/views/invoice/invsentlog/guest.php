@@ -62,7 +62,7 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header: $translator->translate('i.id'),
+        header: $translator->translate('id'),
         content: static function (InvSentLog $model): string {
             return (string) $model->getId();
         }
@@ -70,7 +70,7 @@ $columns = [
     new DataColumn(
         field: 'inv_id',
         property: 'filterInvNumber',
-        header: $translator->translate('invoice.invoice.number'),
+        header: $translator->translate('number'),
         content: static function (InvSentLog $model) use ($urlGenerator): A {
             return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate(
                 'inv/view',
@@ -82,17 +82,17 @@ $columns = [
     ),
     new DataColumn(
         'inv_id',
-        header: $translator->translate('i.setup_db_username_info'),
+        header: $translator->translate('setup.db.username.info'),
         content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin()
     ),
     new DataColumn(
         'client_id',
-        header: $translator->translate('i.client'),
+        header: $translator->translate('client'),
         content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? '')
     ),
     new DataColumn(
         'date_sent',
-        header: $translator->translate('invoice.email.date'),
+        header: $translator->translate('email.date'),
         content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
@@ -102,7 +102,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
-    $translator->translate('invoice.email.logs'),
+    $translator->translate('email.logs'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
@@ -121,5 +121,5 @@ echo GridView::widget()
   ->summaryTemplate(($viewInv ?
                        $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '').' '.
                        $grid_summary)->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('invoice.invoice.no.records'))
+  ->emptyText($translator->translate('no.records'))
   ->toolbar($toolbarString);

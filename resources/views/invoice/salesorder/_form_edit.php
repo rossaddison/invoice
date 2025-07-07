@@ -59,14 +59,14 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::errorSummary($form)
                                         ->errors($errors)
-                                        ->header($translator->translate('invoice.error.summary'))
+                                        ->header($translator->translate('error.summary'))
                                         ->onlyCommonErrors()
 ?>
                                 <?= Html::closeTag('div'); ?>        
                                 <?= Html::openTag('div'); ?>
                                      <?= Field::hidden($form, 'number')
      ->hideLabel(false)
-     ->label($translator->translate('invoice.salesorder'))
+     ->label($translator->translate('salesorder'))
      ->addInputAttributes([
          'class' => 'form-control',
          'readonly' => 'readonly',
@@ -76,22 +76,22 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'client_id')
-   ->label($translator->translate('invoice.user.account.clients'))
+   ->label($translator->translate('user.account.clients'))
    ->addInputAttributes(['class' => 'form-control'])
    ->value($form->getClient_id())
-   ->prompt($translator->translate('i.none'))
+   ->prompt($translator->translate('none'))
    ->optionsData($optionsData['client'])
-   ->hint($translator->translate('invoice.hint.this.field.is.required'));
+   ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                                 <?= Html::closeTag('div'); ?>            
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'group_id')
-    ->label($translator->translate('invoice.salesorder.default.group'))
+    ->label($translator->translate('salesorder.default.group'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value($form->getGroup_id() ?? $defaultGroupId)
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
     ->optionsData($optionsData['group'])
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                                 <?= Html::closeTag('div'); ?>   
                             
@@ -100,13 +100,13 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             // and to avoid undeliverable locations
                             if ($delCount == 0) {
                                 echo Html::a(
-                                    $translator->translate('invoice.invoice.delivery.location.add'),
+                                    $translator->translate('delivery.location.add'),
                                     $urlGenerator->generate('del/add', $actionArgumentsDelAdd, ['class' => 'btn btn-danger btn-lg mt-3'])
                                 );
                             } else { ?>
                                <div class="form-group">
                                     <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                                        <label for="delivery_location_id"><?= $translator->translate('invoice.invoice.delivery.location'); ?>: </label>
+                                        <label for="delivery_location_id"><?= $translator->translate('delivery.location'); ?>: </label>
                                     </div>        
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="input-group">  
@@ -138,7 +138,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('br'); ?>    
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form, 'date_created')
-                                ->label($translator->translate('invoice.invoice.date.issued'))
+                                ->label($translator->translate('date.issued'))
                                 ->value(
                                     Html::encode($form->getDate_created() instanceof \DateTimeImmutable ?
                                     $form->getDate_created()->format('Y-m-d') : (is_string(
@@ -146,26 +146,26 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ) ?
                                     $form->getDate_created() : ''))
                                 )
-                                ->hint($translator->translate('invoice.hint.this.field.is.required'));
+                                ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::password($form, 'password')
-    ->label($translator->translate('i.password'))
+    ->label($translator->translate('password'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getPassword()))
-    ->placeholder($translator->translate('i.password'))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->placeholder($translator->translate('password'))
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::select($form, 'status_id')
-    ->label($translator->translate('i.status'))
+    ->label($translator->translate('status'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value($form->getStatus_id())
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
     ->optionsData($optionsData['salesOrderStatus'])
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
@@ -178,7 +178,7 @@ if ($form->getStatus_id() == 1) { ?>
                         <?php if ($form->getStatus_id() > 1) { ?>
                             <?= Field::text($form, 'url_key')
         ->hideLabel(false)
-        ->label($translator->translate('i.guest_url'))
+        ->label($translator->translate('guest.url'))
         ->addInputAttributes($editInputAttributesUrlKey);
                             ?>
                         <?php } ?>
@@ -187,18 +187,18 @@ if ($form->getStatus_id() == 1) { ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form, 'discount_amount')
                                 ->hideLabel(false)
-                                ->label($translator->translate('i.discount').' '. $s->getSetting('currency_symbol'))
+                                ->label($translator->translate('discount').' '. $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
                                 ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
-                                ->placeholder($translator->translate('i.discount'));
+                                ->placeholder($translator->translate('discount'));
                         ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form, 'discount_percent')
-                            ->label($translator->translate('i.discount_percentage'))
+                            ->label($translator->translate('discount.percentage'))
                             ->addInputAttributes(['class' => 'form-control'])
                             ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
-                            ->placeholder($translator->translate('i.discount_percentage'));
+                            ->placeholder($translator->translate('discount.percentage'));
                         ?>
                         <?= Html::closeTag('div'); ?>
                     <?php } ?>
@@ -217,7 +217,7 @@ if ($form->getStatus_id() == 1) { ?>
 ?>
                         <?= Html::openTag('div'); ?>
                             <div class="col-xs-12 col-sm-2 text-right text-left-xs">   
-                                <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('invoice.term') ?></label>
+                                <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('term') ?></label>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="input-group">
@@ -225,7 +225,7 @@ if ($form->getStatus_id() == 1) { ?>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-                                <label for="inv_id" class="control-label"><?= $translator->translate('invoice.salesorder.invoice.number'); ?></label>
+                                <label for="inv_id" class="control-label"><?= $translator->translate('salesorder.invoice.number'); ?></label>
                             </div>
                             <div class="col-xs-12 col-sm-6">  
                                 <div clsss="input-group">  
@@ -249,4 +249,3 @@ if ($form->getStatus_id() == 1) { ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-

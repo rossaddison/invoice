@@ -107,7 +107,7 @@ final class UploadController extends BaseController
         $upload = new Upload();
         $form = new UploadForm($upload);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'upload/add',
             'actionArguments' => [],
             'form' => $form,
@@ -143,10 +143,10 @@ final class UploadController extends BaseController
             if ($upload) {
                 $this->uploadService->deleteUpload($upload, $this->sR);
                 $inv_id = (string) $this->session->get('inv_id');
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
-                    ['heading' => '', 'message' => $this->translator->translate('i.record_successfully_deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+                    ['heading' => '', 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
                 ));
             }
             return $this->webService->getRedirectResponse('upload/index');
@@ -175,7 +175,7 @@ final class UploadController extends BaseController
         if ($upload) {
             $form = new UploadForm($upload);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'upload/edit',
                 'actionArguments' => ['id' => $upload->getId()],
                 'errors' => [],
@@ -210,7 +210,7 @@ final class UploadController extends BaseController
         if ($upload) {
             $form = new UploadForm($upload);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'upload/view',
                 'actionArguments' => ['id' => $upload->getId()],
                 'form' => $form,

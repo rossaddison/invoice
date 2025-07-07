@@ -19,7 +19,7 @@ use Yiisoft\Html\Html;
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-               <h5 class="modal-title"><?php echo $translator->translate('invoice.salesorder.to.invoice'); ?></h5>
+               <h5 class="modal-title"><?php echo $translator->translate('salesorder.to.invoice'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -29,14 +29,14 @@ use Yiisoft\Html\Html;
                     <input type="hidden" name="so_id" id="so_id" value="<?= $so->getId(); ?>">
                     <input type="hidden" name="user_id" id="user_id" value="<?= $so->getUser_id(); ?>">
                     <div class="form-group">
-                        <label for="password"><?= $translator->translate('i.invoice_password'); ?></label>
+                        <label for="password"><?= $translator->translate('invoice.password'); ?></label>
                         <input type="text" name="password" id="invoice_password" class="form-control"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password') ?>"
                                autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="group_id">
-                            <?= $translator->translate('i.invoice_group'); ?>
+                            <?= $translator->translate('invoice.group'); ?>
                         </label>
                         <select name="group_id" id="group_id" class="form-control">
                             <?php
@@ -55,10 +55,10 @@ use Yiisoft\Html\Html;
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="so_to_invoice_confirm btn btn-success" id="so_to_invoice_confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('i.submit'); ?>
+                        <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('i.cancel'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

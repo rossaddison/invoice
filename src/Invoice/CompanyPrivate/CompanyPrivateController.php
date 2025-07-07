@@ -50,7 +50,7 @@ final class CompanyPrivateController extends BaseController
         $paginator = new OffsetPaginator($this->companyprivates($companyprivateRepository));
         $parameters = [
             'canEdit' => $canEdit,
-            'company_private' => $this->translator->translate('invoice.setting.company.private'),
+            'company_private' => $this->translator->translate('setting.company.private'),
             'paginator' => $paginator,
             'alert' => $this->alert(),
         ];
@@ -73,22 +73,23 @@ final class CompanyPrivateController extends BaseController
         $form = new CompanyPrivateForm($company_private);
         $body = $request->getParsedBody() ?? [];
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'companyprivate/add',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
             'companies' => $companyRepository->findAllPreloaded(),
-            'company_public' => $this->translator->translate('invoice.company.public'),
+            'company_public' => $this->translator->translate('company.public'),
         ];
         $aliases = $this->sR->get_company_private_logos_folder_aliases();
         $targetPath = $aliases->get('@company_private_logos');
         $targetPublicPath = $aliases->get('@public_logo');
         if (!is_writable($targetPath)) {
-            $this->flashMessage('warning', $this->translator->translate('i.is_not_writable'));
+            $this->flashMessage('warning', $this->translator->translate('is.not.writable'));
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         if ($request->getMethod() === Method::POST) {
+            $logoFileName = $_FILES['logo_filename']['name'];
             if (!isset($_FILES['logo_filename']['tmp_name']) || empty($_FILES['logo_filename']['tmp_name'])) {
                 throw new RuntimeException('No file uploaded or temporary file missing.');
             }
@@ -98,7 +99,7 @@ final class CompanyPrivateController extends BaseController
             }
 
             $tmp = $_FILES['logo_filename']['tmp_name'];
-            $originalFileName = basename($_FILES['logo_filename']['name']); // Extract original file name
+            $originalFileName = basename($logoFileName); // Extract original file name
             $spaceToUnderscore = preg_replace('/\s+/', '_', $originalFileName); // Replace spaces with underscores
 
             if (null !== $spaceToUnderscore) {
@@ -127,7 +128,7 @@ final class CompanyPrivateController extends BaseController
                     // Process form data
                     if ($formHydrator->populateAndValidate($form, $body)) {
                         $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                         return $this->webService->getRedirectResponse('companyprivate/index');
                     }
                     $parameters['form'] = $form;
@@ -197,19 +198,19 @@ final class CompanyPrivateController extends BaseController
         if ($company_private) {
             $form = new CompanyPrivateForm($company_private);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'companyprivate/edit',
                 'actionArguments' => ['id' => $company_private->getId()],
                 'errors' => [],
                 'form' => $form,
                 'companies' => $companyRepository->findAllPreloaded(),
-                'company_public' => $this->translator->translate('invoice.setting.company'),
+                'company_public' => $this->translator->translate('setting.company'),
             ];
             $aliases = $this->sR->get_company_private_logos_folder_aliases();
             $targetPath = $aliases->get('@company_private_logos');
             $targetPublicPath = $aliases->get('@public_logo');
             if (!is_writable($targetPath)) {
-                $this->flashMessage('warning', $this->translator->translate('i.is_not_writable'));
+                $this->flashMessage('warning', $this->translator->translate('is.not.writable'));
                 return $this->webService->getRedirectResponse('companyprivate/index');
             }
             if ($request->getMethod() === Method::POST) {
@@ -219,10 +220,9 @@ final class CompanyPrivateController extends BaseController
                 // the file that has just been selected
                 /**
                  * @var array $_FILES['logo_filename']
-                 * @var string $_FILES['logo_filename']['name']
                  * @var array $body
                  */
-                $body['logo_filename'] = $_FILES['logo_filename']['name'];
+                $body['logo_filename'] = (string)$_FILES['logo_filename']['name'];
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
                     $modified_original_file_name = Random::string(4) . '_' . (string)preg_replace('/\s+/', '_', $body['logo_filename']);
@@ -255,7 +255,7 @@ final class CompanyPrivateController extends BaseController
                         );
                         $companyprivateRepository->save($after_save);
 
-                        $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('companyprivate/index');
                     } // after  save
                 }
@@ -289,7 +289,7 @@ final class CompanyPrivateController extends BaseController
                 $target_public_logo = $targetPublicPath . DIRECTORY_SEPARATOR . $logo;
                 unlink($target_public_logo);
                 $this->companyPrivateService->deleteCompanyPrivate($company_private);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('companyprivate/index');
             }
         }
@@ -310,13 +310,13 @@ final class CompanyPrivateController extends BaseController
         if ($company_private) {
             $form = new CompanyPrivateForm($company_private);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'companyprivate/view',
                 'actionArguments' => ['id' => $company_private->getId()],
                 'form' => $form,
                 'companies' => $companyRepository->findAllPreloaded(),
                 'companyprivate' => $company_private,
-                'company_public' => $this->translator->translate('invoice.company.public'),
+                'company_public' => $this->translator->translate('company.public'),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -330,7 +330,7 @@ final class CompanyPrivateController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('companyprivate/index');
         }
         return $canEdit;

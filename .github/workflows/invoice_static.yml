@@ -1,5 +1,7 @@
 on:
   pull_request:
+    branches:
+      main
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -11,6 +13,8 @@ on:
       - 'phpunit.xml.dist'
 
   push:
+    branches:
+      main
     paths-ignore:
       - 'docs/**'
       - 'README.md'

@@ -29,11 +29,11 @@ use Sabre\Xml\Writer;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use DateTime;
 
-final class PeppolUblXml
+final readonly class PeppolUblXml
 {
-    private readonly ArrayCollection $items;
-    private readonly string $currencyCode_to;
-    private readonly array $company;
+    private ArrayCollection $items;
+    private string $currencyCode_to;
+    private array $company;
 
     /**
      * @param sR $sR
@@ -41,7 +41,7 @@ final class PeppolUblXml
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(private readonly sR $sR, private readonly Translator $t, private readonly Inv $invoice, private readonly iiaR $iiaR, private readonly InvAmount $inv_amount)
+    public function __construct(private sR $sR, private Translator $t, private Inv $invoice, private iiaR $iiaR, private InvAmount $inv_amount)
     {
         $this->items = $this->invoice->getItems();
         $this->currencyCode_to = $this->sR->getSetting('currency_to');

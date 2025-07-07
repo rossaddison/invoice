@@ -29,6 +29,7 @@ use Yiisoft\Files\FileHelper;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -71,25 +72,9 @@ class GeneratorController extends BaseController
      * The files located in the templates_protected folder are array 'php shells' which receive the arrays from the English folder.
      * Any changes to the ./resources/messages/en/app.php during development, requires changes to the English folder files.
      */
-    // e.g. i.this_is_a_sentence
-    public const string  _IP = '_ip_lang.php';
 
-    // e.g. g.this_is_a_gateway
-    public const string  _GATEWAY = '_gateway_lang.php';
-
-    // e.g. a complete file that is too big for Google to translate
+    // e.g. a complete file that is now easy for Google to translate
     public const string _APP = '_app.php';
-
-    // e.g. invoice.invoice.this.is.a.sentence
-    public const string _A_LATEST = '_a_latest_lang.php';
-
-    public const string _B_LATEST = '_b_latest_lang.php';
-
-    // e.g. site.soletrader.contact.address
-    public const string _COMMON = '_common_lang.php';
-
-    // e.g. miscellaneous
-    public const string _ANY = '_any_lang.php';
 
     // e.g. compare resources/messages/en.php with de.php with function rebuildLocale.
     // The missing keys in de.php are input into an array into an overwritable file
@@ -100,6 +85,7 @@ class GeneratorController extends BaseController
         private Aliases $aliases,
         private DataResponseFactoryInterface $factory,
         private GeneratorService $generatorService,
+        private readonly UrlGenerator $urlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -109,7 +95,7 @@ class GeneratorController extends BaseController
         Flash $flash
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->aliases = $aliases;
+        $this->aliases = $this->setAliases();
         $this->factory = $factory;
         $this->generatorService = $generatorService;
     }
@@ -172,10 +158,10 @@ class GeneratorController extends BaseController
     }
 
     /**
-     * Version: 2 replacing 1.0.2 as at 13/02/2025
-     * Purpose: To translate individual files located in src/Invoice/Language/English to folder
+     * Version: 2.0.1 replacing 2.0.0 as at 20/06/2025
+     * Purpose: To translate one individual file located in src/Invoice/Language/English to folder
      *          ./resources/views/invoice/generator/output_overwrite
-     *          These individual files can then be combinded manually into a app.php
+     *          This individual file can be copied to an app.php
      *
      * @param CurrentRoute $currentRoute
      * @throws CaCertFileNotFoundException
@@ -195,15 +181,20 @@ class GeneratorController extends BaseController
             if ($curlcertificate == false) {
                 throw new CaCertFileNotFoundException();
             }
-            if ($type == 'diff') {
-                $this->rebuildLocale();
-            }
+            // $type == 'app' => rebuild complete array
+            // $type == 'diff' => compare the folder e.g 'de' with developing folder 'resources/messages/en' and ONLY translate the difference
+            match ($type) {
+                'diff' => $this->rebuildLocale(),
+                // copy the latest developments in the en folder to the working directory English
+                'app' => $this->copyAppPhpToLangPhp(),
+                default => null,
+            };
             // 1. Downloaded json file at https://console.cloud.google.com/iam-admin/serviceaccounts/details/unique_project_id/keys?project={your_project_name}
             //    into ..src/Invoice/Google_translate_unique_folder
             $aliases = $this->sR->get_google_translate_json_file_aliases();
             $targetPath = $aliases->get('@google_translate_json_file_folder');
             $path_and_filename = $targetPath . DIRECTORY_SEPARATOR . $this->sR->getSetting('google_translate_json_filename');
-            if (empty($path_and_filename)) {
+            if (strlen($this->sR->getSetting('google_translate_json_filename')) == 0 || !$this->ensureJsonExtension($path_and_filename)) {
                 throw new GoogleTranslateJsonFileNotFoundException();
             }
             $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
@@ -214,43 +205,55 @@ class GeneratorController extends BaseController
                 putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
                 try {
                     $translationClient = new TranslationServiceClient([]);
-                    $request = new TranslateTextRequest();
-                    $request->setParent('projects/' . $projectId);
                     // Use the ..src/Invoice/Language/English/ip_lang.php associative array as template
                     $lang = new Lang();
                     // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php respectively
                     $lang->load($type, 'English');
                     /** @var array<array-key, string> $content */
                     $content = $lang->_language;
-                    $request->setContents($content);
                     // Retrieve the selected new language according to locale in Settings View Google Translate
                     // eg. 'es' ie. Spanish
                     $targetLanguage = $this->sR->getSetting('google_translate_locale');
                     if (empty($targetLanguage)) {
                         throw new GoogleTranslateLocaleSettingNotFoundException();
                     }
-                    $request->setTargetLanguageCode($targetLanguage);
-
-                    // The request will contain the authentication token based on the default credentials file
-                    $response = $translationClient->translateText($request);
+                    // Set the batch size based on Google API limits (e.g., 100)
+                    $batchSize = 100;
+                    $keys = array_keys($content);
+                    $values = array_values($content);
+                    $numItems = count($content);
                     $result_array = [];
-                    /**
-                     * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
-                     * @psalm-suppress DeprecatedClass
-                     * @see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead.
-                     */
-                    $response_get_translations = $response->getTranslations();
-                    /**
-                     * @psalm-suppress RawObjectIteration $response_get_translations
-                     * @var \Google\Cloud\Translate\V3\Translation $translation
-                     * @var string $key
-                     * @see $content = ['view.contact.form.name' => 'Name']
-                     * @see $response_get_translations = ['Name' => 'Naam']
-                     */
-                    foreach ($response_get_translations as $key => $translation) {
-                        $result_array[] = $translation->getTranslatedText();
+
+                    // Loop through in batches
+                    for ($i = 0; $i < $numItems; $i += $batchSize) {
+                        $batchValues = array_slice($values, $i, $batchSize);
+                        $request = new TranslateTextRequest();
+                        $request->setParent('projects/' . $projectId);
+                        $request->setContents($batchValues);
+                        $request->setTargetLanguageCode($targetLanguage);
+                        // The request will contain the authentication token based on the default credentials file
+                        $response = $translationClient->translateText($request);
+                        /**
+                         * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
+                         * @psalm-suppress DeprecatedClass
+                         * @see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead.
+                         */
+                        $response_get_translations = $response->getTranslations();
+                        /**
+                        * @psalm-suppress RawObjectIteration $response_get_translations
+                        * @var \Google\Cloud\Translate\V3\Translation $translation
+                        * @var string $key
+                        * @see $content = ['view.contact.form.name' => 'Name']
+                        * @see $response_get_translations = ['Name' => 'Naam']
+                        */
+                        foreach ($response_get_translations as $key => $translation) {
+                            $result_array[] = $translation->getTranslatedText();
+                        }
                     }
-                    $combined_array = array_combine(array_keys($content), $result_array);
+                    if (count($result_array) !== $numItems) {
+                        throw new \RuntimeException('Total translation count mismatch.');
+                    }
+                    $combined_array = array_combine($keys, $result_array);
                     $templateFile = $this->google_translate_get_file_from_type($type);
                     $path = $this->aliases->get('@generated');
                     $content_params = [
@@ -261,21 +264,71 @@ class GeneratorController extends BaseController
                         $content_params
                     );
                     $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage . '_' . $type . '_' . (string)time();
-                    $this->flashMessage('success', $templateFile . $this->translator->translate('invoice.generator.generated') . $path . '/' . $prefixToFileAsLocaleWithFileTypeAndTimeStamp);
+                    $this->flashMessage(
+                        'success',
+                        sprintf(
+                            '%s: %d keys translated in batches of %d. Output: %s/%s',
+                            $templateFile,
+                            $numItems,
+                            $batchSize,
+                            $path,
+                            $prefixToFileAsLocaleWithFileTypeAndTimeStamp
+                        )
+                    );
                     // output to //invoice/generator/output_overwrite/
                     $this->build_and_save($path, $file_content, $templateFile, $prefixToFileAsLocaleWithFileTypeAndTimeStamp);
-                    $parameters = [
-                        'alert' => $this->alert(),
-                        'combined_array' => $combined_array,
-                    ];
-                    return $this->viewRenderer->render('_google_translate_lang', $parameters);
+                    // return to the Language dropdown under settings ... google translate
+                    return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
                 } catch (\Exception $e) {
                     throw $e;
                 }
             }
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.generator.file.type.not.found'));
-        return $this->webService->getRedirectResponse('site/index');
+        $this->flashMessage('info', $this->translator->translate('generator.file.type.not.found'));
+        return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+    }
+
+    /**
+     * Ensure the file path ends with .json
+     *
+     * @param string $filepath
+     * @return bool
+     */
+    public function ensureJsonExtension(string $filepath): bool
+    {
+        // Remove any trailing whitespace
+        $filepath = trim($filepath);
+
+        // If it already ends with .json (case-insensitive), return as-is
+        return str_ends_with(strtolower($filepath), '.json');
+    }
+
+    /**
+     * Copies resources/messages/en/app.php as src/Invoice/Language/English/app_lang.php
+     * with the $lang = [...] format.
+     *
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArrayAccess
+     */
+    private function copyAppPhpToLangPhp(): void
+    {
+        $source = $this->aliases->get('@messages') . '/en/app.php';
+        $destination = $this->aliases->get('@English') . '/app_lang.php';
+
+        if (!file_exists($source)) {
+            throw new \RuntimeException("Source file not found: $source");
+        }
+
+        /** @var array<string, string> $app */
+        $app = include($source);
+
+        $export = var_export($app, true);
+
+        $php = "<?php\n";
+        $php .= "declare(strict_types=1);\n";
+        $php .= "\$lang = $export;\n";
+
+        file_put_contents($destination, $php);
     }
 
     /**
@@ -286,31 +339,13 @@ class GeneratorController extends BaseController
     {
         $file = '';
         switch ($type) {
-            case 'ip':
-                $file = self::_IP;
-                break;
-            case 'gateway':
-                $file = self::_GATEWAY;
-                break;
             case 'app':
                 $file = self::_APP;
                 break;
                 /**
-                 * @see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('invoice.generator.google.translate.latest.a'),
+                 * @see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
                  *      $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
                  */
-            case 'a_latest':
-                $file = self::_A_LATEST;
-                break;
-            case 'b_latest':
-                $file = self::_B_LATEST;
-                break;
-            case 'common':
-                $file = self::_COMMON;
-                break;
-            case 'any':
-                $file = self::_ANY;
-                break;
             case 'diff':
                 $file = self::_DIFF;
                 break;
@@ -368,7 +403,7 @@ class GeneratorController extends BaseController
         $gentor = new Gentor();
         $form = new GeneratorForm($gentor);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'generator/add',
             'actionArguments' => [],
             'errors' => [],
@@ -404,7 +439,7 @@ class GeneratorController extends BaseController
         if ($generator) {
             $form = new GeneratorForm($generator);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'generator/edit',
                 'actionArguments' => ['id' => $generator->getGentor_id()],
                 'errors' => [],
@@ -417,7 +452,7 @@ class GeneratorController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->generatorService->saveGenerator($generator, $body);
-                        $this->flashMessage('warning', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('warning', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('generator/index');
                     }
                 }
@@ -439,14 +474,14 @@ class GeneratorController extends BaseController
         try {
             $generator = $this->generator($currentRoute, $generatorRepository);
             if ($generator) {
-                $this->flashMessage('danger', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('danger', $this->translator->translate('record.successfully.deleted'));
                 $this->generatorService->deleteGenerator($generator);
                 return $this->webService->getRedirectResponse('generator/index');
             }
             return $this->webService->getRedirectResponse('generator/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.generator.history'));
+            $this->flashMessage('danger', $this->translator->translate('generator.history'));
         }
         return $this->webService->getRedirectResponse('generator/index');
     }
@@ -464,7 +499,7 @@ class GeneratorController extends BaseController
         if ($generator) {
             $form = new GeneratorForm($generator);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'generator/view',
                 'actionArguments' => ['id' => $generator->getGentor_id()],
                 'generator' => $generator,
@@ -482,7 +517,7 @@ class GeneratorController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('generator/index');
         }
         return $canEdit;
@@ -542,11 +577,11 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, '.php', $g->getCamelcase_capital_name());
-        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $camelcaseFileName);
+        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('generator.generated') . $viewPath . '/' . $camelcaseFileName);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -586,11 +621,11 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
-        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $camelcaseFileName);
+        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('generator.generated') . $viewPath . '/' . $camelcaseFileName);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -630,11 +665,11 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
-        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $camelcaseFileName);
+        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('generator.generated') . $viewPath . '/' . $camelcaseFileName);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -675,11 +710,11 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
-        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $camelcaseFileName);
+        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('generator.generated') . $viewPath . '/' . $camelcaseFileName);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -720,10 +755,10 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, $camelcaseFileName, '');
-        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $camelcaseFileName);
+        $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('generator.generated') . $viewPath . '/' . $camelcaseFileName);
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -763,11 +798,11 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, $file, '');
-        $this->flashMessage('success', $file . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $file);
+        $this->flashMessage('success', $file . $this->translator->translate('generator.generated') . $viewPath . '/' . $file);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -806,11 +841,11 @@ class GeneratorController extends BaseController
         $content = $this->getContent($view, $g, $relations, $orm, $file);
 
         $build_file = $this->build_and_save($viewPath, $content, $file, '');
-        $this->flashMessage('success', $file . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $file);
+        $this->flashMessage('success', $file . $this->translator->translate('generator.generated') . $viewPath . '/' . $file);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -850,11 +885,11 @@ class GeneratorController extends BaseController
 
         // also generate a file into the folder created for this view
         $build_file = $this->build_and_save($viewPath, $content, $file, '');
-        $this->flashMessage('success', $file . $this->translator->translate('invoice.generator.generated') . $viewPath . '/' . $file);
+        $this->flashMessage('success', $file . $this->translator->translate('generator.generated') . $viewPath . '/' . $file);
 
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,
@@ -893,11 +928,11 @@ class GeneratorController extends BaseController
         $orm = $dbal->database('default')
                     ->table($table_name);
         $content = $this->getContent($view, $g, $relations, $orm, $file);
-        $this->flashMessage('success', $file . $this->translator->translate('invoice.generator.generated') . $path . '/' . $file);
+        $this->flashMessage('success', $file . $this->translator->translate('generator.generated') . $path . '/' . $file);
         $build_file = $this->build_and_save($path, $content, $file, '');
         $parameters = [
             'canEdit' => $this->rbac(),
-            'title' => $this->translator->translate('invoice.generator.generate') . $file,
+            'title' => $this->translator->translate('generator.generate') . $file,
             'generator' => $g,
             'orm_schema' => $orm,
             'relations' => $relations,

@@ -92,15 +92,15 @@ echo $modal_pdf;
         <br>
         <br>
         <div class="panel-heading">
-            <b><h2><?= Html::encode($translator->translate('i.payments')); ?></h2></b>
+            <b><h2><?= Html::encode($translator->translate('payments')); ?></h2></b>
         </div>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th><?= Html::encode($translator->translate('i.date')); ?></th>
-                        <th><?= Html::encode($translator->translate('i.amount')); ?></th>
-                        <th><?= Html::encode($translator->translate('i.note')); ?></th>
+                        <th><?= Html::encode($translator->translate('date')); ?></th>
+                        <th><?= Html::encode($translator->translate('amount')); ?></th>
+                        <th><?= Html::encode($translator->translate('note')); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,7 +131,7 @@ echo $modal_pdf;
             'style' => 'text-decoration:none'
         ])
         ->addClass('btn btn-info me-1')
-        ->content(Html::b($translator->translate('i.add_product')))
+        ->content(Html::b($translator->translate('add.product')))
         ->href('#add-product-tab')
         ->id('btn-reset')
         ->render();
@@ -144,7 +144,7 @@ echo $modal_pdf;
             'style' => 'text-decoration:none'
         ])
         ->addClass('btn btn-info me-1')
-        ->content(Html::b($translator->translate('i.add_task')))
+        ->content(Html::b($translator->translate('add.task')))
         ->href('#add-task-tab')
         ->id('btn-reset')
         ->render();
@@ -173,21 +173,21 @@ echo $modal_pdf;
                             <?= Html::openTag(
                                 'button',
                                 [
-                                                    'class' => 'btn btn-primary',
-                                                    'href' => '#modal-choose-items',
-                                                    'id' => '#modal-choose-items',
-                                                    'data-bs-toggle' => 'modal'
-                                                ]
+                                    'class' => 'btn btn-primary',
+                                    'href' => '#modal-choose-items',
+                                    'id' => '#modal-choose-items',
+                                    'data-bs-toggle' => 'modal'
+                                ]
                             );
     ?>
                             <?= I::tag()
         ->addClass('fa fa-list')
         ->addAttributes([
             'data-bs-toggle' => 'tooltip',
-            'title' => $translator->translate('i.add_product')
+            'title' => $translator->translate('add.product')
         ]);
     ?>
-                            <?= $translator->translate('i.add_product'); ?>
+                            <?= $translator->translate('add.product'); ?>
                             <?= Html::closeTag('button'); ?>
                         <?= Html::closeTag('div'); ?>
                 <?= $add_inv_item_product; ?>
@@ -202,7 +202,7 @@ echo $modal_pdf;
         'id' => 'modal-choose-tasks',
         'data-bs-toggle' => 'modal']);
     ?>
-                            <?= $translator->translate('i.add_task'); ?>
+                            <?= $translator->translate('add.task'); ?>
                             <?= Html::closeTag('button'); ?>
                         <?= Html::closeTag('td'); ?>           
                 <?= $add_inv_item_task; ?>
@@ -215,14 +215,14 @@ echo $modal_pdf;
     <div id="headerbar">
         <h1 class="headerbar-title">
 <?php
-echo Html::encode($translator->translate('i.invoice')) . ' ';
+echo Html::encode($translator->translate('invoice')) . ' ';
 echo(Html::encode(strlen($inv->getNumber() ?? '') > 0 ? ' #' . ($inv->getNumber() ?? ' #') : $inv->getId()));
 ?>
         </h1>        
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
             <div class="options btn-group">
                 <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
-                    <i class="fa fa-chevron-down"></i><?= $translator->translate('i.options'); ?>
+                    <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
 <?php
@@ -232,7 +232,7 @@ if ($showButtons && $invEdit) {
                         <li>
                             <a href="<?= $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]) ?>" style="text-decoration:none">
                                 <i class="fa fa-edit fa-margin"></i>
-    <?= Html::encode($translator->translate('i.edit')); ?>
+    <?= Html::encode($translator->translate('edit')); ?>
                             </a>
                         </li>
     <?php
@@ -242,14 +242,14 @@ if ($showButtons && $invEdit) {
                         <li>
                             <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-plus fa-margin"></i>
-                                <?= Html::encode($translator->translate('i.add_invoice_tax')); ?>
+                                <?= Html::encode($translator->translate('add.invoice.tax')); ?>
                             </a>
                         </li>
                         <?php } ?>
                         <li>
                             <a href="#add-inv-allowance-charge" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-plus fa-margin"></i>
-                                <?= $translator->translate('invoice.invoice.allowance.or.charge.add'); ?>
+                                <?= $translator->translate('allowance.or.charge.add'); ?>
                             </a>
                         </li>
                     <?php } ?>
@@ -260,7 +260,7 @@ if ($showButtons && $invEdit) {
                         <li>
                             <a href="" style="text-decoration:none" onclick="window.open('<?= $urlGenerator->generate('inv/peppol', ['id' => $inv->getId()]) ?>')">
                                 <i class="fa fa-window-restore"></i>
-                                <?= Html::encode($translator->translate('invoice.peppol')); ?>
+                                <?= Html::encode($translator->translate('peppol')); ?>
                             </a>
                         </li>
                         <li>
@@ -268,7 +268,7 @@ if ($showButtons && $invEdit) {
                                 <i class="fa <?= $peppol_stream_toggle === '1' ? 'fa-toggle-on' : 'fa-toggle-off'; ?> fa-margin" aria-hidden="true"></i>
                                 <?=
 // Options ...  Peppol Stream Toggle
-                                  Html::encode($translator->translate('invoice.peppol.stream.toggle')); ?>
+                                  Html::encode($translator->translate('peppol.stream.toggle')); ?>
                             </a>
                         </li>
                         <li>
@@ -276,7 +276,7 @@ if ($showButtons && $invEdit) {
                                 <i class="fa fa-check fa-margin" aria-hidden="true"></i>
                                 <?=
 // Options ...  Ecosio Validator
-                                     Html::encode($translator->translate('invoice.peppol.ecosio.validator')); ?>
+                                     Html::encode($translator->translate('peppol.ecosio.validator')); ?>
                             </a>
                         </li>                        
                         <li>
@@ -284,13 +284,13 @@ if ($showButtons && $invEdit) {
                                 <i class="fa fa-eye fa-margin"></i>
                                 <?=
 // Options ...  Store Cove Json Encoded Invoice
-                                  Html::encode($translator->translate('invoice.storecove.invoice.json.encoded')); ?>
+                                  Html::encode($translator->translate('storecove.invoice.json.encoded')); ?>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]) ?>" style="text-decoration:none">
                                 <i class="fa fa-plus fa-margin"></i>
-                                <?= Html::encode($translator->translate('invoice.delivery.location.add')); ?>
+                                <?= Html::encode($translator->translate('delivery.location.add')); ?>
                             </a>
                         </li>
                     <?php } ?>
@@ -306,7 +306,7 @@ if ($showButtons && $invEdit) {
                         ?>
                         <li>
                             <a href="#create-credit-inv" data-bs-toggle="modal" data-invoice-id="<?= $inv->getId(); ?>" style="text-decoration:none">
-                                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.create_credit_invoice')); ?>
+                                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('create.credit.invoice')); ?>
                             </a>
                         </li>
                     <?php } ?>
@@ -327,7 +327,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                data-invoice-payment-method="<?= Html::encode($inv->getPayment_method()); ?>"
                                data-payment-cf-exisst="<?= Html::encode($paymentCfExist); ?>">
                                 <i class="fa fa-credit-card fa-margin"></i>
-                        <?= Html::encode($translator->translate('i.enter_payment')); ?>
+                        <?= Html::encode($translator->translate('enter.payment')); ?>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -348,7 +348,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                 ?>
             <a href="<?= $urlGenerator->generate('inv/url_key', ['url_key' => $inv->getUrl_key(), 'gateway' => $gateway]); ?>"
                 style="text-decoration:none">
-                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
+                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('pay.now') . '-' . ucfirst($gateway)); ?>
             </a>
             <?php } ?>
             <?php
@@ -356,7 +356,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                  // resources/views/invoice/inv/modal_message_layout has the ... 'id' => 'modal-message-'.$type which matches the #modal-message-inv below?>
             <?php if ($inv->getPayment_method() === 0) { ?>
             <a href="#modal-message-inv" data-bs-toggle="modal" style="text-decoration:none">
-                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('i.pay_now') . '-' . ucfirst($gateway)); ?>
+                <i class="fa fa-minus fa-margin"></i> <?= Html::encode($translator->translate('pay.now') . '-' . ucfirst($gateway)); ?>
             </a>
             <?php } ?>
         </li>
@@ -369,7 +369,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                             <?php if ($s->getSetting('sumex') === '1') { ?>
                             <a href="#inv-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
-                            <?= Html::encode($translator->translate('i.generate_sumex')); ?>
+                            <?= Html::encode($translator->translate('generate.sumex')); ?>
                             </a>
     <?php
 // Options ... Download PDF
@@ -377,14 +377,14 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                 ?>
                             <a href="#inv-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-print fa-margin"></i>
-                                <?= Html::encode($translator->translate('i.download_pdf')); ?>
+                                <?= Html::encode($translator->translate('download.pdf')); ?>
                             </a>
                             <?php 
 // Options ... Modal PDF                            
                             if ($s->getSetting('pdf_stream_inv') == '1') { ?>
                             <a href="#inv-to-modal-pdf" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-desktop fa-margin"></i>
-                                <?= Html::encode($translator->translate('invoice.invoice.pdf.modal').' ✅'); ?>
+                                <?= Html::encode($translator->translate('pdf.modal').' ✅'); ?>
                             </a>
                             <?php } else { ?>
                             <a href="<?= $urlGenerator->generate(
@@ -393,7 +393,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                         ['active' => 'invoices'],
                                        'settings[pdf_stream_inv]'); ?>" style="text-decoration:none">
                                 <i class="fa fa-desktop fa-margin"></i>
-                                <?= Html::encode($translator->translate('invoice.invoice.pdf.modal').' ❌'); ?>
+                                <?= Html::encode($translator->translate('pdf.modal').' ❌'); ?>
                             </a>
                             <?php } ?>
                         
@@ -413,7 +413,7 @@ if ($invEdit) {
                         <li>
                             <a href="<?= $urlGenerator->generate('invrecurring/add', ['inv_id' => $inv->getId()]); ?>" style="text-decoration:none">
                                 <i class="fa fa-refresh fa-margin"></i>
-                            <?= Html::encode($translator->translate('i.create_recurring')); ?>
+                            <?= Html::encode($translator->translate('create.recurring')); ?>
                             </a>
                         </li>
                         <li>
@@ -432,7 +432,7 @@ if ($invEdit) {
                                     ?>
                                 <a href="<?= $urlGenerator->generate('sumex/edit', ['id' => $inv->getId()]); ?>" style="text-decoration:none">
                                     <i class="fa fa-edit fa-margin"></i>
-                                        <?= $translator->translate('invoice.sumex.edit'); ?>
+                                        <?= $translator->translate('sumex.edit'); ?>
                                 </a>
                             <?php } ?>
                         <?php } ?>
@@ -442,7 +442,7 @@ if ($invEdit) {
                                 <i class="fa fa-send fa-margin"></i>
     <?=
 // Options ... Send Email
-    Html::encode($translator->translate('i.send_email'));
+    Html::encode($translator->translate('send.email'));
     ?>
                             </a>
                         </li>
@@ -455,7 +455,7 @@ if ($invEdit) {
   * Options ... Copy Invoice
   */
 
-    Html::encode($translator->translate('i.copy_invoice')); ?>
+    Html::encode($translator->translate('copy.invoice')); ?>
                             </a>
                         </li>
                         <li>
@@ -465,7 +465,7 @@ if ($invEdit) {
                                 ?>
                                 <a href="#inv-to-html"  data-bs-toggle="modal" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i>
-                                <?= Html::encode($translator->translate('invoice.invoice.html.sumex.yes')); ?>
+                                <?= Html::encode($translator->translate('html.sumex.yes')); ?>
                                 </a>
         <?php
 // Options ... Invoice to HTML without Sumex
@@ -473,7 +473,7 @@ if ($invEdit) {
                                 ?>
                                 <a href="#inv-to-html"  data-bs-toggle="modal" style="text-decoration:none">
                                     <i class="fa fa-print fa-margin"></i>
-        <?= Html::encode($translator->translate('invoice.invoice.html.sumex.no')); ?>
+        <?= Html::encode($translator->translate('html.sumex.no')); ?>
                                 </a>
                         <?php } ?>
                             <!--
@@ -497,13 +497,13 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
     ?>
                         <li>
                             <a href="#delete-inv" data-bs-toggle="modal"  style="text-decoration:none">
-                                <i class="fa fa-trash fa-margin"></i> <?= Html::encode($translator->translate('i.delete')); ?>
+                                <i class="fa fa-trash fa-margin"></i> <?= Html::encode($translator->translate('delete')); ?>
                             </a>
                         </li>
                         <li>
                             <a href="#delete-items"  data-bs-toggle="modal" style="text-decoration:none">
                                 <i class="fa fa-trash fa-margin"></i>
-                        <?= Html::encode($translator->translate('i.delete') . " " . $translator->translate('i.item')); ?>
+                        <?= Html::encode($translator->translate('delete') . " " . $translator->translate('item')); ?>
                             </a>
                         </li>
 <?php } ?>
@@ -513,12 +513,12 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                 <?php if ($isRecurring) { ?>
                     <span class="label label-info">
                         <i class="fa fa-refresh"></i>
-    <?= Html::encode($translator->translate('i.recurring')); ?>
+    <?= Html::encode($translator->translate('recurring')); ?>
                     </span>
         <?php } ?>
         <?php if ($inv->getIs_read_only() === true) { ?>
                     <span class="label label-danger">
-                        <i class="fa fa-read-only"></i><?= Html::encode($translator->translate('i.read_only')); ?>
+                        <i class="fa fa-read-only"></i><?= Html::encode($translator->translate('read.only')); ?>
                     </span>
         <?php } ?>
             </div>
@@ -550,25 +550,25 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                             <?php echo(strlen($inv->getClient()?->getClient_zip() ?? '') > 0 ? Html::encode($inv->getClient()?->getClient_zip()) : ''); ?>
                             </span>
                             <span class="client-address-country-line">
-                        <?php echo(strlen($inv->getClient()?->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('i.cldr'), ($inv->getClient()?->getClient_country() ?? '')) : ''); ?>
+                        <?php echo(strlen($inv->getClient()?->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), ($inv->getClient()?->getClient_country() ?? '')) : ''); ?>
                             </span>
                         </div>
                         <hr>
                         <?php if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0): ?>
                             <div class="client-phone">
-                            <?= $translator->translate('i.phone'); ?>:&nbsp;
+                            <?= $translator->translate('phone'); ?>:&nbsp;
                                 <?= Html::encode($inv->getClient()?->getClient_phone() ?? ''); ?>
                             </div>
                             <?php endif; ?>
                         <?php if ($inv->getClient()?->getClient_mobile() ?? ''): ?>
                             <div class="client-mobile">
-    <?= $translator->translate('i.mobile'); ?>:&nbsp;
+    <?= $translator->translate('mobile'); ?>:&nbsp;
     <?= Html::encode($inv->getClient()?->getClient_mobile()); ?>
                             </div>
 <?php endif; ?>
 <?php if (null !== $inv->getClient()?->getClient_email()): ?>
                             <div class='client-email'>
-    <?= $translator->translate('i.email'); ?>:&nbsp;
+    <?= $translator->translate('email'); ?>:&nbsp;
     <?php echo $inv->getClient()?->getClient_email(); ?>
                             </div>
 <?php endif; ?>
@@ -585,16 +585,16 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
 
                                     <div class="invoice-properties">
                                         <label for="inv_number">
-                                            <b><?= $translator->translate('i.invoice'); ?> #</b>
+                                            <b><?= $translator->translate('invoice'); ?> #</b>
                                         </label>
                                         <input type="text" id="inv_number" class="form-control" readonly
                                                    <?php if (strlen($inv->getNumber() ?? '') > 0) : ?> value="<?= $inv->getNumber(); ?>"
-                                                   <?php else : ?> placeholder="<?= Html::encode($translator->translate('i.not_set')); ?>"
+                                                   <?php else : ?> placeholder="<?= Html::encode($translator->translate('not.set')); ?>"
 <?php endif; ?>>
                                     </div>
                                     <div class="invoice-properties has-feedback">
                                         <label for="date_created">
-                                            <b><?= $translator->translate('invoice.invoice.date.issued'); ?></b>
+                                            <b><?= $translator->translate('date.issued'); ?></b>
                                         </label>
                                         <div class="input-group">
                                             <input id="date_created" disabled
@@ -609,7 +609,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                     </div>
                                     <div class="invoice-properties has-feedback">
                                         <label for="date_supplied">
-                                            <b><?= $translator->translate('invoice.invoice.date.supplied'); ?></b>
+                                            <b><?= $translator->translate('date.supplied'); ?></b>
                                         </label>
                                         <div class="input-group">
                                             <input id="date_supplied" disabled
@@ -623,7 +623,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
 <?php if ($vat === '1') { ?>
                                         <div class="invoice-properties has-feedback">
                                             <label for="date_tax_point">
-                                                <b><?= $translator->translate('invoice.invoice.tax.point'); ?></b>
+                                                <b><?= $translator->translate('tax.point'); ?></b>
                                             </label>
                                             <div class="input-group">
                                                 <input id="date_tax_point" disabled
@@ -637,7 +637,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
 <?php } ?>
                                     <div class="invoice-properties has-feedback">
                                         <label for="inv_date_due">
-                                            <b><?= $translator->translate('i.expires'); ?></b>
+                                            <b><?= $translator->translate('expires'); ?></b>
                                         </label>
                                         <div class="input-group">
                                             <input name="inv_date_due" id="inv_date_due" disabled
@@ -664,7 +664,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                 <div class="col-xs-12 col-md-6">
                                     <div class="invoice-properties">
                                         <label for="inv_status_id">
-                                            <b><?= $translator->translate('i.status'); ?></b>
+                                            <b><?= $translator->translate('status'); ?></b>
                                         </label>
                                         <select name="inv_status_id" id="inv_status_id" disabled
                                                 class="form-control">
@@ -685,11 +685,11 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                     </div>
                                     <div class="invoice-properties">
                                         <label for="payment_method">
-                                            <b><?= $translator->translate('i.payment_method'); ?></b>
+                                            <b><?= $translator->translate('payment.method'); ?></b>
                                         </label>
 <?php if ($inv->getPayment_method() !== 0) { ?>
                                             <select name="payment_method" id="payment_method" class="form-control" disabled="disabled">
-                                                <option value="0"><?= Html::encode($translator->translate('i.select_payment_method')); ?></option>
+                                                <option value="0"><?= Html::encode($translator->translate('select.payment.method')); ?></option>
                                         <?php
                                                 /**
                                                  * @var App\Invoice\Entity\PaymentMethod $payment_method
@@ -708,21 +708,21 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
 <?php } else { ?>
                                             <select name="payment_method" id="payment_method" class="form-control"
     <?= 'disabled="disabled"'; ?>>
-                                                <option "0" ><?= Html::encode($translator->translate('i.none')); ?></option>
+                                                <option "0" ><?= Html::encode($translator->translate('none')); ?></option>
                                             </select>
 <?php } ?>
                                     </div>
 <?php if (($inv->getStatus_id() !== 1) && ($invEdit)) { ?>
                                         <div class="invoice-properties">
                                             <label for="inv_password">
-                                                <b><?= Html::encode($translator->translate('i.password')); ?></b>
+                                                <b><?= Html::encode($translator->translate('password')); ?></b>
                                             </label>
                                             <input type="text" id="inv_password" class="form-control" disabled value="<?= Html::encode($form->getPassword() ?? ''); ?>">
                                         </div>
                                         <div class="invoice-properties">
                                             <div class="form-group">
                                                 <label for="guest-url">
-                                                    <b><?= Html::encode($translator->translate('i.guest_url')); ?></b>
+                                                    <b><?= Html::encode($translator->translate('guest.url')); ?></b>
                                                 </label>
                                                 <div class="input-group">
                                                     <input type="text" id="guest-url" name="guest-url" readonly class="form-control" value="<?= 'inv/url_key/' . $inv->getUrl_key(); ?>">
@@ -770,7 +770,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                     </div>
 <?php if (!empty($inv->getSo_id())) {
     Html::openTag('div');
-    $translator->translate('invoice.salesorder');
+    $translator->translate('salesorder');
     Html::closeTag('div');
     Html::openTag('div', ['class' => 'input-group']);
     Html::a(
@@ -797,7 +797,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                 <div class="panel panel-default no-margin">
                     <div class="panel-heading">
                         <b>
-                            <?= Html::encode($translator->translate('i.terms')); ?>
+                            <?= Html::encode($translator->translate('terms')); ?>
                             <?php
                                 $paymentTermArray = $s->get_payment_term_array($translator);
                                 $termsKey = (int)$inv->getTerms() ?: 0;

@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
 
     <?= Field::errorSummary($form)
         ->errors($errors)
-        ->header($translator->translate('invoice.client.error.summary'))
+        ->header($translator->translate('client.error.summary'))
         ->onlyCommonErrors()
 ?>
     <?= Field::text($form, 'client_id')
@@ -47,39 +47,39 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getClient_id() ?? $client_id))
 ?>    
     <?= Field::text($form, 'reference')
-   ->label($translator->translate('invoice.invoice.contract.reference'))
+   ->label($translator->translate('contract.reference'))
    ->addInputAttributes([
        'value' => Html::encode($form->getReference() ?? ''),
    ])
    ->required(true)
-   ->hint($translator->translate('invoice.hint.this.field.is.required'));
+   ->hint($translator->translate('hint.this.field.is.required'));
 ?>
     <?= Field::text($form, 'name')
-    ->label($translator->translate('invoice.invoice.contract.name'))
+    ->label($translator->translate('contract.name'))
     ->addInputAttributes([
         'value' => Html::encode($form->getName() ?? ''),
     ])
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
     <?= Field::date($form, 'period_start')
-    ->label($translator->translate('invoice.invoice.contract.period.start'))
+    ->label($translator->translate('contract.period.start'))
     ->addInputAttributes([
         'role' => 'presentation',
         'autocomplete' => 'off',
     ])
     ->value(Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d'))))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
     <?= Field::date($form, 'period_end')
-    ->label($translator->translate('invoice.invoice.contract.period.end'))
+    ->label($translator->translate('contract.period.end'))
     ->addInputAttributes([
         'autocomplete' => 'off',
     ])
     ->value(Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d'))))
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 
 <?= Html::closeTag('h1'); ?>

@@ -16,7 +16,7 @@ class GroupException extends \RuntimeException implements FriendlyExceptionInter
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.group.document.number');
+        return $this->translator->translate('group.document.number');
     }
 
     /**

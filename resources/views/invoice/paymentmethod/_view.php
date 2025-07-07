@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-                ->label($translator->translate('i.name'))
+                ->label($translator->translate('name'))
                 ->addInputAttributes([
                     'class' => 'form-control  alert alert-warning'
                 ])

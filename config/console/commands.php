@@ -6,6 +6,7 @@ use Yiisoft\Yii\Console\Command\Serve;
 
 return [
     'serve' => Serve::class,
+    'install' => App\Command\InstallCommand::class,
     'user/create' => App\User\Console\CreateCommand::class,
     'user/assignRole' => App\User\Console\AssignRoleCommand::class,
     'router/list' => App\Command\Router\ListCommand::class,

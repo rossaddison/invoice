@@ -78,22 +78,22 @@ use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryPercentNotFoundExcepti
 use DateTime;
 use DateTimeImmutable;
 
-final class StoreCoveHelper
+final readonly class StoreCoveHelper
 {
-    private readonly DateHelper $datehelper;
+    private DateHelper $datehelper;
 
     public function __construct(
-        private readonly SRepo $s,
-        private readonly DelRepo $delRepo,
-        private readonly IIAR $iiaR,
-        private readonly InvAmount $inv_amount,
-        private readonly DL $delivery_location,
-        private readonly Translator $t,
-        private readonly string $from_currency,
-        private readonly string $to_currency,
-        private readonly string $from_to_manual_input,
-        private readonly string $to_from_manual_input,
-        private readonly Crypt $crypt
+        private SRepo $s,
+        private DelRepo $delRepo,
+        private IIAR $iiaR,
+        private InvAmount $inv_amount,
+        private DL $delivery_location,
+        private Translator $t,
+        private string $from_currency,
+        private string $to_currency,
+        private string $from_to_manual_input,
+        private string $to_from_manual_input,
+        private Crypt $crypt
     ) {
         $this->datehelper = new DateHelper($this->s);
     }
@@ -295,11 +295,11 @@ final class StoreCoveHelper
             if ($sales_order_id) {
                 $sales_order = $soR->repoSalesOrderUnLoadedquery($sales_order_id);
                 if ($sales_order) {
-                    $sales_order_number = ($sales_order->getNumber() ?? $this->t->translate('invoice.storecove.salesorder.number.not.exist')) ;
+                    $sales_order_number = ($sales_order->getNumber() ?? $this->t->translate('storecove.salesorder.number.not.exist')) ;
                     $inv_items = $invoice->getItems();
                     $contract_id = $invoice->getContract_id();
                     $contract = $contractRepo->repoContractquery($contract_id);
-                    $contract_reference = $contract?->getReference() ?? $this->t->translate('invoice.storecove.no.contract.exists');
+                    $contract_reference = $contract?->getReference() ?? $this->t->translate('storecove.no.contract.exists');
                     $incrementor = 0;
                     $line_number = 1;
                     $references = [];
@@ -310,7 +310,7 @@ final class StoreCoveHelper
                         $so_item_id = $item->getSo_item_id();
                         $so_item = $soiR->repoSalesOrderItemquery($so_item_id);
                         if (null !== $so_item) {
-                            $po_itemid = $so_item->getPeppol_po_itemid() ?? $this->t->translate('invoice.storecove.purchase.order.item.id.null');
+                            $po_itemid = $so_item->getPeppol_po_itemid() ?? $this->t->translate('storecove.purchase.order.item.id.null');
                             $references[$incrementor] = [
                                 'documentType' => 'purchase_order',
                                 'documentId' => 'So_item_id/Po_item_id - ' . $so_item_id . '/' . $po_itemid,
@@ -357,12 +357,12 @@ final class StoreCoveHelper
                     if (null !== $invoice->getNumber()) {
                         $ref = $invoice->getNumber();
                     } else {
-                        $ref = $this->t->translate('invoice.invoice.number.missing.therefore.use.invoice.id') . $invoice_id;
+                        $ref = $this->t->translate('number.missing.therefore.use.invoice.id') . $invoice_id;
                     }
                     $incrementor += 1;
                     $references[$incrementor] = [
                         'documentType' => 'originator',
-                        'documentId' => null !== $ref ? $this->t->translate('invoice.storecove.invoice') . $ref : '',
+                        'documentId' => null !== $ref ? $this->t->translate('storecove.invoice') . $ref : '',
                     ];
                     return $references;
                 } // null!== $sales_order
@@ -598,7 +598,7 @@ final class StoreCoveHelper
                                     'category' => $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
                                 ],
                                 //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
-                                'orderLineReferenceLineId' => $peppol_po_lineid ?? $this->t->translate('invoice.client.') ,
+                                'orderLineReferenceLineId' => $peppol_po_lineid ?? $this->t->translate('client.') ,
                                 'accountingCost' => $client_peppol->getAccountingCost(),
                                 'name' => $item->getName(),
                                 'description' => $item->getDescription(),
@@ -1432,14 +1432,14 @@ final class StoreCoveHelper
             foreach ($store_cove_sender_array as $key => $value) {
                 if ($key == $identifier) {
                     // Use the identifier basis to retrieve either the legal or tax identifier
-                    if ($identifier_basis === $this->t->translate('invoice.storecove.tax')) {
+                    if ($identifier_basis === $this->t->translate('storecove.tax')) {
                         /**
                          * @var string $value[$identifier_basis]
                          */
                         $routing_scheme_identifier = $value[$identifier_basis];
                         continue;
                     }
-                    if ($identifier_basis === $this->t->translate('invoice.storecove.legal')) {
+                    if ($identifier_basis === $this->t->translate('storecove.legal')) {
                         /**
                          * @var string $value[$identifier_basis]
                          */
@@ -1506,7 +1506,7 @@ final class StoreCoveHelper
                              * @see https://www.storecove.com/docs/#_sender_identifiers_list
                              */
                             'scheme' => $routing_scheme_identifier,
-                            'id' => $routing_scheme_identifier === $this->t->translate('invoice.storecove.legal') ? $legal_entity_id : $tax_scheme_id,
+                            'id' => $routing_scheme_identifier === $this->t->translate('storecove.legal') ? $legal_entity_id : $tax_scheme_id,
                         ],
                     ],
                     'emails' => [
@@ -1527,7 +1527,7 @@ final class StoreCoveHelper
                         'invoicePeriod' => $this->invoice_period($invoice, $this->s),
                         'references' => $references,
                         'accountingCost' => $this->AccountingCost($invoice, $cpR),
-                        'note' => $invoice->getNote() ?? $this->t->translate('invoice.storecove.advisory.to.developer.easily.missed'),
+                        'note' => $invoice->getNote() ?? $this->t->translate('storecove.advisory.to.developer.easily.missed'),
                         'accountingSupplierParty' => [
                             'party' => [
                                 'contact' => [
@@ -1571,7 +1571,7 @@ final class StoreCoveHelper
                             ],
                         ],
                         'delivery' => [
-                            'deliveryPartyName' => null !== $c_del_party ? $c_del_party->getPartyName() : $this->t->translate('invoice.invoice.storecove.not.available'),
+                            'deliveryPartyName' => null !== $c_del_party ? $c_del_party->getPartyName() : $this->t->translate('storecove.not.available'),
                             'actualDeliveryDate' => $c_actual_del_datetime?->format('Y-m-d'),
                             'deliveryLocation' => [
                                 'id' => $this->delivery_location->getGlobal_location_number(),

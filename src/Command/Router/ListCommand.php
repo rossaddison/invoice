@@ -15,7 +15,7 @@ use Yiisoft\Yii\Console\ExitCode;
 
 final class ListCommand extends Command
 {
-    protected static $defaultName = 'router/list';
+    protected static string $defaultName = 'router/list';
 
     public function __construct(private readonly RouteCollectionInterface $routeCollection)
     {
@@ -30,11 +30,8 @@ final class ListCommand extends Command
             ->setHelp('This command displays a list of registered routes.');
     }
 
-    /**
-     * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
-     */
     #[\Override]
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $table = new Table($output);
         $routes = $this->routeCollection->getRoutes();

@@ -67,7 +67,7 @@ final class TaxRateController extends BaseController
         $taxRate = new TaxRate();
         $form = new TaxRateForm($taxRate);
         $parameters = [
-            'title' => $this->translator->translate('invoice.tax.rate.add'),
+            'title' => $this->translator->translate('tax.rate.add'),
             'actionName' => 'taxrate/add',
             'actionArguments' => [],
             'form' => $form,
@@ -80,7 +80,7 @@ final class TaxRateController extends BaseController
                 $body = $request->getParsedBody();
                 if (is_array($body)) {
                     $this->taxRateService->saveTaxRate($taxRate, $body);
-                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                 }
                 return $this->webService->getRedirectResponse('taxrate/index');
             }
@@ -109,7 +109,7 @@ final class TaxRateController extends BaseController
         if ($taxRate) {
             $form = new TaxRateForm($taxRate);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'taxrate/edit',
                 'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
                 'form' => $form,
@@ -122,7 +122,7 @@ final class TaxRateController extends BaseController
                     $body = $request->getParsedBody();
                     if (is_array($body)) {
                         $this->taxRateService->saveTaxRate($taxRate, $body);
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                     }
                     return $this->webService->getRedirectResponse('taxrate/index');
                 }
@@ -149,7 +149,7 @@ final class TaxRateController extends BaseController
             return $this->webService->getRedirectResponse('taxrate/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.tax.rate.history.exists'));
+            $this->flashMessage('danger', $this->translator->translate('tax.rate.history.exists'));
             return $this->webService->getRedirectResponse('taxrate/index');
         }
     }
@@ -167,7 +167,7 @@ final class TaxRateController extends BaseController
         if ($taxRate) {
             $form = new TaxRateForm($taxRate);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'taxrate/view',
                 'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
                 'form' => $form,
@@ -186,7 +186,7 @@ final class TaxRateController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('taxrate/index');
         }
         return $canEdit;

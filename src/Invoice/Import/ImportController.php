@@ -81,7 +81,7 @@ final class ImportController extends BaseController
             $pdoDriver = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword);
             return new Connection($pdoDriver, $schemaCache);
         }
-        $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
+        $this->flashMessage('warning', $this->translator->translate('invoiceplane.no.username.or.password'));
 
         return null;
     }
@@ -119,16 +119,16 @@ final class ImportController extends BaseController
                     $db->close();
                     $this->flashMessage(
                         'success',
-                        $this->translator->translate('invoice.invoice.invoiceplane.import.complete.connection.closed')
+                        $this->translator->translate('invoiceplane.import.complete.connection.closed')
                     );
                 } else {
-                    $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
+                    $this->flashMessage('info', $this->translator->translate('invoiceplane.no.connection'));
                 }
             } else {
-                $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.tables.not.empty'));
+                $this->flashMessage('warning', $this->translator->translate('invoiceplane.tables.not.empty'));
             }
         } else {
-            $this->flashMessage('warning', $this->translator->translate('invoice.invoice.invoiceplane.no.username.or.password'));
+            $this->flashMessage('warning', $this->translator->translate('invoiceplane.no.username.or.password'));
         }
         return $this->webService->getRedirectResponse('import/index');
     }
@@ -139,9 +139,9 @@ final class ImportController extends BaseController
         if (null !== $db) {
             // Test to the Query Level on any Table to ensure a username and password validated connection
             $this->inputProduct($db);
-            $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.yes.connection'));
+            $this->flashMessage('info', $this->translator->translate('invoiceplane.yes.connection'));
         } else {
-            $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.no.connection'));
+            $this->flashMessage('info', $this->translator->translate('invoiceplane.no.connection'));
         }
         return $this->webService->getRedirectResponse('setting/tab_index');
     }
@@ -273,7 +273,7 @@ final class ImportController extends BaseController
             $newUnit->setUnit_name_plrl((string)$unit['unit_name_plrl']);
             $this->uR->save($newUnit);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.units'));
+        $this->flashMessage('info', $this->translator->translate('invoiceplane.units'));
     }
 
     private function InsertFamilies(array $families): void
@@ -286,7 +286,7 @@ final class ImportController extends BaseController
             $newFamily->setFamily_name((string)$family['family_name']);
             $this->fR->save($newFamily);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.families'));
+        $this->flashMessage('info', $this->translator->translate('invoiceplane.families'));
     }
 
     private function InsertTaxRates(array $taxRates): void
@@ -300,7 +300,7 @@ final class ImportController extends BaseController
             $newTaxRate->setTaxRateDefault(false);
             $this->trR->save($newTaxRate);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.taxrates'));
+        $this->flashMessage('info', $this->translator->translate('invoiceplane.taxrates'));
     }
 
     private function InsertClients(array $clients): void
@@ -336,7 +336,7 @@ final class ImportController extends BaseController
             $newClient->setClient_gender((int)$client['client_gender']);
             $this->cR->save($newClient);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.clients'));
+        $this->flashMessage('info', $this->translator->translate('invoiceplane.clients'));
     }
 
     private function InsertProducts(array $products): void
@@ -358,6 +358,6 @@ final class ImportController extends BaseController
             $newProduct->setProduct_tariff((float)$product['product_tariff']);
             $this->pR->save($newProduct);
         }
-        $this->flashMessage('info', $this->translator->translate('invoice.invoice.invoiceplane.products'));
+        $this->flashMessage('info', $this->translator->translate('invoiceplane.products'));
     }
 }

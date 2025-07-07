@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['default_email', 'include', 'email'])
                     ->onlyCommonErrors()
 ?>
@@ -52,7 +52,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::checkbox($form, 'include')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('invoice.from.include.in.dropdown'))
+    ->ariaDescribedBy($translator->translate('from.include.in.dropdown'))
 ?>       
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -60,19 +60,19 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::checkbox($form, 'default_email')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('invoice.from.default.in.dropdown'))
+    ->ariaDescribedBy($translator->translate('from.default.in.dropdown'))
 ?>     
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::email($form, 'email')
-    ->label($translator->translate('invoice.from.email.address'))
+    ->label($translator->translate('from.email.address'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.email'),
+        'placeholder' => $translator->translate('email'),
         'value' => Html::encode($form->getEmail() ?? ''),
         'class' => 'form-control',
         'id' => 'email',
     ])
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

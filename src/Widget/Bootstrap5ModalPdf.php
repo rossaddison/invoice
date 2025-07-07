@@ -7,12 +7,12 @@ namespace App\Widget;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-final class Bootstrap5ModalPdf
+final readonly class Bootstrap5ModalPdf
 {
     public function __construct(
-        private readonly Translator $translator,
-        private readonly ViewRenderer $viewRenderer,
-        private readonly string $type
+        private Translator $translator,
+        private ViewRenderer $viewRenderer,
+        private string $type
     ) {
     }
 
@@ -25,7 +25,7 @@ final class Bootstrap5ModalPdf
                 'iframeWithPdf' => $this->viewRenderer->renderPartialAsString(
                     '//invoice/' . $this->type . '/modal_view_' . $this->type . '_pdf',
                     [
-                        'title' => $this->translator->translate('i.view'),
+                        'title' => $this->translator->translate('view'),
                     ]
                 ),
             ]

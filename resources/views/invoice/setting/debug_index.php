@@ -20,9 +20,9 @@ echo $alert;
 ?>
 
 <div>
- <h5><?= $translator->translate('i.settings'); ?></h5>
+ <h5><?= $translator->translate('settings'); ?></h5>
  <a class="btn btn-success" href="<?= $urlGenerator->generate('setting/add'); ?>">
-      <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?> </a>
+      <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?> </a>
 </div>
 
 <?php
@@ -42,10 +42,10 @@ $pagination = OffsetPagination::widget()
 <table class="table table-hover table-striped">
    <thead>
     <tr>
-        <th><?= $translator->translate('i.options'); ?></th>
+        <th><?= $translator->translate('options'); ?></th>
         <th><?= 'Id'; ?></th>        
         <th><?= 'Key'; ?></th>
-        <th><?= $translator->translate('i.value'); ?></th>      
+        <th><?= $translator->translate('value'); ?></th>      
         
     </tr>
    </thead>
@@ -61,17 +61,17 @@ $pagination = OffsetPagination::widget()
           <div class="options btn-group">
           <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-cog"></i>
-                <?= $translator->translate('i.options'); ?>
+                <?= $translator->translate('options'); ?>
           </a>
           <ul class="dropdown-menu">
               <li>
                   <a href="<?= $urlGenerator->generate('setting/edit', ['setting_id' => $setting->getSetting_id()]); ?>"><i class="fa fa-edit fa-margin"></i>
-                       <?= $translator->translate('i.edit'); ?>
+                       <?= $translator->translate('edit'); ?>
                   </a>
               </li>
               <li>
-                  <a href="<?= $urlGenerator->generate('setting/delete', ['setting_id' => $setting->getSetting_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('i.delete_record_warning'); ?>');">
-                        <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>                                    
+                  <a href="<?= $urlGenerator->generate('setting/delete', ['setting_id' => $setting->getSetting_id()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');">
+                        <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>                                    
                   </a>
               </li>
           </ul>
@@ -88,11 +88,11 @@ $pagination = OffsetPagination::widget()
     $pageSize = $paginator->getCurrentPageSize();
 if ($pageSize > 0) {
     echo Html::p(
-        sprintf($translator->translate('invoice.index.footer.showing').' settings', $pageSize, $paginator->getTotalItems()),
+        sprintf($translator->translate('index.footer.showing').' settings', $pageSize, $paginator->getTotalItems()),
         ['class' => 'text-muted']
     );
 } else {
-    echo Html::p($translator->translate('invoice.records.no'));
+    echo Html::p($translator->translate('records.no'));
 }
 ?>
 </div>

@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('i.view'); ?>
+<?= $translator->translate('view'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?>
-                        <?= $translator->translate('invoice.generator.table'); ?>
+                        <?= $translator->translate('generator.table'); ?>
                     <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?> 
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?>
-                        <?= $translator->translate('invoice.generator.namespace'); ?>
+                        <?= $translator->translate('generator.namespace'); ?>
                     <?= Html::closeTag('h5'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
@@ -66,7 +66,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
-                <?= Html::openTag('h5'); ?><?= $translator->translate('invoice.generator.controller.and.repository'); ?><?= Html::closeTag('h5'); ?>
+                <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.and.repository'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>  
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'route_prefix'); ?>
@@ -87,36 +87,36 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::checkbox($form, 'flash_include')
                     ->inputLabelAttributes(['class' => 'form-check-label'])
                     ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.generator.flash.include')); ?>
+                    ->ariaDescribedBy($translator->translate('generator.flash.include')); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'created_include')
                     ->inputLabelAttributes(['class' => 'form-check-label'])
                     ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.generator.created.include')); ?>
+                    ->ariaDescribedBy($translator->translate('generator.created.include')); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'modified_include')
                     ->inputLabelAttributes(['class' => 'form-check-label'])
                     ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.generator.modified.include')); ?>
+                    ->ariaDescribedBy($translator->translate('generator.modified.include')); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'updated_include')
                     ->inputLabelAttributes(['class' => 'form-check-label'])
                     ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.generator.updated.include')); ?>
+                    ->ariaDescribedBy($translator->translate('generator.updated.include')); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'deleted_include')
                     ->inputLabelAttributes(['class' => 'form-check-label'])
                     ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('invoice.generator.deleted.include')); ?>
+                    ->ariaDescribedBy($translator->translate('generator.deleted.include')); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
-                <?= Html::openTag('h5'); ?><?= $translator->translate('invoice.generator.controller.path.layout'); ?><?= Html::closeTag('h5'); ?>
+                <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.path.layout'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'controller_layout_dir'); ?>

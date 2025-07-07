@@ -11,7 +11,7 @@ use Yiisoft\View\WebView;
  * @var WebView $this
  * @var string $proceedToMenuButton
  */
-$this->setTitle($translator->translate('invoice.invoice.identity.provider.authentication.successful'));
+$this->setTitle($translator->translate('identity.provider.authentication.successful'));
 ?>
 
 <div class="container py-5 h-100">

@@ -14,7 +14,7 @@ declare(strict_types=1);
     <meta charset="utf-8">
     <title>
         <?= $heading; ?>
-        <?= $translator->translate('invoice.invoice'); ?>
+        <?= $translator->translate('invoice'); ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -68,7 +68,7 @@ declare(strict_types=1);
 <body>   
 <h1><?php echo $heading; ?></h1>
     <?php echo $message; ?><br>
-<button onclick="window.close()"><i class="fa fa-close"><?= $translator->translate('i.close'); ?></i></button>
+<button onclick="window.close()"><i class="fa fa-close"><?= $translator->translate('close'); ?></i></button>
 </body>
 </html>
 

@@ -27,12 +27,12 @@ use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\Helpers\DateHelper as DHelp;
 use App\Invoice\Helpers\NumberHelper as NHelp;
 
-final class TemplateHelper
+final readonly class TemplateHelper
 {
-    private readonly DHelp $d;
-    private readonly NHelp $n;
+    private DHelp $d;
+    private NHelp $n;
 
-    public function __construct(private readonly SRepo $s, private readonly ccR $ccR, private readonly qcR $qcR, private readonly icR $icR, private readonly pcR $pcR, private readonly socR $socR, private readonly cfR $cfR, private readonly cvR $cvR)
+    public function __construct(private SRepo $s, private ccR $ccR, private qcR $qcR, private icR $icR, private pcR $pcR, private socR $socR, private cfR $cfR, private cvR $cvR)
     {
         $this->d = new DHelp($this->s);
         $this->n = new NHelp($this->s);

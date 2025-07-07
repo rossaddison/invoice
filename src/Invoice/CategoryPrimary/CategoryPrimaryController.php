@@ -55,7 +55,7 @@ final class CategoryPrimaryController extends BaseController
         $categoryPrimary = new CategoryPrimary();
         $form = new CategoryPrimaryForm($categoryPrimary);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'categoryprimary/add',
             'actionArguments' => [],
             'errors' => [],
@@ -112,7 +112,7 @@ final class CategoryPrimaryController extends BaseController
                 $categoryPrimary = $this->categoryprimary($categoryPrimaryRepository, $id);
                 if ($categoryPrimary) {
                     $this->categoryPrimaryService->deleteCategoryPrimary($categoryPrimary);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                     return $this->webService->getRedirectResponse('categoryprimary/index');
                 }
             }
@@ -134,7 +134,7 @@ final class CategoryPrimaryController extends BaseController
             if ($categoryprimary) {
                 $form = new CategoryPrimaryForm($categoryprimary);
                 $parameters = [
-                    'title' => $this->translator->translate('i.edit'),
+                    'title' => $this->translator->translate('edit'),
                     'actionName' => 'categoryprimary/edit',
                     'actionArguments' => ['id' => $id],
                     'errors' => [],
@@ -197,7 +197,7 @@ final class CategoryPrimaryController extends BaseController
             if ($category_primary) {
                 $form = new CategoryPrimaryForm($category_primary);
                 $parameters = [
-                    'title' => $this->translator->translate('i.view'),
+                    'title' => $this->translator->translate('view'),
                     'actionName' => 'categoryprimary/view',
                     'actionArguments' => ['id' => $id],
                     'form' => $form,

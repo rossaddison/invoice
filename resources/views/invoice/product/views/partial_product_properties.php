@@ -20,7 +20,7 @@ $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_langua
 <div>
 <label class="btn btn-info">
     <?= Html::a(
-        $translator->translate('invoice.product.property.table'),
+        $translator->translate('product.property.table'),
         $urlGenerator->generate(
             'productproperty/index',
             $languageArgument
@@ -29,7 +29,7 @@ $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_langua
     ); ?>
 </label>
     <?= Html::a(
-        $translator->translate('invoice.product.property'),
+        $translator->translate('product.property'),
         $urlGenerator->generate(
             'productproperty/add',
             $productPropertyArguments

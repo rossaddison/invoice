@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 
@@ -29,7 +28,7 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('input', ['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-        <?= $translator->translate('i.assign_client'); ?>
+        <?= $translator->translate('assign.client'); ?>
     <?= Html::closeTag('h1'); ?>
     <?= $button::backSave(); ?>
 <?= Html::closeTag('div'); ?>
@@ -46,7 +45,7 @@ use Yiisoft\Html\Html;
                         <?= Html::openTag('div', ['class' => 'alert alert-info']); ?>
                             <?= Field::errorSummary($form)
                                 ->errors($errors)
-                                ->header($translator->translate('invoice.client.error.summary'))
+                                ->header($translator->translate('client.error.summary'))
                                 ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
                                 ->onlyCommonErrors()
 ?>
@@ -56,10 +55,10 @@ use Yiisoft\Html\Html;
         'class' => 'form-check-label'
     ])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('i.user_all_clients'))
+    ->ariaDescribedBy($translator->translate('user.all.clients'))
 ?>    
                             <?= Html::openTag('div'); ?>
-                                <?= $translator->translate('i.user_all_clients_text') ?>
+                                <?= $translator->translate('user.all.clients.text') ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>
 
@@ -79,7 +78,7 @@ if ($clients) {
         }
     }
     echo Field::select($form, 'client_id')
-    ->label($translator->translate('i.client'))
+    ->label($translator->translate('client'))
     ->addInputAttributes([
         'id' => 'client_id',
         'class' => 'form-control',
@@ -90,9 +89,9 @@ if ($clients) {
 
 } else {
 
-    $optionsDataClient[0] = $translator->translate('i.none');
+    $optionsDataClient[0] = $translator->translate('none');
     echo Field::select($form, 'client_id')
-    ->label($translator->translate('i.client'))
+    ->label($translator->translate('client'))
     ->addInputAttributes([
         'id' => 'client_id',
         'class' => 'form-control',

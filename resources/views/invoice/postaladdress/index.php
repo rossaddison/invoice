@@ -39,7 +39,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.client.postaladdress'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('client.postaladdress'))
             )
     )
     ->render();
@@ -54,17 +54,17 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 ?>
-<h1><?= $translator->translate('invoice.client.postaladdress'); ?></h1>
+<h1><?= $translator->translate('client.postaladdress'); ?></h1>
 <?php
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('i.id'),
+            header:  $translator->translate('id'),
             content: static fn (PostalAddress $model) => $model->getId()
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('i.client_name'),
+            header:  $translator->translate('client.name'),
             content: static function (PostalAddress $model) use ($cR): string {
                 $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ? Html::encode(($cR->repoClientquery($model->getClient_id()))->getClient_name()) : '');
                 return $clientName;
@@ -72,7 +72,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('i.client_surname'),
+            header:  $translator->translate('client.surname'),
             content: static function (PostalAddress $model) use ($cR): string {
                 $clientId = $model->getClient_id();
                 if ($clientId) {
@@ -84,7 +84,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('i.active'),
+            header:  $translator->translate('active'),
             content: static function (PostalAddress $model) use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
                 $client = $cR->repoClientquery($model->getClient_id());
                 if (null !== $client->getPostaladdress_id() && $client->getPostaladdress_id() > 0) {
@@ -96,19 +96,19 @@ $toolbar = Div::tag();
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.view'),
+            header:  $translator->translate('view'),
             content: static function (PostalAddress $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/view', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.edit'),
+            header:  $translator->translate('edit'),
             content: static function (PostalAddress $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/edit', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.delete'),
+            header:  $translator->translate('delete'),
             content: static function (PostalAddress $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
@@ -117,7 +117,7 @@ $toolbar = Div::tag();
                         [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
-                        'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                     ]
                     ),
                     $urlGenerator->generate('postaladdress/delete', ['id' => $model->getId()]),
@@ -132,7 +132,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.postaladdresses'),
+    $translator->translate('postaladdresses'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open() .

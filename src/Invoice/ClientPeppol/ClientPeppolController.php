@@ -63,7 +63,7 @@ final class ClientPeppolController extends BaseController
         $peppolArrays = new PeppolArrays();
         if (null !== $client_id) {
             $parameters = [
-                'title' => $this->translator->translate('invoice.add'),
+                'title' => $this->translator->translate('add'),
                 'actionName' => 'clientpeppol/add',
                 'actionArguments' => ['client_id' => $client_id],
                 'errors' => [],
@@ -90,8 +90,8 @@ final class ClientPeppolController extends BaseController
                                              && !$this->userService->hasPermission('editInv')
                                              ? 'client/guest'
                                              : 'client/index',
-                                    'heading' => $this->translator->translate('invoice.client.peppol'),
-                                    'message' => $this->translator->translate('i.record_successfully_updated'),
+                                    'heading' => $this->translator->translate('client.peppol'),
+                                    'message' => $this->translator->translate('record.successfully.updated'),
                                 ]
                             )
                         );
@@ -196,7 +196,7 @@ final class ClientPeppolController extends BaseController
             $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
             if ($clientpeppol) {
                 $this->clientPeppolService->deleteClientPeppol($clientpeppol);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('clientpeppol/index');
             }
             return $this->webService->getRedirectResponse('clientpeppol/index');
@@ -225,7 +225,7 @@ final class ClientPeppolController extends BaseController
             $peppolarrays = new PeppolArrays();
             $form = new ClientPeppolForm($clientpeppol);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientpeppol/edit',
                 'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
                 'buttons' => $this->viewRenderer->renderPartialAsString(
@@ -250,7 +250,7 @@ final class ClientPeppolController extends BaseController
                         if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
                             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
-                                ['url' => 'client/guest', 'heading' => $this->translator->translate('invoice.client.peppol'), 'message' => $this->translator->translate('i.record_successfully_updated')]
+                                ['url' => 'client/guest', 'heading' => $this->translator->translate('client.peppol'), 'message' => $this->translator->translate('record.successfully.updated')]
                             ));
                         }
                         // Administrator's return url to see all clients

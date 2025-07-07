@@ -16,7 +16,7 @@ use Yiisoft\Html\Html;
     <meta charset="utf-8">
     <title>
         <?= $heading; ?>
-        <?= $translator->translate('invoice.invoice'); ?>
+        <?= $translator->translate('invoice'); ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -70,7 +70,7 @@ use Yiisoft\Html\Html;
 <body>
     
 <h1><?php echo $heading. '. '.$message; ?></h1>
-<?= Html::button($translator->translate('invoice.back'), ['onclick' => 'history.back()']); ?>
+<?= Html::button($translator->translate('back'), ['onclick' => 'history.back()']); ?>
 </body>
 </html>
 

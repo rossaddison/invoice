@@ -15,7 +15,7 @@ declare(strict_types=1);
         <div class="panel panel-default">
             <div class="panel-heading">
                 <label <?= $s->where('front_page_file_locations_tooltip'); ?>><i class="bi bi-info-circle"></i>
-                    <?= $translator->translate('invoice.invoice.front.page') . ' '.'⛔'; ?>
+                    <?= $translator->translate('front.page') . ' '.'⛔'; ?>
                 </label>    
             </div>
             <div class="panel-body">
@@ -98,7 +98,7 @@ declare(strict_types=1);
                             <input type="hidden" name="settings[no_front_site_slider_page]" value="0">
                             <input type="checkbox" name="settings[no_front_site_slider_page]" value="1"
                                 <?php $s->check_select($body['settings[no_front_site_slider_page]'], 1, '==', true) ?>>
-                            <?= $translator->translate('invoice.home'); ?>
+                            <?= $translator->translate('home'); ?>
                         </label>
                     </div>             
                 </div>

@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('invoice.setting.company.private'); ?>
+<?= $translator->translate('setting.company.private'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Form::tag()
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::errorSummary($form)
                         ->errors($errors)
-                        ->header($translator->translate('invoice.error.summary'))
+                        ->header($translator->translate('error.summary'))
                         ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>    
@@ -74,7 +74,7 @@ foreach ($companies as $company) {
     ])
     ->optionsData($optionsDataCompany)
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
@@ -86,25 +86,25 @@ foreach ($companies as $company) {
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'tax_code')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('i.tax_code'))
+    ->label($translator->translate('tax.code'))
     ->value(Html::encode($form->getTax_code() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'iban')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('i.user_iban'))
+    ->label($translator->translate('user.iban'))
     ->value(Html::encode($form->getIban() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'gln')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('i.gln'))
+    ->label($translator->translate('gln'))
     ->value(Html::encode($form->getGln() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'rcc')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('i.sumex_rcc'))
+    ->label($translator->translate('sumex.rcc'))
     ->value(Html::encode($form->getRcc() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
@@ -118,19 +118,19 @@ foreach ($companies as $company) {
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'logo_width')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('invoice.company.private.logo.width'))
+    ->label($translator->translate('company.private.logo.width'))
     ->value(Html::encode($form->getLogo_width() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'logo_height')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('invoice.company.private.logo.height'))
+    ->label($translator->translate('company.private.logo.height'))
     ->value(Html::encode($form->getLogo_height() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'logo_margin')
     ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('invoice.company.private.logo.margin'))
+    ->label($translator->translate('company.private.logo.margin'))
     ->value(Html::encode($form->getLogo_margin() ??  '')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>

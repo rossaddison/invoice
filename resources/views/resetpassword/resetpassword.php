@@ -16,7 +16,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $csrf
  * @var string $token
  */
-$this->setTitle($translator->translate('i.password_reset'));
+$this->setTitle($translator->translate('password.reset'));
 ?>
 
 <div class="container py-5 h-100">

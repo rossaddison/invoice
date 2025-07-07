@@ -42,7 +42,7 @@ echo $alert;
 
 ?>
 <div>
-    <h5><?= Html::encode($translator->translate('i.clients')); ?></h5>
+    <h5><?= Html::encode($translator->translate('clients')); ?></h5>
 </div>    
 <?php
     $gridComponents->header('i.client');
@@ -55,14 +55,14 @@ $columns = [
     ),
     new DataColumn(
         'client_active',
-        header: $translator->translate('i.active'),
+        header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
             return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         }
     ),
     new DataColumn(
         'client_email',
-        header: $translator->translate('i.email'),
+        header: $translator->translate('email'),
         content: static function (Client $model): string {
             return $model->getClient_email() ?: '';
         },
@@ -71,7 +71,7 @@ $columns = [
     ),
     new DataColumn(
         'client_mobile',
-        header: $translator->translate('i.mobile_number'),
+        header: $translator->translate('mobile.number'),
         content: static function (Client $model): string {
             return $model->getClient_mobile() ?? '';
         },
@@ -80,7 +80,7 @@ $columns = [
     ),
     new DataColumn(
         field: 'client_name',
-        header: $translator->translate('i.client_name'),
+        header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
                     ->content(Html::encode($model->getClient_name()))
@@ -91,7 +91,7 @@ $columns = [
     ),
     new DataColumn(
         field:  'client_surname',
-        header: $translator->translate('i.client_surname'),
+        header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
                     ->content(Html::encode($model->getClient_surname() ?? ''))
@@ -102,7 +102,7 @@ $columns = [
     ),
     new DataColumn(
         'client_phone',
-        header: $translator->translate('i.phone'),
+        header: $translator->translate('phone'),
         content: static function (Client $model): string {
             return $model->getClient_phone() ?? '';
         },
@@ -172,7 +172,7 @@ $columns = [
     ),
     new DataColumn(
         'client_id',
-        header: $translator->translate('i.balance') . ' ('. $s->getSetting('currency_symbol') . ')',
+        header: $translator->translate('balance') . ' ('. $s->getSetting('currency_symbol') . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
             if (null !== ($clientId = $model->getClient_id())) {
                 return Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR)));
@@ -189,7 +189,7 @@ $columns = [
        $paginator,
        $translator,
        (int)$userInv->getListLimit(),
-       $translator->translate('invoice.clients'),
+       $translator->translate('clients'),
        ''
    );
 $toolbarString =
@@ -204,17 +204,17 @@ $toolbarString =
             A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn '.($active == 2 ? 'btn-primary' : 'btn-info'))
-            ->content($translator->translate('i.all'))
+            ->content($translator->translate('all'))
             ->render().
             A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
             ->addClass('btn '.($active == 1 ? 'btn-primary' : 'btn-info'))
-            ->content($translator->translate('i.active'))
+            ->content($translator->translate('active'))
             ->render().
             A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
             ->addClass('btn '.($active == 0 ? 'btn-primary' : 'btn-info'))
-            ->content($translator->translate('i.inactive'))
+            ->content($translator->translate('inactive'))
             ->render()
         )
         ->encode(false)->render() .
@@ -233,13 +233,13 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->emptyCell($translator->translate('i.not_set'))
+->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 ->id('w34-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', ($userInv->getListLimit() ?? 10)))
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

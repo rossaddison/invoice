@@ -14,7 +14,7 @@ use Yiisoft\Html\Html;
     <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
     <?php $buttonsDataArray = [
         [
-            $translator->translate('i.back'),
+            $translator->translate('back'),
             'type' => 'reset',
             'onclick' => 'window.history.back()',
             'class' => 'btn btn-danger',
@@ -23,7 +23,7 @@ use Yiisoft\Html\Html;
             'value' => '1'
         ],
         [
-            $translator->translate('i.save'),
+            $translator->translate('save'),
             'type' => 'submit',
             'class' => 'btn btn-success',
             'id' => 'btn-submit',

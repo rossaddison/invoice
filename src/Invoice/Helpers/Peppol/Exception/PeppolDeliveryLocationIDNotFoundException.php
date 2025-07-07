@@ -19,7 +19,7 @@ final class PeppolDeliveryLocationIDNotFoundException extends \RuntimeException 
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.delivery.location.id.not.found');
+        return $this->translator->translate('delivery.location.id.not.found');
     }
 
     /**

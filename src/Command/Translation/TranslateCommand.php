@@ -17,8 +17,8 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class TranslateCommand extends Command
 {
-    protected static $defaultName = 'translator/translate';
-    protected static $defaultDescription = 'Translates a message';
+    protected static string $defaultName = 'translator/translate';
+    protected static string $defaultDescription = 'Translates a message';
 
     public function __construct(private readonly TranslatorInterface $translator)
     {
@@ -32,11 +32,8 @@ final class TranslateCommand extends Command
         $this->addArgument('locale', InputArgument::OPTIONAL, 'Translation locale.');
     }
 
-    /**
-     * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
-     */
     #[\Override]
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /**
          * @var mixed $input->getArgument('message')

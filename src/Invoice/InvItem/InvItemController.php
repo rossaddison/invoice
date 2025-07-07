@@ -84,7 +84,7 @@ final class InvItemController extends BaseController
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
         $form = new InvItemForm($invitem, (int)$inv_id);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'invitem/add_product',
             'errors' => [],
             'form' => $form,
@@ -100,7 +100,7 @@ final class InvItemController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar), $iiar, $this->sR, $uR);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
             }
@@ -133,7 +133,7 @@ final class InvItemController extends BaseController
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
         $form = new InvItemForm($invitem, (int)$inv_id);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'invitem/add_task',
             'errors' => [],
             'form' => $form,
@@ -150,7 +150,7 @@ final class InvItemController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar), $iiar, $this->sR);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
             }
@@ -244,7 +244,7 @@ final class InvItemController extends BaseController
             $inv_item_allowances_charges_count = $aciiR->repoInvItemcount((string)$inv_item_id);
             $inv_item_allowances_charges = $aciiR->repoInvItemquery((string)$inv_item_id);
             $parameters = [
-                'title' => $this->translator->translate('invoice.product.edit'),
+                'title' => $this->translator->translate('product.edit'),
                 'actionName' => 'invitem/edit_product',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'addItemActionName' => 'invitemallowancecharge/add',
@@ -303,7 +303,7 @@ final class InvItemController extends BaseController
                             );
                             $numberHelper = new NumberHelper($this->sR);
                             $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-                            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
                     }
@@ -428,7 +428,7 @@ final class InvItemController extends BaseController
             $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
             $form = new InvItemForm($inv_item, (int)$inv_id);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'invitem/edit_task',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
@@ -463,7 +463,7 @@ final class InvItemController extends BaseController
                             $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $this->sR);
                             $numberHelper = new NumberHelper($this->sR);
                             $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
-                            $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
                     }

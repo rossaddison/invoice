@@ -42,7 +42,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <div class="panel panel-default">
 <div class="panel-heading">
-        <?= $translator->translate('i.item'); ?>
+        <?= $translator->translate('item'); ?>
 </div>
 <form id="SalesOrderItemForm" method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments)?>" enctype="multipart/form-data">
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
@@ -51,14 +51,14 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 <thead style="display: none">
 <tr>
     <th></th>
-    <th><?= $translator->translate('i.item'); ?></th>
-    <th><?= $translator->translate('i.description'); ?></th>
-    <th><?= $translator->translate('i.quantity'); ?></th>
-    <th><?= $translator->translate('i.price'); ?></th>
-    <th><?= $vat === false ? $translator->translate('i.tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></th>
-    <th><?= $translator->translate('i.subtotal'); ?></th>
-    <th><?= $translator->translate('i.tax'); ?></th>
-    <th><?= $translator->translate('i.total'); ?></th>
+    <th><?= $translator->translate('item'); ?></th>
+    <th><?= $translator->translate('description'); ?></th>
+    <th><?= $translator->translate('quantity'); ?></th>
+    <th><?= $translator->translate('price'); ?></th>
+    <th><?= $vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate') ?></th>
+    <th><?= $translator->translate('subtotal'); ?></th>
+    <th><?= $translator->translate('tax'); ?></th>
+    <th><?= $translator->translate('total'); ?></th>
     <th></th>
 </tr>
 </thead>
@@ -74,9 +74,9 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                 <input type="hidden" disabled name="name" value="<?= Html::encode($body['name'] ??  ''); ?>">
                 <input type="hidden" disabled name="order" id="order" value="<?= Html::encode($body['order'] ?? ''); ?>">
                 <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('i.item'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('item'); ?></span>
                         <select name="product_id" id="product_id" class="form-control has-feedback" required disabled>
-                            <option value="0"><?= $translator->translate('i.none'); ?></option>
+                            <option value="0"><?= $translator->translate('none'); ?></option>
                              <?php
                              /**
                               * @var App\Invoice\Entity\Product $product
@@ -91,29 +91,29 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             </td>
             <td class="td-amount td-quantity">
                 <div class="input-group">
-                    <span class="input-group-text"><?= $translator->translate('i.quantity'); ?></span>
+                    <span class="input-group-text"><?= $translator->translate('quantity'); ?></span>
                     <input type="text" name="quantity" class="input-sm form-control amount has-feedback" required disabled value="<?= $numberHelper->format_amount($body['quantity'] ?? ''); ?>">
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
-                    <span class="input-group-text"><?= $translator->translate('i.price'); ?></span>
+                    <span class="input-group-text"><?= $translator->translate('price'); ?></span>
                     <input type="number" name="price" class="input-sm form-control amount has-feedback" required disabled value="<?= $numberHelper->format_amount($body['price'] ?? ''); ?>">
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
-                     <span class="input-group-text"><?= $vat === false ? $translator->translate('i.item_discount') : $translator->translate('invoice.invoice.cash.discount'); ?></span>
+                     <span class="input-group-text"><?= $vat === false ? $translator->translate('item.discount') : $translator->translate('cash.discount'); ?></span>
                     <input type="number" name="discount_amount" class="input-sm form-control amount has-feedback" required disabled
                            data-bs-toggle = "tooltip" data-placement="bottom"
-                           title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('i.per_item'); ?>" value="<?= $numberHelper->format_amount($body['discount_amount'] ?? ''); ?>">
+                           title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>" value="<?= $numberHelper->format_amount($body['discount_amount'] ?? ''); ?>">
                 </div>
             </td>
             <td td-vert-middle>
                 <div class="input-group">
-                    <span class="input-group-text"><?= $vat === false ? $translator->translate('i.tax_rate') : $translator->translate('invoice.invoice.vat.rate') ?></span>
+                    <span class="input-group-text"><?= $vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate') ?></span>
                     <select name="tax_rate_id" class="form-control has-feedback" required disabled>
-                        <option value=""> <?= $translator->translate('i.tax_rate'); ?></option>
+                        <option value=""> <?= $translator->translate('tax.rate'); ?></option>
                         <?php
                             /**
                              * @var App\Invoice\Entity\TaxRate $taxRate
@@ -138,21 +138,21 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                 </div>
             </td>
             <td class="td-icon text-right td-vert-middle">                   
-                <button type="submit" class="btn btn btn-info" data-bs-toggle = "tooltip" title="salesorderitem/edit"><i class="fa fa-plus"></i><?= $translator->translate('i.save'); ?></button>
+                <button type="submit" class="btn btn btn-info" data-bs-toggle = "tooltip" title="salesorderitem/edit"><i class="fa fa-plus"></i><?= $translator->translate('save'); ?></button>
             </td>
         </tr>
         <tr>
             <td class="td-textarea">
                 <div class="input-group">
-                    <span class="input-group-text"><?= $translator->translate('i.description'); ?></span>
+                    <span class="input-group-text"><?= $translator->translate('description'); ?></span>
                     <textarea disabled name="description" class="form-control"><?= Html::encode($body['description'] ??  ''); ?></textarea>
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
-                        <span class="input-group-text"><?= $translator->translate('i.product_unit'); ?></span>
+                        <span class="input-group-text"><?= $translator->translate('product.unit'); ?></span>
                         <select name="product_unit_id" class="form-control has-feedback" required disabled>
-                            <option value="0"><?= $translator->translate('i.none'); ?></option>
+                            <option value="0"><?= $translator->translate('none'); ?></option>
                             <?php
                                 /**
                                  * @var App\Invoice\Entity\Unit $unit
@@ -166,19 +166,19 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                 </div>
             </td>                
             <td class="td-amount td-vert-middle">
-                <span><?= $translator->translate('i.subtotal'); ?></span><br/>
+                <span><?= $translator->translate('subtotal'); ?></span><br/>
                 <span name="subtotal" class="amount"></span>
             </td>
             <td class="td-amount td-vert-middle">
-                <span><?= $vat === false ? $translator->translate('i.discount') : $translator->translate('invoice.invoice.early.settlement.cash.discount') ?></span><br/>
+                <span><?= $vat === false ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?></span><br/>
                 <span name="discount_total" class="amount"></span>
             </td>
             <td class="td-amount td-vert-middle">
-                <span><?= $vat === false ? $translator->translate('i.tax') : $translator->translate('invoice.invoice.vat.abbreviation')  ?></span><br/>
+                <span><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation')  ?></span><br/>
                 <span name="tax_total" class="amount"></span>
             </td>
             <td class="td-amount td-vert-middle">
-                <span><?= $translator->translate('i.total'); ?></span><br/>
+                <span><?= $translator->translate('total'); ?></span><br/>
                 <span name="total" class="amount"></span>
             </td>
         </tr>

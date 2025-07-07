@@ -54,7 +54,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('i.quote'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('quote'))
             )
     )
     ->render();
@@ -82,7 +82,7 @@ $disabledAddQuoteButton = A::tag()
     ->addAttributes([
         'class' => 'btn btn-info',
         'data-bs-toggle' => 'tooltip',
-        'title' => $translator->translate('i.add_client'),
+        'title' => $translator->translate('add.client'),
         'disabled' => 'disabled',
         'style' => 'text-decoration:none',
     ])
@@ -96,7 +96,7 @@ $toolbar = Div::tag();
 echo Breadcrumbs::widget()
      ->links(
          BreadcrumbLink::to(
-             label: $translator->translate('i.default_quote_group'),
+             label: $translator->translate('default.quote.group'),
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
@@ -105,12 +105,12 @@ echo Breadcrumbs::widget()
              active: true,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
-                   'title' => $defaultQuoteGroup ?? $translator->translate('i.not_set')
+                   'title' => $defaultQuoteGroup ?? $translator->translate('not.set')
                ],
              encodeLabel: false
          ),
          BreadcrumbLink::to(
-             label: $translator->translate('i.default_notes'),
+             label: $translator->translate('default.notes'),
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
@@ -119,12 +119,12 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
-                   'title' => $s->getSetting('default_quote_notes') ?: $translator->translate('i.not_set')
+                   'title' => $s->getSetting('default.quote.notes') ?: $translator->translate('not.set')
                ],
              encodeLabel: false
          ),
          BreadcrumbLink::to(
-             label: $translator->translate('i.quotes_expire_after'),
+             label: $translator->translate('quotes.expire.after'),
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
@@ -133,12 +133,12 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
-                   'title' => $s->getSetting('quotes_expire_after') ?: $translator->translate('i.not_set')
+                   'title' => $s->getSetting('quotes_expire_after') ?: $translator->translate('not.set')
                ],
              encodeLabel: false
          ),
          BreadcrumbLink::to(
-             label: $translator->translate('i.generate_quote_number_for_draft'),
+             label: $translator->translate('generate.quote.number.for.draft'),
              url:  $urlGenerator->generate(
                  'setting/tab_index',
                  [],
@@ -152,7 +152,7 @@ echo Breadcrumbs::widget()
              encodeLabel: false
          ),
          BreadcrumbLink::to(
-             label: $translator->translate('i.default_email_template'),
+             label: $translator->translate('default.email.template'),
              url:  $urlGenerator->generate(
                  'setting/tab_index',
                  [],
@@ -161,12 +161,12 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
-                   'title' => strlen($s->getSetting('email_quote_template')) > 0 ? $s->getSetting('email_quote_template') : $translator->translate('i.not_set')
+                   'title' => strlen($s->getSetting('email_quote_template')) > 0 ? $s->getSetting('email_quote_template') : $translator->translate('not.set')
                ],
              encodeLabel: false
          ),
          BreadcrumbLink::to(
-             label: $translator->translate('i.pdf_quote_footer'),
+             label: $translator->translate('pdf.quote.footer'),
              url: $urlGenerator->generate(
                  'setting/tab_index',
                  [],
@@ -175,7 +175,7 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                    'data-bs-toggle' => 'tooltip',
-                   'title' => $s->getSetting('pdf_quote_footer') ?: $translator->translate('i.not_set')
+                   'title' => $s->getSetting('pdf_quote_footer') ?: $translator->translate('not.set')
                ],
              encodeLabel: false
          ),
@@ -191,31 +191,31 @@ echo Breadcrumbs::widget()
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 0]); ?>"
                    class="btn <?php echo $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.all'); ?>
+                    <?= $translator->translate('all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 1]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 1 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.draft'); ?>
+                    <?= $translator->translate('draft'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.sent'); ?>
+                    <?= $translator->translate('sent'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 3]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.viewed'); ?>
+                    <?= $translator->translate('viewed'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 4]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('i.approved'); ?>
+                    <?= $translator->translate('approved'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 5]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.rejected'); ?>
+                    <?= $translator->translate('rejected'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1,'status' => 6]); ?>" style="text-decoration:none"
                    class="btn  <?php echo $status == 6 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('i.canceled'); ?>
+                    <?= $translator->translate('canceled'); ?>
                 </a>
             </div>
     </div>
@@ -226,7 +226,7 @@ echo Breadcrumbs::widget()
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static function (Quote $model): string {
                 return (string) $model->getId();
             },
@@ -240,7 +240,7 @@ echo Breadcrumbs::widget()
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -250,7 +250,7 @@ echo Breadcrumbs::widget()
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -259,14 +259,14 @@ echo Breadcrumbs::widget()
                     return $urlGenerator->generate('quote/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
         new DataColumn(
             'status_id',
-            header: $translator->translate('i.status'),
+            header: $translator->translate('status'),
             content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag {
                 if (null !== $model->getStatus_id()) {
                     $span = $qR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
@@ -279,7 +279,7 @@ echo Breadcrumbs::widget()
         ),
         new DataColumn(
             'so_id',
-            header: $translator->translate('invoice.salesorder.number.status'),
+            header: $translator->translate('salesorder.number.status'),
             content: static function (Quote $model) use ($urlGenerator, $soR): string {
                 $so_id = $model->getSo_id();
                 $so = $soR->repoSalesOrderUnloadedquery($so_id);
@@ -308,7 +308,7 @@ echo Breadcrumbs::widget()
         new DataColumn(
             field: 'number',
             property: 'filterQuoteNumber',
-            header: $translator->translate('invoice.quote.number'),
+            header: $translator->translate('quote.number'),
             content: static function (Quote $model) use ($urlGenerator): A {
                 return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
             },
@@ -317,7 +317,7 @@ echo Breadcrumbs::widget()
         ),
         new DataColumn(
             'date_created',
-            header: $translator->translate('i.date_created'),
+            header: $translator->translate('date.created'),
             content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
             withSorting: true
         ),
@@ -333,7 +333,7 @@ echo Breadcrumbs::widget()
         new DataColumn(
             field: 'client_id',
             property: 'filterClient',
-            header: $translator->translate('i.client'),
+            header: $translator->translate('client'),
             content: static function (Quote $model): string {
                 $clientName = $model->getClient()?->getClient_name();
                 $clientSurname = $model->getClient()?->getClient_surname();
@@ -348,7 +348,7 @@ echo Breadcrumbs::widget()
         new DataColumn(
             field: 'id',
             property: 'filterQuoteAmountTotal',
-            header: $translator->translate('i.total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static function (Quote $model) use ($decimalPlaces): Label {
                 $quoteTotal = $model->getQuoteAmount()->getTotal();
                 return
@@ -367,7 +367,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.quotes'),
+    $translator->translate('quotes'),
     ''
 );
 $toolbarString =
@@ -393,7 +393,7 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->emptyCell($translator->translate('i.not_set'))
+->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 //->header($header)
 ->id('w2-grid')
@@ -404,7 +404,7 @@ echo GridView::widget()
  */
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote').' '.$grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
 

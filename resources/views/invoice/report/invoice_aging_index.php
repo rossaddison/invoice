@@ -14,7 +14,7 @@ declare(strict_types=1);
 ?> 
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.invoice_aging'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('invoice.aging'); ?></h1>
 </div>
 
 <div id="content">
@@ -28,7 +28,7 @@ declare(strict_types=1);
 
                 <div class="panel-heading">
                     <i class="fa fa-print"></i>
-                    <?= $translator->translate('i.report_options'); ?>
+                    <?= $translator->translate('report.options'); ?>
                 </div>
 
                 <div class="panel-body">
@@ -38,7 +38,7 @@ declare(strict_types=1);
                         <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
                         <input type="submit" class="btn btn-success"
-                               name="btn_submit" value="<?= $translator->translate('i.run_report'); ?>">
+                               name="btn_submit" value="<?= $translator->translate('run.report'); ?>">
                     </form>
                 </div>
             </div>

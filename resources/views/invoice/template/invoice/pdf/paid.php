@@ -48,16 +48,16 @@ $vat = $s->getSetting('enable_vat_registration');
             <b><?= Html::encode($inv->getClient()?->getClient_name()); ?></b>
         </div>
          <?php if (strlen($clientVatId = $inv->getClient()?->getClient_vat_id() ?? '') > 0) {
-             echo '<div>' .$translator->translate('invoice.invoice.vat.reg.no')
+             echo '<div>' .$translator->translate('vat.reg.no')
                           .': '
                           . $clientVatId
                           . '</div>';
          }
 if (strlen($clientTaxCode = $inv->getClient()?->getClient_tax_code() ?? '') > 0) {
-    echo '<div>' .$translator->translate('i.tax_code_short') . ': ' . $clientTaxCode . '</div>';
+    echo '<div>' .$translator->translate('tax.code.short') . ': ' . $clientTaxCode . '</div>';
 }
-echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('i.street_address')) . '</div>';
-echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('i.street_address_2')) . '</div>';
+echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('street.address')) . '</div>';
+echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('street.address.2')) . '</div>';
 if (strlen($inv->getClient()?->getClient_city() ?? '') > 0 || strlen($inv->getClient()?->getClient_state() ?? '') > 0 || strlen($inv->getClient()?->getClient_zip() ?? '') > 0) {
     echo '<div>';
     if (strlen($inv->getClient()?->getClient_city() ?? '') > 0) {
@@ -75,13 +75,13 @@ if (strlen($inv->getClient()?->getClient_state() ?? '') > 0) {
     echo '<div>' . Html::encode($inv->getClient()?->getClient_state()) . '</div>';
 }
 if (strlen($clientCountry = $inv->getClient()?->getClient_country() ?? '') > 0) {
-    echo '<div>' . $countryHelper->get_country_name($translator->translate('i.cldr'), $clientCountry) . '</div>';
+    echo '<div>' . $countryHelper->get_country_name($translator->translate('cldr'), $clientCountry) . '</div>';
 }
 
 echo '<br/>';
 
 if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
-    echo '<div>' .$translator->translate('i.phone_abbr') . ': ' . Html::encode($inv->getClient()?->getClient_phone()) . '</div>';
+    echo '<div>' .$translator->translate('phone.abbr') . ': ' . Html::encode($inv->getClient()?->getClient_phone()) . '</div>';
 } ?>
 
     </div>
@@ -90,24 +90,24 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
     <div class="invoice-details clearfix">
         <table>
             <tr>
-                <td><?php echo $translator->translate('invoice.invoice.date.issued') . ':'; ?></td>
+                <td><?php echo $translator->translate('date.issued') . ':'; ?></td>
                      
                 <td><?php echo Html::encode(!is_string($dateCreated = $inv->getDate_created()) ?
                                                $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
              <?php if ($vat === '1') { ?>
             <tr>
-                <td><?php echo $translator->translate('invoice.invoice.tax.point') . ':'; ?></td>
+                <td><?php echo $translator->translate('tax.point') . ':'; ?></td>
                 <td><?php echo Html::encode(!is_string($dateTaxPoint = $inv->getDate_tax_point()) ?
                                                $dateTaxPoint->format('Y-m-d') : ''); ?></td>
                 
-                <td><?php echo $translator->translate('invoice.invoice.date.supplied') . ':'; ?></td>
+                <td><?php echo $translator->translate('date.supplied') . ':'; ?></td>
                 <td><?php echo Html::encode(!is_string($dateSupplied = $inv->getDate_supplied()) ?
                                                $dateSupplied->format('Y-m-d') : ''); ?></td>
             </tr>
             <?php } ?>
             <tr>
-                <td><?php echo $translator->translate('i.expires') . ': '; ?></td>
+                <td><?php echo $translator->translate('expires') . ': '; ?></td>
                 <td><?php echo Html::encode(!is_string($dateDueNext = $inv->getDate_due()) ?
                                                $dateDueNext->format('Y-m-d') : ''); ?></td>
             </tr>
@@ -115,25 +115,25 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
         </table>
     </div>
 
-    <h3 class="invoice-title"><b><?php echo Html::encode($translator->translate('i.invoice') . ' ' . ($inv->getNumber() ?? '')); ?></b></h3>
+    <h3 class="invoice-title"><b><?php echo Html::encode($translator->translate('invoice') . ' ' . ($inv->getNumber() ?? '')); ?></b></h3>
 
     <table class="items table-primary table table-borderless no-margin">
         <thead style="display: none">
         <tr>
-            <th class="item-name"><?= Html::encode($translator->translate('i.item')); ?></th>
-            <th class="item-desc"><?= Html::encode($translator->translate('i.description')); ?></th>
-            <th class="item-amount text-right"><?= Html::encode($translator->translate('i.qty')); ?></th>
-            <th class="item-price text-right"><?= Html::encode($translator->translate('i.price')); ?></th>
+            <th class="item-name"><?= Html::encode($translator->translate('item')); ?></th>
+            <th class="item-desc"><?= Html::encode($translator->translate('description')); ?></th>
+            <th class="item-amount text-right"><?= Html::encode($translator->translate('qty')); ?></th>
+            <th class="item-price text-right"><?= Html::encode($translator->translate('price')); ?></th>
             <?php if ($show_item_discounts) : ?>
-                <th class="item-discount text-right"><?= Html::encode($translator->translate('i.discount')); ?></th>
+                <th class="item-discount text-right"><?= Html::encode($translator->translate('discount')); ?></th>
             <?php endif; ?>
             <?php if ($vat === '0') { ?>     
-            <th class="item-price text-right"><?= Html::encode($translator->translate('i.tax')); ?></th>    
+            <th class="item-price text-right"><?= Html::encode($translator->translate('tax')); ?></th>    
             <?php } else { ?>
-                <th class="item-price text-right"><?= Html::encode($translator->translate('invoice.invoice.vat.abbreviation')); ?></th>
+                <th class="item-price text-right"><?= Html::encode($translator->translate('vat.abbreviation')); ?></th>
                 <th class="item-price text-right">%</th>
             <?php } ?>       
-            <th class="item-total text-right"><?= Html::encode($translator->translate('i.total')); ?></th>
+            <th class="item-total text-right"><?= Html::encode($translator->translate('total')); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -191,12 +191,12 @@ if ($items) {
             <?php if ($vat === '0') { ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
-                        $translator->translate('i.subtotal')
-                    )." (".Html::encode($translator->translate('i.price'))."-".Html::encode($translator->translate('i.discount')).") x ".Html::encode($translator->translate('i.qty')); ?></td>
+                        $translator->translate('subtotal')
+                    )." (".Html::encode($translator->translate('price'))."-".Html::encode($translator->translate('discount')).") x ".Html::encode($translator->translate('qty')); ?></td>
             <?php } else { ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
-                        $translator->translate('i.subtotal')
+                        $translator->translate('subtotal')
                     ); ?></td> 
             <?php } ?>
             <td class="text-right"><?php echo Html::encode($s->format_currency($inv_amount->getItem_subtotal())); ?></td>
@@ -205,7 +205,7 @@ if ($items) {
         <?php if ($inv_amount->getItem_tax_total() > 0) { ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?= Html::encode($vat === '1' ? $translator->translate('invoice.invoice.vat.break.down') : $translator->translate('i.item_tax')); ?>
+                    <?= Html::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')); ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($inv_amount->getItem_tax_total())); ?>
@@ -236,7 +236,7 @@ if ($items) {
         <?php if ($inv->getDiscount_percent() !== 0.00) { ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?= Html::encode($translator->translate('i.discount')); ?>
+                    <?= Html::encode($translator->translate('discount')); ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_amount($inv->getDiscount_percent())); ?>%
@@ -246,7 +246,7 @@ if ($items) {
         <?php if ($inv->getDiscount_amount() !== 0.00) { ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?= Html::encode($translator->translate('i.discount')); ?>
+                    <?= Html::encode($translator->translate('discount')); ?>
                 </td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($inv->getDiscount_amount())); ?>
@@ -256,7 +256,7 @@ if ($items) {
         <?php } ?>    
         <tr>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                <b><?= Html::encode($translator->translate('i.total')); ?></b>
+                <b><?= Html::encode($translator->translate('total')); ?></b>
             </td>
             <td class="text-right">
                 <b><?php echo Html::encode($s->format_currency($inv_amount->getTotal())); ?></b>
@@ -274,7 +274,7 @@ if ($items) {
     <?php if ($inv->getTerms()) { ?>
     <div style="page-break-before: always"></div>
     <div>
-        <b><?= Html::encode($translator->translate('i.terms')); ?></b><br>
+        <b><?= Html::encode($translator->translate('terms')); ?></b><br>
         <?php echo nl2br(Html::encode($inv->getTerms())); ?>
     </div>
     <br>
@@ -289,31 +289,31 @@ if ($items) {
         <?php
             $reason = ['disease','accident','maternity','prevention','birthdefect','unknown'];
         ?>
-        <b><?= Html::encode($translator->translate('i.reason')); ?></b><br>
-        <p><?= Html::encode($translator->translate('i.reason_'. $reason[is_int($sumexReason = $sumex?->getReason()) ? $sumexReason : 5])); ?></p>       
+        <b><?= Html::encode($translator->translate('reason')); ?></b><br>
+        <p><?= Html::encode($translator->translate('reason_'. $reason[is_int($sumexReason = $sumex?->getReason()) ? $sumexReason : 5])); ?></p>       
     </div>
     <div>            
-        <b><?= Html::encode($translator->translate('i.sumex_observations')); ?></b><br>
+        <b><?= Html::encode($translator->translate('sumex.observations')); ?></b><br>
         <p><?= $sumex?->getObservations() ?? ''; ?></p>
     </div>    
     <div>            
-        <b><?= Html::encode($translator->translate('i.invoice_sumex_diagnosis')); ?></b><br>
+        <b><?= Html::encode($translator->translate('invoice.sumex.diagnosis')); ?></b><br>
         <p><?= $sumex?->getDiagnosis() ?? ''; ?></p>
     </div>
     <div>            
-        <b><?= Html::encode($translator->translate('i.case_date')); ?></b><br>
+        <b><?= Html::encode($translator->translate('case.date')); ?></b><br>
         <p><?= !is_string($caseDate = $sumex?->getCasedate()) ? $caseDate?->format('Y-m-d') : ''; ?></p>
     </div>
     <div>            
-        <b><?= Html::encode($translator->translate('i.case_number')); ?></b><br>
+        <b><?= Html::encode($translator->translate('case.number')); ?></b><br>
         <p><?= strlen($sumex?->getCasenumber() ?? '') > 0 ? $sumex?->getCaseNumber() : ''; ?></p>
     </div>
     <div>
-        <b><?= Html::encode($translator->translate('i.treatment_start')); ?></b><br>
+        <b><?= Html::encode($translator->translate('treatment.start')); ?></b><br>
         <p><?= !is_string($treatmentStart = $sumex?->getTreatmentstart()) ? $treatmentStart?->format('Y-m-d') : ''; ?></p>
     </div> 
     <div>    
-        <b><?= Html::encode($translator->translate('i.treatment_end')); ?></b><br>
+        <b><?= Html::encode($translator->translate('treatment.end')); ?></b><br>
         <p><?= !is_string($treatmentEnd = $sumex?->getTreatmentend()) ? $treatmentEnd?->format('Y-m-d') : ''; ?></p>
     </div>
     <?php } ?>  

@@ -18,7 +18,7 @@ declare(strict_types=1);
             <div class="mb-3 form-group">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <?= $translator->translate('i.custom_fields'); ?>
+                        <?= $translator->translate('custom.fields'); ?>
                     </div>
                     <div>
                         <div class='row'>

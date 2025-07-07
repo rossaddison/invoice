@@ -18,10 +18,10 @@ use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
 final class SalesOrderTruncate3Command extends Command
 {
-    protected static $defaultName = 'invoice/salesorder/truncate3';
+    protected static string $defaultName = 'invoice/salesorder/truncate3';
 
     public function __construct(
-        private CycleDependencyProxy $promise,
+        private readonly CycleDependencyProxy $promise,
     ) {
         parent::__construct();
     }

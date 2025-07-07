@@ -33,7 +33,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     public function getAttributeLabels(): array
     {
         return [
-            'email' => $this->translator->translate('i.email'),
+            'email' => $this->translator->translate('email'),
         ];
     }
 

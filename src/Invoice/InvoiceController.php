@@ -44,7 +44,6 @@ use App\Invoice\Libraries\Crypt;
 
 final class InvoiceController extends BaseController
 {
-    protected Crypt $crypt;
     // New property for controller name
     protected string $controllerName = 'invoice';
 
@@ -55,11 +54,10 @@ final class InvoiceController extends BaseController
         ViewRenderer $viewRenderer,
         SessionInterface $session,
         SettingRepository $sR,
-        Crypt $crypt,
+        protected Crypt $crypt,
         Flash $flash
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->crypt = $crypt;
     }
 
     /**
@@ -262,7 +260,7 @@ final class InvoiceController extends BaseController
             $data = '{"documentTypes": ["invoice"], "network": "peppol", "metaScheme": "iso6523-actorid-upis", "scheme": "nl:kvk", "identifier":"60881119"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.setup.successful');
+            $message = curl_error($site) ?: $this->translator->translate('curl.store.cove.api.setup.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -301,7 +299,7 @@ final class InvoiceController extends BaseController
             $data = '{"party_name": "Test Party", "line1": "Test Street 1", "city": "Test City", "zip": "Zippy", "country": "' . $country_code_identifier . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.get.legal.entity.id.successful');
+            $message = curl_error($site) ?: $this->translator->translate('curl.store.cove.api.get.legal.entity.id.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -349,7 +347,7 @@ final class InvoiceController extends BaseController
             $data = '{"superscheme": "iso6523-actorid-upis", "scheme": "' . $scheme_tax_identifier . '", "identifier": "' . $combo_id . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.legal.entity.identifier.successful');
+            $message = curl_error($site) ?: $this->translator->translate('curl.store.cove.api.legal.entity.identifier.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -456,7 +454,7 @@ final class InvoiceController extends BaseController
             }';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.send.test.json.invoice.successful');
+            $message = curl_error($site) ?: $this->translator->translate('curl.store.cove.api.send.test.json.invoice.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -768,7 +766,7 @@ final class InvoiceController extends BaseController
 
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             curl_close($site);
-            $message = curl_error($site) ?: $this->translator->translate('invoice.curl.store.cove.api.setup.legal.entity.successful');
+            $message = curl_error($site) ?: $this->translator->translate('curl.store.cove.api.setup.legal.entity.successful');
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -915,7 +913,7 @@ final class InvoiceController extends BaseController
             $this->install_test_data($trR, $uR, $fR, $pR, $cR);
         } else {
             // Test Data Already exists => Settings...View install_test_data must be set back to No
-            $this->flashMessage('warning', $this->translator->translate('invoice.install.test.data.exists.already'));
+            $this->flashMessage('warning', $this->translator->translate('install.test.data.exists.already'));
             $setting = $sR->withKey('install_test_data');
             if ($setting) {
                 $setting->setSetting_value('0');
@@ -1198,7 +1196,7 @@ final class InvoiceController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('viewInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('invoice/index');
         }
         return $canEdit;
@@ -1252,16 +1250,16 @@ final class InvoiceController extends BaseController
         if ($sR->repoCount('use_test_data') > 0 && $sR->getSetting('use_test_data') == '0') {
             // Only remove the test data if the user's test quotes and invoices have been removed FIRST else integrity constraint violations
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
-                $flash = $this->translator->translate('invoice.first.reset');
+                $flash = $this->translator->translate('first.reset');
             } else {
                 // Note: The Tax Rates are not deleted because you must have at least one zero tax rate and one standard rate
                 // for the quotes and invoices to function corrrectly
                 $this->test_data_delete($uR, $fR, $pR, $cR);
-                $flash = $this->translator->translate('invoice.deleted');
+                $flash = $this->translator->translate('deleted');
             }
         } else {
             // Settings...General...Install Test Data => change to 'no' before you remove the test data
-            $flash = $this->translator->translate('invoice.install.test.data');
+            $flash = $this->translator->translate('install.test.data');
         }
         $data = [
             'alerts' => $this->alert(),
@@ -1293,14 +1291,14 @@ final class InvoiceController extends BaseController
         if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting('install_test_data') == 1) {
             // Only remove the test data if the user's test quotes and invoices have been removed FIRST else integrity constraint violations
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
-                $flash = $this->translator->translate('invoice.first.reset');
+                $flash = $this->translator->translate('first.reset');
             } else {
                 $this->test_data_delete($uR, $fR, $pR, $cR);
                 $this->install_test_data($trR, $uR, $fR, $pR, $cR);
-                $flash = $this->translator->translate('i.reset');
+                $flash = $this->translator->translate('reset');
             }
         } else {
-            $flash = $this->translator->translate('invoice.install.test.data');
+            $flash = $this->translator->translate('install.test.data');
         }
         $this->flashMessage('info', $flash);
         $data = [

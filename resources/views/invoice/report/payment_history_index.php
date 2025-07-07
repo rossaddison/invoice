@@ -18,7 +18,7 @@ declare(strict_types=1);
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.payment_history'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('payment.history'); ?></h1>
 </div>
 
 <div id="content">
@@ -32,7 +32,7 @@ declare(strict_types=1);
 
                 <div class="panel-heading">
                     <i class="fa fa-print"></i>
-                    <?= $translator->translate('i.report_options'); ?>
+                    <?= $translator->translate('report.options'); ?>
                 </div>
 
                 <div class="panel-body">
@@ -43,7 +43,7 @@ declare(strict_types=1);
                         <input type="hidden" name="_csrf" value="<?= $csrf ?>">
 
                         <div class="mb-3 form-group has-feedback">
-                            <label for="from_date"><?= $translator->translate('i.from_date') .' ('.$dateHelper->display().')'; ?></label>
+                            <label for="from_date"><?= $translator->translate('from.date') .' ('.$dateHelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="from_date" id="from_date" placeholder="<?= ' ('.$dateHelper->display().')';?>"
                                        class="form-control" readonly                   
@@ -55,7 +55,7 @@ declare(strict_types=1);
                         </div> 
 
                         <div class="mb-3 form-group has-feedback">
-                            <label for="to_date"><?= $translator->translate('i.to_date') .' ('.$dateHelper->display().')'; ?></label>
+                            <label for="to_date"><?= $translator->translate('to.date') .' ('.$dateHelper->display().')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="to_date" id="to_date" placeholder="<?= ' ('.$dateHelper->display().')';?>"
                                        class="form-control" readonly                   
@@ -67,9 +67,8 @@ declare(strict_types=1);
                         </div>
 
                         <input type="submit" class="btn btn-success" name="btn_submit"
-                               value="<?= $translator->translate('i.run_report'); ?>">
-
-                    </form>
+                               value="<?= $translator->translate('run.report'); ?>">
+                   </form>
 
                 </div>
 

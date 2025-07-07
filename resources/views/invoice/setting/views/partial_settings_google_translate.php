@@ -34,7 +34,7 @@ use Yiisoft\Html\Html;
                             <?php $body['settings[google_translate_locale]'] = $s->getSetting('google_translate_locale');?>
                             <select name="settings[google_translate_locale]" id="settings[google_translate_locale]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('i.none'); ?></option>
+                                <option value=""><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var string $key
@@ -53,19 +53,12 @@ use Yiisoft\Html\Html;
             </div>
             <div class="panel-body">
                 <p><b>Objective:</b> Rebuild a \www\invoice\resources\messages\en\app.php language file and insert it into e.g. <a href="https://github.com/rossaddison/invoice/commit/28188010c7965092f92484871712bf8347f0f5ed">zu_ZA\app.php</a></p>
-                <p><b>Problem:</b> This en\app.php file is too big for Google to Translate. </p>
-                <p><b>Step 1:</b> Copy the <pre>'g.online_payment' .. 'g.online_payment_3dauth_redirect'</pre> to <pre>src\Invoice\Language\English\<b>gateway_lang.php</b></pre></p>
-                <p><b>Step 2:</b> Copy the <pre>'i.account_information' .. 'i.false'</pre> to <pre>src\Invoice\Language\English\<b>ip_lang.php</b></pre></p>
-                <p><b>Step 3:</b> Copy the <pre>'invoice.add' .. 'validator.user.exist.not'</pre> to <pre>src\Invoice\Language\English\<b>latest_lang.php</b></pre></p>
-                <p><b>Step 4:</b> Copy the <pre>'site.soletrader.about.we' .. 'site.soletrader.contact.phone'</pre> to <pre>src\Invoice\Language\English\<b>common_lang.php</b></pre></p>
-                <p><b>Step 5:</b> Optional: Copy any loose <pre>'x.x.x.x' .. 'x.x.x.y'</pre> to <pre>src\Invoice\Language\English\<b>any_lang.php</b></pre></p>
-                <p><b>Step 6:</b> Run the Generator ... Translate English sub programs to translate the above files from English into the language of your choice into<pre><h6>...\resources\views\invoice\generator\output_overwrite</h6></pre>.</p>
-                <p><b>Step 7:</b> You will have to combine these 3 parts into one array called <code>app.php</code> in the language of your choice and place it into a folder <code>..resources\messages\{locale}</code> folder</p>
-                <p><b>Step 8:</b> Adjust the <code>\resources\views\layout</code> files.</p>
-                <p><b>Step 9:</b> Create a suitable <code>\invoice\src\Invoice\Asset\i18nAsset</code> file under this folder.</p>
-                <p><b>Step 10:</b> Create a separate folder under <code>\invoice\src\Invoice\Language</code>. This will be used by View...Settings...General...Language</p>
-                <p><b>Step 11:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR' and also the <code>locales</code> function.</p>
-                <p><b>Step 12:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 1:</b> Run the Generator ... Translate 'app' to translate the above file from English into the language of your choice into<pre><h6>...\resources\views\invoice\generator\output_overwrite</h6></pre>.</p>
+                <p><b>Step 2:</b> Adjust the <code>\resources\views\layout</code> files.</p>
+                <p><b>Step 3:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR' and also the <code>locales</code> function.</p>
+                <p><b>Step 4:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
+                <p><b>Step 5:</b> Copy the contents from outputoverwrite folder into your resources/messages/{locale}
+                
             </div>
             <div class="panel-body">
                 <p><i class="bi bi-link"></i> <a href="https://curl.haxx.se/ca/cacert.pem" target="_blank">https://curl.haxx.se/ca/cacert.pem</a></p>
@@ -84,7 +77,7 @@ use Yiisoft\Html\Html;
                 <p><strong>Step 7:</strong> <br />Adjust the php.ini [apache_module] by means of the wampserver icon or by clicking on the symlink in the directory.</p>
                 <p><strong>Step 8:</strong> <br />The symlink file points to <code>C:\wamp64\bin\php\php8.3.16\phpForApache.ini</code> Adjust this manually at line 1947 [curl] with eg. <code>"c:/wamp64/bin/php/php8.3.16/cacert.pem"</code> Note the forward slashes.</p>
                 <p><strong>Step 9:</strong> <br />Reboot your server.</p>
-                <p><strong>Step 10:</strong> <br />After generating the file, move the file from <code>views/generator/output_overwrite to e.g. src/Invoice/Language/{your language}</code>. Use all three array sections to build one language array file i.e. app.php</p>
+                <p><strong>Step 10:</strong> <br />Copy the contents from outputoverwrite folder into your resources/messages/{locale}</p>
                 <p>&nbsp;</p>
             </div>             
         </div>

@@ -10,14 +10,19 @@ cls
 echo =======================================
 echo         INVOICE SYSTEM MENU
 echo =======================================
+echo [0] Goto Installation Menu
 echo [1] Run PHP Psalm
 echo [2] Run PHP Psalm on a Specific File
 echo [2a] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
+echo [3a] Composer why-not {repository eg. yiisoft/yii-demo} {patch/minor version e.g. 1.1.1}
 echo [4] Run Composer Update
 echo [4a] Run Node Modules Update
+echo [4b] Run Install or update nvm-windows to the latest version
 echo [5] Run Composer Require Checker
-echo [5a] Run Codeception Tests 
+echo [5a] Run Codeception Tests
+echo [5b] Run Rector See Potential Changes
+echo [5c] Run Rector Make Changes 
 echo [6] Run 'serve' Command
 echo [7] Run 'user/create' username password
 echo [8] Run 'user/assignRole' role userId 
@@ -35,16 +40,21 @@ echo [19] Run 'invoice/autoincrementsettooneafter/truncate6' Command
 echo [20] Exit
 echo [21] Exit to Current Directory
 echo =======================================
-set /p choice="Enter your choice [1-21]: "
+set /p choice="Enter your choice [0-21]: "
 
+if "%choice%"=="0" goto installation_menu 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
+if "%choice%"=="3a" goto composerwhynot
 if "%choice%"=="4" goto composer_update
 if "%choice%"=="4a" goto node_modules_update
+if "%choice%"=="4b" goto nvm_install_or_update
 if "%choice%"=="5" goto require_checker
 if "%choice%"=="5a" goto codeception_tests
+if "%choice%"=="5b" goto rector_see_changes
+if "%choice%"=="5c" goto rector_make_changes
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="7a" goto user_create
@@ -138,6 +148,12 @@ echo Invalid input. Returning to the menu.
 pause
 goto menu
 
+:installation_menu
+echo Installation menu...
+install.bat
+pause
+goto menu
+
 :psalm
 echo Running PHP Psalm...
 php vendor/bin/psalm
@@ -168,6 +184,14 @@ composer outdated
 pause
 goto menu
 
+:composerwhynot
+@echo off
+set /p repo="Enter the package name (e.g. vendor/package): "
+set /p version="Enter the version (e.g. 1.0.0): "
+composer why-not %repo% %version%
+pause
+goto menu
+
 :require_checker
 echo Running Composer Require Checker...
 php vendor/bin/composer-require-checker
@@ -180,6 +204,18 @@ php vendor/bin/codecept run
 pause
 goto menu
 
+:rector_see_changes
+echo See changes that Rector Proposes
+php vendor/bin/rector process --dry-run --output-format=console
+pause
+goto menu
+
+:rector_make_changes
+echo Make changes that Rector Proposed 
+php vendor/bin/rector
+pause
+goto menu
+
 :composer_update
 echo Running Composer Update...
 composer update
@@ -187,13 +223,22 @@ pause
 goto menu
 
 :node_modules_update
-cd node_modules
+pushd node_modules
 echo Running Node Modules Update...
 npx npm-check-updates -u
 npm install
+popd
+cd ..
 pause
 goto menu
 
+:nvm_install_or_update
+echo Downloading the latest nvm-windows installer...
+powershell -Command "Invoke-WebRequest -Uri https://github.com/coreybutler/nvm-windows/releases/latest/download/nvm-setup.exe -OutFile nvm-setup.exe"
+echo Running the nvm-windows installer...
+start /wait nvm-setup.exe /SILENT
+del nvm-setup.exe
+echo nvm-windows installation/update complete.
 pause
 goto menu
 

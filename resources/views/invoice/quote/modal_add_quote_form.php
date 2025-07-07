@@ -41,7 +41,7 @@ echo Form::tag()
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= $translator->translate('i.create_quote'); ?>
+    <?= $translator->translate('create.quote'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?= Html::openTag('div', ['id' => 'headerbar-modal-add-quote-form']); ?>
@@ -51,43 +51,43 @@ echo Form::tag()
             <?= Html::openTag('div', ['class' => 'mb-3 form-group' ]); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'client_id')
-    ->label($translator->translate('invoice.user.account.clients'))
+    ->label($translator->translate('user.account.clients'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getClient_id()))
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
     ->optionsData($clients)
     ->tabIndex(1)
     ->autofocus(true)
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>            
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'group_id')
-    ->label($translator->translate('i.quote_group'))
+    ->label($translator->translate('quote.group'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : 2))
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
     ->optionsData($groups)
     ->tabIndex(2)
     ->required(true)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>                                       
             <?= Html::openTag('div'); ?>
                 <?= Field::password($form, 'password')
-    ->label($translator->translate('i.password'))
+    ->label($translator->translate('password'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getPassword()))
-    ->placeholder($translator->translate('i.password'))
+    ->placeholder($translator->translate('password'))
     ->tabIndex(3)
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -107,17 +107,17 @@ echo Form::tag()
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::textarea($form, 'notes')
-    ->label($translator->translate('i.note'))
+    ->label($translator->translate('note'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getNotes()))
-    ->placeholder($translator->translate('i.note'))
-    ->hint($translator->translate('invoice.hint.this.field.is.not.required'));
+    ->placeholder($translator->translate('note'))
+    ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'url_key')
     ->disabled(true)
-    ->label($translator->translate('invoice.upload.url.key'))
+    ->label($translator->translate('upload.url.key'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($urlKey));
 ?>

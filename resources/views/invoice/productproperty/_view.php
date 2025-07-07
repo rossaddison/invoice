@@ -55,7 +55,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'product_id')
-                        ->label($translator->translate('i.product_name'))
+                        ->label($translator->translate('product.name'))
                         ->readonly(true)
                         ->value($form->getProduct()?->getProduct_name() ?? ''); ?>
                 <?= Html::closeTag('div'); ?>

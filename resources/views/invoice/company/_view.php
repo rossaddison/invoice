@@ -49,15 +49,15 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::checkbox($form, 'current')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('i.active'))
+    ->ariaDescribedBy($translator->translate('active'))
     ->disabled(true)
 ?>    
                 <?= Html::closeTag('div'); ?>    
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'name')
-    ->label($translator->translate('i.name'))
+    ->label($translator->translate('name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.name'),
+        'placeholder' => $translator->translate('name'),
         'class' => 'form-control'
     ])
     ->required(true)
@@ -67,9 +67,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::email($form, 'email')
-    ->label($translator->translate('i.email'))
+    ->label($translator->translate('email'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.email'),
+        'placeholder' => $translator->translate('email'),
         'class' => 'form-control'
     ])
     ->required(true)
@@ -79,9 +79,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'web')
-    ->label($translator->translate('i.web'))
+    ->label($translator->translate('web'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.web'),
+        'placeholder' => $translator->translate('web'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getWeb() ?? ''))
@@ -90,9 +90,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'address_1')
-    ->label($translator->translate('i.street_address'))
+    ->label($translator->translate('street.address'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.street_address'),
+        'placeholder' => $translator->translate('street.address'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getAddress_1() ?? ''))
@@ -101,9 +101,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'address_2')
-    ->label($translator->translate('i.street_address_2'))
+    ->label($translator->translate('street.address.2'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.street_address_2'),
+        'placeholder' => $translator->translate('street.address.2'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getAddress_2() ?? ''))
@@ -112,9 +112,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'city')
-    ->label($translator->translate('i.city'))
+    ->label($translator->translate('city'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.city'),
+        'placeholder' => $translator->translate('city'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getCity() ?? ''))
@@ -123,9 +123,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'state')
-    ->label($translator->translate('i.state'))
+    ->label($translator->translate('state'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.state'),
+        'placeholder' => $translator->translate('state'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getState() ?? ''))
@@ -134,9 +134,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'zip')
-    ->label($translator->translate('i.zip'))
+    ->label($translator->translate('zip'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.zip'),
+        'placeholder' => $translator->translate('zip'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getZip() ?? ''))
@@ -145,9 +145,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'country')
-    ->label($translator->translate('i.country'))
+    ->label($translator->translate('country'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.country'),
+        'placeholder' => $translator->translate('country'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getCountry() ?? ''))
@@ -156,9 +156,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::telephone($form, 'phone')
-    ->label($translator->translate('i.phone'))
+    ->label($translator->translate('phone'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.phone'),
+        'placeholder' => $translator->translate('phone'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getPhone() ?? ''))
@@ -167,9 +167,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::telephone($form, 'fax')
-    ->label($translator->translate('i.fax'))
+    ->label($translator->translate('fax'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.fax'),
+        'placeholder' => $translator->translate('fax'),
         'class' => 'form-control'
     ])
     ->value(Html::encode($form->getFax() ?? ''))

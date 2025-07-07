@@ -31,13 +31,13 @@ use Yiisoft\Html\Html;
 
         <thead>
         <tr>
-            <th><?= $translator->translate('i.status'); ?></th>
-            <th><?= $translator->translate('i.quote'); ?></th>
-            <th><?= $translator->translate('i.created'); ?></th>
-            <th><?= $translator->translate('i.due_date'); ?></th>
-            <th><?= $translator->translate('i.client_name'); ?></th>
-            <th style="text-align: right; padding-right: 25px;"><?= $translator->translate('i.amount'); ?></th>
-            <th><?= $translator->translate('i.options'); ?></th>
+            <th><?= $translator->translate('status'); ?></th>
+            <th><?= $translator->translate('quote'); ?></th>
+            <th><?= $translator->translate('created'); ?></th>
+            <th><?= $translator->translate('due.date'); ?></th>
+            <th><?= $translator->translate('client.name'); ?></th>
+            <th style="text-align: right; padding-right: 25px;"><?= $translator->translate('amount'); ?></th>
+            <th><?= $translator->translate('options'); ?></th>
         </tr>
         </thead>
 
@@ -66,7 +66,7 @@ foreach ($quotes as $quote) {
                 </td>
                 <td>
                     <a href="<?= $urlGenerator->generate('quote/view', $actionViewArguments); ?>"
-                       title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none">
+                       title="<?= $translator->translate('edit'); ?>" style="text-decoration:none">
                         <?=(null !== ($quote->getNumber()) ? $quote->getNumber() : $quote->getId()); ?>
                     </a>
                 </td>
@@ -78,7 +78,7 @@ foreach ($quotes as $quote) {
                 </td>
                 <td>
                     <a href="<?= $urlGenerator->generate('client/view', $actionClientViewArguments); ?>"
-                       title="<?= $translator->translate('i.view_client'); ?>" style="text-decoration:none">
+                       title="<?= $translator->translate('view.client'); ?>" style="text-decoration:none">
                         <?= Html::encode($clientHelper->format_client($quote->getClient())); ?>
                     </a>
                 </td>
@@ -90,31 +90,31 @@ foreach ($quotes as $quote) {
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
                         <a class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown"
                            href="#" style="text-decoration:none">
-                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?= $urlGenerator->generate('quote/view', $actionViewArguments); ?>" style="text-decoration:none">
-                                    <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('edit'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('quote/pdf', $actionPdfArguments); ?>"
                                    target="_blank" style="text-decoration:none">
-                                    <i class="fa fa-print fa-margin"></i> <?= $translator->translate('i.download_pdf'); ?>
+                                    <i class="fa fa-print fa-margin"></i> <?= $translator->translate('download.pdf'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('quote/email_stage_0', $actionEmailArguments); ?>" style="text-decoration:none">
-                                    <i class="fa fa-send fa-margin"></i> <?= $translator->translate('i.send_email'); ?>
+                                    <i class="fa fa-send fa-margin"></i> <?= $translator->translate('send.email'); ?>
                                 </a>
                             </li>
                             <li>
                                 <form action="<?= $urlGenerator->generate('quote/delete', $actionDeleteArguments); ?>" method="POST">
                                     <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>"> 
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?= $translator->translate('i.delete_quote_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
+                                            onclick="return confirm('<?= $translator->translate('delete.quote.warning'); ?>');">
+                                        <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
                                     </button>
                                 </form>
                             </li>

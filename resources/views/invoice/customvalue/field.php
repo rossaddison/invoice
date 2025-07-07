@@ -28,7 +28,7 @@ use Yiisoft\FormModel\Field;
         <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $translator->translate('i.custom_values'); ?>
+            <?= $translator->translate('custom.values'); ?>
         <?= Html::closeTag('h1'); ?>
 
         <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
@@ -37,13 +37,13 @@ use Yiisoft\FormModel\Field;
                         'class' => 'btn btn-default',
                         'href' => $urlGenerator->generate('customfield/index')]); ?>
                         <?= Html::openTag('i', ['class' => 'fa fa-arrow-left']);?>
-                        <?= Html::closeTag('i'); ?><?= $translator->translate('i.back'); ?>    
+                        <?= Html::closeTag('i'); ?><?= $translator->translate('back'); ?>    
                 <?= Html::closeTag('a'); ?>
                 <?= Html::openTag('a', [
                         'class' => 'btn btn-primary',
                         'href' => $urlGenerator->generate('customvalue/new', ['id' => $custom_field->getId()])]); ?>
                         <?= Html::openTag('i', ['class' => 'fa fa-plus']);?>
-                        <?= Html::closeTag('i'); ?><?= $translator->translate('i.new'); ?>    
+                        <?= Html::closeTag('i'); ?><?= $translator->translate('new'); ?>    
                 <?= Html::closeTag('a'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -55,7 +55,7 @@ use Yiisoft\FormModel\Field;
                 <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
                     <?= Html::openTag('div', ['class' => 'form-group']); ?>
                         <?= Field::text($field_form, 'label')
-                            ->label($translator->translate('i.field'))
+                            ->label($translator->translate('field'))
                             ->addInputAttributes([
                                 'class' => 'form-control',
                                 'disabled' => 'disabled',
@@ -71,13 +71,13 @@ $optionsDataType = [];
  */
 foreach ($custom_values_types as $type) {
     $alpha = str_replace('-', '_', strtolower($type));
-    $optionsDataType[$type] = $translator->translate('i.'.$alpha.'');
+    $optionsDataType[$type] = $translator->translate(''.$alpha.'');
 }
 ?>
                     <?= Html::openTag('div', ['class' => 'form-group']); ?>    
                         <?=
         Field::select($field_form, 'type')
-        ->label($translator->translate('i.type'))
+        ->label($translator->translate('type'))
         ->addInputAttributes([
             'class' => 'form-control',
             'id' => 'type',
@@ -91,9 +91,9 @@ foreach ($custom_values_types as $type) {
                         <?= Html::openTag('table', ['class' => 'table table-bordered']); ?>
                             <?= Html::openTag('thead'); ?>
                             <?= Html::openTag('tr'); ?>
-                                <?= Html::openTag('th'); ?><?= $translator->translate('i.id'); ?><?= Html::closeTag('th'); ?>
-                                <?= Html::openTag('th'); ?><?= $translator->translate('i.label'); ?><?= Html::closeTag('th'); ?>
-                                <?= Html::openTag('th'); ?><?= $translator->translate('i.options'); ?><?= Html::closeTag('th'); ?>
+                                <?= Html::openTag('th'); ?><?= $translator->translate('id'); ?><?= Html::closeTag('th'); ?>
+                                <?= Html::openTag('th'); ?><?= $translator->translate('label'); ?><?= Html::closeTag('th'); ?>
+                                <?= Html::openTag('th'); ?><?= $translator->translate('options'); ?><?= Html::closeTag('th'); ?>
                             <?= Html::closeTag('tr'); ?> 
                             <?= Html::closeTag('thead'); ?>
 
@@ -112,7 +112,7 @@ foreach ($custom_values_types as $type) {
                         'class' => 'btn btn-default btn-sm dropdown-toggle',
                         'data-toggle' => 'dropdown',
                         'href' => '#']); ?>
-                                                <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
+                                                <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
                                             <?= Html::closeTag('a'); ?>
                                             <?= Html::openTag('ul', ['class' => 'dropdown-menu']); ?>
                                                 <?= Html::openTag('li'); ?>
@@ -125,7 +125,7 @@ foreach ($custom_values_types as $type) {
                                                                                 ]
                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' => 'font-size:10px']); ?>            
-                                                            <i class="fa fa-eye fa-margin"></i><?= $translator->translate('i.view'); ?>
+                                                            <i class="fa fa-eye fa-margin"></i><?= $translator->translate('view'); ?>
                                                         <?= Html::closeTag('p'); ?>
                                                     <?= Html::closeTag('a'); ?>
                                                 <?= Html::closeTag('li'); ?>
@@ -139,7 +139,7 @@ foreach ($custom_values_types as $type) {
                                                                                 ]
                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' => 'font-size:10px']); ?>            
-                                                            <i class="fa fa-edit fa-margin"></i><?= $translator->translate('i.edit'); ?>
+                                                            <i class="fa fa-edit fa-margin"></i><?= $translator->translate('edit'); ?>
                                                         <?= Html::closeTag('p'); ?>
                                                     <?= Html::closeTag('a'); ?>
                                                 <?= Html::closeTag('li'); ?>
@@ -150,11 +150,11 @@ foreach ($custom_values_types as $type) {
                                                                                     'href' => $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->getId()]),
                                                                                     'style' => 'text-decoration:none',
                                                                                     'class' => 'btn',
-                                                                                    'onclick' => 'return confirm('."'".$translator->translate('i.delete_record_warning')."')"
+                                                                                    'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."')"
                                                                                 ]
                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' => 'font-size:10px']); ?>            
-                                                            <i class="fa fa-trash fa-margin"></i><?= $translator->translate('i.delete'); ?>
+                                                            <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>
                                                         <?= Html::closeTag('p'); ?>
                                                     <?= Html::closeTag('a'); ?>
                                                     <?= Html::closeTag('form'); ?>

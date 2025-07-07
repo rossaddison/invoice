@@ -239,7 +239,7 @@ final class SettingController extends BaseController
                     if ($this->sR->repoCount($key) > 0) {
                         // Warn if duplicates
                         if ($this->sR->repoCount($key) > 1) {
-                            $this->flashMessage('danger', $this->translator->translate('invoice.setting.duplicate.key') . $key);
+                            $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
                             return $this->webService->getRedirectResponse('setting/tab_index');
                         }
                         if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
@@ -274,7 +274,7 @@ final class SettingController extends BaseController
                         $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value);
                     }
                 }
-                $this->flashMessage('info', $this->translator->translate('i.settings_successfully_saved'));
+                $this->flashMessage('info', $this->translator->translate('settings.successfully.saved'));
                 return $this->webService->getRedirectResponse('setting/tab_index');
             }
         }
@@ -380,7 +380,7 @@ final class SettingController extends BaseController
         $setting = new Setting();
         $form = new SettingForm($setting);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'setting/add',
             'actionArguments' => [],
             'alert' => $this->alert(),
@@ -391,7 +391,7 @@ final class SettingController extends BaseController
             $body = $request->getParsedBody() ?? [];
             $key = (string)($body['setting_key'] ?? '');
             if ($this->sR->repoCount($key) == 1) {
-                $this->flashMessage('danger', $this->translator->translate('invoice.setting.duplicate.key') . $key);
+                $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
             /**
@@ -399,7 +399,7 @@ final class SettingController extends BaseController
              */
             if ($formHydrator->populateAndValidate($form, $body)) {
                 $this->settingService->saveSetting($setting, $body);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                 return $this->webService->getRedirectResponse('setting/debug_index');
             }
             $parameters['form'] = $form;
@@ -565,7 +565,7 @@ final class SettingController extends BaseController
         if ($setting) {
             $form = new SettingForm($setting);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'setting/edit',
                 'actionArguments' => ['setting_id' => $setting->getSetting_id()],
                 'alert' => $this->alert(),
@@ -582,7 +582,7 @@ final class SettingController extends BaseController
                      * @psalm-suppress PossiblyInvalidArgument
                      */
                     $this->settingService->saveSetting($setting, $body);
-                    $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                     return $this->webService->getRedirectResponse('setting/debug_index');
                 }
                 $parameters['form'] = $form;
@@ -617,7 +617,7 @@ final class SettingController extends BaseController
     {
         $setting = $this->setting($currentRoute);
         if ($setting) {
-            $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+            $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             $this->settingService->deleteSetting($setting);
         }
         return $this->webService->getRedirectResponse('setting/debug_index');
@@ -632,7 +632,7 @@ final class SettingController extends BaseController
         if ($setting) {
             $form = new SettingForm($setting);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'setting/view',
                 'actionArguments' => ['setting_id' => $setting->getSetting_id()],
                 'setting' => $setting,
@@ -650,7 +650,7 @@ final class SettingController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('setting/index');
         }
         return $canEdit;
@@ -689,16 +689,16 @@ final class SettingController extends BaseController
         try {
             $filehelper = new FileHelper();
             $filehelper->clearDirectory($directory);
-            $this->flashMessage('info', $this->translator->translate('invoice.setting.assets.cleared.at') . $directory);
+            $this->flashMessage('info', $this->translator->translate('setting.assets.cleared.at') . $directory);
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/successful',
-                ['heading' => $this->translator->translate('invoice.successful'),'message' => $this->translator->translate('invoice.setting.you.have.cleared.the.cache')]
+                ['heading' => $this->translator->translate('successful'),'message' => $this->translator->translate('setting.you.have.cleared.the.cache')]
             ));
         } catch (\Exception $e) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.setting.assets.were.not.cleared.at') . $directory . $this->translator->translate('invoice.setting.as.a.result.of') . $e->getMessage());
+            $this->flashMessage('warning', $this->translator->translate('setting.assets.were.not.cleared.at') . $directory . $this->translator->translate('setting.as.a.result.of') . $e->getMessage());
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/unsuccessful',
-                ['heading' => $this->translator->translate('invoice.unsuccessful'),'message' => $this->translator->translate('invoice.setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('invoice.setting.error.on.the.public.assets.folder')]
+                ['heading' => $this->translator->translate('unsuccessful'),'message' => $this->translator->translate('setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('setting.error.on.the.public.assets.folder')]
             ));
         }
     }

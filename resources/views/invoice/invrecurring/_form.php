@@ -47,13 +47,13 @@ use DateTimeImmutable;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('p'); ?>
-                    <?= $translator->translate('invoice.recurring.original.invoice.date'); ?>
+                    <?= $translator->translate('recurring.original.invoice.date'); ?>
                     <?= $invDateCreated->format('Y-m-d'); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -79,34 +79,34 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
      * @see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js $('#frequency').change(function () {
      */
     Field::select($form, 'frequency')
-    ->label($translator->translate('invoice.recurring.frequency'))
+    ->label($translator->translate('recurring.frequency'))
     ->value($form->getFrequency() ?? '')
     ->optionsData($optionsDataFrequency)
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= A::tag()->href('https://wiki.invoiceplane.com/en/1.6/modules/recurring-invoices')->content('❔')?>
                     <?= Field::date($form, 'start')
-        ->label($translator->translate('i.start_date'))
+        ->label($translator->translate('start.date'))
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
                 <?= Html::closeTag('div'); ?>            
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'next')
-    ->label($translator->translate('i.next') ." (".  $dateHelper->display().") ")
+    ->label($translator->translate('next') ." (".  $dateHelper->display().") ")
     ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
     // Always disabled because it is always the result of start + frequency
     ->disabled(true)
     ->addInputAttributes([
         'data-bs-toggle' => 'tooltip',
-        'title' => $translator->translate('invoice.recurring.tooltip.next')
+        'title' => $translator->translate('recurring.tooltip.next')
     ])
 ?>
                 <?= Html::closeTag('div'); ?>                
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'end')
-        ->label($translator->translate('i.end_date') ."(".$translator->translate('i.optional'))
+        ->label($translator->translate('end.date') ."(".$translator->translate('optional'))
         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
 ?>
                 <?= Html::closeTag('div'); ?>

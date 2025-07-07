@@ -44,14 +44,14 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::checkbox($form, 'current')
         ->inputLabelAttributes(['class' => 'form-check-label'])
         ->inputClass('form-check-input')
-        ->ariaDescribedBy($translator->translate('i.active'))
+        ->ariaDescribedBy($translator->translate('active'))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -69,7 +69,7 @@ foreach ($companies as $company) {
 }
 ?>
                     <?= Field::select($form, 'company_id')
-    ->prompt($translator->translate('i.none'))
+    ->prompt($translator->translate('none'))
     ->optionsData($optionsDataCompany);
 ?>    
                 <?= Html::closeTag('div'); ?>

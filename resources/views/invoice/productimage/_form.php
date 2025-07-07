@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -54,11 +54,11 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'uploaded_date')
-                    ->label($translator->translate('i.date'))
+                    ->label($translator->translate('date'))
                     ->required(true)
                     ->value($form->getUploaded_date() instanceof DateTimeImmutable ?
     $form->getUploaded_date()->format('Y-m-d') : '')
-                    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+                    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

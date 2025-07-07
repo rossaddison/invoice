@@ -33,14 +33,14 @@ use Yiisoft\Html\Tag\Button;
 echo Button::tag()
 ->id('task-modal-submit')
 ->addClass('select-items-confirm-task btn-success')
-->content($translator->translate('i.submit'))
+->content($translator->translate('submit'))
 ->disabled(true)
 ->render();
 ?>        
                         <?php
     echo Button::tag()
     ->addClass('btn btn-danger')
-    ->content($translator->translate('i.close'))
+    ->content($translator->translate('close'))
     ->addAttributes(['data-bs-dismiss' => 'modal'])
     ->render();
 ?>    

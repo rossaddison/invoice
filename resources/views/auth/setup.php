@@ -29,10 +29,10 @@ use Yiisoft\Html\Tag\Img;
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">                
                 <div class="card-header bg-dark text-white">
-                    <h5 class="fw-normal h3 text-center"><?= $translator->translate('invoice.invoice.two.factor.authentication.setup'); ?></h5>
+                    <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication.setup'); ?></h5>
                 </div>
                 <div class="card-body p-1 text-center">
-                    <p><?= $translator->translate('invoice.invoice.two.factor.authentication.scan'); ?></p>
+                    <p><?= $translator->translate('two.factor.authentication.scan'); ?></p>
                     <?=  
                         Img::tag()
                         ->width($s->getSetting('qr_height_and_width'))
@@ -41,7 +41,7 @@ use Yiisoft\Html\Tag\Img;
                         ->alt("2FA QR Code")
                         ->render(); 
                     ?>
-                    <p><?= $translator->translate('invoice.invoice.two.factor.authentication.qr.code.enter.manually'); ?></p>
+                    <p><?= $translator->translate('two.factor.authentication.qr.code.enter.manually'); ?></p>
                 </div>
                 <div class="card-body p-1 text-center" style="max-width:400px;">
                     <div class="input-group">
@@ -53,36 +53,29 @@ use Yiisoft\Html\Tag\Img;
                         <?= Button::tfaToggleSecret(); ?>
                         <?= Button::tfaCopyToClipboard(); ?>
                     </div>
-                </div>
-                <div class="card-body p-1 text-center">
-                    <?php if ((null!==$error) && (strlen($error) > 0)) { ?>
-                        <?=         
-                            Html::tag('span', $error, 
-                            [
-                                'class' => 'badge bg-primary',
-                                'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
-                            ]); 
-                        ?>
-                    <?php } ?>
-                </div>     
+                </div>   
                 <div class="card-body p-1 text-center">
                     <?= Form::tag()
                         ->post($urlGenerator->generate('auth/verifySetup'))
                         ->class('form-floating')
                         ->csrf($csrf)
                         ->id('twoFactorAuthenticationSetupForm')
-                        ->open(); ?>                    
+                        ->open(); ?> 
                     <?= Field::text($formModel, 'code')
                         ->addInputAttributes([
                             'autocomplete' => 'current-code', 
                             'id' => 'code', 
-                            'name' => 'text',
+                            'name' => 'code',
                             'minlength' => 6,
+                            // Only the otp is entered here (6 digit). 
+                            // Not the recovery code (8 digit).
                             'maxlength' => 6,
                             'type' => 'tel',
                         ])
+                        ->error($error ?? '')
+                        ->required(true)
                         ->inputClass('form-control')
-                        ->label($translator->translate('layout.password.otp'))
+                        ->label($translator->translate('layout.password.otp.6'))
                         ->autofocus();
                     ?>
                     <?= Field::submitButton()

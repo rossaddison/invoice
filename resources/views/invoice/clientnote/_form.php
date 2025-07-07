@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['date_note', 'client_id', 'note'])
                     ->onlyCommonErrors()
 ?>
@@ -60,34 +60,34 @@ foreach ($clients as $client) {
     }
 }
 echo Field::select($form, 'client_id')
-->label($translator->translate('i.client'))
+->label($translator->translate('client'))
 ->addInputAttributes([
     'id' => 'client_id',
     'class' => 'form-control',
 ])
 ->optionsData($optionsDataClient)
-->hint($translator->translate('invoice.hint.this.field.is.required'));
+->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'date_note')
-    ->label($translator->translate('i.date'))
+    ->label($translator->translate('date'))
     ->required(true)
     ->value(!is_string($dateNote = $form->getDate_note()) ? $dateNote->format('Y-m-d') : '')
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'note')
-    ->label($translator->translate('i.note'))
+    ->label($translator->translate('note'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('i.note'),
+        'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
         'class' => 'form-control',
         'id' => 'note',
     ])
-    ->hint($translator->translate('invoice.hint.this.field.is.required'));
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

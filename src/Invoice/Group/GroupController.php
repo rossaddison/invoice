@@ -77,7 +77,7 @@ final class GroupController extends BaseController
         $group = new Group();
         $form = new GroupForm($group);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'group/add',
             'actionArguments' => [],
             'errors' => [],
@@ -115,7 +115,7 @@ final class GroupController extends BaseController
         if ($group) {
             $form = new GroupForm($group);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'group/edit',
                 'actionArguments' => ['id' => $group->getId()],
                 'errors' => [],
@@ -155,7 +155,7 @@ final class GroupController extends BaseController
             return $this->webService->getRedirectResponse('group/index');
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('invoice.group.history'));
+            $this->flashMessage('danger', $this->translator->translate('group.history'));
             return $this->webService->getRedirectResponse('group/index');
         }
     }
@@ -173,7 +173,7 @@ final class GroupController extends BaseController
         if ($group) {
             $form = new GroupForm($group);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'group/view',
                 'actionArguments' => ['id' => $group->getId()],
                 'errors' => [],
@@ -192,7 +192,7 @@ final class GroupController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('group/index');
         }
         return $canEdit;

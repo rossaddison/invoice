@@ -83,13 +83,13 @@ final class SalesOrderController extends BaseController
     protected string $controllerName = 'invoice/salesorder';
 
     public function __construct(
-        private DataResponseFactoryInterface $factory,
-        private InvService $invService,
-        private InvCustomService $inv_custom_service,
-        private InvAmountService $invAmountService,
-        private InvItemService $invItemService,
-        private InvTaxRateService $invTaxRateService,
-        private SalesOrderService $salesorderService,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly InvService $invService,
+        private readonly InvCustomService $inv_custom_service,
+        private readonly InvAmountService $invAmountService,
+        private readonly InvItemService $invItemService,
+        private readonly InvTaxRateService $invTaxRateService,
+        private readonly SalesOrderService $salesorderService,
         Session $session,
         SettingRepository $sR,
         ViewRenderer $viewRenderer,
@@ -259,7 +259,7 @@ final class SalesOrderController extends BaseController
                         '//invoice/setting/salesorder_successful',
                         [
                             'heading' => $so_label,
-                            'message' => $this->translator->translate('i.record_successfully_updated'),
+                            'message' => $this->translator->translate('record.successfully.updated'),
                             'url' => 'salesorder/view','id' => $so_id,
                         ]
                     ));
@@ -291,7 +291,7 @@ final class SalesOrderController extends BaseController
                             '//invoice/setting/salesorder_successful',
                             [
                                 'heading' => $soR->getSpecificStatusArrayLabel((string)9),
-                                'message' => $this->translator->translate('i.record_successfully_updated'),
+                                'message' => $this->translator->translate('record.successfully.updated'),
                                 'url' => 'salesorder/view','id' => $so_id,
                             ]
                         )
@@ -380,7 +380,7 @@ final class SalesOrderController extends BaseController
             }
             $inv_number = null !== $inv_id && null !== $inv ? (string)$inv->getNumber() : '';
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'salesorder/edit',
                 'actionArguments' => ['id' => $so->getId()],
                 'actionArgumentsDelAdd' => [
@@ -407,7 +407,7 @@ final class SalesOrderController extends BaseController
                 'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
                 'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
-                'no_delivery_locations' => $delRepo->repoClientCount($so->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('invoice.quote.delivery.location.none')),
+                'no_delivery_locations' => $delRepo->repoClientCount($so->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('quote.delivery.location.none')),
                 'alert' => $this->alert(),
                 'so' => $so,
                 'cfR' => $cfR,
@@ -420,7 +420,7 @@ final class SalesOrderController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->salesorderService->saveSo($so, $body);
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_updated'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('salesorder/index');
                     }
                 }
@@ -461,7 +461,7 @@ final class SalesOrderController extends BaseController
             $so = $this->salesorder($currentRoute, $salesorderRepository);
             if ($so) {
                 $this->salesorderService->deleteSo($so, $socR, $socS, $soiR, $soiS, $sotrR, $sotrS, $soaR, $soaS);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('salesorder/index');
             }
             return $this->webService->getRedirectResponse('salesorder/index');
@@ -578,7 +578,7 @@ final class SalesOrderController extends BaseController
                     $form = new SalesOrderForm($so);
                     $parameters = [
                         'alert' => $this->alert(),
-                        'title' => $this->translator->translate('i.view'),
+                        'title' => $this->translator->translate('view'),
                         'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
                         'errors' => [],
                         'form' => $form,
@@ -741,11 +741,11 @@ final class SalesOrderController extends BaseController
                                 $so->setInv_id($inv_id);
                                 // Set salesorder's status to invoice generated
                                 $so->setStatus_id(8);
-                                $this->flashMessage('info', $this->translator->translate('invoice.salesorder.invoice.generated'));
+                                $this->flashMessage('info', $this->translator->translate('salesorder.invoice.generated'));
                                 $soR->save($so);
                                 $parameters = [
                                     'success' => 1,
-                                    'flash_message' => $this->translator->translate('invoice.salesorder.copied.to.invoice'),
+                                    'flash_message' => $this->translator->translate('salesorder.copied.to.invoice'),
                                 ];
                                 return $this->factory->createResponse(Json::encode($parameters));
                             } // null!==$inv_id
@@ -755,7 +755,7 @@ final class SalesOrderController extends BaseController
             } else {
                 $parameters = [
                     'success' => 0,
-                    'flash_message' => $this->translator->translate('invoice.salesorder.copied.to.invoice.not'),
+                    'flash_message' => $this->translator->translate('salesorder.copied.to.invoice.not'),
                 ];
                 //return response to salesorder.js to reload page at location
                 return $this->factory->createResponse(Json::encode($parameters));

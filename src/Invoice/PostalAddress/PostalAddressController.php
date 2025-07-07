@@ -68,7 +68,7 @@ final class PostalAddressController extends BaseController
         $parameters = [
             'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
             'client_id' => $client_id,
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'postaladdress/add',
             'actionArguments' => ['client_id' => $client_id],
             'actionQueryParameters' => [
@@ -86,7 +86,7 @@ final class PostalAddressController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                    $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                    $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                     $url = $origin . '/' . $action;
                     if ($origin_id) {
                         /**
@@ -151,7 +151,7 @@ final class PostalAddressController extends BaseController
             $postaladdress = $this->postaladdress($currentRoute, $postaladdressRepository);
             if ($postaladdress) {
                 $this->postaladdressService->deletePostalAddress($postaladdress);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('postaladdress/index');
             }
             return $this->webService->getRedirectResponse('postaladdress/index');
@@ -186,7 +186,7 @@ final class PostalAddressController extends BaseController
             $action = (string)$queryParams['action'];
             $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'postaladdress/edit',
                 'actionArguments' => ['id' => $postalAddress->getId()],
                 'actionQueryParameters' => [
@@ -202,7 +202,7 @@ final class PostalAddressController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                        $this->flashMessage('success', $this->translator->translate('i.record_successfully_created'));
+                        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         $url = $origin . '/' . $action;
                         // Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {
@@ -266,7 +266,7 @@ final class PostalAddressController extends BaseController
         if ($postalAddress) {
             $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'postaladdress/view',
                 'actionArguments' => ['id' => $postalAddress->getId()],
                 'form' => $form,

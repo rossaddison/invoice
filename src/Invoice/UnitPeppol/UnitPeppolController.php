@@ -61,7 +61,7 @@ final class UnitPeppolController extends BaseController
         $unitPeppol = new UnitPeppol();
         $form = new UnitPeppolForm($unitPeppol);
         $parameters = [
-            'title' => $this->translator->translate('invoice.unit.peppol.add'),
+            'title' => $this->translator->translate('unit.peppol.add'),
             'actionName' => 'unitpeppol/add',
             'actionArguments' => [],
             'form' => $form,
@@ -118,7 +118,7 @@ final class UnitPeppolController extends BaseController
                 $paginator,
                 $this->translator,
                 (int)$this->sR->getSetting('default_list_limit'),
-                $this->translator->translate('invoice.unit.peppol'),
+                $this->translator->translate('unit.peppol'),
                 ''
             ),
             'paginator' => $paginator,
@@ -139,7 +139,7 @@ final class UnitPeppolController extends BaseController
             $unitpeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
             if ($unitpeppol) {
                 $this->unitpeppolService->deleteUnitPeppol($unitpeppol);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('unitpeppol/index');
             }
             return $this->webService->getRedirectResponse('unitpeppol/index');
@@ -171,7 +171,7 @@ final class UnitPeppolController extends BaseController
         if ($unitPeppol) {
             $form = new UnitPeppolForm($unitPeppol);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'unitpeppol/edit',
                 'actionArguments' => ['id' => $unitPeppol->getId()],
                 'eneces' => $enece_array,
@@ -240,7 +240,7 @@ final class UnitPeppolController extends BaseController
         if ($unitPeppol) {
             $form = new UnitPeppolForm($unitPeppol);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'unitpeppol/view',
                 'actionArguments' => ['id' => $unitPeppol->getId()],
                 'form' => $form,

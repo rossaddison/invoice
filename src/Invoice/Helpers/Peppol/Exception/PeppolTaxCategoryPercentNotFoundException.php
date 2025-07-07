@@ -16,7 +16,7 @@ final class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException 
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.peppol.tax.category.percent.not.found');
+        return $this->translator->translate('peppol.tax.category.percent.not.found');
     }
 
     /**

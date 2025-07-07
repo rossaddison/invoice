@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'id')
                 ->addInputAttributes(['style' => 'background:lightblue'])
-                ->label($translator->translate('i.id'))
+                ->label($translator->translate('id'))
                 ->value(Html::encode($form->getId() ?? ''))
                 ->readonly(true);
 ?>
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'table')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('i.table'))
+    ->label($translator->translate('table'))
     ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string)$custom_tables[$table])) : ''))
     ->readonly(true);
 ?>
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'label')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('i.label'))
+    ->label($translator->translate('label'))
     ->value(Html::encode($form->getLabel() ?? ''))
     ->readonly(true);
 ?>
@@ -67,8 +67,8 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'type')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('i.type'))
-    ->value(Html::encode($translator->translate('i.'.str_replace("-", "_", strtolower($form->getType() ?? '')).'')))
+    ->label($translator->translate('type'))
+    ->value(Html::encode($translator->translate(''.str_replace("-", "_", strtolower($form->getType() ?? '')).'')))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -76,7 +76,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'location')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('invoice.custom.field.location'))
+    ->label($translator->translate('custom.field.location'))
     ->value(Html::encode($form->getLocation() ?? ''))
     ->readonly(true);
 ?>
@@ -85,7 +85,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'order')
     ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('i.order'))
+    ->label($translator->translate('order'))
     ->value(Html::encode($form->getOrder() ?? ''))
     ->readonly(true);
 ?>

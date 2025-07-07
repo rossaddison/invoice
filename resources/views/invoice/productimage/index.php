@@ -25,7 +25,7 @@ use Yiisoft\Yii\DataView\GridView;
 echo $alert;
 
 ?>
-<h1><?= $translator->translate('invoice.productimage.index'); ?></h1>
+<h1><?= $translator->translate('productimage.index'); ?></h1>
 <div>
 </div>
 <?php
@@ -36,7 +36,7 @@ echo $alert;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('i.product')))
+                            ->content(' ' . Html::encode($translator->translate('product')))
                 )
         )
         ->render();
@@ -54,43 +54,43 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header: $translator->translate('i.id'),
+        header: $translator->translate('id'),
         content: static fn (ProductImage $model) => Html::encode($model->getId())
     ),
     new DataColumn(
         'product_id',
-        header:  $translator->translate('i.product'),
+        header:  $translator->translate('product'),
         content: static fn (ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? '')
     ),
     new DataColumn(
         'file_name_original',
-        header:  $translator->translate('invoice.upload.filename.original'),
+        header:  $translator->translate('upload.filename.original'),
         content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original())
     ),
     new DataColumn(
         'file_name_new',
-        header:  $translator->translate('invoice.upload.filename.new'),
+        header:  $translator->translate('upload.filename.new'),
         content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_new())
     ),
     new DataColumn(
         'description',
-        header:  $translator->translate('invoice.upload.filename.description'),
+        header:  $translator->translate('upload.filename.description'),
         content: static fn (ProductImage $model): string => Html::encode($model->getDescription())
     ),
     new DataColumn(
-        header:  $translator->translate('i.view'),
+        header:  $translator->translate('view'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productimage/view', ['id' => $model->getId()]), [])->render();
         }
     ),
     new DataColumn(
-        header:  $translator->translate('i.edit'),
+        header:  $translator->translate('edit'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('productimage/edit', ['id' => $model->getId()]), [])->render();
         }
     ),
     new DataColumn(
-        header:  $translator->translate('i.delete'),
+        header:  $translator->translate('delete'),
         content: static function (ProductImage $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
@@ -99,7 +99,7 @@ $columns = [
                     [
                          'type' => 'submit',
                          'class' => 'dropdown-button',
-                         'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                         'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                      ]
                 ),
                 $urlGenerator->generate('productimage/delete', ['id' => $model->getId()]),
@@ -114,7 +114,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.product.image.plural'),
+    $translator->translate('product.image.plural'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open() .
@@ -131,6 +131,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

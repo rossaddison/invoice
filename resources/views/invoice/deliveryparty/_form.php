@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div'); ?>
         <?= Field::errorSummary($form)
             ->errors($errors)
-            ->header($translator->translate('invoice.error.summary'))
+            ->header($translator->translate('error.summary'))
             ->onlyProperties(...['party_name'])
             ->onlyCommonErrors();
 ?>    
@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
         ->addInputAttributes([
             'class' => 'form-control'
         ])
-        ->label($translator->translate('invoice.invoice.delivery.party.name'))
+        ->label($translator->translate('delivery.party.name'))
         ->value(Html::encode($form->getParty_name() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>

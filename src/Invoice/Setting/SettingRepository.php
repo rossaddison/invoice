@@ -539,7 +539,7 @@ final class SettingRepository extends Select\Repository
             'esmtp_scheme' => $params['yiisoft/mailer-symfony']['esmtpTransport']['scheme'],
             'esmtp_host' => $params['yiisoft/mailer-symfony']['esmtpTransport']['host'],
             'esmtp_port' => $params['yiisoft/mailer-symfony']['esmtpTransport']['port'],
-            'use_send_mail' => $params['yiisoft/mailer-symfony']['useSendmail'] == 1 ? $this->translator->translate('i.true') : $this->translator->translate('i.false'),
+            'use_send_mail' => $params['yiisoft/mailer-symfony']['useSendmail'] == 1 ? $this->translator->translate('true') : $this->translator->translate('false'),
         ];
     }
 
@@ -898,6 +898,7 @@ final class SettingRepository extends Select\Repository
             'af-ZA' => 'AfrikaansSouthAfrican',
             'ar-BH' => 'ArabicBahrainian',
             'az' => 'Azerbaijani',
+            'bs' => 'Bosnian',
             'de' => 'German',
             'en' => 'English',
             'fil' => 'Filipino',
@@ -910,6 +911,7 @@ final class SettingRepository extends Select\Repository
             'nl' => 'Dutch',
             'ru' => 'Russian',
             'sk' => 'Slovakian',
+            'sl' => 'Slovenian',
             'es' => 'Spanish',
             'uk' => 'Ukrainian',
             'uz' => 'Uzbek',
@@ -969,7 +971,7 @@ final class SettingRepository extends Select\Repository
     public function trans(string $words): string
     {
         // A few $s->trans uses still exist in e.g. MpdfHelper. These will be removed later
-        return $this->translator->translate('i.' . $words);
+        return $this->translator->translate('' . $words);
     }
 
     /**
@@ -1060,9 +1062,9 @@ final class SettingRepository extends Select\Repository
     {
         return [
             // I have not accepted the terms
-            $this->translator->translate('invoice.term.1'),
+            $this->translator->translate('term.1'),
             // I have accepted the terms
-            $this->translator->translate('invoice.term.2'),
+            $this->translator->translate('term.2'),
         ];
     }
 
@@ -1370,7 +1372,7 @@ final class SettingRepository extends Select\Repository
                 ],
                 'version' => [
                     'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
+                    'label' => $this->translator->translate('online.payment.version'),
                 ],
                 //'liveEndpoint' => array(
                 //    'type' => 'text',
@@ -1400,7 +1402,7 @@ final class SettingRepository extends Select\Repository
                 ],
                 'version' => [
                     'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
+                    'label' => $this->translator->translate('online.payment.version'),
                 ],
                 //'liveEndpoint' => array(
                 //    'type' => 'text',
@@ -1434,7 +1436,7 @@ final class SettingRepository extends Select\Repository
                 ],
                 'version' => [
                     'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
+                    'label' => $this->translator->translate('online.payment.version'),
                 ],
                 //'solutionType' => array(
                 //    'type' => 'text',
@@ -1480,7 +1482,7 @@ final class SettingRepository extends Select\Repository
                 ],
                 'version' => [
                     'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
+                    'label' => $this->translator->translate('online.payment.version'),
                 ],
             ],
             // March 2023
@@ -1504,7 +1506,7 @@ final class SettingRepository extends Select\Repository
                 ],
                 'version' => [
                     'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
+                    'label' => $this->translator->translate('online.payment.version'),
                 ],
                 'sandbox' => [
                     'type' => 'checkbox',
@@ -1620,7 +1622,7 @@ final class SettingRepository extends Select\Repository
                 ],
                 'version' => [
                     'type' => 'checkbox',
-                    'label' => $this->translator->translate('g.online_payment_version'),
+                    'label' => $this->translator->translate('online.payment.version'),
                 ],
             ],
         ];
@@ -1828,7 +1830,7 @@ final class SettingRepository extends Select\Repository
             ],
             'google_translate_json_filename' => [
                 'why' => 'GeneratorController includes a function google_translate_lang. ' .
-                'This function takes the English ip_lang array or gateway_lang located in src/Invoice/Language/English and translates it into the chosen locale (Settings...View...Google Translate) outputting it to resources/views/generator/output_overwrite' . "\r\n" .
+                'This function takes the English app_lang array in src/Invoice/Language/English and translates it into the chosen locale (Settings...View...Google Translate) outputting it to resources/views/generator/output_overwrite' . "\r\n" .
                 '---Step--1: Download https://curl.haxx.se/ca/cacert.pem into active c:\wamp64\bin\php\php8.1.12 folder' . "\r\n" .
                 '---Step--2: Select your project that you created under https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?supportedpurview=project' . "\r\n" .
                 '---Step--3: Click on Actions icon and select Manage Keys' . "\r\n" .
@@ -1838,10 +1840,10 @@ final class SettingRepository extends Select\Repository
                 '---Step--7: Adjust the php.ini [apache_module] by means of the wampserver icon or by clicking on the symlink in the directory.' . "\r\n" .
                 '---Step--8: Edit this symlink file manually at [curl] with eg. "c:/wamp64/bin/php/php8.1.13/cacert.pem   Note the forward slashes.' . "\r\n" .
                 '---Step--9: Reboot your server' . "\r\n" .
-                '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. src/Invoice/Language/{your language}. Use all three array sections to build one language array file i.e. app.php',
+                '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. resources/messages/{de}/app.php.' .
+                '---Step--11: Include your language in src/Invoice/Language/{your language}.',
 
                 'where' => 'GeneratorController/google_translate_lang',
-                //'menu' => true,
             ],
             'google_translate_en_app_php' => [
                 'why' => 'To translate resources/messages/en/app.php, make sure you have loaded a copy in the ../Language/English folder.' . "\r\n" .
@@ -1991,10 +1993,10 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @param string $setting
-     * @param bool $debug_mode
-     * @return string
-     */
+      * @param string $setting
+      * @param bool $debug_mode
+      * @return string
+      */
     public function where(string $setting, bool $debug_mode = true): string
     {
         $tooltip = $this->tooltip_array();
@@ -2195,22 +2197,22 @@ final class SettingRepository extends Select\Repository
     public function get_payment_term_array(TranslatorInterface $translator): array
     {
         return [
-            $translator->translate('invoice.payment.term'),
-            $translator->translate('invoice.payment.term.0.days'),
-            $translator->translate('invoice.payment.term.net.15.days'),
-            $translator->translate('invoice.payment.term.net.30.days'),
-            $translator->translate('invoice.payment.term.net.60.days'),
-            $translator->translate('invoice.payment.term.net.90.days'),
-            $translator->translate('invoice.payment.term.net.120.days'),
-            $translator->translate('invoice.payment.term.eom.15.days'),
-            $translator->translate('invoice.payment.term.eom.30.days'),
-            $translator->translate('invoice.payment.term.eom.60.days'),
-            $translator->translate('invoice.payment.term.eom.90.days'),
-            $translator->translate('invoice.payment.term.eom.120.days'),
-            $translator->translate('invoice.payment.term.mfi.15'),
-            $translator->translate('invoice.payment.term.general'),
-            $translator->translate('invoice.payment.term.polite'),
-            $translator->translate('invoice.payment.term.pia'),
+            $translator->translate('payment.term'),
+            $translator->translate('payment.term.0.days'),
+            $translator->translate('payment.term.net.15.days'),
+            $translator->translate('payment.term.net.30.days'),
+            $translator->translate('payment.term.net.60.days'),
+            $translator->translate('payment.term.net.90.days'),
+            $translator->translate('payment.term.net.120.days'),
+            $translator->translate('payment.term.eom.15.days'),
+            $translator->translate('payment.term.eom.30.days'),
+            $translator->translate('payment.term.eom.60.days'),
+            $translator->translate('payment.term.eom.90.days'),
+            $translator->translate('payment.term.eom.120.days'),
+            $translator->translate('payment.term.mfi.15'),
+            $translator->translate('payment.term.general'),
+            $translator->translate('payment.term.polite'),
+            $translator->translate('payment.term.pia'),
         ];
     }
 
@@ -2387,11 +2389,11 @@ final class SettingRepository extends Select\Repository
         if ($pageSize > 0) {
             return (string)Html::tag(
                 'b',
-                sprintf($translator->translate('invoice.invoice.showing.of') .
-                      $translator->translate('invoice.invoice.max') .
+                sprintf($translator->translate('showing.of') .
+                      $translator->translate('max') .
                       ' ' . (string)$max . ' ' .
                       $entity_plural .
-                      $translator->translate('invoice.invoice.per.page.total') .
+                      $translator->translate('per.page.total') .
                       $entity_plural . ': ' .
                       (string)$paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
                 ['class' => 'card-header bg-warning text-black']

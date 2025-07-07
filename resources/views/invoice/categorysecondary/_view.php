@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
 <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?><?= Html::openTag('div',['class'=>'card-header']); ?>
 <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
-     <?= $translator->translate('i.add'); ?>
+     <?= $translator->translate('add'); ?>
      <?= $button->back(); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
@@ -51,19 +51,19 @@ use Yiisoft\Html\Tag\Form;
                  'disabled' => 'disabled',
             ])
             ->value($form->getCategory_primary_id())
-            ->prompt($translator->translate('i.none'))
+            ->prompt($translator->translate('none'))
             ->optionsData($category_primarys)
         ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form,'name')
-            ->label($translator->translate('i.name'))
+            ->label($translator->translate('name'))
             ->addInputAttributes([
                 'class' => 'form-control'
             ])
             ->value(Html::encode($form->getName()))
             ->readonly(true)
-            ->placeholder($translator->translate('i.name'))
+            ->placeholder($translator->translate('name'))
          ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('form'); ?>

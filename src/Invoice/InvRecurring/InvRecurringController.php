@@ -118,7 +118,7 @@ final class InvRecurringController extends BaseController
                 if ($baseInvoice->getStatus_id() == 2) {
                     $invDateCreated = $baseInvoice->getDate_created();
                     $parameters = [
-                        'title' => $this->translator->translate('invoice.add'),
+                        'title' => $this->translator->translate('add'),
                         'actionName' => 'invrecurring/add',
                         'actionArguments' => ['inv_id' => $inv_id],
                         'errors' => [],
@@ -138,7 +138,7 @@ final class InvRecurringController extends BaseController
                     }
                     return $this->viewRenderer->render('_form', $parameters);
                 }
-                $this->flashMessage('danger', $this->translator->translate('invoice.recurring.sent.only') . '❗');
+                $this->flashMessage('danger', $this->translator->translate('recurring.sent.only') . '❗');
             }
         }
         return $this->webService->getNotFoundResponse();
@@ -182,7 +182,7 @@ final class InvRecurringController extends BaseController
                         }
                     } else {
                         return $this->factory->createResponse(Json::encode(['success' => 0,
-                            'message' => $this->translator->translate('invoice.recurring.status.sent.only')]));
+                            'message' => $this->translator->translate('recurring.status.sent.only')]));
                     }
                 } else {
                     return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => '']));
@@ -190,7 +190,7 @@ final class InvRecurringController extends BaseController
             }
             return $this->factory->createResponse(Json::encode(['success' => 1]));
         }
-        return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $this->translator->translate('invoice.recurring.no.invoices.selected')]));
+        return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $this->translator->translate('recurring.no.invoices.selected')]));
     }
 
     /**
@@ -236,7 +236,7 @@ final class InvRecurringController extends BaseController
             if (null !== $base_invoice) {
                 $invDateCreated = $base_invoice->getDate_created();
                 $parameters = [
-                    'title' => $this->translator->translate('i.edit'),
+                    'title' => $this->translator->translate('edit'),
                     'actionName' => 'invrecurring/start',
                     'actionArguments' => ['id' => $inv_recurring->getId()],
                     'errors' => [],
@@ -273,7 +273,7 @@ final class InvRecurringController extends BaseController
             $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
             if ($inv_recurring) {
                 $this->invrecurringService->deleteInvRecurring($inv_recurring);
-                $this->flashMessage('info', $this->translator->translate('invoice.invoice.recurring.deleted'));
+                $this->flashMessage('info', $this->translator->translate('recurring.deleted'));
                 return $this->webService->getRedirectResponse('invrecurring/index');
             }
             return $this->webService->getNotFoundResponse();
@@ -316,7 +316,7 @@ final class InvRecurringController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('invrecurring/index');
         }
         return $canEdit;
@@ -370,7 +370,7 @@ final class InvRecurringController extends BaseController
             if (null !== $base_invoice) {
                 $invDateCreated = $base_invoice->getDate_created();
                 $parameters = [
-                    'title' => $this->translator->translate('i.view'),
+                    'title' => $this->translator->translate('view'),
                     'actionName' => 'invrecurring/view',
                     'actionArguments' => ['id' => $invRecurringId],
                     'errors' => [],

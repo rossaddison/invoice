@@ -22,16 +22,16 @@ use Yiisoft\Html\Html;
 
 <ul id="product-tabs" class="nav nav-tabs nav-tabs-noborder">
     <li class="active">
-        <a data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?= $translator->translate('invoice.product.view.tab.details'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?= $translator->translate('product.view.tab.details'); ?> </a>
     </li>
     <li>
-        <a data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?= $translator->translate('invoice.product.view.tab.properties'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?= $translator->translate('product.view.tab.properties'); ?> </a>
     </li>
     <li>
-        <a data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?= $translator->translate('invoice.product.view.tab.images'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?= $translator->translate('product.view.tab.images'); ?> </a>
     </li>
     <li>
-        <a data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('invoice.product.view.tab.gallery'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('product.view.tab.gallery'); ?> </a>
     </li>
     <li>
         <?= $button::back(); ?>

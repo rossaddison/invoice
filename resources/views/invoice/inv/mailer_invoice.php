@@ -106,7 +106,7 @@ echo Html::script($js2)->type('module');
         <div class="col-12 col-md-8 col-lg-6 col-xl-8">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('i.email_invoice'). ' #'. ($invoice->getNumber() ?? '#'). ' => '. ($invoice->getClient()?->getClient_email() ?? '') ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('email.invoice'). ' #'. ($invoice->getNumber() ?? '#'). ' => '. ($invoice->getClient()?->getClient_email() ?? '') ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
@@ -123,7 +123,7 @@ echo Html::script($js2)->type('module');
 ?>
                     
                     <div class="panel panel-default" hidden>
-                        <?= Html::tag('Label', $translator->translate('i.type'), ['for' => 'email_template_type', 'class' => 'control-label']) ?>
+                        <?= Html::tag('Label', $translator->translate('type'), ['for' => 'email_template_type', 'class' => 'control-label']) ?>
                         <?= Html::tag(
                             'Div',
                             Html::tag(
@@ -147,51 +147,51 @@ echo Html::script($js2)->type('module');
                             ['class' => 'radio']
                         ); ?>
                     </div>
-                    <?= Html::tag('Label', $translator->translate('i.to_email')) ?>
+                    <?= Html::tag('Label', $translator->translate('to.email')) ?>
                     <?= Field::email($form, 'to_email')->addInputAttributes(['value' => Html::encode($invoice->getClient()?->getClient_email())])
                                                            ->required(true)
                                                            ->hideLabel() ?> 
                     
-                    <?= Html::tag('Label', $translator->translate('i.email_template')) ?>                        
+                    <?= Html::tag('Label', $translator->translate('email.template')) ?>                        
                     <?= Field::select($form, 'email_template')
                             ->optionsData($dropdownTitlesOfEmailTemplates, true, [], [])
                             ->disabled(empty($dropdownTitlesOfEmailTemplates) ? true : false)
                             ->hideLabel() ?>
                     
-                    <?= Html::tag('Label', $translator->translate('i.from_name')) ?>
+                    <?= Html::tag('Label', $translator->translate('from.name')) ?>
                     <?= Field::text($form, 'from_name')
                             ->addInputAttributes(['class' => 'email-template-from-name form-control'])
                             ->addInputAttributes(['value' => strlen((string)$autoTemplate['from_name']) > 0 ? $autoTemplate['from_name'] : Html::encode($userInv->getName())])
                             ->hideLabel()
                             ->required(true); ?>
                     
-                    <?= (string)Html::tag('Label', $translator->translate('i.from_email')). str_repeat("&nbsp;", 2). ($autoTemplate['from_email'] ? $translator->translate('invoice.email.source.email.template') : $translator->translate('invoice.email.source.user.account')) ?>
+                    <?= (string)Html::tag('Label', $translator->translate('from.email')). str_repeat("&nbsp;", 2). ($autoTemplate['from_email'] ? $translator->translate('email.source.email.template') : $translator->translate('email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')
                             ->addInputAttributes(['value' => strlen((string)$autoTemplate['from_email']) > 0 ? $autoTemplate['from_email'] : (Html::encode($userInv->getUser()?->getEmail()))])->hideLabel()
                             ->addInputAttributes(['class' => 'email-template-from-email form-control'])
                             ->required(true); ?>                            
                     
-                    <?= Html::tag('Label', $translator->translate('i.cc')) ?>
+                    <?= Html::tag('Label', $translator->translate('cc')) ?>
                     <?= Field::text($form, 'cc')
                             ->addInputAttributes(['class' => 'email-template-cc form-control'])
                             ->addInputAttributes(['value' => $autoTemplate['cc'] ?? '' ])
                             ->hideLabel()?>
                     
-                    <?= Html::tag('Label', $translator->translate('i.bcc')) ?>
+                    <?= Html::tag('Label', $translator->translate('bcc')) ?>
                     <?= Field::email($form, 'bcc')
                             ->addInputAttributes(['class' => 'email-template-bcc form-control'])
                             ->addInputAttributes(['value' => $autoTemplate['bcc'] ?? '' ])
                             ->hideLabel()?>
                                         
-                    <?= Html::tag('Label', $translator->translate('i.subject')) ?>
+                    <?= Html::tag('Label', $translator->translate('subject')) ?>
                     <?= Field::text($form, 'subject')
                             ->addInputAttributes(['id' => 'mailerinvform-subject'])
                             ->addInputAttributes(['class' => 'email-template-subject form-control'])
-                            ->addInputAttributes(['value' => strlen((string)$autoTemplate['subject']) > 0 ? $autoTemplate['subject'] : $translator->translate('i.invoice'). '#'. ($invoice->getNumber() ?? '') ])
+                            ->addInputAttributes(['value' => strlen((string)$autoTemplate['subject']) > 0 ? $autoTemplate['subject'] : $translator->translate('invoice'). '#'. ($invoice->getNumber() ?? '') ])
                             ->hideLabel()
                             ->required(true); ?>
                     
-                    <?= Html::tag('Label', $translator->translate('i.pdf_template')) ?>
+                    <?= Html::tag('Label', $translator->translate('pdf.template')) ?>
                     <?= Field::select($form, 'pdf_template')
                             ->optionsData($pdfTemplates, true, [], [])
                             ->disabled(empty($pdfTemplates) ? true : false)
@@ -199,7 +199,7 @@ echo Html::script($js2)->type('module');
                             ->addInputAttributes(['value' => $settingStatusPdfTemplate ?: ucfirst('invoice')])
                             ->hideLabel()?>
                     
-                    <?= Html::tag('Label', $translator->translate('i.body')) ?>
+                    <?= Html::tag('Label', $translator->translate('body')) ?>
                     
                     <?= Field::textarea($form, 'body')
                             ->addInputAttributes(['id' => 'mailerinvform-body'])
@@ -245,7 +245,7 @@ echo Html::script($js2)->type('module');
                     
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <?= $translator->translate('i.preview'); ?>
+                            <?= $translator->translate('preview'); ?>
                             <div id="email-template-preview-reload" class="pull-right cursor-pointer">
                                 <i class="fa fa-refresh"></i>
                             </div>
@@ -289,13 +289,13 @@ echo Html::tag(
 ->addContainerClass('btn-group btn-toolbar float-end')
 ->buttonsData([
     [
-        $translator->translate('i.cancel'),
+        $translator->translate('cancel'),
         'type' => 'reset',
         'class' => 'btn btn-lg btn-danger',
         'name' => 'btn_cancel'
     ],
     [
-        $translator->translate('i.send'),
+        $translator->translate('send'),
         'type' => 'submit',
         'class' => 'btn btn-lg btn-primary',
         'name' => 'btn_send'

@@ -16,7 +16,7 @@ final class PeppolDeliveryLocationCountryNameNotFoundException extends \RuntimeE
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.client.peppol.not.found.delivery.location');
+        return $this->translator->translate('client.peppol.not.found.delivery.location');
     }
 
     /**

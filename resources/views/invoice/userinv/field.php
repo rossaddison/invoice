@@ -23,15 +23,15 @@ $client_helper = new ClientHelper($s);
 
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('i.assigned_clients'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('assigned.clients'); ?></h1>
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
             <a class="btn btn-default" href="<?= $urlGenerator->generate('userinv/index'); ?>">
-                <i class="fa fa-arrow-left"></i> <?= $translator->translate('i.back'); ?>
+                <i class="fa fa-arrow-left"></i> <?= $translator->translate('back'); ?>
             </a>
             <a class="btn btn-primary" href="<?= $urlGenerator->generate('userclient/new', ['user_id' => $userInv->getUser_id()]); ?>">
-                <i class="fa fa-plus"></i> <?= $translator->translate('i.new'); ?>
+                <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?>
             </a>
         </div>
     </div>
@@ -43,7 +43,7 @@ $client_helper = new ClientHelper($s);
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <?= $translator->translate('i.user') . ': ' . Html::encode($userInv->getName()); ?>
+                    <?= $translator->translate('user') . ': ' . Html::encode($userInv->getName()); ?>
                 </div>
 
                 <div class="panel-body table-content">
@@ -52,8 +52,8 @@ $client_helper = new ClientHelper($s);
 
                             <thead>
                             <tr>
-                                <th><?= $translator->translate('i.client'); ?></th>
-                                <th><?= $translator->translate('i.options'); ?></th>
+                                <th><?= $translator->translate('client'); ?></th>
+                                <th><?= $translator->translate('options'); ?></th>
                             </tr>
                             </thead>
 
@@ -78,8 +78,8 @@ $client_helper = new ClientHelper($s);
                                             method="POST" enctype="multipart/form-data">
                                             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                                             <button type="submit" class="btn btn-default btn-sm"
-                                                    onclick="return confirm('<?= $translator->translate('i.delete_user_client_warning'); ?>');">
-                                                <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('i.remove'); ?>
+                                                    onclick="return confirm('<?= $translator->translate('delete.user.client.warning'); ?>');">
+                                                <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('remove'); ?>
                                             </button>
                                         </form>
                                     </td>

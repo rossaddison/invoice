@@ -50,7 +50,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('i.product')))
+                        ->content(' ' . Html::encode($translator->translate('product')))
             )
     )
     ->render();
@@ -78,10 +78,10 @@ $toolbar = Div::tag();
 ?>
 
 <div>
-    <h5><?= $translator->translate('i.products'); ?></h5>
+    <h5><?= $translator->translate('products'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('product/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('new')); ?>
         </a>
     </div>
 </div>
@@ -94,14 +94,14 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (Product $model) => Html::encode($model->getProduct_id()),
             withSorting: true,
         ),
         new DataColumn(
             field: 'family_id',
             property: 'filter_family_id',    
-            header: $translator->translate('i.family_name'),
+            header: $translator->translate('family.name'),
             encodeHeader: true,    
             content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
             filter: $optionsDataFamiliesDropdownFilter,
@@ -115,7 +115,7 @@ $toolbar = Div::tag();
              */
             field: 'product_sku',
             property: 'filter_product_sku',
-            header:  $translator->translate('i.product_sku'),
+            header:  $translator->translate('product.sku'),
             encodeHeader: true,
             content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
             // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below
@@ -125,47 +125,47 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'product_description',
-            header: $translator->translate('i.product_description'),
+            header: $translator->translate('product.description'),
             content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
             withSorting: true
         ),
         new DataColumn(
             field: 'product_price',
             property: 'filter_product_price',
-            header: $translator->translate('i.product_price'). ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('product.price'). ' ( '. $s->getSetting('currency_symbol'). ' ) ',
             content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
             filter: true,
             withSorting: false
         ),
         new DataColumn(
             'product_price_base_quantity',
-            header: $translator->translate('invoice.product.price.base.quantity'),
+            header: $translator->translate('product.price.base.quantity'),
             content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
             withSorting: true
         ),
         new DataColumn(
             'product_unit',
-            header: $translator->translate('i.product_unit'),
+            header: $translator->translate('product.unit'),
             content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? '')))
         ),
         new DataColumn(
             'tax_rate_id',
-            header: $translator->translate('i.tax_rate'),
+            header: $translator->translate('tax.rate'),
             content: static fn (Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
                         ? Html::encode($model->getTaxrate()?->getTaxRateName())
-                        : $translator->translate('i.none'),
+                        : $translator->translate('none'),
             withSorting: true
         ),
         new DataColumn(
             'product_tariff',
-            header: $s->getSetting('sumex') ? $translator->translate('i.product_tariff'). '('. $s->getSetting('currency_symbol'). ')' : '',
+            header: $s->getSetting('sumex') ? $translator->translate('product.tariff'). '('. $s->getSetting('currency_symbol'). ')' : '',
             content: static fn (Product $model): string => ($s->getSetting('sumex')
                         ? Html::encode($model->getProduct_tariff())
-                        : Html::encode($translator->translate('i.none'))),
+                        : Html::encode($translator->translate('none'))),
             visible: $s->getSetting('sumex') ? true : false
         ),
         new DataColumn(
-            header: $translator->translate('invoice.product.property.add'),
+            header: $translator->translate('product.property.add'),
             content: static function (Product $model) use ($urlGenerator): A {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-plus fa-margin dropdown-button text-decoration-none']),
@@ -183,7 +183,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -194,7 +194,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -204,8 +204,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('product/delete', ['id' => $model->getProduct_id()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -229,7 +229,7 @@ $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.products'),
+    $translator->translate('products'),
     ''
 );
 
@@ -255,7 +255,7 @@ echo GridView::widget()
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
-->emptyCell($translator->translate('i.not_set'))
+->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 ->header($header)
 ->id('w4-grid')
@@ -263,7 +263,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product').' '.$grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
 </div>

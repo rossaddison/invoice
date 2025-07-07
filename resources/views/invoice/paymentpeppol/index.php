@@ -26,28 +26,28 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 ?>
-<h1><?= $translator->translate('invoice.paymentpeppol') ?></h1>
+<h1><?= $translator->translate('paymentpeppol') ?></h1>
 <?php
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('i.id'),
+            header:  $translator->translate('id'),
             content: static fn (PaymentPeppol $model) => $model->getId()
         ),
         new DataColumn(
-            header:  $translator->translate('i.view'),
+            header:  $translator->translate('view'),
             content: static function (PaymentPeppol $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.edit'),
+            header:  $translator->translate('edit'),
             content: static function (PaymentPeppol $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->getId()]), []);
             }
         ),
         new DataColumn(
-            header:  $translator->translate('i.delete'),
+            header:  $translator->translate('delete'),
             content: static function (PaymentPeppol $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
@@ -56,7 +56,7 @@ echo $alert;
                         [
                   'type' => 'submit',
                   'class' => 'dropdown-button',
-                  'onclick' => "return confirm(" . "'" . $translator->translate('i.delete_record_warning') . "');"
+                  'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
                 ]
                     ),
                     $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->getId()]),
@@ -73,7 +73,7 @@ $header = Div::tag()
       H5::tag()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.paymentpeppol'))
+            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('paymentpeppol'))
         )
   )
 ->render();
@@ -92,7 +92,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.paymentpeppol.reference.plural'),
+    $translator->translate('paymentpeppol.reference.plural'),
     ''
 );
 echo GridView::widget()
@@ -107,5 +107,5 @@ echo GridView::widget()
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
   ->summaryTemplate($grid_summary)
   ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('invoice.invoice.no.records'))
+  ->emptyText($translator->translate('no.records'))
   ->toolbar($toolbarString);

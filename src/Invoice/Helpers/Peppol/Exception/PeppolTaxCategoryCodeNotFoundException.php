@@ -16,7 +16,7 @@ final class PeppolTaxCategoryCodeNotFoundException extends \RuntimeException imp
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.peppol.tax.category.not.found');
+        return $this->translator->translate('peppol.tax.category.not.found');
     }
 
     /**

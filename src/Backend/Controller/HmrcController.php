@@ -303,31 +303,29 @@ final class HmrcController extends BaseController
      */
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
-        return function (callable $handler) use ($logFile): callable {
-            return function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
-                $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return fn(callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
+            $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-                // Prevent log corruption if encoding fails
-                if ($headersJson === false) {
-                    $headersJson = 'Error encoding headers';
-                }
+            // Prevent log corruption if encoding fails
+            if ($headersJson === false) {
+                $headersJson = 'Error encoding headers';
+            }
 
-                $logEntry = sprintf(
-                    "[%s] %s %s\nHeaders: %s\n\n",
-                    date('c'),
-                    $request->getMethod(),
-                    (string) $request->getUri(),
-                    $headersJson
-                );
-                // Use file_put_contents with LOCK_EX to prevent concurrent writes
-                file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+            $logEntry = sprintf(
+                "[%s] %s %s\nHeaders: %s\n\n",
+                date('c'),
+                $request->getMethod(),
+                (string) $request->getUri(),
+                $headersJson
+            );
+            // Use file_put_contents with LOCK_EX to prevent concurrent writes
+            file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
 
-                /**
-                 * Call the next handler in the stack
-                 * @psalm-suppress MixedReturnStatement
-                 */
-                return $handler($request, $options);
-            };
+            /**
+             * Call the next handler in the stack
+             * @psalm-suppress MixedReturnStatement
+             */
+            return $handler($request, $options);
         };
     }
 

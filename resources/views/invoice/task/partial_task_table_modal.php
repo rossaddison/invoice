@@ -17,12 +17,12 @@ use Yiisoft\Html\Html;
     <table id="tasks_table" class="table table-hover table-bordered table-striped no-margin">
         <tr>
             <th>&nbsp;</th>
-            <th><?= $translator->translate('i.project_name'); ?></th>
-            <th><?= $translator->translate('i.task_name'); ?></th>
-            <th><?= $translator->translate('i.task_finish_date'); ?></th>
-            <th><?= $translator->translate('i.task_description'); ?></th>
+            <th><?= $translator->translate('project.name'); ?></th>
+            <th><?= $translator->translate('task.name'); ?></th>
+            <th><?= $translator->translate('task.finish.date'); ?></th>
+            <th><?= $translator->translate('task.description'); ?></th>
             <th class="text-right">
-                <?= $translator->translate('i.task_price'); ?></th>
+                <?= $translator->translate('task.price'); ?></th>
         </tr>
 
         <?php

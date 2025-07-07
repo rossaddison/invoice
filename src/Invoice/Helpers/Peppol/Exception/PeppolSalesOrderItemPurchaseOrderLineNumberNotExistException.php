@@ -16,7 +16,7 @@ final class PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException extends
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.client.peppol.not.found.purchase.order.line.number');
+        return $this->translator->translate('client.peppol.not.found.purchase.order.line.number');
     }
 
     /**

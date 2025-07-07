@@ -34,7 +34,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.item.lookup')))
+                        ->content(' ' . Html::encode($translator->translate('item.lookup')))
             )
     )
     ->render();
@@ -51,10 +51,10 @@ $toolbar = Div::tag();
 ?>
 
 <div>
-    <h5><?= $translator->translate('invoice.item.lookup'); ?></h5>
+    <h5><?= $translator->translate('item.lookup'); ?></h5>
     <div class="btn-group">
         <a class="btn btn-success" href="<?= $urlGenerator->generate('itemlookup/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('i.new')); ?>
+            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('new')); ?>
         </a>
     </div>
 </div>
@@ -67,22 +67,22 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header: $translator->translate('i.id'),
+            header: $translator->translate('id'),
             content: static fn (ItemLookup $model) => Html::encode($model->getId())
         ),
         new DataColumn(
             'name',
-            header: $translator->translate('i.name'),
+            header: $translator->translate('name'),
             content: static fn (ItemLookup $model): string => Html::encode($model->getName())
         ),
         new DataColumn(
             'description',
-            header: $translator->translate('i.description'),
+            header: $translator->translate('description'),
             content: static fn (ItemLookup $model): string => Html::encode($model->getDescription())
         ),
         new DataColumn(
             'price',
-            header: $translator->translate('i.price'),
+            header: $translator->translate('price'),
             content: static fn (ItemLookup $model): string => Html::encode($model->getPrice())
         ),
         new ActionColumn(buttons: [
@@ -93,7 +93,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.view'),
+                    'title' => $translator->translate('view'),
                 ]
             ),
             new ActionButton(
@@ -103,7 +103,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('i.edit'),
+                    'title' => $translator->translate('edit'),
                 ]
             ),
             new ActionButton(
@@ -112,8 +112,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('itemlookup/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('i.delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                 ]
             ),
         ]),
@@ -124,7 +124,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.item.lookup'),
+    $translator->translate('item.lookup'),
     ''
 );
 $toolbarString =
@@ -143,7 +143,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
 </div>

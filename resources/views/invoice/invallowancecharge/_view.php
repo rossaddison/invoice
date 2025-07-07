@@ -43,7 +43,7 @@ echo Form::tag()
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::select($form, 'allowance_charge_id')
-                    ->label($translator->translate('invoice.invoice.allowance.or.charge'))
+                    ->label($translator->translate('allowance.or.charge'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
                         'disabled' => 'disabled'
@@ -54,7 +54,7 @@ echo Form::tag()
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'amount')
-    ->label($translator->translate('invoice.invoice.allowance.or.charge.amount'))
+    ->label($translator->translate('allowance.or.charge.amount'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'
@@ -66,7 +66,7 @@ echo Form::tag()
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'vat')
-    ->label($translator->translate('invoice.invoice.vat.abbreviation'))
+    ->label($translator->translate('vat.abbreviation'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled'

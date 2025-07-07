@@ -77,26 +77,26 @@ foreach ($custom_fields as $custom_field) {
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
                 <a href="#modal-add-quote" data-bs-toggle="modal" class="btn btn-success" style="text-decoration:none">
-                    <i class="fa fa-file-text"></i><?= $translator->translate('i.create_quote'); ?>
+                    <i class="fa fa-file-text"></i><?= $translator->translate('create.quote'); ?>
                 </a>
                 <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-success"  style="text-decoration:none">
-                   <i class="fa fa-file-text"></i><?= $translator->translate('i.create_invoice'); ?>
+                   <i class="fa fa-file-text"></i><?= $translator->translate('create.invoice'); ?>
                 </a>
                 <?php if ($cpR->repoClientCount($clientId = (string)$client->getClient_id()) === 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['client_id' => $client->getClient_id()]); ?>" 
+                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['client.id' => $client->getClient_id()]); ?>" 
                    class="btn btn-info" style="text-decoration:none">
-                     <i class="fa fa-plus"></i> <?= $translator->translate('invoice.client.peppol.add'); ?>
+                     <i class="fa fa-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
                 </a>
                 <?php } ?>
                 <?php if ($cpR->repoClientCount($clientId = (string)$client->getClient_id()) > 0 && strlen($clientId) > 0) { ?>
                 <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClient_id()]); ?>" 
                    class="btn btn-warning" style="text-decoration:none">
-                     <i class="fa fa-edit"></i> <?= $translator->translate('invoice.client.peppol.edit'); ?>
+                     <i class="fa fa-edit"></i> <?= $translator->translate('client.peppol.edit'); ?>
                 </a>
                 <?php } ?>
                 <a href="<?= null !== ($clientIdEdit = $client->getClient_id()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
                    class="btn btn-danger" style="text-decoration:none">
-                    <i class="fa fa-edit"></i><?= $translator->translate('i.edit'); ?>
+                    <i class="fa fa-edit"></i><?= $translator->translate('edit'); ?>
                 </a>
                 <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id()) ?
                             $urlGenerator->generate(
@@ -117,7 +117,7 @@ foreach ($custom_fields as $custom_field) {
                                     'action' => 'add']
                             ) : ''; ?>"
                    class="btn btn-primary" style="text-decoration:none">
-                    <i class="fa fa-plus"></i><?= $translator->translate('invoice.client.postaladdress.add'); ?>
+                    <i class="fa fa-plus"></i><?= $translator->translate('client.postaladdress.add'); ?>
                 </a>
                 <a href="<?= null !== ($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate(
                     'del/add',
@@ -125,12 +125,12 @@ foreach ($custom_fields as $custom_field) {
                     ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']
                 ) : ''; ?>"
                    class="btn btn-success" style="text-decoration:none">
-                   <i class="fa fa-plus fa-margin"></i><?= $translator->translate('invoice.invoice.delivery.location.add'); ?>
+                   <i class="fa fa-plus fa-margin"></i><?= $translator->translate('delivery.location.add'); ?>
                 </a>
                 <a class="btn btn-danger"
                    href="<?= $urlGenerator->generate('client/delete', ['id' => $client->getClient_id()]); ?>"
-                   onclick="return confirm('<?= $translator->translate('i.delete_client_warning'); ?>');" style="text-decoration:none">
-                   <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
+                   onclick="return confirm('<?= $translator->translate('delete.client.warning'); ?>');" style="text-decoration:none">
+                   <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
                 </a>
         </div>
     </div>
@@ -139,29 +139,29 @@ foreach ($custom_fields as $custom_field) {
 
 <ul id="submenu" class="nav nav-tabs nav-tabs-noborder">
     <!== https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
-    <li class="nav-item" role="presentation"><button class="nav-link active" id="client-details-tab" data-bs-toggle="tab" data-bs-target="#clientDetails"  style="text-decoration:none"><?= $translator->translate('i.details'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-tab" data-bs-toggle="tab" data-bs-target="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $translator->translate('i.quotes'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-draft-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-sent-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-approved-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('i.approved'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-cancelled-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('i.canceled'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-rejected-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('i.rejected'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-tab" data-bs-toggle="tab" data-bs-target="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $translator->translate('i.invoices'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-draft-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('i.draft'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-sent-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('i.sent'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('i.viewed'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-paid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesPaid" style="text-decoration:none"><?= $translator->translate('i.paid'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-overdue-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOverdue" style="text-decoration:none"><?= $translator->translate('i.overdue'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-unpaid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesUnpaid" style="text-decoration:none"><?= $translator->translate('i.unpaid'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-reminder-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesReminderSent" style="text-decoration:none"><?= $translator->translate('i.reminder'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-seven-day-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSevenDay" style="text-decoration:none"><?= $translator->translate('i.letter'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-legal-claim-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesLegalClaim" style="text-decoration:none"><?= $translator->translate('i.claim'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-judgement-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesJudgement" style="text-decoration:none"><?= $translator->translate('i.judgement'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-officer-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOfficer" style="text-decoration:none"><?= $translator->translate('i.enforcement'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-credit-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesCredit" style="text-decoration:none"><?= $translator->translate('i.credit_invoice_for_invoice'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-written-off-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesWrittenOff" style="text-decoration:none"><?= $translator->translate('i.loss'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-payments-tab" data-bs-toggle="tab" data-bs-target="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $translator->translate('i.payments'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link active" id="client-details-tab" data-bs-toggle="tab" data-bs-target="#clientDetails"  style="text-decoration:none"><?= $translator->translate('details'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-tab" data-bs-toggle="tab" data-bs-target="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $translator->translate('quotes'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-draft-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('draft'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-sent-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('sent'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('viewed'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-approved-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('approved'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-cancelled-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('canceled'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-rejected-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('rejected'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-tab" data-bs-toggle="tab" data-bs-target="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $translator->translate('invoices'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-draft-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('draft'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-sent-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('sent'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('viewed'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-paid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesPaid" style="text-decoration:none"><?= $translator->translate('paid'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-overdue-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOverdue" style="text-decoration:none"><?= $translator->translate('overdue'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-unpaid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesUnpaid" style="text-decoration:none"><?= $translator->translate('unpaid'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-reminder-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesReminderSent" style="text-decoration:none"><?= $translator->translate('reminder'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-seven-day-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSevenDay" style="text-decoration:none"><?= $translator->translate('letter'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-legal-claim-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesLegalClaim" style="text-decoration:none"><?= $translator->translate('claim'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-judgement-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesJudgement" style="text-decoration:none"><?= $translator->translate('judgement'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-officer-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOfficer" style="text-decoration:none"><?= $translator->translate('enforcement'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-credit-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesCredit" style="text-decoration:none"><?= $translator->translate('credit.invoice.for.invoice'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-written-off-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesWrittenOff" style="text-decoration:none"><?= $translator->translate('loss'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link" id="client-payments-tab" data-bs-toggle="tab" data-bs-target="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $translator->translate('payments'); ?></button></li>
 </ul>
 
 <div id="content" class="tabbable tabs-below no-padding">
@@ -185,7 +185,7 @@ foreach ($custom_fields as $custom_field) {
                     <table class="table table-bordered no-margin">
                         <tr>
                             <th>
-                                <?= $translator->translate('i.language'); ?>
+                                <?= $translator->translate('language'); ?>
                             </th>
                             <td class="td-amount">
                                 <?= ucfirst($client->getClient_language() ?? ''); ?>
@@ -193,7 +193,7 @@ foreach ($custom_fields as $custom_field) {
                         </tr>
                         <tr>
                             <th>
-                                <?= $translator->translate('i.total_billed'); ?>
+                                <?= $translator->translate('total.billed'); ?>
                             </th>
                             <td class="td-amount">
                                 <?= null !== ($clientIdTotal = $client->getClient_id()) ? $s->format_currency($iR->with_total($clientIdTotal, $iaR)) : ''; ?>
@@ -201,7 +201,7 @@ foreach ($custom_fields as $custom_field) {
                         </tr>
                         <tr>
                             <th>
-                                <?= $translator->translate('i.total_paid'); ?>
+                                <?= $translator->translate('total.paid'); ?>
                             </th>
                             <th class="td-amount">
                                 <?= null !== ($clientIdPaid = $client->getClient_id()) ? $s->format_currency($iR->with_total_paid($clientIdPaid, $iaR)) : ''; ?>
@@ -209,7 +209,7 @@ foreach ($custom_fields as $custom_field) {
                         </tr>
                         <tr>
                             <th>
-                                <?= $translator->translate('i.total_balance'); ?>
+                                <?= $translator->translate('total.balance'); ?>
                             </th>
                             <td class="td-amount">
                                 <?= null !== ($clientIdBalance = $client->getClient_id()) ? $s->format_currency($iR->with_total_balance($clientIdBalance, $iaR)) : ''; ?>
@@ -225,7 +225,7 @@ foreach ($custom_fields as $custom_field) {
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
-                        <div class="panel-heading"><?= $translator->translate('invoice.invoice.delivery.location.client'); ?></div>
+                        <div class="panel-heading"><?= $translator->translate('delivery.location.client'); ?></div>
                             <div class="panel-body table-content">
                                 <?php echo $delivery_locations; ?>
                             </div>
@@ -238,36 +238,36 @@ foreach ($custom_fields as $custom_field) {
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
-                        <div class="panel-heading"><?= $translator->translate('i.contact_information'); ?></div>
+                        <div class="panel-heading"><?= $translator->translate('contact.information'); ?></div>
                         <div class="panel-body table-content">
                             <table class="table no-margin">
                                 <?php if ($client->getClient_email()) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.email'); ?></th>
+                                        <th><?= $translator->translate('email'); ?></th>
                                         <td><?= Html::mailto($client->getClient_email()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (strlen(($client->getClient_phone() ?? '')) > 0) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.phone'); ?></th>
+                                        <th><?= $translator->translate('phone'); ?></th>
                                         <td><?= Html::encode($client->getClient_phone()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (strlen(($client->getClient_mobile() ?? '')) > 0) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.mobile'); ?></th>
+                                        <th><?= $translator->translate('mobile'); ?></th>
                                         <td><?= Html::encode($client->getClient_mobile()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (strlen(($client->getClient_fax() ?? '')) > 0) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.fax'); ?></th>
+                                        <th><?= $translator->translate('fax'); ?></th>
                                         <td><?= Html::encode($client->getClient_fax()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (strlen(($client->getClient_web() ?? '')) > 0) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.web'); ?></th>
+                                        <th><?= $translator->translate('web'); ?></th>
                                         <td><?= Html::link($client->getClient_web()); ?></td>
                                     </tr>
                                 <?php endif; ?>
@@ -294,18 +294,18 @@ foreach ($custom_fields as $custom_field) {
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
 
-                        <div class="panel-heading"><?= $translator->translate('i.tax_information'); ?></div>
+                        <div class="panel-heading"><?= $translator->translate('tax.information'); ?></div>
                         <div class="panel-body table-content">
                             <table class="table no-margin">
                                 <?php if ($client->getClient_vat_id()) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.vat_id'); ?></th>
+                                        <th><?= $translator->translate('vat.id'); ?></th>
                                         <td><?= Html::encode($client->getClient_vat_id()); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (strlen(($clientTaxCode = $client->getClient_tax_code() ?? '')) > 0) : ?>
                                     <tr>
-                                        <th><?= $translator->translate('i.tax_code'); ?></th>
+                                        <th><?= $translator->translate('tax.code'); ?></th>
                                         <td><?= Html::encode($clientTaxCode); ?></td>
                                     </tr>
                                 <?php endif; ?>
@@ -342,13 +342,13 @@ foreach ($custom_fields as $custom_field) {
 
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <?= $translator->translate('i.personal_information'); ?>
+                                <?= $translator->translate('personal.information'); ?>
                             </div>
 
                             <div class="panel-body table-content">
                                 <table class="table no-margin">                                     
                                     <tr>
-                                        <th><?= $translator->translate('i.birthdate'); ?></th>
+                                        <th><?= $translator->translate('birthdate'); ?></th>
                                         
                                         <td><?=
                                               !is_string($clientBirthdate = $client->getClient_birthdate())
@@ -357,21 +357,21 @@ foreach ($custom_fields as $custom_field) {
                 ?></td>
                                     </tr>
                                     <tr>
-                                        <th><?= $translator->translate('i.gender'); ?></th>
+                                        <th><?= $translator->translate('gender'); ?></th>
                                         <td><?= null !== ($clientGender = $client->getClient_gender()) ?
                     $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
                                     </tr>
                                     <?php if ($s->getSetting('sumex') == '1'): ?>
                                         <tr>
-                                            <th><?= $translator->translate('i.sumex_ssn'); ?></th>
+                                            <th><?= $translator->translate('sumex.ssn'); ?></th>
                                             <td><?= null !== ($clientAvs = $client->getClient_avs()) ? $cvH->format_avs($clientAvs) : ''; ?></td>
                                         </tr>
                                         <tr>
-                                            <th><?= $translator->translate('i.sumex_insurednumber'); ?></th>
+                                            <th><?= $translator->translate('sumex.insurednumber'); ?></th>
                                             <td><?= Html::encode($client->getClient_insurednumber()) ?></td>
                                         </tr>
                                         <tr>
-                                            <th><?= $translator->translate('i.sumex_veka'); ?></th>
+                                            <th><?= $translator->translate('sumex.veka'); ?></th>
                                             <td><?= Html::encode($client->getClient_veka()) ?></td>
                                         </tr>
                                     <?php endif; ?>
@@ -410,7 +410,7 @@ foreach ($custom_fields as $custom_field) {
                         <div class="panel panel-default no-margin">
 
                             <div class="panel-heading">
-                                <?= $translator->translate('i.custom_fields'); ?>
+                                <?= $translator->translate('custom.fields'); ?>
                             </div>
                             <div class="panel-body table-content">
                                 <table class="table no-margin">
@@ -443,7 +443,7 @@ foreach ($custom_fields as $custom_field) {
 
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading">
-                            <?= $translator->translate('i.notes'); ?>
+                            <?= $translator->translate('notes'); ?>
                         </div>
                         <div class="panel-body">
                             <div id="notes_list">
@@ -454,7 +454,7 @@ foreach ($custom_fields as $custom_field) {
                             <div class="input-group">
                                 <textarea id="client_note" class="form-control" rows="2" style="resize:none"></textarea>
                                 <span id="save_client_note_new" class="input-text-addon btn btn-info">
-                                    <?= $translator->translate('i.add_note'); ?>
+                                    <?= $translator->translate('add.note'); ?>
                                 </span>
                             </div>
                         </div>

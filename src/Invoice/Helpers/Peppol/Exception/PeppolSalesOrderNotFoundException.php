@@ -16,7 +16,7 @@ final class PeppolSalesOrderNotFoundException extends \RuntimeException implemen
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.client.peppol.not.exist.sales.order');
+        return $this->translator->translate('client.peppol.not.exist.sales.order');
     }
 
     /**

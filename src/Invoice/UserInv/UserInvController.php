@@ -89,7 +89,7 @@ final class UserInvController extends BaseController
         $userinv = new UserInv();
         $form = new UserInvForm($userinv);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'userinv/add',
             'actionArguments' => [],
             'aliases' => $aliases,
@@ -120,15 +120,15 @@ final class UserInvController extends BaseController
                             $roles = $this->manager->getRolesByUserId($form->getUser_id());
                             if (!array_key_exists('observer', $roles)) {
                                 $this->manager->assign('observer', $form->getUser_id());
-                                $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.all.new'));
+                                $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                             } else {
-                                $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.observer.assigned.already'));
+                                $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned.already'));
                             }
                             $this->userinvService->saveUserInv($userinv, $body);
                         }
                         // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
                         if ($form->getUser_id() != '1' && $type == '0') {
-                            $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
+                            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                         }
                         // the user is admin and the type administrator was selected in the dropdown on the form
                         if ($form->getUser_id() == '1' && $type == '0') {
@@ -136,15 +136,15 @@ final class UserInvController extends BaseController
                             $roles = $this->manager->getRolesByUserId($form->getUser_id());
                             if (!array_key_exists('admin', $roles)) {
                                 $this->manager->assign('admin', $form->getUser_id());
-                                $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.administrator.assigned'));
+                                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
                             } else {
-                                $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.administrator.already.assigned'));
+                                $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.already.assigned'));
                             }
                             $this->userinvService->saveUserInv($userinv, $body);
                         }
                         // the user is an admin and the type guest was selected in the dropdown on the form
                         if ($form->getUser_id() == '1' && $type == '1') {
-                            $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.guest.type.to.administrator'));
+                            $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
                         }
                         return $this->webService->getRedirectResponse('userinv/index');
                     } // null!== $form->getUser_id()
@@ -235,7 +235,7 @@ final class UserInvController extends BaseController
                 if ($userinv) {
                     $form = new UserInvForm($userinv);
                     $parameters = [
-                        'title' => $this->translator->translate('i.edit'),
+                        'title' => $this->translator->translate('edit'),
                         'actionName' => 'userinv/guest',
                         'actionArguments' => [],
                         'errors' => [],
@@ -301,7 +301,7 @@ final class UserInvController extends BaseController
         if (strlen($user_id) > 0) {
             $this->manager->revokeAll($user_id);
             $this->manager->assign('observer', $user_id);
-            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
@@ -315,8 +315,8 @@ final class UserInvController extends BaseController
         if (strlen($user_id) > 0) {
             $this->manager->revokeAll($user_id);
             $this->manager->assign('accountant', $user_id);
-            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.accountant.assigned'));
-            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.accountant.default'));
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.accountant.assigned'));
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.accountant.default'));
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
@@ -329,7 +329,7 @@ final class UserInvController extends BaseController
     {
         if (strlen($user_id) > 0) {
             $this->manager->revokeAll($user_id);
-            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.revoke.all'));
+            $this->flashMessage('info', $this->translator->translate('user.inv.role.revoke.all'));
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
@@ -360,7 +360,7 @@ final class UserInvController extends BaseController
         if ($userinv) {
             $form = new UserInvForm($userinv);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'userinv/edit',
                 'actionArguments' => ['id' => $userinv->getId()],
                 'errors' => [],
@@ -382,15 +382,15 @@ final class UserInvController extends BaseController
                                 $roles = $this->manager->getRolesByUserId($form->getUser_id());
                                 if (!array_key_exists('observer', $roles)) {
                                     $this->manager->assign('observer', $form->getUser_id());
-                                    $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.all.new'));
+                                    $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                                 } else {
-                                    $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.role.observer.assigned.already'));
+                                    $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
                                 }
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }
                             // the user is not admin(1) and the type administrator(0) was selected in the dropdown on the form
                             if ($form->getUser_id() != '1' && $type == '0') {
-                                $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
+                                $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.administrator.type.to.non.administrator'));
                             }
                             // the user is admin and the type administrator was selected in the dropdown on the form
                             if ($form->getUser_id() == '1' && $type == '0') {
@@ -398,15 +398,15 @@ final class UserInvController extends BaseController
                                 $roles = $this->manager->getRolesByUserId($form->getUser_id());
                                 if (!array_key_exists('admin', $roles)) {
                                     $this->manager->assign('admin', $form->getUser_id());
-                                    $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.administrator.assigned'));
+                                    $this->flashMessage('info', $this->translator->translate('user.inv.role.administrator.assigned'));
                                 } else {
-                                    $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.role.administrator.assigned.already'));
+                                    $this->flashMessage('warning', $this->translator->translate('user.inv.role.administrator.assigned.already'));
                                 }
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }
                             // the user is an admin and the type guest was selected in the dropdown on the form
                             if ($form->getUser_id() == '1' && $type == '1') {
-                                $this->flashMessage('warning', $this->translator->translate('invoice.user.inv.type.cannot.allocate.guest.type.to.administrator'));
+                                $this->flashMessage('warning', $this->translator->translate('user.inv.type.cannot.allocate.guest.type.to.administrator'));
                             }
                             return $this->webService->getRedirectResponse('userinv/index');
                         } // null!== user_id
@@ -460,7 +460,7 @@ final class UserInvController extends BaseController
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
             $this->userinvService->deleteUserInv($userinv);
-            $this->flashMessage('info', $translator->translate('invoice.deleted'));
+            $this->flashMessage('info', $translator->translate('deleted'));
             return $this->webService->getRedirectResponse('userinv/index');
         }
         return $this->webService->getRedirectResponse('userinv/index');
@@ -532,7 +532,7 @@ final class UserInvController extends BaseController
                                         $client->setClient_language($language);
                                         $client->setClient_age($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
                                         $cR->save($client);
-                                        $this->flashMessage('info', $this->translator->translate('invoice.invoice.assign.client.on.signup.done'));
+                                        $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
                                         if (null !== ($clientId = $client->getClient_id())) {
                                             $userClient = new UserClient();
                                             $userClient->setUser_id((int)$userInv->getUser_id());
@@ -542,12 +542,12 @@ final class UserInvController extends BaseController
                                         if (strlen($userId) > 0 && $userId > 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('observer', $userId);
-                                            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.observer.assigned'));
+                                            $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
                                         }
                                         if (strlen($userId) > 0 && $userId == 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('admin', $userId);
-                                            $this->flashMessage('info', $this->translator->translate('invoice.user.inv.role.admin.assigned'));
+                                            $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
                                         }
                                     } else {
                                         $this->flashMessage('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' . ' ' .
@@ -585,7 +585,7 @@ final class UserInvController extends BaseController
             $form = new UserInvForm($userinv);
             $parameters = [
                 'aliases' => $aliases,
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'userinv/view',
                 'actionArguments' => ['id' => $userinv->getId()],
                 'errors' => [],
@@ -604,7 +604,7 @@ final class UserInvController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('userinv/index');
         }
         return $canEdit;

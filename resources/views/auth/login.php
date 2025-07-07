@@ -40,9 +40,14 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $csrf
  */
 
-$this->setTitle($translator->translate('i.login'));
+$this->setTitle($translator->translate('login'));
 
 ?>
+
+<!-- Fade-out CSS for TFA badge -->
+<?= \Yiisoft\Html\Tag\Style::tag()->content(
+    '.fade-out { opacity: 1; transition: opacity 40s ease-in; } .fade-out.hidden { opacity: 0; }'
+) ?>
 
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -95,11 +100,11 @@ $this->setTitle($translator->translate('i.login'));
                     <?php } ?>       
                 </div>
                 <?php if (($s->getSetting('enable_tfa') == '1')) { ?>
-                <div class="card-body p-2 text-center">
+                <div id="tfa-badge" class="card-body p-2 text-center fade-out">
                         <?=         
                             Html::tag('span', $s->getSetting('enable_tfa_with_disabling') == '1' ?
-                                    $translator->translate('invoice.invoice.two.factor.authentication.enabled.with.disabling') :
-                                    $translator->translate('invoice.invoice.two.factor.authentication.enabled.without.disabling'), 
+                                    $translator->translate('two.factor.authentication.enabled.with.disabling') :
+                                    $translator->translate('two.factor.authentication.enabled.without.disabling'), 
                             [
                                 'class' => 'badge bg-primary',
                                 'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
@@ -141,7 +146,7 @@ $this->setTitle($translator->translate('i.login'));
                         ->attribute('style', 'color:#999;text-decoration:none')
                         ->addClass('my-1 mx-0')
                         ->href($urlGenerator->generate('auth/forgotpassword'))
-                        ->content($translator->translate('i.forgot_your_password'))
+                        ->content($translator->translate('forgot.your.password'))
                         ->render();
                     ?>
                 </div>
@@ -149,3 +154,19 @@ $this->setTitle($translator->translate('i.login'));
         </div>
     </div>
 </div>
+
+<!-- Fade-out JS: this will fade out the badge after 2 seconds; adjust as needed -->
+<?php
+$fadeOutScript = <<<JS
+document.addEventListener('DOMContentLoaded', function() {
+    var badge = document.getElementById('tfa-badge');
+    if (badge) {
+        setTimeout(function() {
+            badge.classList.add('hidden');
+        }, 2000);
+    }
+});
+JS;
+
+echo \Yiisoft\Html\Html::script($fadeOutScript)->type('text/javascript')->charset('utf-8');
+?>

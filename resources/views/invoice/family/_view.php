@@ -44,16 +44,16 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::errorSummary($form)
                     ->errors($errors)
-                    ->header($translator->translate('invoice.error.summary'))
+                    ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['family_name'])
                     ->onlyCommonErrors()
                   ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'family_name')
-                    ->label($translator->translate('i.family_name'))
+                    ->label($translator->translate('family.name'))
                     ->addInputAttributes([
-                        'placeholder' => $translator->translate('i.family_name'),
+                        'placeholder' => $translator->translate('family.name'),
                         'value' => Html::encode($form->getFamily_name() ?? ''),
                         'class' => 'form-control',
                         'id' => 'family_name',
@@ -63,24 +63,24 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>  
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_primary_id')
-                      ->label($translator->translate('invoice.category.primary'))
+                      ->label($translator->translate('category.primary'))
                       ->addInputAttributes([
                           'class' => 'form-control  alert alert-warning'
                       ])
                       ->value($form->getCategory_primary_id())
-                      ->prompt($translator->translate('i.none'))
+                      ->prompt($translator->translate('none'))
                       ->optionsData($categoryPrimaries)
                       ->disabled(true);
                   ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_secondary_id')
-                      ->label($translator->translate('invoice.category.secondary'))
+                      ->label($translator->translate('category.secondary'))
                       ->addInputAttributes([
                           'class' => 'form-control  alert alert-warning'
                       ])
                       ->value($form->getCategory_secondary_id())
-                      ->prompt($translator->translate('i.none'))
+                      ->prompt($translator->translate('none'))
                       ->optionsData($categorySecondaries)
                       ->disabled(true)  
                   ?>

@@ -61,7 +61,7 @@ foreach ($uR->findAllPreloaded() as $user) {
     }
 }
 echo Field::select($form, 'user_id')
-->label($translator->translate('i.users'))
+->label($translator->translate('users'))
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'user_id',
@@ -74,8 +74,8 @@ echo Field::select($form, 'user_id')
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
   $types = [
-      0 => $translator->translate('i.administrator'),
-      1 => $translator->translate('i.guest_read_only'),
+      0 => $translator->translate('administrator'),
+      1 => $translator->translate('guest.read.only'),
   ]
 ?>
             <?php
@@ -84,7 +84,7 @@ foreach ($types as $key => $value) {
     $optionsDataType[$key] = $value;
 }
 echo Field::select($form, 'type')
-->label($translator->translate('i.type'))
+->label($translator->translate('type'))
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'type',
@@ -99,7 +99,7 @@ echo Field::select($form, 'type')
                 <?= Field::checkbox($form, 'active')
         ->inputLabelAttributes(['class' => 'form-check-label'])
         ->inputClass('form-check-input')
-        ->ariaDescribedBy($translator->translate('i.active'))
+        ->ariaDescribedBy($translator->translate('active'))
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
@@ -107,7 +107,7 @@ echo Field::select($form, 'type')
             <?= Field::checkbox($form, 'all_clients')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('i.user_all_clients'));
+    ->ariaDescribedBy($translator->translate('user.all.clients'));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
@@ -120,7 +120,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     $optionsDataLanguage[$language] = ucfirst($language);
 }
 echo Field::select($form, 'language')
-->label($translator->translate('i.language'))
+->label($translator->translate('language'))
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'language',
@@ -132,7 +132,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'name')
-    ->label($translator->translate('i.name'))
+    ->label($translator->translate('name'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'name',
@@ -143,7 +143,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'company')
-    ->label($translator->translate('i.company'))
+    ->label($translator->translate('company'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'company',
@@ -154,7 +154,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'address_1')
-    ->label($translator->translate('i.street_address'))
+    ->label($translator->translate('street.address'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'address_1',
@@ -165,7 +165,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'address_2')
-    ->label($translator->translate('i.street_address_2'))
+    ->label($translator->translate('street.address.2'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'address_2',
@@ -176,7 +176,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'city')
-    ->label($translator->translate('i.city'))
+    ->label($translator->translate('city'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'city',
@@ -187,7 +187,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'state')
-    ->label($translator->translate('i.state'))
+    ->label($translator->translate('state'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'state',
@@ -198,7 +198,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'zip')
-    ->label($translator->translate('i.zip'))
+    ->label($translator->translate('zip'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'zip',
@@ -209,7 +209,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'country')
-    ->label($translator->translate('i.country'))
+    ->label($translator->translate('country'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'country',
@@ -220,7 +220,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::telephone($form, 'phone')
-    ->label($translator->translate('i.phone'))
+    ->label($translator->translate('phone'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'phone',
@@ -231,7 +231,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::telephone($form, 'fax')
-    ->label($translator->translate('i.fax'))
+    ->label($translator->translate('fax'))
     ->addInputAttributes([
         'class' => 'form-control',
         'readonly' => 'readonly'
@@ -241,7 +241,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
            <?= Field::telephone($form, 'mobile')
-    ->label($translator->translate('i.mobile'))
+    ->label($translator->translate('mobile'))
     ->addInputAttributes([
         'class' => 'form-control',
         'readonly' => 'readonly'
@@ -251,7 +251,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'web')
-    ->label($translator->translate('i.web_address'))
+    ->label($translator->translate('web.address'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'web',
@@ -262,7 +262,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'tax_code')
-    ->label($translator->translate('i.tax_code'))
+    ->label($translator->translate('tax.code'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'tax_code',
@@ -273,7 +273,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'subscribernumber')
-    ->label($translator->translate('i.user_subscriber_number'))
+    ->label($translator->translate('user.subscriber.number'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'subscribernumber',
@@ -284,7 +284,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'iban')
-    ->label($translator->translate('i.user_iban'))
+    ->label($translator->translate('user.iban'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'iban',
@@ -295,7 +295,7 @@ echo Field::select($form, 'language')
          <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'gln')
-    ->label($translator->translate('invoice.delivery.location.global.location.number'))
+    ->label($translator->translate('delivery.location.global.location.number'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'gln',
@@ -306,7 +306,7 @@ echo Field::select($form, 'language')
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'rcc')
-    ->label($translator->translate('i.sumex_rcc'))
+    ->label($translator->translate('sumex.rcc'))
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'rcc'

@@ -98,7 +98,7 @@ final class EmailTemplateController extends BaseController
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email' => $this->sR->getConfigAdminEmail(),
             'sender_email' => $this->sR->getConfigSenderEmail(),
-            'from_email' => $fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set'),
+            'from_email' => $fromR->getDefault()?->getEmail() ?? $this->translator->translate('email.default.none.set'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -106,7 +106,7 @@ final class EmailTemplateController extends BaseController
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
                 if (is_array($body)) {
                     $this->emailTemplateService->saveEmailTemplate(new EmailTemplate(), $body);
-                    $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.added'));
+                    $this->flashMessage('info', $this->translator->translate('email.template.successfully.added'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
             }
@@ -148,7 +148,7 @@ final class EmailTemplateController extends BaseController
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email' => $this->sR->getConfigAdminEmail(),
             'sender_email' => $this->sR->getConfigSenderEmail(),
-            'from_email' => $fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set'),
+            'from_email' => $fromR->getDefault()?->getEmail() ?? $this->translator->translate('email.default.none.set'),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -156,7 +156,7 @@ final class EmailTemplateController extends BaseController
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body)) {
                 if (is_array($body)) {
                     $this->emailTemplateService->saveEmailTemplate(new EmailTemplate(), $body);
-                    $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.added'));
+                    $this->flashMessage('info', $this->translator->translate('email.template.successfully.added'));
                     return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
             }
@@ -187,7 +187,7 @@ final class EmailTemplateController extends BaseController
         if ($email_template) {
             $form = new EmailTemplateForm($email_template);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'emailtemplate/edit_invoice',
                 'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
@@ -207,14 +207,14 @@ final class EmailTemplateController extends BaseController
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $this->sR->getConfigAdminEmail(),
                 'sender_email' => $this->sR->getConfigSenderEmail(),
-                'from_email' => ($fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
+                'from_email' => ($fromR->getDefault()?->getEmail() ?? $this->translator->translate('email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->emailTemplateService->saveEmailTemplate($email_template, $body);
-                        $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.edited'));
+                        $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
                         return $this->webService->getRedirectResponse('emailtemplate/index');
                     }
                 }
@@ -247,7 +247,7 @@ final class EmailTemplateController extends BaseController
         if ($email_template) {
             $form = new EmailTemplateForm($email_template);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'emailtemplate/edit_quote',
                 'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
@@ -267,14 +267,14 @@ final class EmailTemplateController extends BaseController
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $this->sR->getConfigAdminEmail(),
                 'sender_email' => $this->sR->getConfigSenderEmail(),
-                'from_email' => ($fromR->getDefault()?->getEmail() ?? $this->translator->translate('invoice.email.default.none.set')),
+                'from_email' => ($fromR->getDefault()?->getEmail() ?? $this->translator->translate('email.default.none.set')),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->emailTemplateService->saveEmailTemplate($email_template, $body);
-                        $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.edited'));
+                        $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
                         return $this->webService->getRedirectResponse('emailtemplate/index');
                     }
                 }
@@ -298,7 +298,7 @@ final class EmailTemplateController extends BaseController
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
         if ($email_template) {
             $this->emailTemplateService->deleteEmailTemplate($email_template);
-            $this->flashMessage('info', $this->translator->translate('invoice.email.template.successfully.deleted'));
+            $this->flashMessage('info', $this->translator->translate('email.template.successfully.deleted'));
             return $this->webService->getRedirectResponse('emailtemplate/index');
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
@@ -340,7 +340,7 @@ final class EmailTemplateController extends BaseController
         if ($email_template) {
             $form = new EmailTemplateForm($email_template);
             $parameters = [
-                'title' => $this->translator->translate('i.preview'),
+                'title' => $this->translator->translate('preview'),
                 'actionName' => 'emailtemplate/preview',
                 'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
@@ -362,7 +362,7 @@ final class EmailTemplateController extends BaseController
         if ($email_template) {
             $form = new EmailTemplateForm($email_template);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'emailtemplate/view',
                 'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
                 'errors' => [],
@@ -381,7 +381,7 @@ final class EmailTemplateController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('emailtemplate/index');
         }
         return $canEdit;

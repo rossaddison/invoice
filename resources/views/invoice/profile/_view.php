@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
                         ->inputLabelAttributes(['class' => 'form-check-label'])
                         ->disabled(true)
                         ->inputClass('form-check-input')
-                        ->ariaDescribedBy($translator->translate('i.active'))
+                        ->ariaDescribedBy($translator->translate('active'))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

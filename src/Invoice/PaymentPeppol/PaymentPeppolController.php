@@ -52,7 +52,7 @@ final class PaymentPeppolController extends BaseController
         $paymentPeppol = new PaymentPeppol();
         $form = new PaymentPeppolForm($paymentPeppol);
         $parameters = [
-            'title' => $this->translator->translate('invoice.add'),
+            'title' => $this->translator->translate('add'),
             'actionName' => 'paymentpeppol/add',
             'errors' => [],
             'form' => $form,
@@ -114,7 +114,7 @@ final class PaymentPeppolController extends BaseController
             $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
             if (null !== $paymentpeppol) {
                 $this->paymentpeppolService->deletePaymentPeppol($paymentpeppol);
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
             return $this->webService->getRedirectResponse('paymentpeppol/index');
@@ -141,7 +141,7 @@ final class PaymentPeppolController extends BaseController
         if ($paymentPeppol) {
             $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
-                'title' => $this->translator->translate('invoice.edit'),
+                'title' => $this->translator->translate('edit'),
                 'actionName' => 'paymentpeppol/edit',
                 'actionArguments' => ['id' => $paymentPeppol->getId()],
                 'errors' => [],
@@ -205,7 +205,7 @@ final class PaymentPeppolController extends BaseController
         if ($paymentPeppol) {
             $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'actionName' => 'paymentpeppol/view',
                 'actionArguments' => ['id' => $paymentPeppol->getId()],
                 'form' => $form,

@@ -35,14 +35,14 @@ use Yiisoft\Html\Html;
 
         <thead>
         <tr>
-            <th><?= $translator->translate('i.status'); ?></th>
-            <th><?= $translator->translate('i.invoice'); ?></th>
-            <th><?= $translator->translate('i.created'); ?></th>
-            <th><?= $translator->translate('i.due_date'); ?></th>
-            <th><?= $translator->translate('i.client_name'); ?></th>
-            <th style="text-align: right;"><?= $translator->translate('i.amount'); ?></th>
-            <th style="text-align: right;"><?= $translator->translate('i.balance'); ?></th>
-            <th><?= $translator->translate('i.options'); ?></th>
+            <th><?= $translator->translate('status'); ?></th>
+            <th><?= $translator->translate('invoice'); ?></th>
+            <th><?= $translator->translate('created'); ?></th>
+            <th><?= $translator->translate('due.date'); ?></th>
+            <th><?= $translator->translate('client.name'); ?></th>
+            <th style="text-align: right;"><?= $translator->translate('amount'); ?></th>
+            <th style="text-align: right;"><?= $translator->translate('balance'); ?></th>
+            <th><?= $translator->translate('options'); ?></th>
         </tr>
         </thead>
 
@@ -79,7 +79,7 @@ foreach ($invoices as $invoice) {
             $count = $iaR->repoInvAmountCount($invoiceId);
             if ($count > 0) {
                 if ($invAmount->getSign() === -1) { ?>
-                                            &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('i.credit_invoice') ?>"></i>
+                                            &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('credit.invoice') ?>"></i>
                                         <?php
                 }
             }
@@ -87,17 +87,17 @@ foreach ($invoices as $invoice) {
     }
     ?>
                         <?php if ($invoice->getIs_read_only()) { ?>
-                            &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('i.read_only') ?>"></i>
+                            &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('read.only') ?>"></i>
                         <?php } ?>
                         <?php if ($irR->repoCount((string)$invoice->getId()) > 0) { ?>
-                            &nbsp;<i class="fa fa-refresh" title="<?= $translator->translate('i.recurring') ?>"></i>
+                            &nbsp;<i class="fa fa-refresh" title="<?= $translator->translate('recurring') ?>"></i>
                         <?php } ?>
                     </span>
                 </td>
 
                 <td>
                     <a href="<?= $urlGenerator->generate('inv/view', $actionViewArguments); ?>"
-                       title="<?= $translator->translate('i.edit'); ?>" style="text-decoration:none">
+                       title="<?= $translator->translate('edit'); ?>" style="text-decoration:none">
                         <?= (null !== ($invoice->getNumber()) ? $invoice->getNumber() : $invoice->getId()); ?>
                     </a>
                 </td>
@@ -114,7 +114,7 @@ foreach ($invoices as $invoice) {
 
                 <td>
                     <a href="<?= $urlGenerator->generate('client/view', $actionClientViewArguments); ?>"
-                       title="<?= $translator->translate('i.view_client'); ?>" style="text-decoration:none">
+                       title="<?= $translator->translate('view.client'); ?>" style="text-decoration:none">
                         <?= Html::encode($clientHelper->format_client($invoice->getClient())); ?>
                     </a>
                 </td>
@@ -136,25 +136,25 @@ foreach ($invoices as $invoice) {
                 <td>
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#" style="text-decoration:none">
-                            <i class="fa fa-cog"></i> <?= $translator->translate('i.options'); ?>
+                            <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
                         </a>
                         <ul class="dropdown-menu">
                             <?php if ($invoice->getIs_read_only() !== true) { ?>
                                 <li>
                                     <a href="<?= $urlGenerator->generate('inv/view', $actionViewArguments); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('i.edit'); ?>
+                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('edit'); ?>
                                     </a>
                                 </li>
                             <?php } ?>
                             <li>
                                 <a href="<?= $urlGenerator->generate('inv/pdf', $actionPdfArguments); ?>"
                                    target="_blank" style="text-decoration:none">
-                                    <i class="fa fa-print fa-margin"></i> <?= $translator->translate('i.download_pdf'); ?>
+                                    <i class="fa fa-print fa-margin"></i> <?= $translator->translate('download.pdf'); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?= $urlGenerator->generate('inv/email_stage_0', $actionEmailArguments); ?>" style="text-decoration:none">
-                                    <i class="fa fa-send fa-margin"></i> <?= $translator->translate('i.send_email'); ?>
+                                    <i class="fa fa-send fa-margin"></i> <?= $translator->translate('send.email'); ?>
                                 </a>
                             </li>
                             <li>
@@ -163,7 +163,7 @@ foreach ($invoices as $invoice) {
                                    data-invoice-balance="<?=  null !== $inv_amount ? $inv_amount->getBalance() : 0.00; ?>"
                                    data-invoice-payment-method="<?= $invoice->getPayment_method(); ?>">
                                     <i class="fa fa-money fa-margin"></i>
-                                    <?= $translator->translate('i.enter_payment'); ?>
+                                    <?= $translator->translate('enter.payment'); ?>
                                 </a>
                             </li>
                             <?php if (
@@ -174,8 +174,8 @@ foreach ($invoices as $invoice) {
                                     <form action="<?= $urlGenerator->generate('inv/delete', $actionDeleteArguments); ?>" method="POST">
                                         <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">
                                         <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?= $translator->translate('i.delete_invoice_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('i.delete'); ?>
+                                                onclick="return confirm('<?= $translator->translate('delete.invoice.warning'); ?>');">
+                                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
                                         </button>
                                     </form>
                                 </li>

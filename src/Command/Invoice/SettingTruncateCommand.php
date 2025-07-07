@@ -14,10 +14,10 @@ use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
 final class SettingTruncateCommand extends Command
 {
-    protected static $defaultName = 'invoice/setting/truncate';
+    protected static string $defaultName = 'invoice/setting/truncate';
 
     public function __construct(
-        private CycleDependencyProxy $promise,
+        private readonly CycleDependencyProxy $promise,
     ) {
         parent::__construct();
     }

@@ -96,6 +96,9 @@ return [
     Route::methods([Method::GET, Method::POST], '/accreditations')
     ->action([SiteController::class, 'accreditations'])
     ->name('site/accreditations'),
+    Route::methods([Method::GET, Method::POST], '/oauth2autherror/{message}')
+    ->action([SiteController::class, 'oauth2autherror'])
+    ->name('site/oauth2autherror'),
     Route::methods([Method::GET, Method::POST], '/adminmustmakeactive')
     ->action([SiteController::class, 'adminmustmakeactive'])
     ->name('site/adminmustmakeactive'),
@@ -213,13 +216,16 @@ return [
     ->action([AuthController::class, 'ajaxShowSetup'])
     ->name('auth/ajaxShowSetup'),
     Route::methods([Method::GET, Method::POST], '/verifySetup')
-    ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifySetup'])
     ->name('auth/verifySetup'),
     Route::methods([Method::GET, Method::POST], '/verifyLogin')
-    ->middleware(LimitRequestsMiddleware::class)
     ->action([AuthController::class, 'verifyLogin'])
     ->name('auth/verifyLogin'),
+    Route::methods([Method::GET, Method::POST], '/regenerateCodes')
+    ->middleware(fn (AccessChecker $checker) => $checker->withPermission('viewInv')
+                                                        ->withPermission('noEntryToBaseController'))
+    ->action([AuthController::class, 'regenerateCodes'])
+    ->name('auth/regenerateCodes'),
     Route::methods([Method::GET, Method::POST], '/forgotpassword')
     ->middleware(fn (
         ResponseFactoryInterface $responseFactory,
@@ -848,8 +854,8 @@ return [
         ->name('generator/quick_view_schema')
         ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))
         ->action([GeneratorController::class, 'quick_view_schema']),
-        // type = eg. 'app', 'ip' or 'gateway' or 'latest'
-        // Translate either app_lang, ip_lang.php or gateway_lang.php in src/Invoice/Language/English
+        // type = eg. 'app', or 'diff'
+        // Translate either app_lang, diff_lang.php in src/Invoice/Language/English
         // using Setting google_translate_locale under Settings...View...Google Translate
         Route::methods([Method::GET, Method::POST], '/generator/google_translate_lang/{type}')
         ->name('generator/google_translate_lang')

@@ -16,7 +16,7 @@ final class TaxSchemeCompanyIdNotFoundException extends \RuntimeException implem
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.storecove.tax.scheme.identifier.not.found');
+        return $this->translator->translate('storecove.tax.scheme.identifier.not.found');
     }
 
     /**

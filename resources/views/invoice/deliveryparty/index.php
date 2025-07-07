@@ -33,7 +33,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('invoice.invoice.delivery.party'))
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.party'))
             )
     )
     ->render();
@@ -50,13 +50,13 @@ $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div');?>
     <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('invoice.invoice.delivery.party'); ?>
+        <?= $translator->translate('delivery.party'); ?>
     <?= Html::closeTag('h5'); ?>
     <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
         if ($canEdit) {
             echo Html::a(
-                $translator->translate('invoice.invoice.delivery.party.add'),
+                $translator->translate('delivery.party.add'),
                 $urlGenerator->generate('deliveryparty/add'),
                 ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
             );
@@ -72,29 +72,29 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header: $translator->translate('i.id'),
+        header: $translator->translate('id'),
         content:static fn (DeliveryParty $model) => Html::encode($model->getId())
     ),
     new DataColumn(
         'party_name',
-        header: $translator->translate('i.name'),
+        header: $translator->translate('name'),
         content: static fn (DeliveryParty $model) => Html::encode($model->getPartyName())
     ),
     new DataColumn(
-        header: $translator->translate('i.view'),
+        header: $translator->translate('view'),
         content: static function (DeliveryParty $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->getId()]), []);
         }
     ),
     new DataColumn(
         'id',
-        header: $translator->translate('invoice.invoice.delivery.party.edit'),
+        header: $translator->translate('delivery.party.edit'),
         content:static function (DeliveryParty $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->getId()]), []);
         }
     ),
     new DataColumn(
-        header: $translator->translate('i.delete'),
+        header: $translator->translate('delete'),
         content:static function (DeliveryParty $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
@@ -103,7 +103,7 @@ $columns = [
                     [
                     'type' => 'submit',
                     'class' => 'dropdown-button',
-                    'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                     ]
                 ),
                 $urlGenerator->generate('deliveryparty/delete', ['id' => $model->getId()]),
@@ -123,7 +123,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.invoice.delivery.party'),
+    $translator->translate('delivery.party'),
     ''
 );
 echo GridView::widget()
@@ -138,6 +138,6 @@ echo GridView::widget()
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('invoice.invoice.no.records'))
+    ->emptyText($translator->translate('no.records'))
     ->toolbar($toolbarString);
 ?>

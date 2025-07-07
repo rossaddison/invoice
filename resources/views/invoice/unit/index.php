@@ -39,7 +39,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('i.unit')))
+                        ->content(' ' . Html::encode($translator->translate('unit')))
             )
     )
     ->render();
@@ -55,7 +55,7 @@ $toolbar = Div::tag();
 ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('i.unit'); ?>
+        <?= $translator->translate('unit'); ?>
     <?= Html::closeTag('h5'); ?>    
 <?= Html::closeTag('div'); ?>
 
@@ -74,17 +74,17 @@ $toolbar = Div::tag();
         $columns = [
             new DataColumn(
                 'unit_id',
-                header: $translator->translate('i.id'),
+                header: $translator->translate('id'),
                 content: static fn (Unit $model) => Html::encode($model->getUnit_id())
             ),
             new DataColumn(
                 'unit_name',
-                header: $translator->translate('i.unit_name'),
+                header: $translator->translate('unit.name'),
                 content: static fn (Unit $model) => Html::encode($model->getUnit_name())
             ),
             new DataColumn(
                 'unit_name_plrl',
-                header: $translator->translate('i.unit_name_plrl'),
+                header: $translator->translate('unit.name.plrl'),
                 content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl())
             ),
 
@@ -96,7 +96,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('i.view'),
+                        'title' => $translator->translate('view'),
                     ]
                 ),
                 new ActionButton(
@@ -106,7 +106,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('i.edit'),
+                        'title' => $translator->translate('edit'),
                     ]
                 ),
                 new ActionButton(
@@ -115,8 +115,8 @@ $toolbar = Div::tag();
                         return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
                     },
                     attributes: [
-                        'title' => $translator->translate('i.delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('i.delete_record_warning')."');"
+                        'title' => $translator->translate('delete'),
+                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
                     ]
                 ),
             ]),
@@ -127,7 +127,7 @@ $toolbar = Div::tag();
         $paginator,
         $translator,
         (int)$s->getSetting('default_list_limit'),
-        $translator->translate('i.units'),
+        $translator->translate('units'),
         ''
     );
 $toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open() .
@@ -145,6 +145,6 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('invoice.invoice.no.records'))
+->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>

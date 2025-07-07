@@ -16,7 +16,7 @@ final class ContactNameNotFoundException extends \RuntimeException implements Fr
     #[\Override]
     public function getName(): string
     {
-        return $this->translator->translate('invoice.storecove.supplier.contact.name.not.found');
+        return $this->translator->translate('storecove.supplier.contact.name.not.found');
     }
 
     /**

@@ -21,30 +21,15 @@ abstract class BaseController
     // New property for controller name
     protected string $controllerName = 'base';
 
-    protected ViewRenderer $viewRenderer;
-    protected WebControllerService $webService;
-    protected UserService $userService;
-    protected TranslatorInterface $translator;
-    protected SessionInterface $session;
-    protected Flash $flash;
-    protected SettingRepository $sR;
-
     public function __construct(
-        WebControllerService $webService,
-        UserService $userService,
-        TranslatorInterface $translator,
-        ViewRenderer $viewRenderer,
-        SessionInterface $session,
-        SettingRepository $sR,
-        Flash $flash
+        protected WebControllerService $webService,
+        protected UserService $userService,
+        protected TranslatorInterface $translator,
+        protected ViewRenderer $viewRenderer,
+        protected SessionInterface $session,
+        protected SettingRepository $sR,
+        protected Flash $flash
     ) {
-        $this->webService = $webService;
-        $this->userService = $userService;
-        $this->translator = $translator;
-        $this->viewRenderer = $viewRenderer;
-        $this->session = $session;
-        $this->sR = $sR;
-        $this->flash = $flash;
         $this->initializeViewRenderer();
     }
 

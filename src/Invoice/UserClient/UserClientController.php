@@ -67,7 +67,7 @@ final class UserClientController extends BaseController
         $user_client = new UserClient();
         $form = new UserClientForm($user_client);
         $parameters = [
-            'title' => $this->translator->translate('i.add'),
+            'title' => $this->translator->translate('add'),
             'action' => ['userclient/add'],
             'errors' => [],
             'form' => $form,
@@ -103,13 +103,13 @@ final class UserClientController extends BaseController
             $this->userclientService->deleteUserClient($user_client);
             $user_inv = $uiR->repoUserInvUserIdquery($user_id);
             if (null !== $user_inv) {
-                $this->flashMessage('info', $this->translator->translate('i.record_successfully_deleted'));
+                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->factory->createResponse(
                     $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/userclient_successful',
                         [
-                            'heading' => $this->translator->translate('i.client'),
-                            'message' => $this->translator->translate('i.record_successfully_deleted'),
+                            'heading' => $this->translator->translate('client'),
+                            'message' => $this->translator->translate('record.successfully.deleted'),
                             'url' => 'userinv/client','id' => $user_inv->getId(),
                         ]
                     )
@@ -137,7 +137,7 @@ final class UserClientController extends BaseController
         if ($user_client) {
             $form = new UserClientForm($user_client);
             $parameters = [
-                'title' => $this->translator->translate('i.edit'),
+                'title' => $this->translator->translate('edit'),
                 'action' => ['userclient/edit', ['id' => $user_client->getId()]],
                 'errors' => [],
                 'form' => $form,
@@ -219,12 +219,12 @@ final class UserClientController extends BaseController
                                 // Check that the user client does not exist
                                                          && !($ucR->repoUserClientqueryCount($user_id, $value) > 0)) {
                                 $this->userclientService->saveUserClient($user_client, $form_array);
-                                $this->flashMessage('info', $this->translator->translate('i.record_successfully_updated'));
+                                $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
 
                             if ($ucR->repoUserClientqueryCount($user_id, $value) > 0) {
-                                $this->flashMessage('info', $this->translator->translate('i.client_already_exists'));
+                                $this->flashMessage('info', $this->translator->translate('client.already.exists'));
                                 return $this->webService->getRedirectResponse('userinv/index');
                             }
                             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -248,7 +248,7 @@ final class UserClientController extends BaseController
         if ($user_client) {
             $form = new UserClientForm($user_client);
             $parameters = [
-                'title' => $this->translator->translate('i.view'),
+                'title' => $this->translator->translate('view'),
                 'action' => ['userclient/view', ['id' => $user_client->getId()]],
                 'errors' => [],
                 'form' => $form,
@@ -266,7 +266,7 @@ final class UserClientController extends BaseController
     {
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('invoice.permission'));
+            $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('userclient/index');
         }
         return $canEdit;

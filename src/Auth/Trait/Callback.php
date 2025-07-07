@@ -28,7 +28,7 @@ trait Callback
         #[Query('state')] string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('developergovsandboxhmrc', $state);
@@ -38,8 +38,7 @@ trait Callback
          */
         if (strlen($code) == 0) {
             $authorizationUrl = $this->developerSandboxHmrc->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
@@ -51,9 +50,9 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
 
@@ -90,7 +89,7 @@ trait Callback
 
             $userArray = $this->developerSandboxHmrc->createTestUserIndividual($oAuthToken, $requestBody);
         } else {
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.test.user.creation.not.allowed.prod'));
         }
 
         /**
@@ -200,7 +199,7 @@ trait Callback
             if (($errorCode == 200) && ($error == 'access_denied') && ($errorReason == 'user_denied')) {
                 return $this->redirectToUserCancelledOauth2();
             }
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('facebook', $state);
@@ -213,8 +212,7 @@ trait Callback
             // and use the protected function oauth2->generateAuthState to generate state param
             // which has a session id built into it
             $authorizationUrl = $this->facebook->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
@@ -226,9 +224,9 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
         $oAuthTokenType = $this->facebook->fetchAccessToken($request, $code, $params = []);
@@ -338,7 +336,7 @@ trait Callback
         #[Query('state')] string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('github', $state);
@@ -351,8 +349,7 @@ trait Callback
             // and use the protected function oauth2->generateAuthState to generate state param 'authState'
             // which has a session id built into it
             $authorizationUrl = $this->github->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
@@ -364,9 +361,9 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
         // Try to get an access token (using the 'authorization code' grant)
@@ -469,7 +466,7 @@ trait Callback
         #[Query('state')] string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('google', $state);
@@ -479,8 +476,7 @@ trait Callback
          */
         if (strlen($code) == 0) {
             $authorizationUrl = $this->google->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
@@ -492,9 +488,9 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
 
@@ -598,7 +594,7 @@ trait Callback
         #[Query('state')] string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('govUk', $state);
@@ -608,8 +604,7 @@ trait Callback
          */
         if (strlen($code) == 0) {
             $authorizationUrl = $this->govUk->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
@@ -621,9 +616,9 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
         $oAuthTokenType = $this->govUk->fetchAccessToken($request, $code, $params = []);
@@ -709,7 +704,7 @@ trait Callback
         #[Query('state')] string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('linkedIn', $state);
@@ -719,8 +714,7 @@ trait Callback
          */
         if (strlen($code) == 0) {
             $authorizationUrl = $this->linkedIn->buildAuthUrl($request, []);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
@@ -732,9 +726,9 @@ trait Callback
          */
         if (strlen($state) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
         $params = [
@@ -838,7 +832,7 @@ trait Callback
         #[Query('session_state')] string $sessionState = null,
     ): ResponseInterface {
         if ($code == null || $state == null || $sessionState == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('microsoftOnline', $state);
@@ -848,8 +842,7 @@ trait Callback
          */
         if (strlen($code) == 0) {
             $authorizationUrl = $this->microsoftOnline->buildAuthUrl($request, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         /**
@@ -865,9 +858,9 @@ trait Callback
          */
         if (strlen($state) == 0 || strlen($sessionState) == 0) {
             /**
-             * State is invalid, possible cross-site request forgery. Exit with an error code.
+             * State is invalid, possible cross-site request forgery.
              */
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state and stateSession are both present
         }
         $oAuthTokenType = $this->microsoftOnline->fetchAccessTokenWithCurl($request, $code, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
@@ -953,7 +946,7 @@ trait Callback
         #[Query('state')] string $state = null
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('x', $state);
@@ -975,8 +968,7 @@ trait Callback
                     'code_challenge_method' => 'S256',
                 ]
             );
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
@@ -986,7 +978,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $state
          */
         if (strlen($state) == 0) {
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
         $codeVerifier = (string)$this->session->get('code_verifier');
         $params = [
@@ -1088,7 +1080,7 @@ trait Callback
         #[Query('device_id')] string $device_id = null
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('vkontakte', $state);
@@ -1111,8 +1103,7 @@ trait Callback
                     'device_id' => $device_id,
                 ]
             );
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
@@ -1122,7 +1113,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $state
          */
         if (strlen($state) == 0) {
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
         $codeVerifier = (string)$this->session->get('code_verifier');
         $params = [
@@ -1266,7 +1257,7 @@ trait Callback
         #[Query('state')] string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
-            return $this->redirectToMain();
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
         $this->blockInvalidState('yandex', $state);
@@ -1288,8 +1279,7 @@ trait Callback
                     'code_challenge_method' => 'S256',
                 ]
             );
-            header('Location: ' . $authorizationUrl);
-            exit;
+            return $this->webService->getRedirectResponse($authorizationUrl);
         }
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
@@ -1299,7 +1289,7 @@ trait Callback
          * @psalm-suppress DocblockTypeContradiction $state
          */
         if (strlen($state) == 0) {
-            exit(1);
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
         $codeVerifier = (string)$this->session->get('code_verifier');
         $params = [
@@ -1389,6 +1379,13 @@ trait Callback
 
         $this->authService->logout();
         return $this->redirectToMain();
+    }
+
+    private function redirectToOauth2AuthError(string $message): ResponseInterface
+    {
+        return $this->webService->getRedirectResponse('site/oauth2autherror', [
+            'message' => $message,
+        ]);
     }
 
     private function redirectToUserCancelledOauth2(): ResponseInterface

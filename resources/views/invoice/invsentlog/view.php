@@ -48,23 +48,23 @@ use Yiisoft\FormModel\Field;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'inv_id')
-   ->label($translator->translate('invoice.invoice.number'))
+   ->label($translator->translate('number'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
-   ->placeholder($translator->translate('invoice.invoice.number'))
+   ->placeholder($translator->translate('number'))
    ->readonly(true)
 ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'date_sent')
-   ->label($translator->translate('invoice.email.date'))
+   ->label($translator->translate('email.date'))
    ->addInputAttributes([
        'class' => 'form-control'
    ])
    ->value(Html::encode(!is_string($form->getDate_sent()) ? $form->getDate_sent()?->format('l, d-M-y H:i:s T') : ''))
-   ->placeholder($translator->translate('date_sent'))
+   ->placeholder($translator->translate('date.sent'))
    ->readonly(true)
 ?>
     <?= Html::closeTag('div'); ?>

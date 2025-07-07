@@ -53,23 +53,23 @@ foreach ($generators as $generator) {
 }
 
 echo Field::select($form, 'gentor_id')
-->label($translator->translate('invoice.generator.relation.form.entity.generator'))
+->label($translator->translate('generator.relation.form.entity.generator'))
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'gentor_id',
     'readonly' => 'readonly',
     'disabled' => 'disabled'
 ])
-->prompt($translator->translate('i.none'))
+->prompt($translator->translate('none'))
 ->optionsData($optionsDataGenerators)
 ?>
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::text($form, 'lowercasename')
-    ->label($translator->translate('invoice.generator.relation.form.lowercase.name'))
+    ->label($translator->translate('generator.relation.form.lowercase.name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.generator.relation.form.lowercase.name'),
+        'placeholder' => $translator->translate('generator.relation.form.lowercase.name'),
         'class' => 'form-control',
         'id' => 'lowercasename',
         'readonly' => 'readonly',
@@ -81,9 +81,9 @@ echo Field::select($form, 'gentor_id')
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::text($form, 'camelcasename')
-    ->label($translator->translate('invoice.generator.relation.form.camelcase.name'))
+    ->label($translator->translate('generator.relation.form.camelcase.name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.generator.relation.form.camelcase.name'),
+        'placeholder' => $translator->translate('generator.relation.form.camelcase.name'),
         'class' => 'form-control',
         'id' => 'camelcasename',
         'readonly' => 'readonly',
@@ -95,9 +95,9 @@ echo Field::select($form, 'gentor_id')
 
 <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?= Field::text($form, 'view_field_name')
-    ->label($translator->translate('invoice.generator.relation.form.view.field.name'))
+    ->label($translator->translate('generator.relation.form.view.field.name'))
     ->addInputAttributes([
-        'placeholder' => $translator->translate('invoice.generator.relation.form.view.field.name'),
+        'placeholder' => $translator->translate('generator.relation.form.view.field.name'),
         'class' => 'form-control',
         'id' => 'view_field_name',
         'readonly' => 'readonly',

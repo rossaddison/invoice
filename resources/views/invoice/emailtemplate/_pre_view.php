@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Body;
 use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Form;
 
@@ -26,7 +24,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-     <?= $translator->translate('i.preview'); ?>
+     <?= $translator->translate('preview'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
