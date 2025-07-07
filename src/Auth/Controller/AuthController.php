@@ -578,7 +578,7 @@ final class AuthController
         // - User agent consistency (if desired)
         // - Session age limits
 
-         ;
+        ;
     }
 
     public function disableToken(
