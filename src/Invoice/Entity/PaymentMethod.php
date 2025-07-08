@@ -36,7 +36,7 @@ class PaymentMethod
     {
         $this->name = $name;
     }
-    
+
     public function getActive(): bool|null
     {
         return $this->active;

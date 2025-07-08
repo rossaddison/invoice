@@ -208,7 +208,7 @@ final class InvRepository extends Select\Repository
         return $this->select()
                     ->count();
     }
-    
+
     /**
      * @param int $invoice_id
      * @param int $status_id

@@ -117,7 +117,7 @@ final class PaymentMethodRepository extends Select\Repository
         return $this->select()
                       ->count();
     }
-    
+
     /**
      * Get Payment Method with filter active
      *
