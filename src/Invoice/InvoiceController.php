@@ -1137,7 +1137,7 @@ final class InvoiceController extends BaseController
         $i_group->setIdentifier_format('INV{{{id}}}');
         $i_group->setNext_id(1);
         $i_group->setLeft_pad(0);
-        $gR->save($i_group);        
+        $gR->save($i_group);
 
         $q_group = new Group();
         $q_group->setName('Quote Group');
@@ -1151,8 +1151,8 @@ final class InvoiceController extends BaseController
         $so_group->setIdentifier_format('SO{{{id}}}');
         $so_group->setNext_id(1);
         $so_group->setLeft_pad(0);
-        $gR->save($so_group);        
-        
+        $gR->save($so_group);
+
         $icn_group = new Group();
         $icn_group->setName('Credit Note Group');
         $icn_group->setIdentifier_format('CN{{{id}}}');

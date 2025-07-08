@@ -781,7 +781,7 @@ final class InvController extends BaseController
                         ];
                         // Record the new Credit Note's $saved_inv_id in the basis invoice
                         $basis_inv->setCreditinvoice_parent_id((int)$saved_inv_id);
-                        $iR->save($basis_inv); 
+                        $iR->save($basis_inv);
                         //return response to inv.js to reload page at location
                         return $this->factory->createResponse(Json::encode($parameters));
                     } //null!== $saved_inv
@@ -1143,7 +1143,7 @@ final class InvController extends BaseController
         foreach ($pmRepo->findAllPreloaded() as $paymentMethod) {
             if ($paymentMethod->getActive()) {
                 $optionsDataPaymentMethod[$paymentMethod->getId()] = $paymentMethod->getName();
-            }    
+            }
         }
         $optionsDataPaymentTerm = [];
         /**
