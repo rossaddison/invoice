@@ -30,6 +30,7 @@ echo $alert;
             <thead>
             <tr>
                 <th><?= $translator->translate('payment.method'); ?></th>
+                <th><?= $translator->translate('active'); ?></th>
                 <th><?= $translator->translate('options'); ?></th>
             </tr>
             </thead>
@@ -41,6 +42,7 @@ echo $alert;
                 foreach ($payment_methods as $payment_method) { ?>
                 <tr>
                     <td><?= Html::encode($payment_method->getName()); ?></td>
+                    <td><?= $payment_method->getActive() == 1 ? '✅' : '❌'; ?></td>
                     <td>
                         <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#">

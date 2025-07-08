@@ -117,4 +117,19 @@ final class PaymentMethodRepository extends Select\Repository
         return $this->select()
                       ->count();
     }
+    
+    /**
+     * Get Payment Method with filter active
+     *
+     * @psalm-return EntityReader
+     */
+    public function findAllWithActive(int $active): EntityReader
+    {
+        if ($active < 2) {
+            $query = $this->select()
+                   ->where(['active' => $active]);
+            return $this->prepareDataReader($query);
+        }
+        return $this->findAllPreloaded();
+    }
 }

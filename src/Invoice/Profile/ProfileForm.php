@@ -89,8 +89,8 @@ final class ProfileForm extends FormModel
     #[\Override]
     public function getPropertyHints(): array
     {
-        $required = 'invoice.hint.this.field.is.required';
-        $not_required = 'invoice.hint.this.field.is.not.required';
+        $required = 'hint.this.field.is.required';
+        $not_required = 'hint.this.field.is.not.required';
         return [
             'company_id' => $this->translator->translate($required),
             'email' => $this->translator->translate($required),

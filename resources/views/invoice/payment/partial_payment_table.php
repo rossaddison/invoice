@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
         <thead>
         <tr>
             <th><?= $translator->translate('payment.date'); ?></th>
-            <th><?= $translator->translate('invoice.date'); ?></th>
+            <th><?= $translator->translate('date'); ?></th>
             <th><?= $translator->translate('invoice'); ?></th>
             <th><?= $translator->translate('client'); ?></th>
             <th><?= $translator->translate('amount'); ?></th>

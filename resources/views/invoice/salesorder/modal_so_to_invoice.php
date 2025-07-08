@@ -29,14 +29,14 @@ use Yiisoft\Html\Html;
                     <input type="hidden" name="so_id" id="so_id" value="<?= $so->getId(); ?>">
                     <input type="hidden" name="user_id" id="user_id" value="<?= $so->getUser_id(); ?>">
                     <div class="form-group">
-                        <label for="password"><?= $translator->translate('invoice.password'); ?></label>
+                        <label for="password"><?= $translator->translate('password'); ?></label>
                         <input type="text" name="password" id="invoice_password" class="form-control"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password') ?>"
                                autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="group_id">
-                            <?= $translator->translate('invoice.group'); ?>
+                            <?= $translator->translate('group'); ?>
                         </label>
                         <select name="group_id" id="group_id" class="form-control">
                             <?php

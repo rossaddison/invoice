@@ -186,7 +186,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <table class="table table-condensed">
                             <tbody>
                             <tr>
-                                <td><?= $translator->translate('invoice.date'); ?></td>
+                                <td><?= $translator->translate('date'); ?></td>
                                 <td style="text-align:right;"><?= $inv->getDate_created()->format('Y-m-d'); ?></td>
                             </tr>
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">

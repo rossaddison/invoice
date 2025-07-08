@@ -38,10 +38,10 @@ $this->beginPage();
 <table>
     <tr>
         <th><?= $translator->translate('client'); ?></th>
-        <th class="amount"><?= $translator->translate('invoice.count'); ?></th>
+        <th class="amount"><?= $translator->translate('count'); ?></th>
         <th class="amount"><?= $translator->translate('sales'); ?></th>
         <th class="amount"><?= $translator->translate('item.tax'); ?></th>
-        <th class="amount"><?= $translator->translate('invoice.tax'); ?></th>
+        <th class="amount"><?= $translator->translate('tax'); ?></th>
         <th class="amount"><?= $translator->translate('sales.with.tax'); ?></th>
     </tr>
     <?php

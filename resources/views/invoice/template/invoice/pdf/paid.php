@@ -297,7 +297,7 @@ if ($items) {
         <p><?= $sumex?->getObservations() ?? ''; ?></p>
     </div>    
     <div>            
-        <b><?= Html::encode($translator->translate('invoice.sumex.diagnosis')); ?></b><br>
+        <b><?= Html::encode($translator->translate('sumex.diagnosis')); ?></b><br>
         <p><?= $sumex?->getDiagnosis() ?? ''; ?></p>
     </div>
     <div>            

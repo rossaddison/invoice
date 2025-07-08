@@ -50,6 +50,12 @@ use Yiisoft\Html\Tag\Form;
                 ->value(Html::encode($form->getName())); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
+                <?= Field::checkbox($form, 'active')
+                    ->inputLabelAttributes(['class' => 'form-check-label'])
+                    ->inputClass('form-check-input')
+                    ->ariaDescribedBy($translator->translate('active')); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

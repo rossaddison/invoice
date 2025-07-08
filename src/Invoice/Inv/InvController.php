@@ -743,24 +743,23 @@ final class InvController extends BaseController
             $basis_inv_id = (string) $body['inv_id'];
             // Set the basis_inv to read-only;
             $basis_inv->setIs_read_only(true);
+            // Credit Note's details
             $ajax_body = [
                 'client_id' => $body['client_id'],
-                'group_id' => $body['group_id'],
+                'group_id' => 4,
                 'user_id' => $body['user_id'],
-                'creditinvoice_parent_id' => (string) $body['inv_id'],
                 'status_id' => $basis_inv->getStatus_id(),
-                'is_read_only' => false,
-                'number' => $gR->generate_number((int) $body['group_id'], true),
-                'discount_amount' => null,
-                'discount_percent' => null,
+                'is_read_only' => true,
+                'number' => $gR->generate_number(4, true),
+                'discount_amount' => $basis_inv->getDiscount_amount(),
+                'discount_percent' => $basis_inv->getDiscount_percent(),
                 'url_key' => '',
                 'password' => $body['password'],
                 'payment_method' => 0,
                 'terms' => '',
                 'delivery_location_id' => $basis_inv->getDelivery_location_id(),
             ];
-            // Save the basis invoice
-            $iR->save($basis_inv);
+            // Save the basis invoice as soon as we have the new credit note's id
             $new_inv = new Inv();
             $form = new InvForm($new_inv);
             if ($formHydrator->populateAndValidate($form, $ajax_body)) {
@@ -780,6 +779,9 @@ final class InvController extends BaseController
                             'success' => 1,
                             'flash_message' => $this->translator->translate('credit.note.creation.successful'),
                         ];
+                        // Record the new Credit Note's $saved_inv_id in the basis invoice
+                        $basis_inv->setCreditinvoice_parent_id((int)$saved_inv_id);
+                        $iR->save($basis_inv); 
                         //return response to inv.js to reload page at location
                         return $this->factory->createResponse(Json::encode($parameters));
                     } //null!== $saved_inv
@@ -918,7 +920,7 @@ final class InvController extends BaseController
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('invoice.items'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+            ['heading' => $this->translator->translate('items'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
         ));
     }
 
@@ -938,7 +940,7 @@ final class InvController extends BaseController
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('invoice.tax.rate'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+            ['heading' => $this->translator->translate('tax.rate'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
         ));
     }
 
@@ -1139,7 +1141,9 @@ final class InvController extends BaseController
          * @var PaymentMethod $paymentMethod
          */
         foreach ($pmRepo->findAllPreloaded() as $paymentMethod) {
-            $optionsDataPaymentMethod[$paymentMethod->getId()] = $paymentMethod->getName();
+            if ($paymentMethod->getActive()) {
+                $optionsDataPaymentMethod[$paymentMethod->getId()] = $paymentMethod->getName();
+            }    
         }
         $optionsDataPaymentTerm = [];
         /**
@@ -1455,7 +1459,7 @@ final class InvController extends BaseController
                 }
                 if ($template_helper->select_email_invoice_template($invoice) == '') {
                     $this->flashMessage('warning', $this->translator->translate('email.template.not.configured'));
-                    return $this->webService->getRedirectResponse('setting/tab_index');
+                    return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'invoices'], 'settings[email_invoice_template]');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_invoice_template($invoice)) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
@@ -2756,7 +2760,7 @@ final class InvController extends BaseController
                 'discount_percent' => (float) $original->getDiscount_percent(),
                 'url_key' => '',
                 'password' => '',
-                'payment_method' => 1,
+                'payment_method' => 6,
                 'terms' => '',
             ];
             $copy = new Inv();
@@ -3956,7 +3960,7 @@ final class InvController extends BaseController
                     // If a custom field exists for payments, use it/them on the payment form.
                     'paymentCfExist' => $cfR->repoTableCountquery('payment_custom') > 0 ? true : false,
                     'paymentView' => $this->userService->hasPermission('viewPayment') ? true : false,
-                    'payment_methods' => $pmR->findAllPreloaded(),
+                    'payment_methods' => $pmR->findAllWithActive(1),
                     'payments' => $pymR->repoCount((string) $this->session->get('inv_id')) > 0 ? $pymR->repoInvquery((string) $this->session->get('inv_id')) : null,
                     'peppol_stream_toggle' => $this->sR->getSetting('peppol_xml_stream'),
                     'readOnly' => $read_only,

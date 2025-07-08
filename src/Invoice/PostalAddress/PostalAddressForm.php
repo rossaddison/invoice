@@ -60,8 +60,8 @@ final class PostalAddressForm extends FormModel
     #[\Override]
     public function getPropertyHints(): array
     {
-        $required = 'invoice.hint.this.field.is.required';
-        $not_required = 'invoice.hint.this.field.is.not.required';
+        $required = 'hint.this.field.is.required';
+        $not_required = 'hint.this.field.is.not.required';
         return [
             'street_name' => $this->translator->translate($required),
             'additional_street_name' => $this->translator->translate($required),

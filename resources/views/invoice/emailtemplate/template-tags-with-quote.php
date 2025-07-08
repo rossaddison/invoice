@@ -163,13 +163,13 @@ declare(strict_types=1);
         </div>
         <?= $template_tags_quote; ?>
         <div class="form-group">
-            <label for="tags_sumex"><?= $translator->translate('invoice.sumex'); ?></label>
+            <label for="tags_sumex"><?= $translator->translate('sumex'); ?></label>
             <select id="tags_sumex" class="taginv-select form-control">
                 <option value="{{{sumex_reason}}}">
                     <?= $translator->translate('reason'); ?>
                 </option>
                 <option value="{{{sumex_diagnosis}}}">
-                    <?= $translator->translate('invoice.sumex.diagnosis'); ?>
+                    <?= $translator->translate('sumex.diagnosis'); ?>
                 </option>
                 <option value="{{{sumex_observations}}}">
                     <?= $translator->translate('sumex.observations'); ?>

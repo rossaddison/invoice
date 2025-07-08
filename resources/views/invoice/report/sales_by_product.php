@@ -33,7 +33,7 @@ $this->beginPage();
 <table>
     <tr>
         <th><?= $translator->translate('product'); ?></th>
-        <th class="amount"><?= $translator->translate('invoice.count'); ?></th>
+        <th class="amount"><?= $translator->translate('count'); ?></th>
         <th class="amount"><?= $translator->translate('sales'); ?></th>
         <th class="amount"><?= $translator->translate('item.tax'); ?></th>
     </tr>

@@ -83,7 +83,7 @@ foreach ($paymentMethods as $paymentMethod) {
     $paymentMethodId = $paymentMethod->getId();
     $paymentMethodName = $paymentMethod->getName();
     if ((strlen($paymentMethodId) > 0)
-        && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName)) {
+        && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName) && ($paymentMethod->getActive())) {
         $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
     }
 }

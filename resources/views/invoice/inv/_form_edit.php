@@ -93,7 +93,7 @@ if ($vat) {
                                 <?= Html::closeTag('div'); ?>            
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'group_id')
-    ->label($translator->translate('invoice.group'))
+    ->label($translator->translate('group'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value($form->getGroup_id() ?? $defaultGroupId)
     ->prompt($translator->translate('none'))

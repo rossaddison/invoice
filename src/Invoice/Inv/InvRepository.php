@@ -206,9 +206,9 @@ final class InvRepository extends Select\Repository
     public function repoCountAll(): int
     {
         return $this->select()
-                      ->count();
+                    ->count();
     }
-
+    
     /**
      * @param int $invoice_id
      * @param int $status_id

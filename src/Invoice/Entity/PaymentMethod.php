@@ -12,7 +12,8 @@ class PaymentMethod
 {
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $name = '')
+        private ?string $name = '', #[Column(type: 'bool', default: true)]
+        private bool $active = true)
     {
     }
 
@@ -34,5 +35,15 @@ class PaymentMethod
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+    
+    public function getActive(): bool|null
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): void
+    {
+        $this->active = $active;
     }
 }

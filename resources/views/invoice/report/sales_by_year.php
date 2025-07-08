@@ -41,7 +41,7 @@ $this->beginPage();
         <th style="width:50%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('name')); ?></th>
         <th style="width:15%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('sales')); ?></th>
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('item.tax')); ?></th>
-        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('invoice.tax')); ?></th>
+        <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('tax')); ?></th>
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('sales.with.tax')); ?></th>
         <th style="width:20%;text-align:center;border-bottom: 1px solid black;"> <?= Html::encode($translator->translate('paid')); ?></th>
     </tr>

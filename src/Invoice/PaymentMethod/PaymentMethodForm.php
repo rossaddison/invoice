@@ -12,15 +12,23 @@ final class PaymentMethodForm extends FormModel
 {
     #[Required]
     private ?string $name = '';
+    
+    private ?bool $active = true;
 
     public function __construct(PaymentMethod $paymentMethod)
     {
         $this->name = $paymentMethod->getName();
+        $this->active = $paymentMethod->getActive();
     }
 
     public function getName(): string|null
     {
         return $this->name;
+    }
+    
+    public function getActive(): bool|null
+    {
+        return $this->active;
     }
 
     /**

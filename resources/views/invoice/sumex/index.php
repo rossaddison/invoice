@@ -39,7 +39,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('invoice.sumex')))
+                        ->content(' ' . Html::encode($translator->translate('sumex')))
             )
     )
     ->render();
@@ -107,7 +107,7 @@ $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
     (int)$s->getSetting('default_list_limit'),
-    $translator->translate('invoice.sumex'),
+    $translator->translate('sumex'),
     ''
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open() .

@@ -17,20 +17,20 @@ declare(strict_types=1);
                 <option value="{{{invoice_status}}}">
                     <?= $translator->translate('status'); ?>
                 </option>
-                <optgroup label="<?= $translator->translate('invoice.dates'); ?>">
+                <optgroup label="<?= $translator->translate('dates'); ?>">
                     <option value="{{{invoice_date_due}}}">
                         <?= $translator->translate('due.date'); ?>
                     </option>
                     <option value="{{{invoice_date_created}}}">
-                        <?= $translator->translate('invoice.date'); ?>
+                        <?= $translator->translate('date'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $translator->translate('invoice.amounts'); ?>">
+                <optgroup label="<?= $translator->translate('amounts'); ?>">
                     <option value="{{{invoice_item_subtotal}}}">
                         <?= $translator->translate('subtotal'); ?>
                     </option>
                     <option value="{{{invoice_item_tax_total}}}">
-                        <?= $translator->translate('invoice.tax'); ?>
+                        <?= $translator->translate('tax'); ?>
                     </option>
                     <option value="{{{invoice_total}}}">
                         <?= $translator->translate('total'); ?>
@@ -44,7 +44,7 @@ declare(strict_types=1);
                 </optgroup>
                 <optgroup label="<?= $translator->translate('extra.information'); ?>">
                     <option value="{{{invoice_terms}}}">
-                        <?= $translator->translate('invoice.terms'); ?>
+                        <?= $translator->translate('terms'); ?>
                     </option>
                 <option value="{{{invoice_guest_url}}}">
                         <?= $translator->translate('guest.url'); ?>

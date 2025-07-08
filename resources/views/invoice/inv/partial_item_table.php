@@ -463,7 +463,7 @@ foreach ($invItems as $item) {
                         <?php if ($showButtons === true && $userCanEdit === true) { ?>
                             <a href="#add-inv-tax" data-bs-toggle="modal" class="btn-xs"> <i class="fa fa-plus-circle"></i></a>
                         <?php } ?>
-                        <?= $translator->translate('invoice.tax'); ?>
+                        <?= $translator->translate('tax'); ?>
                         </b>    
                     </td>
                     <td>

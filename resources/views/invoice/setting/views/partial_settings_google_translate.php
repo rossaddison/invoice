@@ -67,7 +67,7 @@ use Yiisoft\Html\Html;
             </div> 
             <div class="panel-body">
                 <p class="demoTitle">&nbsp; &nbsp;</p>
-                <p>GeneratorController includes a function <em>google_translate_lang</em>. This function takes the English i<em>p_lang</em> array or <em>gateway_lang</em> located in <em>src/Invoice/Language/English</em> and translates it into the chosen locale (Settings...View...Google Translate) outputting it to <em>resources/views/generator/output_overwrite</em>.</p>
+                <p>GeneratorController includes a function <em>google_translate_lang</em>. This function takes the English <em>app_lang</em> array located in <em>src/Invoice/Language/English</em> and translates it into the chosen locale (Settings...View...Google Translate) outputting it to <em>resources/views/generator/output_overwrite</em>.</p>
                 <p><strong>Step 1:</strong> <br />Download <code>https://curl.haxx.se/ca/cacert.pem</code> into active <code>c:\wamp64\bin\php\php8.1.12</code> folder</p>
                 <p><strong>Step 2:</strong> <br />Select your project that you created under <code>https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?supportedpurview=project</code></p>
                 <p><strong>Step 3:</strong> <br />Click on Actions icon and select Manage Keys.</p>

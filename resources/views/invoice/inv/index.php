@@ -584,11 +584,14 @@ $toolbar = Div::tag();
             field: 'creditinvoice_parent_id',
             content: static function (Inv $model) use ($urlGenerator, $iR): A {
                 $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
-                $url = ($model->getNumber() ?? '#'). '💳';
-                return  A::tag()
-                        ->addAttributes(['style' => 'text-decoration:none'])
-                        ->content($visible ? $url : '')
-                        ->href($urlGenerator->generate('inv/view', ['id' => $model->getCreditinvoice_parent_id()]));
+                if (null!==$visible) {
+                    $url = ($visible->getNumber() ?? '#'). '💳';
+                    return  A::tag()
+                            ->addAttributes(['style' => 'text-decoration:none'])
+                            ->content($url)
+                            ->href($urlGenerator->generate('inv/view', ['id' => $model->getCreditinvoice_parent_id()]));
+                }
+                return A::tag()->content('')->href('');
             },
             withSorting: false
         ),

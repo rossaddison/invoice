@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
                                 <?= Html::closeTag('div'); ?>            
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'group_id')
-    ->label($translator->translate('invoice.group'))
+    ->label($translator->translate('group'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : $defaultGroupId))
     ->prompt($translator->translate('none'))

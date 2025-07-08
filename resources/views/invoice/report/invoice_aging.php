@@ -20,17 +20,17 @@ $this->beginPage();
 <!DOCTYPE html>
 <html lang="<?= $translator->translate('cldr'); ?>">
 <head>
-    <title><?= Html::encode($translator->translate('invoice.aging')); ?></title>
+    <title><?= Html::encode($translator->translate('aging')); ?></title>
 </head>
 <body>
 <?php $this->beginBody() ?>
-<h3 class="report_title"><?= Html::encode($translator->translate('invoice.aging')); ?></h3>
+<h3 class="report_title"><?= Html::encode($translator->translate('aging')); ?></h3>
 <table>
     <tr>
         <th><?= Html::encode($translator->translate('client')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('invoice.aging.1.15')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('invoice.aging.16.30')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('invoice.aging.above.30')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('aging.1.15')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('aging.16.30')); ?></th>
+        <th class="amount"><?= Html::encode($translator->translate('aging.above.30')); ?></th>
         <th class="amount"><?= Html::encode($translator->translate('total')); ?></th>
     </tr>
     <?php

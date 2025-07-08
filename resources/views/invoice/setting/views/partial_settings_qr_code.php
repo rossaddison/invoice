@@ -104,7 +104,7 @@ echo Table::tag()
     Tr::tag()
     ->dataStrings([
         '*.php',
-        'invoice.php $company_logo_and_address',
+        'php $company_logo_and_address',
     ]),
     Tr::tag()
     ->dataStrings([

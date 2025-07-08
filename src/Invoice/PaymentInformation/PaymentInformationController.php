@@ -361,7 +361,7 @@ final class PaymentInformationController
                     ];
                     // Check if the invoice is payable
                     if ($balance == 0.00) {
-                        $this->flashMessage('warning', $this->translator->translate('invoice.already.paid'));
+                        $this->flashMessage('warning', $this->translator->translate('already.paid'));
                         $disable_form = true;
                     }
                     // Get additional invoice information

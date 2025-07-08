@@ -63,8 +63,8 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::textarea($form, 'diagnosis')
-    ->label($translator->translate('invoice.sumex.diagnosis'))
-    ->placeholder($translator->translate('invoice.sumex.diagnosis'))
+    ->label($translator->translate('sumex.diagnosis'))
+    ->placeholder($translator->translate('sumex.diagnosis'))
     ->value(Html::encode($form->getDiagnosis() ?? ''))
     ->disabled(true);
 ?>

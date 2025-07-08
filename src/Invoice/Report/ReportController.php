@@ -85,7 +85,7 @@ class ReportController extends BaseController
             /** @psalm-suppress MixedReturnStatement */
             return $mpdfhelper->pdf_create(
                 $this->viewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
-                $this->translator->translate('invoice.aging'),
+                $this->translator->translate('aging'),
                 true,
                 '',
                 $this->sR,

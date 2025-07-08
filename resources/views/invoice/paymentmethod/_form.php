@@ -48,13 +48,18 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-->label($translator->translate('name'))
-->addInputAttributes([
-    'class' => 'form-control  alert alert-warning'
-])
-->value(Html::encode($form->getName()))
-->placeholder($translator->translate('name'))
-->hint($translator->translate('hint.this.field.is.required')); ?>
+                    ->label($translator->translate('name'))
+                    ->addInputAttributes([
+                        'class' => 'form-control  alert alert-warning'
+                    ])
+                    ->value(Html::encode($form->getName()))
+                    ->placeholder($translator->translate('name'))
+                    ->hint($translator->translate('hint.this.field.is.required')); ?>
+            <?= Html::openTag('div'); ?>
+                <?= Field::checkbox($form, 'active')
+                    ->inputLabelAttributes(['class' => 'form-check-label'])
+                    ->inputClass('form-check-input')
+                    ->ariaDescribedBy($translator->translate('active')); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
         <?= Html::closeTag('div'); ?>

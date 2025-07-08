@@ -82,7 +82,7 @@ declare(strict_types=1);
                        /**
                         * @var App\Invoice\Entity\CustomField $custom
                         */
-                        foreach ($custom_fields['client.custom'] as $custom) { ?>
+                        foreach ($custom_fields['client_custom'] as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
                             <?= ($custom->getLabel() ?? '#'). ' (ID ' . $custom->getId() . ')'; ?>
                         </option>
@@ -163,13 +163,13 @@ declare(strict_types=1);
         </div>
         <?= $template_tags_inv; ?>
         <div class="form-group">
-            <label for="tags_sumex"><?= $translator->translate('invoice.sumex'); ?></label>
+            <label for="tags_sumex"><?= $translator->translate('sumex'); ?></label>
             <select id="tags_sumex" class="taginv-select form-control">
                 <option value="{{{sumex_reason}}}">
                     <?= $translator->translate('reason'); ?>
                 </option>
                 <option value="{{{sumex_diagnosis}}}">
-                    <?= $translator->translate('invoice.sumex.diagnosis'); ?>
+                    <?= $translator->translate('sumex.diagnosis'); ?>
                 </option>
                 <option value="{{{sumex_observations}}}">
                     <?= $translator->translate('sumex.observations'); ?>

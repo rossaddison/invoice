@@ -126,7 +126,7 @@ final class InvoiceController extends BaseController
             'install_test_data' => 0,
             //1 => None, 2 => Cash, 3 => Cheque, 4 => Card/Direct Debit - Succeeded
             //5 => Card/Direct Debit - Processing 6 => Card/Direct Debit - Customer Ready
-            'invoice_default_payment_method' => 1,
+            'invoice_default_payment_method' => 6,
             'invoices_due_after' => 30,
             'invoice_logo' => 'favicon.ico',
             //This setting should be zero during Production. See inv/mark_sent warning
@@ -1137,7 +1137,7 @@ final class InvoiceController extends BaseController
         $i_group->setIdentifier_format('INV{{{id}}}');
         $i_group->setNext_id(1);
         $i_group->setLeft_pad(0);
-        $gR->save($i_group);
+        $gR->save($i_group);        
 
         $q_group = new Group();
         $q_group->setName('Quote Group');
@@ -1151,7 +1151,14 @@ final class InvoiceController extends BaseController
         $so_group->setIdentifier_format('SO{{{id}}}');
         $so_group->setNext_id(1);
         $so_group->setLeft_pad(0);
-        $gR->save($so_group);
+        $gR->save($so_group);        
+        
+        $icn_group = new Group();
+        $icn_group->setName('Credit Note Group');
+        $icn_group->setIdentifier_format('CN{{{id}}}');
+        $icn_group->setNext_id(1);
+        $icn_group->setLeft_pad(0);
+        $gR->save($icn_group);
     }
 
     /**
@@ -1162,30 +1169,37 @@ final class InvoiceController extends BaseController
         // 1
         $pm_cash = new PaymentMethod();
         $pm_cash->setName('Cash');
+        $pm_cash->setActive(true);
         $pmR->save($pm_cash);
         // 2
         $pm_cheque = new PaymentMethod();
         $pm_cheque->setName('Cheque');
+        $pm_cheque->setActive(true);
         $pmR->save($pm_cheque);
         // 3
         $pm_succeeded = new PaymentMethod();
         $pm_succeeded->setName('Card / Direct Debit - Payment Succeeded');
+        $pm_succeeded->setActive(true);
         $pmR->save($pm_succeeded);
         // 4
         $pm_processing = new PaymentMethod();
         $pm_processing->setName('Card / Direct Debit - Payment Processing');
+        $pm_processing->setActive(true);
         $pmR->save($pm_processing);
         // 5
         $pm_unsuccessful = new PaymentMethod();
         $pm_unsuccessful->setName('Card / Direct Debit - Payment Unsuccessful');
+        $pm_unsuccessful->setActive(true);
         $pmR->save($pm_unsuccessful);
         // 6
         $customer_ready = new PaymentMethod();
         $customer_ready->setName('Card / Direct Debit - Customer Ready for Payment');
+        $customer_ready->setActive(true);
         $pmR->save($customer_ready);
         // 7
         $peppol_access_point = new PaymentMethod();
         $peppol_access_point->setName('Peppol Access Point');
+        $peppol_access_point->setActive(true);
         $pmR->save($peppol_access_point);
     }
 

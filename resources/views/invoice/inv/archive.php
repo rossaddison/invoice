@@ -14,13 +14,13 @@ echo $alert;
 ?> 
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('invoice.archive'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('archive'); ?></h1>
     <div class="headerbar-item pull-right">
        <!-- No Url Generator here. Just post -->
        <form method="post">
             <input type="hidden" name="_csrf" value="<?= $csrf; ?>">
             <div class="input-group" hidden>
-                <label for="invoice_number"><?= $translator->translate('invoice.number'); ?></label>
+                <label for="invoice_number"><?= $translator->translate('number'); ?></label>
                 <input name="invoice_number" id="invoice_number" type="text" class="form-control" value="<?php $body['invoice_number'] ?? '#'; ?>">
                 <span class="input-group-btn">
                     <button class="btn btn-primary btn-sm" type="submit"><?= $translator->translate('filter.invoices'); ?></button>

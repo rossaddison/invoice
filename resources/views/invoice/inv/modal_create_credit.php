@@ -40,7 +40,7 @@ use Yiisoft\Html\Html;
 echo $credit_date; ?>">
 
                     <div class="form-group">
-                        <label for="inv_password"><?= $translator->translate('invoice.password'); ?></label>
+                        <label for="inv_password"><?= $translator->translate('password'); ?></label>
                         <input type="text" name="inv_password" id="inv_password" class="form-control"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password'); ?>"
                                style="margin: 0 auto;" autocomplete="off">
@@ -74,7 +74,7 @@ echo $credit_date; ?>">
                     <ul>
                         <li><?= $translator->translate('client') . ': ' . Html::encode($inv->getClient()?->getClient_name()); ?></li>
                         <li><?= $translator->translate('credit.invoice.date') . ': ' . $credit_date; ?></li>
-                        <li><?= $translator->translate('invoice.group') . ': ' . (!empty($credit_invoice_group) ? $credit_invoice_group : ''); ?></li>
+                        <li><?= $translator->translate('group') . ': ' . (!empty($credit_invoice_group) ? $credit_invoice_group : ''); ?></li>
                     </ul>
 
                     <div class="alert alert-danger no-margin">

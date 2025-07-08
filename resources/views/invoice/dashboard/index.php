@@ -126,7 +126,7 @@ use Yiisoft\Html\Html;
             <div id="panel-invoice-overview" class="panel panel-default overview">
 
                 <div class="panel-heading">
-                    <b><i class="fa fa-bar-chart fa-margin"></i> <?= $translator->translate('invoice.overview'); ?></b>
+                    <b><i class="fa fa-bar-chart fa-margin"></i> <?= $translator->translate('overview'); ?></b>
                     <span class="pull-right text-muted"><?= $s->lang($invoice_status_period); ?></span>
                 </div>
 

@@ -14,7 +14,7 @@ declare(strict_types=1);
 ?> 
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('invoice.aging'); ?></h1>
+    <h1 class="headerbar-title"><?= $translator->translate('aging'); ?></h1>
 </div>
 
 <div id="content">

@@ -52,6 +52,14 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>8th July 2025</b></p>
+<p>Created an additional Group called Credit Note in the InvoiceController</p>
+<p>Credit Notes can be generated if the original invoice has been sent.</p>
+<p>The Credit Note is simply a 'reversed sent Invoice'.</p>
+<p>Bugfix: When a Credit Note is created from an Invoice, this Invoice's creditinvoiceparent_id is set to the new Credit Notes id (effectively an invoice id)</p>
+<p>I have not created a separate Credit Note entity</p>
+<p>Payment methods can be made active. Only active payment methods should appear in the dropdowns</p>
+<p>Set the default payment method to online as dealing with cheques or cash complicates matters.</p>
 <p><b>7th July 2025</b></p>
 <p>Add more appropriate error messages to the AuthController.php</p>
 <p><b>5th July 2025</b></p>

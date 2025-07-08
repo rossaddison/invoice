@@ -98,7 +98,7 @@ use Yiisoft\Html\Tag\A;
     <table class="table table-bordered table-condensed no-margin">
     <tbody>
     <tr>
-        <td><?= $translator->translate('invoice.date'); ?></td>
+        <td><?= $translator->translate('date'); ?></td>
         <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
     </tr>
     <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
