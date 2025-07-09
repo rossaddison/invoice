@@ -52,6 +52,12 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>9th July 2025</b></p>
+<p>Create separate service for Stripe.</p>
+<p>Performance boost: DI's created: inv.php and quote.php</p>
+<p>Move Stripe related PaymentInformationController code into a separate service for Stripe.</p>
+<p>This is to facilitate future unit testing.</p>
+<p>Similar work will commence on the other Payment Providers.</p>
 <p><b>8th July 2025</b></p>
 <p>Created an additional Group called Credit Note in the InvoiceController</p>
 <p>Credit Notes can be generated if the original invoice has been sent.</p>

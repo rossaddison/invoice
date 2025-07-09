@@ -34,6 +34,7 @@ use App\Invoice\PaymentMethod\PaymentMethodRepository as pmR;
 use App\Invoice\Setting\SettingRepository as sR;
 // Services
 use App\Invoice\Merchant\MerchantService;
+use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Payment\PaymentService;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -51,6 +52,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Mollie\Api\Resources\Payment as MolliePayment;
 use Mollie\Api\MollieApiClient as MollieClient;
 use Mollie\Api\Exceptions\ApiException as MollieException;
+use Stripe\Stripe;
 
 final class PaymentInformationController
 {
@@ -62,6 +64,7 @@ final class PaymentInformationController
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
         private MerchantService $merchantService,
+        private StripePaymentService $stripePaymentService,    
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -79,6 +82,7 @@ final class PaymentInformationController
     ) {
         $this->factory = $factory;
         $this->merchantService = $merchantService;
+        $this->stripePaymentService = $stripePaymentService;
         $this->paymentService = $paymentService;
         $this->session = $session;
         $this->flash = $flash;
@@ -1016,20 +1020,6 @@ final class PaymentInformationController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param string $client_chosen_gateway
-     * @param string $url_key
-     * @param float $balance
-     * @param cR $cR
-     * @param Inv $invoice
-     * @param array $items_array
-     * @param array $yii_invoice_array
-     * @param bool $disable_form
-     * @param bool $is_overdue
-     * @param string $payment_method_for_this_invoice
-     * @param float $total
-     * @return Response
-     */
     public function stripeInForm(
         string $client_chosen_gateway,
         string $url_key,
@@ -1043,33 +1033,32 @@ final class PaymentInformationController
         string $payment_method_for_this_invoice,
         float $total
     ): Response {
-        // Return the view
-        if ($this->sR->getSetting('gateway_stripe_enabled') === '1' && ($this->stripe_setApiKey() == false)) {
-            $this->flashMessage('warning', 'Stripe Payment Gateway Secret Key/Api Key needs to be setup.');
-            return $this->webService->getNotFoundResponse();
-        }
+        // Get Stripe keys and client secret from service
+        $publishableKey = $this->stripePaymentService->getPublishableKey();
+        $clientSecret = $this->stripePaymentService->createPaymentIntent($yii_invoice_array);
+
         $stripe_pci_view_data = [
             'alert' => $this->alert(),
-            'return_url' => ['paymentinformation/stripe_complete',['url_key' => $url_key]],
+            'return_url' => ['paymentinformation/stripe_complete', ['url_key' => $url_key]],
             'balance' => $balance,
             'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
-            'pci_client_publishable_key' => $this->crypt->decode($this->sR->getSetting('gateway_stripe_publishableKey')),
+            'pci_client_publishable_key' => $publishableKey,
             'json_encoded_items' => Json::encode($items_array),
-            'client_secret' => $this->get_stripe_pci_client_secret($yii_invoice_array),
+            'client_secret' => $clientSecret,
             'disable_form' => $disable_form,
             'client_chosen_gateway' => $client_chosen_gateway,
             'invoice' => $invoice,
             'inv_url_key' => $url_key,
             'is_overdue' => $is_overdue,
             'partial_client_address' => $this->viewRenderer
-                                             ->renderPartialAsString(
-                                                 '//invoice/client/partial_client_address',
-                                                 ['client' => $cR->repoClientquery($invoice->getClient_id())]
-                                             ),
-            'payment_method' => $payment_method_for_this_invoice ?: 'None' ,
+                ->renderPartialAsString(
+                    '//invoice/client/partial_client_address',
+                    ['client' => $cR->repoClientquery($invoice->getClient_id())]
+                ),
+            'payment_method' => $payment_method_for_this_invoice ?: 'None',
             'total' => $total,
             'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
-            'title' => \Stripe\Stripe::getApiVersion() . ' - PCI Compliant - is enabled. ',
+            'title' => Stripe::getApiVersion() . ' - PCI Compliant - is enabled. ',
         ];
         return $this->viewRenderer->render('payment_information_stripe_pci', $stripe_pci_view_data);
     }
@@ -1084,48 +1073,21 @@ final class PaymentInformationController
         return !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? true : false;
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
-    public function stripe_complete(Request $request, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function stripe_complete(Request $request, CurrentRoute $currentRoute): Response
     {
-        // Redirect to the invoice using the url key
         $invoice_url_key = $currentRoute->getArgument('url_key');
-        $pending_message = '';
-        $heading = '';
-        $payment_method = 1;
         if (null !== $invoice_url_key) {
             $sandbox_url_array = $this->sR->sandbox_url_array();
-            // Get the invoice data
-            /** @var Inv $invoice */
             $invoice = $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
+            if ($invoice === null) {
+                return $this->webService->getNotFoundResponse();
+            }
             $invoiceNumber = (null !== $invoice->getNumber()) ?: 'unknown';
-            // Get Stripe's query param redirect_status returned in their returnUrl
             $query_params = $request->getQueryParams();
-            $redirect_status_from_stripe = (string)$query_params['redirect_status'];
-            // Set the status to paid
-            // Your stripe dashboard has the metadata invoice id and a breakdown of 'online' payment method
-            // eg. card or bacs
-            if ($redirect_status_from_stripe === 'succeeded') {
-                $invoice->setStatus_id(4);
-                // 1 None, 2 Cash, 3 Cheque, 4 Card / Direct-debit - Succeeded, 5 Card / Direct-debit - Processing, 6 Card / Direct-debit - Customer Ready
-                $payment_method = 4;
-                $invoice->setPayment_method(4);
-            }
-
-            if ($redirect_status_from_stripe === 'requires_payment_method') {
-                $invoice->setStatus_id(3);
-
-                // 1 None, 2 Cash, 3 Cheque, 4 Card / Direct-debit - Succeeded, 5 Card / Direct-debit - Processing, 6 Card / Direct-debit - Customer Ready
-                $payment_method = 5;
-                $invoice->setPayment_method(5);
-                $pending_message = 'Requires a payment method. ';
-            }
-            $heading = $redirect_status_from_stripe == 'succeeded' ?
-              sprintf($this->translator->translate('online.payment.payment.successful'), (string)$invoiceNumber)
-              : sprintf($this->translator->translate('online.payment.payment.failed'), (string)$invoiceNumber . ' ' . ($pending_message ?: ''));
+            $redirect_status_from_stripe = (string)($query_params['redirect_status'] ?? '');
+            $result = $this->stripePaymentService->handleCompletion($invoice, $redirect_status_from_stripe);
+            $invoice->setStatus_id((int)$result['status_id']);
+            $invoice->setPayment_method((int)$result['payment_method']);
             $this->iR->save($invoice);
             /** @var int $invoice->getId() */
             $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice->getId());
@@ -1142,7 +1104,7 @@ final class PaymentInformationController
                     $invoice_amount_record->getInv_id(),
                     $balance ?: 0.00,
                     // Card / Direct Debit - Customer Ready => 6
-                    $payment_method,
+                    (int)$result['payment_method'],
                     (string)$invoiceNumber,
                     'Stripe',
                     'stripe',
@@ -1150,7 +1112,9 @@ final class PaymentInformationController
                     true,
                     $sandbox_url_array
                 );
-
+                $heading = $redirect_status_from_stripe == 'succeeded' ?
+                  sprintf($this->translator->translate('online.payment.payment.successful'), (string)$invoiceNumber)
+                  : sprintf($this->translator->translate('online.payment.payment.failed'), (string)$invoiceNumber . ' ' . ((string)$result['message'] ?: ''));
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(
                         'paymentinformation/payment_message',
@@ -1166,7 +1130,7 @@ final class PaymentInformationController
                 return $this->viewRenderer->render('payment_completion_page', $view_data);
             } //null!==$balance
             return $this->webService->getNotFoundResponse();
-        } //null!==$invoice_url_key
+        } //null!== $invoice_url_key
         return $this->webService->getNotFoundResponse();
     }
 

@@ -3227,16 +3227,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.47.0",
+            "version": "v1.47.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9"
+                "reference": "d7a0a215ec42ca0c8cb40e9ae0c5960aa9a024b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d6389aae7c009daceaa8da9b7942d8df6969f6d9",
-                "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d7a0a215ec42ca0c8cb40e9ae0c5960aa9a024b7",
+                "reference": "d7a0a215ec42ca0c8cb40e9ae0c5960aa9a024b7",
                 "shasum": ""
             },
             "require": {
@@ -3282,9 +3282,9 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.47.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.47.1"
             },
-            "time": "2025-04-15T21:47:20+00:00"
+            "time": "2025-07-09T15:26:02+00:00"
         },
         {
             "name": "google/cloud-core",
@@ -17864,12 +17864,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "0305182696c0feb9a84ed87a02777b3accc8f6cd"
+                "reference": "63caeeb633d6b4a1cacbed809f58b0927b2d4100"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/0305182696c0feb9a84ed87a02777b3accc8f6cd",
-                "reference": "0305182696c0feb9a84ed87a02777b3accc8f6cd",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/63caeeb633d6b4a1cacbed809f58b0927b2d4100",
+                "reference": "63caeeb633d6b4a1cacbed809f58b0927b2d4100",
                 "shasum": ""
             },
             "require": {
@@ -17952,7 +17952,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-19T20:51:54+00:00"
+            "time": "2025-07-09T18:56:03+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -21857,12 +21857,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "a76f62e135c8b583602bd99df737b5c20f4d7200"
+                "reference": "c4ed86478b4c2004245ec9d3a470dbe1790586a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a76f62e135c8b583602bd99df737b5c20f4d7200",
-                "reference": "a76f62e135c8b583602bd99df737b5c20f4d7200",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c4ed86478b4c2004245ec9d3a470dbe1790586a3",
+                "reference": "c4ed86478b4c2004245ec9d3a470dbe1790586a3",
                 "shasum": ""
             },
             "conflict": {
@@ -22302,7 +22302,7 @@
                 "microsoft/microsoft-graph": ">=1.16,<1.109.1|>=2,<2.0.1",
                 "microsoft/microsoft-graph-beta": "<2.0.1",
                 "microsoft/microsoft-graph-core": "<2.0.2",
-                "microweber/microweber": "<=2.0.16",
+                "microweber/microweber": "<=2.0.19",
                 "mikehaertl/php-shellcommand": "<1.6.1",
                 "miniorange/miniorange-saml": "<1.4.3",
                 "mittwald/typo3_forum": "<1.2.1",
@@ -22804,7 +22804,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-04T13:13:44+00:00"
+            "time": "2025-07-09T19:05:36+00:00"
         },
         {
             "name": "sanmai/later",
