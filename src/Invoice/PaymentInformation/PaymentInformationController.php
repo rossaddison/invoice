@@ -64,7 +64,7 @@ final class PaymentInformationController
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
         private MerchantService $merchantService,
-        private StripePaymentService $stripePaymentService,    
+        private StripePaymentService $stripePaymentService,
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -1069,7 +1069,7 @@ final class PaymentInformationController
         /** @var string $sk_test */
         $sk_test = !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? $this->crypt->decode($this->sR->getSetting('gateway_stripe_secretKey'))
                        : '';
-        !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? \Stripe\Stripe::setApiKey($sk_test) : '';
+        !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? Stripe::setApiKey($sk_test) : '';
         return !empty($this->sR->getSetting('gateway_stripe_secretKey')) ? true : false;
     }
 
