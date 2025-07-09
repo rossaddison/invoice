@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Invoice\Quote\QuoteController;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\Inv\InvService;
@@ -32,7 +34,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 return [
     QuoteController::class => [
         'class' => QuoteController::class,
-        '__construct()' => [    
+        '__construct()' => [
             DataResponseFactoryInterface::class => DataResponseFactory::class,
             InvAmountService::class => InvAmountService::class,
             InvService::class => InvService::class,
@@ -54,7 +56,7 @@ return [
             UrlGenerator::class => UrlGenerator::class,
             SessionInterface::class => SessionInterface::class,
             SR::class => SR::class,
-            TranslatorInterface::class => TranslatorInterface::class, 
+            TranslatorInterface::class => TranslatorInterface::class,
             UserService::class => UserService::class,
             ViewRenderer::class => ViewRenderer::class,
             WebControllerService::class => WebControllerService::class,

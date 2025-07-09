@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Invoice\Inv\InvController;
 use App\Invoice\Libraries\Crypt;
 use App\Invoice\Delivery\DeliveryRepository as DelRepo;
@@ -23,7 +25,6 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Session\Flash\Flash;
-
 
 return [
     InvController::class => [
@@ -51,4 +52,3 @@ return [
         ],
     ],
 ];
-

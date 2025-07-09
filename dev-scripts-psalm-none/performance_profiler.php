@@ -7,17 +7,23 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use App\Invoice\Inv\InvService;
-
 // Dummy setup: You must adapt these lines to use actual implementations or mocks for the constructor dependencies
 use App\Invoice\Inv\InvRepository;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
-class DummyRepo extends InvRepository {}
-class DummySession implements SessionInterface {/* implement required methods as empty */}
-class DummyTranslator implements TranslatorInterface {/* implement required methods as empty */}
+class DummyRepo extends InvRepository
+{
+}
+class DummySession implements SessionInterface
+{/* implement required methods as empty */
+}
+class DummyTranslator implements TranslatorInterface
+{/* implement required methods as empty */
+}
 
-function profile(Container $container, string $serviceId, int $iterations) {
+function profile(Container $container, string $serviceId, int $iterations)
+{
     $start = microtime(true);
     for ($i = 0; $i < $iterations; $i++) {
         $container->get($serviceId);
