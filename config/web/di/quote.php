@@ -20,7 +20,6 @@ use App\Invoice\QuoteItem\QuoteItemService;
 use App\Invoice\Quote\QuoteService;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateService;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Cache\ArrayCache;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Mailer\MailerInterface;
@@ -33,8 +32,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 return [
     QuoteController::class => [
         'class' => QuoteController::class,
-        '__construct()' => [
-            ArrayCache::class => ArrayCache::class,    
+        '__construct()' => [    
             DataResponseFactoryInterface::class => DataResponseFactory::class,
             InvAmountService::class => InvAmountService::class,
             InvService::class => InvService::class,
