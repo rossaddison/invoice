@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Setting\SettingRepository;
@@ -19,4 +21,3 @@ return [
         ],
     ],
 ];
-

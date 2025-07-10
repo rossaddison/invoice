@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Invoice\PaymentInformation\Service;
 
 use Amazon\Pay\API\Client;
@@ -39,7 +41,7 @@ class AmazonPayPaymentService
             'currency' => $currency,
         ];
     }
-    
+
     public function handleCallback(array $payload): array
     {
         $sessionId = (string)$payload['amazonCheckoutSessionId'];
@@ -66,7 +68,7 @@ class AmazonPayPaymentService
                 'sandbox' => $this->settingRepository->getSetting('gateway_amazon_pay_sandbox') === '1',
             ];
             $client = new Client($amazonpayConfig);
-            
+
             $apiResponse = (array)$client->getCheckoutSession(['checkoutSessionId' => $sessionId]);
             $responseData = (array)$apiResponse['response'];
             $statusDetails = (array)$responseData['statusDetails'];
@@ -96,7 +98,7 @@ class AmazonPayPaymentService
             $invoiceAmountRecord = $invoiceAmountRepository->repoInvquery((int)$invoice->getId());
             if ($invoiceAmountRecord) {
                 $balance = $invoiceAmountRecord->getBalance();
-                if (null!==$balance) {
+                if (null !== $balance) {
                     $total = $invoiceAmountRecord->getTotal();
                     $invoiceAmountRecord->setBalance(0);
                     if ($total !== null) {
@@ -176,7 +178,7 @@ class AmazonPayPaymentService
             ],
         ];
         $payloadJSON = Json::encode($payloadArray);
-                
+
         /**
          * @psalm-suppress MixedReturnStatement $this->generateButtonSignature($payloadJSON)
          */
@@ -206,10 +208,10 @@ class AmazonPayPaymentService
     /**
      * @see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
      * Step 3: Sign the payload
-     * 
+     *
      * @param string $payloadJSON
-     * @return string
      * @throws \RuntimeException
+     * @return string
      */
     private function generateButtonSignature(string $payloadJSON): string
     {
@@ -219,7 +221,7 @@ class AmazonPayPaymentService
             'region' => $this->getAmazonRegion(),
             'sandbox' => $this->settingRepository->getSetting('gateway_amazon_pay_sandbox') === '1',
         ];
-        $client = new \Amazon\Pay\API\Client($amazonpay_config);
+        $client = new Client($amazonpay_config);
 
         /**
          * @psalm-suppress MixedReturnStatement $this->generateButtonSignature($payloadJSON)

@@ -66,7 +66,7 @@ final class PaymentInformationController
         private Flash $flash,
         private MerchantService $merchantService,
         private AmazonPayPaymentService $amazonPayPaymentService,
-        private StripePaymentService $stripePaymentService, 
+        private StripePaymentService $stripePaymentService,
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -131,7 +131,7 @@ final class PaymentInformationController
             ]
         );
     }
-    
+
     /**
      * @see https://developer.amazon.com/docs/amazon-pay-api-v2/checkout-session.html#create-checkout-session
      * @param Request $request
@@ -156,11 +156,11 @@ final class PaymentInformationController
         $query_params = $request->getQueryParams();
         /** @var string $query_params['amazonCheckoutSessionId'] */
         $checkout_session_id = $query_params['amazonCheckoutSessionId'] ?? null;
-        
+
         if ($checkout_session_id === null) {
             return $this->webService->getNotFoundResponse();
         }
-        
+
         $sandbox_url_array = $this->sR->sandbox_url_array();
 
         // Use service to check completion status and handle invoice updates
@@ -441,7 +441,7 @@ final class PaymentInformationController
         }
         return $this->webService->getNotFoundResponse();
     }
-    
+
     public function amazonInForm(
         string $client_chosen_gateway,
         string $url_key,
@@ -498,7 +498,7 @@ final class PaymentInformationController
         ];
         return $this->viewRenderer->render('payment_information_amazon_pci', $amazon_pci_view_data);
     }
-    
+
     public function braintreeInForm(
         Request $request,
         string $client_chosen_gateway,
