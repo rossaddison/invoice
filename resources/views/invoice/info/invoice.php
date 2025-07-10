@@ -56,6 +56,8 @@
 <p>Create separate service for AmazonPay</p>
 <p>Create di\payment-service.php to increase performance</p>
 <p>Copilot created a pull-request for Braintree</p>
+<p>Request closed due to Copilot request limit reached</p>
+<p>Statically analysed Braintree related data submitted</p>
 <p><b>9th July 2025</b></p>
 <p>Create separate service for Stripe.</p>
 <p>Performance boost: DI's created: inv.php and quote.php</p>
