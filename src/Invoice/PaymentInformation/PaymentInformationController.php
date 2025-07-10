@@ -35,6 +35,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 // Services
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
+use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\Payment\PaymentService;
 use App\Invoice\Traits\FlashMessage;
 use App\Service\WebControllerService;
@@ -65,6 +66,7 @@ final class PaymentInformationController
         private Flash $flash,
         private MerchantService $merchantService,
         private StripePaymentService $stripePaymentService,
+        private BraintreePaymentService $braintreePaymentService,
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -83,6 +85,7 @@ final class PaymentInformationController
         $this->factory = $factory;
         $this->merchantService = $merchantService;
         $this->stripePaymentService = $stripePaymentService;
+        $this->braintreePaymentService = $braintreePaymentService;
         $this->paymentService = $paymentService;
         $this->session = $session;
         $this->flash = $flash;
@@ -638,27 +641,26 @@ final class PaymentInformationController
         float $total,
         array $sandbox_url_array
     ): Response {
-        $gateway = new \Braintree\Gateway([
-            'environment' => $this->sR->getSetting('gateway_braintree_sandbox') === '1' ? 'sandbox' : 'production',
-            'merchantId' => $this->crypt->decode($this->sR->getSetting('gateway_braintree_merchantId')),
-            'publicKey' => $this->crypt->decode($this->sR->getSetting('gateway_braintree_publicKey')),
-            'privateKey' => $this->crypt->decode($this->sR->getSetting('gateway_braintree_privateKey')),
-        ]);
-        $customer_gateway = new \Braintree\CustomerGateway($gateway);
-        // Create a new Braintree customer if not existing
-        try {
-            $customer_gateway->find($invoice->getClient_id());
-        } catch (\Throwable) {
-        } finally {
-            $customer_gateway->create([
-                'id' => $invoice->getClient_id(),
-                'firstName' => $invoice->getClient()?->getClient_name(),
-                'lastName' => $invoice->getClient()?->getClient_surname(),
-                'email' => $invoice->getClient()?->getClient_email(),
-            ]);
+        // Check if Braintree is properly configured
+        if (!$this->braintreePaymentService->isConfigured()) {
+            $this->flashMessage('warning', 'Braintree payment gateway is not properly configured.');
+            return $this->webService->getNotFoundResponse();
         }
-        $client_token_gateway = new \Braintree\ClientTokenGateway($gateway);
-        $merchantId = (string)$this->crypt->decode($this->sR->getSetting('gateway_braintree_merchantId'));
+
+        // Create or find customer
+        if (!$this->braintreePaymentService->findOrCreateCustomer($invoice)) {
+            $this->flashMessage('warning', 'Unable to create or find customer in Braintree.');
+        }
+
+        // Generate client token
+        $clientToken = $this->braintreePaymentService->generateClientToken();
+        if (empty($clientToken)) {
+            $this->flashMessage('warning', 'Unable to generate Braintree client token.');
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $merchantId = $this->braintreePaymentService->getMerchantId();
+        
         // Return the view
         $braintree_pci_view_data = [
             'alert' => $this->alert(),
@@ -667,7 +669,7 @@ final class PaymentInformationController
             'body' => $request->getParsedBody() ?? [],
             'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
             'json_encoded_items' => Json::encode($items_array),
-            'client_token' => $client_token_gateway->generate(),
+            'client_token' => $clientToken,
             'disable_form' => $disable_form,
             'client_chosen_gateway' => $client_chosen_gateway,
             'invoice' => $invoice,
@@ -685,20 +687,19 @@ final class PaymentInformationController
             'braintreeLogo' => $this->renderPartialAsStringBrainTreeLogo($merchantId),
             'title' => 'Braintree - PCI Compliant - Version' . \Braintree\Version::get() . ' - is enabled. ',
         ];
+
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            $result = $gateway->transaction()->sale([
-                'amount' => $balance,
-                'paymentMethodNonce' => $body['payment_method_nonce'] ?? '',
-                //'deviceData' => $deviceDataFromTheClient,
-                'options' => [
-                    'submitForSettlement' => true,
-                ],
-            ]);
-            if ($result->success) {
+            $paymentMethodNonce = (string)($body['payment_method_nonce'] ?? '');
+            
+            // Process transaction using service
+            $transactionResult = $this->braintreePaymentService->processTransaction($balance, $paymentMethodNonce);
+            
+            if ($transactionResult['success']) {
                 $payment_method = 4;
                 $invoice->setPayment_method($payment_method);
                 $invoice->setStatus_id(4);
+                
                 /** @var InvAmount $invoice_amount_record */
                 $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice->getId());
                 if (null !== $invoice_amount_record->getTotal()) {
@@ -721,11 +722,13 @@ final class PaymentInformationController
                     );
                 } //null!==$invoice
             }
+
             $view_data = [
                 'render' => $this->viewRenderer->renderPartialAsString('//invoice/setting/payment_message', ['heading' => '',
                     //https://developer.paypal.com/braintree/docs/reference/general/result-objects
-                    'message' => $result->success ? sprintf($this->translator->translate('online.payment.payment.successful'), $invoice->getNumber() ?? '')
-                                                  : sprintf($this->translator->translate('online.payment.payment.failed'), $invoice->getNumber() ?? ''),
+                    'message' => $transactionResult['success'] 
+                        ? sprintf($this->translator->translate('online.payment.payment.successful'), $invoice->getNumber() ?? '')
+                        : sprintf($this->translator->translate('online.payment.payment.failed'), $invoice->getNumber() ?? ''),
                     'url' => 'inv/url_key',
                     'url_key' => $url_key,
                     'gateway' => 'Braintree',

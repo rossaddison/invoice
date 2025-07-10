@@ -43,8 +43,8 @@ class StripePaymentService
     {
         $payment_intent = PaymentIntent::create([
             // convert the float amount to cents
-            'amount' => (int) round(((float)$$invoiceData['balance'] ?: 0.00) * 100),
-            'currency' => (string) $$invoiceData['currency'],
+            'amount' => (int) round(((float)$invoiceData['balance'] ?: 0.00) * 100),
+            'currency' => (string) $invoiceData['currency'],
             // include the payment methods you have chosen listed in dashboard.stripe.com eg. card, bacs direct debit,
             // googlepay etc.
             'automatic_payment_methods' => [
@@ -52,13 +52,13 @@ class StripePaymentService
             ],
             //'customer' => $invoiceData['customer'],
             //'description' => $invoiceData['description'],
-            'receipt_email' => (string) $$invoiceData['customer_email'],
+            'receipt_email' => (string) $invoiceData['customer_email'],
             'metadata' => [
-                'invoice_id' => (string) $$invoiceData['id'],
-                'invoice_customer_id' => (string) $$invoiceData['customer_id'],
-                'invoice_number' => (string) $$invoiceData['number'] ?: '',
+                'invoice_id' => (string) $invoiceData['id'],
+                'invoice_customer_id' => (string) $invoiceData['customer_id'],
+                'invoice_number' => (string) $invoiceData['number'] ?: '',
                 'invoice_payment_method' => '',
-                'invoice_url_key' => (string) $$invoiceData['url_key'],
+                'invoice_url_key' => (string) $invoiceData['url_key'],
             ],
         ]);
         return $payment_intent->client_secret;
