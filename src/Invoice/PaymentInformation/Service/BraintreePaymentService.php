@@ -48,7 +48,7 @@ class BraintreePaymentService
 
     /**
      * Finds or creates a Braintree customer for the given invoice
-     * 
+     *
      * @param Inv $invoice The invoice containing client information
      * @return bool True if customer exists or was created successfully, false otherwise
      */
@@ -66,7 +66,7 @@ class BraintreePaymentService
         } catch (\Braintree\Exception\NotFound $e) {
             // Customer not found, create new one
             $this->logger->info('Braintree customer not found, creating new one', ['client_id' => $clientId]);
-            
+
             try {
                 $result = $customerGateway->create([
                     'id' => $clientId,
@@ -78,18 +78,17 @@ class BraintreePaymentService
                 if ($result->success) {
                     $this->logger->info('Braintree customer created successfully', ['client_id' => $clientId]);
                     return true;
-                } else {
-                    $this->logger->error('Failed to create Braintree customer', [
-                        'client_id' => $clientId,
-                        'errors' => $result->message ?? 'Unknown error'
-                    ]);
-                    return false;
                 }
+                $this->logger->error('Failed to create Braintree customer', [
+                    'client_id' => $clientId,
+                    'errors' => $result->message ?? 'Unknown error',
+                ]);
+                return false;
             } catch (\Throwable $e) {
                 $this->logger->error('Exception occurred while creating Braintree customer', [
                     'client_id' => $clientId,
                     'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'trace' => $e->getTraceAsString(),
                 ]);
                 return false;
             }
@@ -97,7 +96,7 @@ class BraintreePaymentService
             $this->logger->error('Exception occurred while finding Braintree customer', [
                 'client_id' => $clientId,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             return false;
         }
@@ -112,13 +111,13 @@ class BraintreePaymentService
             $gateway = $this->createGateway();
             $clientTokenGateway = new ClientTokenGateway($gateway);
             $token = $clientTokenGateway->generate();
-            
+
             $this->logger->debug('Braintree client token generated successfully');
             return $token;
         } catch (\Throwable $e) {
             $this->logger->error('Failed to generate Braintree client token', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             return '';
         }
@@ -126,7 +125,7 @@ class BraintreePaymentService
 
     /**
      * Processes a transaction using Braintree
-     * 
+     *
      * @param float $amount The amount to charge
      * @param string $paymentMethodNonce The payment method nonce from client
      * @return array Result array with success status and details
@@ -137,7 +136,7 @@ class BraintreePaymentService
             'success' => false,
             'transaction_id' => null,
             'message' => '',
-            'braintree_result' => null
+            'braintree_result' => null,
         ];
 
         if (empty($paymentMethodNonce)) {
@@ -148,7 +147,7 @@ class BraintreePaymentService
 
         try {
             $gateway = $this->createGateway();
-            
+
             $braintreeResult = $gateway->transaction()->sale([
                 'amount' => $amount,
                 'paymentMethodNonce' => $paymentMethodNonce,
@@ -165,16 +164,16 @@ class BraintreePaymentService
                     /** @var Transaction $braintreeResult->transaction */
                     $transaction = $braintreeResult->transaction;
                     /** @psalm-var object{id?: string|int} $transaction */
-                    if (isset($transaction->id)) { 
+                    if (isset($transaction->id)) {
                         $result['transaction_id'] = (string)$transaction->id;
                     } else {
                         $result['transaction_id'] = null;
-                    }    
+                    }
                     $result['message'] = 'Transaction successful';
 
                     $this->logger->info('Braintree transaction completed successfully', [
                         'amount' => $amount,
-                        'transaction_id' => $result['transaction_id']
+                        'transaction_id' => $result['transaction_id'],
                     ]);
                 } else {
                     /** @var string|null $braintreeResult->message */
@@ -182,17 +181,17 @@ class BraintreePaymentService
 
                     $this->logger->warning('Braintree transaction failed', [
                         'amount' => $amount,
-                        'message' => $result['message']
+                        'message' => $result['message'],
                     ]);
                 }
-            }    
+            }
         } catch (\Throwable $e) {
             $result['message'] = 'Transaction processing error: ' . $e->getMessage();
-            
+
             $this->logger->error('Exception occurred during Braintree transaction', [
                 'amount' => $amount,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
 
@@ -239,8 +238,8 @@ class BraintreePaymentService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->getMerchantId()) && 
-               !empty($this->getPublicKey()) && 
+        return !empty($this->getMerchantId()) &&
+               !empty($this->getPublicKey()) &&
                !empty($this->getPrivateKey());
     }
 

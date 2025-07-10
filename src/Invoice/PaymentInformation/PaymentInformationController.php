@@ -68,7 +68,7 @@ final class PaymentInformationController
         private MerchantService $merchantService,
         private AmazonPayPaymentService $amazonPayPaymentService,
         private BraintreePaymentService $braintreePaymentService,
-        private StripePaymentService $stripePaymentService, 
+        private StripePaymentService $stripePaymentService,
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -536,7 +536,7 @@ final class PaymentInformationController
         }
 
         $merchantId = $this->braintreePaymentService->getMerchantId();
-        
+
         // Return the view
         $braintree_pci_view_data = [
             'alert' => $this->alert(),
@@ -567,15 +567,15 @@ final class PaymentInformationController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             $paymentMethodNonce = (string)($body['payment_method_nonce'] ?? '');
-            
+
             // Process transaction using service
             $transactionResult = $this->braintreePaymentService->processTransaction($balance, $paymentMethodNonce);
-            
+
             if ($transactionResult['success']) {
                 $payment_method = 4;
                 $invoice->setPayment_method($payment_method);
                 $invoice->setStatus_id(4);
-                
+
                 /** @var InvAmount $invoice_amount_record */
                 $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice->getId());
                 if (null !== $invoice_amount_record->getTotal()) {
@@ -602,7 +602,7 @@ final class PaymentInformationController
             $view_data = [
                 'render' => $this->viewRenderer->renderPartialAsString('//invoice/setting/payment_message', ['heading' => '',
                     //https://developer.paypal.com/braintree/docs/reference/general/result-objects
-                    'message' => $transactionResult['success'] 
+                    'message' => $transactionResult['success']
                         ? sprintf($this->translator->translate('online.payment.payment.successful'), $invoice->getNumber() ?? '')
                         : sprintf($this->translator->translate('online.payment.payment.failed'), $invoice->getNumber() ?? ''),
                     'url' => 'inv/url_key',
@@ -627,17 +627,17 @@ final class PaymentInformationController
         $invoice_url_key = $currentRoute->getArgument('url_key');
         if (null !== $invoice_url_key) {
             $sandbox_url_array = $this->sR->sandbox_url_array();
-            
+
             // Get the invoice data
             if ($this->iR->repoUrl_key_guest_count($invoice_url_key) > 0) {
                 $invoice = $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
             } else {
                 return $this->webService->getNotFoundResponse();
             }
-            
+
             if ($invoice) {
                 $invoiceNumber = $invoice->getNumber() ?? 'Unknown';
-                
+
                 // For Braintree, transactions are typically completed directly in the form POST
                 // This completion handler is primarily for consistency with other payment methods
                 $view_data = [
