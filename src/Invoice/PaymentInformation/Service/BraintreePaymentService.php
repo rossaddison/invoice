@@ -232,4 +232,12 @@ class BraintreePaymentService
                !empty($this->getPublicKey()) && 
                !empty($this->getPrivateKey());
     }
+
+    /**
+     * Gets the Braintree SDK version for display purposes
+     */
+    public function getVersion(): string
+    {
+        return \Braintree\Version::get();
+    }
 }

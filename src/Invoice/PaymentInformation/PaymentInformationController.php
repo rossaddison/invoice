@@ -685,7 +685,7 @@ final class PaymentInformationController
             'action' => ['paymentinformation/form',['url_key' => $url_key,'gateway' => 'Braintree']],
             'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
             'braintreeLogo' => $this->renderPartialAsStringBrainTreeLogo($merchantId),
-            'title' => 'Braintree - PCI Compliant - Version' . \Braintree\Version::get() . ' - is enabled. ',
+            'title' => 'Braintree - PCI Compliant - Version' . $this->braintreePaymentService->getVersion() . ' - is enabled. ',
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -739,6 +739,48 @@ final class PaymentInformationController
             return $this->viewRenderer->render('payment_completion_page', $view_data);
         } //request->getMethod Braintree
         return $this->viewRenderer->render('payment_information_braintree_pci', $braintree_pci_view_data);
+    }
+
+    /**
+     * Handles Braintree payment completion
+     * Note: Braintree payments are typically processed directly in braintreeInForm method,
+     * but this endpoint exists for consistency and potential webhook handling
+     */
+    public function braintree_complete(Request $request, CurrentRoute $currentRoute): Response
+    {
+        $invoice_url_key = $currentRoute->getArgument('url_key');
+        if (null !== $invoice_url_key) {
+            $sandbox_url_array = $this->sR->sandbox_url_array();
+            
+            // Get the invoice data
+            if ($this->iR->repoUrl_key_guest_count($invoice_url_key) > 0) {
+                $invoice = $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
+            } else {
+                return $this->webService->getNotFoundResponse();
+            }
+            
+            if ($invoice) {
+                $invoiceNumber = $invoice->getNumber() ?? 'Unknown';
+                
+                // For Braintree, transactions are typically completed directly in the form POST
+                // This completion handler is primarily for consistency with other payment methods
+                $view_data = [
+                    'render' => $this->viewRenderer->renderPartialAsString(
+                        'setting/payment_message',
+                        [
+                            'heading' => sprintf($this->translator->translate('online.payment.payment.successful'), $invoiceNumber),
+                            'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                            'url' => 'inv/url_key',
+                            'url_key' => $invoice_url_key,
+                            'gateway' => 'Braintree',
+                            'sandbox_url' => $sandbox_url_array['braintree'],
+                        ]
+                    ),
+                ];
+                return $this->viewRenderer->render('payment_completion_page', $view_data);
+            }
+        }
+        return $this->webService->getNotFoundResponse();
     }
 
     public function mollieInForm(
