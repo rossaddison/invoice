@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>10th July 2025</b></p>
+<p>Create separate service for AmazonPay</p>
+<p>Create di\payment-service.php to increase performance</p>
+<p>Copilot created a pull-request for Braintree</p>
 <p><b>9th July 2025</b></p>
 <p>Create separate service for Stripe.</p>
 <p>Performance boost: DI's created: inv.php and quote.php</p>

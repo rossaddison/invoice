@@ -34,6 +34,7 @@ use App\Invoice\PaymentMethod\PaymentMethodRepository as pmR;
 use App\Invoice\Setting\SettingRepository as sR;
 // Services
 use App\Invoice\Merchant\MerchantService;
+use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Payment\PaymentService;
 use App\Invoice\Traits\FlashMessage;
@@ -64,7 +65,8 @@ final class PaymentInformationController
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
         private MerchantService $merchantService,
-        private StripePaymentService $stripePaymentService,
+        private AmazonPayPaymentService $amazonPayPaymentService,
+        private StripePaymentService $stripePaymentService, 
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -82,6 +84,7 @@ final class PaymentInformationController
     ) {
         $this->factory = $factory;
         $this->merchantService = $merchantService;
+        $this->amazonPayPaymentService = $amazonPayPaymentService;
         $this->stripePaymentService = $stripePaymentService;
         $this->paymentService = $paymentService;
         $this->session = $session;
@@ -128,184 +131,78 @@ final class PaymentInformationController
             ]
         );
     }
-
-    // https://developer.amazon.com/docs/amazon-pay-api-v2/checkout-session.html#create-checkout-session
-
+    
     /**
+     * @see https://developer.amazon.com/docs/amazon-pay-api-v2/checkout-session.html#create-checkout-session
      * @param Request $request
      * @param currentRoute $currentRoute
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function amazon_complete(Request $request, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
     {
-        // Redirect to the invoice using the url key
         $invoice_url_key = $currentRoute->getArgument('url_key');
-        /** @var Inv $invoice */
-        if (null !== $invoice_url_key) {
-            $sandbox_url_array = $this->sR->sandbox_url_array();
-            // Get the invoice data
-            if ($this->iR->repoUrl_key_guest_count($invoice_url_key) > 0) {
-                $invoice = $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
-            } else {
-                return $this->webService->getNotFoundResponse();
-            }
-            if ($invoice) {
-                // InvoiceController/install_default_payment_methods: 4 => Card / Direct - Debit Payment Succeeded
-                $invoice_id = $invoice->getId();
-                $invoice_number = null !== $invoice->getNumber() ?: 'Unknown';
-                $payment_method = 4;
-                $invoice->setPayment_method($payment_method);
-                $invoice->setStatus_id(4);
-                $query_params = $request->getQueryParams();
-                // The query param in the returned Url appended by amazon to the CheckoutReviewReturnUrl
-                // set in the amazon_payload_json function.
-                // ie. https://localhost/invoice/paymentinformation/amazon_complete/{url_key}?amazonCheckoutSessionId=.....
-                /** @var string $query_params['amazonCheckoutSessionId'] */
-                $checkout_session_id = $query_params['amazonCheckoutSessionId'];
-                $this->iR->save($invoice);
-                $invoice_amount_record = $this->iaR->repoInvquery((int)$invoice_id);
-                if (null !== $invoice_amount_record) {
-                    $balance = $invoice_amount_record->getBalance();
-                    $total = $invoice_amount_record->getTotal();
-                    $inv_amount_inv_id = $invoice_amount_record->getInv_id();
-                    // The invoice amount has been paid => balance on the invoice is zero and the paid amount is full
-                    $invoice_amount_record->setBalance(0);
-                    if (null !== $total) {
-                        $invoice_amount_record->setPaid($total);
-                    }
-                    $this->iaR->save($invoice_amount_record);
-                    $this->record_online_payments_and_merchant_for_non_omnipay(
-                        $checkout_session_id,
-                        $inv_amount_inv_id,
-                        $balance ?? 0.00,
-                        $payment_method,
-                        (string)$invoice_number,
-                        'Amazon_Pay',
-                        'amazon_pay',
-                        $invoice_url_key,
-                        // bool
-                        true,
-                        $sandbox_url_array
-                    );
-                    if ($checkout_session_id) {
-                        $view_data = [
-                            'render' => $this->viewRenderer->renderPartialAsString(
-                                'setting/payment_message',
-                                [
-                                    'heading' => $this->translator->translate('payment.information.amazon.payment.session.complete') . $checkout_session_id,
-                                    'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
-                                    'url' => 'inv/url_key',
-                                    'url_key' => $invoice_url_key,'gateway' => 'Amazon_Pay',
-                                    'sandbox_url' => $sandbox_url_array['amazon_pay'],
-                                ]
-                            ),
-                        ];
-                        return $this->viewRenderer->render('payment_completion_page', $view_data);
-                    }
-                    $view_data = [
-                        'render' => $this->viewRenderer->renderPartialAsString(
-                            'setting/payment_message',
-                            [
-                                'heading' => $this->translator->translate('payment.information.amazon.payment.session.incomplete'),
-                                'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
-                                'url' => 'inv/url_key',
-                                'url_key' => $invoice_url_key,'gateway' => 'Amazon_Pay',
-                                'sandbox_url' => $sandbox_url_array['amazon_pay'],
-                            ]
-                        ),
-                    ];
-                    return $this->viewRenderer->render('payment_completion_page', $view_data);
-                } //$invoice_amount_record
-            } //$invoice
-        } // null!==$invoice_url_key
-        return $this->webService->getNotFoundResponse();
-    }
-
-    // https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
-
-    /**
-     * @param string $url_key
-     *
-     * @return false|string
-     */
-    private function amazon_payload_json(string $url_key): string|false
-    {
-        $payload_array = [
-            'webCheckoutDetails' => [
-                // Input: Setting...Views...Online Payment...Amazon Pay
-                'checkoutReviewReturnUrl' => $this->sR->getSetting('gateway_amazon_pay_returnUrl') . '/' . $url_key,
-            ],
-            'storeId' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_storeId')),
-            'scopes' => [
-                'name',
-                'email',
-                'phoneNumber',
-                // Not needed since customer can retrieve bill from downloadable pdf
-                'billingAddress',
-            ],
-        ];
-        return json_encode($payload_array);
-    }
-
-    /**
-     * @return string
-     */
-    private function amazon_private_key_file(): string
-    {
-        $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
-        $targetPath = $aliases->get('@pem_file_unique_folder');
-        // 04-12-2022
-        // Below private key file automatically downloaded to your browser in
-        // left hand corner when creating API keys on
-        // https://sellercentral-europe.amazon.com/external-payments/integration-central
-        // Point 5
-        // eg. 'AmazonPay_SANDBOX-AGQNCVAR7LO44CKBVHJWB4AB.pem' renamed to private.pem;
-        $original_file_name = 'private.pem';
-        return $targetPath . '/' . $original_file_name;
-    }
-
-    // https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
-    // Step 3: Sign the payload
-
-    /**
-     * @param string $url_key
-     * @return string
-     */
-    private function amazon_signature(string $url_key): string
-    {
-        $amazonpay_config = [
-            'public_key_id' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
-            'private_key' => $this->amazon_private_key_file(),
-            'region' => $this->amazon_get_region(),
-            'sandbox' => $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1' ? true : false,
-        ];
-        $client = new \Amazon\Pay\API\Client($amazonpay_config);
-        // For testing purposes
-        // $signature = $client->testPrivateKeyIntegrity()
-        //           ? $client->generateButtonSignature($this->amazon_payload_json($url_key))
-        //           : '';
-        //
-        /**
-         * @psalm-suppress MixedReturnStatement
-         */
-        return $client->generateButtonSignature($this->amazon_payload_json($url_key));
-    }
-
-    /**
-     * @return string
-     */
-    public function amazon_get_region(): string
-    {
-        $regions = $this->sR->amazon_regions();
-        // Region North America => na, Japan => jp, Europe => eu
-        $region = $this->sR->getSetting('gateway_amazon_pay_region');
-        if (!in_array($region, $regions)) {
-            $region_value = 'eu';
-        } else {
-            /** @var string $regions[$region] */
-            $region_value = $regions[$region];
+        if ($invoice_url_key === null) {
+            return $this->webService->getNotFoundResponse();
         }
-        return $region_value;
+
+        $invoice = $this->iR->repoUrl_key_guest_count($invoice_url_key) > 0
+            ? $this->iR->repoUrl_key_guest_loaded($invoice_url_key)
+            : null;
+
+        if ($invoice === null) {
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $query_params = $request->getQueryParams();
+        /** @var string $query_params['amazonCheckoutSessionId'] */
+        $checkout_session_id = $query_params['amazonCheckoutSessionId'] ?? null;
+        
+        if ($checkout_session_id === null) {
+            return $this->webService->getNotFoundResponse();
+        }
+        
+        $sandbox_url_array = $this->sR->sandbox_url_array();
+
+        // Use service to check completion status and handle invoice updates
+        $result = $this->amazonPayPaymentService->handleCallback([
+            'amazonCheckoutSessionId' => $checkout_session_id,
+            'invoice' => $invoice, // Pass the entity if needed in service
+            'iR' => $this->iR,
+            'iaR' => $this->iaR,
+        ]);
+
+        // Update invoice/payment status if successful
+        if ($result['success']) {
+            $view_data = [
+                'render' => $this->viewRenderer->renderPartialAsString(
+                    'setting/payment_message',
+                    [
+                        'heading' => $this->translator->translate('payment.information.amazon.payment.session.complete') . $checkout_session_id,
+                        'message' => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                        'url' => 'inv/url_key',
+                        'url_key' => $invoice_url_key,
+                        'gateway' => 'Amazon_Pay',
+                        'sandbox_url' => $sandbox_url_array['amazon_pay'],
+                    ]
+                ),
+            ];
+        } else {
+            $view_data = [
+                'render' => $this->viewRenderer->renderPartialAsString(
+                    'setting/payment_message',
+                    [
+                        'heading' => $this->translator->translate('payment.information.amazon.payment.session.incomplete'),
+                        'message' => $result['message'] ?? ($this->translator->translate('payment') . ':' . $this->translator->translate('incomplete')),
+                        'url' => 'inv/url_key',
+                        'url_key' => $invoice_url_key,
+                        'gateway' => 'Amazon_Pay',
+                        'sandbox_url' => $sandbox_url_array['amazon_pay'],
+                    ]
+                ),
+            ];
+        }
+
+        return $this->viewRenderer->render('payment_completion_page', $view_data);
     }
 
     /**
@@ -544,7 +441,7 @@ final class PaymentInformationController
         }
         return $this->webService->getNotFoundResponse();
     }
-
+    
     public function amazonInForm(
         string $client_chosen_gateway,
         string $url_key,
@@ -557,11 +454,10 @@ final class PaymentInformationController
         string $payment_method_for_this_invoice,
         float $total
     ): Response {
-        //$this->flash('warning','Testing: You will need to create a buyer test account under sellercental.');
-        // Return the view
-        $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
-        if (!file_exists($aliases->get('@pem_file_unique_folder') . '/private.pem')) {
-            $this->flashMessage('warning', 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem');
+        // Let service check for private.pem and return error message if missing
+        $pemCheck = $this->amazonPayPaymentService->checkPrivatePemFile();
+        if ($pemCheck !== null) {
+            $this->flashMessage('warning', (string)$pemCheck['message']);
             return $this->viewRenderer->render(
                 'setting/payment_message',
                 [
@@ -573,34 +469,14 @@ final class PaymentInformationController
                 ]
             );
         }
-        $client_language = $invoice->getClient()?->getClient_language();
-        $amazon_languages = $this->sR->amazon_languages();
-        $client_in_language = 'en_GB';
-        if (null !== $client_language) {
-            $client_in_language = $amazon_languages[$client_language];
-        }
+
+        // Get Amazon Pay button data from the service
+        $amazonPayButton = $this->amazonPayPaymentService->getButtonData($invoice, $url_key, $balance);
+
         $amazon_pci_view_data = [
             'alert' => $this->alert(),
-            // https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
-            'amazonPayButton' => [
-                'amount' => $balance,
-                // format eg. en_GB
-                'checkoutLanguage' => in_array(
-                    $client_language,
-                    $amazon_languages
-                ) ?
-                                               $client_in_language : 'en_GB',
-                // Settings...View...General...Currency Code
-                'ledgerCurrency' => $this->sR->getSetting('currency_code'),
-                'merchantId' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_merchantId')),
-                'payloadJSON' => $this->amazon_payload_json($url_key),
-                // PayOnly / PayAndShip / SignIn
-                'productType' => 'PayOnly',
-                'publicKeyId' => $this->crypt->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId')),
-                'signature' => $this->amazon_signature($url_key),
-            ],
+            'amazonPayButton' => $amazonPayButton,
             'balance' => $balance,
-            // inv/view view.php gateway choices with url's eg. inv/url_key/{url_key}/{gateway}
             'client_chosen_gateway' => $client_chosen_gateway,
             'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
             'crypt' => $this->crypt,
@@ -611,18 +487,18 @@ final class PaymentInformationController
             'json_encoded_items' => Json::encode($items_array),
             'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
             'partial_client_address' => $this->viewRenderer
-                                             ->renderPartialAsString(
-                                                 '//invoice/client/partial_client_address',
-                                                 ['client' => $cR->repoClientquery($invoice->getClient_id())]
-                                             ),
+                ->renderPartialAsString(
+                    '//invoice/client/partial_client_address',
+                    ['client' => $cR->repoClientquery($invoice->getClient_id())]
+                ),
             'payment_method' => $payment_method_for_this_invoice,
-            'return_url' => ['paymentinformation/amazon_complete',['url_key' => $url_key]],
+            'return_url' => ['paymentinformation/amazon_complete', ['url_key' => $url_key]],
             'title' => 'Amazon Pay is enabled',
             'total' => $total,
         ];
         return $this->viewRenderer->render('payment_information_amazon_pci', $amazon_pci_view_data);
     }
-
+    
     public function braintreeInForm(
         Request $request,
         string $client_chosen_gateway,

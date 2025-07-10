@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "881312272f06b25c1b0a282267fc6f79",
+    "content-hash": "666d527bcb46adfc3f220272a1e6ac22",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -2048,16 +2048,16 @@
         },
         {
             "name": "cycle/schema-builder",
-            "version": "v2.11.1",
+            "version": "v2.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/schema-builder.git",
-                "reference": "af4816cfb52ce3591110e3842dda0c1df905c928"
+                "reference": "c59071a22dc9368a599253f541ff5338a61a1511"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/schema-builder/zipball/af4816cfb52ce3591110e3842dda0c1df905c928",
-                "reference": "af4816cfb52ce3591110e3842dda0c1df905c928",
+                "url": "https://api.github.com/repos/cycle/schema-builder/zipball/c59071a22dc9368a599253f541ff5338a61a1511",
+                "reference": "c59071a22dc9368a599253f541ff5338a61a1511",
                 "shasum": ""
             },
             "require": {
@@ -2071,7 +2071,7 @@
                 "spiral/code-style": "^2.2",
                 "spiral/tokenizer": "^2.8",
                 "symfony/console": "^6.0 || ^7.0",
-                "vimeo/psalm": "^5.12"
+                "vimeo/psalm": "^5.12 || ^6.12"
             },
             "type": "library",
             "autoload": {
@@ -2104,7 +2104,7 @@
             "description": "Cycle ORM Schema Builder",
             "support": {
                 "issues": "https://github.com/cycle/schema-builder/issues",
-                "source": "https://github.com/cycle/schema-builder/tree/v2.11.1"
+                "source": "https://github.com/cycle/schema-builder/tree/v2.11.2"
             },
             "funding": [
                 {
@@ -2112,7 +2112,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-13T15:51:51+00:00"
+            "time": "2025-07-10T03:45:14+00:00"
         },
         {
             "name": "cycle/schema-migrations-generator",
@@ -5185,16 +5185,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.1.4",
+            "version": "v3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "5c5fe183fae988f49947ad9d6c6d019a9d3f7831"
+                "reference": "a51234aaaf76e2418891e1f3c3944e75b5d6f41e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/5c5fe183fae988f49947ad9d6c6d019a9d3f7831",
-                "reference": "5c5fe183fae988f49947ad9d6c6d019a9d3f7831",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/a51234aaaf76e2418891e1f3c3944e75b5d6f41e",
+                "reference": "a51234aaaf76e2418891e1f3c3944e75b5d6f41e",
                 "shasum": ""
             },
             "require": {
@@ -5275,9 +5275,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.1.4"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.1.5"
             },
-            "time": "2025-06-11T13:14:29+00:00"
+            "time": "2025-07-10T14:15:52+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -8357,16 +8357,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "d513dea45a94394b660e15c155d1fa27826f8e30"
+                "reference": "d0917c069bb0d9bb06ed111cf052510f609015a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d513dea45a94394b660e15c155d1fa27826f8e30",
-                "reference": "d513dea45a94394b660e15c155d1fa27826f8e30",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d0917c069bb0d9bb06ed111cf052510f609015a4",
+                "reference": "d0917c069bb0d9bb06ed111cf052510f609015a4",
                 "shasum": ""
             },
             "require": {
@@ -8405,7 +8405,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.0"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.1"
             },
             "funding": [
                 {
@@ -8413,7 +8413,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-24T20:26:57+00:00"
+            "time": "2025-07-10T11:31:31+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -21857,12 +21857,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "c4ed86478b4c2004245ec9d3a470dbe1790586a3"
+                "reference": "b34bea5e19970433575063dd74b68e5e880e10ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c4ed86478b4c2004245ec9d3a470dbe1790586a3",
-                "reference": "c4ed86478b4c2004245ec9d3a470dbe1790586a3",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b34bea5e19970433575063dd74b68e5e880e10ee",
+                "reference": "b34bea5e19970433575063dd74b68e5e880e10ee",
                 "shasum": ""
             },
             "conflict": {
@@ -22663,6 +22663,7 @@
                 "ua-parser/uap-php": "<3.8",
                 "uasoft-indonesia/badaso": "<=2.9.7",
                 "unisharp/laravel-filemanager": "<2.9.1",
+                "universal-omega/dynamic-page-list3": "<3.6.4",
                 "unopim/unopim": "<0.1.5",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
@@ -22804,7 +22805,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-09T19:05:36+00:00"
+            "time": "2025-07-10T13:15:28+00:00"
         },
         {
             "name": "sanmai/later",

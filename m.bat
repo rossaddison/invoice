@@ -13,7 +13,8 @@ echo =======================================
 echo [0] Goto Installation Menu
 echo [1] Run PHP Psalm
 echo [2] Run PHP Psalm on a Specific File
-echo [2a] Clear Psalm's cache (in the event of stubborn errors)
+echo [2a] Run PHP Psalm on a Specific Directory
+echo [2b] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
 echo [3a] Composer why-not {repository eg. yiisoft/yii-demo} {patch/minor version e.g. 1.1.1}
 echo [4] Run Composer Update
@@ -45,7 +46,8 @@ set /p choice="Enter your choice [0-21]: "
 if "%choice%"=="0" goto installation_menu 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
-if "%choice%"=="2a" goto psalm_clear_cache
+if "%choice%"=="2a" goto psalm_directory
+if "%choice%"=="2b" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
 if "%choice%"=="3a" goto composerwhynot
 if "%choice%"=="4" goto composer_update
@@ -169,6 +171,25 @@ if "%file%"=="" (
     goto menu
 )
 php vendor/bin/psalm "%file%"
+pause
+goto menu
+
+:psalm_directory
+echo Running PHP Psalm on a specific directory...
+
+if "%~1"=="" (
+    set /p DIR="Enter the path to the directory (relative to the project root): "
+    if "%DIR%"=="" (
+        echo No directory specified. Returning to the menu.
+        pause
+        exit /b
+    )
+    set TARGET=%DIR%
+) else (
+    set TARGET=%~1
+)
+
+php vendor/bin/psalm %TARGET%
 pause
 goto menu
 

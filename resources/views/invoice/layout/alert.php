@@ -59,7 +59,7 @@ foreach ($flash->getAll() as $key => $value) {
                      ->closeButtonTag('button')
                      ->closeButtonAttributes(['style' => 'font-size:'. $alertCloseButtonFontSize. 'px'])
                      ->variant($matchedKey)
-                     // do not html encode since not user-generted code.
+                     // do not html encode since not user-generated code.
                      ->body($body, false)
                      ->dismissable(true)
                      ->render();
