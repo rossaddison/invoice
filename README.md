@@ -118,8 +118,8 @@ If a user signs up by email, they will automatically be assigned as a client, an
 
 **Steps to translate into another language:** 
 
-GeneratorController includes a function google_translate_lang ...            
-This function takes the English ip_lang array or gateway_lang located in 
+GeneratorController includes a function google_translate_lang ...          
+This function takes the English app_lang.php array auto generated in 
 
 ````src/Invoice/Language/English```` 
 
