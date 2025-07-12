@@ -88,7 +88,7 @@ final class AuthController
         private readonly Google $google,
         private readonly GovUk $govUk,
         private readonly LinkedIn $linkedIn,
-        private readonly MicrosoftOnline $microsoftOnline, 
+        private readonly MicrosoftOnline $microsoftOnline,
         private readonly OpenBanking $openBanking,
         private readonly VKontakte $vkontakte,
         private readonly X $x,
@@ -108,7 +108,7 @@ final class AuthController
             $govUk,
             $linkedIn,
             $microsoftOnline,
-            $openBanking,    
+            $openBanking,
             $vkontakte,
             $x,
             $yandex
@@ -241,7 +241,7 @@ final class AuthController
                 'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
                 'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
                 'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
-                    $request, 
+                    $request,
                     $params = [
                         'return_type' => 'id_token',
                         'code_challenge' => $codeChallenge,

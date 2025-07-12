@@ -37,7 +37,7 @@ trait Oauth2
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
 
     public const string OPENBANKING_ACCESS_TOKEN = 'openbanking-access';
-    
+
     public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
 
     public const string X_ACCESS_TOKEN = 'x-access';
@@ -52,7 +52,7 @@ trait Oauth2
         GovUk $govUk,
         LinkedIn $linkedIn,
         MicrosoftOnline $microsoftOnline,
-        OpenBanking $openBanking,    
+        OpenBanking $openBanking,
         VKontakte $vkontakte,
         X $x,
         Yandex $yandex
@@ -183,7 +183,7 @@ trait Oauth2
     {
         return $this->getAccessToken($user, $tR, self::MICROSOFTONLINE_ACCESS_TOKEN);
     }
-    
+
     private function getOpenBankingAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::OPENBANKING_ACCESS_TOKEN);

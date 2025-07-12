@@ -74,7 +74,7 @@ final class SignupController
         private GovUk $govUk,
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
-        private OpenBanking $openBanking,    
+        private OpenBanking $openBanking,
         private VKontakte $vkontakte,
         private X $x,
         private Yandex $yandex,
@@ -110,7 +110,7 @@ final class SignupController
             $govUk,
             $linkedIn,
             $microsoftOnline,
-            $openBanking,    
+            $openBanking,
             $vkontakte,
             $x,
             $yandex
@@ -252,7 +252,7 @@ final class SignupController
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
             'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
-                $request, 
+                $request,
                 $params = [
                     'return_type' => 'id_token',
                     'code_challenge' => $codeChallenge,
