@@ -301,6 +301,22 @@ final readonly class Button
         ->id('btn-microsoftonline')
         ->render();
     }
+    
+    public function openbanking(string $openBankingAuthUrl): string
+    {
+        return
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
+            Img::tag()
+            ->src('/img/open-banking.svg')
+            ->addClass('btn btn-dark')
+            ->render() . A::tag()
+            ->addClass('btn btn-dark')
+            ->content($this->translator->translate('continue.with.openbanking'))
+            ->href($openBankingAuthUrl)
+            ->id('btn-openbanking')
+            ->render() .
+        Html::closeTag('div');
+    }
 
     public function vkontakte(string $vkontakteAuthUrl): string
     {

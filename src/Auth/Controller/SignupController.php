@@ -40,6 +40,7 @@ use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\GovUk;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\X;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
@@ -73,6 +74,7 @@ final class SignupController
         private GovUk $govUk,
         private LinkedIn $linkedIn,
         private MicrosoftOnline $microsoftOnline,
+        private OpenBanking $openBanking,    
         private VKontakte $vkontakte,
         private X $x,
         private Yandex $yandex,
@@ -96,6 +98,7 @@ final class SignupController
         $this->govUk = $govUk;
         $this->linkedIn = $linkedIn;
         $this->microsoftOnline = $microsoftOnline;
+        $this->openBanking = $openBanking;
         $this->vkontakte = $vkontakte;
         $this->x = $x;
         $this->yandex = $yandex;
@@ -107,6 +110,7 @@ final class SignupController
             $govUk,
             $linkedIn,
             $microsoftOnline,
+            $openBanking,    
             $vkontakte,
             $x,
             $yandex
@@ -211,7 +215,7 @@ final class SignupController
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
-
+        $noOpenBankingContinueButton = $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false;
         $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
 
         $codeVerifier = Random::string(128);
@@ -247,6 +251,14 @@ final class SignupController
             ) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
+            'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
+                $request, 
+                $params = [
+                    'return_type' => 'id_token',
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ]
+            ) : '',
             'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
                 $request,
                 $params = [
@@ -281,6 +293,7 @@ final class SignupController
             'noGovUkContinueButton' => $noGovUkContinueButton,
             'noLinkedInContinueButton' => $noLinkedInContinueButton,
             'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
+            'noOpenBankingContinueButton' => $noOpenBankingContinueButton,
             'noVKontakteContinueButton' => $noVKontakteContinueButton,
             'noXContinueButton' => $noXContinueButton,
             'noYandexContinueButton' => $noYandexContinueButton,

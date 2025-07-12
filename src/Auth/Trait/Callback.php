@@ -934,6 +934,61 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
+    
+    public function callbackOpenBanking(
+        ServerRequestInterface $request,
+        TranslatorInterface $translator,
+        TokenRepository $tR,
+        UserInvRepository $uiR,
+        UserRepository $uR,
+        #[RouteArgument('_language')] string $_language,
+        #[Query('code')] string $code = null,
+        #[Query('state')] string $state = null,
+    ): ResponseInterface {
+        if ($code === null || $state === null) {
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
+        }
+
+        $this->blockInvalidState('openbanking', $state);
+
+        if (strlen($code) === 0) {
+            $authorizationUrl = $this->openBanking->buildAuthUrl($request, []);
+            return $this->webService->getRedirectResponse($authorizationUrl);
+        }
+
+        if ($code == 401) {
+            return $this->redirectToOauth2CallbackResultUnAuthorised();
+        }
+
+        if (strlen($state) === 0) {
+            return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
+        }
+
+        $codeVerifier = (string)$this->session->get('code_verifier');
+
+        // Exchange code for token with PKCE
+        $oAuthToken = $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, [
+            'redirect_uri'   => $this->openBanking->getOauth2ReturnUrl(),
+            'code_verifier'  => $codeVerifier,
+            'grant_type'     => 'authorization_code',
+        ]);
+
+        // Save tokens and claims as appropriate (these keys are your choice)
+        $this->session->set('openbanking_access_token', $oAuthToken->getParam('access_token'));
+        $this->session->set('openbanking_refresh_token', $oAuthToken->getParam('refresh_token'));
+        $this->session->set('openbanking_id_token', $oAuthToken->getParam('id_token'));
+        $this->session->set('openbanking_token_type', $oAuthToken->getParam('token_type'));
+        $this->session->set('openbanking_token_expires', time() + (int)$oAuthToken->getParam('expires_in'));
+        $this->session->set('openbanking_scope', $oAuthToken->getParam('scope'));
+
+        // Optionally: store user claims from id_token if using OpenID Connect
+        if ($oAuthToken->getParam('id_token')) {
+            $this->session->set('openbanking_claims', $oAuthToken->getParam('id_token_payload') ?? []);
+        }
+
+        // Continue to app-specific logic (e.g., redirect to dashboard)
+        return $this->redirectToInvoiceIndex();
+    }
 
     public function callbackX(
         ServerRequestInterface $request,
@@ -1387,7 +1442,7 @@ trait Callback
             'message' => $message,
         ]);
     }
-
+    
     private function redirectToUserCancelledOauth2(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);

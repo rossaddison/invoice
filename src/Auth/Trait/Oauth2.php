@@ -15,6 +15,7 @@ use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\GovUk;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\X;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
@@ -35,6 +36,8 @@ trait Oauth2
 
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
 
+    public const string OPENBANKING_ACCESS_TOKEN = 'openbanking-access';
+    
     public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
 
     public const string X_ACCESS_TOKEN = 'x-access';
@@ -49,6 +52,7 @@ trait Oauth2
         GovUk $govUk,
         LinkedIn $linkedIn,
         MicrosoftOnline $microsoftOnline,
+        OpenBanking $openBanking,    
         VKontakte $vkontakte,
         X $x,
         Yandex $yandex
@@ -63,6 +67,7 @@ trait Oauth2
         $govUk->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('govuk'));
         $linkedIn->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('linkedin'));
         $microsoftOnline->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('microsoftonline'));
+        $openBanking->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('openbanking'));
         $vkontakte->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('vkontakte'));
         $x->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('x'));
         $yandex->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('yandex'));
@@ -74,6 +79,7 @@ trait Oauth2
         $govUk->setClientId($this->sR->getOauth2IdentityProviderClientId('govuk'));
         $linkedIn->setClientId($this->sR->getOauth2IdentityProviderClientId('linkedin'));
         $microsoftOnline->setClientId($this->sR->getOauth2IdentityProviderClientId('microsoftonline'));
+        $openBanking->setClientId($this->sR->getOauth2IdentityProviderClientId('openbanking'));
         $vkontakte->setClientId($this->sR->getOauth2IdentityProviderClientId('vkontakte'));
         $x->setClientId($this->sR->getOauth2IdentityProviderClientId('x'));
         $yandex->setClientId($this->sR->getOauth2IdentityProviderClientId('yandex'));
@@ -85,6 +91,7 @@ trait Oauth2
         $govUk->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('govuk'));
         $linkedIn->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('linkedin'));
         $microsoftOnline->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('microsoftonline'));
+        $openBanking->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('openbanking'));
         $vkontakte->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('vkontakte'));
         $x->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('x'));
         $yandex->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('yandex'));
@@ -175,6 +182,11 @@ trait Oauth2
     private function getMicrosoftOnlineAccessToken(User $user, TokenRepository $tR): string
     {
         return $this->getAccessToken($user, $tR, self::MICROSOFTONLINE_ACCESS_TOKEN);
+    }
+    
+    private function getOpenBankingAccessToken(User $user, TokenRepository $tR): string
+    {
+        return $this->getAccessToken($user, $tR, self::OPENBANKING_ACCESS_TOKEN);
     }
 
     private function getVKontakteAccessToken(User $user, TokenRepository $tR): string

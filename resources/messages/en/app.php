@@ -265,6 +265,7 @@ return [
   'continue.with.govuk' => 'Continue with Gov Uk',
   'continue.with.linkedin' => 'Continue with LinkedIn',
   'continue.with.microsoftonline' => 'Continue with MicrosoftOnline',
+  'continue.with.openbanking' => 'Continue with Open Banking',
   'continue.with.vkontakte' => 'Continue with VKontakte',
   'continue.with.x' => 'Continue with X',
   'continue.with.yandex' => 'Continue with Yandex',

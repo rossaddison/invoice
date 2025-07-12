@@ -52,6 +52,9 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>12th July 2025</b></p>
+<p>Introduce Open Banking to the AuthController and SignupController</p>
+<p>https://github.com/rossaddison/invoice/discussions/288</p>
 <p><b>10th July 2025</b></p>
 <p>Create separate service for AmazonPay</p>
 <p>Create di\payment-service.php to increase performance</p>

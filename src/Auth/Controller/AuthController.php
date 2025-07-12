@@ -47,6 +47,7 @@ use Yiisoft\Yii\AuthClient\Client\Google;
 use Yiisoft\Yii\AuthClient\Client\GovUk;
 use Yiisoft\Yii\AuthClient\Client\LinkedIn;
 use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
+use Yiisoft\Yii\AuthClient\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\Client\X;
 use Yiisoft\Yii\AuthClient\Client\VKontakte;
 use Yiisoft\Yii\AuthClient\Client\Yandex;
@@ -65,6 +66,7 @@ final class AuthController
     public const string GOVUK_ACCESS_TOKEN = 'govuk-access';
     public const string LINKEDIN_ACCESS_TOKEN = 'linkedin-access';
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
+    public const string OPENBANKING_ACCESS_TOKEN = 'openbanking-access';
     public const string X_ACCESS_TOKEN = 'x-access';
     public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
@@ -86,7 +88,8 @@ final class AuthController
         private readonly Google $google,
         private readonly GovUk $govUk,
         private readonly LinkedIn $linkedIn,
-        private readonly MicrosoftOnline $microsoftOnline,
+        private readonly MicrosoftOnline $microsoftOnline, 
+        private readonly OpenBanking $openBanking,
         private readonly VKontakte $vkontakte,
         private readonly X $x,
         private readonly Yandex $yandex,
@@ -105,6 +108,7 @@ final class AuthController
             $govUk,
             $linkedIn,
             $microsoftOnline,
+            $openBanking,    
             $vkontakte,
             $x,
             $yandex
@@ -202,6 +206,7 @@ final class AuthController
         $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
         $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
         $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
+        $noOpenBankingContinueButton = $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false;
         $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
         $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
         $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
@@ -235,6 +240,14 @@ final class AuthController
                 ) : '',
                 'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
                 'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
+                'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
+                    $request, 
+                    $params = [
+                        'return_type' => 'id_token',
+                        'code_challenge' => $codeChallenge,
+                        'code_challenge_method' => 'S256',
+                    ]
+                ) : '',
                 'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
                     $request,
                     $params = [
@@ -269,6 +282,7 @@ final class AuthController
                 'noFacebookContinueButton' => $noFacebookContinueButton,
                 'noLinkedInContinueButton' => $noLinkedInContinueButton,
                 'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
+                'noOpenBankingContinueButton' => $noOpenBankingContinueButton,
                 'noVKontakteContinueButton' => $noVKontakteContinueButton,
                 'noXContinueButton' => $noXContinueButton,
                 'noYandexContinueButton' => $noYandexContinueButton,
@@ -622,6 +636,7 @@ final class AuthController
             'govUk' => $this->govUk->getSessionAuthState() ?? null,
             'linkedIn' => $this->linkedIn->getSessionAuthState() ?? null,
             'microsoftOnline' => $this->microsoftOnline->getSessionAuthState() ?? null,
+            'openBanking' => $this->openBanking->getSessionAuthState() ?? null,
             'vkontakte' => $this->vkontakte->getSessionAuthState() ?? null,
             'x' => $this->x->getSessionAuthState() ?? null,
             'yandex' => $this->yandex->getSessionAuthState() ?? null
@@ -807,6 +822,7 @@ final class AuthController
         $specialMap = [
             'developersandboxhmrc' => 'DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN',
             'email-verification' => 'EMAIL_VERIFICATION_TOKEN',
+            'openbanking' => 'OPENBANKING_ACCESS_TOKEN',
             // add more if needed
         ];
         if (isset($specialMap[$provider])) {

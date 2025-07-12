@@ -24,6 +24,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $linkedInAuthUrl
  * @var string                                  $telegramToken
  * @var string                                  $microsoftOnlineAuthUrl
+ * @var string                                  $openBankingAuthUrl
  * @var string                                  $vkontakteAuthUrl
  * @var string                                  $xAuthUrl
  * @var string                                  $yandexAuthUrl
@@ -34,6 +35,7 @@ use Yiisoft\Html\Tag\Form;
  * @var bool                                    $noGovUkContinueButton 
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
+ * @var bool                                    $noOpenBankingContinueButton
  * @var bool                                    $noVKontakteContinueButton
  * @var bool                                    $noXContinueButton
  * @var bool                                    $noYandexContinueButton
@@ -86,6 +88,10 @@ $this->setTitle($translator->translate('login'));
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
                     <?php } ?>
+                    <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton) { ?>
+                        <br><br>
+                        <?= $button->openbanking($openBankingAuthUrl ?: ''); ?>
+                    <?php } ?>    
                     <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
                         <br><br>
                         <?= $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
