@@ -934,7 +934,7 @@ trait Callback
         $this->authService->logout();
         return $this->redirectToMain();
     }
-    
+
     public function callbackOpenBanking(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -968,9 +968,9 @@ trait Callback
 
         // Exchange code for token with PKCE
         $oAuthToken = $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, [
-            'redirect_uri'   => $this->openBanking->getOauth2ReturnUrl(),
-            'code_verifier'  => $codeVerifier,
-            'grant_type'     => 'authorization_code',
+            'redirect_uri' => $this->openBanking->getOauth2ReturnUrl(),
+            'code_verifier' => $codeVerifier,
+            'grant_type' => 'authorization_code',
         ]);
 
         // Save tokens and claims as appropriate (these keys are your choice)
@@ -1442,7 +1442,7 @@ trait Callback
             'message' => $message,
         ]);
     }
-    
+
     private function redirectToUserCancelledOauth2(): ResponseInterface
     {
         return $this->webService->getRedirectResponse('site/usercancelledoauth2', ['_language' => 'en']);

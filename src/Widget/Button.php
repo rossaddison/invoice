@@ -301,7 +301,7 @@ final readonly class Button
         ->id('btn-microsoftonline')
         ->render();
     }
-    
+
     public function openbanking(string $openBankingAuthUrl): string
     {
         return
