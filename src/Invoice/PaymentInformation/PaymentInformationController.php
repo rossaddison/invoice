@@ -63,9 +63,9 @@ final class PaymentInformationController
     use FlashMessage;
 
     use OpenBankingProviders;
-    
+
     private Crypt $crypt;
-    
+
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
@@ -140,7 +140,7 @@ final class PaymentInformationController
             ]
         );
     }
-    
+
     public function openBankingInForm(
         string $client_chosen_gateway,
         string $url_key,
@@ -170,7 +170,7 @@ final class PaymentInformationController
             'invoice' => $invoice,
             'inv_url_key' => $url_key,
             'is_overdue' => $is_overdue,
-            'json_encoded_items' => \Yiisoft\Json\Json::encode($items_array),
+            'json_encoded_items' => Json::encode($items_array),
             'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
             'partial_client_address' => $this->viewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
