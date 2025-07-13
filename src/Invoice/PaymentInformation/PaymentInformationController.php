@@ -177,6 +177,7 @@ final class PaymentInformationController
                 ['client' => $cR->repoClientquery($invoice->getClient_id())]
             ),
             'payment_method' => $payment_method_for_this_invoice,
+            'provider' => $provider,
             'title' => 'Open Banking is enabled',
             'total' => $total,
         ];
