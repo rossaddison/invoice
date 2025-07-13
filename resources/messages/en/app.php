@@ -57,6 +57,7 @@ return [
   'allowance.or.charge.reason' => 'Reason',
   'allowance.or.charge.reason.code' => 'Reason Code',
   'already.paid' => 'This invoice was already paid.',
+  'amount.payment' => 'Payment Amount to be paid in full',
   'amount' => 'Invoice Item Amount',
   'amount.add' => 'Invoice Item Amount Add',
   'amount.due' => 'Amount Due',

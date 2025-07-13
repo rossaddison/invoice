@@ -15,7 +15,10 @@ echo $alert;
 
 echo Html::tag('h2', Html::encode($title));
 
-echo Html::tag('p', $translator->translate('Amount') . ': ' . Html::encode((string)$balance));
+echo Html::tag(
+    'p',
+    Html::encode($translator->translate('amount')) . ': ' . Html::encode((string)$balance)
+);
 
 if (!empty($authUrl)) {
     echo Html::a(
@@ -23,6 +26,8 @@ if (!empty($authUrl)) {
         $authUrl,
         [
             'class' => 'btn btn-primary',
+            'rel' => 'noopener noreferrer',
+            'target' => '_blank',
         ]
     );
 } else {
