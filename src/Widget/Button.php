@@ -301,17 +301,14 @@ final readonly class Button
         ->id('btn-microsoftonline')
         ->render();
     }
-
-    public function openbanking(string $openBankingAuthUrl): string
+    
+    public function openbanking(string $openBankingAuthUrl, string $provider): string
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
-            Img::tag()
-            ->src('/img/open-banking.svg')
+            A::tag()
             ->addClass('btn btn-dark')
-            ->render() . A::tag()
-            ->addClass('btn btn-dark')
-            ->content($this->translator->translate('continue.with.openbanking'))
+            ->content('🏦  '.$this->translator->translate('continue.with.openbanking'). '➡️'. ucfirst($provider))
             ->href($openBankingAuthUrl)
             ->id('btn-openbanking')
             ->render() .

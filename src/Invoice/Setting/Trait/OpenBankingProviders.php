@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Trait;
+namespace App\Invoice\Setting\Trait;
 
 /**
  * Trait OpenBankingProviders
@@ -242,7 +242,7 @@ trait OpenBankingProviders
 
     /**
      * Get an array of all available Open Banking provider names.
-     *
+     * @psalm-return list<array-key>
      * @return string[]
      */
     public function getOpenBankingProviderNames(): array

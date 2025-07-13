@@ -25,6 +25,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $telegramToken
  * @var string                                  $microsoftOnlineAuthUrl
  * @var string                                  $openBankingAuthUrl
+ * @var string|null                             $selectedOpenBankingProvider
  * @var string                                  $vkontakteAuthUrl
  * @var string                                  $xAuthUrl
  * @var string                                  $yandexAuthUrl
@@ -88,9 +89,9 @@ $this->setTitle($translator->translate('login'));
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
                     <?php } ?>
-                    <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton) { ?>
+                    <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton && null!==$selectedOpenBankingProvider) { ?>
                         <br><br>
-                        <?= $button->openbanking($openBankingAuthUrl ?: ''); ?>
+                        <?= $button->openbanking($openBankingAuthUrl ?: '', $selectedOpenBankingProvider);?>
                     <?php } ?>    
                     <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
                         <br><br>

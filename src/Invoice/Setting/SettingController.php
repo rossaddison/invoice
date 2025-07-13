@@ -19,6 +19,7 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Libraries\Sumex;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
 //use App\Invoice\Libraries\Sumex;
 use App\Service\WebControllerService;
@@ -53,6 +54,8 @@ use DateTimeZone;
 
 final class SettingController extends BaseController
 {
+    use OpenBankingProviders;
+    
     protected string $controllerName = 'invoice/setting';
 
     public function __construct(
@@ -172,7 +175,9 @@ final class SettingController extends BaseController
             'salesorders' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
                 'gR' => $gR,
             ]),
-            'oauth2' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2'),
+            'oauth2' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2', [
+                'openBankingProviders' => $this->getOpenBankingProviderNames(),
+            ]),
             'taxes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes', [
                 'tax_rates' => $tR->findAllPreloaded(),
             ]),
@@ -260,7 +265,7 @@ final class SettingController extends BaseController
                             $this->tab_index_settings_save($key, $value);
                         }
 
-                        if ($key == 'number_format') {
+                        if (($key == 'number_format') && in_array($value, $this->sR->number_formats())) {
                             // Set thousands_separator and decimal_point according to number_format
                             // Derive the 'decimal_point' and 'thousands_separator' setting from the chosen ..number format eg. 1000,000.00 if it has a value
                             $this->tab_index_number_format($value);
@@ -338,18 +343,22 @@ final class SettingController extends BaseController
     {
         // Set thousands_separator and decimal_point according to number_format
         $number_formats = $this->sR->number_formats();
-        if ($this->sR->repoCount('decimal_point') == 1) {
-            $this->tab_index_settings_save(
-                'decimal_point',
-                $number_formats[$value]['decimal_point'] ?? '.'
-            );
-        }
-        if ($this->sR->repoCount('thousands_separator') == 1) {
-            $this->tab_index_settings_save(
-                'thousands_separator',
-                $number_formats[$value]['thousands_separator'] ?? ','
-            );
-        }
+        if (strlen($value) > 0) {
+            if (is_array($number_formats[$value])) {
+                if ($this->sR->repoCount('decimal_point') == 1) {
+                    $this->tab_index_settings_save(
+                        'decimal_point',
+                        (string)$number_formats[$value]['decimal_point']
+                    );
+                }
+                if ($this->sR->repoCount('thousands_separator') == 1) {
+                    $this->tab_index_settings_save(
+                        'thousands_separator',
+                        (string)$number_formats[$value]['thousands_separator']
+                    );
+                }
+            }
+        }    
     }
 
     // This procedure is used in the above procedure to ensure that all settings are being captured.

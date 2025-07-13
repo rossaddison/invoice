@@ -15,6 +15,7 @@ use App\Auth\Trait\Oauth2;
 use App\Auth\TokenRepository;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
 use App\User\User;
@@ -57,7 +58,9 @@ final class AuthController
 {
     use Callback;
     //initialize .env file at root with oauth2.0 settings
-    use Oauth2;
+    use Oauth2; 
+    
+    use OpenBankingProviders;
 
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
@@ -132,6 +135,27 @@ final class AuthController
         }
         $loginForm = new LoginForm($this->authService, $translator);
 
+        $openBankingAuthUrl = '';
+        $selectedOpenBankingProvider = $this->sR->getSetting('open_banking_provider');
+        // If a provider has been selected, configure the client accordingly
+        if (strlen($selectedOpenBankingProvider) > 0) {
+            $providerConfig = $this->getOpenBankingProviderConfig($selectedOpenBankingProvider);
+            if ($providerConfig !== null) {
+                $this->openBanking->setAuthUrl((string)$providerConfig['authUrl']);
+                $this->openBanking->setTokenUrl((string)$providerConfig['tokenUrl']);
+                $this->openBanking->setScope(isset($providerConfig['scope']) ? (string)$providerConfig['scope']  : null);
+                $codeVerifier = Random::string(128);
+                $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+                $this->session->set('code_verifier', $codeVerifier);
+                $openBankingAuthUrl = $this->openBanking->getAuthUrl() . '?' . http_build_query([
+                    'response_type' => 'code',
+                    'scope' => $this->openBanking->getScope(),
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256'
+                ]);
+            }
+        }
+        
         if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
             $identity = $this->authService->getIdentity();
             $userId = $identity->getId();
@@ -240,14 +264,8 @@ final class AuthController
                 ) : '',
                 'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
                 'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
-                'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
-                    $request,
-                    $params = [
-                        'return_type' => 'id_token',
-                        'code_challenge' => $codeChallenge,
-                        'code_challenge_method' => 'S256',
-                    ]
-                ) : '',
+                'openBankingAuthUrl' => $openBankingAuthUrl,
+                'selectedOpenBankingProvider' => $selectedOpenBankingProvider,
                 'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
                     $request,
                     $params = [

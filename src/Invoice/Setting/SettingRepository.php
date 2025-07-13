@@ -2059,11 +2059,10 @@ final class SettingRepository extends Select\Repository
         return $debug_mode ? $href : '';
     }
 
-    /**
-     * @return string[][]
-     *
-     * @psalm-return array{number_format_us_uk: array{label: 'i.number_format_us_uk', decimal_point: '.', thousands_separator: ','}, number_format_european: array{label: 'i.number_format_european', decimal_point: ',', thousands_separator: '.'}, number_format_iso80k1_point: array{label: 'i.number_format_iso80k1_point', decimal_point: '.', thousands_separator: ' '}, number_format_iso80k1_comma: array{label: 'i.number_format_iso80k1_comma', decimal_point: ',', thousands_separator: ' '}, number_format_compact_point: array{label: 'i.number_format_compact_point', decimal_point: '.', thousands_separator: ''}, number_format_compact_comma: array{label: 'i.number_format_compact_comma', decimal_point: ',', thousands_separator: ''}}
-     */
+   /**
+    * 
+    * @return array
+    */
     public function number_formats(): array
     {
         /*
@@ -2085,37 +2084,37 @@ final class SettingRepository extends Select\Repository
         return [
             'number_format_us_uk' =>
                 [
-                    'label' => 'i.number_format_us_uk',
+                    'label' => 'number.format.us.uk',
                     'decimal_point' => '.',
                     'thousands_separator' => ',',
                 ],
             'number_format_european' =>
                 [
-                    'label' => 'i.number_format_european',
+                    'label' => 'number.format.european',
                     'decimal_point' => ',',
                     'thousands_separator' => '.',
                 ],
             'number_format_iso80k1_point' =>
                 [
-                    'label' => 'i.number_format_iso80k1_point',
+                    'label' => 'number.format.iso80k1.point',
                     'decimal_point' => '.',
                     'thousands_separator' => ' ',
                 ],
             'number_format_iso80k1_comma' =>
                 [
-                    'label' => 'i.number_format_iso80k1_comma',
+                    'label' => 'number.format.iso80k1.comma',
                     'decimal_point' => ',',
                     'thousands_separator' => ' ',
                 ],
             'number_format_compact_point' =>
                 [
-                    'label' => 'i.number_format_compact_point',
+                    'label' => 'number.format.compact.point',
                     'decimal_point' => '.',
                     'thousands_separator' => '',
                 ],
             'number_format_compact_comma' =>
                 [
-                    'label' => 'i.number_format_compact_comma',
+                    'label' => 'number.format.compact.comma',
                     'decimal_point' => ',',
                     'thousands_separator' => '',
                 ],

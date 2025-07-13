@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\I;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $openBankingProviders
  * @var array $body
  */
 ?>
@@ -92,27 +93,46 @@ use Yiisoft\Html\Tag\I;
                             <?= I::tag()->addClass('bi bi-microsoft')->render() . ' Microsoft Online'; ?>
                         </label>
                     </div>
-                    <div class="checkbox">
-                        <?php $body['settings[no_openbanking_continue_button]'] = $s->getSetting('no_openbanking_continue_button');?>
-                        <label>
-                            <input type="hidden" name="settings[no_openbanking_continue_button]" value="0">
-                            <input type="checkbox" name="settings[no_openbanking_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_openbanking_continue_button]'], 1, '==', true) ?>>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
-                                    <circle cx="6" cy="6" r="5" stroke="#000" stroke-width="1.5" fill="#fff"/>
-                                    <g>
-                                      <rect x="3" y="5" width="6" height="4" rx="0.5" fill="#fff" stroke="#000" stroke-width="0.6"/>
-                                      <rect x="4.5" y="6" width="3" height="0.6" rx="0.3" fill="#000"/>
-                                      <rect x="4.5" y="7.2" width="1.75" height="0.6" rx="0.3" fill="#000" opacity="0.7"/>
-                                      <circle cx="6" cy="3.5" r="0.9" fill="#fff" stroke="#000" stroke-width="0.6"/>
-                                      <path d="M6 4.5V6.5" stroke="#000" stroke-width="0.4" stroke-linecap="round"/>
-                                    </g>
-                                    <g>
-                                      <path d="M2 5.3L6 2.5L10 5.3" stroke="#000" stroke-width="0.6" fill="none"/>
-                                    </g>
-                                </svg><?= ' Open Banking'; ?>
-                        </label>
-                    </div>
+                    <div>
+                        <div class="checkbox">
+                            <?php $body['settings[no_openbanking_continue_button]'] = $s->getSetting('no_openbanking_continue_button');?>
+                            <label>
+                                <input type="hidden" name="settings[no_openbanking_continue_button]" value="0">
+                                <input type="checkbox" name="settings[no_openbanking_continue_button]" value="1"
+                                    <?php $s->check_select($body['settings[no_openbanking_continue_button]'], 1, '==', true) ?>>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
+                                        <circle cx="6" cy="6" r="5" stroke="#000" stroke-width="1.5" fill="#fff"/>
+                                        <g>
+                                          <rect x="3" y="5" width="6" height="4" rx="0.5" fill="#fff" stroke="#000" stroke-width="0.6"/>
+                                          <rect x="4.5" y="6" width="3" height="0.6" rx="0.3" fill="#000"/>
+                                          <rect x="4.5" y="7.2" width="1.75" height="0.6" rx="0.3" fill="#000" opacity="0.7"/>
+                                          <circle cx="6" cy="3.5" r="0.9" fill="#fff" stroke="#000" stroke-width="0.6"/>
+                                          <path d="M6 4.5V6.5" stroke="#000" stroke-width="0.4" stroke-linecap="round"/>
+                                        </g>
+                                        <g>
+                                          <path d="M2 5.3L6 2.5L10 5.3" stroke="#000" stroke-width="0.6" fill="none"/>
+                                        </g>
+                                    </svg><?= ' Open Banking'; ?>
+                            </label>
+                        </div>
+                        <div>
+                            <?php $body['settings[open_banking_provider]'] = $s->getSetting('open_banking_provider');?>
+                            <select name="settings[open_banking_provider]" id="settings[open_banking_provider]"
+                                class="form-control">
+                                <?php
+                                    /**
+                                     * @var string $key
+                                     * @var string $value
+                                     */
+                                    foreach ($openBankingProviders as $key => $value) { ?>
+                                    <option value="<?= $value; ?>"
+                                        <?php $s->check_select($body['settings[open_banking_provider]'], $value); ?>>
+                                        <?= ucfirst($value); ?>
+                                    </option>
+                                    <?php } ?>
+                            </select>
+                        </div>
+                    </div>    
                     <div class="checkbox">
                         <?php $body['settings[no_vkontakte_continue_button]'] = $s->getSetting('no_vkontakte_continue_button');?>
                         <label>

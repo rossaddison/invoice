@@ -152,6 +152,12 @@ return [
                */
                 'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common',
             ],
+            'openbanking' => [
+                'class' => 'Yiisoft\Yii\AuthClient\Client\OpenBanking::class',
+                'clientId' => $_ENV['OPENBANKING_API_CLIENT_ID'] ?? '',
+                'clientSecret' => $_ENV['OPENBANKING_API_CLIENT_SECRET'] ?? '',
+                'returnUrl' => $_ENV['OPENBANKING_API_CLIENT_RETURN_URL'] ?? '',
+            ],
             'vkontakte' => [
                 'class' => 'Yiisoft\Yii\AuthClient\Client\VKontakte::class',
                 'clientId' => $_ENV['VKONTAKTE_API_CLIENT_ID'] ?? '',
