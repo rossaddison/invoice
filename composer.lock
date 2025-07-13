@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "151d81a251e53b68d8c13cb02ac85c37",
+    "content-hash": "66702a9cb4374254ab5daa96cfd3c385",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1841,16 +1841,16 @@
         },
         {
             "name": "cycle/entity-behavior",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/entity-behavior.git",
-                "reference": "7499560c927814c630587db99fca43ca450d1e68"
+                "reference": "e8ec084d8ed07d496d3086f46e2219f0be976df8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/entity-behavior/zipball/7499560c927814c630587db99fca43ca450d1e68",
-                "reference": "7499560c927814c630587db99fca43ca450d1e68",
+                "url": "https://api.github.com/repos/cycle/entity-behavior/zipball/e8ec084d8ed07d496d3086f46e2219f0be976df8",
+                "reference": "e8ec084d8ed07d496d3086f46e2219f0be976df8",
                 "shasum": ""
             },
             "require": {
@@ -1911,7 +1911,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-17T13:01:43+00:00"
+            "time": "2025-07-13T07:05:33+00:00"
         },
         {
             "name": "cycle/migrations",
