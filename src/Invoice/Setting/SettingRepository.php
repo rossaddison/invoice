@@ -2059,10 +2059,9 @@ final class SettingRepository extends Select\Repository
         return $debug_mode ? $href : '';
     }
 
-   /**
-    * 
-    * @return array
-    */
+    /**
+     * @return array
+     */
     public function number_formats(): array
     {
         /*

@@ -55,7 +55,7 @@ use DateTimeZone;
 final class SettingController extends BaseController
 {
     use OpenBankingProviders;
-    
+
     protected string $controllerName = 'invoice/setting';
 
     public function __construct(
@@ -358,7 +358,7 @@ final class SettingController extends BaseController
                     );
                 }
             }
-        }    
+        }
     }
 
     // This procedure is used in the above procedure to ensure that all settings are being captured.

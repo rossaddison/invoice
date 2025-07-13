@@ -58,8 +58,8 @@ final class AuthController
 {
     use Callback;
     //initialize .env file at root with oauth2.0 settings
-    use Oauth2; 
-    
+    use Oauth2;
+
     use OpenBankingProviders;
 
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
@@ -143,7 +143,7 @@ final class AuthController
             if ($providerConfig !== null) {
                 $this->openBanking->setAuthUrl((string)$providerConfig['authUrl']);
                 $this->openBanking->setTokenUrl((string)$providerConfig['tokenUrl']);
-                $this->openBanking->setScope(isset($providerConfig['scope']) ? (string)$providerConfig['scope']  : null);
+                $this->openBanking->setScope(isset($providerConfig['scope']) ? (string)$providerConfig['scope'] : null);
                 $codeVerifier = Random::string(128);
                 $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
                 $this->session->set('code_verifier', $codeVerifier);
@@ -151,11 +151,11 @@ final class AuthController
                     'response_type' => 'code',
                     'scope' => $this->openBanking->getScope(),
                     'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256'
+                    'code_challenge_method' => 'S256',
                 ]);
             }
         }
-        
+
         if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
             $identity = $this->authService->getIdentity();
             $userId = $identity->getId();
