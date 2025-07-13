@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "151d81a251e53b68d8c13cb02ac85c37",
+    "content-hash": "66702a9cb4374254ab5daa96cfd3c385",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1841,16 +1841,16 @@
         },
         {
             "name": "cycle/entity-behavior",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/entity-behavior.git",
-                "reference": "7499560c927814c630587db99fca43ca450d1e68"
+                "reference": "e8ec084d8ed07d496d3086f46e2219f0be976df8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/entity-behavior/zipball/7499560c927814c630587db99fca43ca450d1e68",
-                "reference": "7499560c927814c630587db99fca43ca450d1e68",
+                "url": "https://api.github.com/repos/cycle/entity-behavior/zipball/e8ec084d8ed07d496d3086f46e2219f0be976df8",
+                "reference": "e8ec084d8ed07d496d3086f46e2219f0be976df8",
                 "shasum": ""
             },
             "require": {
@@ -1911,20 +1911,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-17T13:01:43+00:00"
+            "time": "2025-07-13T07:05:33+00:00"
         },
         {
             "name": "cycle/migrations",
-            "version": "v4.2.5",
+            "version": "v4.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/migrations.git",
-                "reference": "0a99d7f85655ca7d682b4a8c30860e0f01b43506"
+                "reference": "c1712b6703441a381f707dd710cc3880c004b92c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/migrations/zipball/0a99d7f85655ca7d682b4a8c30860e0f01b43506",
-                "reference": "0a99d7f85655ca7d682b4a8c30860e0f01b43506",
+                "url": "https://api.github.com/repos/cycle/migrations/zipball/c1712b6703441a381f707dd710cc3880c004b92c",
+                "reference": "c1712b6703441a381f707dd710cc3880c004b92c",
                 "shasum": ""
             },
             "require": {
@@ -1955,9 +1955,9 @@
             "description": "Database migrations, migration scaffolding",
             "support": {
                 "issues": "https://github.com/cycle/migrations/issues",
-                "source": "https://github.com/cycle/migrations/tree/v4.2.5"
+                "source": "https://github.com/cycle/migrations/tree/v4.2.6"
             },
-            "time": "2025-02-06T11:59:51+00:00"
+            "time": "2025-07-13T07:22:37+00:00"
         },
         {
             "name": "cycle/orm",
@@ -7415,16 +7415,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
+                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
-                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
+                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
                 "shasum": ""
             },
             "require": {
@@ -7456,9 +7456,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.1.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.2.0"
             },
-            "time": "2025-02-19T13:28:12+00:00"
+            "time": "2025-07-13T07:04:09+00:00"
         },
         {
             "name": "phpstan/phpstan",

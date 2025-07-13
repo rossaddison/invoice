@@ -32,10 +32,12 @@ use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvItem\InvItemRepository as iiR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as pmR;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Setting\Trait\OpenBankingProviders;
 // Services
 use App\Invoice\Merchant\MerchantService;
 use App\Invoice\PaymentInformation\Service\AmazonPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
+use App\Invoice\PaymentInformation\Service\OpenBankingPaymentService;
 use App\Invoice\PaymentInformation\Service\StripePaymentService;
 use App\Invoice\Payment\PaymentService;
 use App\Invoice\Traits\FlashMessage;
@@ -60,8 +62,10 @@ final class PaymentInformationController
 {
     use FlashMessage;
 
+    use OpenBankingProviders;
+    
     private Crypt $crypt;
-
+    
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
@@ -69,6 +73,7 @@ final class PaymentInformationController
         private AmazonPayPaymentService $amazonPayPaymentService,
         private BraintreePaymentService $braintreePaymentService,
         private StripePaymentService $stripePaymentService,
+        private OpenBankingPaymentService $openBankingPaymentService,
         private PaymentService $paymentService,
         private Session $session,
         private iaR $iaR,
@@ -89,6 +94,7 @@ final class PaymentInformationController
         $this->amazonPayPaymentService = $amazonPayPaymentService;
         $this->braintreePaymentService = $braintreePaymentService;
         $this->stripePaymentService = $stripePaymentService;
+        $this->openBankingPaymentService = $openBankingPaymentService;
         $this->paymentService = $paymentService;
         $this->session = $session;
         $this->flash = $flash;
@@ -133,6 +139,49 @@ final class PaymentInformationController
                 'errors' => [],
             ]
         );
+    }
+    
+    public function openBankingInForm(
+        string $client_chosen_gateway,
+        string $url_key,
+        float $balance,
+        cR $cR,
+        Inv $invoice,
+        array $items_array,
+        bool $disable_form,
+        bool $is_overdue,
+        string $payment_method_for_this_invoice,
+        float $total
+    ): Response {
+        // Get the Open Banking provider and config
+        $provider = $this->sR->getSetting('open_banking_provider');
+        $providerConfig = $provider ? $this->getOpenBankingProviderConfig($provider) : null;
+
+        // Use your service to get the auth URL (assuming you injected OpenBankingPaymentService as $openBankingPaymentService)
+        $authUrl = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
+
+        $viewData = [
+            'alert' => $this->alert(),
+            'authUrl' => $authUrl,
+            'balance' => $balance,
+            'client_chosen_gateway' => $client_chosen_gateway,
+            'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
+            'disable_form' => $disable_form,
+            'invoice' => $invoice,
+            'inv_url_key' => $url_key,
+            'is_overdue' => $is_overdue,
+            'json_encoded_items' => \Yiisoft\Json\Json::encode($items_array),
+            'companyLogo' => $this->renderPartialAsStringCompanyLogo(),
+            'partial_client_address' => $this->viewRenderer->renderPartialAsString(
+                '//invoice/client/partial_client_address',
+                ['client' => $cR->repoClientquery($invoice->getClient_id())]
+            ),
+            'payment_method' => $payment_method_for_this_invoice,
+            'title' => 'Open Banking is enabled',
+            'total' => $total,
+        ];
+
+        return $this->viewRenderer->render('invoice/payment_information_openbanking', $viewData);
     }
 
     /**
@@ -376,6 +425,19 @@ final class PaymentInformationController
         if (null !== $invoice->getNumber()) {
             if ($this->sR->getSetting('gateway_' . $d . '_enabled') === '1') {
                 switch ($client_chosen_gateway) {
+                    case 'OpenBanking':
+                        return $this->openBankingInForm(
+                            $client_chosen_gateway,
+                            $url_key,
+                            $balance,
+                            $cR,
+                            $invoice,
+                            $items_array,
+                            $disable_form,
+                            $is_overdue,
+                            $payment_method_for_this_invoice,
+                            $total
+                        );
                     case 'Amazon_Pay':
                         return $this->amazonInForm(
                             $client_chosen_gateway,

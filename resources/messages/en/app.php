@@ -983,6 +983,8 @@ There should be no existing data in these tables prior to importing and no exist
   'online.payment.webhookId' => 'Webhook Id',
   'online.payment.websiteKey' => 'Website Key',
   'online.payments' => 'Online Payments',
+  'open.banking.pay.with' => 'Pay with Open Banking', 
+  'open.banking.not.configured' => 'Open Banking is not configured. Please contact support.',  
   'open' => 'Open',
   'open.invoices' => 'Open Invoices',
   'open.quotes' => 'Open Quotes',
