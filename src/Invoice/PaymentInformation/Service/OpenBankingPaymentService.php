@@ -57,40 +57,40 @@ final class OpenBankingPaymentService
         ]);
     }
 
-   /**
-    * Exchange the authorization code for an access token.
-    * 
-    * @param ServerRequestInterface $request
-    * @param non-empty-string $code
-    * @param array{authUrl:non-empty-string,tokenUrl:non-empty-string,scope?:string}|null $providerConfig
-    * @param non-empty-string $url_key
-    * @return \Yiisoft\Yii\AuthClient\OAuthToken
-    * @throws \RuntimeException
-    */
-   public function fetchToken(
-       ServerRequestInterface $request,
-       string $code,
-       ?array $providerConfig,
-       string $url_key
-   ): \Yiisoft\Yii\AuthClient\OAuthToken {
-       if ($providerConfig === null) {
-           throw new \RuntimeException('Open Banking provider is not configured.');
-       }
-       $this->openBanking->setAuthUrl($providerConfig['authUrl']);
-       $this->openBanking->setTokenUrl($providerConfig['tokenUrl']);
-       $this->openBanking->setScope(isset($providerConfig['scope']) ? $providerConfig['scope'] : null);
+    /**
+     * Exchange the authorization code for an access token.
+     *
+     * @param ServerRequestInterface $request
+     * @param non-empty-string $code
+     * @param array{authUrl:non-empty-string,tokenUrl:non-empty-string,scope?:string}|null $providerConfig
+     * @param non-empty-string $url_key
+     * @throws \RuntimeException
+     * @return \Yiisoft\Yii\AuthClient\OAuthToken
+     */
+    public function fetchToken(
+        ServerRequestInterface $request,
+        string $code,
+        ?array $providerConfig,
+        string $url_key
+    ): \Yiisoft\Yii\AuthClient\OAuthToken {
+        if ($providerConfig === null) {
+            throw new \RuntimeException('Open Banking provider is not configured.');
+        }
+        $this->openBanking->setAuthUrl($providerConfig['authUrl']);
+        $this->openBanking->setTokenUrl($providerConfig['tokenUrl']);
+        $this->openBanking->setScope($providerConfig['scope'] ?? null);
 
-       $codeVerifier = $this->session->get('code_verifier');
-       if (!is_string($codeVerifier) || $codeVerifier === '') {
-           throw new \RuntimeException('Missing code verifier in session.');
-       }
-       return $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier(
-           $request,
-           $code,
-           [
-               'redirect_uri' => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
-               'code_verifier' => $codeVerifier,
-           ]
-       );
-   }
+        $codeVerifier = $this->session->get('code_verifier');
+        if (!is_string($codeVerifier) || $codeVerifier === '') {
+            throw new \RuntimeException('Missing code verifier in session.');
+        }
+        return $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier(
+            $request,
+            $code,
+            [
+                'redirect_uri' => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
+                'code_verifier' => $codeVerifier,
+            ]
+        );
+    }
 }
