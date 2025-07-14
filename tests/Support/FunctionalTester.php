@@ -9,6 +9,7 @@ use Codeception\Actor;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
+
 use function dirname;
 
 /**

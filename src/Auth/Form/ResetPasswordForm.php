@@ -55,7 +55,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
 
     /**
      * {@inheritDoc}
-     * @return iterable<int|string, \Yiisoft\Validator\RuleInterface|callable|iterable<int, \Yiisoft\Validator\RuleInterface|callable>>
+     * @return iterable<int|string, callable|iterable<int, callable|\Yiisoft\Validator\RuleInterface>|\Yiisoft\Validator\RuleInterface>
      */
     #[\Override]
     public function getRules(): iterable
@@ -67,7 +67,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
     }
 
     /**
-     * @return list<\Yiisoft\Validator\RuleInterface|callable>
+     * @return list<callable|\Yiisoft\Validator\RuleInterface>
      */
     private function newPasswordVerifyRules(): array
     {

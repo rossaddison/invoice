@@ -22,24 +22,24 @@ final class Environment
     {
         /** Previously APP_ENV=docker */
         self::setString('DOCK_AMP', 'docker');
-        
+
         /** Used in public/index line 21 */
         self::setBoolean('APP_C3', true);
-        
+
         /** Previously YII_ENV */
         self::setString('APP_ENV', 'dev');
-        
+
         /** Previously YII_DEBUG */
         self::setBoolean('APP_DEBUG', true);
-        
-        self::setBoolean('BUILD_DATABASE', false);        
+
+        self::setBoolean('BUILD_DATABASE', false);
         self::setBoolean('SENTRY_DSN', false);
         self::setString('BASE_URL', '');
-        
+
         /** Symfony Mailer */
         self::setString('SYMFONY_MAILER_USERNAME', '');
         self::setString('SYMFONY_MAILER_PASSWORD', '');
-        
+
         /** OAuth2.0 */
         self::setString('FACEBOOK_API_CLIENT_ID', 'test_facebook_client_id');
         self::setString('FACEBOOK_API_CLIENT_SECRET', 'test_facebook_secret');
@@ -77,7 +77,7 @@ final class Environment
         self::setString('DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL', 'test_developer_gov_sandbox_hmrc_client_return_url_from_dot_env');
         self::setEnvironment();
     }
-    
+
     /**
      * @return non-empty-string
      */
@@ -110,7 +110,7 @@ final class Environment
     {
         return self::appEnv() === self::PROD;
     }
-    
+
     public static function isDocker(): bool
     {
         return self::dockerEnv() === self::DOCKER;
@@ -133,7 +133,7 @@ final class Environment
         /** @var bool */
         return self::$values['APP_DEBUG'];
     }
-    
+
     private static function setEnvironment(): void
     {
         $environment = self::getRawValue('APP_ENV');

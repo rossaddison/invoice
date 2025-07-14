@@ -48,7 +48,7 @@ return [
         ],
         'routes' => [
             'common/routes/*.php',
-        ],    
+        ],
         'bootstrap' => [
             'common/bootstrap.php',
         ],
@@ -79,4 +79,4 @@ return [
     'config-plugin-options' => [
         'source-directory' => 'config',
     ],
-];    
+];
