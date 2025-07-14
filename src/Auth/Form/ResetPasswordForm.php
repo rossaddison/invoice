@@ -8,7 +8,6 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;
-use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RulesProviderInterface;
 
@@ -24,7 +23,6 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
 
     /**
      * @return string[]
-     *
      * @psalm-return array{newPassword: string, newPasswordVerify: string}
      */
     public function getAttributeLabels(): array
@@ -37,7 +35,6 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
 
     /**
      * @return string
-     *
      * @psalm-return 'ResetPassword'
      */
     #[\Override]
@@ -56,21 +53,22 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
         return $this->newPasswordVerify;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return iterable<int|string, \Yiisoft\Validator\RuleInterface|callable|iterable<int, \Yiisoft\Validator\RuleInterface|callable>>
+     */
     #[\Override]
-    public function getRules(): array
+    public function getRules(): iterable
     {
         return [
-            'newPassword' => [
-                new Required(),
-                /**
-                 * New Length(min: 8)
-                 * @see https://github.com/yiisoft/demo/pull/602  Password length should not be limited
-                 */
-            ],
-            'newPasswordVerify' => $this->NewPasswordVerifyRules(),
+            'newPassword' => [new Required()],
+            'newPasswordVerify' => $this->newPasswordVerifyRules(),
         ];
     }
 
+    /**
+     * @return list<\Yiisoft\Validator\RuleInterface|callable>
+     */
     private function newPasswordVerifyRules(): array
     {
         return [
@@ -78,7 +76,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
             new Callback(
                 callback: function (): Result {
                     $result = new Result();
-                    if (!($this->newPassword === $this->newPasswordVerify)) {
+                    if ($this->newPassword !== $this->newPasswordVerify) {
                         $result->addError($this->translator->translate('validator.password.not.match.new'));
                     }
                     return $result;

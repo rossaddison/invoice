@@ -35,10 +35,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
         if ($this->validator->validate($this)->isValid()) {
             $user = $this->userRepository->findByLogin($this->getLogin());
             if (null !== $user) {
-                // Apply a new hash to the new password and save the resultant passwordHash
                 $user->setPassword($this->getNewPassword());
-                // The cookie identity auth_key is regenerated on logout
-                // Refer to ChangeController change function
                 $this->userRepository->save($user);
                 return true;
             }
@@ -48,7 +45,6 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
 
     /**
      * @return string[]
-     *
      * @psalm-return array{login: string, password: string, newPassword: string, newPasswordVerify: string}
      */
     public function getAttributeLabels(): array
@@ -63,7 +59,6 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
 
     /**
      * @return string
-     *
      * @psalm-return 'ChangePassword'
      */
     #[\Override]
@@ -92,41 +87,24 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
         return $this->newPasswordVerify;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return iterable<int|string, \Yiisoft\Validator\RuleInterface|callable|iterable<int, \Yiisoft\Validator\RuleInterface|callable>>
+     */
     #[\Override]
-    public function getRules(): array
+    public function getRules(): iterable
     {
         return [
-            /**
-             * @see ChangePasswordController function change  $login = $identity->getUser()?->getLogin();
-             * @see resources\views\changepassword\change.php
-             * The login field will include the current login username or email address {$login} in a READONLY field
-             * for all users besides the administrator i.e.
-             * $changePasswordForAnyUser
-                            ?   Field::text($formModel, 'login')
-                                ->label($translator->translate('layout.login'))
-                                ->addInputAttributes([
-                                    'value' => $login ?? ''
-                                ])
-                            :   Field::text($formModel, 'login')
-                                ->label($translator->translate('layout.login'))
-                                ->addInputAttributes([
-                                    'value' => $login ?? '',
-                                    'readonly' => 'readonly'
-                                ]);
-             */
             'login' => [new Required()],
             'password' => $this->passwordRules(),
-            'newPassword' => [
-                new Required(),
-                /**
-                 * New Length(min: 8)
-                 * @see https://github.com/yiisoft/demo/pull/602  Password length should not be limited
-                 */
-            ],
-            'newPasswordVerify' => $this->NewPasswordVerifyRules(),
+            'newPassword' => [new Required()],
+            'newPasswordVerify' => $this->newPasswordVerifyRules(),
         ];
     }
 
+    /**
+     * @return list<\Yiisoft\Validator\RuleInterface|callable>
+     */
     private function passwordRules(): array
     {
         return [
@@ -144,6 +122,9 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
         ];
     }
 
+    /**
+     * @return list<\Yiisoft\Validator\RuleInterface|callable>
+     */
     private function newPasswordVerifyRules(): array
     {
         return [
@@ -151,7 +132,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
             new Callback(
                 callback: function (): Result {
                     $result = new Result();
-                    if (!($this->newPassword === $this->newPasswordVerify)) {
+                    if ($this->newPassword !== $this->newPasswordVerify) {
                         $result->addError($this->translator->translate('validator.password.not.match.new'));
                     }
                     return $result;
