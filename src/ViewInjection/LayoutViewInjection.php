@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ViewInjection;
 
 use App\Auth\Identity;
+use App\Environment;
 // Entities
 use App\Invoice\Entity\Company;
 use App\Invoice\Entity\CompanyPrivate;
@@ -104,13 +105,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $noFrontPageTermsOfService = $this->settingRepository->getSetting('no_front_terms_of_service') == '1' ? true : false;
         $noFrontPageContactDetails = $this->settingRepository->getSetting('no_front_contact_details_page') == '1' ? true : false;
         $noFrontPageContactUs = $this->settingRepository->getSetting('no_front_contact_us_page') == '1' ? true : false;
-        /**
-         * @see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
-         *      e.g YII_DEBUG=true
-         * @see {root} autoload.php
-         */
-        $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
-        $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true' ? true : false;
+        $debugMode = Environment::appDebug();
+        $buildDatabase = Environment::buildDatabase();
         // Record the debugMode in a setting so that 'debug_mode' can be used in e.g. salesorder\guest.php`
         $this->settingRepository->debugMode($debugMode);
         $user = $identity instanceof Identity ? $identity->getUser() : null;

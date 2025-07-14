@@ -2,12 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Environment;
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
-/**
- * @psalm-suppress RiskyTruthyFalsyComparison getenv('YII_C3')
- */
-if (getenv('YII_C3')) {
+$autoloadPath = dirname(__DIR__)  . '/vendor/autoload.php';
+if (!file_exists($autoloadPath)) {
+    fwrite(
+        STDERR,
+        "Dependencies not found. Please run 'composer install' in the project directory first.\n" .
+        "If Composer is not installed, visit https://getcomposer.org/download/ for instructions.\n"
+    );
+    exit(1);
+}
+
+require_once $autoloadPath;
+
+Environment::prepare();
+
+if (Environment::appC3()) {
     $c3 = dirname(__DIR__) . '/c3.php';
     if (file_exists($c3)) {
         require_once $c3;
@@ -29,14 +41,13 @@ if (PHP_SAPI === 'cli-server') {
     $_SERVER['SCRIPT_NAME'] = '/index.php';
 }
 
-chdir(dirname(__DIR__));
-require_once dirname(__DIR__) . '/autoload.php';
+
 
 // Run HTTP application runner
 $runner = new HttpApplicationRunner(
     rootPath: dirname(__DIR__),
-    debug: !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : false,
-    checkEvents: !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : false,
-    environment: $_ENV['YII_ENV']
+    debug: Environment::appDebug(),
+    checkEvents: Environment::appDebug(),
+    environment: Environment::appEnv(),
 );
 $runner->run();
