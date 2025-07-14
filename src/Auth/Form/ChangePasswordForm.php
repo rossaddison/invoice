@@ -10,7 +10,6 @@ use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;
-use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Validator\RulesProviderInterface;
@@ -89,7 +88,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
 
     /**
      * {@inheritDoc}
-     * @return iterable<int|string, \Yiisoft\Validator\RuleInterface|callable|iterable<int, \Yiisoft\Validator\RuleInterface|callable>>
+     * @return iterable<int|string, callable|iterable<int, callable|\Yiisoft\Validator\RuleInterface>|\Yiisoft\Validator\RuleInterface>
      */
     #[\Override]
     public function getRules(): iterable
@@ -103,7 +102,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
     }
 
     /**
-     * @return list<\Yiisoft\Validator\RuleInterface|callable>
+     * @return list<callable|\Yiisoft\Validator\RuleInterface>
      */
     private function passwordRules(): array
     {
@@ -123,7 +122,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
     }
 
     /**
-     * @return list<\Yiisoft\Validator\RuleInterface|callable>
+     * @return list<callable|\Yiisoft\Validator\RuleInterface>
      */
     private function newPasswordVerifyRules(): array
     {
