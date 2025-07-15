@@ -35,8 +35,8 @@
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.3",
         "cycle/annotated": "^4.3",
-        "cycle/database": "^2.13.0",
-        "cycle/entity-behavior": "^1.5.0",
+        "cycle/database": "^2.14.0",
+        "cycle/entity-behavior": "^1.6.0",
         "cycle/orm": "^2.10.1",
         "cycle/schema-provider": "^1.0",
         "digitalbazaar/json-ld": "^0.4.8",
@@ -146,7 +146,7 @@
         "codeception/module-asserts": "^3.2",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^3.0.1",
-        "friendsofphp/php-cs-fixer": "^3.82.2",
+        "friendsofphp/php-cs-fixer": "^3.84.0",
         "phpunit/phpunit": "^12.2.7",
         "rector/rector": "^2.1.1",
         "roave/better-reflection": "^6.59",
@@ -154,7 +154,7 @@
         "roave/security-advisories": "dev-latest",
         "spatie/phpunit-watcher": ">=1.24.0",
         "styleci/cli": "^1.6.0",
-        "vimeo/psalm": "^6.12.1",
+        "vimeo/psalm": "^6.13.0",
         "yiisoft/translator-extractor": "^2.1.1"
     },      
     "autoload": {

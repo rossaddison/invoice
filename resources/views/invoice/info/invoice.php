@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>15th July 2025</b></p>
+<p>An environment branch has been created and is passing all tests but is degraded in terms of performance.</p>
+<p>Improve ChangePasswordForm and ResetPasswordForm</p>
+<p>Include php 8.4 in the invoice_build</p>
 <p><b>12th July 2025</b></p>
 <p>Introduce Open Banking to the AuthController and SignupController</p>
 <p>https://github.com/rossaddison/invoice/discussions/288</p>
