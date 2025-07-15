@@ -73,7 +73,7 @@ switch ($env) {
 }
 
 return [
-    'env' => $_ENV['YII_ENV'] ?? '',
+    'env' => $_ENV['APP_ENV'] ?? '',
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
@@ -451,7 +451,7 @@ return [
             // sending them via HTTP). To disable interactions with Sentry SDK completely, remove middleware and the
             // rest of the config.
             'dsn' => $_ENV['SENTRY_DSN'] ?? null,
-            'environment' => $_ENV['YII_ENV'] ?? null, // Add to separate "production" / "staging" environment errors.
+            'environment' => $_ENV['APP_ENV'] ?? null, // Add to separate "production" / "staging" environment errors.
         ],
     ],
     'yiisoft/mailer' => [

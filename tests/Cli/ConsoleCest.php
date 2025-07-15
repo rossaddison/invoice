@@ -7,6 +7,8 @@ namespace Tests\Cli;
 use Tests\Support\CliTester;
 use Yiisoft\Yii\Console\ExitCode;
 
+use function dirname;
+
 final class ConsoleCest
 {
     public function testCommandYii(CliTester $I): void

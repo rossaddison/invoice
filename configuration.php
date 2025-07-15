@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Environment;
+
 return [
     'config-plugin' => [
         'params' => [
@@ -58,19 +60,19 @@ return [
         ],
     ],
     'config-plugin-environments' => [
-        'dev' => [
+        Environment::DEV => [
             'params' => [
                 'environments/dev/params.php',
             ],
         ],
-        'prod' => [
-            'params' => [
-                'environments/prod/params.php',
-            ],
-        ],
-        'test' => [
+        Environment::TEST => [
             'params' => [
                 'environments/test/params.php',
+            ],
+        ],
+        Environment::PROD => [
+            'params' => [
+                'environments/prod/params.php',
             ],
         ],
     ],
