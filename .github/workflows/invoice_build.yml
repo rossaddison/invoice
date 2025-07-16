@@ -33,60 +33,11 @@ jobs:
 
     env:
       extensions: fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz
-      
-      # Framework/Core and should match src\Environment.php function prepare().
-      # which is equivalent to a .env file
-      
-      # Local wamp lamp docker
-      DOCK_AMP: docker
-      
-      # Application
-      APP_C3: true
-      APP_ENV: dev
-      APP_DEBUG: true
-      
-      BUILD_DATABASE: false
-      SENTRY_DSN: false
-      BASE_URL: ""
-      # Symfony Mailer
-      SYMFONY_MAILER_USERNAME: "" 
-      SYMFONY_MAILER_PASSWORD: "" 
-      
-      # OAuth2/Identity Providers (fill with example/test values from your .env)
-      FACEBOOK_API_CLIENT_ID: "test_facebook_client_id"
-      FACEBOOK_API_CLIENT_SECRET: "test_facebook_secret"
-      FACEBOOK_API_CLIENT_RETURN_URL: "http://localhost/auth/facebook-return"
-      GITHUB_API_CLIENT_ID: "test_github_client_id"
-      GITHUB_API_CLIENT_SECRET: "test_github_secret"
-      GITHUB_API_CLIENT_RETURN_URL: "http://localhost/auth/github-return"
-      GOOGLE_API_CLIENT_ID: "test_google_client_id"
-      GOOGLE_API_CLIENT_SECRET: "test_google_secret"
-      GOOGLE_API_CLIENT_RETURN_URL: "http://localhost/auth/google-return"
-      GOVUK_API_CLIENT_ID: "test_govuk_client_id"
-      GOVUK_API_CLIENT_SECRET: "test_govuk_secret"
-      GOVUK_API_CLIENT_RETURN_URL: "http://localhost/auth/govuk-return"
-      LINKEDIN_API_CLIENT_ID: "test_linkedin_client_id"
-      LINKEDIN_API_CLIENT_SECRET: "test_linkedin_secret"
-      LINKEDIN_API_CLIENT_RETURN_URL: "http://localhost/auth/linkedin-return"
-      MICROSOFTONLINE_API_CLIENT_ID: "test_msonline_client_id"
-      MICROSOFTONLINE_API_CLIENT_SECRET: "test_msonline_secret"
-      MICROSOFTONLINE_API_CLIENT_RETURN_URL: "http://localhost/auth/msonline-return"
-      MICROSOFTONLINE_API_CLIENT_TENANT: "common"
-      OPENBANKING_API_CLIENT_ID: "test_openbanking_client_id"
-      OPENBANKING_API_CLIENT_SECRET: "test_openbanking_secret"
-      OPENBANKING_API_CLIENT_RETURN_URL: "http://localhost/auth/openbanking-return"
-      VKONTAKTE_API_CLIENT_ID: "test_vk_client_id"
-      VKONTAKTE_API_CLIENT_SECRET: "test_vk_secret"
-      VKONTAKTE_API_CLIENT_RETURN_URL: "http://localhost/auth/vk-return"
-      X_API_CLIENT_ID: "test_x_client_id"
-      X_API_CLIENT_SECRET: "test_x_secret"
-      X_API_CLIENT_RETURN_URL: "http://localhost/auth/x-return"
-      YANDEX_API_CLIENT_ID: "test_yandex_client_id"
-      YANDEX_API_CLIENT_SECRET: "test_yandex_secret"
-      YANDEX_API_CLIENT_RETURN_URL: "http://localhost/auth/yandex-return"  
+      key: cache-v1
+      YII_C3: true
 
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 4
     
     strategy:
       matrix:
@@ -102,6 +53,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Composer GitHub auth
+        run: composer config --global --auth github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
         with:
