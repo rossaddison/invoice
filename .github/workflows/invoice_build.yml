@@ -52,7 +52,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        run: composer config --global --auth github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
         with:
