@@ -205,12 +205,17 @@
         }
     },
     "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org",
-            "type": "vcs",
-            "url": "https://github.com/rossaddison/yii-gii",
-            "url": "https://github.com/rossaddison/yii-sentry"
-        }
-    ]
+    {
+        "type": "composer",
+        "url": "https://asset-packagist.org"
+    },
+    {
+        "type": "vcs",
+        "url": "https://github.com/rossaddison/yii-gii"
+    },
+    {
+        "type": "vcs",
+        "url": "https://github.com/rossaddison/yii-sentry"
+    }
+]
 }
