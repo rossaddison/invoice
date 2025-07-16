@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f330d594c49e5811eabbe2416c2e0ea5",
+    "content-hash": "7077626eac573120ac8400ae06f4e801",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -14415,12 +14415,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "87b29b1fad80cafaaa13c1f20c1efa98c5e961a2"
+                "reference": "4cfcbed2e1758e310043660b89ccd0015d67cedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/87b29b1fad80cafaaa13c1f20c1efa98c5e961a2",
-                "reference": "87b29b1fad80cafaaa13c1f20c1efa98c5e961a2",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/4cfcbed2e1758e310043660b89ccd0015d67cedd",
+                "reference": "4cfcbed2e1758e310043660b89ccd0015d67cedd",
                 "shasum": ""
             },
             "require": {
@@ -14492,7 +14492,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-13T13:16:08+00:00"
+            "time": "2025-07-16T09:57:07+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14500,12 +14500,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "3a17c30e55417e0604c5efbb3206fccd3a1c3c6c"
+                "reference": "023c20de4e879ee3beddb342621d1f54081d54cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/3a17c30e55417e0604c5efbb3206fccd3a1c3c6c",
-                "reference": "3a17c30e55417e0604c5efbb3206fccd3a1c3c6c",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/023c20de4e879ee3beddb342621d1f54081d54cb",
+                "reference": "023c20de4e879ee3beddb342621d1f54081d54cb",
                 "shasum": ""
             },
             "require": {
@@ -14570,7 +14570,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-07T13:25:31+00:00"
+            "time": "2025-07-16T09:57:30+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -24493,7 +24493,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.3 - 8.4",
+        "php": "8.3 - 8.5",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-fileinfo": "*",
