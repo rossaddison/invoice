@@ -1201,7 +1201,7 @@ final class InvoiceController extends BaseController
         $peppol_access_point->setName('Peppol Access Point');
         $peppol_access_point->setActive(true);
         $pmR->save($peppol_access_point);
-        // 8 
+        // 8
         $open_banking = new PaymentMethod();
         $open_banking->setName('Open Banking Third Party Provider');
         $open_banking->setActive(true);

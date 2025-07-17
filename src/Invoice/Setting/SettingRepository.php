@@ -1609,8 +1609,8 @@ final class SettingRepository extends Select\Repository
                  */
                 'thirdPartyProvider' => [
                     'type' => 'text',
-                    'label' => 'Third Party Provider'
-                ]
+                    'label' => 'Third Party Provider',
+                ],
             ],
             'StoreCove' => [
                 'apiKey' => [
