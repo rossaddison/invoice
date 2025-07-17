@@ -115,7 +115,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                         <label for="settings[gateway_<?= $d; ?>_<?= $key ?>]">
                             <?= $translator->translate('online.payment.' . $key);?>
                         </label>
-                                <input type="<?= $setting['type']; ?>" class="input-sm form-control"
+                                <input type="<?= $setting['type']; ?>" class="form-control"
                             name="settings[gateway_<?= $d; ?>_<?= $key ?>]"
                             id="settings[gateway_<?= $d; ?>_<?= $key ?>]" 
                                     <?php
@@ -148,7 +148,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <?php $body['settings[gateway_' . $d . '_region]'] = $s->getSetting('gateway_' . $d . '_region');?>
                 <select name="settings[gateway_<?= $d; ?>_region]"
                     id="settings[gateway_<?= $d; ?>_region]"
-                    class="input-sm form-control">
+                    class="form-control">
                     <?php
                         /**
                          * @var string $val
@@ -171,7 +171,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <?php $body['settings[gateway_' . $d . '_currency]'] = $s->getSetting('gateway_' . $d . '_currency');?>
                 <select name="settings[gateway_<?= $d; ?>_currency]"
                     id="settings[gateway_<?= $d; ?>_currency]"
-                    class="input-sm form-control">
+                    class="form-control">
                     <?php
                         /**
                          * @var string $val
@@ -194,7 +194,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <?php $body['settings[gateway_' . $d . '_locale]'] = $s->getSetting('gateway_' . $d . '_locale');?>
                 <select name="settings[gateway_<?= $d; ?>_locale]"
                     id="settings[gateway_<?= $d; ?>_locale]"
-                    class="input-sm form-control">
+                    class="form-control">
                     <?php
                         $locales = $s->mollieSupportedLocaleArray();
                 /**
@@ -219,7 +219,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                 <?php $body['settings[gateway_' . $d . '_payment_method]'] = $s->getSetting('gateway_' . $d . '_payment_method');?>
                 <select name="settings[gateway_<?= $d; ?>_payment_method]"
                     id="settings[gateway_<?= $d; ?>_payment_method]"
-                    class="input-sm form-control">
+                    class="form-control">
                     <?php
                 /**
                  * @var App\Invoice\Entity\PaymentMethod $payment_method

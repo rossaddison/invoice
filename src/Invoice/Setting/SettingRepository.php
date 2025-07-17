@@ -1598,6 +1598,20 @@ final class SettingRepository extends Select\Repository
                     'label' => 'Sandbox',
                 ],
             ],
+            'OpenBanking' => [
+                'apiToken' => [
+                    'type' => 'password',
+                    'label' => 'Token',
+                ],
+                /**
+                 * @see settings/views/partial_settings_online_payment.php line 115 $key
+                 * @see resources/messages/en/app.php online.payment.thirdPartyProvider
+                 */
+                'thirdPartyProvider' => [
+                    'type' => 'text',
+                    'label' => 'Third Party Provider'
+                ]
+            ],
             'StoreCove' => [
                 'apiKey' => [
                     'type' => 'password',

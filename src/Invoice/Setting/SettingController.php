@@ -189,6 +189,7 @@ final class SettingController extends BaseController
                 'gateway_drivers' => $this->sR->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->sR->amazon_regions(),
+                'openBankingProviders' => $this->getOpenBankingProviderNames(),
                 'payment_methods' => $pm->findAllPreloaded(),
                 'crypt' => $crypt,
             ]),

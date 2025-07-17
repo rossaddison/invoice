@@ -976,6 +976,8 @@ There should be no existing data in these tables prior to importing and no exist
   'online.payment.subAccountId' => 'Sub Account Id',
   'online.payment.testMode' => 'Test Mode',
   'online.payment.testOrLiveApiKey' => 'Test or Live Api Key i.e starts with test_ or live_',
+  'online.payment.apiToken' => 'Api Token',
+  'online.payment.thirdPartyProvider' => 'Third Party Provider e.g. Wonderful',
   'online.payment.transactionKey' => 'Transaction Key',
   'online.payment.transactionPassword' => 'Transaction Password',
   'online.payment.username' => 'Username',
