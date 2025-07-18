@@ -1599,6 +1599,7 @@ final class SettingRepository extends Select\Repository
                 ],
             ],
             'OpenBanking' => [
+                // Only Wonderful has an apiToken
                 'apiToken' => [
                     'type' => 'password',
                     'label' => 'Token',

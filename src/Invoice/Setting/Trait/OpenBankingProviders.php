@@ -38,18 +38,16 @@ trait OpenBankingProviders
     protected array $openBankingProviders = [
         // EUROPE
         'wonderful' => [
-            'authUrl' => 'https://api.wonderful.one/oauth2/authorize',
-            'tokenUrl' => 'https://api.wonderful.one/oauth2/token',
-            'apiBaseUrl' => 'https://api.wonderful.one/open-banking/v3.1/',
-            'scope' => 'openid accounts payments',
-            'userinfoUrl' => 'https://api.wonderful.one/openid/userinfo',
-            'documentationUrl' => 'https://wonderful.gitbook.io/open-banking/',
+            // No authUrl, tokenUrl, or userinfoUrl (authentication is via static API token)
+            'apiBaseUrl' => 'https://api.wonderful.one/',
+            'scope' => '', // Not required
+            'documentationUrl' => 'https://api.wonderful.one/', // Official API docs
             'furtherSecuredWithOIDC' => [
-                'value' => true,
+                'value' => false, // No OIDC/OAuth2
                 'date' => '2025-07-12',
             ],
             'continent' => 'europe',
-            'notes' => 'Open source, zero-fee TPP.',
+            'notes' => 'Authentication is via dashboard-issued API token. OAuth2 endpoints are not available.',
         ],
         'tink' => [
             'authUrl' => 'https://oauth.tink.com/authorize/',
@@ -239,6 +237,30 @@ trait OpenBankingProviders
             'notes' => 'Australia Consumer Data Right (CDR) provider. Free sandbox, paid production.',
         ],
     ];
+    
+   /**
+    * Get an array of Open Banking provider names that have a non-empty authUrl.
+    * @psalm-return list<string>
+    * @return string[]
+    */
+    public function getOpenBankingProvidersWithAuthUrl(): array
+    {
+        // Psalm wants to guarantee string keys; array_keys() over array_filter preserves keys, which are always string here
+        $names = array_keys(
+            array_filter(
+                $this->openBankingProviders,
+                /**
+                 * @param array<string, mixed> $provider
+                 */
+                function (array $provider): bool {
+                    return isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '';
+                }
+            )
+        );
+        // Psalm: array_keys() returns list<array-key>, but these keys are always string
+        /** @var list<string> $names */
+        return $names;
+    }
 
     /**
      * Get an array of all available Open Banking provider names.

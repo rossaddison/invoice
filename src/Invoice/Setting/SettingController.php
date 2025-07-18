@@ -176,7 +176,7 @@ final class SettingController extends BaseController
                 'gR' => $gR,
             ]),
             'oauth2' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2', [
-                'openBankingProviders' => $this->getOpenBankingProviderNames(),
+                'openBankingProviders' => $this->getOpenBankingProvidersWithAuthUrl(),
             ]),
             'taxes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes', [
                 'tax_rates' => $tR->findAllPreloaded(),

@@ -157,12 +157,12 @@ final class PaymentInformationController
         $provider = $this->sR->getSetting('open_banking_provider');
         $providerConfig = $provider ? $this->getOpenBankingProviderConfig($provider) : null;
 
-        // Use your service to get the auth URL (assuming you injected OpenBankingPaymentService as $openBankingPaymentService)
-        $authUrl = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
+        // Determine if provider is 'wonderful'
+        $isWonderful = $provider === 'wonderful';
 
+        // Prepare view data
         $viewData = [
             'alert' => $this->alert(),
-            'authUrl' => $authUrl,
             'balance' => $balance,
             'client_chosen_gateway' => $client_chosen_gateway,
             'client_on_invoice' => $cR->repoClientquery($invoice->getClient_id()),
@@ -181,6 +181,16 @@ final class PaymentInformationController
             'title' => 'Open Banking is enabled',
             'total' => $total,
         ];
+
+        if ($isWonderful) {
+            // Wonderful requires an authToken, not an authUrl
+            $authToken = $this->sR->getSetting('gateway_openbanking_apiToken');
+            $viewData['authToken'] = $authToken;
+        } else {
+            // Other providers use authUrl
+            $authUrl = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
+            $viewData['authUrl'] = $authUrl;
+        }
 
         return $this->viewRenderer->render('invoice/payment_information_openbanking', $viewData);
     }

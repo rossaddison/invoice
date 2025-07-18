@@ -52,6 +52,12 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>18th July 2025</b></p>
+<p>Include a new function opCacheHealthCheck() in App\Widget\PerformanceMetrics</p>
+<p>Used in resources/views/layout/invoice.php to identify poor php.ini setups</p>
+<p>Wonderful - Open Banking removed from Oauth2.0. An authToken is required. Not an authUrl.
+<p>New function: getOpenBankingProvidersWithAuthUrl used to differentiate between TPP offering Oauth2.0 and those only providing it through a token.</p>
+<p><a href="https://github.com/copilot/c/8d6ef7ec-97c7-48bf-8ef3-caca4017035d" target="_blank">Incorporating Open Banking into PaymentInformationController</a></p>
 <p><b>15th July 2025</b></p>
 <p>An environment branch has been created and is passing all tests but is degraded in terms of performance.</p>
 <p>Improve ChangePasswordForm and ResetPasswordForm</p>

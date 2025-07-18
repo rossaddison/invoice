@@ -353,10 +353,14 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text('php.ini: (line 1791): opcache.enable (pref 1) = ' . ((string)ini_get('opcache.enable') ?: 'unknown').(((string)ini_get('opcache.enable')  == 1 ? '✅' : '❌'))),
                 DropdownItem::text('php.ini (line 1794): opcache.enable_cli (pref 1) = ' . ((string)ini_get('opcache.enable_cli') ?: 'unknown').(((string)ini_get('opcache.enable_cli') == 1 ? '✅' : '❌'))),
                 DropdownItem::text('php.ini (line 1797): opcache.memory_consumption (pref 128) = '. ((string)ini_get('opcache.memory_consumption') ?: 'unknown').(((string)ini_get('opcache.memory_consumption')  == 128 ? '✅' : '❌')), ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']),
-                DropdownItem::text('php.ini (line 1800): opcache.interned_strings_buffer (pref 8) = '. ((string)ini_get('opcache.interned_strings_buffer') ?: 'unknown'). (((string)ini_get('opcache.interned_strings_buffer')  == 8 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini (line 1800): opcache.interned_strings_buffer (pref 64 for frameworks) = '. ((string)ini_get('opcache.interned_strings_buffer') ?: 'unknown'). (((string)ini_get('opcache.interned_strings_buffer')  == 64 ? '✅' : '❌'))),
                 DropdownItem::text('php.ini (line 1804): opcache.max_accelerated_files (pref 4000) = '. ((string)ini_get('opcache.max_accelerated_files') ?: 'unknown'). (((string)ini_get('opcache.max_accelerated_files') == 4000 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini: (line 1818): opcache.validate_timestamps (pref 0) = '.  ((string)ini_get('opcache.validate_timestamps') ?: 'unknown'). (((string)ini_get('opcache.validate_timestamps') == 0 ? '✅' : '❌'))),
                 DropdownItem::text('php.ini: (line 1822): opcache.revalidate_freq (pref 60) = '.  ((string)ini_get('opcache.revalidate_freq') ?: 'unknown'). (((string)ini_get('opcache.revalidate_freq') == 60 ? '✅' : '❌'))),
                 DropdownItem::divider(),
+                // https://tideways.com/profiler/blog/fine-tune-your-opcache-configuration-to-avoid-caching-suprises
+                DropdownItem::text(PerformanceMetrics::opCacheHealthCheck()),    
+                DropdownItem::divider(),    
                 DropdownItem::text('CLI (Command Line Interface): Manually Edit c:\wamp64\bin\php\php8.3.16 php.ini then ... Right Click Wampserver Icon... Restart From Zero .. e.g. C:\wamp64\www\invoice>php ./vendor/bin/composer-require-checker'),
                 DropdownItem::text('php.ini (line 451): memory_limit (pref 1024 M) = '. ((string)ini_get('memory_limit') ?: 'unknown'). (((string)ini_get('memory_limit') == '1024M' ? '✅' : '❌'))),
                 DropdownItem::divider(),
@@ -380,8 +384,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text('Apache: 2.4.59 64 bit'),
                 DropdownItem::text($translator->translate('platform.mySqlVersion') . ': 8.3.0 '),
                 DropdownItem::text($translator->translate('platform.windowsVersion') . ': Windows 11 Pro Edition'),
-                DropdownItem::text($translator->translate('platform.PhpVersion') . ': 8.3.0 (Compatable with PhpAdmin 5.2.1)'),
-                DropdownItem::text($translator->translate('platform.PhpMyAdmin') . ': 5.2.1 (Compatable with php 8.2.0)'),
+                DropdownItem::text($translator->translate('platform.PhpVersion') . ' '. PHP_VERSION),
                 DropdownItem::link($translator->translate('platform.PhpSupport'), 'https://php.net/supported-versions'),
                 DropdownItem::link($translator->translate('platform.update'), 'https://wampserver.aviatechno.net/'),
                 DropdownItem::link('Bootstrap 5 Icons with Filter', 'https://icons.getbootstrap.com/'),
@@ -727,7 +730,7 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
             </div>
         </div>
         <footer class="container py-4">
-            <?= PerformanceMetrics::widget() ?>           
+            <?= PerformanceMetrics::widget(); ?>           
         </footer>
         <?php
         $this->endBody();
