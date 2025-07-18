@@ -6,5 +6,5 @@ if (function_exists('opcache_get_configuration')) {
     $config = opcache_get_configuration();
     print_r($config);
 } else {
-    echo "Opcache extension is not available.";
+    echo 'Opcache extension is not available.';
 }

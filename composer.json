@@ -44,7 +44,7 @@
         "doctrine/collections": "^2.3.0",
         "doctrine/inflector": "^2.0.10||^3.0",
         "fakerphp/faker": "^1.24.1",
-        "google/cloud-translate": "^2.0.2",
+        "google/cloud-translate": "^2.0.3",
         "guzzlehttp/guzzle": ">=7.9.3",
         "guzzlehttp/psr7": ">=2.7.1",
         "httpsoft/http-message": "^1.1.6",
