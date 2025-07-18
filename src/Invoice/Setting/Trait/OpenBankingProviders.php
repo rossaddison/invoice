@@ -237,16 +237,16 @@ trait OpenBankingProviders
             'notes' => 'Australia Consumer Data Right (CDR) provider. Free sandbox, paid production.',
         ],
     ];
-    
-   /**
-    * Get an array of Open Banking provider names that have a non-empty authUrl.
-    * @psalm-return list<string>
-    * @return string[]
-    */
+
+    /**
+     * Get an array of Open Banking provider names that have a non-empty authUrl.
+     * @psalm-return list<string>
+     * @return string[]
+     */
     public function getOpenBankingProvidersWithAuthUrl(): array
     {
         // Psalm wants to guarantee string keys; array_keys() over array_filter preserves keys, which are always string here
-        $names = array_keys(
+        return array_keys(
             array_filter(
                 $this->openBankingProviders,
                 /**
@@ -259,7 +259,6 @@ trait OpenBankingProviders
         );
         // Psalm: array_keys() returns list<array-key>, but these keys are always string
         /** @var list<string> $names */
-        return $names;
     }
 
     /**

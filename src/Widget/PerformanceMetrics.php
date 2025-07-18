@@ -21,8 +21,8 @@ final class PerformanceMetrics extends Widget
 
         return "Time: $time s. Memory: $memory mb.";
     }
-    
-    public static function opCacheHealthCheck(): string 
+
+    public static function opCacheHealthCheck(): string
     {
         $performanceItems = [];
 
@@ -33,7 +33,7 @@ final class PerformanceMetrics extends Widget
                 $statusOpcacheStatistics = (array)$status['opcache_statistics'];
             }
             $config = opcache_get_configuration();
-            $configDirectives =  (array)$config['directives'];
+            $configDirectives = (array)$config['directives'];
             $cacheFull = (bool)($status['cache_full'] ?? false);
             $numCachedKeys = (int)($status['num_cached_keys'] ?? 0);
             $maxCachedKeys = (int)($configDirectives['opcache.max_accelerated_files'] ?? 0);
@@ -45,24 +45,22 @@ final class PerformanceMetrics extends Widget
             // Condition 1
             if ($cacheFull && ($currentWastedPercentage < $maxWastedPercentage)) {
                 $performanceItems[] = "Opcache: Cache full, wasted memory below threshold ({$currentWastedPercentage}% < {$maxWastedPercentage}%). " .
-                    ($opcacheHitRate < 99 ? "Hit rate dropped below 99% ({$opcacheHitRate}%). " : "") .
-                    "Solution: Increase opcache.memory_consumption.";
+                    ($opcacheHitRate < 99 ? "Hit rate dropped below 99% ({$opcacheHitRate}%). " : '') .
+                    'Solution: Increase opcache.memory_consumption.';
             }
             // Condition 2
             if ($cacheFull && ($numCachedKeys == $maxCachedKeys)) {
                 $performanceItems[] = "Opcache: Cache full due to max files ({$maxCachedKeys}) reached. " .
-                    "Solution: Increase opcache.max_accelerated_files.";
+                    'Solution: Increase opcache.max_accelerated_files.';
             }
             // Condition 3
             if (!$cacheFull && ($currentWastedPercentage >= $maxWastedPercentage)) {
                 $performanceItems[] = "Opcache: Frequent restarts, wasted memory exceeds threshold ({$currentWastedPercentage}% >= {$maxWastedPercentage}%). " .
-                    "Solution: Increase opcache.max_wasted_percentage.";
+                    'Solution: Increase opcache.max_wasted_percentage.';
             }
             // Condition 4
             if (
-                isset($status['interned_strings_usage']) &&
-                isset($status['interned_strings_usage']['free_memory']) &&
-                isset($status['interned_strings_usage']['buffer_size'])
+                isset($status['interned_strings_usage'], $status['interned_strings_usage']['free_memory'], $status['interned_strings_usage']['buffer_size'])
             ) {
                 $bufferSize = (int)$status['interned_strings_usage']['buffer_size'];
                 $freeMemory = (int)$status['interned_strings_usage']['free_memory'];
@@ -70,29 +68,29 @@ final class PerformanceMetrics extends Widget
                 $freePercent = $bufferSize > 0 ? ($freeMemory / $bufferSize) * 100 : 100;
                 // Dangerous if less than 10% free or less than 1MB free
                 if ($freePercent < 10 || $freeMemory < 1024 * 1024) {
-                    $performanceItems[] = "Opcache: interned_strings_buffer is nearly full (" .
-                        round($freePercent, 2) . "% free, " . round($freeMemory / (1024*1024), 2) . " MB left). " .
-                        "Solution: Increase opcache.interned_strings_buffer in php.ini.";
+                    $performanceItems[] = 'Opcache: interned_strings_buffer is nearly full (' .
+                        round($freePercent, 2) . '% free, ' . round($freeMemory / (1024 * 1024), 2) . ' MB left). ' .
+                        'Solution: Increase opcache.interned_strings_buffer in php.ini.';
                 }
             }
             // Condition 5 Xdebug check and warning
             if (extension_loaded('xdebug')) {
-                $performanceItems[] = "Warning: Xdebug extension is enabled. This will disable OPcache optimizations and significantly reduce performance ❌." .
-                    "Solution: Disable Xdebug in production environments.";
+                $performanceItems[] = 'Warning: Xdebug extension is enabled. This will disable OPcache optimizations and significantly reduce performance ❌.' .
+                    'Solution: Disable Xdebug in production environments.';
             }
-            
+
             // If no specific issues, show healthy status
             if (empty($performanceItems)) {
-                $performanceItems[] = "Opcache: Healthy configuration detected ✅.";
+                $performanceItems[] = 'Opcache: Healthy configuration detected ✅.';
             }
         } else {
-            $performanceItems[] = "Opcache extension not available ❌.";
-        } 
+            $performanceItems[] = 'Opcache extension not available ❌.';
+        }
 
         $performanceText = '';
         foreach ($performanceItems as $item) {
             $performanceText .= $item;
         }
         return $performanceText;
-    }  
-}    
+    }
+}
