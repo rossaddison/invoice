@@ -37,8 +37,8 @@ $header = Div::tag()
     ->addClass('bg-primary text-white p-3 rounded-top')
     ->content(
         I::tag()->addClass('bi bi-receipt')
-      ->content(' ' . Html::encode($translator->translate('delivery')))
-    )
+      ->content(' ' . Html::encode($translator->translate('delivery'))),
+    ),
   )
   ->render();
 
@@ -57,33 +57,33 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('id'),
-            content: static fn (Delivery $model) => Html::encode($model->getId())
+            header: $translator->translate('id'),
+            content: static fn(Delivery $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'start_date',
-            header:  $translator->translate('start.date'),
-            content: static fn (Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? '')
+            header: $translator->translate('start.date'),
+            content: static fn(Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? ''),
         ),
         new DataColumn(
             'actual_delivery_date',
-            header:  $translator->translate('delivery.actual.delivery.date'),
-            content: static fn (Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? '')
+            header: $translator->translate('delivery.actual.delivery.date'),
+            content: static fn(Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
         ),
         new DataColumn(
             'end_date',
-            header:  $translator->translate('end.date'),
-            content: static fn (Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? '')
+            header: $translator->translate('end.date'),
+            content: static fn(Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? ''),
         ),
         new DataColumn(
             content: static function (Delivery $model) use ($urlGenerator, $translator): string {
                 return Html::a($translator->translate('back'), $urlGenerator->generate('inv/edit', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
-            }
+            },
         ),
         new DataColumn(
             'delivery_location_id',
-            header:  $translator->translate('delivery.location.global.location.number'),
-            content: static fn (Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number())
+            header: $translator->translate('delivery.location.global.location.number'),
+            content: static fn(Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
         ),
     ];
 ?>
@@ -93,7 +93,7 @@ $grid_summary = $s->grid_summary(
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('deliveries'),
-    ''
+    '',
 );
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open() .
@@ -117,8 +117,8 @@ echo GridView::widget()
 $pageSize = $paginator->getCurrentPageSize();
 if ($pageSize > 0) {
     echo Html::p(
-        sprintf($translator->translate('index.footer.showing').' deliveries: Max ' . (string)$max . ' deliveries per page: Total Deliveries ' . (string)$paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()),
-        ['class' => 'text-muted']
+        sprintf($translator->translate('index.footer.showing') . ' deliveries: Max ' . (string) $max . ' deliveries per page: Total Deliveries ' . (string) $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()),
+        ['class' => 'text-muted'],
     );
 } else {
     echo Html::p($translator->translate('records.no'));

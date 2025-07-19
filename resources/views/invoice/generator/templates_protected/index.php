@@ -28,7 +28,7 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 /**
- * @var App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?> $<?= $generator->getSmall_singular_name()."\n"; ?>
+ * @var App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?> $<?= $generator->getSmall_singular_name() . "\n"; ?>
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -44,8 +44,8 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 ?>
 <?php
         $inf = new Inflector();
-echo '<h1>'.$inf->toSentence($generator->getPre_entity_table(), false).'</h1>'."\n";
-echo "<?= Html::a(Html::tag('"."i','',['class'=>'fa fa-plus btn btn-primary fa-margin']),".'$urlGenerator->generate('."'". $generator->getSmall_singular_name()."/add'),[]); ?>";
+echo '<h1>' . $inf->toSentence($generator->getPre_entity_table(), false) . '</h1>' . "\n";
+echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa-margin'])," . '$urlGenerator->generate(' . "'" . $generator->getSmall_singular_name() . "/add'),[]); ?>";
 ?>
 
 <?php   echo "<?php\n"; ?>

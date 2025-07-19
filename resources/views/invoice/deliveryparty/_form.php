@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?= Field::text($form, 'party_name')
         ->addInputAttributes([
-            'class' => 'form-control'
+            'class' => 'form-control',
         ])
         ->label($translator->translate('delivery.party.name'))
         ->value(Html::encode($form->getParty_name() ?? ''));

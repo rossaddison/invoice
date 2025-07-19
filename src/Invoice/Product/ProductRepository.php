@@ -70,7 +70,7 @@ final class ProductRepository extends Select\Repository
     private function getFilter(string $product_sku): All
     {
         return new All(
-            new Like('product_sku', $product_sku)
+            new Like('product_sku', $product_sku),
         );
     }
 
@@ -101,7 +101,7 @@ final class ProductRepository extends Select\Repository
                 ->withOrder([
                     'id' => 'desc',
                     'product_description' => 'desc',
-                ])
+                ]),
         );
     }
 
@@ -187,12 +187,12 @@ final class ProductRepository extends Select\Repository
         }
 
         //eg. product/lookup?Cleaning%20Services&ff=4
-        if (!empty($product_name) && ($family_id > (string)0)) {
+        if (!empty($product_name) && ($family_id > (string) 0)) {
             $query = $query->where(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
         }
 
         //eg. product/lookup?ff=4
-        if (empty($product_name) && ($family_id > (string)0)) {
+        if (empty($product_name) && ($family_id > (string) 0)) {
             $query = $query->where(['family_id' => $family_id]);
         }
 

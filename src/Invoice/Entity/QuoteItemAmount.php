@@ -11,7 +11,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository::class)]
 class QuoteItemAmount
 {
-    #[BelongsTo(target:QuoteItem::class, nullable: false)]
+    #[BelongsTo(target: QuoteItem::class, nullable: false)]
     private ?QuoteItem $quote_item = null;
 
     public function __construct(#[Column(type: 'primary')]
@@ -20,9 +20,7 @@ class QuoteItemAmount
         private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
-    }
+        private ?float $total = 0.00) {}
 
     public function getQuoteItem(): ?QuoteItem
     {
@@ -31,7 +29,7 @@ class QuoteItemAmount
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -41,7 +39,7 @@ class QuoteItemAmount
 
     public function getQuote_item_id(): string
     {
-        return (string)$this->quote_item_id;
+        return (string) $this->quote_item_id;
     }
 
     public function setQuote_item_id(int $quote_item_id): void

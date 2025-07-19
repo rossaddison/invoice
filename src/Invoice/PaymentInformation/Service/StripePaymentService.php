@@ -26,7 +26,7 @@ class StripePaymentService
     {
         $secretKeySetting = $this->settings->getSetting('gateway_stripe_secretKey');
 
-        $sk_test = (string)$this->crypt->decode($secretKeySetting);
+        $sk_test = (string) $this->crypt->decode($secretKeySetting);
         if (!empty($sk_test)) {
             Stripe::setApiKey($sk_test);
         }
@@ -36,14 +36,14 @@ class StripePaymentService
     {
         $publishableKey = $this->settings->getSetting('gateway_stripe_publishableKey');
 
-        return (string)$this->crypt->decode($publishableKey ?: '');
+        return (string) $this->crypt->decode($publishableKey ?: '');
     }
 
     public function createPaymentIntent(array $invoiceData): ?string
     {
         $payment_intent = PaymentIntent::create([
             // convert the float amount to cents
-            'amount' => (int) round(((float)$invoiceData['balance'] ?: 0.00) * 100),
+            'amount' => (int) round(((float) $invoiceData['balance'] ?: 0.00) * 100),
             'currency' => (string) $invoiceData['currency'],
             // include the payment methods you have chosen listed in dashboard.stripe.com eg. card, bacs direct debit,
             // googlepay etc.

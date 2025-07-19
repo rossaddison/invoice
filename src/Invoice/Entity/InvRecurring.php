@@ -18,22 +18,20 @@ class InvRecurring
      * Every Recurring Invoice record belongs to one related Invoice
      * @var Inv $inv
      */
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    public function __construct(#[Column(type:'primary')]
-        private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $inv_id = null, #[Column(type:'date', nullable: false)]
-        private mixed $start = '', #[Column(type:'date', nullable: true)]
-        private mixed $end = '', #[Column(type:'string(191)', nullable: false)]
-        private string $frequency = '', #[Column(type:'date', nullable: true)]
-        private mixed $next = '')
-    {
-    }
+    public function __construct(#[Column(type: 'primary')]
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null, #[Column(type: 'date', nullable: false)]
+        private mixed $start = '', #[Column(type: 'date', nullable: true)]
+        private mixed $end = '', #[Column(type: 'string(191)', nullable: false)]
+        private string $frequency = '', #[Column(type: 'date', nullable: true)]
+        private mixed $next = '') {}
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -48,7 +46,7 @@ class InvRecurring
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void

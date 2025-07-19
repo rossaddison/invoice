@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\A;
     ->id('btn-reset')
     ->addAttributes([
         'type' => 'submit',
-        'onclick' => 'return confirm("'. $translator->translate('invoiceplane.import.proceed.alert'). '")',
+        'onclick' => 'return confirm("' . $translator->translate('invoiceplane.import.proceed.alert') . '")',
     ])
     ->addClass('btn btn-success me-1')
     ->content($translator->translate('invoiceplane.import.proceed'))

@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::text($form, 'name')
                 ->label($translator->translate('name'))
                 ->addInputAttributes([
-                    'class' => 'form-control'
+                    'class' => 'form-control',
                 ])
                 ->value(Html::encode($form->getName()))
                 ->placeholder($translator->translate('name'))
@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control taggable',
                     'id' => 'identifier_format',
-                    'name' => 'identifier_format'
+                    'name' => 'identifier_format',
                 ])
                 ->value(Html::encode($form->getIdentifier_format()))
                 ->placeholder('INV-{{{id}}}')
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::text($form, 'left_pad')
                 ->label($translator->translate('left.pad'))
                 ->addInputAttributes([
-                    'class' => 'form-control'
+                    'class' => 'form-control',
                 ])
                 ->value(Html::encode($form->getLeft_pad()) ?: '0')
                 ->placeholder('0')
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::text($form, 'next_id')
                 ->label($translator->translate('next.id'))
                 ->addInputAttributes([
-                    'class' => 'form-control'
+                    'class' => 'form-control',
                 ])
                 ->value(Html::encode($form->getNext_id()) ?: '1')
                 ->placeholder('1')

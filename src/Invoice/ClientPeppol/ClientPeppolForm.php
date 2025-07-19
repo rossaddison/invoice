@@ -43,8 +43,8 @@ final class ClientPeppolForm extends FormModel
 
     public function __construct(ClientPeppol $client_peppol)
     {
-        $this->id = (int)$client_peppol->getId();
-        $this->client_id = (int)$client_peppol->getClient_id();
+        $this->id = (int) $client_peppol->getId();
+        $this->client_id = (int) $client_peppol->getClient_id();
         $this->accounting_cost = $client_peppol->getAccountingCost();
         $this->buyer_reference = $client_peppol->getBuyerReference();
         $this->endpointid = $client_peppol->getEndpointid();

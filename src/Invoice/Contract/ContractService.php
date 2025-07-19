@@ -10,9 +10,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 
 final readonly class ContractService
 {
-    public function __construct(private ContractRepository $repository)
-    {
-    }
+    public function __construct(private ContractRepository $repository) {}
 
     /**
      * @param Contract $model
@@ -21,14 +19,14 @@ final readonly class ContractService
      */
     public function saveContract(Contract $model, array $array, SR $s): void
     {
-        $model->nullifyRelationOnChange((int)$array['client_id']);
+        $model->nullifyRelationOnChange((int) $array['client_id']);
 
         $datehelper = new DateHelper($s);
 
         $datetime_immutable_period_start = new \DateTimeImmutable();
         $period_start = $datetime_immutable_period_start::createFromFormat(
             'Y-m-d',
-            (string)$array['period_start']
+            (string) $array['period_start'],
         );
 
         $period_start ? $model->setPeriod_start($period_start) : '';
@@ -36,14 +34,14 @@ final readonly class ContractService
         $datetime_immutable_period_end = new \DateTimeImmutable();
         $period_end = $datetime_immutable_period_end::createFromFormat(
             'Y-m-d',
-            (string)$array['period_end']
+            (string) $array['period_end'],
         );
 
         $period_end ? $model->setPeriod_end($period_end) : '';
 
-        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
-        isset($array['name']) ? $model->setName((string)$array['name']) : '';
-        isset($array['reference']) ? $model->setReference((string)$array['reference']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+        isset($array['name']) ? $model->setName((string) $array['name']) : '';
+        isset($array['reference']) ? $model->setReference((string) $array['reference']) : '';
         $this->repository->save($model);
     }
 

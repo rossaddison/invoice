@@ -37,9 +37,9 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
-                'title' => $s->isDebugMode(3)
+                'title' => $s->isDebugMode(3),
             ])
-            ->content(' '.$translator->translate('task'));
+            ->content(' ' . $translator->translate('task'));
 ?>
     <?= Html::closeTag('div'); ?>    
     <?= Form::tag()
@@ -61,7 +61,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                         <?= I::tag()
                                     ->addAttributes([
                                         'title' => $translator->translate('recurring'),
-                                        'class' => 'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted'
+                                        'class' => 'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted',
                                     ]);
                                     ?>
                                         <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'is_recurring', 'value' => '/']); ?>
@@ -139,7 +139,7 @@ foreach ($taxRates as $taxRate) {
     $taxRateName = $taxRate->getTaxRateName() ?? '';
     $formattedNumber = $numberHelper->format_amount($taxRatePercent);
     if ((null !== $taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
-        $optionsDataTaxRate[$taxRateId] = (string)$formattedNumber . '% - ' . $taxRateName;
+        $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber . '% - ' . $taxRateName;
     }
 }
 ?>    
@@ -155,10 +155,10 @@ foreach ($taxRates as $taxRate) {
                         <!-- see line 896 InvController: id modal-choose-items lies on views/product/modal_product_lookups_inv.php-->
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
                             <?= Html::openTag('button', [
-'type' => 'submit',
-'class' => 'btn btn-info fa fa-plus',
-'data-bs-toggle' => 'tooltip',
-'title' => 'invitem/edit_task']);
+                                'type' => 'submit',
+                                'class' => 'btn btn-info fa fa-plus',
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => 'invitem/edit_task']);
 ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>

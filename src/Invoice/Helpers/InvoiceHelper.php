@@ -11,9 +11,7 @@ use Yiisoft\Session\Flash\Flash;
 
 class InvoiceHelper
 {
-    public function __construct(private readonly SR $s, private readonly SessionInterface $session)
-    {
-    }
+    public function __construct(private readonly SR $s, private readonly SessionInterface $session) {}
 
     /**
      * @psalm-param 'danger' $level
@@ -51,7 +49,7 @@ class InvoiceHelper
                       . DIRECTORY_SEPARATOR .
                       'img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
-            return '<img src="file://' . (string)getcwd() . $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '" id="invoice-logo">';
+            return '<img src="file://' . (string) getcwd() . $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '" id="invoice-logo">';
         }
         return '';
     }
@@ -70,10 +68,10 @@ class InvoiceHelper
     {
         $isEur = false;
 
-        if ((int)$slipType > 14) {
+        if ((int) $slipType > 14) {
             $isEur = true;
         } else {
-            $amount = .5 * round((float)$amount / .5, 1);
+            $amount = .5 * round((float) $amount / .5, 1);
         }
 
         if (!$isEur && $amount > 99999999.95) {
@@ -82,18 +80,18 @@ class InvoiceHelper
             $this->flash('danger', $this->s->trans('invalid_amount'));
         }
 
-        $amountLine = sprintf('%010d', (float)$amount * 100.00);
+        $amountLine = sprintf('%010d', (float) $amount * 100.00);
         $checkSlAmount = $this->invoice_recMod10($slipType . $amountLine);
 
-        if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string)$subNumb)) {
+        if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string) $subNumb)) {
             $this->flash('danger', $this->s->trans('Invalid subscriber number'));
         }
 
-        $subNumb_exploded = explode('-', (string)$subNumb);
+        $subNumb_exploded = explode('-', (string) $subNumb);
         $fullSub = $subNumb_exploded[0] . sprintf('%06d', $subNumb_exploded[1]) . $subNumb_exploded[2];
         $rnumb_preg_replace = preg_replace('/\s+/', '', $rnumb);
 
-        return $slipType . $amountLine . (string)$checkSlAmount . '>' . (string)$rnumb_preg_replace . '+ ' . $fullSub . '>';
+        return $slipType . $amountLine . (string) $checkSlAmount . '>' . (string) $rnumb_preg_replace . '+ ' . $fullSub . '>';
     }
 
     /**

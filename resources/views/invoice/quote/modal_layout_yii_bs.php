@@ -20,7 +20,7 @@ echo Modal::widget()
 ->bodyAttributes(['style' => 'text-align:center;'])
 ->body($form)
 ->fullscreen(ModalDialogFullScreenSize::FULLSCREEN_SM_DOWN)
-->id('modal-add-'.$type)
+->id('modal-add-' . $type)
 ->responsive(Responsive::LG)
 ->scrollable()
 ->triggerButton()
@@ -35,10 +35,10 @@ echo Modal::widget()
  * The simplified modal_layout is not using 'aria-hidden'
  */
 
-$inert = '$(function () {'.
-        "const modal = document.getElementById('modal-add-quote');".
-        "modal.removeAttribute('inert');".
-        "modal.setAttribute('inert', '');".
+$inert = '$(function () {' .
+        "const modal = document.getElementById('modal-add-quote');" .
+        "modal.removeAttribute('inert');" .
+        "modal.setAttribute('inert', '');" .
 '});';
 
 echo Html::script($inert)->type('module');

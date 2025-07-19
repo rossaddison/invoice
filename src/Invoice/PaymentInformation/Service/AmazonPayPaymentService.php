@@ -20,7 +20,7 @@ class AmazonPayPaymentService
 
     public function __construct(
         SettingRepository $settingRepository,
-        Crypt $crypt
+        Crypt $crypt,
     ) {
         $this->settingRepository = $settingRepository;
         $this->crypt = $crypt;
@@ -44,7 +44,7 @@ class AmazonPayPaymentService
 
     public function handleCallback(array $payload): array
     {
-        $sessionId = (string)$payload['amazonCheckoutSessionId'];
+        $sessionId = (string) $payload['amazonCheckoutSessionId'];
         /** @var Inv $invoice */
         $invoice = $payload['invoice'];
         /** @var InvRepository */
@@ -69,9 +69,9 @@ class AmazonPayPaymentService
             ];
             $client = new Client($amazonpayConfig);
 
-            $apiResponse = (array)$client->getCheckoutSession(['checkoutSessionId' => $sessionId]);
-            $responseData = (array)$apiResponse['response'];
-            $statusDetails = (array)$responseData['statusDetails'];
+            $apiResponse = (array) $client->getCheckoutSession(['checkoutSessionId' => $sessionId]);
+            $responseData = (array) $apiResponse['response'];
+            $statusDetails = (array) $responseData['statusDetails'];
             /** @var string|null $paymentState */
             $paymentState = $statusDetails['state'] ?? null;
 
@@ -95,7 +95,7 @@ class AmazonPayPaymentService
             $invoice->setStatus_id(4);      // 4 = Paid
             $invoiceRepository->save($invoice);
 
-            $invoiceAmountRecord = $invoiceAmountRepository->repoInvquery((int)$invoice->getId());
+            $invoiceAmountRecord = $invoiceAmountRepository->repoInvquery((int) $invoice->getId());
             if ($invoiceAmountRecord) {
                 $balance = $invoiceAmountRecord->getBalance();
                 if (null !== $balance) {
@@ -158,12 +158,12 @@ class AmazonPayPaymentService
         $ledgerCurrency = $this->settingRepository->getSetting('currency_code') ?: 'GBP';
 
         // Get merchant and public key id
-        $merchantId = (string)$this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_merchantId'));
-        $publicKeyId = (string)$this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_publicKeyId'));
+        $merchantId = (string) $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_merchantId'));
+        $publicKeyId = (string) $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_publicKeyId'));
 
         // Generate the payload JSON for Amazon Pay
         $checkoutReviewReturnUrl = $this->settingRepository->getSetting('gateway_amazon_pay_returnUrl') . '/' . $url_key;
-        $storeId = (string)$this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_storeId'));
+        $storeId = (string) $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_storeId'));
 
         $payloadArray = [
             'webCheckoutDetails' => [
@@ -241,6 +241,6 @@ class AmazonPayPaymentService
     {
         $regions = $this->settingRepository->amazon_regions();
         $region = $this->settingRepository->getSetting('gateway_amazon_pay_region');
-        return (string)$regions[$region] ?: 'eu';
+        return (string) $regions[$region] ?: 'eu';
     }
 }

@@ -10,9 +10,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 class PeppolProductItemClassificationCodeSchemeIdNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator, private readonly Product $product)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator, private readonly Product $product) {}
 
     #[\Override]
     public function getName(): string

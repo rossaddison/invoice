@@ -34,8 +34,8 @@ echo $alert;
           H5::tag()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('product.property'))
-        )
+            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('product.property')),
+        ),
       )
       ->render();
 
@@ -55,55 +55,55 @@ $columns = [
         header: $translator->translate('id'),
         content: static function (ProductProperty $model): string {
             return (string) $model->getProperty_id();
-        }
+        },
     ),
     new DataColumn(
         'name',
-        header:  $translator->translate('product.property.name'),
-        content: static fn (ProductProperty $model) => Html::encode($model->getName())
+        header: $translator->translate('product.property.name'),
+        content: static fn(ProductProperty $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'value',
-        header:  $translator->translate('product.property.value'),
-        content: static fn (ProductProperty $model) => Html::encode($model->getValue())
+        header: $translator->translate('product.property.value'),
+        content: static fn(ProductProperty $model) => Html::encode($model->getValue()),
     ),
     new DataColumn(
-        header:  $translator->translate('view'),
+        header: $translator->translate('view'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), []);
-        }
+        },
     ),
     new DataColumn(
-        header:  $translator->translate('edit'),
+        header: $translator->translate('edit'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), []);
-        }
+        },
     ),
     new DataColumn(
-        header:  $translator->translate('delete'),
+        header: $translator->translate('delete'),
         content: static function (ProductProperty $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                    'type' => 'submit',
-                    'class' => 'dropdown-button',
-                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
-                ]
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
                 $urlGenerator->generate('productproperty/delete', ['id' => $model->getProperty_id()]),
-                []
+                [],
             );
-        }
+        },
     ),
 ];
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('product.property'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('productproperty/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

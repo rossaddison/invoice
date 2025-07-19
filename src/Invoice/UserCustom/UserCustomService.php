@@ -8,9 +8,7 @@ use App\Invoice\Entity\UserCustom;
 
 final readonly class UserCustomService
 {
-    public function __construct(private UserCustomRepository $repository)
-    {
-    }
+    public function __construct(private UserCustomRepository $repository) {}
 
     /**
      * @param UserCustom $model

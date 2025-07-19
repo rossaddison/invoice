@@ -48,17 +48,17 @@ use Yiisoft\Html\Tag\A;
         <h2 class="fw-normal h3 text-center">
             <?php echo Html::tag('br');
     echo $companyLogo; ?><?= $translator->translate('online.payment.for.invoice'); ?> #
-                <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
-             Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
-             Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+                <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
+             Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
+             Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
              $numberHelper->format_currency($balance); ?>
             
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
     </div> 
     <br><?= Html::tag('Div', Html::tag('H4', $title)); ?><br>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\A;
         // open in a separate window
         ->target('_blank')
         ->addClass('btn btn-lg btn-primary bi bi-info-circle')
-        ->content(' '.$translator->translate('read.this.please'))
+        ->content(' ' . $translator->translate('read.this.please'))
         ->render();
     ?>        
     <?php
@@ -82,7 +82,7 @@ use Yiisoft\Html\Tag\A;
         ->href($paymentCheckoutUrl)
         ->target('_blank')
         ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')
-        ->content(' '. $translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance))
+        ->content(' ' . $translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance))
         ->render();
     }
     ?>

@@ -25,7 +25,7 @@ final class ProfileForm extends FormModel
 
     public function __construct(Profile $profile, private readonly Translator $translator)
     {
-        $this->company_id = (int)$profile->getCompany_id();
+        $this->company_id = (int) $profile->getCompany_id();
         $this->current = $profile->getCurrent();
         $this->mobile = $profile->getMobile();
         $this->email = $profile->getEmail();

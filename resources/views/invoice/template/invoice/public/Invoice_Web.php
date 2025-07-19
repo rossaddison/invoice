@@ -71,22 +71,22 @@ $vat = $s->getSetting('enable_vat_registration');
 
                     <?php if (null !== $sumex) : ?>
                         <a href="<?= $urlGenerator->generate('inv/key_download_pdf_non_sumex', ['url_key' => $inv_url_key]); ?>" class="btn btn-primary" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
                         </a>
                     <?php else : ?>
                         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-primary" style="text-decoration:none">
-                           <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+                           <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
                         </a>
                     <?php endif; ?>
 
                     <!-- Exclude custom fields -->         
                     <?php if (null !== $sumex) : ?>
                         <a href="<?= $urlGenerator->generate('inv/key_download_pdf_non_sumex', ['url_key' => $inv_url_key]); ?>" class="btn btn-danger" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>    
+                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>    
                         </a>    
                     <?php else : ?>
                         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-danger" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>    
+                            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>    
                         </a>    
                     <?php endif; ?>
 
@@ -94,9 +94,9 @@ $vat = $s->getSetting('enable_vat_registration');
                         <a href="<?= $urlGenerator->generate(
                             'paymentinformation/inform',
                             ['url_key' => $inv_url_key,
-                                                         'gateway' => $client_chosen_gateway]
+                                'gateway' => $client_chosen_gateway],
                         ); ?>" class="btn btn-success">
-                            <i class="fa fa-credit-card"></i><?= $translator->translate('pay.now').' '. str_replace('_', ' ', $client_chosen_gateway); ?>
+                            <i class="fa fa-credit-card"></i><?= $translator->translate('pay.now') . ' ' . str_replace('_', ' ', $client_chosen_gateway); ?>
                         </a>
                     <?php } ?>
                     <?php if ($s->getSetting('enable_online_payments') == 1 && $inv_amount->getBalance() == 0) { ?>
@@ -245,7 +245,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <?php $query = $iiaR->repoInvItemAmountquery((string)$item->getId()); ?>
+                                <?php $query = $iiaR->repoInvItemAmountquery((string) $item->getId()); ?>
                                 <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>                                   
                             </tr>  
                             <?php } ?>
@@ -306,7 +306,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                     <?php
                                     $percent = $inv->getDiscount_percent();
                                 if ($percent >= 0.00) {
-                                    echo (string)$numberHelper->format_amount($percent) . ' %';
+                                    echo (string) $numberHelper->format_amount($percent) . ' %';
                                 } else {
                                     $discountAmount = $inv->getDiscount_amount();
                                     if ($discountAmount >= 0.00) {

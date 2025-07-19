@@ -8,9 +8,7 @@ use App\Invoice\Entity\CustomValue;
 
 final readonly class CustomValueService
 {
-    public function __construct(private CustomValueRepository $repository)
-    {
-    }
+    public function __construct(private CustomValueRepository $repository) {}
 
     /**
      * @param CustomValue $model
@@ -18,8 +16,8 @@ final readonly class CustomValueService
      */
     public function saveCustomValue(CustomValue $model, array $array): void
     {
-        isset($array['custom_field_id']) ? $model->setCustom_field_id((int)$array['custom_field_id']) : '';
-        isset($array['value']) ? $model->setValue((string)$array['value']) : '';
+        isset($array['custom_field_id']) ? $model->setCustom_field_id((int) $array['custom_field_id']) : '';
+        isset($array['value']) ? $model->setValue((string) $array['value']) : '';
         $this->repository->save($model);
     }
 

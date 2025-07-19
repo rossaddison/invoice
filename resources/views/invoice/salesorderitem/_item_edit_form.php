@@ -33,7 +33,7 @@ if ($errors) {
     foreach ($errors as $field => $error) {
         echo Alert::widget()
              ->variant(AlertVariant::DANGER)
-             ->body((string)$field . ':' . $error, true)
+             ->body((string) $field . ':' . $error, true)
              ->dismissable(true)
              ->render();
     }
@@ -126,7 +126,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 if (null !== $taxRatePercent && null !== $taxRateName) {
                                     $formattedPercent = $numberHelper->format_amount($taxRatePercent);
                                     if (null !== $formattedPercent) {
-                                        echo  $formattedPercent. '% - ' .$taxRateName;
+                                        echo  $formattedPercent . '% - ' . $taxRateName;
                                     }
                                 } else {
                                     echo '%';

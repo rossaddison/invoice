@@ -401,19 +401,19 @@ final readonly class TemplateHelper
                         }
                         break;
                     case 'invoice_item_subtotal':
-                        $invoice_amount = $iaR->repoInvAmountCount((int)$pk) > 0 ? $iaR->repoInvquery((int)$pk) : null;
+                        $invoice_amount = $iaR->repoInvAmountCount((int) $pk) > 0 ? $iaR->repoInvquery((int) $pk) : null;
                         if ($invoice_amount) {
                             $replace = $this->n->format_currency($invoice_amount->getItem_subtotal());
                         }
                         break;
                     case 'invoice_item_tax_total':
-                        $invoice_amount = $iaR->repoInvAmountCount((int)$pk) > 0 ? $iaR->repoInvquery((int)$pk) : null;
+                        $invoice_amount = $iaR->repoInvAmountCount((int) $pk) > 0 ? $iaR->repoInvquery((int) $pk) : null;
                         if ($invoice_amount) {
                             $replace = $this->n->format_currency($invoice_amount->getItem_tax_total());
                         }
                         break;
                     case 'invoice_total':
-                        $invoice_amount = $iaR->repoInvAmountCount((int)$pk) > 0 ? $iaR->repoInvquery((int)$pk) : null;
+                        $invoice_amount = $iaR->repoInvAmountCount((int) $pk) > 0 ? $iaR->repoInvquery((int) $pk) : null;
                         if ($invoice_amount) {
                             $replace = $this->n->format_currency($invoice_amount->getTotal());
                         }
@@ -425,13 +425,13 @@ final readonly class TemplateHelper
                         }
                         break;
                     case 'invoice_paid':
-                        $invoice_amount = $iaR->repoInvAmountCount((int)$pk) > 0 ? $iaR->repoInvquery((int)$pk) : null;
+                        $invoice_amount = $iaR->repoInvAmountCount((int) $pk) > 0 ? $iaR->repoInvquery((int) $pk) : null;
                         if ($invoice_amount) {
                             $replace = $this->n->format_currency($invoice_amount->getPaid());
                         }
                         break;
                     case 'invoice_balance':
-                        $invoice_amount = $iaR->repoInvAmountCount((int)$pk) > 0 ? $iaR->repoInvquery((int)$pk) : null;
+                        $invoice_amount = $iaR->repoInvAmountCount((int) $pk) > 0 ? $iaR->repoInvquery((int) $pk) : null;
                         if ($invoice_amount) {
                             $replace = $this->n->format_currency($invoice_amount->getBalance());
                         }
@@ -456,21 +456,21 @@ final readonly class TemplateHelper
                                     // $pk = quote id;
                                     $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null;
                                     if ($quote) {
-                                        $replace_custom = $this->qcR->repoFormValuequery((string)$quote->getId(), $cf_id[1]);
+                                        $replace_custom = $this->qcR->repoFormValuequery((string) $quote->getId(), $cf_id[1]);
                                     }
                                     break;
                                 case 'salesorder_custom':
                                     // $pk = so id;
                                     $so = $soR->repoCount($pk) > 0 ? $soR->repoSalesOrderLoadedquery($pk) : null;
                                     if ($so) {
-                                        $replace_custom = $this->socR->repoFormValuequery((string)$so->getId(), $cf_id[1]);
+                                        $replace_custom = $this->socR->repoFormValuequery((string) $so->getId(), $cf_id[1]);
                                     }
                                     break;
                                 case 'inv_custom':
                                     // $pk = inv id;
                                     $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
                                     if ($invoice) {
-                                        $replace_custom = $this->icR->repoFormValuequery((string)$invoice->getId(), $cf_id[1]);
+                                        $replace_custom = $this->icR->repoFormValuequery((string) $invoice->getId(), $cf_id[1]);
                                     }
                                     break;
                                 case 'client_custom':

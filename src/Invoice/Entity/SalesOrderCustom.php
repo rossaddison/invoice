@@ -11,19 +11,17 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\SalesOrderCustom\SalesOrderCustomRepository::class)]
 class SalesOrderCustom
 {
-    #[BelongsTo(target:CustomField::class, nullable: false)]
+    #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    #[BelongsTo(target:SalesOrder::class, nullable: false)]
+    #[BelongsTo(target: SalesOrder::class, nullable: false)]
     private ?SalesOrder $so = null;
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $so_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
-        private string $value = '')
-    {
-    }
+        private string $value = '') {}
 
     public function getCustomField(): ?CustomField
     {
@@ -37,7 +35,7 @@ class SalesOrderCustom
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -47,7 +45,7 @@ class SalesOrderCustom
 
     public function getSo_id(): string
     {
-        return (string)$this->so_id;
+        return (string) $this->so_id;
     }
 
     public function setSo_id(int $so_id): void
@@ -57,7 +55,7 @@ class SalesOrderCustom
 
     public function getCustom_field_id(): string
     {
-        return (string)$this->custom_field_id;
+        return (string) $this->custom_field_id;
     }
 
     public function setCustom_field_id(int $custom_field_id): void

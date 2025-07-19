@@ -20,10 +20,10 @@ final class InvItemAllowanceChargeForm extends FormModel
 
     public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, private readonly ?int $inv_item_id)
     {
-        $this->inv_id = (int)$invItemAllowanceCharge->getInv_id();
-        $this->allowance_charge_id = (int)$invItemAllowanceCharge->getAllowance_charge_id();
-        $this->amount = (float)$invItemAllowanceCharge->getAmount();
-        $this->vat = (float)$invItemAllowanceCharge->getVat();
+        $this->inv_id = (int) $invItemAllowanceCharge->getInv_id();
+        $this->allowance_charge_id = (int) $invItemAllowanceCharge->getAllowance_charge_id();
+        $this->amount = (float) $invItemAllowanceCharge->getAmount();
+        $this->vat = (float) $invItemAllowanceCharge->getVat();
     }
 
     public function getInv_id(): int|null

@@ -41,8 +41,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('project')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('project'))),
+            ),
     )
     ->render();
 
@@ -75,7 +75,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Project $model) => Html::encode($model->getId())
+            content: static fn(Project $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'client_id',
@@ -84,16 +84,16 @@ $toolbar = Div::tag();
                 $clientName = $model->getClient()?->getClient_name() ?? '';
                 $clientSurname = $model->getClient()?->getClient_surname() ?? '';
                 if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0)) {
-                    return Html::encode($clientName . ' '. $clientSurname);
+                    return Html::encode($clientName . ' ' . $clientSurname);
                 } else {
                     return '#';
                 }
-            }
+            },
         ),
         new DataColumn(
             'name',
             header: $translator->translate('project.name'),
-            content: static fn (Project $model): string => Html::encode(ucfirst($model->getName() ?? ''))
+            content: static fn(Project $model): string => Html::encode(ucfirst($model->getName() ?? '')),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -104,7 +104,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -114,7 +114,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -123,8 +123,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -133,14 +133,14 @@ $toolbar = Div::tag();
 $paginator = (new OffsetPaginator($projects))
     ->withPageSize($s->positiveListLimit())
     ->withCurrentPage($page)
-    ->withToken(PageToken::next((string)$page));
+    ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('projects'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('project/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

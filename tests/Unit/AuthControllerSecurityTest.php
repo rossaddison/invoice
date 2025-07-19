@@ -93,7 +93,7 @@ final class AuthControllerSecurityTest extends TestCase
             $urlGenerator,
             $logger,
             $flash,
-            $rateLimiter
+            $rateLimiter,
         );
 
         $this->reflection = new ReflectionClass($this->authController);

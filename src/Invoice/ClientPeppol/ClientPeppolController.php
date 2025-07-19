@@ -38,7 +38,7 @@ final class ClientPeppolController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->clientPeppolService = $clientPeppolService;
@@ -54,7 +54,7 @@ final class ClientPeppolController extends BaseController
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
         $client_peppol = new ClientPeppol();
@@ -92,8 +92,8 @@ final class ClientPeppolController extends BaseController
                                              : 'client/index',
                                     'heading' => $this->translator->translate('client.peppol'),
                                     'message' => $this->translator->translate('record.successfully.updated'),
-                                ]
-                            )
+                                ],
+                            ),
                         );
                     }
                 }
@@ -190,7 +190,7 @@ final class ClientPeppolController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        ClientPeppolRepository $clientpeppolRepository
+        ClientPeppolRepository $clientpeppolRepository,
     ): Response {
         try {
             $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
@@ -217,7 +217,7 @@ final class ClientPeppolController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        ClientPeppolRepository $clientpeppolRepository
+        ClientPeppolRepository $clientpeppolRepository,
     ): Response {
         $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
         $body = $request->getParsedBody() ?? [];
@@ -230,7 +230,7 @@ final class ClientPeppolController extends BaseController
                 'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
                 'buttons' => $this->viewRenderer->renderPartialAsString(
                     '//invoice/layout/header_buttons',
-                    ['hide_submit_button' => false, 'hide_cancel_button' => false]
+                    ['hide_submit_button' => false, 'hide_cancel_button' => false],
                 ),
                 'errors' => [],
                 'form' => $form,
@@ -250,7 +250,7 @@ final class ClientPeppolController extends BaseController
                         if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
                             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
-                                ['url' => 'client/guest', 'heading' => $this->translator->translate('client.peppol'), 'message' => $this->translator->translate('record.successfully.updated')]
+                                ['url' => 'client/guest', 'heading' => $this->translator->translate('client.peppol'), 'message' => $this->translator->translate('record.successfully.updated')],
                             ));
                         }
                         // Administrator's return url to see all clients

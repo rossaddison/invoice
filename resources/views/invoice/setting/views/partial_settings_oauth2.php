@@ -25,7 +25,7 @@ use Yiisoft\Html\Tag\I;
         <div class="panel panel-default">
             <div class="panel-heading">
                 <label <?= $s->where('oauth2'); ?>><i class="bi bi-info-circle"></i>
-                    <?= $translator->translate('oauth2') . ' '.'⛔'; ?>
+                    <?= $translator->translate('oauth2') . ' ' . '⛔'; ?>
                 </label>    
             </div>
             <div class="panel-body">
@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\I;
                             <input type="hidden" name="settings[no_developer_sandbox_hmrc_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_developer_sandbox_hmrc_continue_button]" value="1"
                                 <?php $s->check_select($body['settings[no_developer_sandbox_hmrc_continue_button]'], 1, '==', true) ?>>
-                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?= chr(32).$translator->translate('gov.developer.sandbox').chr(32).$translator->translate('gov.developer.sandbox.uk'); ?>
+                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?= chr(32) . $translator->translate('gov.developer.sandbox') . chr(32) . $translator->translate('gov.developer.sandbox.uk'); ?>
                         </label>
                     </div>    
                     <div class="checkbox">

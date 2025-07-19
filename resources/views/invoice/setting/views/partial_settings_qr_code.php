@@ -37,7 +37,7 @@ use chillerlan\QRCode\QRCode;
                             <?php $body['settings[qr_version]'] = $s->getSetting('qr_version') ?: '40';?>
                            <input type="text" name="settings[qr_version]" id="settings[qr_version]"
                                 class="form-control" 
-                                value="<?= $body['settings[qr_version]'] ?? (string)Version::AUTO; ?>">
+                                value="<?= $body['settings[qr_version]'] ?? (string) Version::AUTO; ?>">
                         </div>
                         <div class="form-group">
                             <label for="settings[qr_ecc_level]">
@@ -60,7 +60,7 @@ use chillerlan\QRCode\QRCode;
                            <input type="text" name="settings[qr_height_and_width]" id="settings[qr_height_and_width]"
                                 class="form-control" 
                                 value="<?= isset($body['settings[qr_height_and_width]']) && !empty($body['settings[qr_height_and_width]'])
-                                        ? (int)$body['settings[qr_height_and_width]'] : 60; ?>">
+                                        ? (int) $body['settings[qr_height_and_width]'] : 60; ?>">
                         </div>
                         <div class="panel-heading">
                         <?=
@@ -81,13 +81,13 @@ use chillerlan\QRCode\QRCode;
                             <div class="panel-body">
                                 <?php
             $pixels = (isset($body['settings[qr_height_and_width]']) && ($body['settings[qr_height_and_width]']))
-                     ? (int)$body['settings[qr_height_and_width]'] : 60;
+                     ? (int) $body['settings[qr_height_and_width]'] : 60;
 printf(Img::tag()
 ->width($pixels)
 ->height($pixels)
 ->src('%s')
 ->alt($translator->translate('qr.code'))
-->render(), (string)(new QRCode())->render('http://invoice.myhost/invoice/inv/view/6'));
+->render(), (string) (new QRCode())->render('http://invoice.myhost/invoice/inv/view/6'));
 echo Table::tag()
 ->attributes([ 'class' => 'table table-info table-striped table-bordered'])
 ->rows(
@@ -139,17 +139,17 @@ echo Table::tag()
     Tr::tag()
     ->dataStrings([
         $translator->translate('qr.code.widget.used'),
-        '\src\Widget\QrCode.php'
+        '\src\Widget\QrCode.php',
     ]),
     Tr::tag()
     ->dataStrings([
         $translator->translate('qr.code.level.1'),
-        '(new QRCode)->render("http://invoice.myhost/invoice/inv/view/6")'
+        '(new QRCode)->render("http://invoice.myhost/invoice/inv/view/6")',
     ]),
     Tr::tag()
     ->dataStrings([
         $translator->translate('qr.code.settings.effect'),
-        $translator->translate('qr.code.settings.effect.explanation')
+        $translator->translate('qr.code.settings.effect.explanation'),
     ]),
 )
 ->render();

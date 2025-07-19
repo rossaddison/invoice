@@ -25,9 +25,7 @@ use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 
 final readonly class LayoutViewInjection implements LayoutParametersInjectionInterface
 {
-    public function __construct(private CurrentUser $currentUser, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator)
-    {
-    }
+    public function __construct(private CurrentUser $currentUser, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator) {}
 
     /**
      * @return array
@@ -75,7 +73,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompany_id() == (string)$company->getId()) {
+                    if ($private->getCompany_id() == (string) $company->getId()) {
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
                         if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
                             $companyLogoFileName = $private->getLogo_filename();

@@ -33,13 +33,13 @@ final class TaskForm extends FormModel
 
     public function __construct(Task $task)
     {
-        $this->project_id = (int)$task->getProject_id();
+        $this->project_id = (int) $task->getProject_id();
         $this->name = $task->getName();
         $this->description = $task->getDescription();
         $this->price = $task->getPrice();
         $this->finish_date = $task->getFinish_date();
         $this->status = $task->getStatus();
-        $this->tax_rate_id = (int)$task->getTax_rate_id();
+        $this->tax_rate_id = (int) $task->getTax_rate_id();
     }
 
     public function getProject_id(): int|null

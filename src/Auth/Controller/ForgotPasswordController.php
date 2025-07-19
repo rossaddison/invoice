@@ -38,7 +38,7 @@ final class ForgotPasswordController
         private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('forgotpassword');
         $this->mailer = $mailer;
@@ -75,7 +75,7 @@ final class ForgotPasswordController
         RequestPasswordResetTokenForm $requestPasswordResetTokenForm,
         tR $tR,
         uiR $uiR,
-        uR $uR
+        uR $uR,
     ): ResponseInterface {
         // only guests i.e. only unauthenticated users can access this function i.e NOT logged in before request
         if (!$authService->isGuest()) {
@@ -100,7 +100,7 @@ final class ForgotPasswordController
                             $timeStamp = $tokenRecord->getCreated_at()->getTimestamp();
                             // check if token Random string is still valid by checking the timestamp
                             if ($timeStamp + 3600 >= time()) {
-                                $requestPasswordResetToken = $tokenString . '_' . (string)$timeStamp;
+                                $requestPasswordResetToken = $tokenString . '_' . (string) $timeStamp;
                             } else {
                                 /**
                                  * This new Token will be nullified when the password is actually reset in the Token extension table i.e.
@@ -140,7 +140,7 @@ final class ForgotPasswordController
                                 date: new \DateTimeImmutable('now'),
                                 from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('administrator')],
                                 to: $to,
-                                htmlBody: $htmlBody
+                                htmlBody: $htmlBody,
                             );
                             $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
 
@@ -176,12 +176,12 @@ final class ForgotPasswordController
      */
     private function requestPasswordResetToken(string $identityId, tR $tR): string
     {
-        $newTokenRecord = new Token((int)$identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
+        $newTokenRecord = new Token((int) $identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
         $requestPasswordResetToken = '';
         $tR->save($newTokenRecord);
         $tokenString = $newTokenRecord->getToken();
         if (null !== $tokenString) {
-            $timeStamp = (string)$newTokenRecord->getCreated_at()->getTimestamp();
+            $timeStamp = (string) $newTokenRecord->getCreated_at()->getTimestamp();
             $requestPasswordResetToken = $tokenString . '_' . $timeStamp;
         }
         return $requestPasswordResetToken;
@@ -200,7 +200,7 @@ final class ForgotPasswordController
             $content = A::tag()
                        ->href($this->urlGenerator->generateAbsolute(
                            'auth/resetpassword',
-                           ['_language' => $_language, 'token' => $tokenWithMask]
+                           ['_language' => $_language, 'token' => $tokenWithMask],
                        ))
                        ->content($this->translator->translate('password.reset.email'));
             return Body::tag()

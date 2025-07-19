@@ -52,7 +52,7 @@ final class UserInvForm extends FormModel
 
     public function __construct(UserInv $userinv)
     {
-        $this->user_id = (int)$userinv->getUser_id();
+        $this->user_id = (int) $userinv->getUser_id();
         $this->type = $userinv->getType();
         $this->active = $userinv->getActive();
         $this->language = $userinv->getLanguage();

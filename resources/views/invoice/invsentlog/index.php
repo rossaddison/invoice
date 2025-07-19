@@ -44,8 +44,8 @@ echo $alert;
             H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->content('📨')
-            )
+                I::tag()->content('📨'),
+            ),
         )
         ->render();
 
@@ -65,38 +65,38 @@ $columns = [
         header: $translator->translate('id'),
         content: static function (InvSentLog $model): string {
             return (string) $model->getId();
-        }
+        },
     ),
     new DataColumn(
         field: 'inv_id',
         property: 'filterInvNumber',
         header: $translator->translate('number'),
         content: static function (InvSentLog $model) use ($urlGenerator): A {
-            return Html::a(($model->getInv()?->getNumber() ?? '#').' 🔍', $urlGenerator->generate(
+            return Html::a(($model->getInv()?->getNumber() ?? '#') . ' 🔍', $urlGenerator->generate(
                 'inv/view',
-                ['id' => $model->getId()]
+                ['id' => $model->getId()],
             ), ['style' => 'text-decoration:none']);
         },
         filter: $optionsDataInvNumberDropDownFilter,
-        withSorting: false
+        withSorting: false,
     ),
     new DataColumn(
         field: 'client_id',
         property: 'filterClient',
         header: $translator->translate('client'),
-        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
+        content: static fn(InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
         filter: $optionsDataClientsDropDownFilter,
-        withSorting: false
+        withSorting: false,
     ),
     new DataColumn(
         'inv_id',
         header: $translator->translate('setup.db.username.info'),
-        content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin()
+        content: static fn(InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
     ),
     new DataColumn(
         'date_sent',
         header: $translator->translate('email.date'),
-        content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+        content: static fn(InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
 $grid_summary = $s->grid_summary(
@@ -104,7 +104,7 @@ $grid_summary = $s->grid_summary(
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('email.logs'),
-    ''
+    '',
 );
 echo '<br>';
 $toolbarString =  Form::tag()->post($urlGenerator->generate('invsentlog/index'))->csrf($csrf)->open() .
@@ -120,7 +120,7 @@ echo GridView::widget()
   ->id('w10463-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invsentlog').' '.$grid_summary)
+  ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invsentlog') . ' ' . $grid_summary)
   ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
   ->emptyText($translator->translate('no.records'))
   ->toolbar($toolbarString);

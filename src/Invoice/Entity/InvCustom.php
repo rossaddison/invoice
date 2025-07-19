@@ -11,7 +11,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\InvCustom\InvCustomRepository::class)]
 class InvCustom
 {
-    #[BelongsTo(target:Inv::class, nullable: false)]
+    #[BelongsTo(target: Inv::class, nullable: false)]
     private ?Inv $inv = null;
 
     #[BelongsTo(target: CustomField::class, nullable: false)]
@@ -21,9 +21,7 @@ class InvCustom
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $value = '')
-    {
-    }
+        private ?string $value = '') {}
 
     public function getInv(): ?Inv
     {
@@ -37,7 +35,7 @@ class InvCustom
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -47,7 +45,7 @@ class InvCustom
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void
@@ -57,7 +55,7 @@ class InvCustom
 
     public function getCustom_field_id(): string
     {
-        return (string)$this->custom_field_id;
+        return (string) $this->custom_field_id;
     }
 
     public function setCustom_field_id(int $custom_field_id): void

@@ -46,7 +46,7 @@ echo Form::tag()
                     ->label($translator->translate('allowance.or.charge'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
-                        'disabled' => 'disabled'
+                        'disabled' => 'disabled',
                     ])
                     ->optionsData($optionsDataAllowanceCharges);
 ?>
@@ -57,7 +57,7 @@ echo Form::tag()
     ->label($translator->translate('allowance.or.charge.amount'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getAmount()));
 ?>
@@ -69,7 +69,7 @@ echo Form::tag()
     ->label($translator->translate('vat.abbreviation'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getVat()));
 ?>

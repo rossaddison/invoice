@@ -38,7 +38,7 @@ class PdfHelper
      */
     private function locale_to_language(): string|null
     {
-        $dropdown_locale = (string)$this->session->get('_language');
+        $dropdown_locale = (string) $this->session->get('_language');
         /** @var array $session_list */
         $session_list = $this->s->locale_language_array();
         /** @var string $session_list[$dropdown_locale] */
@@ -93,7 +93,7 @@ class PdfHelper
         \App\Invoice\Quote\QuoteRepository $qR,
         \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
-        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
+        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
     ) {
         if (null !== $quote_id) {
             $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
@@ -124,7 +124,7 @@ class PdfHelper
                 // Get all data related to building the quote including custom fields
                 $data = [
                     'quote' => $quote,
-                    'quote_tax_rates' => (($qtrR->repoCount((string)$this->session->get('quote_id')) > 0) ? $qtrR->repoQuotequery((string)$this->session->get('quote_id')) : null),
+                    'quote_tax_rates' => (($qtrR->repoCount((string) $this->session->get('quote_id')) > 0) ? $qtrR->repoQuotequery((string) $this->session->get('quote_id')) : null),
                     'items' => $items,
                     'qiaR' => $qiaR,
                     'output_type' => 'pdf',
@@ -158,10 +158,10 @@ class PdfHelper
                             'isInvoice' => false,
                             'isQuote' => true,
                             'isSalesOrder' => false,
-                        ]
+                        ],
                     ),
                     'userInv' => $userinv,
-                    'client' => $cR->repoClientquery((string)$quote->getClient()?->getClient_id()),
+                    'client' => $cR->repoClientquery((string) $quote->getClient()?->getClient_id()),
                     'quote_amount' => $quote_amount,
                     // Use the temporary print language to define cldr
                     'cldr' => array_search($this->get_print_language($quote), $this->s->locale_language_array()),
@@ -174,7 +174,7 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string)random_int(0, 10));
+                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
             }
         }
@@ -216,7 +216,7 @@ class PdfHelper
         \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
         \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
-        Translator $translator
+        Translator $translator,
     ): string {
         if (null !== $so_id) {
             $so = $soR->repoCount($so_id) > 0 ? $soR->repoSalesOrderLoadedquery($so_id) : null;
@@ -246,7 +246,7 @@ class PdfHelper
                 // Get all data related to building the quote including custom fields
                 $data = [
                     'salesorder' => $so,
-                    'salesorder_tax_rates' => (($sotrR->repoCount((string)$this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string)$this->session->get('so_id')) : null),
+                    'salesorder_tax_rates' => (($sotrR->repoCount((string) $this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string) $this->session->get('so_id')) : null),
                     'items' => $items,
                     'soiaR' => $soiaR,
                     'output_type' => 'pdf',
@@ -278,10 +278,10 @@ class PdfHelper
                             'isInvoice' => false,
                             'isQuote' => false,
                             'isSalesOrder' => true,
-                        ]
+                        ],
                     ),
                     'userInv' => $userinv,
-                    'client' => $cR->repoClientquery((string)$so->getClient()?->getClient_id()),
+                    'client' => $cR->repoClientquery((string) $so->getClient()?->getClient_id()),
                     'so_amount' => $so_amount,
                     // Use the temporary print language to define cldr
                     'cldr' => array_search($this->get_print_language($so), $this->s->locale_language_array()),
@@ -294,7 +294,7 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $translator->translate('salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string)random_int(0, 10));
+                $filename = $translator->translate('salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string) random_int(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
             }
         }
@@ -365,7 +365,7 @@ class PdfHelper
             // Get all data related to building the inv including custom fields
             $data = [
                 'inv' => $inv,
-                'inv_tax_rates' => (($itrR->repoCount((string)$this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string)$this->session->get('inv_id')) : null),
+                'inv_tax_rates' => (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : null),
                 'items' => $items,
                 'iiaR' => $iiaR,
                 'output_type' => 'pdf',
@@ -408,9 +408,9 @@ class PdfHelper
                         'isInvoice' => true,
                         'isQuote' => false,
                         'isSalesOrder' => false,
-                    ]
+                    ],
                 ),
-                'client' => $cR->repoClientquery((string)$inv->getClient()?->getClient_id()),
+                'client' => $cR->repoClientquery((string) $inv->getClient()?->getClient_id()),
                 'inv_amount' => $inv_amount,
                 'cldr' => array_search($this->get_print_language($inv), $this->s->locale_language_array()),
             ];
@@ -456,7 +456,7 @@ class PdfHelper
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
         SumexRepository $sumexR,
-        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
+        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
     ): string {
         if (null !== $inv_id) {
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
@@ -481,7 +481,7 @@ class PdfHelper
                 } else {
                     $associatedFiles = [];
                 }
-                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string)random_int(0, 10));
+                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string) random_int(0, 10));
                 //$isInvoice is assigned to true as it is an invoice
                 // If stream is true return the pdf as a string using mpdf otherwise save to local file and
                 // return the filename inclusive target_path to be used to attach to email attachments

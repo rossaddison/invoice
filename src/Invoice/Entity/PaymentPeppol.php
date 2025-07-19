@@ -12,7 +12,7 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\PaymentPeppol\PaymentPeppolRepository::class)]
 class PaymentPeppol
 {
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
     #[Column(type: 'primary')]
@@ -24,7 +24,7 @@ class PaymentPeppol
     public function __construct(
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $inv_id = null,
-        #[Column(type: 'string(20)', nullable:false)]
+        #[Column(type: 'string(20)', nullable: false)]
         private string $provider = '',
     ) {
         // convert the current DateTimeImmutable to a timestamp
@@ -43,7 +43,7 @@ class PaymentPeppol
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -63,7 +63,7 @@ class PaymentPeppol
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void

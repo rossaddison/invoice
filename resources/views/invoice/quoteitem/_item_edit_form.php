@@ -118,7 +118,7 @@ foreach ($taxRates as $taxRate) {
     $taxRateName = $taxRate->getTaxRateName();
     // Only build the drop down item if all values are present
     if (null !== $taxRatePercentNumber && null !== $taxRateName && null !== $taxRateId) {
-        $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber. '% - ' . $taxRateName;
+        $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber . '% - ' . $taxRateName;
     }
 }
 ?>      
@@ -136,10 +136,10 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
                             <!-- see QuoteController: id modal-choose-items lies on views/product/modal_product_lookups_quote.php-->
                             <?= Html::openTag('button', [
-'type' => 'submit',
-'class' => 'btn btn-info',
-'data-bs-toggle' => 'tooltip',
-'title' => 'quoteitem/edit']); ?>
+                                'type' => 'submit',
+                                'class' => 'btn btn-info',
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => 'quoteitem/edit']); ?>
                                 <?= I::tag()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>

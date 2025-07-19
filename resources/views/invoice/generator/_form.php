@@ -62,7 +62,7 @@ foreach ($tables as $table) {
 echo Field::select($form, 'pre_entity_table')
 ->label($translator->translate('generator.table.used.to.generate.entity.controller.repository'))
 ->addInputAttributes([
-    'placeholder' => $translator->translate('generator.table.used.to.generate.entity.controller.repository')
+    'placeholder' => $translator->translate('generator.table.used.to.generate.entity.controller.repository'),
 ])
 ->optionsData($optionsDataTable)
 ->value(Html::encode($form->getPre_entity_table()));

@@ -39,8 +39,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('profile.singular')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('profile.singular'))),
+            ),
     )
     ->render();
 
@@ -73,22 +73,22 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Profile $model) => Html::encode($model->getId())
+            content: static fn(Profile $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'company_id',
             header: $translator->translate('company'),
-            content: static fn (Profile $model): string => Html::encode($model->getCompany()?->getName() ?? '')
+            content: static fn(Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
         ),
         new DataColumn(
             'email',
             header: $translator->translate('email.address'),
-            content: static fn (Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? ''))
+            content: static fn(Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
         ),
         new DataColumn(
             'description',
             header: $translator->translate('description'),
-            content: static fn (Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? ''))
+            content: static fn(Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -99,7 +99,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -109,7 +109,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -118,8 +118,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -128,9 +128,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('profiles'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('profile/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

@@ -51,7 +51,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::date($form, 'uploaded_date')
 ->addInputAttributes([
     'readonly' => 'readonly',
-    'disabled' => 'disabled'
+    'disabled' => 'disabled',
 ])
 ->label($translator->translate('date'))
 ->required(true)

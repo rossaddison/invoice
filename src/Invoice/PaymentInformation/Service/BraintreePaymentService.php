@@ -26,7 +26,7 @@ class BraintreePaymentService
     public function __construct(
         SettingRepository $settings,
         Crypt $crypt,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->settings = $settings;
         $this->crypt = $crypt;
@@ -165,7 +165,7 @@ class BraintreePaymentService
                     $transaction = $braintreeResult->transaction;
                     /** @psalm-var object{id?: string|int} $transaction */
                     if (isset($transaction->id)) {
-                        $result['transaction_id'] = (string)$transaction->id;
+                        $result['transaction_id'] = (string) $transaction->id;
                     } else {
                         $result['transaction_id'] = null;
                     }
@@ -204,7 +204,7 @@ class BraintreePaymentService
     public function getMerchantId(): string
     {
         $merchantId = $this->settings->getSetting('gateway_braintree_merchantId');
-        return (string)$this->crypt->decode($merchantId ?: '');
+        return (string) $this->crypt->decode($merchantId ?: '');
     }
 
     /**
@@ -221,7 +221,7 @@ class BraintreePaymentService
     private function getPublicKey(): string
     {
         $publicKey = $this->settings->getSetting('gateway_braintree_publicKey');
-        return (string)$this->crypt->decode($publicKey ?: '');
+        return (string) $this->crypt->decode($publicKey ?: '');
     }
 
     /**
@@ -230,7 +230,7 @@ class BraintreePaymentService
     private function getPrivateKey(): string
     {
         $privateKey = $this->settings->getSetting('gateway_braintree_privateKey');
-        return (string)$this->crypt->decode($privateKey ?: '');
+        return (string) $this->crypt->decode($privateKey ?: '');
     }
 
     /**

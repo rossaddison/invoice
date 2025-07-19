@@ -33,7 +33,7 @@ $vat = $s->getSetting('enable_vat_registration');
 <html class="h-100" lang="<?= $cldr; ?>">
 <?php
     /** Set the locale when the view is being rendered partially i.e. without a layout */
-    $translator->setLocale($cldr); 
+    $translator->setLocale($cldr);
 ?>
 <head>
     <meta charset="utf-8">
@@ -48,13 +48,13 @@ $vat = $s->getSetting('enable_vat_registration');
             <b><?= Html::encode($inv->getClient()?->getClient_name()); ?></b>
         </div>
         <?php if (strlen($clientVatId = $inv->getClient()?->getClient_vat_id() ?? '') > 0) {
-            echo '<div>' .$translator->translate('vat.reg.no')
-                         .': '
+            echo '<div>' . $translator->translate('vat.reg.no')
+                         . ': '
                          . $clientVatId
                          . '</div>';
         }
 if (strlen($clientTaxCode = $inv->getClient()?->getClient_tax_code() ?? '') > 0) {
-    echo '<div>' .$translator->translate('tax.code.short') . ': ' . $clientTaxCode . '</div>';
+    echo '<div>' . $translator->translate('tax.code.short') . ': ' . $clientTaxCode . '</div>';
 }
 echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('street.address')) . '</div>';
 echo '<div>' . Html::encode(strlen($inv->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('street.address.2')) . '</div>';
@@ -81,7 +81,7 @@ if (strlen($clientCountry = $inv->getClient()?->getClient_country() ?? '') > 0) 
 echo '<br/>';
 
 if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
-    echo '<div>' .$translator->translate('phone.abbr') . ': ' . Html::encode($inv->getClient()?->getClient_phone()) . '</div>';
+    echo '<div>' . $translator->translate('phone.abbr') . ': ' . Html::encode($inv->getClient()?->getClient_phone()) . '</div>';
 } ?>
     </div>
 </header>
@@ -142,7 +142,7 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
              * @var App\Invoice\Entity\InvItem $item
              */
             foreach ($items as $item) {
-                $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                 ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>
@@ -189,12 +189,12 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
             <?php if ($vat === '0') { ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
-                        $translator->translate('subtotal')
-                    )." (".Html::encode($translator->translate('price'))."-".Html::encode($translator->translate('discount')).") x ".Html::encode($translator->translate('qty')); ?></td>
+                        $translator->translate('subtotal'),
+                    ) . " (" . Html::encode($translator->translate('price')) . "-" . Html::encode($translator->translate('discount')) . ") x " . Html::encode($translator->translate('qty')); ?></td>
             <?php } else { ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
-                        $translator->translate('subtotal')
+                        $translator->translate('subtotal'),
                     ); ?></td> 
             <?php } ?> 
         </tr>
@@ -287,7 +287,7 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
             $reason = ['disease','accident','maternity','prevention','birthdefect','unknown'];
         ?>
         <b><?= Html::encode($translator->translate('reason')); ?></b><br>
-        <p><?= Html::encode($translator->translate('reason_'. $reason[is_int($sumexReason = $sumex?->getReason()) ? $sumexReason : 5])); ?></p>       
+        <p><?= Html::encode($translator->translate('reason_' . $reason[is_int($sumexReason = $sumex?->getReason()) ? $sumexReason : 5])); ?></p>       
     </div>
     <div>            
         <b><?= Html::encode($translator->translate('sumex.observations')); ?></b><br>

@@ -22,7 +22,7 @@ final class QrCode
             ->height($pixels)
             ->src('%s')
             ->render(),
-            $qrCode
+            $qrCode,
         );
     }
 }

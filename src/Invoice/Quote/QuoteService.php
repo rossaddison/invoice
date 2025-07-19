@@ -29,9 +29,7 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class QuoteService
 {
-    public function __construct(private QuoteRepository $repository, private SessionInterface $session)
-    {
-    }
+    public function __construct(private QuoteRepository $repository, private SessionInterface $session) {}
 
     /**
      * @param User $user
@@ -43,7 +41,7 @@ final readonly class QuoteService
      */
     public function saveQuote(User $user, Quote $model, array $array, SR $s, GR $gR): Quote
     {
-        $model->nullifyRelationOnChange((int)$array['group_id'], (int)$array['client_id']);
+        $model->nullifyRelationOnChange((int) $array['group_id'], (int) $array['client_id']);
 
         $datetime_created = new \DateTimeImmutable();
         /**
@@ -52,24 +50,24 @@ final readonly class QuoteService
         $date_created = $array['date_created'] ?? '';
         $model->setDate_created($datetime_created::createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('1901/01/01'));
 
-        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
-        isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
-        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : 0;
-        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : 0;
-        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
-        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
-        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
-        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
-        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
-        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
-        isset($array['notes']) ? $model->setNotes((string)$array['notes']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
+        isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : 0;
+        isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : 0;
+        isset($array['status_id']) ? $model->setStatus_id((int) $array['status_id']) : '';
+        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int) $array['delivery_location_id']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float) $array['discount_percent']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string) $array['url_key']) : '';
+        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
+        isset($array['notes']) ? $model->setNotes((string) $array['notes']) : '';
         if ($model->isNewRecord()) {
             $model->setInv_id(0);
             $model->setSo_id(0);
-            isset($array['number']) ? $model->setNumber((string)$array['number']) : '';
+            isset($array['number']) ? $model->setNumber((string) $array['number']) : '';
             $model->setStatus_id(1);
             $model->setUser($user);
-            $model->setUser_id((int)$user->getId());
+            $model->setUser_id((int) $user->getId());
             $model->setUrl_key(Random::string(32));
             $model->setDate_created(new \DateTimeImmutable('now'));
             $model->setDate_expires($s);
@@ -77,7 +75,7 @@ final readonly class QuoteService
         }
         // Regenerate quote numbers if the setting is changed
         if (!$model->isNewRecord() && $s->getSetting('generate_quote_number_for_draft') === '1') {
-            null !== $array['group_id'] ? $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true)) : '';
+            null !== $array['group_id'] ? $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true)) : '';
         }
         $this->repository->save($model);
         return $model;

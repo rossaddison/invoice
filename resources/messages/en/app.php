@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 // Note this is the only file that gets adjusted during development.
-// Use: Copied to the English folder located under src/Invoice/Language/English as app_lang.php 
+// Use: Copied to the English folder located under src/Invoice/Language/English as app_lang.php
 //      by function GeneratorController google_translate_lang during translating
-//      If the google_translate_lang route is 'diff' and not 'app' the 
-//      the desired translation locale folder e.g 'de' is compared with 
+//      If the google_translate_lang route is 'diff' and not 'app' the
+//      the desired translation locale folder e.g 'de' is compared with
 //      app_lang and any translation key-value pairs that the 'de' folder
 //      does not have is output to the outputoverwrite folder.
 return [
   'account.information' => 'Account Information',
   'active' => 'Active',
-  'add' => 'Add',  
+  'add' => 'Add',
   'add.invoice' => 'Add Invoice',
   'add.client' => 'Add Client',
   'add.family' => 'Add Family',
@@ -23,7 +23,7 @@ return [
   'add.notes' => 'Add Notes',
   'add.payment.provider' => 'Add a Payment Provider',
   'add.product' => 'Add product',
-  'add.quote' => 'Add Quote',  
+  'add.quote' => 'Add Quote',
   'add.quote.tax' => 'Add Quote Tax',
   'add.task' => 'Add task',
   'add.unit' => 'Add Unit',
@@ -912,7 +912,7 @@ There should be no existing data in these tables prior to importing and no exist
   'number.no' => 'No Invoice Number',
   'oauth2' => 'OAuth 2.0',
   'oauth2.backup.recovery.codes' => 'Backup recovery codes. Keep in a safe place.',
-  'oauth2.backup.recovery.codes.regenerate' => 'Regenerate Backup Recovery Codes', 
+  'oauth2.backup.recovery.codes.regenerate' => 'Regenerate Backup Recovery Codes',
   'oauth2.google.people.api.v1.client.id' => 'Client Id',
   'oauth2.google.people.api.v1.client.secret' => 'Client Secret',
   'oauth2.missing.authentication.code.or.state.parameter' => 'Missing authentication code or state parameter.',
@@ -986,8 +986,8 @@ There should be no existing data in these tables prior to importing and no exist
   'online.payment.webhookId' => 'Webhook Id',
   'online.payment.websiteKey' => 'Website Key',
   'online.payments' => 'Online Payments',
-  'open.banking.pay.with' => 'Pay with Open Banking: ', 
-  'open.banking.not.configured' => 'Open Banking is not configured. Please contact support.',  
+  'open.banking.pay.with' => 'Pay with Open Banking: ',
+  'open.banking.not.configured' => 'Open Banking is not configured. Please contact support.',
   'open' => 'Open',
   'open.invoices' => 'Open Invoices',
   'open.quotes' => 'Open Quotes',
@@ -1242,7 +1242,7 @@ There should be no existing data in these tables prior to importing and no exist
   'Q1' => 'Q1',
   'Q2' => 'Q2',
   'Q3' => 'Q3',
-  'Q4' => 'Q4',  
+  'Q4' => 'Q4',
   'qr.absolute.url' => 'Absolute Url used to build above Qr Code',
   'qr.code' => 'QR Code',
   'qr.code.1' => 'QR Code 1',

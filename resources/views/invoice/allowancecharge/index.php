@@ -33,8 +33,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge'))
-            )
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge')),
+            ),
     )
     ->render();
 
@@ -58,12 +58,12 @@ $toolbar = Div::tag();
             echo Html::a(
                 'Add Allowance',
                 $urlGenerator->generate('allowancecharge/add_allowance'),
-                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
+                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
             );
             echo Html::a(
                 'Add Charge',
                 $urlGenerator->generate('allowancecharge/add_charge'),
-                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
+                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
             );
         } ?>    
     <?= Html::closeTag('div');?>
@@ -78,7 +78,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (AllowanceCharge $model) => $model->getId()
+        content: static fn(AllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -86,40 +86,40 @@ $columns = [
             return Html::a(
                 Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
                 $urlGenerator->generate('allowancecharge/view', ['id' => $model->getId()]),
-                []
+                [],
             )
                                         ->render();
-        }
+        },
     ),
     new DataColumn(
         'identifier',
         header: $translator->translate('allowance.or.charge.edit.allowance'),
-        content:static function (AllowanceCharge $model) use ($urlGenerator): string {
+        content: static function (AllowanceCharge $model) use ($urlGenerator): string {
             return !$model->getIdentifier() ?
                   Html::a(
                       Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                       $urlGenerator->generate(
                           'allowancecharge/edit_allowance',
-                          ['id' => $model->getId()]
+                          ['id' => $model->getId()],
                       ),
-                      []
+                      [],
                   )->render() : '';
-        }
+        },
     ),
     new DataColumn(
         'identifier',
         header: $translator->translate('allowance.or.charge.edit.charge'),
-        content:static function (AllowanceCharge $model) use ($urlGenerator): string {
+        content: static function (AllowanceCharge $model) use ($urlGenerator): string {
             return $model->getIdentifier() ?
                 Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                     $urlGenerator->generate(
                         'allowancecharge/edit_charge',
-                        ['id' => $model->getId()]
+                        ['id' => $model->getId()],
                     ),
-                    []
+                    [],
                 )->render() : '';
-        }
+        },
     ),
     new DataColumn(
         header: $translator->translate('delete'),
@@ -129,15 +129,15 @@ $columns = [
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                    'type' => 'submit',
-                    'class' => 'dropdown-button',
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
                 $urlGenerator->generate('allowancecharge/delete', ['id' => $model->getId()]),
-                []
+                [],
             )->render();
-        }
+        },
     ),
 ]
 ?>
@@ -148,7 +148,7 @@ $grid_summary = $s->grid_summary(
     $translator,
     $defaultPageSizeOffsetPaginator,
     $translator->translate('allowance.or.charge'),
-    ''
+    '',
 );
 $toolbarString =
     Form::tag()

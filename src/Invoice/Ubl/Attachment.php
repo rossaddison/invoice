@@ -11,9 +11,7 @@ use InvalidArgumentException;
 
 class Attachment implements XmlSerializable
 {
-    public function __construct(private ?string $filePath, private ?string $externalReference)
-    {
-    }
+    public function __construct(private ?string $filePath, private ?string $externalReference) {}
 
     /**
      * @throws Exception
@@ -111,7 +109,7 @@ class Attachment implements XmlSerializable
         if (null !== $this->externalReference) {
             $writer->writeElement(
                 Schema::CAC . 'ExternalReference',
-                [Schema::CBC . 'URI' => $this->externalReference]
+                [Schema::CBC . 'URI' => $this->externalReference],
             );
         }
     }

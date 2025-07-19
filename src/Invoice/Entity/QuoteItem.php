@@ -16,14 +16,14 @@ class QuoteItem
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
-    #[BelongsTo(target:Quote::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
     // Mandatory: The item MUST have a product however psalm testing requires it to be in the constructor => nullable
-    #[BelongsTo(target:Product::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 
     public function __construct(
@@ -39,7 +39,7 @@ class QuoteItem
         private ?float $price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount_amount = 0.00,
-        #[Column(type: 'integer(2)', nullable: false, default:0)]
+        #[Column(type: 'integer(2)', nullable: false, default: 0)]
         private ?int $order = null,
         #[Column(type: 'string(50)', nullable: true)]
         private ?string $product_unit = '',
@@ -50,7 +50,7 @@ class QuoteItem
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $product_unit_id = null
+        private ?int $product_unit_id = null,
     ) {
         $this->date_added = new DateTimeImmutable();
     }
@@ -91,7 +91,7 @@ class QuoteItem
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -101,7 +101,7 @@ class QuoteItem
 
     public function getQuote_id(): string
     {
-        return (string)$this->quote_id;
+        return (string) $this->quote_id;
     }
 
     public function setQuote_id(int $quote_id): void
@@ -111,7 +111,7 @@ class QuoteItem
 
     public function getTax_rate_id(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setTax_rate_id(int $tax_rate_id): void
@@ -121,7 +121,7 @@ class QuoteItem
 
     public function getProduct_id(): string
     {
-        return (string)$this->product_id;
+        return (string) $this->product_id;
     }
 
     public function setProduct_id(int $product_id): void
@@ -212,7 +212,7 @@ class QuoteItem
 
     public function getProduct_unit_id(): string
     {
-        return (string)$this->product_unit_id;
+        return (string) $this->product_unit_id;
     }
 
     public function setProduct_unit_id(int $product_unit_id): void

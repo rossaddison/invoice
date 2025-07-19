@@ -12,17 +12,15 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class UnitPeppol
 {
-    #[BelongsTo(target:Unit::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $unit_id = null, #[Column(type:'string(3)', nullable: false)]
-        private string $code = '', #[Column(type:'string(120)', nullable: false)]
-        private string $name = '', #[Column(type:'longText', nullable: false)]
-        private string $description = '')
-    {
-    }
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $unit_id = null, #[Column(type: 'string(3)', nullable: false)]
+        private string $code = '', #[Column(type: 'string(120)', nullable: false)]
+        private string $name = '', #[Column(type: 'longText', nullable: false)]
+        private string $description = '') {}
 
     public function getUnit(): ?Unit
     {
@@ -36,7 +34,7 @@ class UnitPeppol
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -46,7 +44,7 @@ class UnitPeppol
 
     public function getUnit_id(): string
     {
-        return (string)$this->unit_id;
+        return (string) $this->unit_id;
     }
 
     public function setUnit_id(int $unit_id): void

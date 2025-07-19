@@ -35,11 +35,11 @@ use Yiisoft\Html\Tag\P;
                 <?= Html::openTag('div', ['class' => 'row justify-content-xl-center']); ?>
                     <?= Html::openTag('div', ['class' => 'col-12 col-xl-11']); ?>
                         <?= Html::openTag('h2', ['class' => 'h1 mb-3']);?>
-                            <?= (string)$contact['touch']; ?>
+                            <?= (string) $contact['touch']; ?>
                         <?= Html::closeTag('h2'); ?>
                         <?= P::tag()
                             ->addClass('lead fs-4 text-secondary mb-5')
-                            ->content((string)$contact['lookout'])
+                            ->content((string) $contact['lookout'])
                             ->render(); ?> 
                         <?= Html::openTag('div', ['class' => 'd-flex mb-4']); ?>
                             <?= Html::openTag('div', ['class' => 'me-4 text-primary']); ?>
@@ -50,13 +50,13 @@ use Yiisoft\Html\Tag\P;
                             <?= Html::openTag('div'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-3')
-                                    ->content(str_repeat(' ', 2) .(string)$contact['address'])
+                                    ->content(str_repeat(' ', 2) . (string) $contact['address'])
                                     ->render(); ?>
                                 <?= Html::openTag('address', ['class' => 'mb-0 text-secondary']); ?>    
-                                    <?= $companyAddress1.', '.
-                                        $companyAddress2.', '.
-                                        $companyCity.', '.
-                                        $companyState.', '.
+                                    <?= $companyAddress1 . ', ' .
+                                        $companyAddress2 . ', ' .
+                                        $companyCity . ', ' .
+                                        $companyState . ', ' .
                                         $companyZip ?>
                                 <?= Html::closeTag('address'); ?>
                         <?= Html::closeTag('div'); ?>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\P;
                             <?= Html::openTag('div'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-3')
-                                    ->content((string)$contact['phone'])
+                                    ->content((string) $contact['phone'])
                                     ->render(); ?>
                                 <?= Html::openTag('p', ['class' => 'mb-0']); ?>
                                     <?=
@@ -92,7 +92,7 @@ use Yiisoft\Html\Tag\P;
                             <?= Html::openTag('div'); ?>
                                 <?= H4::tag()
 ->addClass('mb-3')
-->content((string)$contact['email'])
+->content((string) $contact['email'])
 ->render(); ?>
                                 <?= Html::openTag('p'); ?>
                                     <?= A::tag()

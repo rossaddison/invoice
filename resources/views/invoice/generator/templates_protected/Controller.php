@@ -14,13 +14,13 @@ echo "<?php\n";
 
 declare(strict_types=1); 
 
-namespace <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>;
+namespace <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name(); ?>;
 
 use App\Invoice\BaseController;
-use <?= $generator->getNamespace_path(). DIRECTORY_SEPARATOR. 'Entity'. DIRECTORY_SEPARATOR. $generator->getCamelcase_capital_name(); ?>;
-use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Form;
-use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Service;
-use <?= $generator->getNamespace_path().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name(); ?>Repository;
+use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name(); ?>;
+use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name(); ?>Form;
+use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name(); ?>Service;
+use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name(); ?>Repository;
 use App\Invoice\Setting\SettingRepository as sR;
 
 <?php
@@ -28,7 +28,7 @@ use App\Invoice\Setting\SettingRepository as sR;
    * @var App\Invoice\Entity\GentorRelation $relation
    */
   foreach ($relations as $relation) {
-      echo 'use ' . $generator->getNamespace_path() .DIRECTORY_SEPARATOR. ($relation->getCamelcase_name() ?? '#') .DIRECTORY_SEPARATOR.($relation->getCamelcase_name() ?? '#') .'Repository;'."\n";
+      echo 'use ' . $generator->getNamespace_path() . DIRECTORY_SEPARATOR . ($relation->getCamelcase_name() ?? '#') . DIRECTORY_SEPARATOR . ($relation->getCamelcase_name() ?? '#') . 'Repository;' . "\n";
   }
 ?>
 use App\User\UserService;
@@ -76,9 +76,9 @@ echo "\n";
  * @var App\Invoice\Entity\GentorRelation $relation
  */
 foreach ($relations as $relation) {
-    $rel .= '                        '.($relation->getCamelcase_name() ?? '#').'Repository $'. lcfirst($relation->getCamelcase_name() ?? '#').'Repository,'."\n";
+    $rel .= '                        ' . ($relation->getCamelcase_name() ?? '#') . 'Repository $' . lcfirst($relation->getCamelcase_name() ?? '#') . 'Repository,' . "\n";
 }
-echo rtrim($rel, ",\n")."\n";
+echo rtrim($rel, ",\n") . "\n";
 ?>
     ) : Response
     {
@@ -96,7 +96,7 @@ echo rtrim($rel, ",\n")."\n";
  * @var App\Invoice\Entity\GentorRelation $relation
  */
 foreach ($relations as $relation) {
-    echo "            '".($relation->getLowercase_name() ?? '#')."s'=>".'$'.($relation->getLowercase_name() ?? '#').'Repository->findAllPreloaded(),'."\n";
+    echo "            '" . ($relation->getLowercase_name() ?? '#') . "s'=>" . '$' . ($relation->getLowercase_name() ?? '#') . 'Repository->findAllPreloaded(),' . "\n";
 }
 ?>
         ];
@@ -157,7 +157,7 @@ foreach ($relations as $relation) {
     public function edit(Request $request, 
                          FormHydrator $formHydrator,
         <?php if ($generator->getCamelcase_capital_name()) {
-            echo $generator->getCamelcase_capital_name().'Repository '. '$'.$generator->getSmall_singular_name().'Repository,';
+            echo $generator->getCamelcase_capital_name() . 'Repository ' . '$' . $generator->getSmall_singular_name() . 'Repository,';
         }
 ?> 
         <?php
@@ -167,9 +167,9 @@ echo "\n";
  * @var App\Invoice\Entity\GentorRelation $relation
  */
 foreach ($relations as $relation) {
-    $rel .= '                        '.($relation->getCamelcase_name() ?? '#').'Repository $'.($relation->getLowercase_name() ?? '#').'Repository,'."\n";
+    $rel .= '                        ' . ($relation->getCamelcase_name() ?? '#') . 'Repository $' . ($relation->getLowercase_name() ?? '#') . 'Repository,' . "\n";
 }
-echo rtrim($rel, ",\n").",";
+echo rtrim($rel, ",\n") . ",";
 ?>#[RouteArgument('id')] int $id): Response {
         $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($<?= $generator->getSmall_singular_name(); ?>Repository, $id);
         if ($<?= $generator->getSmall_singular_name(); ?>){
@@ -186,9 +186,9 @@ echo rtrim($rel, ",\n").",";
  * @var App\Invoice\Entity\GentorRelation $relation
  */
 foreach ($relations as $relation) {
-    $rel .= "            '".($relation->getLowercase_name() ?? '#')."s'=>".'$'.($relation->getLowercase_name() ?? '#').'Repository->findAllPreloaded(),'."\n";
+    $rel .= "            '" . ($relation->getLowercase_name() ?? '#') . "s'=>" . '$' . ($relation->getLowercase_name() ?? '#') . 'Repository->findAllPreloaded(),' . "\n";
 }
-echo rtrim($rel, ",\n")."\n";
+echo rtrim($rel, ",\n") . "\n";
 ?>
             ];
             if ($request->getMethod() === Method::POST) {

@@ -63,7 +63,7 @@ final class SalesOrderItemForm extends FormModel
         $this->so_id = $salesOrderItem->getSales_order_id();
         $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
         $this->product_id = $salesOrderItem->getProduct_id();
-        $this->product_unit_id = (int)$salesOrderItem->getProduct_unit_id();
+        $this->product_unit_id = (int) $salesOrderItem->getProduct_unit_id();
     }
 
     public function getId(): string|null

@@ -8,9 +8,7 @@ class CreditNoteLine extends InvoiceLine
 {
     public string $xmlTagName = 'CreditNoteLine';
 
-    public function __construct(public float $invoicedQuantity, protected bool $isCreditNoteLine)
-    {
-    }
+    public function __construct(public float $invoicedQuantity, protected bool $isCreditNoteLine) {}
 
     /**
      * @return float

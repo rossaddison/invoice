@@ -51,18 +51,18 @@ use Yiisoft\Html\Html;
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #
-                    <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
-                     Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
-                     Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+                    <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
+                     Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
+                     Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
                      $numberHelper->format_currency($balance); ?>
                 </div>
             </div>    
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
     </div> 
     <br><?= Html::tag('Div', Html::tag('H4', $title, ['data-toggle' => 'tooltip','title' => 'Test card: 4111 1111 1111 1111 Expiry-date: 06/34'])); ?><br>
@@ -126,21 +126,21 @@ use Yiisoft\Html\Html;
 $js22 = 'const form = document.getElementById("payment-form");'
         . 'braintree.dropin.create('
         . '{'
-        .       'authorization: "' .$client_token. '",'
-        .       'container: "#dropin-container"'
+        . 'authorization: "' . $client_token . '",'
+        . 'container: "#dropin-container"'
         . '}, '
         . '(error, dropinInstance) => {'
-        .  '    if (error) console.error(error);'
-        .  '    form.addEventListener("submit", event => {'
-        .  '       event.preventDefault();'
-        .  '       dropinInstance.requestPaymentMethod((error, payload) => {'
-        .  '          if (error) console.error(error);'
-        .  '          document.getElementById("nonce").value = payload.nonce;'
-        .  '          form.submit();'
-        .  '       });'
-        .  '    });'
-        .  '}'
-        .  ');';
+        . '    if (error) console.error(error);'
+        . '    form.addEventListener("submit", event => {'
+        . '       event.preventDefault();'
+        . '       dropinInstance.requestPaymentMethod((error, payload) => {'
+        . '          if (error) console.error(error);'
+        . '          document.getElementById("nonce").value = payload.nonce;'
+        . '          form.submit();'
+        . '       });'
+        . '    });'
+        . '}'
+        . ');';
 echo Html::script($js22)->type('module')->charset('utf-8');
 ?>
 

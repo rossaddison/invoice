@@ -21,7 +21,7 @@ use Yiisoft\Html\Tag\H5;
         <?= Html::openTag('div', ['class' => 'row justify-content-md-center']); ?> 
             <?= Html::openTag('div', ['class' => 'col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 text-center']); ?>
                 <?= Html::openTag('h2', ['class' => 'display-3 fw-bolder mb-4']);?>
-                    <?= (string)$testimonial['we']; ?>
+                    <?= (string) $testimonial['we']; ?>
                 <?= Html::closeTag('h2'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>                    
@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\H5;
                                 <?= Html::closeTag('div'); ?>
                                     <?= Html::openTag('blockquote', ['class' => 'mb-3']); ?>
                                         <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
-                                            <?= (string)$testimonial['worker1']; ?>
+                                            <?= (string) $testimonial['worker1']; ?>
                                         <?= Html::closeTag('blockquote'); ?>
                                     <?= Html::openTag('blockquote'); ?>
                                 <?= H4::tag()
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\H5;
                                 'alt' => 'Papa Quana']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
-                                    <?= (string)$testimonial['worker2']; ?>
+                                    <?= (string) $testimonial['worker2']; ?>
                                 <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')
@@ -96,7 +96,7 @@ use Yiisoft\Html\Tag\H5;
                                 'alt' => 'Rara Sasa']); ?>    
                             <?= Html::openTag('figcaption'); ?>
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
-                                    <?= (string)$testimonial['worker3']; ?>
+                                    <?= (string) $testimonial['worker3']; ?>
                                 <?= Html::closeTag('blockquote'); ?>
                                 <?= H4::tag()
                                     ->addClass('mb-2')

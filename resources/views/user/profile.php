@@ -28,17 +28,17 @@ $title = Html::encode($this->getTitle());
         new DataField(
             name: 'id',
             label: 'ID',
-            value: $item->getId()
+            value: $item->getId(),
         ),
         new DataField(
             name: 'login',
             label: $translator->translate('gridview.login'),
-            value: $item->getLogin()
+            value: $item->getLogin(),
         ),
         new DataField(
             name: 'create_at',
             label: $translator->translate('gridview.create.at'),
-            value: $item->getCreatedAt()->format('H:i:s d.m.Y')
+            value: $item->getCreatedAt()->format('H:i:s d.m.Y'),
         ),
     )
     ->labelAttributes(['class' => 'fw-bold'])

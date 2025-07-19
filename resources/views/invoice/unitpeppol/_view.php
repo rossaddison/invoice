@@ -108,15 +108,15 @@ use Yiisoft\Html\Tag\Form;
              * @var array $eneces[$key]
              */
             $enece = $eneces[$key];
-            $description = (string)(array_key_exists('Description', $enece) ? $enece['Description'] : '');
+            $description = (string) (array_key_exists('Description', $enece) ? $enece['Description'] : '');
             echo Html::openTag('tr');
             echo Html::openTag('td');
-            echo (string)$enece['Id'];
+            echo (string) $enece['Id'];
             echo Html::closeTag('td');
             echo Html::closeTag('tr');
             echo Html::openTag('tr');
             echo Html::openTag('td');
-            echo (string)$enece['Name'];
+            echo (string) $enece['Name'];
             echo Html::closeTag('td');
             echo Html::closeTag('tr');
             echo Html::openTag('tr');

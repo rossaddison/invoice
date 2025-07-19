@@ -12,20 +12,18 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class InvTaxRate
 {
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable:false)]
-        private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable:false)]
-        private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable:false, default:0)]
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable: false, default: 0)]
         private ?int $include_item_tax = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $inv_tax_rate_amount = 0.00)
-    {
-    }
+        private ?float $inv_tax_rate_amount = 0.00) {}
 
     public function getInv(): ?Inv
     {
@@ -39,7 +37,7 @@ class InvTaxRate
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -49,7 +47,7 @@ class InvTaxRate
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void
@@ -59,7 +57,7 @@ class InvTaxRate
 
     public function getTax_rate_id(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setTax_rate_id(int $tax_rate_id): void

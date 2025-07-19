@@ -33,7 +33,7 @@ final class GeneratorRelationController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->generatorrelationService = $generatorrelationService;
@@ -100,7 +100,7 @@ final class GeneratorRelationController extends BaseController
         CurrentRoute $currentRoute,
         GeneratorRelationRepository $generatorrelationRepository,
         GeneratorRepository $generatorRepository,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {
@@ -154,7 +154,7 @@ final class GeneratorRelationController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         GeneratorRelationRepository $generatorrelationRepository,
-        GeneratorRepository $generatorRepository
+        GeneratorRepository $generatorRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {

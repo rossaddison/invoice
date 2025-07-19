@@ -18,10 +18,10 @@ class Contract
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $period_start;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $period_end;
 
     public function __construct(
@@ -43,7 +43,7 @@ class Contract
 
     public function getClient_id(): string
     {
-        return (string)$this->client_id;
+        return (string) $this->client_id;
     }
 
     public function setClient_id(int $client_id): void

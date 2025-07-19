@@ -56,7 +56,7 @@ foreach ($allowance_charges as $allowance_charge) {
     : $translator->translate('allowance.or.charge.allowance'))
     . ' ' . ($allowance_charge->getReason())
     . ' ' . ($allowance_charge->getReasonCode())
-    . ' '. ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
+    . ' ' . ($allowance_charge->getTaxRate()?->getTaxRateName() ?? '')
     . ' ' . ($translator->translate('allowance.or.charge.allowance'));
 }
 ?>
@@ -69,7 +69,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount').'('.$s->getSetting('currency_symbol').')')
+    ->label($translator->translate('amount') . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes(['class' => 'form-control'])
     ->value($s->format_amount($form->getAmount() ?? 0.00))
     ->hint($translator->translate('hint.this.field.is.required'));

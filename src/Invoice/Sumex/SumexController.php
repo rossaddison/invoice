@@ -34,7 +34,7 @@ final class SumexController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->sumexService = $sumexService;
@@ -67,7 +67,7 @@ final class SumexController extends BaseController
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $inv_id = $currentRoute->getArgument('inv_id');
         $model = new Sumex();
@@ -107,7 +107,7 @@ final class SumexController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        SumexRepository $sumexRepository
+        SumexRepository $sumexRepository,
     ): Response {
         $sumex = $this->sumex($currentRoute, $sumexRepository);
         if ($sumex) {
@@ -126,7 +126,7 @@ final class SumexController extends BaseController
                     if (is_array($body) && isset($body['invoice'])) {
                         $this->sumexService->saveSumex($sumex, $body);
                         $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
-                        $id = (string)$body['invoice'];
+                        $id = (string) $body['invoice'];
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
                     }
                 }
@@ -145,7 +145,7 @@ final class SumexController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        SumexRepository $sumexRepository
+        SumexRepository $sumexRepository,
     ): Response {
         $sumex = $this->sumex($currentRoute, $sumexRepository);
         if ($sumex) {

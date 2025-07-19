@@ -40,17 +40,17 @@ final class PageSizeLimiter
                 $buttons .= A::tag()
                 ->addAttributes(['type' => 'submit'])
                 ->addClass('btn btn-danger me-1')
-                ->content((string)$value)
+                ->content((string) $value)
                 ->href(
                     $urlGenerator->generate(
                         'setting/listlimit',
                         [
                             '_language' => $currentRoute->getArgument('_language'),
                             'setting_id' => $setting_id, 'limit' => $value, 'origin' => $origin,
-                        ]
-                    )
+                        ],
+                    ),
                 )
-                ->id('btn-submit-' . (string)$value)
+                ->id('btn-submit-' . (string) $value)
                 ->render();
             }
         }
@@ -69,7 +69,7 @@ final class PageSizeLimiter
         UrlGenerator $urlGenerator,
         Translator $translator,
         string $origin,
-        int $listLimit
+        int $listLimit,
     ): string {
         $buttons = '';
         $userinv_id = $userinv->getId();
@@ -78,16 +78,16 @@ final class PageSizeLimiter
             $buttons .= A::tag()
             ->addAttributes(['type' => 'submit', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('user.inv.refer.to')])
             ->addClass($value == $listLimit ? 'btn btn-success me-1' : 'btn btn-danger me-1')
-            ->content((string)$value)
+            ->content((string) $value)
             ->href(
                 $urlGenerator->generate(
                     'userinv/guestlimit',
                     [
                         'userinv_id' => $userinv_id, 'limit' => $value, 'origin' => $origin,
-                    ]
-                )
+                    ],
+                ),
             )
-            ->id('btn-submit-' . (string)$value)
+            ->id('btn-submit-' . (string) $value)
             ->render();
         }
         return $buttons;

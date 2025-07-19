@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?= Field::hidden($form, 'id')
         ->addInputAttributes([
-            'class' => 'form-control'
+            'class' => 'form-control',
         ])
         ->hideLabel()
         ->value(Html::encode($form->getId()));
@@ -62,14 +62,14 @@ use Yiisoft\Html\Tag\Form;
  * @var string $value
  */
 foreach ($charges as $key => $value) {
-    $optionsDataReason[$value[0]] = ucfirst((string)$key).' '.$value[0];
+    $optionsDataReason[$value[0]] = ucfirst((string) $key) . ' ' . $value[0];
 }
 ?>
             <?= Field::select($form, 'reason')
     ->label($translator->translate('allowance.or.charge.reason'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'reason'
+        'id' => 'reason',
     ])
     ->value(Html::encode($form->getReason() ?? ''))
     ->optionsData($optionsDataReason, true)
@@ -125,11 +125,11 @@ foreach ($charges as $key => $value) {
 foreach ($taxRates as $taxRate) {
     $taxRateId = $taxRate->getTaxRateId();
     if (null !== $taxRateId) {
-        $optionsDataTax[$taxRateId] = (string)$taxRateId
-            .':  '
-            .(string)$taxRate->getTaxRateName()
+        $optionsDataTax[$taxRateId] = (string) $taxRateId
+            . ':  '
+            . (string) $taxRate->getTaxRateName()
             . ' '
-            . (string)$taxRate->getTaxRatePercent();
+            . (string) $taxRate->getTaxRatePercent();
     }
 }
 ?>
@@ -137,7 +137,7 @@ foreach ($taxRates as $taxRate) {
     ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'tax_rate_id'
+        'id' => 'tax_rate_id',
     ])
     ->value($form->getTaxRateId() ?? '')
     ->optionsData($optionsDataTax, true)

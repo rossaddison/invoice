@@ -34,8 +34,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge.item'))
-            )
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge.item')),
+            ),
     )
     ->render();
 
@@ -54,7 +54,7 @@ $backButton = A::tag()
         'class' => 'btn btn-primary me-1',
         'id' => 'btn-cancel',
     ])
-    ->content('⬅ ️'.$translator->translate('back'))
+    ->content('⬅ ️' . $translator->translate('back'))
     ->render();
 
 $toolbar = Div::tag();
@@ -74,20 +74,20 @@ $toolbar = Div::tag();
 $url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]);
 ?>
 
-<?= Html::i(Html::a('  '.$add, $url, ['class' => 'btn btn-primary',
-'style' => 'font-family:Arial']), ['class' => 'btn btn-primary fa fa-item']); ?>
+<?= Html::i(Html::a('  ' . $add, $url, ['class' => 'btn btn-primary',
+    'style' => 'font-family:Arial']), ['class' => 'btn btn-primary fa fa-item']); ?>
 <br>
 <br>
 <?php
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('id'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getId()
+            header: $translator->translate('id'),
+            content: static fn(InvItemAllowanceCharge $model) => $model->getId(),
         ),
         new DataColumn(
-            header:  $translator->translate('allowance.or.charge.reason.code'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? ''
+            header: $translator->translate('allowance.or.charge.reason.code'),
+            content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
         ),
         new DataColumn(
             content: static function (InvItemAllowanceCharge $model) use ($translator): string {
@@ -99,53 +99,53 @@ $url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $
             },
         ),
         new DataColumn(
-            header:  $translator->translate('allowance.or.charge.reason'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? ''
+            header: $translator->translate('allowance.or.charge.reason'),
+            content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
         ),
         new DataColumn(
-            header:  $translator->translate('allowance.or.charge.amount'),
+            header: $translator->translate('allowance.or.charge.amount'),
             content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
                 // show the charge in brackets
                 if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
-                    return '('.$numberHelper->format_currency($model->getAmount()).')';
+                    return '(' . $numberHelper->format_currency($model->getAmount()) . ')';
                 } else {
                     return $numberHelper->format_currency($model->getAmount());
                 }
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('vat'),
-            content: static fn (InvItemAllowanceCharge $model) => $numberHelper->format_currency($model->getVat())
+            header: $translator->translate('vat'),
+            content: static fn(InvItemAllowanceCharge $model) => $numberHelper->format_currency($model->getVat()),
         ),
         new DataColumn(
-            header:  $translator->translate('edit'),
+            header: $translator->translate('edit'),
             content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), [])->render();
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('view'),
+            header: $translator->translate('view'),
             content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), [])->render();
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('delete'),
+            header: $translator->translate('delete'),
             content: static function (InvItemAllowanceCharge $model) use ($translator, $urlGenerator): string {
                 return Html::a(
                     Html::tag(
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        ],
                     ),
                     $urlGenerator->generate('invitemallowancecharge/delete', ['id' => $model->getId()]),
-                    []
+                    [],
                 )->render();
-            }
+            },
         ),
     ];
 ?>
@@ -153,9 +153,9 @@ $url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $
 $grid_summary =  $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('allowance.or.charge.item'),
-    ''
+    '',
 );
 $toolbarString =
         Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .

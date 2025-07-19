@@ -39,7 +39,7 @@ final class ContractController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->contractService = $contractService;
@@ -60,7 +60,7 @@ final class ContractController extends BaseController
         /**
          * @var string $query_params['page']
          */
-        $page = (int)($query_params['page'] ?? $currentRoute->getArgument('page', '1'));
+        $page = (int) ($query_params['page'] ?? $currentRoute->getArgument('page', '1'));
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @var string $query_params['sort'] */
@@ -74,7 +74,7 @@ final class ContractController extends BaseController
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
@@ -97,7 +97,7 @@ final class ContractController extends BaseController
         $client_id = $currentRoute->getArgument('client_id');
         $contract = new Contract();
         // To pass the client id variable to the form, set it first in the entity
-        $contract->setClient_id((int)$client_id);
+        $contract->setClient_id((int) $client_id);
         $title = '';
         $form = new ContractForm($contract);
         if (null !== $client_id) {
@@ -141,7 +141,7 @@ final class ContractController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        contractR $contractRepository
+        contractR $contractRepository,
     ): Response {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {

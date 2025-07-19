@@ -11,7 +11,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-use App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name().'Controller;'; ?>
+use App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name() . 'Controller;'; ?>
 
     Route::get('/<?= $generator->getRoute_suffix(); ?>[/page/{page:\d+}]')
     ->middleware(fn (AccessChecker $checker) => $checker->withPermission('editInv'))

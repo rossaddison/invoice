@@ -522,7 +522,7 @@ declare(strict_types=1);
                             <select name="settings[sumex_sliptype]" id="settings[sumex_sliptype]"
                                 class="form-control">
                                 <?php
-                                $slipTypes = array("esr9", "esrRed");
+                                $slipTypes = ["esr9", "esrRed"];
 /**
  * @var string $k
  * @var string $v

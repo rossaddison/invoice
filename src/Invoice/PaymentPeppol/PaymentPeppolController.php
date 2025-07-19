@@ -34,7 +34,7 @@ final class PaymentPeppolController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->paymentpeppolService = $paymentpeppolService;
@@ -47,7 +47,7 @@ final class PaymentPeppolController extends BaseController
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $paymentPeppol = new PaymentPeppol();
         $form = new PaymentPeppolForm($paymentPeppol);
@@ -61,7 +61,7 @@ final class PaymentPeppolController extends BaseController
                 [
                     'hide_submit_button' => false ,
                     'hide_cancel_button' => false,
-                ]
+                ],
             ),
         ];
 
@@ -86,14 +86,14 @@ final class PaymentPeppolController extends BaseController
      */
     public function index(CurrentRoute $routeCurrent, PaymentPeppolRepository $paymentpeppolRepository): Response
     {
-        $page = (int)$routeCurrent->getArgument('page', '1');
+        $page = (int) $routeCurrent->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($paymentpeppols))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $parameters = [
             'paymentpeppols' => $this->paymentpeppols($paymentpeppolRepository),
             'paginator' => $paginator,
@@ -135,7 +135,7 @@ final class PaymentPeppolController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        PaymentPeppolRepository $paymentpeppolRepository
+        PaymentPeppolRepository $paymentpeppolRepository,
     ): Response {
         $paymentPeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
         if ($paymentPeppol) {
@@ -151,7 +151,7 @@ final class PaymentPeppolController extends BaseController
                     [
                         'hide_submit_button' => false ,
                         'hide_cancel_button' => false,
-                    ]
+                    ],
                 ),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -215,7 +215,7 @@ final class PaymentPeppolController extends BaseController
                     [
                         'hide_submit_button' => false ,
                         'hide_cancel_button' => false,
-                    ]
+                    ],
                 ),
             ];
             return $this->viewRenderer->render('_view', $parameters);

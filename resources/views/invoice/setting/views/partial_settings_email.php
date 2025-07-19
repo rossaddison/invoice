@@ -53,10 +53,10 @@ use Yiisoft\Html\Html;
                 <?= Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <div class="form-group"><?= Html::tag('h6', 'eSMTP Host: '.(string)$s->config_params()['esmtp_host']); ?></div>    
-                            <div class="form-group"><?= Html::tag('h6', 'eSMTP Port: '.(string)$s->config_params()['esmtp_port']); ?></div>
-                            <div class="form-group"><?= Html::tag('h6', 'eSMTP Schema: '. ucfirst((string)$s->config_params()['esmtp_scheme'])); ?></div>
-                            <div class="form-group"><?= Html::tag('h6', 'Use SendMail: '. $s->config_params()['use_send_mail']); ?></div>
+                            <div class="form-group"><?= Html::tag('h6', 'eSMTP Host: ' . (string) $s->config_params()['esmtp_host']); ?></div>    
+                            <div class="form-group"><?= Html::tag('h6', 'eSMTP Port: ' . (string) $s->config_params()['esmtp_port']); ?></div>
+                            <div class="form-group"><?= Html::tag('h6', 'eSMTP Schema: ' . ucfirst((string) $s->config_params()['esmtp_scheme'])); ?></div>
+                            <div class="form-group"><?= Html::tag('h6', 'Use SendMail: ' . $s->config_params()['use_send_mail']); ?></div>
                         </div>
                     </div>
                 </div>

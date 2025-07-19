@@ -39,7 +39,7 @@ final class FamilyController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->familyService = $familyService;
@@ -56,10 +56,10 @@ final class FamilyController extends BaseController
         CurrentRoute $currentRoute,
         fR $familyRepository,
         cpR $cpR,
-        csR $csR
+        csR $csR,
     ): \Yiisoft\DataResponse\DataResponse {
         $familys = $this->familys($familyRepository);
-        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        $pageNum = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($familys))
@@ -77,7 +77,7 @@ final class FamilyController extends BaseController
              */
             'cpR' => $cpR,
             'csR' => $csR,
-            'defaultPageSizeOffsetPaginator' => (int)$this->sR->getSetting('default_list_limit'),
+            'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -147,7 +147,7 @@ final class FamilyController extends BaseController
     {
         $queryParams = $request->getQueryParams();
 
-        $categorySecondaryId = (string)$queryParams['category_secondary_id'];
+        $categorySecondaryId = (string) $queryParams['category_secondary_id'];
 
         if ($categorySecondaryId) {
             $familyNames = $fR->optionsDataFamilyNamesWithCategorySecondaryId($categorySecondaryId);
@@ -176,7 +176,7 @@ final class FamilyController extends BaseController
     {
         $queryParams = $request->getQueryParams();
 
-        $categoryPrimaryId = (string)$queryParams['category_primary_id'];
+        $categoryPrimaryId = (string) $queryParams['category_primary_id'];
 
         if ($categoryPrimaryId) {
             $secondaryCategories = $csR->optionsDataCategorySecondariesWithCategoryPrimaryId($categoryPrimaryId);

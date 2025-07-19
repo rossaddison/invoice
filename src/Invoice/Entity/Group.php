@@ -20,13 +20,12 @@ class Group
         #[Column(type: 'integer', nullable: true)]
         private ?int $next_id = null,
         #[Column(type: 'integer', nullable: true, default: 0)]
-        private ?int $left_pad = null
-    ) {
-    }
+        private ?int $left_pad = null,
+    ) {}
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -56,7 +55,7 @@ class Group
 
     public function getNext_id(): string
     {
-        return (string)$this->next_id;
+        return (string) $this->next_id;
     }
 
     public function setNext_id(int $next_id): void

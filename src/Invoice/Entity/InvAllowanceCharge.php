@@ -12,20 +12,18 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class InvAllowanceCharge
 {
-    #[BelongsTo(target:AllowanceCharge::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    public function __construct(#[Column(type:'primary')]
-        private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $inv_id = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $allowance_charge_id = null, #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
+    public function __construct(#[Column(type: 'primary')]
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat = null)
-    {
-    }
+        private ?float $vat = null) {}
 
     public function getAllowanceCharge(): ?AllowanceCharge
     {
@@ -44,7 +42,7 @@ class InvAllowanceCharge
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -54,7 +52,7 @@ class InvAllowanceCharge
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void
@@ -64,7 +62,7 @@ class InvAllowanceCharge
 
     public function getAllowance_charge_id(): string
     {
-        return (string)$this->allowance_charge_id;
+        return (string) $this->allowance_charge_id;
     }
 
     public function setAllowance_charge_id(int $allowance_charge_id): void
@@ -74,7 +72,7 @@ class InvAllowanceCharge
 
     public function getAmount(): string
     {
-        return (string)$this->amount;
+        return (string) $this->amount;
     }
 
     public function setAmount(float $amount): void
@@ -84,7 +82,7 @@ class InvAllowanceCharge
 
     public function getVat(): string
     {
-        return (string)$this->vat;
+        return (string) $this->vat;
     }
 
     public function setVat(float $vat): void

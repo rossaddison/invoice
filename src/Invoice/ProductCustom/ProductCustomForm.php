@@ -26,8 +26,8 @@ final class ProductCustomForm extends FormModel
 
     public function __construct(ProductCustom $product_custom)
     {
-        $this->product_id = (int)$product_custom->getProduct_id();
-        $this->custom_field_id = (int)$product_custom->getCustom_field_id();
+        $this->product_id = (int) $product_custom->getProduct_id();
+        $this->custom_field_id = (int) $product_custom->getCustom_field_id();
         $this->value = $product_custom->getValue();
     }
 

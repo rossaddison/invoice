@@ -9,9 +9,7 @@ use Sabre\Xml\XmlSerializable;
 
 class PartyLegalEntity implements XmlSerializable
 {
-    public function __construct(private string $registrationName, private string $companyId, private array $companyIdAttributes, private readonly string $companyLegalForm)
-    {
-    }
+    public function __construct(private string $registrationName, private string $companyId, private array $companyIdAttributes, private readonly string $companyLegalForm) {}
 
     /**
      * @return string

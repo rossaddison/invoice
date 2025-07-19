@@ -16,7 +16,7 @@ final class AutoIncrementSetToOneAfterTruncate6Command extends Command
     protected static string $defaultName = 'invoice/autoincrementsettooneafter/truncate6';
 
     public function __construct(
-        private readonly DatabaseManager $dbal
+        private readonly DatabaseManager $dbal,
     ) {
         parent::__construct();
     }

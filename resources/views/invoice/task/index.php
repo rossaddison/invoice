@@ -50,27 +50,27 @@ echo $alert;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('tasks')))
-                )
+                            ->content(' ' . Html::encode($translator->translate('tasks'))),
+                ),
         )
         ->render();
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft'
+        'class' => 'draft',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed'
+        'class' => 'viewed',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent'
+        'class' => 'sent',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid'
-    ]
+        'class' => 'paid',
+    ],
 ];
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -101,14 +101,14 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Task $model) => Html::encode($model->getId())
+            content: static fn(Task $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'project_id',
             header: $translator->translate('project'),
             content: static function (Task $model) use ($prjctR): string {
                 return Html::encode(($prjctR->count($model->getProject_id()) > 0 ? $prjctR->repoProjectquery($model->getProject_id())?->getName() : ''));
-            }
+            },
         ),
         new DataColumn(
             'status',
@@ -128,23 +128,23 @@ $toolbar = Div::tag();
                     return Html::encode($statusArray['label']);
                 }
                 return '';
-            }
+            },
         ),
         new DataColumn(
             'name',
             header: $translator->translate('name'),
             withSorting: true,
-            content: static fn (Task $model): string => Html::encode($model->getName())
+            content: static fn(Task $model): string => Html::encode($model->getName()),
         ),
         new DataColumn(
             'description',
             header: $translator->translate('description'),
-            content: static fn (Task $model): string => Html::encode(ucfirst($model->getDescription()))
+            content: static fn(Task $model): string => Html::encode(ucfirst($model->getDescription())),
         ),
         new DataColumn(
             'price',
             header: $translator->translate('price'),
-            content: static fn (Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00))
+            content: static fn(Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
         ),
         new DataColumn(
             'finish_date',
@@ -154,12 +154,12 @@ $toolbar = Div::tag();
                  * @psalm-suppress PossiblyInvalidMethodCall $model->getFinish_date()->format('Y-m-d')
                  */
                 return Html::encode($model->getFinish_date() instanceof \DateTimeImmutable ? $model->getFinish_date()->format('Y-m-d') : '');
-            }
+            },
         ),
         new DataColumn(
             'tax_rate_id',
             header: $translator->translate('tax.rate'),
-            content: static fn (Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none')
+            content: static fn(Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -170,7 +170,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -180,7 +180,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -189,8 +189,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -200,14 +200,14 @@ $toolbar = Div::tag();
     $paginator = (new OffsetPaginator($tasks))
         ->withPageSize($s->positiveListLimit())
         ->withCurrentPage($page)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('products'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

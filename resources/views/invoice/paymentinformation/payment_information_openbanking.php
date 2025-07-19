@@ -48,14 +48,14 @@ echo Html::tag('p', Html::encode($translator->translate('payment.method')) . ': 
 
 echo Html::tag(
     'p',
-    Html::encode($translator->translate('invoice')) . ': ' . Html::encode($inv_url_key)
+    Html::encode($translator->translate('invoice')) . ': ' . Html::encode($inv_url_key),
 );
 
 if ($is_overdue) {
     echo Html::tag(
         'div',
         Html::encode($translator->translate('invoice.is.overdue')),
-        ['class' => 'alert alert-warning']
+        ['class' => 'alert alert-warning'],
     );
 }
 
@@ -64,28 +64,28 @@ if ($disable_form) {
     echo Html::tag(
         'div',
         Html::encode($translator->translate('form.disabled.already.paid')),
-        ['class' => 'alert alert-info']
+        ['class' => 'alert alert-info'],
     );
 }
 
 if (!empty($authUrl) && !$disable_form) {
     echo Html::a(
-        Html::encode($translator->translate('open.banking.pay.with'). $provider),
+        Html::encode($translator->translate('open.banking.pay.with') . $provider),
         $authUrl,
         [
             'class' => 'btn btn-primary',
             'rel' => 'noopener noreferrer',
             'target' => '_blank',
-        ]
+        ],
     );
 } elseif ($disable_form) {
     echo Html::tag(
         'p',
-        Html::encode($translator->translate('open.banking.payment.not.required'))
+        Html::encode($translator->translate('open.banking.payment.not.required')),
     );
 } else {
     echo Html::tag(
         'p',
-        Html::encode($translator->translate('open.banking.not.configured'))
+        Html::encode($translator->translate('open.banking.not.configured')),
     );
 }

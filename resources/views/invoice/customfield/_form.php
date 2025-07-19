@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Form;
         ->label($translator->translate('table'))
         ->addInputAttributes([
             'class' => 'form-control',
-            'id' => 'table'
+            'id' => 'table',
         ])
         ->value(Html::encode($form->getTable() ?? ''))
         ->optionsData($tables);
@@ -93,7 +93,7 @@ $optionsDataType = [];
  */
 foreach ($types as $type) {
     $alpha = str_replace("-", "_", strtolower($type));
-    $optionsDataType[$type] = ($translator->translate(''.$alpha));
+    $optionsDataType[$type] = ($translator->translate('' . $alpha));
 }
 ?>    
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -102,7 +102,7 @@ foreach ($types as $type) {
             ->addInputAttributes([
                 'placeholder' => $translator->translate('type'),
                 'class' => 'form-control',
-                'id' => 'type'
+                'id' => 'type',
             ])
             ->value(Html::encode($form->getType() ?? ''))
             ->optionsData($optionsDataType);
@@ -141,29 +141,29 @@ foreach ($types as $type) {
         <?= Html::closeTag('div'); ?>
         <?php
         // double dropdown box
-        $js2 = "$(function () {"."\n".
-               "var jsonPositions ='".$positions."';"."\n".
-               "jsonPositions = JSON.parse(jsonPositions);"."\n".
-               "function updatePositions(index, selKey) {"."\n".
-    '$("#location option").remove();'."\n".
-    "var pos = 0;"."\n".
-    "var key = Object".'.'.'keys(jsonPositions)[index];'."\n".
-    'for (pos in jsonPositions[key]) {'."\n".
-       'var opt = $("<'."option".'>");'."\n".
-       'opt.attr("value", pos);'."\n".
-       'opt.text(jsonPositions[key][pos]);'."\n".
-       'if (selKey == pos) {'."\n".
-          'opt.attr("selected", "selected");'."\n".
-       "}"."\n".
-       '$("#location").append(opt);'."\n".
-    '}'."\n".
-"}"."\n".
-'var optionIndex = $("#table option:selected").index();'."\n".
-'$("#table").on("change", function () {'."\n".
-'optionIndex = $("#table option:selected").index();'."\n".
-'updatePositions(optionIndex);'."\n".
-'});'."\n".
-'updatePositions(optionIndex,'. $valueSelected. ');'.
+        $js2 = "$(function () {" . "\n" .
+               "var jsonPositions ='" . $positions . "';" . "\n" .
+               "jsonPositions = JSON.parse(jsonPositions);" . "\n" .
+               "function updatePositions(index, selKey) {" . "\n" .
+    '$("#location option").remove();' . "\n" .
+    "var pos = 0;" . "\n" .
+    "var key = Object" . '.' . 'keys(jsonPositions)[index];' . "\n" .
+    'for (pos in jsonPositions[key]) {' . "\n" .
+       'var opt = $("<' . "option" . '>");' . "\n" .
+       'opt.attr("value", pos);' . "\n" .
+       'opt.text(jsonPositions[key][pos]);' . "\n" .
+       'if (selKey == pos) {' . "\n" .
+          'opt.attr("selected", "selected");' . "\n" .
+       "}" . "\n" .
+       '$("#location").append(opt);' . "\n" .
+    '}' . "\n" .
+"}" . "\n" .
+'var optionIndex = $("#table option:selected").index();' . "\n" .
+'$("#table").on("change", function () {' . "\n" .
+'optionIndex = $("#table option:selected").index();' . "\n" .
+'updatePositions(optionIndex);' . "\n" .
+'});' . "\n" .
+'updatePositions(optionIndex,' . $valueSelected . ');' .
 '});';
 echo Html::script($js2)->type('module');
 ?> 

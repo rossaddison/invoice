@@ -34,7 +34,7 @@ final class ClientNoteController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->clientNoteService = $clientNoteService;
@@ -66,7 +66,7 @@ final class ClientNoteController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
     ): Response {
         $clientnote = new ClientNote();
         $form = new ClientNoteForm($clientnote);
@@ -107,7 +107,7 @@ final class ClientNoteController extends BaseController
         FormHydrator $formHydrator,
         ClientNoteRepository $clientnoteRepository,
         ClientRepository $clientRepository,
-        CurrentRoute $currentRoute
+        CurrentRoute $currentRoute,
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if (null !== $client_note) {
@@ -143,7 +143,7 @@ final class ClientNoteController extends BaseController
      */
     public function delete(
         ClientNoteRepository $clientnoteRepository,
-        CurrentRoute $currentRoute
+        CurrentRoute $currentRoute,
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($client_note) {
@@ -162,7 +162,7 @@ final class ClientNoteController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         ClientNoteRepository $clientnoteRepository,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($client_note) {

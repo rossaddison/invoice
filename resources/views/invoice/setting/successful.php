@@ -69,7 +69,7 @@ use Yiisoft\Html\Html;
 </head>
 <body>
     
-<h1><?php echo $heading. '. '.$message; ?></h1>
+<h1><?php echo $heading . '. ' . $message; ?></h1>
 <?= Html::button($translator->translate('back'), ['onclick' => 'history.back()']); ?>
 </body>
 </html>

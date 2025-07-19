@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
         ->required(true)
         ->addInputAttributes([
             'readonly' => 'readonly',
-            'disabled' => 'disabled'
+            'disabled' => 'disabled',
         ])
         ->value(Html::encode($form->getName()))
         ->placeholder($translator->translate('name'));
@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
     ->required(true)
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getDescription()))
     ->placeholder($translator->translate('description'))
@@ -64,7 +64,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('project'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->optionsData($projects)
     ->value($form->getProject_id())
@@ -75,7 +75,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->optionsData($taxRates)
     ->value($form->getTax_rate_id())
@@ -86,7 +86,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('price'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value($s->format_amount(($form->getPrice() ?? 0.00)))
     ->placeholder($translator->translate('price'))
@@ -97,11 +97,11 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('task.finish.date'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable ?
                          $form->getFinish_date()->format('Y-m-d') : (is_string(
-                             $form->getFinish_date()
+                             $form->getFinish_date(),
                          ) ?
                          $form->getFinish_date() : '')))
 ?>    
@@ -111,20 +111,20 @@ use Yiisoft\Html\Tag\Form;
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft'
+        'class' => 'draft',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed'
+        'class' => 'viewed',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent'
+        'class' => 'sent',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid'
-    ]
+        'class' => 'paid',
+    ],
 ];
 /**
  * @var int $key
@@ -142,7 +142,7 @@ foreach ($statuses as $key => $status) {
     ->label($translator->translate('status'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->optionsData($optionsDataStatus)
     ->value($form->getStatus())

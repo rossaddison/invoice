@@ -1,5 +1,6 @@
 <?php
-return array (
+
+return array(
   0 => 'gateway.online.payment',
   1 => 'i.active_client',
   2 => 'i.add_notes',

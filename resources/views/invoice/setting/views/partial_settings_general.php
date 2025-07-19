@@ -597,7 +597,7 @@ foreach ($number_formats as $key => $value) { ?>
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[cron_key]" id="settings[cron_key]" class="cron_key form-control" 
-                                    value="<?= (string)($body['settings[cron_key]'] ?? $s->getSetting('cron_key')); ?>">
+                                    value="<?= (string) ($body['settings[cron_key]'] ?? $s->getSetting('cron_key')); ?>">
                                 <div class="input-group-text">
                                     <?php
     /**

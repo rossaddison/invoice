@@ -11,19 +11,17 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\CustomValue\CustomValueRepository::class)]
 class CustomValue
 {
-    #[BelongsTo(target: CustomField::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: CustomField::class, nullable: false, fkAction: 'NO ACTION')]
     private ?CustomField $custom_field = null;
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: false)]
-        private string $value = '')
-    {
-    }
+        private string $value = '') {}
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void

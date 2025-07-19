@@ -84,7 +84,7 @@ Html::closeTag('div')
 <?= Field::select($form, 'client_title')
     ->label($translator->translate('client.title'))
     ->addInputAttributes([
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->value($form->getClient_title())
     ->prompt($translator->translate('none'))
@@ -103,7 +103,7 @@ Html::closeTag('div')
     ->addInputAttributes([
         'value' => Html::encode($form->getClient_name() ?? ''),
         'placeholder' => $translator->translate('client.name'),
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -113,7 +113,7 @@ Html::closeTag('div')
     ->addInputAttributes([
         'value' => Html::encode($form->getClient_surname() ?? ''),
         'placeholder' => $translator->translate('client.surname'),
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->required(false);
 ?>
@@ -125,7 +125,7 @@ Html::closeTag('div')
         'placeholder' => $translator->translate('email'),
         'value' =>  Html::encode($form->getClient_email() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_email'
+        'id' => 'client_email',
     ])
     ->required(false);
 ?>
@@ -136,7 +136,7 @@ Html::closeTag('div')
         'placeholder' => $translator->translate('mobile'),
         'value' => Html::encode($form->getClient_mobile() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_mobile'
+        'id' => 'client_mobile',
     ])
     ->required(false);
 ?>
@@ -146,7 +146,7 @@ Html::closeTag('div')
     ->addInputAttributes([
         'value' => Html::encode($form->getClient_group() ?? ''),
         'placeholder' => $translator->translate('client.group'),
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->required(false);
 ?>
@@ -156,7 +156,7 @@ Html::closeTag('div')
     ->addInputAttributes([
         'value' => Html::encode($form->getClient_frequency() ?? ''),
         'placeholder' => $translator->translate('client.frequency'),
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->optionsData($optionsDataClientFrequencyDropdownFilter)
     ->required(false);
@@ -167,27 +167,27 @@ Html::closeTag('div')
     ->addInputAttributes([
         'value' => Html::encode($form->getClient_number() ?? ''),
         'placeholder' => $translator->translate('client.number'),
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->required(false);
 ?>  
     
 <?php
     $options = [];
-    /** @var string $language */
-    foreach ($s->locale_language_array() as $language) {
-        $options[$language] = ucfirst($language);
-    }
-    echo Field::select($form, 'client_language')
-        ->label($translator->translate('language'))
-        ->addInputAttributes([
-            'class' => 'form-control',
-            'id' => 'client_language'
+/** @var string $language */
+foreach ($s->locale_language_array() as $language) {
+    $options[$language] = ucfirst($language);
+}
+echo Field::select($form, 'client_language')
+    ->label($translator->translate('language'))
+    ->addInputAttributes([
+        'class' => 'form-control',
+        'id' => 'client_language',
     ])
-    ->value(strlen($form->getClient_language() ?? '') > 0 ? $form->getClient_language() : $selectedLanguage)    
-    ->optionsData($options)
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
+->value(strlen($form->getClient_language() ?? '') > 0 ? $form->getClient_language() : $selectedLanguage)
+->optionsData($options)
+->required(true)
+->hint($translator->translate('hint.this.field.is.required'));
 ?>  
 
 <?= Html::Tag('br'); ?>
@@ -217,7 +217,7 @@ Html::closeTag('div')
         'placeholder' => $translator->translate('street.address.2'),
         'value' => Html::encode($form->getClient_address_2() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_address_2'
+        'id' => 'client_address_2',
     ])
     ->required(false);
 ?>
@@ -283,7 +283,7 @@ echo Field::select($form, 'client_country')
 ->addInputAttributes([
     'id' => 'client_country',
     'class' => 'form-control',
-    'selected' => $s->check_select(($form->getClient_country() ?? $client->getClient_country()), $selectedCountry)
+    'selected' => $s->check_select(($form->getClient_country() ?? $client->getClient_country()), $selectedCountry),
 ])
 ->optionsData($options)
 ->required(true)
@@ -319,7 +319,7 @@ echo Field::select($form, 'client_country')
             'placeholder' => $translator->translate('phone'),
             'value' => Html::encode($form->getClient_phone() ?? ''),
             'class' => 'form-control',
-            'id' => 'client_phone'
+            'id' => 'client_phone',
         ])
         ->required(false);
 ?>
@@ -358,7 +358,7 @@ echo Field::select($form, 'client_country')
             ->required(true)
             ->addInputAttributes([
                 'value' => Html::encode($form->getPostaladdress_id() ?? ''),
-                'class' => 'form-control  alert alert-warning'
+                'class' => 'form-control  alert alert-warning',
             ])
             ->optionsData($optionsDataPostalAddresses)
             ->hint($translator->translate('hint.this.field.is.required'));
@@ -414,7 +414,7 @@ echo Field::date($form, 'client_birthdate')
     'class' => 'form-control',
     'id' => 'client_birthdate',
     'role' => 'presentation',
-    'autocomplete' => 'off'
+    'autocomplete' => 'off',
 ])
 ->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate() ?
                                 $form->getClient_birthdate()->format('Y-m-d') : ''))
@@ -426,7 +426,7 @@ echo Field::date($form, 'client_birthdate')
         'placeholder' => $translator->translate('client.age'),
         'value' => Html::encode($form->getClient_age() ?? '18'),
         'class' => 'form-control',
-        'id' => 'client_age'
+        'id' => 'client_age',
     ])
     ->required(true)
     //->min(16) not necessary @see ClientForm
@@ -442,7 +442,7 @@ echo Field::date($form, 'client_birthdate')
         'placeholder' => $translator->translate('sumx.ssn'),
         'value' =>  Html::encode($form->getClient_avs() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_avs'
+        'id' => 'client_avs',
     ])
     ->required(false);
 ?>
@@ -452,7 +452,7 @@ echo Field::date($form, 'client_birthdate')
         'placeholder' => $translator->translate('sumex.insurednumber'),
         'value' =>  Html::encode($form->getClient_insurednumber() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_insurednumber'
+        'id' => 'client_insurednumber',
     ])
     ->required(false);
 ?>
@@ -462,7 +462,7 @@ echo Field::date($form, 'client_birthdate')
         'placeholder' => $translator->translate('sumex.veka'),
         'value' =>  Html::encode($form->getClient_veka() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_veka'
+        'id' => 'client_veka',
     ])
     ->required(false);
 ?>
@@ -496,7 +496,7 @@ echo Field::date($form, 'client_birthdate')
                 'placeholder' => $translator->translate('vat.id'),
                 'value' =>  Html::encode($form->getClient_vat_id() ?? ''),
                 'class' => 'form-control',
-                'id' => 'client_vat_id'
+                'id' => 'client_vat_id',
             ])
             ->required(false);
 ?>
@@ -506,7 +506,7 @@ echo Field::date($form, 'client_birthdate')
         'placeholder' => $translator->translate('tax.code'),
         'value' =>  Html::encode($form->getClient_tax_code() ?? ''),
         'class' => 'form-control',
-        'id' => 'client_tax_code'
+        'id' => 'client_tax_code',
     ])
     ->required(false);
 ?>

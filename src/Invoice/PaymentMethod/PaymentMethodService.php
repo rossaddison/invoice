@@ -8,9 +8,7 @@ use App\Invoice\Entity\PaymentMethod;
 
 final readonly class PaymentMethodService
 {
-    public function __construct(private PaymentMethodRepository $repository)
-    {
-    }
+    public function __construct(private PaymentMethodRepository $repository) {}
 
     /**
      * @param PaymentMethod $model
@@ -18,7 +16,7 @@ final readonly class PaymentMethodService
      */
     public function savePaymentMethod(PaymentMethod $model, array $array): void
     {
-        isset($array['name']) ? $model->setName((string)$array['name']) : '';
+        isset($array['name']) ? $model->setName((string) $array['name']) : '';
         $model->setActive($array['active'] === '1' ? true : false);
         $this->repository->save($model);
     }

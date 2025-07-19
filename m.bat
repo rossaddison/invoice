@@ -23,7 +23,9 @@ echo [4b] Run Install or update nvm-windows to the latest version
 echo [5] Run Composer Require Checker
 echo [5a] Run Codeception Tests
 echo [5b] Run Rector See Potential Changes
-echo [5c] Run Rector Make Changes 
+echo [5c] Run Rector Make Changes
+echo [5d] Run Code Style Fixer with a dry-run to see potential changes
+echo [5e] Run Code Style Fixer and actually change the coding style of the files
 echo [6] Run 'serve' Command
 echo [7] Run 'user/create' username password
 echo [8] Run 'user/assignRole' role userId 
@@ -57,6 +59,8 @@ if "%choice%"=="5" goto require_checker
 if "%choice%"=="5a" goto codeception_tests
 if "%choice%"=="5b" goto rector_see_changes
 if "%choice%"=="5c" goto rector_make_changes
+if "%choice%"=="5d" goto code_style_suggest_changes
+if "%choice%"=="5e" goto code_style_make_changes
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="7a" goto user_create
@@ -75,6 +79,18 @@ if "%choice%"=="19" goto confirm_warning_19
 if "%choice%"=="20" goto exit
 if "%choice%"=="21" goto exit_to_directory
 echo Invalid choice. Please try again.
+pause
+goto menu
+
+:code_style_suggest_changes
+echo Suggested changes to the Coding Style 
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff 
+pause
+goto menu
+
+:code_style_make_changes
+echo Make the changes that were suggested to the Coding Style 
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php 
 pause
 goto menu
 

@@ -32,7 +32,7 @@ final class AssignRoleCommand extends Command
     public function __construct(
         private readonly CycleDependencyProxy $promise,
         private readonly Manager $manager,
-        private readonly ItemsStorageInterface $itemsStorage
+        private readonly ItemsStorageInterface $itemsStorage,
     ) {
         parent::__construct();
     }

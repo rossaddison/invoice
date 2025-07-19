@@ -58,7 +58,7 @@ $columns = [
         header: $translator->translate('table'),
         content: static function (CustomField $model) use ($s, $custom_tables): string {
             if (strlen($table = $model->getTable() ?? '') > 0) {
-                return Html::encode(ucfirst($s->lang((string)$custom_tables[$table])));
+                return Html::encode(ucfirst($s->lang((string) $custom_tables[$table])));
             }
             return '';
         },
@@ -68,22 +68,22 @@ $columns = [
         header: $translator->translate('label'),
         content: static function (CustomField $model): string {
             return Html::encode(ucfirst($model->getLabel() ?? '#'));
-        }
+        },
     ),
     new DataColumn(
         'type',
         header: $translator->translate('type'),
         content: static function (CustomField $model) use ($translator): string {
             $alpha = str_replace("-", "_", strtolower($model->getType()));
-            return Html::encode($translator->translate(''.$alpha.''));
-        }
+            return Html::encode($translator->translate('' . $alpha . ''));
+        },
     ),
     new DataColumn(
         'order',
         header: $translator->translate('order'),
         content: static function (CustomField $model): string {
             return Html::encode($model->getOrder());
-        }
+        },
     ),
     new DataColumn(
         'type',
@@ -97,11 +97,11 @@ $columns = [
                        ->content(
                            I::tag()
                             ->addClass('fa fa-list fa-margin')
-                            ->content(' '.$translator->translate('values'))
+                            ->content(' ' . $translator->translate('values')),
                        );
             }
             return '';
-        }
+        },
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -112,7 +112,7 @@ $columns = [
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('view'),
-            ]
+            ],
         ),
         new ActionButton(
             content: '✎',
@@ -122,7 +122,7 @@ $columns = [
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('edit'),
-            ]
+            ],
         ),
         new ActionButton(
             content: '❌',
@@ -131,8 +131,8 @@ $columns = [
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-            ]
+                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+            ],
         ),
     ]),
 ];
@@ -151,9 +151,9 @@ $columns = [
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('custom.fields'),
-    ''
+    '',
 );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -166,7 +166,7 @@ echo GridView::widget()
 ->id('w75-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

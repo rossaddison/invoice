@@ -48,7 +48,7 @@ class DeliveryLocation
         #[Column(type: 'string(13)', nullable: true)]
         private ?string $global_location_number = '',
         #[Column(type: 'string(4)', nullable: true)]
-        private ?string $electronic_address_scheme = ''
+        private ?string $electronic_address_scheme = '',
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();

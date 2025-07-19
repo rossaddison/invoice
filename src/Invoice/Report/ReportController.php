@@ -47,7 +47,7 @@ class ReportController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
     }
@@ -94,7 +94,7 @@ class ReportController extends BaseController
                 false,
                 false,
                 [],
-                null
+                null,
             );
         }
         return $this->viewRenderer->render('invoice_aging_index', $parameters);
@@ -107,7 +107,7 @@ class ReportController extends BaseController
      */
     private function invoice_aging_report(
         ClientRepository $cR,
-        InvAmountRepository $iaR
+        InvAmountRepository $iaR,
     ): array {
         $clienthelper = new ClientHelper($this->sR);
         $numberhelper = new NumberHelper($this->sR);
@@ -250,8 +250,8 @@ class ReportController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $from_date = (string)$body['from_date'];
-                $to_date = (string)$body['to_date'];
+                $from_date = (string) $body['from_date'];
+                $to_date = (string) $body['to_date'];
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
@@ -274,7 +274,7 @@ class ReportController extends BaseController
                     false,
                     false,
                     [],
-                    null
+                    null,
                 );
             } //is_array body
             return $this->webService->getNotFoundResponse();
@@ -294,7 +294,7 @@ class ReportController extends BaseController
     private function payment_history_report(
         PaymentRepository $pymtR,
         string $from,
-        string $to
+        string $to,
     ): array {
         $clienthelper = new ClientHelper($this->sR);
         $payments = $pymtR->repoPaymentLoaded_from_to_count($from, $to) > 0 ? $pymtR->repoPaymentLoaded_from_to($from, $to) : null;
@@ -353,8 +353,8 @@ class ReportController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $from_date = (string)$body['from_date'];
-                $to_date = (string)$body['to_date'];
+                $from_date = (string) $body['from_date'];
+                $to_date = (string) $body['to_date'];
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
@@ -375,7 +375,7 @@ class ReportController extends BaseController
                     false,
                     false,
                     [],
-                    null
+                    null,
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -396,7 +396,7 @@ class ReportController extends BaseController
         InvRepository $iR,
         string $from,
         string $to,
-        InvAmountRepository $iaR
+        InvAmountRepository $iaR,
     ): array {
         // Report Heading:  Sales by Client
         // Report Heading2: From To Date
@@ -478,8 +478,8 @@ class ReportController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $from_date = (string)$body['from_date'];
-                $to_date = (string)$body['to_date'];
+                $from_date = (string) $body['from_date'];
+                $to_date = (string) $body['to_date'];
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
@@ -499,7 +499,7 @@ class ReportController extends BaseController
                     false,
                     false,
                     [],
-                    null
+                    null,
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -538,7 +538,7 @@ class ReportController extends BaseController
          * @var \\App\Invoice\Entity\Product $product
          */
         foreach ($products as $product) {
-            $product_id = (int)$product->getProduct_id();
+            $product_id = (int) $product->getProduct_id();
             if (!empty($product_id)) {
                 // Product name
                 $row['product_name'] = (string) $product->getProduct_name();
@@ -574,7 +574,7 @@ class ReportController extends BaseController
         ViewRenderer $head,
         TaskRepository $taskR,
         InvRepository $iR,
-        InvItemAmountRepository $iiaR
+        InvItemAmountRepository $iiaR,
     ): Response|\Mpdf\Mpdf|array|string {
         $this->flashMessage('info', $this->translator->translate('report.sales.by.task.info'));
         $dateHelper = new DateHelper($this->sR);
@@ -591,8 +591,8 @@ class ReportController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $from_date = (string)$body['from_date'];
-                $to_date = (string)$body['to_date'];
+                $from_date = (string) $body['from_date'];
+                $to_date = (string) $body['to_date'];
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
@@ -612,7 +612,7 @@ class ReportController extends BaseController
                     false,
                     false,
                     [],
-                    null
+                    null,
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -651,10 +651,10 @@ class ReportController extends BaseController
          * @var \\App\Invoice\Entity\Task $task
          */
         foreach ($tasks as $task) {
-            $task_id = (int)$task->getId();
+            $task_id = (int) $task->getId();
             if (!empty($task_id)) {
                 // Task name
-                $row['task_name'] = (string)$task->getName();
+                $row['task_name'] = (string) $task->getName();
                 $row['inv_count'] = $iR->repoCountByTask($task_id);
                 $row['sales_no_tax'] = $iR->repoCountByTask($task_id) > 0
                               ? $iR->with_item_subtotal_from_to_using_task($task_id, $from, $to, $iiaR)
@@ -683,7 +683,7 @@ class ReportController extends BaseController
         ViewRenderer $head,
         ClientRepository $cR,
         InvRepository $iR,
-        InvAmountRepository $iaR
+        InvAmountRepository $iaR,
     ): Response|\Mpdf\Mpdf|array|string {
         $dateHelper = new DateHelper($this->sR);
         $body = $request->getParsedBody();
@@ -699,8 +699,8 @@ class ReportController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $from_date = (string)$body['from_date'];
-                $to_date = (string)$body['to_date'];
+                $from_date = (string) $body['from_date'];
+                $to_date = (string) $body['to_date'];
                 $data = [
                     'from_date' => $from_date,
                     'to_date' => $to_date,
@@ -725,7 +725,7 @@ class ReportController extends BaseController
                     false,
                     false,
                     [],
-                    null
+                    null,
                 );
             } // is_array body
             return $this->webService->getNotFoundResponse();
@@ -738,7 +738,7 @@ class ReportController extends BaseController
         InvRepository $iR,
         string $from,
         string $to,
-        InvAmountRepository $iaR
+        InvAmountRepository $iaR,
     ): array {
         $results = [];
         $year = [
@@ -805,7 +805,7 @@ class ReportController extends BaseController
                 $immutable_to = $dateHelper->ymd_to_immutable($to);
                 $interval = new \DateInterval('P1Y');
                 $daterange = new \DatePeriod($immutable_from, $interval, $immutable_to);
-                $client_id = (int)$client->getClient_id();
+                $client_id = (int) $client->getClient_id();
                 foreach ($daterange as $current_year) {
                     $additional_year = $this->quarters($year, $immutable_from, $current_year, $client, $clientHelper, $client_id, $iR, $iaR);
                     $results[] = $additional_year;
@@ -836,7 +836,7 @@ class ReportController extends BaseController
         ClientHelper $clienthelper,
         int $client_id,
         InvRepository $iR,
-        InvAmountRepository $iaR
+        InvAmountRepository $iaR,
     ): array {
         if ($client_id) {
             $quarters = ['first' => 3, 'second' => 6, 'third' => 9, 'fourth' => 12];
@@ -845,12 +845,12 @@ class ReportController extends BaseController
             $immutable_from_start_date = $immutable_from;
 
             foreach ($quarters as $quarter => $month_ending) {
-                $quarter_from = $immutable_from_start_date->add(new \DateInterval('P' . (string)$month_ending . 'M'))
+                $quarter_from = $immutable_from_start_date->add(new \DateInterval('P' . (string) $month_ending . 'M'))
                                                           ->sub(new \DateInterval('P3M'))
                                                           ->add(new \DateInterval('P1D'))
                                                           ->format('Y-m-d');
 
-                $quarter_to = $immutable_from_start_date->add(new \DateInterval('P' . (string)$month_ending . 'M'))
+                $quarter_to = $immutable_from_start_date->add(new \DateInterval('P' . (string) $month_ending . 'M'))
                                                           ->format('Y-m-d');
 
                 $year['quarters'][$quarter]['beginning'] = $quarter_from;
@@ -861,7 +861,7 @@ class ReportController extends BaseController
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
-                                  $iaR
+                                  $iaR,
                               )
                               : 0.00;
                 $year['quarters'][$quarter]['sales_no_tax'] = $sales_no_tax;
@@ -871,7 +871,7 @@ class ReportController extends BaseController
                                     $client_id,
                                     $quarter_from,
                                     $quarter_to,
-                                    $iaR
+                                    $iaR,
                                 )
                                 : 0.00;
                 $year['quarters'][$quarter]['item_tax_total'] = $item_tax_total;
@@ -881,7 +881,7 @@ class ReportController extends BaseController
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
-                                  $iaR
+                                  $iaR,
                               )
                               : 0.00;
                 $year['quarters'][$quarter]['tax_total'] = $tax_total;
@@ -891,7 +891,7 @@ class ReportController extends BaseController
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
-                                  $iaR
+                                  $iaR,
                               )
                               : 0.00;
                 $year['quarters'][$quarter]['sales_with_tax'] = $sales_with_tax;
@@ -901,7 +901,7 @@ class ReportController extends BaseController
                                   $client_id,
                                   $quarter_from,
                                   $quarter_to,
-                                  $iaR
+                                  $iaR,
                               )
                               : 0.00;
                 $year['quarters'][$quarter]['paid'] = $paid;

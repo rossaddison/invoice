@@ -31,9 +31,9 @@ return [
         ->name('backend/hmrc/fphFeedback'),
 
     Route::methods([Method::GET, Method::POST], '/backend/hmrc/fphValidate')
-        ->middleware(fn (
+        ->middleware(fn(
             ResponseFactoryInterface $responseFactory,
-            StorageInterface $storage
+            StorageInterface $storage,
         ) => new LimitRequestsMiddleware(new Counter($storage, 10, 10), $responseFactory))
         ->action([HmrcController::class, 'fphValidate'])
         ->name('backend/hmrc/fphValidate'),

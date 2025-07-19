@@ -27,11 +27,11 @@ final class PaymentForm extends FormModel
 
     public function __construct(Payment $payment)
     {
-        $this->payment_method_id = (int)$payment->getPayment_method_id();
+        $this->payment_method_id = (int) $payment->getPayment_method_id();
         $this->payment_date = $payment->getPayment_date();
         $this->amount = $payment->getAmount();
         $this->note = $payment->getNote();
-        $this->inv_id = (int)$payment->getInv_id();
+        $this->inv_id = (int) $payment->getInv_id();
         $this->inv = $payment->getInv();
     }
 

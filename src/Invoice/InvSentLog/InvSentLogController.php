@@ -34,7 +34,7 @@ final class InvSentLogController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->invsentlogService = $invsentlogService;
@@ -52,10 +52,14 @@ final class InvSentLogController extends BaseController
     public function guest(
         ISLR $islR,
         UIR $uiR,
-        #[RouteArgument('page')] string $page = '1',
-        #[Query('page')] string $queryPage = null,
-        #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
-        #[Query('filterClient')] string $queryFilterClient = null,
+        #[RouteArgument('page')]
+        string $page = '1',
+        #[Query('page')]
+        string $queryPage = null,
+        #[Query('filterInvNumber')]
+        string $queryFilterInvNumber = null,
+        #[Query('filterClient')]
+        string $queryFilterClient = null,
     ): Response {
         $user = $this->userService->getUser();
         if ($user instanceof User && null !== $user->getId()) {
@@ -67,7 +71,7 @@ final class InvSentLogController extends BaseController
                 $invsentlogs = $islR->withUser($userId);
                 $finalPage = $queryPage ?? $page;
                 /** @psalm-var positive-int $currentPageNeverZero */
-                $currentPageNeverZero = (int)$finalPage > 0 ? (int)$finalPage : 1;
+                $currentPageNeverZero = (int) $finalPage > 0 ? (int) $finalPage : 1;
                 if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                     $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
                 }
@@ -88,7 +92,7 @@ final class InvSentLogController extends BaseController
                     'viewInv' => $this->userService->hasPermission('viewInv'),
                     'userInv' => $userinv,
                     'defaultPageSizeOffsetPaginator' => $userinv->getListLimit() ?? 10,
-                    'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int)$userId),
+                    'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int) $userId),
                     // Get all the clients that have been assigned to this user
                     'optionsDataGuestClientDropDownFilter' => $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
@@ -108,15 +112,19 @@ final class InvSentLogController extends BaseController
      */
     public function index(
         ISLR $islR,
-        #[RouteArgument('page')] string $page = '1',
-        #[Query('page')] string $queryPage = null,
-        #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
-        #[Query('filterClient')] string $queryFilterClientId = null,
+        #[RouteArgument('page')]
+        string $page = '1',
+        #[Query('page')]
+        string $queryPage = null,
+        #[Query('filterInvNumber')]
+        string $queryFilterInvNumber = null,
+        #[Query('filterClient')]
+        string $queryFilterClientId = null,
     ): Response {
         $invsentlogs = $islR->findAllPreloaded();
         $finalPage = $queryPage ?? $page;
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$finalPage > 0 ? (int)$finalPage : 1;
+        $currentPageNeverZero = (int) $finalPage > 0 ? (int) $finalPage : 1;
         if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
             $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
         }
@@ -135,7 +143,7 @@ final class InvSentLogController extends BaseController
             'paginator' => $paginator,
             'alert' => $this->alert(),
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($islR),
             'optionsDataClientsDropDownFilter' => $this->optionsDataClientsFilter($islR),
         ];
@@ -153,7 +161,7 @@ final class InvSentLogController extends BaseController
             /**
              * @var InvSentLog $invsentlog
              */
-            return $islR->repoInvSentLogLoadedquery((string)$id);
+            return $islR->repoInvSentLogLoadedquery((string) $id);
         }
         return null;
     }
@@ -245,7 +253,7 @@ final class InvSentLogController extends BaseController
             if (null !== $invNumber) {
                 $invUserId = $invSentLog->getInv()?->getUser()->getId();
                 if (null !== $invUserId) {
-                    if ($user_id == (int)$invUserId) {
+                    if ($user_id == (int) $invUserId) {
                         if (!in_array($invNumber, $optionsDataGuestInvNumbers)) {
                             $optionsDataGuestInvNumbers[$invNumber] = $invNumber;
                         }
@@ -275,7 +283,7 @@ final class InvSentLogController extends BaseController
             $invClientId = $invSentLog->getInv()?->getClient()?->getClient_id();
             $invUserId = $invSentLog->getInv()?->getUser()?->getId();
             if (null !== $invUserId && null !== $invClientId) {
-                if ((null !== $invClientFullName) && ($userId == (int)$invUserId)) {
+                if ((null !== $invClientFullName) && ($userId == (int) $invUserId)) {
                     if (!in_array($invClientFullName, $optionsDataGuestClientsOfUser)) {
                         $optionsDataGuestClientsOfUser[$invClientId] = $invClientFullName;
                     }

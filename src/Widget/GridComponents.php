@@ -19,9 +19,7 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 final readonly class GridComponents
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
-    {
-    }
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator) {}
 
     public function header(string $translatorString): string
     {
@@ -33,8 +31,8 @@ final readonly class GridComponents
                         ->content(
                             I::tag()
                             ->addClass('bi bi-receipt')
-                            ->content(' ' . $this->translator->translate($translatorString))
-                        )
+                            ->content(' ' . $this->translator->translate($translatorString)),
+                        ),
                 )
                 ->render();
     }
@@ -106,8 +104,8 @@ final readonly class GridComponents
                                        ($invId ?? '')) .
                                        ' ' .
                                        (null !== $invBalance
-                                             ? (string)$invBalance
-                                             : '')
+                                             ? (string) $invBalance
+                                             : ''),
                     )
                     ->render() .
                 Html::closeTag('td');
@@ -150,7 +148,7 @@ final readonly class GridComponents
                         'data-bs-toggle' => 'tooltip',
                         'title' => $invSentLog->getDate_sent()->format('m-d')])
                     ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
-                    ->content((string)$invSentLogId)
+                    ->content((string) $invSentLogId)
                     ->render() .
                 Html::closeTag('td');
             $item_count++;

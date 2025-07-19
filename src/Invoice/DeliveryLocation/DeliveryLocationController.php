@@ -39,7 +39,7 @@ final class DeliveryLocationController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->delService = $delService;
@@ -61,11 +61,13 @@ final class DeliveryLocationController extends BaseController
         CR $cR,
         IR $iR,
         QR $qR,
-        #[Query('page')] string $queryPage = null,
-        #[Query('sort')] string $querySort = null,
+        #[Query('page')]
+        string $queryPage = null,
+        #[Query('sort')]
+        string $querySort = null,
     ): Response {
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$queryPage > 0 ? (int)$queryPage : 1;
+        $currentPageNeverZero = (int) $queryPage > 0 ? (int) $queryPage : 1;
         $this->add_in_invoice_flash();
         $parameters = [
             'alert' => $this->alert(),
@@ -109,12 +111,12 @@ final class DeliveryLocationController extends BaseController
         /**
          * @var array $queryParams
          */
-        $origin = (string)$queryParams['origin'];
-        $origin_id = (int)$queryParams['origin_id'];
-        $action = (string)$queryParams['action'];
+        $origin = (string) $queryParams['origin'];
+        $origin_id = (int) $queryParams['origin_id'];
+        $action = (string) $queryParams['action'];
 
         $delivery_location = new DeliveryLocation();
-        $delivery_location->setClient_id((int)$client_id);
+        $delivery_location->setClient_id((int) $client_id);
         $form = new DeliveryLocationForm($delivery_location);
 
         $parameters = [
@@ -181,9 +183,9 @@ final class DeliveryLocationController extends BaseController
             /**
              * @var array $queryParams
              */
-            $origin = (string)$queryParams['origin'];
-            $origin_id = (int)$queryParams['origin_id'];
-            $action = (string)$queryParams['action'];
+            $origin = (string) $queryParams['origin'];
+            $origin_id = (int) $queryParams['origin_id'];
+            $action = (string) $queryParams['action'];
 
             $form = new DeliveryLocationForm($del);
             $parameters = [
@@ -231,7 +233,7 @@ final class DeliveryLocationController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        DeliveryLocationRepository $delRepository
+        DeliveryLocationRepository $delRepository,
     ): Response {
         try {
             $del = $this->del($currentRoute, $delRepository);

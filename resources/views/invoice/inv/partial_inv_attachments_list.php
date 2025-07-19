@@ -25,67 +25,67 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         $columns = [
             new DataColumn(
                 'file_name_original',
-                header:  $translator->translate('name'),
-                content: static fn (Upload $model): string => ($model->getFile_name_original())
+                header: $translator->translate('name'),
+                content: static fn(Upload $model): string => ($model->getFile_name_original()),
             ),
             new DataColumn(
                 'uploaded_date',
-                header:  $translator->translate('date'),
-                content: static fn (Upload $model): string => ($model->getUploaded_date())->format('Y-m-d')
+                header: $translator->translate('date'),
+                content: static fn(Upload $model): string => ($model->getUploaded_date())->format('Y-m-d'),
             ),
             new DataColumn(
-                header:  $translator->translate('download'),
+                header: $translator->translate('download'),
                 content: static function (Upload $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
                             [
-                              'type' => 'submit',
-                              'class' => 'dropdown-button'
-                          ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                            ],
                         ),
                         $urlGenerator->generate('inv/download_file', ['upload_id' => $model->getId(), '_language' => 'en']),
-                        []
+                        [],
                     );
-                }
+                },
             ),
             new DataColumn(
                 visible: $invEdit,
-                header:  $translator->translate('edit'),
+                header: $translator->translate('edit'),
                 content: static function (Upload $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
                             [
-                                        'type' => 'submit',
-                                        'class' => 'dropdown-button'
-                                    ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                            ],
                         ),
                         $urlGenerator->generate('upload/edit', ['id' => $model->getId(), '_language' => 'en']),
-                        []
+                        [],
                     );
-                }
+                },
             ),
             new DataColumn(
                 visible: $invEdit,
-                header:  $translator->translate('delete'),
+                header: $translator->translate('delete'),
                 content: static function (Upload $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                             [
-                                        'type' => 'submit',
-                                        'class' => 'dropdown-button',
-                                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
-                                    ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                            ],
                         ),
                         $urlGenerator->generate('upload/delete', ['id' => $model->getId(), '_language' => 'en']),
-                        []
+                        [],
                     );
-                }
+                },
             ),
         ];
 ?>
@@ -95,7 +95,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         $translator,
         (int) $s->getSetting('default_list_limit'),
         $translator->translate('attachment.list'),
-        ''
+        '',
     );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

@@ -65,7 +65,7 @@ final class UnitRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'unit_name', 'unit_name_plrl'])
-                ->withOrder(['unit_name' => 'asc'])
+                ->withOrder(['unit_name' => 'asc']),
         );
     }
 
@@ -115,7 +115,7 @@ final class UnitRepository extends Select\Repository
      */
     public function singular_or_plural_name(string $unit_id, int $quantity): string|Unit|null
     {
-        if ((int)$unit_id === 0) {
+        if ((int) $unit_id === 0) {
             return '';
         }
         $unit = $this->repoUnitquery($unit_id);

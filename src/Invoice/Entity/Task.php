@@ -13,23 +13,21 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Task\TaskRepository::class)]
 class Task
 {
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
-    #[BelongsTo(target:Project::class, nullable: true, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Project::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Project $project = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type:'integer(11)', nullable: true, default: null)]
-        private ?int $project_id = null, #[Column(type:'text', nullable: true)]
-        private ?string $name = '', #[Column(type:'longText', nullable: false)]
-        private string $description = '', #[Column(type:'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $price = null, #[Column(type:'date', nullable: true)]
-        private mixed $finish_date = '', #[Column(type:'int', nullable: false)]
-        private ?int $status = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null)
-    {
-    }
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: true, default: null)]
+        private ?int $project_id = null, #[Column(type: 'text', nullable: true)]
+        private ?string $name = '', #[Column(type: 'longText', nullable: false)]
+        private string $description = '', #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $price = null, #[Column(type: 'date', nullable: true)]
+        private mixed $finish_date = '', #[Column(type: 'int', nullable: false)]
+        private ?int $status = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null) {}
 
     public function getTaxRate(): ?TaxRate
     {
@@ -43,7 +41,7 @@ class Task
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -53,7 +51,7 @@ class Task
 
     public function getProject_id(): string
     {
-        return (string)$this->project_id;
+        return (string) $this->project_id;
     }
 
     public function setProject_id(int $project_id): void
@@ -114,7 +112,7 @@ class Task
 
     public function getTax_rate_id(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setTax_rate_id(int $tax_rate_id): void

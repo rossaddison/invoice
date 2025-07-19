@@ -9,9 +9,7 @@ use Sabre\Xml\XmlSerializable;
 
 class OrderReference implements XmlSerializable
 {
-    public function __construct(private readonly ?string $id, private readonly ?string $salesOrderId)
-    {
-    }
+    public function __construct(private readonly ?string $id, private readonly ?string $salesOrderId) {}
 
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=SalesOrderId

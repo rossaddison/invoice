@@ -36,15 +36,15 @@ final class QuoteForm extends FormModel
         $this->date_created = $quote->getDate_created();
         $this->inv_id = $quote->getInv_id();
         $this->so_id = $quote->getSo_id();
-        $this->group_id = (int)$quote->getGroup_id();
-        $this->client_id = (int)$quote->getClient_id();
+        $this->group_id = (int) $quote->getGroup_id();
+        $this->client_id = (int) $quote->getClient_id();
         $this->status_id = $quote->getStatus_id();
         $this->discount_amount = $quote->getDiscount_amount();
         $this->discount_percent = $quote->getDiscount_percent();
         $this->url_key = $quote->getUrl_key();
         $this->password = $quote->getPassword();
         $this->notes = $quote->getNotes();
-        $this->delivery_location_id = (int)$quote->getDelivery_location_id();
+        $this->delivery_location_id = (int) $quote->getDelivery_location_id();
     }
 
     public function getDate_created(): string|null|DateTimeImmutable

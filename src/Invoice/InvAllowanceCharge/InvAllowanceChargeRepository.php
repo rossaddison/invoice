@@ -85,7 +85,7 @@ final class InvAllowanceChargeRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 

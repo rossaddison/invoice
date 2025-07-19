@@ -28,7 +28,7 @@ abstract class BaseController
         protected ViewRenderer $viewRenderer,
         protected SessionInterface $session,
         protected SettingRepository $sR,
-        protected Flash $flash
+        protected Flash $flash,
     ) {
         $this->initializeViewRenderer();
     }
@@ -76,7 +76,7 @@ abstract class BaseController
             '//invoice/layout/alert',
             [
                 'flash' => $this->flash,
-            ]
+            ],
         );
     }
 }

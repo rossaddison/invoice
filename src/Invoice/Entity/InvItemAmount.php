@@ -11,7 +11,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\InvItemAmount\InvItemAmountRepository::class)]
 class InvItemAmount
 {
-    #[BelongsTo(target:InvItem::class, nullable: true)]
+    #[BelongsTo(target: InvItem::class, nullable: true)]
     private ?InvItem $inv_item = null;
 
     public function __construct(#[Column(type: 'primary')]
@@ -22,9 +22,7 @@ class InvItemAmount
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $charge = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $allowance = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
-    }
+        private ?float $total = 0.00) {}
 
     public function getInvItem(): ?InvItem
     {
@@ -33,7 +31,7 @@ class InvItemAmount
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -43,7 +41,7 @@ class InvItemAmount
 
     public function getInv_item_id(): string
     {
-        return (string)$this->inv_item_id;
+        return (string) $this->inv_item_id;
     }
 
     public function setInv_item_id(int $inv_item_id): void

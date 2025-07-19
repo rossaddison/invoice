@@ -36,8 +36,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('company')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('company'))),
+            ),
     )
     ->render();
 
@@ -73,27 +73,27 @@ $toolbar = Div::tag();
             new DataColumn(
                 'id',
                 header: $translator->translate('id'),
-                content: static fn (Company $model) => Html::encode($model->getId())
+                content: static fn(Company $model) => Html::encode($model->getId()),
             ),
             new DataColumn(
                 'current',
                 header: $translator->translate('active'),
-                content: static fn (Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active').' '.'✔️') : $translator->translate('inactive').' '.'❌')
+                content: static fn(Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active') . ' ' . '✔️') : $translator->translate('inactive') . ' ' . '❌'),
             ),
             new DataColumn(
                 'name',
                 header: $translator->translate('name'),
-                content: static fn (Company $model) => Html::encode($model->getName())
+                content: static fn(Company $model) => Html::encode($model->getName()),
             ),
             new DataColumn(
                 'email',
                 header: $translator->translate('email.address'),
-                content: static fn (Company $model) => Html::encode($model->getEmail())
+                content: static fn(Company $model) => Html::encode($model->getEmail()),
             ),
             new DataColumn(
                 'phone',
                 header: $translator->translate('phone'),
-                content: static fn (Company $model) => Html::encode($model->getPhone())
+                content: static fn(Company $model) => Html::encode($model->getPhone()),
             ),
             new ActionColumn(buttons: [
                 new ActionButton(
@@ -104,7 +104,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('view'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '✎',
@@ -114,7 +114,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('edit'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '❌',
@@ -123,8 +123,8 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'title' => $translator->translate('delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
             ]),
         ];
@@ -137,9 +137,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('company.public'),
-    ''
+    '',
 );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

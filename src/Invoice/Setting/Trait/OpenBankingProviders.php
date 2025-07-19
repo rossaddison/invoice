@@ -237,7 +237,7 @@ trait OpenBankingProviders
             'notes' => 'Australia Consumer Data Right (CDR) provider. Free sandbox, paid production.',
         ],
     ];
-    
+
     public function getOpenBankingProvidersWithAuthUrl(): array
     {
         $names = array_keys(
@@ -248,8 +248,8 @@ trait OpenBankingProviders
                  */
                 function (array $provider): bool {
                     return isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '';
-                }
-            )
+                },
+            ),
         );
         return $names;
     }

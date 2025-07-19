@@ -84,7 +84,7 @@ declare(strict_types=1);
                         */
                         foreach ($custom_fields['client_custom'] as $custom) { ?>
                         <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
-                            <?= ($custom->getLabel() ?? '#'). ' (ID ' . $custom->getId() . ')'; ?>
+                            <?= ($custom->getLabel() ?? '#') . ' (ID ' . $custom->getId() . ')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>

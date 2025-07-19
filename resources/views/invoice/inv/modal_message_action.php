@@ -19,7 +19,7 @@ use Yiisoft\Html\Tag\I;
     ->addClass('bi bi-info-circle')
     ->addAttributes([
         'tooltip' => 'data-bs-toggle',
-        'title' => $s->isDebugMode(17)
+        'title' => $s->isDebugMode(17),
     ])
     ->render(); ?>
 <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>

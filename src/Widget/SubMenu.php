@@ -35,7 +35,7 @@ final class SubMenu
              * @var array $value
              */
             foreach ($levelItemsArray as $key => $value) {
-                $actionName = (string)$value[0];
+                $actionName = (string) $value[0];
                 /**
                  * @psalm-var array<string, \Stringable|null|scalar> $value[1]
                  */
@@ -44,8 +44,8 @@ final class SubMenu
                     $key,
                     $urlGenerator->generate(
                         $actionName,
-                        $actionArguments
-                    )
+                        $actionArguments,
+                    ),
                 );
             }
             $finalString = Dropdown::widget()

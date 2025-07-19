@@ -31,12 +31,12 @@ final class FamilyForm extends FormModel
 
     public function getCategory_primary_id(): string
     {
-        return (string)$this->category_primary_id;
+        return (string) $this->category_primary_id;
     }
 
     public function getCategory_secondary_id(): string
     {
-        return (string)$this->category_secondary_id;
+        return (string) $this->category_secondary_id;
     }
 
     /**

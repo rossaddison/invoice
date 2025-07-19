@@ -32,7 +32,7 @@ $this->beginPage();
 <h3 class="report_title">
     <?= Html::encode($translator->translate('sales.by.date')); ?>
     <br/>
-    <small><?= Html::encode($from_date  . ' - ' . $to_date); ?></small>
+    <small><?= Html::encode($from_date . ' - ' . $to_date); ?></small>
 </h3>
 
 <table>
@@ -75,7 +75,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('Q1'). '/'.(string)$result['year']); ?></td>
+            <?= Html::encode($translator->translate('Q1') . '/' . (string) $result['year']); ?></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->format_currency($result['quarters']['first']['sales_no_tax'] ?? 0.00)); ?></td>
@@ -90,7 +90,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('Q2').'/'.(string)$result['year']); ?>
+            <?= Html::encode($translator->translate('Q2') . '/' . (string) $result['year']); ?>
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
@@ -106,7 +106,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('Q3').'/'.(string)$result['year']); ?>
+            <?= Html::encode($translator->translate('Q3') . '/' . (string) $result['year']); ?>
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
@@ -122,7 +122,7 @@ $this->beginPage();
     </tr>
     <tr>
         <td  style="width:20%;text-align:left;border-bottom: 1px solid black;">
-            <?= Html::encode($translator->translate('Q4').'/'.(string)$result['year']); ?>
+            <?= Html::encode($translator->translate('Q4') . '/' . (string) $result['year']); ?>
         </td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;"></td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">

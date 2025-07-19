@@ -25,7 +25,7 @@ final class Bootstrap5ModalQuote
         private readonly GroupRepository $gR,
         private readonly SettingRepository $sR,
         private readonly UserClientRepository $ucR,
-        private readonly QuoteForm $quoteForm
+        private readonly QuoteForm $quoteForm,
     ) {
         $this->layoutParameters = [];
         $this->formParameters = [];

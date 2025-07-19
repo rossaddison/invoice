@@ -36,7 +36,7 @@ final class CategoryPrimaryController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->categoryPrimaryService = $categoryPrimaryService;
@@ -50,7 +50,7 @@ final class CategoryPrimaryController extends BaseController
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $categoryPrimary = new CategoryPrimary();
         $form = new CategoryPrimaryForm($categoryPrimary);
@@ -79,7 +79,8 @@ final class CategoryPrimaryController extends BaseController
     public function index(
         CategoryPrimaryRepository $categoryPrimaryRepository,
         sR $settingRepository,
-        #[RouteArgument('page')] int $page = 1
+        #[RouteArgument('page')]
+        int $page = 1,
     ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -87,13 +88,13 @@ final class CategoryPrimaryController extends BaseController
         $paginator = (new OffsetPaginator($categoryPrimary))
         ->withPageSize($settingRepository->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $parameters = [
             'categoryprimarys' => $this->categoryprimaries($categoryPrimaryRepository),
             'paginator' => $paginator,
             'alert' => $this->alert(),
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                                                          ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+                                                          ? (int) $settingRepository->getSetting('default_list_limit') : 1,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -105,7 +106,8 @@ final class CategoryPrimaryController extends BaseController
      */
     public function delete(
         CategoryPrimaryRepository $categoryPrimaryRepository,
-        #[RouteArgument('id')] int $id
+        #[RouteArgument('id')]
+        int $id,
     ): Response {
         try {
             if ($id) {
@@ -127,7 +129,8 @@ final class CategoryPrimaryController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         CategoryPrimaryRepository $categoryPrimaryRepository,
-        #[RouteArgument('id')] int $id
+        #[RouteArgument('id')]
+        int $id,
     ): Response {
         if ($id) {
             $categoryprimary = $this->categoryprimary($categoryPrimaryRepository, $id);
@@ -166,7 +169,7 @@ final class CategoryPrimaryController extends BaseController
     private function categoryprimary(CategoryPrimaryRepository $categoryPrimaryRepository, int $id): CategoryPrimary|null
     {
         if ($id) {
-            $categoryPrimary = $categoryPrimaryRepository->repoCategoryPrimaryQuery((string)$id);
+            $categoryPrimary = $categoryPrimaryRepository->repoCategoryPrimaryQuery((string) $id);
             if (null !== $categoryPrimary) {
                 return $categoryPrimary;
             }

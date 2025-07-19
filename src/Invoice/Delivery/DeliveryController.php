@@ -39,7 +39,7 @@ final class DeliveryController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->deliveryService = $deliveryService;
@@ -58,7 +58,7 @@ final class DeliveryController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         InvRepository $iR,
-        DLR $delRepo
+        DLR $delRepo,
     ): Response {
         $inv_id = $currentRoute->getArgument('inv_id');
         $inv = $iR->repoInvLoadedquery((string) $inv_id);
@@ -66,7 +66,7 @@ final class DeliveryController extends BaseController
             $dels = $delRepo->repoClientquery($inv->getClient_id());
             $delivery = new Delivery();
             // inv_id is a hidden field and is static
-            $delivery->setInv_id((int)$inv_id);
+            $delivery->setInv_id((int) $inv_id);
             $form = new DeliveryForm($delivery);
             $parameters = [
                 'title' => $this->translator->translate('delivery.add'),
@@ -108,7 +108,7 @@ final class DeliveryController extends BaseController
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
+        $currentPageNeverZero = (int) $page > 0 ? (int) $page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'delivery_location_id'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -119,7 +119,7 @@ final class DeliveryController extends BaseController
         $paginator = (new OffsetPaginator($deliveries))
                 ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
-                ->withToken(PageToken::next((string)$page));
+                ->withToken(PageToken::next((string) $page));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
@@ -150,7 +150,7 @@ final class DeliveryController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        DeliveryRepository $deliveryRepository
+        DeliveryRepository $deliveryRepository,
     ): Response {
         try {
             $delivery = $this->delivery($currentRoute, $deliveryRepository);
@@ -181,7 +181,7 @@ final class DeliveryController extends BaseController
         FormHydrator $formHydrator,
         DeliveryRepository $deliveryRepository,
         DLR $delRepo,
-        InvRepository $iR
+        InvRepository $iR,
     ): Response {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {

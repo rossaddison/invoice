@@ -39,8 +39,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('unit')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('unit'))),
+            ),
     )
     ->render();
 
@@ -75,17 +75,17 @@ $toolbar = Div::tag();
             new DataColumn(
                 'unit_id',
                 header: $translator->translate('id'),
-                content: static fn (Unit $model) => Html::encode($model->getUnit_id())
+                content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
             ),
             new DataColumn(
                 'unit_name',
                 header: $translator->translate('unit.name'),
-                content: static fn (Unit $model) => Html::encode($model->getUnit_name())
+                content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
             ),
             new DataColumn(
                 'unit_name_plrl',
                 header: $translator->translate('unit.name.plrl'),
-                content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl())
+                content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
             ),
 
             new ActionColumn(buttons: [
@@ -97,7 +97,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('view'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '✎',
@@ -107,7 +107,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('edit'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '❌',
@@ -116,8 +116,8 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'title' => $translator->translate('delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
             ]),
         ];
@@ -126,9 +126,9 @@ $toolbar = Div::tag();
     $grid_summary = $s->grid_summary(
         $paginator,
         $translator,
-        (int)$s->getSetting('default_list_limit'),
+        (int) $s->getSetting('default_list_limit'),
         $translator->translate('units'),
-        ''
+        '',
     );
 $toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

@@ -9,9 +9,7 @@ use Sabre\Xml\XmlSerializable;
 
 class Country implements XmlSerializable
 {
-    public function __construct(private readonly string $identificationCode, private readonly ?string $listId)
-    {
-    }
+    public function __construct(private readonly string $identificationCode, private readonly ?string $listId) {}
 
     // used in StoreCoveHelper
     public function getIdentificationCode(): string

@@ -181,7 +181,7 @@ class MpdfHelper
         bool $isInvoice = false,
         bool $zugferd_invoice = false,
         array $associated_files = [],
-        null|object $quote_or_invoice = null
+        null|object $quote_or_invoice = null,
     ): string {
         $sR->load_settings();
         $aliases = $this->ensure_uploads_folder_exists($sR);

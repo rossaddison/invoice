@@ -76,43 +76,43 @@ echo $modal_delete_items;
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag(
                     'button',
-                        [
-                           'class' => 'btn btn-primary',
-                           'href' => '#modal-choose-items',
-                           'id' => 'modal-choose-items',
-                           'data-bs-toggle' => 'modal'
-                        ]
-                    );
-                ?>
+                    [
+                        'class' => 'btn btn-primary',
+                        'href' => '#modal-choose-items',
+                        'id' => 'modal-choose-items',
+                        'data-bs-toggle' => 'modal',
+                    ],
+                );
+        ?>
                     <?= A::tag()
-                        ->addAttributes([
-                            'type' => 'reset',
-                            'onclick' => 'window.history.back()',
-                            'value' => '1',
-                            'data-bs-toggle' => 'tab',
-                            'style' => 'text-decoration:none'
-                        ])
-                        ->addClass('btn btn-danger bi bi-arrow-left')
-                        ->id('back')
-                        ->render(); ?>
+                ->addAttributes([
+                    'type' => 'reset',
+                    'onclick' => 'window.history.back()',
+                    'value' => '1',
+                    'data-bs-toggle' => 'tab',
+                    'style' => 'text-decoration:none',
+                ])
+                ->addClass('btn btn-danger bi bi-arrow-left')
+                ->id('back')
+                ->render(); ?>
                 <?= Html::closeTag('button'); ?>
                 <?= Html::openTag(
                     'button',
-                        [
-                            'class' => 'btn btn-primary',
-                            'href' => '#modal-choose-items',
-                            'id' => 'modal-choose-items',
-                            'data-bs-toggle' => 'modal'
-                        ]
-                    );
-                ?>
+                    [
+                        'class' => 'btn btn-primary',
+                        'href' => '#modal-choose-items',
+                        'id' => 'modal-choose-items',
+                        'data-bs-toggle' => 'modal',
+                    ],
+                );
+        ?>
                     <?= I::tag()
-                        ->addClass('fa fa-list')
-                        ->addAttributes([
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $translator->translate('add.product')
-                        ]);
-                    ?>
+                ->addClass('fa fa-list')
+                ->addAttributes([
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('add.product'),
+                ]);
+        ?>
                     <?= $translator->translate('add.product'); ?>
                 <?= Html::closeTag('button'); ?>
             <?= Html::closeTag('div'); ?>
@@ -143,16 +143,16 @@ if (null !== ($number) && null !== $id) {
             $translator->translate('quote.label.switch.on'),
             $translator->translate('quote.label.switch.off'),
             'quote-view-label-switch-id',
-            '16'
+            '16',
         ) : '';
-        ?>    
+?>    
         <div class="options btn-group">
             <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
                 <?php
-        if ($invEdit) { ?> 
+if ($invEdit) { ?> 
                 <li>
                     <a href="<?= $urlGenerator->generate('quote/edit', ['id' => $quote->getId()]) ?>" style="text-decoration:none">
                         <i class="fa fa-edit fa-margin"></i>
@@ -189,7 +189,7 @@ if (null !== ($number) && null !== $id) {
                     </a>
                 </li>
                 <?php // if quote has been approved (ie status 4) by the client without po number do not show quote to sales order again
-             if ($quote->getSo_id() === '0' && $quote->getStatus_id() === 4) { ?>
+     if ($quote->getSo_id() === '0' && $quote->getStatus_id() === 4) { ?>
                 <li>
                     <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
@@ -217,7 +217,7 @@ if (null !== ($number) && null !== $id) {
                 <li>      
                     <a href="#delete-items"  data-bs-toggle="modal" style="text-decoration:none">
                         <i class="fa fa-trash fa-margin"></i>
-                        <?= $translator->translate('delete')." ".$translator->translate('item'); ?>
+                        <?= $translator->translate('delete') . " " . $translator->translate('item'); ?>
                     </a>
                 </li>
                 <?php } ?>
@@ -253,7 +253,7 @@ if (null !== ($number) && null !== $id) {
                         </span>
                         <span class="client-address-country-line">
                             <?php
-                        $countryName = $quote->getClient()?->getClient_country();
+                $countryName = $quote->getClient()?->getClient_country();
 if (null !== $countryName) {
     echo '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), $countryName);
 } ?>
@@ -375,7 +375,7 @@ if (null !== $countryName) {
                                     <div class="quote-properties">
                                         <label for="quote_guest_url" hidden><?php echo $translator->translate('guest.url'); ?></label>
                                         <div class="input-group" hidden>
-                                            <input type="text" id="quote_guest_url" readonly class="form-control" value="<?=  'quote/url_key/'.$quote->getUrl_key(); ?>" hidden>
+                                            <input type="text" id="quote_guest_url" readonly class="form-control" value="<?=  'quote/url_key/' . $quote->getUrl_key(); ?>" hidden>
                                             <span class="input-group-text to-clipboard cursor-pointer"
                                                   data-clipboard-target="#quote_guest_url">
                                                 <i class="fa fa-clipboard fa-fw"></i>

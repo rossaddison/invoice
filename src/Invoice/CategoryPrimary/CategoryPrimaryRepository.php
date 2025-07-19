@@ -63,7 +63,7 @@ final class CategoryPrimaryRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'name'])
-                ->withOrder(['name' => 'asc'])
+                ->withOrder(['name' => 'asc']),
         );
     }
 

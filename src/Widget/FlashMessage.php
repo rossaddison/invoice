@@ -11,9 +11,7 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 final class FlashMessage extends Widget
 {
-    public function __construct(private readonly FlashInterface $flash)
-    {
-    }
+    public function __construct(private readonly FlashInterface $flash) {}
 
     #[\Override]
     public function render(): string
@@ -31,12 +29,12 @@ final class FlashMessage extends Widget
                     'secondary' => AlertVariant::SECONDARY,
                     'success' => AlertVariant::SUCCESS,
                     'warning' => AlertVariant::WARNING,
-                    'default' => AlertVariant::INFO
+                    'default' => AlertVariant::INFO,
                 };
                 $html[] = Alert::widget()
                     ->addClass('shadow')
                     ->variant($matchedType)
-                    ->body((string)$message['body'], true)
+                    ->body((string) $message['body'], true)
                     ->dismissable(true)
                    ->render();
             }

@@ -33,7 +33,7 @@ final class DeliveryPartyController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->deliveryPartyService = $deliveryPartyService;
@@ -46,7 +46,7 @@ final class DeliveryPartyController extends BaseController
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $deliveryParty = new DeliveryParty();
         $form = new DeliveryPartyForm($deliveryParty);
@@ -97,7 +97,7 @@ final class DeliveryPartyController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        DeliveryPartyRepository $deliverypartyRepository
+        DeliveryPartyRepository $deliverypartyRepository,
     ): Response {
         try {
             $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
@@ -124,7 +124,7 @@ final class DeliveryPartyController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        DeliveryPartyRepository $deliverypartyRepository
+        DeliveryPartyRepository $deliverypartyRepository,
     ): Response {
         $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
         if ($deliveryparty) {

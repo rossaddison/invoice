@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
  */
 foreach ($companies as $company) {
     if (null !== ($companyId = $company->getId()) && null !== ($companyName = $company->getName())) {
-        $optionsDataCompany[(string)$companyId] = $companyName;
+        $optionsDataCompany[(string) $companyId] = $companyName;
     }
 }
 ?>
@@ -70,7 +70,7 @@ foreach ($companies as $company) {
     ->label($company_public)
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'company_id'
+        'id' => 'company_id',
     ])
     ->optionsData($optionsDataCompany)
     ->required(true)
@@ -139,8 +139,8 @@ foreach ($companies as $company) {
         ->addInputAttributes(
             [
                 'class' => 'form-control',
-                'placeholder' => ' ('.$dateHelper->display().')',
-            ]
+                'placeholder' => ' (' . $dateHelper->display() . ')',
+            ],
         )
         ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
                             ? $startdate->format('Y-m-d')
@@ -154,8 +154,8 @@ foreach ($companies as $company) {
     ->addInputAttributes(
         [
             'class' => 'form-control',
-            'placeholder' => ' ('.$dateHelper->display().')'
-        ]
+            'placeholder' => ' (' . $dateHelper->display() . ')',
+        ],
     )
     ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
                         ? $enddate->format('Y-m-d')

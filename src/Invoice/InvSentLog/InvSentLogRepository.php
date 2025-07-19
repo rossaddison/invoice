@@ -171,7 +171,7 @@ final class InvSentLogRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'desc'])
+                ->withOrder(['id' => 'desc']),
         );
     }
 }

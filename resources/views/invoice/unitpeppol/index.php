@@ -42,8 +42,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('unit.peppol.index')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('unit.peppol.index'))),
+            ),
     )
     ->render();
 $toolbarReset = A::tag()
@@ -69,62 +69,62 @@ $toolbar = Div::tag();
             new DataColumn(
                 'id',
                 header: $translator->translate('id'),
-                content: static fn (UnitPeppol $model) => Html::encode($model->getId())
+                content: static fn(UnitPeppol $model) => Html::encode($model->getId()),
             ),
             new DataColumn(
                 'unit_id',
-                header:  $translator->translate('unit.name'),
-                content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name())
+                header: $translator->translate('unit.name'),
+                content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
             ),
             new DataColumn(
                 'unit_id',
-                header:  $translator->translate('unit.name.plrl'),
-                content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl())
+                header: $translator->translate('unit.name.plrl'),
+                content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
             ),
             new DataColumn(
                 'code',
-                header:  $translator->translate('code'),
-                content: static fn (UnitPeppol $model) => Html::encode($model->getCode())
+                header: $translator->translate('code'),
+                content: static fn(UnitPeppol $model) => Html::encode($model->getCode()),
             ),
             new DataColumn(
                 'name',
-                header:  $translator->translate('name'),
-                content: static fn (UnitPeppol $model) => Html::encode($model->getName())
+                header: $translator->translate('name'),
+                content: static fn(UnitPeppol $model) => Html::encode($model->getName()),
             ),
             new DataColumn(
                 'description',
-                header:  $translator->translate('description'),
-                content: static fn (UnitPeppol $model) => Html::encode($model->getDescription())
+                header: $translator->translate('description'),
+                content: static fn(UnitPeppol $model) => Html::encode($model->getDescription()),
             ),
             new DataColumn(
-                header:  $translator->translate('view'),
+                header: $translator->translate('view'),
                 content: static function (UnitPeppol $model) use ($urlGenerator): A {
                     return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), []);
-                }
+                },
             ),
             new DataColumn(
-                header:  $translator->translate('edit'),
+                header: $translator->translate('edit'),
                 content: static function (UnitPeppol $model) use ($urlGenerator): A {
                     return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), []);
-                }
+                },
             ),
             new DataColumn(
-                header:  $translator->translate('delete'),
+                header: $translator->translate('delete'),
                 content: static function (UnitPeppol $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                             [
-                                 'type' => 'submit',
-                                 'class' => 'dropdown-button',
-                                 'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                             ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                            ],
                         ),
                         $urlGenerator->generate('unitpeppol/delete', ['id' => $model->getId()]),
-                        []
+                        [],
                     );
-                }
+                },
             ),
         ];
 ?>
@@ -132,9 +132,9 @@ $toolbar = Div::tag();
     $grid_summary = $s->grid_summary(
         $paginator,
         $translator,
-        (int)$s->getSetting('default_list_limit'),
+        (int) $s->getSetting('default_list_limit'),
         $translator->translate('unit.peppol'),
-        ''
+        '',
     );
 $toolbarString = Form::tag()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

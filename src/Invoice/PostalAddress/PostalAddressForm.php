@@ -31,7 +31,7 @@ final class PostalAddressForm extends FormModel
         private readonly ?int $client_id)
     {
         // two hidden fields with ->hideLabel(true) in the view
-        $this->id = (int)$postalAddress->getId();
+        $this->id = (int) $postalAddress->getId();
 
         // not hidden fields
         $this->street_name = $postalAddress->getStreet_name();

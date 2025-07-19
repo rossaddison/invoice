@@ -10,9 +10,7 @@ use DateTime;
 
 class Delivery implements XmlSerializable
 {
-    public function __construct(private readonly ?DateTime $actualDeliveryDate, private array $deliveryLocationID_scheme, private readonly ?Address $deliveryLocation, private readonly ?Party $deliveryParty)
-    {
-    }
+    public function __construct(private readonly ?DateTime $actualDeliveryDate, private array $deliveryLocationID_scheme, private readonly ?Address $deliveryLocation, private readonly ?Party $deliveryParty) {}
 
     /**
      * @param Writer $writer

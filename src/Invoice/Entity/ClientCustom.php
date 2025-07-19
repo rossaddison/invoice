@@ -11,19 +11,17 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\ClientCustom\ClientCustomRepository::class)]
 class ClientCustom
 {
-    #[BelongsTo(target:Client::class, nullable: false)]
+    #[BelongsTo(target: Client::class, nullable: false)]
     private ?Client $client = null;
 
-    #[BelongsTo(target:CustomField::class, nullable: false)]
+    #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $client_id = null, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $custom_field_id = null, #[Column(type:'text', nullable: true)]
-        private ?string $value = null)
-    {
-    }
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+        private ?string $value = null) {}
 
     public function getClient(): ?Client
     {
@@ -37,7 +35,7 @@ class ClientCustom
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -47,7 +45,7 @@ class ClientCustom
 
     public function getClient_id(): string
     {
-        return (string)$this->client_id;
+        return (string) $this->client_id;
     }
 
     public function setClient_id(int $client_id): void
@@ -57,7 +55,7 @@ class ClientCustom
 
     public function getCustom_field_id(): string
     {
-        return (string)$this->custom_field_id;
+        return (string) $this->custom_field_id;
     }
 
     public function setCustom_field_id(int $custom_field_id): void

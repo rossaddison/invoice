@@ -83,13 +83,14 @@ echo Breadcrumbs::widget()
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-             'settings[default_invoice_group]'),
+             'settings[default_invoice_group]',
+         ),
          active: true,
          attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $defaultInvoiceGroup ?? $translator->translate('not.set')
-            ],
-         encodeLabel: false
+             'data-bs-toggle' => 'tooltip',
+             'title' => $defaultInvoiceGroup ?? $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
      ),
      BreadcrumbLink::to(
          label: $translator->translate('default.terms'),
@@ -97,27 +98,29 @@ echo Breadcrumbs::widget()
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-             'settings[default_invoice_terms]'),
+             'settings[default_invoice_terms]',
+         ),
          active: false,
          attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $s->getSetting('default_invoice_terms') ?: $translator->translate('not.set')
-            ],
-         encodeLabel: false
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('default_invoice_terms') ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
      ),
      BreadcrumbLink::to(
-         label:  $translator->translate('default.payment.method'),
+         label: $translator->translate('default.payment.method'),
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-             'settings[invoice_default_payment_method]'),
+             'settings[invoice_default_payment_method]',
+         ),
          active: false,
          attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $defaultInvoicePaymentMethod ?? $translator->translate('not.set')
-            ],
-         encodeLabel: false
+             'data-bs-toggle' => 'tooltip',
+             'title' => $defaultInvoicePaymentMethod ?? $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
      ),
      BreadcrumbLink::to(
          label: $translator->translate('invoices.due.after'),
@@ -125,13 +128,14 @@ echo Breadcrumbs::widget()
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-            'settings[invoices_due_after]'),
+             'settings[invoices_due_after]',
+         ),
          active: false,
          attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $s->getSetting('invoices_due_after') ?: $translator->translate('not.set')
-            ],
-         encodeLabel: false
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('invoices_due_after') ?: $translator->translate('not.set'),
+         ],
+         encodeLabel: false,
      ),
      BreadcrumbLink::to(
          label: $translator->translate('generate.invoice.number.for.draft'),
@@ -139,25 +143,27 @@ echo Breadcrumbs::widget()
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-              'settings[generate_invoice_number_for_draft]'),
+             'settings[generate_invoice_number_for_draft]',
+         ),
          active: false,
          attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌'
-            ],
-         encodeLabel: false
-     ),   
-     BreadcrumbLink::to(
-         label: $translator->translate('recurring'),
-         url: $urlGenerator->generate('invrecurring/index')
+             'data-bs-toggle' => 'tooltip',
+             'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌',
+         ],
+         encodeLabel: false,
      ),
      BreadcrumbLink::to(
-         label: $translator->translate('set.to.read.only').' '. $iR->getSpecificStatusArrayEmoji((int)$s->getSetting('read_only_toggle')),
-         url:  $urlGenerator->generate(
+         label: $translator->translate('recurring'),
+         url: $urlGenerator->generate('invrecurring/index'),
+     ),
+     BreadcrumbLink::to(
+         label: $translator->translate('set.to.read.only') . ' ' . $iR->getSpecificStatusArrayEmoji((int) $s->getSetting('read_only_toggle')),
+         url: $urlGenerator->generate(
              'setting/tab_index',
              [],
              ['active' => 'invoices'],
-             'settings[read_only_toggle]')
+             'settings[read_only_toggle]',
+         ),
      ),
  )
  ->listId(false)
@@ -176,7 +182,7 @@ $copyInvoiceMultiple = A::tag()
          * @see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
          */
         ->href('#modal-copy-inv-multiple')
-        ->content('☑️'.$translator->translate('copy.invoice'))
+        ->content('☑️' . $translator->translate('copy.invoice'))
         ->id('btn-modal-copy-inv-multipe')
         ->render();
 
@@ -188,7 +194,7 @@ $copyInvoiceMultiple = A::tag()
 $markAsSent = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('sent'))])
         ->addClass('btn btn-success')
-        ->content('☑️'.$translator->translate('sent').$iR->getSpecificStatusArrayEmoji(2))
+        ->content('☑️' . $translator->translate('sent') . $iR->getSpecificStatusArrayEmoji(2))
         ->id('btn-mark-as-sent')
         ->render();
 
@@ -203,7 +209,7 @@ $disabledMarkSentAsDraft = A::tag()
             'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-success')
-        ->content('☑️'.$translator->translate('draft').$iR->getSpecificStatusArrayEmoji(1))
+        ->content('☑️' . $translator->translate('draft') . $iR->getSpecificStatusArrayEmoji(1))
         ->id('btn-mark-sent-as-draft')
         ->render();
 
@@ -213,7 +219,7 @@ $enabledMarkSentAsDraft = A::tag()
             'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-success')
-        ->content('☑️'.$translator->translate('draft').$iR->getSpecificStatusArrayEmoji(1))
+        ->content('☑️' . $translator->translate('draft') . $iR->getSpecificStatusArrayEmoji(1))
         ->id('btn-mark-sent-as-draft')
         ->render();
 
@@ -229,7 +235,7 @@ $markAsRecurringMultiple = A::tag()
          * @see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
          */
         ->href('#create-recurring-multiple')
-        ->content('☑️'.$translator->translate('recurring').'♻️')
+        ->content('☑️' . $translator->translate('recurring') . '♻️')
         ->render();
 
 $toolbarReset = A::tag()
@@ -259,7 +265,7 @@ $enabledAddInvoiceButton = A::tag()
         ->addAttributes([
             'class' => 'btn btn-info',
             'data-bs-toggle' => 'modal',
-            'style' => 'text-decoration:none'
+            'style' => 'text-decoration:none',
         ])
         ->content('➕')
         ->href('#modal-add-inv')
@@ -288,59 +294,59 @@ $toolbar = Div::tag();
         <div class="btn-group index-options">
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 0]); ?>"
                class="btn btn-<?= $status == 0 ? $iR->getSpecificStatusArrayClass(0) : 'btn-default' ?>">
-                   <?= $iR->getSpecificStatusArrayEmoji(0).' '.$translator->translate('all'); ?>
+                   <?= $iR->getSpecificStatusArrayEmoji(0) . ' ' . $translator->translate('all'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 1]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 1 ? $iR->getSpecificStatusArrayClass(1) : 'btn-default' ?>">
-                   <?= $iR->getSpecificStatusArrayEmoji(1).' '.$translator->translate('draft'); ?>
+                   <?= $iR->getSpecificStatusArrayEmoji(1) . ' ' . $translator->translate('draft'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 2]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 2 ? $iR->getSpecificStatusArrayClass(2) : 'btn-default' ?>">
-                   <?= $iR->getSpecificStatusArrayEmoji(2).' '.$translator->translate('sent'); ?>
+                   <?= $iR->getSpecificStatusArrayEmoji(2) . ' ' . $translator->translate('sent'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 3]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 3 ? $iR->getSpecificStatusArrayClass(3) : 'btn-default' ?>">
-                   <?= $iR->getSpecificStatusArrayEmoji(3).' '.$translator->translate('viewed'); ?>
+                   <?= $iR->getSpecificStatusArrayEmoji(3) . ' ' . $translator->translate('viewed'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 4]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 4 ? $iR->getSpecificStatusArrayClass(4) : 'btn-default' ?>">
-                   <?= $iR->getSpecificStatusArrayEmoji(4).' '.$translator->translate('paid'); ?>
+                   <?= $iR->getSpecificStatusArrayEmoji(4) . ' ' . $translator->translate('paid'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 5]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 5 ? $iR->getSpecificStatusArrayClass(5) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(5).' '.$translator->translate('overdue'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(5) . ' ' . $translator->translate('overdue'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 6]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 6 ? $iR->getSpecificStatusArrayClass(6) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(6).' '.$translator->translate('unpaid'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(6) . ' ' . $translator->translate('unpaid'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 7]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 7 ? $iR->getSpecificStatusArrayClass(7) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(7).' '.$translator->translate('reminder'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(7) . ' ' . $translator->translate('reminder'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 8]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 8 ? $iR->getSpecificStatusArrayClass(8) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(8).' '.$translator->translate('letter'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(8) . ' ' . $translator->translate('letter'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 9]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 9 ? $iR->getSpecificStatusArrayClass(9) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(9).' '.$translator->translate('claim'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(9) . ' ' . $translator->translate('claim'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 10]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 10 ? $iR->getSpecificStatusArrayClass(10) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(10).' '.$translator->translate('judgement'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(10) . ' ' . $translator->translate('judgement'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 11]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 11 ? $iR->getSpecificStatusArrayClass(11) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(11).' '.$translator->translate('enforcement'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(11) . ' ' . $translator->translate('enforcement'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 12]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 12 ? $iR->getSpecificStatusArrayClass(12) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(12).' '.$translator->translate('credit.invoice.for.invoice'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(12) . ' ' . $translator->translate('credit.invoice.for.invoice'); ?>
             </a>
             <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 13]); ?>" style="text-decoration:none"
                class="btn btn-<?= $status == 13 ? $iR->getSpecificStatusArrayClass(13) : 'btn-default' ?>">
-                <?= $iR->getSpecificStatusArrayEmoji(13).' '.$translator->translate('loss'); ?>
+                <?= $iR->getSpecificStatusArrayEmoji(13) . ' ' . $translator->translate('loss'); ?>
             </a>
         </div>
     </div>
@@ -373,15 +379,15 @@ $toolbar = Div::tag();
                 }
                 return '';
             },
-            multiple: true
+            multiple: true,
         ),
         new ActionColumn(
-            buttons: [ 
+            buttons: [
                 new ActionButton(
                     // is_read_only false, disable_read_only 0, status draft1 => ✎, not disabled
                     // is_read_only false, disable_read_only 1, status draft1 => ❗✎, not disabled
                     // is_read_only true, disable_read_only 0, status  sent2 => 🚫, disabled
-                    // is_read_only true, disable_read_only 1, status sent2 => ❗, not disabled     
+                    // is_read_only true, disable_read_only 1, status sent2 => ❗, not disabled
                     content: static function (Inv $inv) use ($s): string {
                         $iRO = $inv->getIs_read_only();
                         $dRO = $s->getSetting('disable_read_only');
@@ -399,21 +405,21 @@ $toolbar = Div::tag();
                                 '1' => [
                                     /** warning: editing a draft with protection off */
                                     '1' => '❗✎',
-                                ]
+                                ],
                             ],
                             /** non editable invoice */
                             'true' => [
                                 /** protection is on */
                                 '0' => [
                                     /** an invoice marked as sent cannot be edited */
-                                    '2' => '🚫'
+                                    '2' => '🚫',
                                 ],
                                 /** protection is off */
                                 '1' => [
                                     /** warning: you are editing an invoice whilst protection is off */
-                                    '2' => '❗'
-                                ]
-                            ]
+                                    '2' => '❗',
+                                ],
+                            ],
                         ];
                         $iROString = $iRO ? 'true' : 'false';
                         /**
@@ -434,30 +440,36 @@ $toolbar = Div::tag();
                             'false' => [
                                 /** protection is on */
                                 '0' => [
-                                    '1' => $urlGenerator->generate('inv/edit', 
-                                            ['id' => $inv->getId()]),
+                                    '1' => $urlGenerator->generate(
+                                        'inv/edit',
+                                        ['id' => $inv->getId()],
+                                    ),
                                 ],
                                 /** protection is off */
                                 '1' => [
                                     /** Allow editing of draft, even though protection is off */
-                                    '1' => $urlGenerator->generate('inv/edit', 
-                                            ['id' => $inv->getId()]),
-                                ]
+                                    '1' => $urlGenerator->generate(
+                                        'inv/edit',
+                                        ['id' => $inv->getId()],
+                                    ),
+                                ],
                             ],
                             /** not editable invoice */
                             'true' => [
                                 /** protection is on */
                                 '0' => [
                                     /** Invoice cannot be edited whilst protection is on */
-                                    '2' => ''
+                                    '2' => '',
                                 ],
                                 /** protection is off */
                                 '1' => [
                                     /** Allow the editing of invoice whilst protection is off */
-                                    '2' => $urlGenerator->generate('inv/edit', 
-                                            ['id' => $inv->getId()]),
-                                ]
-                            ]
+                                    '2' => $urlGenerator->generate(
+                                        'inv/edit',
+                                        ['id' => $inv->getId()],
+                                    ),
+                                ],
+                            ],
                         ];
 
                         $iROString = $iRO ? 'true' : 'false';
@@ -480,16 +492,16 @@ $toolbar = Div::tag();
                                 '0' => [
                                     /** draft invoices can be edited */
                                     '1' => [
-                                        'data-bs-toggle' => 'tooltip', 
+                                        'data-bs-toggle' => 'tooltip',
                                         'title' => $translator->translate('edit')],
                                 ],
                                 /** protection is off */
                                 '1' => [
                                     '1' => [
-                                        'data-bs-toggle' => 'tooltip', 
-                                        'title' => $translator->translate('security.disable.read.only.true.draft.check.and.mark'), 
-                                        ],
-                                ]
+                                        'data-bs-toggle' => 'tooltip',
+                                        'title' => $translator->translate('security.disable.read.only.true.draft.check.and.mark'),
+                                    ],
+                                ],
                             ],
                             /** not editable invoice */
                             'true' => [
@@ -497,20 +509,20 @@ $toolbar = Div::tag();
                                 '0' => [
                                     /** Invoice cannot be edited whilst protection is on */
                                     '2' => [
-                                        'data-bs-toggle' => 'tooltip', 
-                                        'title' => $translator->translate('sent'), 
+                                        'data-bs-toggle' => 'tooltip',
+                                        'title' => $translator->translate('sent'),
                                         'disabled' => 'disabled',
-                                        'aria-disabled' => 'true',  
-                                        'style' => 'pointer-events:none'], 
+                                        'aria-disabled' => 'true',
+                                        'style' => 'pointer-events:none'],
                                 ],
                                 /** protection is off */
                                 '1' => [
                                     /** Allow the editing of invoice whilst protection is off */
                                     '2' => [
-                                        'data-bs-toggle' => 'tooltip', 
-                                        'title' => $translator->translate('security.disable.read.only.true.sent.check.and.mark')]
-                                ]
-                            ]
+                                        'data-bs-toggle' => 'tooltip',
+                                        'title' => $translator->translate('security.disable.read.only.true.sent.check.and.mark')],
+                                ],
+                            ],
                         ];
                         $iROString = $iRO ? 'true' : 'false';
                         /**
@@ -520,29 +532,29 @@ $toolbar = Div::tag();
                          */
                         $attributes = $attributesMap[$iROString][$dRO][$status] ?? [];
                         return $attributes;
-                    },      
+                    },
                 ),
                 new ActionButton(
                     url: static function (Inv $inv) use ($translator, $urlGenerator): string {
                         return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf', ['id' => $inv->getId()]);
-                    },       
+                    },
                     attributes: [
-                       'data-bs-toggle' => 'tooltip',
-                       'target' => '_blank',
-                       'title' => $translator->translate('download.pdf'),
-                       'class' => 'bi bi-file-pdf'
-                   ]
+                        'data-bs-toggle' => 'tooltip',
+                        'target' => '_blank',
+                        'title' => $translator->translate('download.pdf'),
+                        'class' => 'bi bi-file-pdf',
+                    ],
                 ),
                 new ActionButton(
                     url: static function (Inv $inv) use ($translator, $urlGenerator): string {
                         return $urlGenerator->generate('inv/pdf_dashboard_include_cf', ['id' => $inv->getId()]);
                     },
                     attributes: [
-                       'data-bs-toggle' => 'tooltip',
-                       'target' => '_blank',
-                       'title' => $translator->translate('download.pdf').'➡️'.$translator->translate('custom.field'),
-                       'class' => 'bi bi-file-pdf-fill'
-                   ],
+                        'data-bs-toggle' => 'tooltip',
+                        'target' => '_blank',
+                        'title' => $translator->translate('download.pdf') . '➡️' . $translator->translate('custom.field'),
+                        'class' => 'bi bi-file-pdf-fill',
+                    ],
                 ),
                 new ActionButton(
                     content: '📨',
@@ -554,17 +566,17 @@ $toolbar = Div::tag();
                         return '';
                     },
                     attributes: [
-                       'data-bs-toggle' => 'tooltip',
-                       'title' => $translator->translate('email.warning.draft')
-                   ],
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('email.warning.draft'),
+                    ],
                 ),
-            ]
+            ],
         ),
         new DataColumn(
             'id',
             header: 'id',
-            content: static fn (Inv $model) => (string)$model->getId(),
-            withSorting: true
+            content: static fn(Inv $model) => (string) $model->getId(),
+            withSorting: true,
         ),
         new DataColumn(
             property: 'filterInvNumber',
@@ -573,19 +585,19 @@ $toolbar = Div::tag();
             content: static function (Inv $model) use ($urlGenerator): A {
                 return  A::tag()
                         ->addAttributes(['style' => 'text-decoration:none'])
-                        ->content(($model->getNumber() ?? '#'). ' 🔍')
+                        ->content(($model->getNumber() ?? '#') . ' 🔍')
                         ->href($urlGenerator->generate('inv/view', ['id' => $model->getId()]));
             },
             filter: $optionsDataInvNumberDropDownFilter,
-            withSorting: false
+            withSorting: false,
         ),
-        new DataColumn( 
-            header: '💳',    
+        new DataColumn(
+            header: '💳',
             field: 'creditinvoice_parent_id',
             content: static function (Inv $model) use ($urlGenerator, $iR): A {
                 $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
-                if (null!==$visible) {
-                    $url = ($visible->getNumber() ?? '#'). '💳';
+                if (null !== $visible) {
+                    $url = ($visible->getNumber() ?? '#') . '💳';
                     return  A::tag()
                             ->addAttributes(['style' => 'text-decoration:none'])
                             ->content($url)
@@ -593,7 +605,7 @@ $toolbar = Div::tag();
                 }
                 return A::tag()->content('')->href('');
             },
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'invsentlogs',
@@ -609,7 +621,7 @@ $toolbar = Div::tag();
                     }
                 }
                 return '';
-            }
+            },
         ),
         new DataColumn(
             'invsentlogs',
@@ -622,14 +634,14 @@ $toolbar = Div::tag();
                         $linkToInvSentLogWithFilterInv = A::tag()
                         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('email.logs')])
                         ->addClass('btn btn-success me-1')
-                        ->content((string)$count)
+                        ->content((string) $count)
                         ->href($urlGenerator->generate('invsentlog/index', [], ['filterInvNumber' => $model->getNumber()]))
                         ->id('btn-all-visible');
                         return $linkToInvSentLogWithFilterInv;
                     }
                 }
                 return '';
-            }
+            },
         ),
         new DataColumn(
             content: static function (Inv $model) use ($islR, $urlGenerator, $gridComponents): string {
@@ -649,28 +661,28 @@ $toolbar = Div::tag();
                     return $gridComponents->gridMiniTableOfInvSentLogsForInv(
                         $model,
                         $min_invsentlogs_per_row = 4,
-                        $urlGenerator
+                        $urlGenerator,
                     );
                 }
                 return '';
-            },   
+            },
             visible: $visibleToggleInvSentLogColumn,
-            encodeContent: false        
+            encodeContent: false,
         ),
         new DataColumn(
             'status_id',
             header: $translator->translate('status'),
             content: static function (Inv $model) use ($s, $iR, $irR, $translator): Yiisoft\Html\Tag\CustomTag {
-                $label = $iR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
+                $label = $iR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
                 if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') == '0') {
                     $label .=  ' 🚫';
                 }
                 if ($irR->repoCount((string) $model->getId()) > 0) {
-                    $label .= $translator->translate('recurring'). ' 🔄';
+                    $label .= $translator->translate('recurring') . ' 🔄';
                 }
-                return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
+                return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int) $model->getStatus_id()) . $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int) $model->getStatus_id())]);
             },
-            withSorting: true
+            withSorting: true,
         ),
         /**
          * @see https://github.com/rossaddison/yii-dataview/commit/9e908d87cddd0661b440cb989429e1652e00a9fe
@@ -679,32 +691,32 @@ $toolbar = Div::tag();
             property: 'filterClient',
             field: 'client_id',
             header: $translator->translate('client'),
-            content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
+            content: static fn(Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
             filter: $optionsDataClientsDropdownFilter,
             withSorting: false,
-            encodeContent: false    
+            encodeContent: false,
         ),
         new DataColumn(
             property: 'filterClientGroup',
             field: 'client_id',
             header: $translator->translate('client.group'),
-            content: static fn (Inv $model): string => $model->getClient()?->getClient_group() ?? '',
+            content: static fn(Inv $model): string => $model->getClient()?->getClient_group() ?? '',
             filter: $optionsDataClientGroupDropDownFilter,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             property: 'filterDateCreatedYearMonth',
             field: 'date_created',
             header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
-            content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
+            content: static fn(Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
             filter: $optionsDataYearMonthDropDownFilter,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'time_created',
             header: $translator->translate('datetime.immutable.time.created'),
             // Show only the time of the DateTimeImmutable
-            content: static fn (Inv $model): string => ($model->getTime_created())->format('H:i:s')
+            content: static fn(Inv $model): string => ($model->getTime_created())->format('H:i:s'),
         ),
         new DataColumn(
             'date_modified',
@@ -719,7 +731,7 @@ $toolbar = Div::tag();
                            ->attributes(['class' => 'label label-success'])
                            ->content(Html::encode($model->getDate_modified()->format('Y-m-d')));
                 }
-            }
+            },
         ),
         new DataColumn(
             'date_due',
@@ -730,12 +742,12 @@ $toolbar = Div::tag();
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
                         ->content(Html::encode(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : ''));
             },
-            withSorting: true
+            withSorting: true,
         ),
         new DataColumn(
             property: 'filterInvAmountTotal',
             field: 'id',
-            header: $translator->translate('total') . '➡️'. $s->getSetting('currency_symbol'),
+            header: $translator->translate('total') . '➡️' . $s->getSetting('currency_symbol'),
             content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
@@ -747,11 +759,11 @@ $toolbar = Div::tag();
             },
             filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 50px']),
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'id',
-            header: $translator->translate('paid') . '➡️'. $s->getSetting('currency_symbol'),
+            header: $translator->translate('paid') . '➡️' . $s->getSetting('currency_symbol'),
             content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
@@ -760,43 +772,43 @@ $toolbar = Div::tag();
                                 ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)));
             },
-            withSorting: false
+            withSorting: false,
         ),
-         new DataColumn(
-             'id',
-             header: $translator->translate('balance')  . '➡️'. $s->getSetting('currency_symbol'),
-             content: static function (Inv $model) use ($decimalPlaces): Label {
-                 $invAmountBalance = $model->getInvAmount()->getBalance();
-                 return  Label::tag()
-                         ->attributes(['class' => $invAmountBalance > 0.00 ? 'label label-success' : 'label label-warning'])
-                         ->content(Html::encode(null !== $invAmountBalance
-                                 ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
-                                 : number_format(0, $decimalPlaces)));
-             },
-             withSorting: false
-         ),
+        new DataColumn(
+            'id',
+            header: $translator->translate('balance') . '➡️' . $s->getSetting('currency_symbol'),
+            content: static function (Inv $model) use ($decimalPlaces): Label {
+                $invAmountBalance = $model->getInvAmount()->getBalance();
+                return  Label::tag()
+                        ->attributes(['class' => $invAmountBalance > 0.00 ? 'label label-success' : 'label label-warning'])
+                        ->content(Html::encode(null !== $invAmountBalance
+                                ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
+                                : number_format(0, $decimalPlaces)));
+            },
+            withSorting: false,
+        ),
         new DataColumn(
             header: '🚚',
             content: static function (Inv $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate(
                     'del/add',
                     [
-                    /**
+                        /**
                      *
                      * @see DeliveryLocation add function getRedirectResponse
                      * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
                      */
-                    'client_id' => $model->getClient_id()
-                ],
+                        'client_id' => $model->getClient_id(),
+                    ],
                     [
-                    'origin' => 'inv',
-                    'origin_id' => $model->getId(),
-                    'action' => 'index'
-                ]
+                        'origin' => 'inv',
+                        'origin_id' => $model->getId(),
+                        'action' => 'index',
+                    ],
                 ));
             },
             visible: $visible,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'quote_id',
@@ -808,19 +820,19 @@ $toolbar = Div::tag();
                     $statusId = $quote->getStatus_id();
                     if (null !== $statusId) {
                         return Html::a(
-                            ($quote->getNumber() ?? '#') . ' ' . $qR->getSpecificStatusArrayLabel((string)$statusId),
+                            ($quote->getNumber() ?? '#') . ' ' . $qR->getSpecificStatusArrayLabel((string) $statusId),
                             $urlGenerator->generate('quote/view', ['id' => $quote_id]),
                             [
                                 'style' => 'text-decoration:none',
-                                'class' => 'label ' . $qR->getSpecificStatusArrayClass((string)$statusId)
-                            ]
+                                'class' => 'label ' . $qR->getSpecificStatusArrayClass((string) $statusId),
+                            ],
                         );
                     }
                 }
                 return '';
             },
             visible: $visible,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'so_id',
@@ -831,7 +843,7 @@ $toolbar = Div::tag();
                 if (null !== $so) {
                     $statusId = $so->getStatus_id();
                     if (null !== $statusId) {
-                        return (string) Html::a(($so->getNumber() ?? '#') . ' ' . $soR->getSpecificStatusArrayLabel((string)$statusId), $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)]);
+                        return (string) Html::a(($so->getNumber() ?? '#') . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId), $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)]);
                     }
                 } else {
                     return '';
@@ -839,7 +851,7 @@ $toolbar = Div::tag();
                 return '';
             },
             visible: $visible,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'delivery_location_id',
@@ -850,12 +862,12 @@ $toolbar = Div::tag();
                 return null !== $delivery_location ? Html::encode($delivery_location->getGlobal_location_number()) : '';
             },
             visible: $visible,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             header: $translator->translate('delete'),
             content: static function (Inv $model) use ($s, $translator, $urlGenerator): A|Label {
-                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ? 
+                return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ?
                         A::tag()->content(
                             Html::tag(
                                 'button',
@@ -863,14 +875,15 @@ $toolbar = Div::tag();
                                 [
                                     'type' => 'submit',
                                     'class' => 'dropdown-button',
-                                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
-                                ]
+                                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                                ],
                             ),
-                            $urlGenerator->generate('inv/delete', ['id' => $model->getId()])) : Label::tag();
+                            $urlGenerator->generate('inv/delete', ['id' => $model->getId()]),
+                        ) : Label::tag();
             },
             visible: $visible,
-            withSorting: false
-        )
+            withSorting: false,
+        ),
     ];
 ?>
 <?php
@@ -878,7 +891,7 @@ $toolbarString =
     Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false))->encode(false)->render().
+    Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false))->encode(false)->render() .
     // use the checkboxcolumn to copy multiple invoices accrding to a new date
     Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render() .
     // use the checkboxcolumn to mark invoices as sent
@@ -888,14 +901,14 @@ $toolbarString =
         $s->getSetting('disable_read_only') === (string) 0
         ? Div::tag()->addClass('float-end m-3')->content($disabledMarkSentAsDraft)->encode(false)->render()
         : Div::tag()->addClass('float-end m-3')->content($enabledMarkSentAsDraft)->encode(false)->render()
-    ).
+    ) .
     // use the checkboxcolumn to mark invoices as recurring
     Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .
     (
         $clientCount == 0
         ? Div::tag()->addClass('float-end m-3')->content($disabledAddInvoiceButton)->encode(false)->render()
         : Div::tag()->addClass('float-end m-3')->content($enabledAddInvoiceButton)->encode(false)->render()
-    ).
+    ) .
     Form::tag()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
@@ -910,14 +923,14 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
         ->withPageSize($defaultPageSizeOffsetPaginator > 0 ? $defaultPageSizeOffsetPaginator : 1)
         ->withCurrentPage($page)
         ->withSort($sort)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
     $translator->translate('invoices'),
-    $label
+    $label,
 );
 
 echo GridView::widget()
@@ -941,7 +954,7 @@ echo GridView::widget()
 ->id('w3-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

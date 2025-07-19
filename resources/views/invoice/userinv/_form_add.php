@@ -87,7 +87,7 @@ echo Field::select($form, 'user_id')
 ->label($translator->translate('users'))
 ->addInputAttributes([
     'class' => 'form-control',
-    'id' => 'user_id'
+    'id' => 'user_id',
 ])
 ->optionsData($optionsDataSignedUpUsersNotInUserInv)
 ->value(Html::encode($form->getUser_id() ?? ''))
@@ -110,7 +110,7 @@ echo Field::select($form, 'type')
 ->label($translator->translate('type'))
 ->addInputAttributes([
     'class' => 'form-control',
-    'id' => 'type'
+    'id' => 'type',
 ])
 ->optionsData($optionsDataType)
 ->value(Html::encode($form->getType() ?? 1))
@@ -144,7 +144,7 @@ echo Field::select($form, 'language')
 ->label($translator->translate('language'))
 ->addInputAttributes([
     'class' => 'form-control',
-    'id' => 'language'
+    'id' => 'language',
 ])
 ->optionsData($optionsDataLanguage)
 ->value(Html::encode($form->getLanguage() ?? ''))
@@ -157,7 +157,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('name'),
         'class' => 'form-control',
-        'id' => 'name'
+        'id' => 'name',
     ])
     ->value(Html::encode($form->getName() ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -169,7 +169,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('company'),
         'class' => 'form-control',
-        'id' => 'company'
+        'id' => 'company',
     ])
     ->value(Html::encode($form->getCompany() ?? ''));
 ?>
@@ -180,7 +180,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('street.address'),
         'class' => 'form-control',
-        'id' => 'address_1'
+        'id' => 'address_1',
     ])
     ->value(Html::encode($form->getAddress_1() ?? ''));
 ?>
@@ -191,7 +191,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('street.address'),
         'class' => 'form-control',
-        'id' => 'address_2'
+        'id' => 'address_2',
     ])
     ->value(Html::encode($form->getAddress_2() ?? ''));
 ?>
@@ -202,7 +202,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('city'),
         'class' => 'form-control',
-        'id' => 'city'
+        'id' => 'city',
     ])
     ->value(Html::encode($form->getCity() ?? ''));
 ?>
@@ -213,7 +213,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('state'),
         'class' => 'form-control',
-        'id' => 'state'
+        'id' => 'state',
     ])
     ->value(Html::encode($form->getState() ?? ''));
 ?>
@@ -224,7 +224,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('zip'),
         'class' => 'form-control',
-        'id' => 'zip'
+        'id' => 'zip',
     ])
     ->value(Html::encode($form->getZip() ?? ''));
 ?>
@@ -235,7 +235,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('country'),
         'class' => 'form-control',
-        'id' => 'country'
+        'id' => 'country',
     ])
     ->value(Html::encode($form->getCountry() ?? ''));
 ?>
@@ -246,7 +246,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('phone'),
         'class' => 'form-control',
-        'id' => 'phone'
+        'id' => 'phone',
     ])
     ->value(Html::encode($form->getPhone() ?? ''));
 ?>
@@ -257,7 +257,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('fax'),
         'class' => 'form-control',
-        'id' => 'fax'
+        'id' => 'fax',
     ])
     ->value(Html::encode($form->getFax() ?? ''));
 ?>
@@ -268,7 +268,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('mobile'),
         'class' => 'form-control',
-        'id' => 'mobile'
+        'id' => 'mobile',
     ])
     ->value(Html::encode($form->getMobile() ?? ''));
 ?>
@@ -279,7 +279,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('email'),
         'class' => 'form-control',
-        'id' => 'email'
+        'id' => 'email',
     ])
     ->disabled(true)
     ->value(Html::encode($form->getUser()?->getEmail() ?? '#'));
@@ -291,7 +291,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('web.address'),
         'class' => 'form-control',
-        'id' => 'web'
+        'id' => 'web',
     ])
     ->value(Html::encode($form->getWeb() ?? ''));
 ?>
@@ -302,7 +302,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('tax.code'),
         'class' => 'form-control',
-        'id' => 'tax_code'
+        'id' => 'tax_code',
     ])
     ->value(Html::encode($form->getTax_code() ?? ''));
 ?>
@@ -313,7 +313,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('user.subscriber.number'),
         'class' => 'form-control',
-        'id' => 'subscribernumber'
+        'id' => 'subscribernumber',
     ])
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
@@ -324,7 +324,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('user.iban'),
         'class' => 'form-control',
-        'id' => 'iban'
+        'id' => 'iban',
     ])
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
 ?>
@@ -335,7 +335,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('delivery.location.global.location.number'),
         'class' => 'form-control',
-        'id' => 'gln'
+        'id' => 'gln',
     ])
     ->value(Html::encode($form->getGln() ?? ''));
 ?>
@@ -346,7 +346,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('sumex.rcc'),
         'class' => 'form-control',
-        'id' => 'rcc'
+        'id' => 'rcc',
     ])
     ->value(Html::encode($form->getRcc() ?? ''));
 ?>
@@ -357,7 +357,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'placeholder' => $translator->translate('user.inv.list.limit'),
         'class' => 'form-control',
-        'id' => 'listLimit'
+        'id' => 'listLimit',
     ])
     ->value(Html::encode($form->getListLimit() ?? 10));
 ?>

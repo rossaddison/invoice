@@ -50,15 +50,15 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string)$model->getClient_id(),
-        withSorting: true
+        content: static fn(Client $model) => (string) $model->getClient_id(),
+        withSorting: true,
     ),
     new DataColumn(
         'client_active',
         header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
             return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
-        }
+        },
     ),
     new DataColumn(
         'client_email',
@@ -66,8 +66,8 @@ $columns = [
         content: static function (Client $model): string {
             return $model->getClient_email() ?: '';
         },
-        encodeContent: true,        
-        withSorting: false
+        encodeContent: true,
+        withSorting: false,
     ),
     new DataColumn(
         'client_mobile',
@@ -75,8 +75,8 @@ $columns = [
         content: static function (Client $model): string {
             return $model->getClient_mobile() ?? '';
         },
-        encodeContent: true,        
-        withSorting: true
+        encodeContent: true,
+        withSorting: true,
     ),
     new DataColumn(
         field: 'client_name',
@@ -87,10 +87,10 @@ $columns = [
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
         },
-        withSorting: false
+        withSorting: false,
     ),
     new DataColumn(
-        field:  'client_surname',
+        field: 'client_surname',
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
@@ -98,7 +98,7 @@ $columns = [
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
         },
-        withSorting: false
+        withSorting: false,
     ),
     new DataColumn(
         'client_phone',
@@ -106,8 +106,8 @@ $columns = [
         content: static function (Client $model): string {
             return $model->getClient_phone() ?? '';
         },
-        encodeContent: true,        
-        withSorting: true
+        encodeContent: true,
+        withSorting: true,
     ),
     new DataColumn(
         'invs',
@@ -124,7 +124,7 @@ $columns = [
                  * @var App\Invoice\Entity\Inv $invoice
                  */
                 foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
                     if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
                         // Load the ArrayCollection
                         $model->addInv($invoice);
@@ -138,7 +138,7 @@ $columns = [
             }
             return 0;
         },
-        encodeContent: false
+        encodeContent: false,
     ),
     new DataColumn(
         'invs',
@@ -151,7 +151,7 @@ $columns = [
                  * @var App\Invoice\Entity\Inv $invoice
                  */
                 foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
                     if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
                         // Load into the ArrayCollection the invoices that make up this balance
                         $model->addInv($invoice);
@@ -162,24 +162,24 @@ $columns = [
                 return $gridComponents->gridMiniTableOfInvoicesForClient(
                     $model,
                     $min_invoices_per_row = 4,
-                    $urlGenerator
+                    $urlGenerator,
                 );
             } else {
                 return '';
             }
         },
-        encodeContent: false        
+        encodeContent: false,
     ),
     new DataColumn(
         'client_id',
-        header: $translator->translate('balance') . ' ('. $s->getSetting('currency_symbol') . ')',
+        header: $translator->translate('balance') . ' (' . $s->getSetting('currency_symbol') . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
             if (null !== ($clientId = $model->getClient_id())) {
                 return Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR)));
             } else {
                 return '';
             }
-        }
+        },
     ),
 ];
 
@@ -188,9 +188,9 @@ $columns = [
    $grid_summary = $s->grid_summary(
        $paginator,
        $translator,
-       (int)$userInv->getListLimit(),
+       (int) $userInv->getListLimit(),
        $translator->translate('clients'),
-       ''
+       '',
    );
 $toolbarString =
     Form::tag()
@@ -200,22 +200,22 @@ $toolbarString =
     Div::tag()
         ->addClass('btn-group')
         ->content(
-            $gridComponents->toolbarReset($urlGenerator).
+            $gridComponents->toolbarReset($urlGenerator) .
             A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
-            ->addClass('btn '.($active == 2 ? 'btn-primary' : 'btn-info'))
+            ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
-            ->render().
+            ->render() .
             A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
-            ->addClass('btn '.($active == 1 ? 'btn-primary' : 'btn-info'))
+            ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
-            ->render().
+            ->render() .
             A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
-            ->addClass('btn '.($active == 0 ? 'btn-primary' : 'btn-info'))
+            ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
-            ->render()
+            ->render(),
         )
         ->encode(false)->render() .
     Form::tag()->close();

@@ -23,18 +23,18 @@ $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_langua
         $translator->translate('product.property.table'),
         $urlGenerator->generate(
             'productproperty/index',
-            $languageArgument
+            $languageArgument,
         ),
-        ['style' => 'text-decoration:none']
+        ['style' => 'text-decoration:none'],
     ); ?>
 </label>
     <?= Html::a(
         $translator->translate('product.property'),
         $urlGenerator->generate(
             'productproperty/add',
-            $productPropertyArguments
+            $productPropertyArguments,
         ),
-        ['class' => 'btn btn-primary fa fa-plus']
+        ['class' => 'btn btn-primary fa fa-plus'],
     ); ?>
 </div>
 <br>

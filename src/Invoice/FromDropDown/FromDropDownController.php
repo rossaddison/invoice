@@ -34,7 +34,7 @@ final class FromDropDownController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->fromService = $fromService;
@@ -72,14 +72,14 @@ final class FromDropDownController extends BaseController
 
     public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): Response
     {
-        $page = (int)$currentRoute->getArgument('page', '1');
+        $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $from = $fromRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($from))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $parameters = [
             'froms' => $this->froms($fromRepository),
             'paginator' => $paginator,
@@ -96,7 +96,7 @@ final class FromDropDownController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        FromDropDownRepository $fromRepository
+        FromDropDownRepository $fromRepository,
     ): Response {
         try {
             $from = $this->from($currentRoute, $fromRepository);
@@ -123,7 +123,7 @@ final class FromDropDownController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        FromDropDownRepository $fromRepository
+        FromDropDownRepository $fromRepository,
     ): Response {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from) {

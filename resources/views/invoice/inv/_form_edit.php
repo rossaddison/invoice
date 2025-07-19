@@ -76,7 +76,7 @@ if ($vat) {
                                          ->addInputAttributes([
                                              'class' => 'form-control',
                                              'readonly' => 'readonly',
-                                           ])
+                                         ])
                                          ->value(Html::encode($form->getNumber()))
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -148,19 +148,19 @@ if ($vat) {
                                     <a href="<?= $urlGenerator->generate(
                                         'del/edit',
                                         [
-                                                'id' => $form->getDelivery_location_id()
-                                            ],
+                                            'id' => $form->getDelivery_location_id(),
+                                        ],
                                         [
-                                                /**
+                                            /**
                                                  * Query parameters used to build a return url back to this form
                                                  * in DeliveryController edit function
                                                  * once the delivery location has been edited
                                                  * @see vendor\yiisoft\router\UrlGeneratorInterface;
                                                  */
-                                                'origin' => 'inv',
-                                                'origin_id' => $form->getId(),
-                                                'action' => 'edit'
-                                            ]
+                                            'origin' => 'inv',
+                                            'origin_id' => $form->getId(),
+                                            'action' => 'edit',
+                                        ],
                                     ); ?>"><i class="fa fa-pencil fa-fw"></i><?= $translator->translate('delivery.location') ?>
                                     </a>
                                 </span>  
@@ -172,15 +172,15 @@ if ($vat) {
                                     $urlGenerator->generate(
                                         'del/add',
                                         [
-                                            'client_id' => $inv->getClient_id()
+                                            'client_id' => $inv->getClient_id(),
                                         ],
                                         [
                                             'origin' => 'inv',
                                             'origin_id' => $inv->getId(),
-                                            'action' => 'edit'
-                                        ]
+                                            'action' => 'edit',
+                                        ],
                                     ),
-                                    ['class' => 'btn btn-danger btn-lg mt-3']
+                                    ['class' => 'btn btn-danger btn-lg mt-3'],
                                 );
                             }
 ?>
@@ -199,10 +199,12 @@ if ($vat) {
                             <?= Html::closeTag('div'); ?>         
                             <?php
                         } ?>
-                        <?php echo Html::a($translator->translate('contract.add'), 
-                                $urlGenerator->generate('contract/add', 
-                                ['client_id' => $inv->getClient_id()]), 
-                                ['class' => 'btn btn-info btn-lg mt-3']); ?>                        
+                        <?php echo Html::a($translator->translate('contract.add'),
+                            $urlGenerator->generate(
+                                'contract/add',
+                                ['client_id' => $inv->getClient_id()],
+                            ),
+                            ['class' => 'btn btn-info btn-lg mt-3']); ?>                        
                         <?php if ($postalAddressCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'postal_address_id')
@@ -220,19 +222,19 @@ if ($vat) {
                                     <a href="<?= $urlGenerator->generate(
                                         'postaladdress/edit',
                                         [
-                                                'id' => $form->getPostal_address_id()
-                                            ],
+                                            'id' => $form->getPostal_address_id(),
+                                        ],
                                         [
-                                                /**
+                                            /**
                                                  * Query parameters used to build a return url back to this form
                                                  * in PostalAddressController edit function
                                                  * once the postal address location has been edited
                                                  * @see vendor\yiisoft\router\UrlGeneratorInterface;
                                                  */
-                                                'origin' => 'inv',
-                                                'origin_id' => $form->getId(),
-                                                'action' => 'edit'
-                                            ]
+                                            'origin' => 'inv',
+                                            'origin_id' => $form->getId(),
+                                            'action' => 'edit',
+                                        ],
                                     ); ?>"><i class="fa fa-pencil fa-fw"></i><?= $translator->translate('client.postaladdress') ?>
                                     </a>
                                 </span>  
@@ -244,15 +246,15 @@ if ($vat) {
                                 $urlGenerator->generate(
                                     'postaladdress/add',
                                     [
-                                        'client_id' => $inv->getClient_id()
+                                        'client_id' => $inv->getClient_id(),
                                     ],
                                     [
                                         'origin' => 'inv',
                                         'origin_id' => $inv->getId(),
-                                        'action' => 'edit'
-                                    ]
+                                        'action' => 'edit',
+                                    ],
                                 ),
-                                ['class' => 'btn btn-danger btn-lg mt-3']
+                                ['class' => 'btn btn-danger btn-lg mt-3'],
                             );
                         }
 ?>
@@ -326,7 +328,7 @@ if ($vat) {
                             <?= Field::text($form, 'discount_amount')
     ->hideLabel(false)
     ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
-    ->label($translator->translate('discount.amount').' '. $s->getSetting('currency_symbol'))
+    ->label($translator->translate('discount.amount') . ' ' . $s->getSetting('currency_symbol'))
     ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
     ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
     ->placeholder($translator->translate('discount.amount'));

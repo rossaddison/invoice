@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
             <tr class="product">
                 <td class="text-left">
                     <input type="checkbox" name="product_ids[]"
-                           value="<?php echo (int)$product->getProduct_id(); ?>">
+                           value="<?php echo (int) $product->getProduct_id(); ?>">
                 </td>
                 <td nowrap class="text-left">
                     <b><?= Html::encode($product->getProduct_sku()); ?></b>

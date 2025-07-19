@@ -33,7 +33,7 @@ echo $alert;
     echo Html::a(
         I::tag()->addClass('fa fa-plus'),
         $urlGenerator->generate('upload/add'),
-        ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
+        ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
     );
 ?>
 </div>
@@ -45,8 +45,8 @@ echo $alert;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('client')))
-                )
+                            ->content(' ' . Html::encode($translator->translate('client'))),
+                ),
         )
         ->render();
 
@@ -64,58 +64,58 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header:  $translator->translate('id'),
-        content: static fn (Upload $model) => Html::encode($model->getId())
+        header: $translator->translate('id'),
+        content: static fn(Upload $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'client_id',
-        header:  $translator->translate('client'),
-        content: static fn (Upload $model): string => Html::encode($model->getClient()?->getClient_name() ?? '')
+        header: $translator->translate('client'),
+        content: static fn(Upload $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
-        header:  $translator->translate('upload.filename.original'),
-        content: static fn (Upload $model): string => Html::encode($model->getFile_name_original())
+        header: $translator->translate('upload.filename.original'),
+        content: static fn(Upload $model): string => Html::encode($model->getFile_name_original()),
     ),
     new DataColumn(
         'file_name_new',
-        header:  $translator->translate('upload.filename.new'),
-        content: static fn (Upload $model): string => Html::encode($model->getFile_name_new())
+        header: $translator->translate('upload.filename.new'),
+        content: static fn(Upload $model): string => Html::encode($model->getFile_name_new()),
     ),
     new DataColumn(
         'description',
-        header:  $translator->translate('upload.filename.description'),
-        content: static fn (Upload $model): string => Html::encode($model->getDescription())
+        header: $translator->translate('upload.filename.description'),
+        content: static fn(Upload $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
-        header:  $translator->translate('view'),
+        header: $translator->translate('view'),
         content: static function (Upload $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('upload/view', ['id' => $model->getId()]), []);
-        }
+        },
     ),
     new DataColumn(
-        header:  $translator->translate('edit'),
+        header: $translator->translate('edit'),
         content: static function (Upload $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('upload/edit', ['id' => $model->getId()]), []);
-        }
+        },
     ),
     new DataColumn(
-        header:  $translator->translate('delete'),
+        header: $translator->translate('delete'),
         content: static function (Upload $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                     'type' => 'submit',
-                     'class' => 'dropdown-button',
-                     'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
                 $urlGenerator->generate('upload/delete', ['id' => $model->getId()]),
-                []
+                [],
             );
-        }
+        },
     ),
 ]
 ?>
@@ -125,7 +125,7 @@ $grid_summary = $s->grid_summary(
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('upload.plural'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

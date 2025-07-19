@@ -101,7 +101,7 @@ $locale = match ($currentRoute->getArgument('_language') ?? 'en') {
     'zh-CN' => 'ChineseSimplified',
     'zh-TW' => 'TiawaneseMandarin',
     'zu-ZA' => 'ZuluSouthAfrican',
-    default   => 'English'
+    default   => 'English',
 };
 
 $this->addCssFiles($assetManager->getCssFiles());
@@ -136,7 +136,7 @@ $this->beginPage();
         <?php
 $this->beginBody();
 
-$offcanvasPlacement = match($bootstrap5OffcanvasPlacement) {
+$offcanvasPlacement = match ($bootstrap5OffcanvasPlacement) {
     'bottom' => OffcanvasPlacement::BOTTOM,
     'end' => OffcanvasPlacement::END,
     'start' => OffcanvasPlacement::START,
@@ -144,10 +144,10 @@ $offcanvasPlacement = match($bootstrap5OffcanvasPlacement) {
 };
 
 echo($bootstrap5OffcanvasEnable ? Offcanvas::widget()
-        ->id('offcanvas'.ucFirst($bootstrap5OffcanvasPlacement))
+        ->id('offcanvas' . ucFirst($bootstrap5OffcanvasPlacement))
         ->placement($offcanvasPlacement)
         ->title('Offcanvas')
-        ->togglerContent('Toggle '. strtolower($bootstrap5OffcanvasPlacement) .' offcanvas')
+        ->togglerContent('Toggle ' . strtolower($bootstrap5OffcanvasPlacement) . ' offcanvas')
         ->begin() : '');
 
 echo NavBar::widget()
@@ -155,15 +155,15 @@ echo NavBar::widget()
   ->addClass('navbar bg-body-tertiary')
   ->brandImage($logoPath)
   ->brandImageAttributes(
-      ['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight]
+      ['margin' => $companyLogoMargin, 'width' => $companyLogoWidth, 'height' => $companyLogoHeight],
   )
-  ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
+  ->brandText(str_repeat('&nbsp;', 7) . $brandLabel)
   ->brandUrl($urlGenerator->generate('invoice/index'))
   ->container(false)
   ->containerAttributes([])
   ->addCssStyle([
-        'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize,
-        'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+      'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize,
+      'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
   ])
   ->id('navbar')
   ->begin();
@@ -173,24 +173,24 @@ echo Form::tag()
 ->post($urlGenerator->generate('auth/logout'))
 ->csrf($csrf)
 ->open()
-. (string)Button::submit(
-    $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])
+. (string) Button::submit(
+    $translator->translate('menu.logout', ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))]),
 )
 ->class('btn btn-xs btn-warning')
 . Form::tag()->close();
 
 $subMenuPhpInfo = [
     0 => [
-       'items' => [
-           $translator->translate('faq.php.info.all') => ['invoice/phpinfo', ['selection' => '-1']],
-           $translator->translate('faq.php.info.general') => ['invoice/phpinfo', ['selection' => '1']],
-           $translator->translate('faq.php.info.credits') => ['invoice/phpinfo', ['selection' => '2']],
-           $translator->translate('faq.php.info.configuration') => ['invoice/phpinfo', ['selection' => '4']],
-           $translator->translate('faq.php.info.modules') => ['invoice/phpinfo', ['selection' => '8']],
-           $translator->translate('faq.php.info.environment') => ['invoice/phpinfo', ['selection' => '16']],
-           $translator->translate('faq.php.info.variables') => ['invoice/phpinfo', ['selection' => '32']],
-           $translator->translate('faq.php.info.licence') => ['invoice/phpinfo', ['selection' => '64']],
-       ]   
+        'items' => [
+            $translator->translate('faq.php.info.all') => ['invoice/phpinfo', ['selection' => '-1']],
+            $translator->translate('faq.php.info.general') => ['invoice/phpinfo', ['selection' => '1']],
+            $translator->translate('faq.php.info.credits') => ['invoice/phpinfo', ['selection' => '2']],
+            $translator->translate('faq.php.info.configuration') => ['invoice/phpinfo', ['selection' => '4']],
+            $translator->translate('faq.php.info.modules') => ['invoice/phpinfo', ['selection' => '8']],
+            $translator->translate('faq.php.info.environment') => ['invoice/phpinfo', ['selection' => '16']],
+            $translator->translate('faq.php.info.variables') => ['invoice/phpinfo', ['selection' => '32']],
+            $translator->translate('faq.php.info.licence') => ['invoice/phpinfo', ['selection' => '64']],
+        ],
     ],
 ];
 $currentPath = $currentRoute->getUri()?->getPath();
@@ -215,8 +215,8 @@ if ((null !== $currentPath) && !$isGuest) {
                     false,
                     [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => 'Clear the assets cache which resides in /public/assets.'
-                    ]
+                        'title' => 'Clear the assets cache which resides in /public/assets.',
+                    ],
                 ),
                 // Vat exists? Show red or green background
                 DropdownItem::text($translator->translate('vat'), ['style' => $vat ? 'background-color: #ffcccb' : 'background-color: #90EE90']),
@@ -224,18 +224,18 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text($translator->translate('debug')),
                 // Locale
                 DropdownItem::text(
-                    'Locale ➡️ ' . $locale
+                    'Locale ➡️ ' . $locale,
                 ),
                 // cldr
-                DropdownItem::text('cldr ➡️ '. ($currentRoute->getArgument('_language') ?? 'unknown')),
+                DropdownItem::text('cldr ➡️ ' . ($currentRoute->getArgument('_language') ?? 'unknown')),
                 // File Location
-                DropdownItem::text('File Location ➡️ '. $s->debug_mode_file_location(0)),
+                DropdownItem::text('File Location ➡️ ' . $s->debug_mode_file_location(0)),
             ),
             // FAQ's
             Dropdown::widget()
             ->addClass('navbar fs-4')
             ->addAttributes([
-                'style' => 'font-size: 2rem; color: cornflowerblue;'
+                'style' => 'font-size: 2rem; color: cornflowerblue;',
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('faq'))
@@ -245,7 +245,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link($translator->translate('faq.taxpoint'), $urlGenerator->generate('invoice/faq', ['topic' => 'tp', 'selection' => ''])),
                 DropdownItem::link($translator->translate('faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])),
                 DropdownItem::link($translator->translate('faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])),
-                DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),   
+                DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'), $urlGenerator, $subMenuPhpInfo)),
                 DropdownItem::link($translator->translate('faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])),
                 DropdownItem::link($translator->translate('faq.ai.callback.session'), $urlGenerator->generate('invoice/faq', ['topic' => 'ai_callback_session', 'selection' => ''])),
             ),
@@ -253,7 +253,7 @@ if ((null !== $currentPath) && !$isGuest) {
             Dropdown::widget()
             ->addClass('navbar fs-4')
             ->attributes([
-                'style' => 'background-color: #ffcccb'
+                'style' => 'background-color: #ffcccb',
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('generator'))
@@ -263,31 +263,31 @@ if ((null !== $currentPath) && !$isGuest) {
                     $translator->translate('generator'),
                     $urlGenerator->generate('generator/index'),
                     false,
-                    false
+                    false,
                 ),
                 DropdownItem::link(
                     $translator->translate('generator.relations'),
                     $urlGenerator->generate('generatorrelation/index'),
                     false,
-                    false
+                    false,
                 ),
                 DropdownItem::link(
                     $translator->translate('generator.add'),
                     $urlGenerator->generate('generator/add'),
                     false,
-                    false
+                    false,
                 ),
                 DropdownItem::link(
                     $translator->translate('generator.relations.add'),
                     $urlGenerator->generate('generatorrelation/add'),
                     false,
-                    false
+                    false,
                 ),
                 DropdownItem::link(
                     $translator->translate('development.schema'),
                     $urlGenerator->generate('generator/quick_view_schema'),
                     false,
-                    false
+                    false,
                 ),
                 // Using the saved locale dropdown setting under Settings ... Views ... Google Translate, translate one of the three files located in
                 // ..resources/views/generator/templates_protected
@@ -298,35 +298,35 @@ if ((null !== $currentPath) && !$isGuest) {
                     $urlGenerator->generate('generator/google_translate_lang', ['type' => 'app']),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $s->where('google_translate_json_filename'), 'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
                     $translator->translate('generator.google.translate.diff'),
                     $urlGenerator->generate('generator/google_translate_lang', ['type' => 'diff']),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\diff_lang.php', 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => 'src\Invoice\Language\English\diff_lang.php', 'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
                     $translator->translate('test.reset.setting'),
                     $urlGenerator->generate('invoice/setting_reset'),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.setting.tooltip'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.setting.tooltip'), 'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
                     $translator->translate('test.reset'),
                     $urlGenerator->generate('invoice/test_data_reset'),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.tooltip'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.reset.tooltip'), 'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
                     $translator->translate('test.remove'),
                     $urlGenerator->generate('invoice/test_data_remove'),
                     false,
                     false,
-                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.remove.tooltip'), 'hidden' => !$debugMode]
+                    ['data-bs-toggle' => 'tooltip', 'title' => $translator->translate('test.remove.tooltip'), 'hidden' => !$debugMode],
                 ),
             ),
             // Performance
@@ -338,7 +338,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 'data-bs-toggle' => 'tooltip',
                 'title' => $read_write ? $translator->translate('performance.label.switch.on')
                                        : $translator->translate('performance.label.switch.off'),
-                'hidden' => !$debugMode
+                'hidden' => !$debugMode,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('performance'))
@@ -348,23 +348,23 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text('...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'),
                 DropdownItem::divider(),
                 DropdownItem::text('Non-CLI/Non-FCGI: Manually Edit c:\wamp64\bin\apache\apache{version}\bin php.ini then ... Wampserver Icon ... Restart All Services'),
-                DropdownItem::text('php.ini (line 425): max_execution_time (pref 360) = '. ((string)ini_get('max_execution_time') ?: 'unknown').(((string)ini_get('max_execution_time')  == 360 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1788): opcache.jit (pref see nothing) = '. ((string)ini_get('opcache.jit') ?: 'unknown').(((string)ini_get('opcache.jit')  == '' ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1791): opcache.enable (pref 1) = ' . ((string)ini_get('opcache.enable') ?: 'unknown').(((string)ini_get('opcache.enable')  == 1 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini (line 1794): opcache.enable_cli (pref 1) = ' . ((string)ini_get('opcache.enable_cli') ?: 'unknown').(((string)ini_get('opcache.enable_cli') == 1 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini (line 1797): opcache.memory_consumption (pref 128) = '. ((string)ini_get('opcache.memory_consumption') ?: 'unknown').(((string)ini_get('opcache.memory_consumption')  == 128 ? '✅' : '❌')), ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']),
-                DropdownItem::text('php.ini (line 1800): opcache.interned_strings_buffer (pref 64 for frameworks) = '. ((string)ini_get('opcache.interned_strings_buffer') ?: 'unknown'). (((string)ini_get('opcache.interned_strings_buffer')  == 64 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini (line 1804): opcache.max_accelerated_files (pref 4000) = '. ((string)ini_get('opcache.max_accelerated_files') ?: 'unknown'). (((string)ini_get('opcache.max_accelerated_files') == 4000 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1818): opcache.validate_timestamps (pref 0) = '.  ((string)ini_get('opcache.validate_timestamps') ?: 'unknown'). (((string)ini_get('opcache.validate_timestamps') == 0 ? '✅' : '❌'))),
-                DropdownItem::text('php.ini: (line 1822): opcache.revalidate_freq (pref 60) = '.  ((string)ini_get('opcache.revalidate_freq') ?: 'unknown'). (((string)ini_get('opcache.revalidate_freq') == 60 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini (line 425): max_execution_time (pref 360) = ' . ((string) ini_get('max_execution_time') ?: 'unknown') . (((string) ini_get('max_execution_time')  == 360 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini: (line 1788): opcache.jit (pref see nothing) = ' . ((string) ini_get('opcache.jit') ?: 'unknown') . (((string) ini_get('opcache.jit')  == '' ? '✅' : '❌'))),
+                DropdownItem::text('php.ini: (line 1791): opcache.enable (pref 1) = ' . ((string) ini_get('opcache.enable') ?: 'unknown') . (((string) ini_get('opcache.enable')  == 1 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini (line 1794): opcache.enable_cli (pref 1) = ' . ((string) ini_get('opcache.enable_cli') ?: 'unknown') . (((string) ini_get('opcache.enable_cli') == 1 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini (line 1797): opcache.memory_consumption (pref 128) = ' . ((string) ini_get('opcache.memory_consumption') ?: 'unknown') . (((string) ini_get('opcache.memory_consumption')  == 128 ? '✅' : '❌')), ['data-bs-toggle' => 'tooltip', 'title' => 'e.g. change manually in C:\wamp64\bin\php\php8.1.13\phpForApache.ini and restart all services.']),
+                DropdownItem::text('php.ini (line 1800): opcache.interned_strings_buffer (pref 64 for frameworks) = ' . ((string) ini_get('opcache.interned_strings_buffer') ?: 'unknown') . (((string) ini_get('opcache.interned_strings_buffer')  == 64 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini (line 1804): opcache.max_accelerated_files (pref 4000) = ' . ((string) ini_get('opcache.max_accelerated_files') ?: 'unknown') . (((string) ini_get('opcache.max_accelerated_files') == 4000 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini: (line 1818): opcache.validate_timestamps (pref 0) = ' . ((string) ini_get('opcache.validate_timestamps') ?: 'unknown') . (((string) ini_get('opcache.validate_timestamps') == 0 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini: (line 1822): opcache.revalidate_freq (pref 60) = ' . ((string) ini_get('opcache.revalidate_freq') ?: 'unknown') . (((string) ini_get('opcache.revalidate_freq') == 60 ? '✅' : '❌'))),
                 DropdownItem::divider(),
                 // https://tideways.com/profiler/blog/fine-tune-your-opcache-configuration-to-avoid-caching-suprises
-                DropdownItem::text(PerformanceMetrics::opCacheHealthCheck()),    
-                DropdownItem::divider(),    
-                DropdownItem::text('CLI (Command Line Interface): Manually Edit c:\wamp64\bin\php\php8.3.16 php.ini then ... Right Click Wampserver Icon... Restart From Zero .. e.g. C:\wamp64\www\invoice>php ./vendor/bin/composer-require-checker'),
-                DropdownItem::text('php.ini (line 451): memory_limit (pref 1024 M) = '. ((string)ini_get('memory_limit') ?: 'unknown'). (((string)ini_get('memory_limit') == '1024M' ? '✅' : '❌'))),
+                DropdownItem::text(PerformanceMetrics::opCacheHealthCheck()),
                 DropdownItem::divider(),
-                DropdownItem::text('.env: BUILD_DATABASE= (pref see nothing) = '. ($buildDatabase ? 'You have built the database using BUILD_DATABASE=true, now assign the environment varirable to nothing i.e. BUILD_DATABASE=' : '✅')),
+                DropdownItem::text('CLI (Command Line Interface): Manually Edit c:\wamp64\bin\php\php8.3.16 php.ini then ... Right Click Wampserver Icon... Restart From Zero .. e.g. C:\wamp64\www\invoice>php ./vendor/bin/composer-require-checker'),
+                DropdownItem::text('php.ini (line 451): memory_limit (pref 1024 M) = ' . ((string) ini_get('memory_limit') ?: 'unknown') . (((string) ini_get('memory_limit') == '1024M' ? '✅' : '❌'))),
+                DropdownItem::divider(),
+                DropdownItem::text('.env: BUILD_DATABASE= (pref see nothing) = ' . ($buildDatabase ? 'You have built the database using BUILD_DATABASE=true, now assign the environment varirable to nothing i.e. BUILD_DATABASE=' : '✅')),
                 DropdownItem::text('config.params: yiisoft/yii-debug: enabled , disable for improved performance'),
                 DropdownItem::text('config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'),
             ),
@@ -372,7 +372,7 @@ if ((null !== $currentPath) && !$isGuest) {
             Dropdown::widget()
             ->addClass('navbar fs-4')
             ->addAttributes([
-                'hidden' => !$debugMode
+                'hidden' => !$debugMode,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($translator->translate('platform'))
@@ -384,7 +384,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text('Apache: 2.4.59 64 bit'),
                 DropdownItem::text($translator->translate('platform.mySqlVersion') . ': 8.3.0 '),
                 DropdownItem::text($translator->translate('platform.windowsVersion') . ': Windows 11 Pro Edition'),
-                DropdownItem::text($translator->translate('platform.PhpVersion') . ' '. PHP_VERSION),
+                DropdownItem::text($translator->translate('platform.PhpVersion') . ' ' . PHP_VERSION),
                 DropdownItem::link($translator->translate('platform.PhpSupport'), 'https://php.net/supported-versions'),
                 DropdownItem::link($translator->translate('platform.update'), 'https://wampserver.aviatechno.net/'),
                 DropdownItem::link('Bootstrap 5 Icons with Filter', 'https://icons.getbootstrap.com/'),
@@ -418,14 +418,14 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('Using ngrok and Wampserver VirtualHosts', 'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'),
                 DropdownItem::link('Using ngrok and webhook testing', 'https://ngrok.com/use-cases/webhook-testing'),
                 DropdownItem::link('Google Oauth2 Playground', 'https://developers.google.com/oauthplayground'),
-                DropdownItem::link('Google Oauth2 Web Application', 'https://console.cloud.google.com/apis/credentials/oauthclient')
+                DropdownItem::link('Google Oauth2 Web Application', 'https://console.cloud.google.com/apis/credentials/oauthclient'),
             ),
             // Php Watch
             Dropdown::widget()
             ->addClass('navbar fs-4')
             ->addAttributes([
                 'style' => 'font-size: 1rem;',
-                'hidden' => !$debugMode
+                'hidden' => !$debugMode,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('🐘')
@@ -433,14 +433,14 @@ if ((null !== $currentPath) && !$isGuest) {
             ->items(
                 DropdownItem::link('8.3', 'https://php.watch/versions/8.3', $debugMode, false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('8.4', 'https://php.watch/versions/8.4', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('8.5', 'https://php.watch/versions/8.5', $debugMode, false, ['style' => 'background-color: #ffcccb']),    
+                DropdownItem::link('8.5', 'https://php.watch/versions/8.5', $debugMode, false, ['style' => 'background-color: #ffcccb']),
             ),
             // Emojipedia.org
             Dropdown::widget()
             ->addClass('navbar fs-4')
             ->addAttributes([
                 'style' => 'font-size: 2rem; color: cornflowerblue;',
-                'hidden' => !$debugMode
+                'hidden' => !$debugMode,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('😀')
@@ -476,7 +476,7 @@ if ((null !== $currentPath) && !$isGuest) {
             // url attributes
             [],
             // visible
-            true
+            true,
         ),
         // Settings
         Dropdown::widget()
@@ -512,7 +512,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->addClass('navbar fs-4')
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
-            'url' => '#'
+            'url' => '#',
         ])
         ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent($translator->translate('peppol.abbreviation'))
@@ -563,7 +563,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerContent($translator->translate('salesorder'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/index'))
+            DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/index')),
         ),
         // Invoice
         Dropdown::widget()
@@ -577,7 +577,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->items(
             DropdownItem::link($translator->translate('create.invoice'), $urlGenerator->generate('inv/add', ['origin' => 'main'])),
             DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/index')),
-            DropdownItem::link($translator->translate('recurring'), $urlGenerator->generate('invrecurring/index'))
+            DropdownItem::link($translator->translate('recurring'), $urlGenerator->generate('invrecurring/index')),
         ),
         // Payment
         Dropdown::widget()
@@ -591,7 +591,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->items(
             DropdownItem::link($translator->translate('enter.payment'), $urlGenerator->generate('payment/add')),
             DropdownItem::link($translator->translate('view'), $urlGenerator->generate('payment/index')),
-            DropdownItem::link($translator->translate('payment.logs'), $urlGenerator->generate('payment/online_log'))
+            DropdownItem::link($translator->translate('payment.logs'), $urlGenerator->generate('payment/online_log')),
         ),
         // Product
         Dropdown::widget()
@@ -606,11 +606,11 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($translator->translate('add.product'), $urlGenerator->generate('product/add')),
             DropdownItem::link($translator->translate('view'), $urlGenerator->generate('product/index')),
             DropdownItem::link($translator->translate('category.primary'), $urlGenerator->generate('categoryprimary/index')),
-            DropdownItem::link($translator->translate('category.secondary'), $urlGenerator->generate('categorysecondary/index')),    
+            DropdownItem::link($translator->translate('category.secondary'), $urlGenerator->generate('categorysecondary/index')),
             DropdownItem::link($translator->translate('family'), $urlGenerator->generate('family/index')),
             DropdownItem::link($translator->translate('family.search'), $urlGenerator->generate('family/search')),
             DropdownItem::link($translator->translate('unit'), $urlGenerator->generate('unit/index')),
-            DropdownItem::link($translator->translate('peppol.unit'), $urlGenerator->generate('unitpeppol/index'))
+            DropdownItem::link($translator->translate('peppol.unit'), $urlGenerator->generate('unitpeppol/index')),
         ),
         // Tasks
         Dropdown::widget()
@@ -654,7 +654,7 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($translator->translate('sales.by.date'), $urlGenerator->generate('report/sales_by_year_index')),
             DropdownItem::link($translator->translate('payment.history'), $urlGenerator->generate('report/payment_history_index')),
             DropdownItem::link($translator->translate('aging'), $urlGenerator->generate('report/invoice_aging_index')),
-            DropdownItem::link($translator->translate('report.test.fraud.prevention.headers.api'), $urlGenerator->generate('backend/hmrc/fphValidate')),    
+            DropdownItem::link($translator->translate('report.test.fraud.prevention.headers.api'), $urlGenerator->generate('backend/hmrc/fphValidate')),
         ),
         // Translate
         Dropdown::widget()
@@ -662,7 +662,7 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'data-bs-toggle' => 'tooltip',
             'title' => $translator->translate('language'),
-            'url' => '#'
+            'url' => '#',
         ])
         ->togglerVariant(ButtonVariant::INFO)
         ->togglerContent(I::tag()->class('bi bi-translate'))
@@ -689,10 +689,10 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link('Slovenian / Slovenski', $urlGenerator->generateFromCurrent(['_language' => 'sl'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-            DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+            DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
             DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
-        )
+        ),
     )
          ->styles(NavStyle::NAVBAR);
 } //null!== currentPath && !isGuest

@@ -12,74 +12,74 @@ use DateTimeImmutable;
 use App\User\User;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
-#[Entity(repository:\App\Invoice\UserInv\UserInvRepository::class)]
+#[Entity(repository: \App\Invoice\UserInv\UserInvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class UserInv
 {
-    #[BelongsTo(target:User::class, nullable: false)]
+    #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private readonly DateTimeImmutable $date_created;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private readonly DateTimeImmutable $date_modified;
 
     public function __construct(
-        #[Column(type:'primary')]
+        #[Column(type: 'primary')]
         private ?int $id = null,
-        #[Column(type: 'integer(11)', nullable:false)]
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null,
         /**
          * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
          */
-        #[Column(type:'integer(11)', nullable:false, default:0)]
+        #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $type = null,
-        #[Column(type:'bool', typecast:'bool', default:false)]
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
         private ?bool $active = false,
-        #[Column(type:'string(191)', nullable:true, default:'system')]
+        #[Column(type: 'string(191)', nullable: true, default: 'system')]
         private ?string $language = '',
-        #[Column(type:'string(151)', nullable:true)]
+        #[Column(type: 'string(151)', nullable: true)]
         private ?string $name = '',
-        #[Column(type:'string(50)', nullable:true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $company = '',
-        #[Column(type:'string(50)', nullable:true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $address_1 = '',
-        #[Column(type:'string(50)', nullable:true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $address_2 = '',
-        #[Column(type:'string(50)', nullable:true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $city = '',
-        #[Column(type:'string(50)', nullable:true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $state = '',
-        #[Column(type:'string(10)', nullable:true)]
+        #[Column(type: 'string(10)', nullable: true)]
         private ?string $zip = '',
-        #[Column(type:'string(50)', nullable:true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $country = '',
-        #[Column(type:'string(20)', nullable:true)]
+        #[Column(type: 'string(20)', nullable: true)]
         private ?string $phone = '',
-        #[Column(type:'string(20)', nullable:true)]
+        #[Column(type: 'string(20)', nullable: true)]
         private ?string $fax = '',
-        #[Column(type:'string(20)', nullable:true)]
+        #[Column(type: 'string(20)', nullable: true)]
         private ?string $mobile = '',
-        #[Column(type:'string(100)', nullable:true)]
+        #[Column(type: 'string(100)', nullable: true)]
         private ?string $web = '',
-        #[Column(type:'string(20)', nullable:true)]
+        #[Column(type: 'string(20)', nullable: true)]
         private ?string $vat_id = '',
-        #[Column(type:'string(15)', nullable:true)]
+        #[Column(type: 'string(15)', nullable: true)]
         private ?string $tax_code = '',
-        #[Column(type:'bool', typecast:'bool', default:false)]
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
         private ?bool $all_clients = false,
-        #[Column(type:'string(40)', nullable:true)]
+        #[Column(type: 'string(40)', nullable: true)]
         private ?string $subscribernumber = '',
-        #[Column(type:'string(34))', nullable:true)]
+        #[Column(type: 'string(34))', nullable: true)]
         private ?string $iban = '',
-        #[Column(type:'bigInteger(20)', nullable:true)]
+        #[Column(type: 'bigInteger(20)', nullable: true)]
         private ?int $gln = null,
-        #[Column(type:'string(7)', nullable:true)]
+        #[Column(type: 'string(7)', nullable: true)]
         private ?string $rcc = '',
-        #[Column(type: 'integer(3)', nullable:true, default: 10)]
-        private ?int $listLimit = 10
+        #[Column(type: 'integer(3)', nullable: true, default: 10)]
+        private ?int $listLimit = 10,
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
@@ -111,7 +111,7 @@ class UserInv
 
     public function getUser_id(): string
     {
-        return (string)$this->user_id;
+        return (string) $this->user_id;
     }
 
     public function setUser_id(int $user_id): void
@@ -286,7 +286,7 @@ class UserInv
 
     public function getVat_id(): string
     {
-        return (string)$this->vat_id;
+        return (string) $this->vat_id;
     }
 
     public function setVat_id(string $vat_id): void

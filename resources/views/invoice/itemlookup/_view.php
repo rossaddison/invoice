@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
                     ->label($translator->translate('name'))
                     ->addInputAttributes([
                         'readonly' => 'readonly',
-                        'disabled' => 'disabled'
+                        'disabled' => 'disabled',
                     ])
                     ->placeholder($translator->translate('name'))
                     ->value(Html::encode($form->getName() ?? ''));
@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('description'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->placeholder($translator->translate('description'))
     ->value(Html::encode($form->getDescription() ?? ''));
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('price'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->placeholder($translator->translate('price'))
     ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)));

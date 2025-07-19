@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -23,12 +23,12 @@ use Yiisoft\Html\Tag\Form;
 ?><?= Html::openTag('h1'); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>
-    <?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>
-        <?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-            <?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>
-                <?= Html::openTag('div',['class'=>'card-header']); ?>
-                    <?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+    <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+        <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+            <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+                <?= Html::openTag('div', ['class' => 'card-header']); ?>
+                    <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
                         <?= $translator->translate('add'); ?>
                     <?= Html::closeTag('h1'); ?>
                     <?= Form::tag()->post($urlGenerator->generate($actionName, $actionArguments))->enctypeMultipartFormData()->csrf($csrf)->id('CategoryPrimaryForm')->open();?>
@@ -36,15 +36,15 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::openTag('div', ['class' => 'container']); ?>
                             <?= Html::openTag('div', ['class' => 'row']); ?>
                                 <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
-                                    <?= Html::openTag('div',['class' => 'card-header']); ?>
+                                    <?= Html::openTag('div', ['class' => 'card-header']); ?>
                                         <?= Html::openTag('h5'); ?>
                                             <?= Html::encode($title) ?>
                                         <?= Html::closeTag('h5'); ?>
                                         <?= Html::openTag('div'); ?>
-                                            <?= Field::text($form,'name')
+                                            <?= Field::text($form, 'name')
                                                 ->label($translator->translate('name'))
                                                 ->addInputAttributes([
-                                                    'class' => 'form-control'
+                                                    'class' => 'form-control',
                                                 ])
                                                 ->value(Html::encode($form->getname()))
                                                 ->placeholder($translator->translate('name')); ?>

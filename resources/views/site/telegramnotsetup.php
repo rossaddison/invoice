@@ -13,7 +13,7 @@ use Yiisoft\Bootstrap5\AlertVariant;
 $alert = Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::WARNING)
-        ->body((string)$telegramnotsetup['telegramNotSetup'], true)
+        ->body((string) $telegramnotsetup['telegramNotSetup'], true)
         ->dismissable(true)
         ->render();
 echo $alert;

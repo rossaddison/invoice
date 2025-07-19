@@ -65,7 +65,7 @@ echo Field::select($form, 'user_id')
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'user_id',
-    'readonly' => 'readonly'
+    'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataUser)
 ->value(Html::encode($form->getUser_id() ?? ''))
@@ -88,7 +88,7 @@ echo Field::select($form, 'type')
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'type',
-    'readonly' => 'readonly'
+    'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataType)
 ->value(Html::encode($form->getType()))
@@ -124,7 +124,7 @@ echo Field::select($form, 'language')
 ->addInputAttributes([
     'class' => 'form-control',
     'id' => 'language',
-    'readonly' => 'readonly'
+    'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataLanguage)
 ->value(Html::encode($form->getLanguage()))
@@ -136,7 +136,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'name',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getName() ?? ''))
 ?>
@@ -147,7 +147,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'company',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getCompany() ?? ''))
 ?>
@@ -158,7 +158,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'address_1',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getAddress_1() ?? ''))
 ?>
@@ -169,7 +169,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'address_2',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getAddress_2() ?? ''))
 ?>
@@ -180,7 +180,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'city',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getCity() ?? ''))
 ?>
@@ -191,7 +191,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'state',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getState() ?? ''))
 ?>
@@ -202,7 +202,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'zip',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getZip() ?? ''))
 ?>
@@ -213,7 +213,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'country',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getCountry() ?? ''))
 ?>
@@ -224,7 +224,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'phone',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getPhone() ?? ''))
 ?>
@@ -234,7 +234,7 @@ echo Field::select($form, 'language')
     ->label($translator->translate('fax'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getFax() ?? ''))
 ?>
@@ -244,7 +244,7 @@ echo Field::select($form, 'language')
     ->label($translator->translate('mobile'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getMobile() ?? ''))
 ?>
@@ -255,7 +255,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'web',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getWeb() ?? ''))
 ?>
@@ -266,7 +266,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'tax_code',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getTax_code() ?? ''))
 ?>
@@ -277,7 +277,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'subscribernumber',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getSubscribernumber() ?? ''))
 ?>
@@ -288,7 +288,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'iban',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getSubscribernumber() ?? ''))
 ?>
@@ -299,7 +299,7 @@ echo Field::select($form, 'language')
     ->addInputAttributes([
         'class' => 'form-control',
         'id' => 'gln',
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
     ->value(Html::encode($form->getGln() ?? ''))
 ?>
@@ -309,7 +309,7 @@ echo Field::select($form, 'language')
     ->label($translator->translate('sumex.rcc'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'rcc'
+        'id' => 'rcc',
     ])
     ->value(Html::encode($form->getRcc() ?? ''))
 ?>

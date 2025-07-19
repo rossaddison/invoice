@@ -40,7 +40,7 @@ final class ClientForm extends FormModel
     private readonly mixed $client_birthdate;
 
     #[Required]
-    #[Integer(min: 16, max:100)]
+    #[Integer(min: 16, max: 100)]
     private ?int $client_age = null;
 
     private ?int $client_gender = null;

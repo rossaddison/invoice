@@ -45,7 +45,7 @@ final class QuoteItemForm extends FormModel
         $this->discount_amount = $quoteItem->getDiscount_amount();
         $this->order = $quoteItem->getOrder();
         $this->product_unit = $quoteItem->getProduct_unit();
-        $this->product_unit_id = (int)$quoteItem->getProduct_unit_id();
+        $this->product_unit_id = (int) $quoteItem->getProduct_unit_id();
     }
 
     public function getQuote_id(): string|null

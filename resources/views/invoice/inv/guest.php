@@ -73,58 +73,58 @@ echo $alert;
             <div class="btn-group index-options">
                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 0]); ?>"
                    class="btn btn-<?= $status == 0 ? $iR->getSpecificStatusArrayClass(0) : 'btn-default' ?>">
-                   <?= $iR->getSpecificStatusArrayEmoji(0).' '.$translator->translate('all'); ?>
+                   <?= $iR->getSpecificStatusArrayEmoji(0) . ' ' . $translator->translate('all'); ?>
                 </a>
                 
                 <?php // Guests are never sent draft invoices i.e. status = '1'?>
                 
                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 2]); ?>" style="text-decoration:none"
                    class="btn btn-<?= $status == 2 ? $iR->getSpecificStatusArrayClass(2) : 'btn-default' ?>">
-                       <?= $iR->getSpecificStatusArrayEmoji(2).' '.$translator->translate('sent'); ?>
+                       <?= $iR->getSpecificStatusArrayEmoji(2) . ' ' . $translator->translate('sent'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 3]); ?>" style="text-decoration:none"
                    class="btn btn-<?= $status == 3 ? $iR->getSpecificStatusArrayClass(3) : 'btn-default' ?>">
-                       <?= $iR->getSpecificStatusArrayEmoji(3).' '.$translator->translate('viewed'); ?>
+                       <?= $iR->getSpecificStatusArrayEmoji(3) . ' ' . $translator->translate('viewed'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 4]); ?>" style="text-decoration:none"
                    class="btn btn-<?= $status == 4 ? $iR->getSpecificStatusArrayClass(4) : 'btn-default' ?>">
-                       <?= $iR->getSpecificStatusArrayEmoji(4).' '.$translator->translate('paid'); ?>
+                       <?= $iR->getSpecificStatusArrayEmoji(4) . ' ' . $translator->translate('paid'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 5]); ?>" style="text-decoration:none"
                    class="btn btn-<?= $status == 5 ? $iR->getSpecificStatusArrayClass(5) : 'btn-default' ?>">
-                    <?= $iR->getSpecificStatusArrayEmoji(5).' '.$translator->translate('overdue'); ?>
+                    <?= $iR->getSpecificStatusArrayEmoji(5) . ' ' . $translator->translate('overdue'); ?>
                 </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 6]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 6 ? $iR->getSpecificStatusArrayClass(6) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(6).' '.$translator->translate('unpaid'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(6) . ' ' . $translator->translate('unpaid'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 7]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 7 ? $iR->getSpecificStatusArrayClass(7) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(7).' '.$translator->translate('reminder'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(7) . ' ' . $translator->translate('reminder'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 8]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 8 ? $iR->getSpecificStatusArrayClass(8) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(8).' '.$translator->translate('letter'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(8) . ' ' . $translator->translate('letter'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 9]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 9 ? $iR->getSpecificStatusArrayClass(9) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(9).' '.$translator->translate('claim'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(9) . ' ' . $translator->translate('claim'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 10]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 10 ? $iR->getSpecificStatusArrayClass(10) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(10).' '.$translator->translate('judgement'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(10) . ' ' . $translator->translate('judgement'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 11]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 11 ? $iR->getSpecificStatusArrayClass(11) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(11).' '.$translator->translate('enforcement'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(11) . ' ' . $translator->translate('enforcement'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 12]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 12 ? $iR->getSpecificStatusArrayClass(12) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(12).' '.$translator->translate('credit.invoice.for.invoice'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(12) . ' ' . $translator->translate('credit.invoice.for.invoice'); ?>
                  </a>
                  <a href="<?= $urlGenerator->generate('inv/guest', ['page' => 1, 'status' => 13]); ?>" style="text-decoration:none"
                     class="btn btn-<?= $status == 13 ? $iR->getSpecificStatusArrayClass(13) : 'btn-default' ?>">
-                     <?= $iR->getSpecificStatusArrayEmoji(13).' '.$translator->translate('loss'); ?>
+                     <?= $iR->getSpecificStatusArrayEmoji(13) . ' ' . $translator->translate('loss'); ?>
                  </a>
             </div>
     </div>
@@ -138,8 +138,8 @@ echo $alert;
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Inv $model) => (string)$model->getId(),
-            withSorting: true
+            content: static fn(Inv $model) => (string) $model->getId(),
+            withSorting: true,
         ),
         new ActionColumn(
             buttons: [
@@ -148,39 +148,39 @@ echo $alert;
                         return $urlGenerator->generate('inv/pdf', ['include' => 0]);
                     },
                     attributes: [
-                       'style' => 'text-decoration:none',
-                       'data-bs-toggle' => 'tooltip',
-                       'title' => $translator->translate('download.pdf'),
-                       'class' => 'bi bi-file-pdf'
-                   ]
+                        'style' => 'text-decoration:none',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('download.pdf'),
+                        'class' => 'bi bi-file-pdf',
+                    ],
                 ),
                 new ActionButton(
                     url: static function (Inv $model) use ($translator, $urlGenerator): string {
                         return $urlGenerator->generate('inv/pdf', ['include' => 1]);
                     },
                     attributes: [
-                       'style' => 'text-decoration:none',
-                       'data-bs-toggle' => 'tooltip',
-                       'title' => $translator->translate('download.pdf').'➡️'.$translator->translate('custom.field'),
-                       'class' => 'bi bi-file-pdf-fill'
-                   ],
+                        'style' => 'text-decoration:none',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('download.pdf') . '➡️' . $translator->translate('custom.field'),
+                        'class' => 'bi bi-file-pdf-fill',
+                    ],
                 ),
-            ]
+            ],
         ),
         new DataColumn(
             'status_id',
             header: $translator->translate('status'),
             content: static function (Inv $model) use ($s, $iR, $irR, $translator): Yiisoft\Html\Tag\CustomTag {
-                $label = $iR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
+                $label = $iR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
                 if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') === (string) 0) {
                     $label .=  ' 🚫';
                 }
                 if ($irR->repoCount((string) $model->getId()) > 0) {
-                    $label .= $translator->translate('recurring'). ' 🔄';
+                    $label .= $translator->translate('recurring') . ' 🔄';
                 }
-                return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int)$model->getStatus_id()). $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int)$model->getStatus_id())]);
+                return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int) $model->getStatus_id()) . $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int) $model->getStatus_id())]);
             },
-            withSorting: true
+            withSorting: true,
         ),
         new DataColumn(
             property: 'filterInvNumber',
@@ -189,36 +189,36 @@ echo $alert;
             content: static function (Inv $model) use ($urlGenerator): A {
                 return  A::tag()
                         ->addAttributes(['style' => 'text-decoration:none'])
-                        ->content(($model->getNumber() ?? '#'). ' 🔍')
+                        ->content(($model->getNumber() ?? '#') . ' 🔍')
                         ->href($urlGenerator->generate('inv/view', ['id' => $model->getId()]));
             },
             filter: $optionsDataInvNumberDropDownFilter,
-            withSorting: false
+            withSorting: false,
         ),
-        new DataColumn( 
-            header: '💳',    
+        new DataColumn(
+            header: '💳',
             field: 'creditinvoice_parent_id',
             content: static function (Inv $model) use ($urlGenerator, $iR): A {
                 $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
-                $url = ($model->getNumber() ?? '#'). '💳';
+                $url = ($model->getNumber() ?? '#') . '💳';
                 return  A::tag()
                         ->addAttributes(['style' => 'text-decoration:none'])
                         ->content($visible ? $url : '')
                         ->href($urlGenerator->generate('inv/view', ['id' => $model->getCreditinvoice_parent_id()]));
             },
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'client_id',
             header: $translator->translate('client'),
-            content: static fn (Inv $model): string => $model->getClient()?->getClient_name() ?? '',
-            withSorting: false
+            content: static fn(Inv $model): string => $model->getClient()?->getClient_name() ?? '',
+            withSorting: false,
         ),
         new DataColumn(
             'date_created',
             header: $translator->translate('date.created'),
-            content: static fn (Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
-            withSorting: false
+            content: static fn(Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
+            withSorting: false,
         ),
         new DataColumn(
             'date_due',
@@ -227,14 +227,14 @@ echo $alert;
                 $now = new \DateTimeImmutable('now');
                 return Html::tag('label')
                         ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
-                        ->content(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : '');                        
-            },   
-            withSorting: true
+                        ->content(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : '');
+            },
+            withSorting: true,
         ),
         new DataColumn(
             field: 'id',
             property: 'filterInvAmountTotal',
-            header: $translator->translate('total') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('total') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
             content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountTotal = $model->getInvAmount()->getTotal();
                 return
@@ -246,11 +246,11 @@ echo $alert;
             },
             filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 50px']),
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'id',
-            header: $translator->translate('paid') . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('paid') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
             content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountPaid = $model->getInvAmount()->getPaid();
                 return Label::tag()
@@ -259,11 +259,11 @@ echo $alert;
                                 ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)));
             },
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'id',
-            header: $translator->translate('balance')  . ' ( '. $s->getSetting('currency_symbol'). ' ) ',
+            header: $translator->translate('balance') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
             content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountBalance = $model->getInvAmount()->getBalance();
                 return  Label::tag()
@@ -272,7 +272,7 @@ echo $alert;
                                 ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)));
             },
-            withSorting: false
+            withSorting: false,
         ),
     ]
 ?>
@@ -284,12 +284,12 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                     ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
                     ->withCurrentPage($page)
                     ->withSort($sort)
-                    ->withToken(PageToken::next((string)$page));
+                    ->withToken(PageToken::next((string) $page));
 
 
 $toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), true))->encode(false)->render().
+        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), true))->encode(false)->render() .
         Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
@@ -297,7 +297,7 @@ $grid_summary = $s->grid_summary(
     $translator,
     !empty($userInvListLimit) ? $userInvListLimit : 10,
     $translator->translate('invoices'),
-    $label
+    $label,
 );
 
 $urlCreator = new UrlCreator($urlGenerator);
@@ -325,7 +325,7 @@ echo GridView::widget()
     ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate(($viewInv ?
-                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '').' '.
+                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '') . ' ' .
                        $grid_summary)
     ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
     ->emptyText($translator->translate('no.records'))

@@ -36,7 +36,7 @@ final class UserClientController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->userclientService = $userclientService;
@@ -95,7 +95,7 @@ final class UserClientController extends BaseController
     public function delete(
         CurrentRoute $currentRoute,
         UserClientRepository $userclientRepository,
-        UIR $uiR
+        UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null !== $user_client) {
@@ -111,8 +111,8 @@ final class UserClientController extends BaseController
                             'heading' => $this->translator->translate('client'),
                             'message' => $this->translator->translate('record.successfully.deleted'),
                             'url' => 'userinv/client','id' => $user_inv->getId(),
-                        ]
-                    )
+                        ],
+                    ),
                 );
             }
             return $this->webService->getRedirectResponse('userclient/index');
@@ -131,7 +131,7 @@ final class UserClientController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        UserClientRepository $userclientRepository
+        UserClientRepository $userclientRepository,
     ): Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if ($user_client) {
@@ -179,7 +179,7 @@ final class UserClientController extends BaseController
         ClientRepository $cR,
         UserClientRepository $ucR,
         UserClientService $ucS,
-        UIR $uiR
+        UIR $uiR,
     ): Response {
         $user_id = $currentRoute->getArgument('user_id');
         if (null !== $user_id) {
@@ -203,14 +203,14 @@ final class UserClientController extends BaseController
                     /** @var string $value */
                     foreach ($body as $key => $value) {
                         // If the user is allowed to see all clients eg. An Accountant
-                        if (((string)$key === 'user_all_clients') && ($value === '1')) {
+                        if (((string) $key === 'user_all_clients') && ($value === '1')) {
                             // Unassign currently assigned clients
                             $ucR->unassign_to_user_client($user_id);
                             // Search for all clients, including new clients and assign them aswell
                             $ucR->reset_users_all_clients($uiR, $cR, $ucS, $formHydrator);
                             return $this->webService->getRedirectResponse('userinv/index');
                         }
-                        if ((string)$key === 'client_id') {
+                        if ((string) $key === 'client_id') {
                             $form_array = [
                                 'user_id' => $user_id,
                                 'client_id' => $value,

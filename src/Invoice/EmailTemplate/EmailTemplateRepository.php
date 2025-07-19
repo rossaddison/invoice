@@ -62,7 +62,7 @@ final class EmailTemplateRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'email_template_title', 'email_template_from_name', 'email_template_from_email'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 

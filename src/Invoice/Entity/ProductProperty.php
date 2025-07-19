@@ -14,15 +14,13 @@ class ProductProperty
     #[Column(type: 'primary')]
     public ?int $id = null;
 
-    #[BelongsTo(target:Product::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 
     public function __construct(#[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_id = null, #[Column(type: 'text', nullable: true)]
         public ?string $name = '', #[Column(type: 'text', nullable: true)]
-        public ?string $value = '')
-    {
-    }
+        public ?string $value = '') {}
 
     public function getProperty_id(): ?int
     {
@@ -31,7 +29,7 @@ class ProductProperty
 
     public function getProduct_id(): string
     {
-        return (string)$this->product_id;
+        return (string) $this->product_id;
     }
 
     public function setProduct_id(int $product_id): void

@@ -40,8 +40,8 @@ final class SalesOrderForm extends FormModel
         $this->date_created = $salesOrder->getDate_created();
         $this->quote_id = $salesOrder->getQuote_id();
         $this->inv_id = $salesOrder->getInv_id();
-        $this->group_id = (int)$salesOrder->getGroup_id();
-        $this->client_id = (int)$salesOrder->getClient_id();
+        $this->group_id = (int) $salesOrder->getGroup_id();
+        $this->client_id = (int) $salesOrder->getClient_id();
         $this->client_po_number = $salesOrder->getClient_po_number();
         $this->client_po_line_number = $salesOrder->getClient_po_line_number();
         $this->client_po_person = $salesOrder->getClient_po_person();

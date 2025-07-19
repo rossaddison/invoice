@@ -11,9 +11,7 @@ final readonly class GroupService
     /**
      * @param GroupRepository $repository
      */
-    public function __construct(private GroupRepository $repository)
-    {
-    }
+    public function __construct(private GroupRepository $repository) {}
 
     /**
      * @param Group $model
@@ -21,10 +19,10 @@ final readonly class GroupService
      */
     public function saveGroup(Group $model, array $array): void
     {
-        isset($array['name']) ? $model->setName((string)$array['name']) : 'Name';
-        isset($array['identifier_format']) ? $model->setIdentifier_format((string)$array['identifier_format']) : 'AAA{{{id}}}';
-        isset($array['next_id']) ? $model->setNext_id((int)$array['next_id']) : 0;
-        isset($array['left_pad']) ? $model->setLeft_pad((int)$array['left_pad']) : 0;
+        isset($array['name']) ? $model->setName((string) $array['name']) : 'Name';
+        isset($array['identifier_format']) ? $model->setIdentifier_format((string) $array['identifier_format']) : 'AAA{{{id}}}';
+        isset($array['next_id']) ? $model->setNext_id((int) $array['next_id']) : 0;
+        isset($array['left_pad']) ? $model->setLeft_pad((int) $array['left_pad']) : 0;
         $this->repository->save($model);
     }
 

@@ -33,7 +33,7 @@ final class CustomValueController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->customValueService = $customValueService;
@@ -47,8 +47,8 @@ final class CustomValueController extends BaseController
     public function index(CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository): Response
     {
         $this->rbac();
-        $custom_field_id = (string)$this->session->get('custom_field_id');
-        $custom_values = $customvalueRepository->repoCustomFieldquery((int)$custom_field_id);
+        $custom_field_id = (string) $this->session->get('custom_field_id');
+        $custom_values = $customvalueRepository->repoCustomFieldquery((int) $custom_field_id);
         $parameters = [
             'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
             'custom_field_id' => $custom_field_id,
@@ -72,7 +72,7 @@ final class CustomValueController extends BaseController
         if (null !== $id) {
             null !== ($this->session->get('custom_field_id')) ?: $this->session->set('custom_field_id', $id);
             $custom_field = $customfieldRepository->repoCustomFieldquery($id);
-            $customvalues = $customvalueRepository->repoCustomFieldquery((int)$id);
+            $customvalues = $customvalueRepository->repoCustomFieldquery((int) $id);
             if ($custom_field) {
                 $field_form = new CustomFieldForm($custom_field);
                 $parameters = [
@@ -98,7 +98,7 @@ final class CustomValueController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        CustomFieldRepository $custom_fieldRepository
+        CustomFieldRepository $custom_fieldRepository,
     ): Response {
         $field_id = $currentRoute->getArgument('id');
         if (null !== $field_id) {
@@ -146,9 +146,9 @@ final class CustomValueController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         CustomValueRepository $customvalueRepository,
-        CustomFieldRepository $custom_fieldRepository
+        CustomFieldRepository $custom_fieldRepository,
     ): Response {
-        $custom_field_id = (string)$this->session->get('custom_field_id');
+        $custom_field_id = (string) $this->session->get('custom_field_id');
         $custom_field = $custom_fieldRepository->repoCustomFieldquery($custom_field_id);
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_field && $custom_value) {
@@ -184,9 +184,9 @@ final class CustomValueController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        CustomValueRepository $customvalueRepository
+        CustomValueRepository $customvalueRepository,
     ): Response {
-        $custom_field_id = (string)$this->session->get('custom_field_id');
+        $custom_field_id = (string) $this->session->get('custom_field_id');
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
             $this->customValueService->deleteCustomValue($custom_value);

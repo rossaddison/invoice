@@ -137,13 +137,13 @@ final class InstallCommand extends Command
 
             $io->text([
                 'Database configuration found:',
-                'Host: ' . (string)$dbConfig['host'],
-                'User: ' . (string)$dbConfig['user'],
-                'Database: ' . (string)$dbConfig['database'],
+                'Host: ' . (string) $dbConfig['host'],
+                'User: ' . (string) $dbConfig['user'],
+                'Database: ' . (string) $dbConfig['database'],
                 '',
             ]);
 
-            if (!$io->confirm('Create database "' . (string)$dbConfig['database'] . '" if it doesn\'t exist?', true)) {
+            if (!$io->confirm('Create database "' . (string) $dbConfig['database'] . '" if it doesn\'t exist?', true)) {
                 $io->note('Database creation skipped.');
                 return true;
             }
@@ -213,10 +213,10 @@ final class InstallCommand extends Command
 
     private function createDatabase(array $config, SymfonyStyle $io): bool
     {
-        $host = (string)$config['host'];
-        $password = (string)$config['password'];
-        $database = (string)$config['database'];
-        $user = (string)$config['user'];
+        $host = (string) $config['host'];
+        $password = (string) $config['password'];
+        $database = (string) $config['database'];
+        $user = (string) $config['user'];
         try {
             // Connect without specifying database to create it
             $dsn = sprintf('mysql:host=%s', $host);

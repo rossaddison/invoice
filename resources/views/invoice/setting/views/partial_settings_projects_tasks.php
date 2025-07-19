@@ -45,7 +45,7 @@ declare(strict_types=1);
                             <div class="input-group">
                                 <input type="text" name="settings[default_hourly_rate]" id="settings[default_hourly_rate]"
                                     class="form-control amount"
-                                    value="<?= $body['settings[default_hourly_rate]'] ? $s->format_amount((float)$body['settings[default_hourly_rate]']) : $body['settings[default_hourly_rate]']; ?>">
+                                    value="<?= $body['settings[default_hourly_rate]'] ? $s->format_amount((float) $body['settings[default_hourly_rate]']) : $body['settings[default_hourly_rate]']; ?>">
                                 <span class="input-group-addon"><?= $s->getSetting('currency_symbol'); ?></span>
                                 <input type="hidden" name="settings[default_hourly_rate_field_is_amount]" value="1">
                             </div>

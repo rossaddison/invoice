@@ -13,6 +13,6 @@ echo A::tag()
               ->src('https://www.mollie.com/wp-content/uploads/2022/08/og-image-mollie.png')
               ->width(280)
               ->height(44)
-              ->addAttributes(['border' => 0])
+              ->addAttributes(['border' => 0]),
     )
     ->render();

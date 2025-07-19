@@ -24,7 +24,7 @@ final class ContactMailer
         private MailerInterface $mailer,
         private Translator $translator,
         private readonly string $sender,
-        private readonly string $to
+        private readonly string $to,
     ) {
         $this->flash = new Flash($session);
         $this->session = $session;
@@ -36,12 +36,12 @@ final class ContactMailer
     {
         $message = new \Yiisoft\Mailer\Message(
             charset: 'utf-8',
-            subject: (string)$form->getPropertyValue('subject'),
+            subject: (string) $form->getPropertyValue('subject'),
             date: new \DateTimeImmutable('now'),
-            from: [(string)$form->getPropertyValue('email') => (string)$form->getPropertyValue('name')],
+            from: [(string) $form->getPropertyValue('email') => (string) $form->getPropertyValue('name')],
             sender: $this->sender,
             to: $this->to,
-            textBody: (string)$form->getPropertyValue('body')
+            textBody: (string) $form->getPropertyValue('body'),
         );
 
         /** @var array $attachFile */
@@ -55,9 +55,9 @@ final class ContactMailer
                     /** @psalm-suppress MixedAssignment $message */
                     $message = $message->withAttachments(
                         File::fromContent(
-                            (string)$file[0]?->getStream(),
-                            (string)$file[0]?->getClientFilename(),
-                            (string)$file[0]?->getClientMediaType()
+                            (string) $file[0]?->getStream(),
+                            (string) $file[0]?->getClientFilename(),
+                            (string) $file[0]?->getClientMediaType(),
                         ),
                     );
                 }

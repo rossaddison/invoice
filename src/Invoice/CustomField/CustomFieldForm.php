@@ -26,7 +26,7 @@ final class CustomFieldForm extends FormModel
 
     public function __construct(CustomField $custom_field)
     {
-        $this->id = (int)$custom_field->getId();
+        $this->id = (int) $custom_field->getId();
         $this->table = $custom_field->getTable();
         $this->label = $custom_field->getLabel();
         $this->type = $custom_field->getType();

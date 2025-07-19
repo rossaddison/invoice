@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
  */
 foreach ($clients as $client) {
     if (null !== ($clientId = $client->getClient_id())) {
-        $optionsDataClient[$clientId] = $client->getClient_name().' '.($client->getClient_surname() ?? '#');
+        $optionsDataClient[$clientId] = $client->getClient_name() . ' ' . ($client->getClient_surname() ?? '#');
     }
 }
 echo Field::select($form, 'client_id')
@@ -59,7 +59,7 @@ echo Field::select($form, 'client_id')
     'id' => 'client_id',
     'class' => 'form-control',
     'readonly' => 'readonly',
-    'disabled' => 'disabled'
+    'disabled' => 'disabled',
 ])
 ->optionsData($optionsDataClient);
 ?>
@@ -80,7 +80,7 @@ echo Field::select($form, 'client_id')
         'class' => 'form-control',
         'id' => 'note',
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
 ?>
                 <?= Html::closeTag('div'); ?>

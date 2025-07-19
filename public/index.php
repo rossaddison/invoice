@@ -20,7 +20,7 @@ if (getenv('YII_C3')) {
 // PHP built-in server routing.
 if (PHP_SAPI === 'cli-server') {
     // Serve static files as is.
-    $path = (string)parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $path = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     if (is_file(__DIR__ . $path)) {
         return false;
     }
@@ -37,6 +37,6 @@ $runner = new HttpApplicationRunner(
     rootPath: dirname(__DIR__),
     debug: !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : false,
     checkEvents: !empty($_ENV['YII_DEBUG']) ? $_ENV['YII_DEBUG'] : false,
-    environment: $_ENV['YII_ENV']
+    environment: $_ENV['YII_ENV'],
 );
 $runner->run();

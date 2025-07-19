@@ -53,18 +53,18 @@ use Yiisoft\Html\Html;
                 </div>
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #
-                    <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
-                     Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
-                     Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+                    <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
+                     Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
+                     Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
                      $numberHelper->format_currency($balance); ?>
                 </div>    
             </div>     
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
     </div> 
     <br><?= Html::tag('Div', Html::tag('H4', $title)); ?><br>
@@ -83,7 +83,7 @@ use Yiisoft\Html\Html;
     <button type="submit" id="submit" class="btn btn-lg btn-success fa fa-credit-card fa-margin">
         <div class="spinner hidden" id="spinner"></div>
         <span id="button-text">
-            <?= ' '.$translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance) ?>
+            <?= ' ' . $translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance) ?>
         </span>
     </button>
 <?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
@@ -138,9 +138,9 @@ use Yiisoft\Html\Html;
 ?>
 <?php // This is your test publishable API key.
 $js18 =
-'const stripe = Stripe("' .$pci_client_publishable_key.'");'
+'const stripe = Stripe("' . $pci_client_publishable_key . '");'
 . 'let elements;'
-. 'const items = ['. $json_encoded_items.'];'
+. 'const items = [' . $json_encoded_items . '];'
 . 'initialize();'
 . 'checkStatus();'
 . 'document.querySelector("#payment-form").addEventListener("submit", handleSubmit);'
@@ -151,7 +151,7 @@ $js18 =
     // headers: { "Content-Type": "application/json" },
     // body: JSON.stringify({ items }),
     // }).then((r) => r.json());
-    . 'const { clientSecret } = {"clientSecret": "'. $client_secret .'"};'
+    . 'const { clientSecret } = {"clientSecret": "' . $client_secret . '"};'
     . 'elements = stripe.elements({ clientSecret });'
     . 'const paymentElementOptions = {'
         . 'layout: "tabs"'
@@ -165,7 +165,7 @@ $js18 =
     . 'const { error } = await stripe.confirmPayment({'
         . 'elements,'
         . 'confirmParams: {'
-            . 'return_url: "'.$urlGenerator->generateAbsolute('paymentinformation/stripe_complete', ['url_key' => $inv_url_key]).'"'
+            . 'return_url: "' . $urlGenerator->generateAbsolute('paymentinformation/stripe_complete', ['url_key' => $inv_url_key]) . '"'
         . '},'
     . '});'
     . 'if (error.type === "card_error" || error.type === "validation_error") {'
@@ -176,46 +176,46 @@ $js18 =
     . 'setLoading(false);'
 . '}'
 . 'async function checkStatus() {'
-.   'const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");'
-.   'if (!clientSecret) {'
-    .   'return;'
-.   '}'
-.   'const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);'
-.   'switch (paymentIntent.status) {'
-    .   '  case "succeeded":'
-    .   '    showMessage("Payment succeeded!");'
-    .   '    break;'
-    .   '  case "processing":'
-    .   '    showMessage("Your payment is processing.");'
-    .   '    break;'
-    .   '  case "requires_payment_method":'
-    .   '    showMessage("Your payment was not successful, please try again.");'
-    .   '    break;'
-    .   '  default:'
-    .   '    showMessage("Something went wrong.");'
-    .   '    break;'
-.  '}'
-.    '}'
-.   'function showMessage(messageText) {'
-.     'const messageContainer = document.querySelector("#payment-message");'
-.     'messageContainer.classList.remove("hidden");'
-.     'messageContainer.textContent = messageText;'
-.     'setTimeout(function () {'
-.       'messageContainer.classList.add("hidden");'
-.       'messageText.textContent = "";'
-.     '}, 4000);'
-.   '}'
-.   'function setLoading(isLoading) {'
-.     'if (isLoading) {'
-.       'document.querySelector("#submit").disabled = true;'
-.       'document.querySelector("#spinner").classList.remove("hidden");'
-.       'document.querySelector("#button-text").classList.add("hidden");'
-.     '} else {'
-.       'document.querySelector("#submit").disabled = false;'
-.       'document.querySelector("#spinner").classList.add("hidden");'
-.       'document.querySelector("#button-text").classList.remove("hidden");'
-.     '}'
-.   '};';
+. 'const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");'
+. 'if (!clientSecret) {'
+    . 'return;'
+. '}'
+. 'const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);'
+. 'switch (paymentIntent.status) {'
+    . '  case "succeeded":'
+    . '    showMessage("Payment succeeded!");'
+    . '    break;'
+    . '  case "processing":'
+    . '    showMessage("Your payment is processing.");'
+    . '    break;'
+    . '  case "requires_payment_method":'
+    . '    showMessage("Your payment was not successful, please try again.");'
+    . '    break;'
+    . '  default:'
+    . '    showMessage("Something went wrong.");'
+    . '    break;'
+. '}'
+. '}'
+. 'function showMessage(messageText) {'
+. 'const messageContainer = document.querySelector("#payment-message");'
+. 'messageContainer.classList.remove("hidden");'
+. 'messageContainer.textContent = messageText;'
+. 'setTimeout(function () {'
+. 'messageContainer.classList.add("hidden");'
+. 'messageText.textContent = "";'
+. '}, 4000);'
+. '}'
+. 'function setLoading(isLoading) {'
+. 'if (isLoading) {'
+. 'document.querySelector("#submit").disabled = true;'
+. 'document.querySelector("#spinner").classList.remove("hidden");'
+. 'document.querySelector("#button-text").classList.add("hidden");'
+. '} else {'
+. 'document.querySelector("#submit").disabled = false;'
+. 'document.querySelector("#spinner").classList.add("hidden");'
+. 'document.querySelector("#button-text").classList.remove("hidden");'
+. '}'
+. '};';
 echo Html::script($js18)->type('module');
 ?>
 

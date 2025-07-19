@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
         'placeholder' => $translator->translate('setting.key'),
         'value' => Html::encode($form->getSetting_key() ?? ''),
         'class' => 'form-control',
-        'id' => 'setting_key'
+        'id' => 'setting_key',
     ])
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
         'placeholder' => $translator->translate('setting.value'),
         'value' => Html::encode($form->getSetting_value() ?? ''),
         'class' => 'form-control',
-        'id' => 'setting_value'
+        'id' => 'setting_value',
     ])
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));

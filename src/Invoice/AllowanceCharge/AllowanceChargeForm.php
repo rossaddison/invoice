@@ -33,7 +33,7 @@ final class AllowanceChargeForm extends FormModel
     #[Required]
     private ?int $base_amount = null;
 
-    #[Integer(min:1)]
+    #[Integer(min: 1)]
     private ?int $tax_rate_id = null;
 
     public function __construct(AllowanceCharge $allowanceCharge)
@@ -45,7 +45,7 @@ final class AllowanceChargeForm extends FormModel
         $this->multiplier_factor_numeric = $allowanceCharge->getMultiplierFactorNumeric();
         $this->amount = $allowanceCharge->getAmount();
         $this->base_amount = $allowanceCharge->getBaseAmount();
-        $this->tax_rate_id = (int)$allowanceCharge->getTaxRateId();
+        $this->tax_rate_id = (int) $allowanceCharge->getTaxRateId();
     }
 
     public function getIdentifier(): bool|null

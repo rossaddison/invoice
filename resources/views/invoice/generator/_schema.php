@@ -21,7 +21,7 @@ if (!$isGuest) {
     foreach ($tables as $table) {
         echo '<div>';
         echo '<br>';
-        echo '<h1>'.$table->getName().'</h1>';
+        echo '<h1>' . $table->getName() . '</h1>';
         echo '<table class="table">';
         echo '<thead>';
         echo '<tr><th scope="row">Name</th><th scope="row">Internal Type<th scope="row">Abstract Type</th><th scope="row">Type</th><th scope="row">Has Def Val</th><th scope="row">Def Value</th><th scope="row">Size</th><th scope="row">Precision</th><th scope="row">Scale</th><th scope="row">Nullable</th><th scope="row">Enums</th><th scope="row">Constraints</th></tr>';
@@ -49,9 +49,9 @@ if (!$isGuest) {
              */
             foreach (($enumValues = $column->getEnumValues()) as $enum) {
                 $temp = $enum;
-                $temp .= " ".$temp;
+                $temp .= " " . $temp;
             }
-            echo '<td>'.$temp.'</td>';
+            echo '<td>' . $temp . '</td>';
             $var = '';
 
             /**
@@ -60,9 +60,9 @@ if (!$isGuest) {
              */
             foreach (($columnConstraints = $column->getConstraints()) as $constraint) {
                 $var = $constraint;
-                $var .= " ".$var;
+                $var .= " " . $var;
             }
-            echo '<td>'.$temp.'</td>';
+            echo '<td>' . $temp . '</td>';
             echo '</tr>';
         }
         echo '</tbody>';

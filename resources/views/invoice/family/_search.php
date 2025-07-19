@@ -16,7 +16,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $actionName
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
- * @psalm-var array<string,list<string>> $errors 
+ * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $categoryPrimaries
  * @psalm-var array<array-key, array<array-key, string>|string> $categorySecondaries
  * @psalm-var array<array-key, array<array-key, string>|string> $familyNames
@@ -52,30 +52,30 @@ use Yiisoft\Html\Tag\Form;
                       ->value($form->getCategory_primary_id())
                       ->prompt($translator->translate('none'))
                       ->optionsData($categoryPrimaries);
-                  ?>
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_secondary_id')
-                      ->label($translator->translate('category.secondary'))
-                      ->addInputAttributes([
-                          'class' => 'form-control  alert alert-warning',
-                          'id' => 'family-category-secondary-id',
-                      ])
-                      ->value($form->getCategory_secondary_id())
-                      ->optionsData($categorySecondaries);
-                  ?>
+    ->label($translator->translate('category.secondary'))
+    ->addInputAttributes([
+        'class' => 'form-control  alert alert-warning',
+        'id' => 'family-category-secondary-id',
+    ])
+    ->value($form->getCategory_secondary_id())
+    ->optionsData($categorySecondaries);
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'family_name')
-                    ->label($translator->translate('family.name'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('family.name'),
-                        'class' => 'form-control',
-                        'id' => 'family-name',
-                    ])
-                    ->value($form->getFamily_name())
-                    ->optionsData($familyNames);    
-                  ?>
+  ->label($translator->translate('family.name'))
+  ->addInputAttributes([
+      'placeholder' => $translator->translate('family.name'),
+      'class' => 'form-control',
+      'id' => 'family-name',
+  ])
+  ->value($form->getFamily_name())
+  ->optionsData($familyNames);
+?>
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

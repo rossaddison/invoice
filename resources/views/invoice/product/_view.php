@@ -17,7 +17,7 @@ use Yiisoft\Html\Html;
 
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= str_repeat("&nbsp;", 2).Html::encode($title) ?></h1>
+    <h1 class="headerbar-title"><?= str_repeat("&nbsp;", 2) . Html::encode($title) ?></h1>
 </div>
 
 <ul id="product-tabs" class="nav nav-tabs nav-tabs-noborder">

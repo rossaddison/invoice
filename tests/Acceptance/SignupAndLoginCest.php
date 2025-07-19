@@ -15,8 +15,7 @@ final class SignupAndLoginCest
         private readonly string $firstUserWrongLogin = 'firstUserWrongLogin',
         private readonly string $firstUserPassword = 'firstUserPassword',
         private readonly string $firstUserWrongPassword = 'firstUserWrongPassword',
-    ) {
-    }
+    ) {}
 
     public function testSignupPage(AcceptanceTester $I): void
     {

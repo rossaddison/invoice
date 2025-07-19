@@ -106,7 +106,7 @@ final class ClientRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 
@@ -186,7 +186,7 @@ final class ClientRepository extends Select\Repository
              * @var Client $client
              */
             foreach ($this->repoUserClient($ucR->getClients_with_user_accounts()) as $client) {
-                $optionsData[(int)$client->getClient_id()] = ($client->getClient_name() ?: '??') . str_repeat(' ', 3) . ($client->getClient_surname() ?? '??');
+                $optionsData[(int) $client->getClient_id()] = ($client->getClient_name() ?: '??') . str_repeat(' ', 3) . ($client->getClient_surname() ?? '??');
             }
         }
         return $optionsData;

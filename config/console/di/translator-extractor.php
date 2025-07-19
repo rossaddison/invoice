@@ -18,8 +18,8 @@ return [
                     'class' => CategorySource::class,
                     '__construct()' => [
                         'app',
-                        'messageReader' => DynamicReference::to(static fn (Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
-                        'messageWriter' => DynamicReference::to(static fn (Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
+                        'messageReader' => DynamicReference::to(static fn(Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
+                        'messageWriter' => DynamicReference::to(static fn(Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
                     ],
                 ]),
             ],

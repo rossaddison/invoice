@@ -40,7 +40,7 @@ final class UploadController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->factory = $factory;
@@ -72,7 +72,7 @@ final class UploadController extends BaseController
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
+        $currentPageNeverZero = (int) $page > 0 ? (int) $page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'file_name_original'])
                 // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -83,7 +83,7 @@ final class UploadController extends BaseController
         $paginator = (new OffsetPaginator($uploads))
                 ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
-                ->withToken(PageToken::next((string)$page));
+                ->withToken(PageToken::next((string) $page));
 
         $parameters = [
             'paginator' => $paginator,
@@ -102,7 +102,7 @@ final class UploadController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
     ): Response {
         $upload = new Upload();
         $form = new UploadForm($upload);
@@ -136,7 +136,7 @@ final class UploadController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        UploadRepository $uploadRepository
+        UploadRepository $uploadRepository,
     ): Response {
         try {
             $upload = $this->upload($currentRoute, $uploadRepository);
@@ -146,7 +146,7 @@ final class UploadController extends BaseController
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
-                    ['heading' => '', 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+                    ['heading' => '', 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
                 ));
             }
             return $this->webService->getRedirectResponse('upload/index');
@@ -169,7 +169,7 @@ final class UploadController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         UploadRepository $uploadRepository,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
     ): Response {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {

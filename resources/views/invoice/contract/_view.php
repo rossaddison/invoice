@@ -35,10 +35,10 @@ use Yiisoft\Html\Tag\Form;
 <?= Field::text($form, 'name')->readonly(true);?>
 <?= Field::text($form, 'period_start')
     ->value(
-        Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d')))
+        Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d'))),
     )->readonly(true);?>
 <?= Field::text($form, 'period_end')
     ->value(
-        Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d')))
+        Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d'))),
     )->readonly(true);?>
 

@@ -52,7 +52,7 @@ use Yiisoft\Html\Html;
                             
                             <?= Field::checkbox($form, 'user_all_clients')
     ->inputLabelAttributes([
-        'class' => 'form-check-label'
+        'class' => 'form-check-label',
     ])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('user.all.clients'))
@@ -83,7 +83,7 @@ if ($clients) {
         'id' => 'client_id',
         'class' => 'form-control',
         'autofocus' => 'autofocus',
-        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id())
+        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()),
     ])
     ->optionsData($optionsDataClient);
 

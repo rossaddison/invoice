@@ -11,18 +11,16 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\QuoteAmount\QuoteAmountRepository::class)]
 class QuoteAmount
 {
-    #[BelongsTo(target:Quote::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable:false)]
-        private ?int $quote_id = null, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-        private ?float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-        private ?float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-        private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable:false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
-    }
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $quote_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $total = 0.00) {}
 
     public function getQuote(): ?Quote
     {
@@ -31,7 +29,7 @@ class QuoteAmount
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -41,7 +39,7 @@ class QuoteAmount
 
     public function getQuote_id(): string
     {
-        return (string)$this->quote_id;
+        return (string) $this->quote_id;
     }
 
     public function setQuote_id(int $quote_id): void

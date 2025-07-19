@@ -63,7 +63,7 @@ foreach ($composerCmds as $cmd) {
     $returnCode = 0;
     $nul = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'NUL' : '/dev/null';
     exec("$cmd --version 2>$nul", $output, $returnCode);
-    if ($returnCode === 0 && isset($output[0]) && stripos((string)$output[0], 'Composer') !== false) {
+    if ($returnCode === 0 && isset($output[0]) && stripos((string) $output[0], 'Composer') !== false) {
         $composerInstalled = true;
         $composerCmdFound = $cmd;
         $composerFoundMsg = $cmd;
@@ -178,10 +178,10 @@ function parseDatabaseConfig(): array
 
 try {
     $dbConfig = parseDatabaseConfig();
-    $host = (string)$dbConfig['host'];
-    $user = (string)$dbConfig['user'];
-    $database = (string)$dbConfig['database'];
-    $password = (string)$dbConfig['password'];
+    $host = (string) $dbConfig['host'];
+    $user = (string) $dbConfig['user'];
+    $database = (string) $dbConfig['database'];
+    $password = (string) $dbConfig['password'];
     echo "   Database configuration found:\n";
     echo '   Host: ' . $host . "\n";
     echo '   User: ' . $user . "\n";

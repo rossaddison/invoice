@@ -33,9 +33,9 @@ if ($invEdit && $invView) {
                ->addClass('bi bi-info-circle')
                ->addAttributes([
                    'tooltip' => 'data-bs-toggle',
-                   'title' => $s->isDebugMode(5)
+                   'title' => $s->isDebugMode(5),
                ])
-               ->content(' '.$translator->translate('attachments'));
+               ->content(' ' . $translator->translate('attachments'));
 ?>
         </b>    
     </div>

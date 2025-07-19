@@ -28,7 +28,7 @@ class Identity implements CookieLoginIdentityInterface
      * it gets built automatically by the User's HasOne Identity relationship
      */
     public function __construct(
-        User $user = null
+        User $user = null,
     ) {
         $this->authKey = $this->regenerateCookieLoginKey();
     }
@@ -36,7 +36,7 @@ class Identity implements CookieLoginIdentityInterface
     #[\Override]
     public function getId(): ?string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function getUser_id(): ?string

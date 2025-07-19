@@ -47,7 +47,7 @@ foreach ($flash->getAll() as $key => $value) {
                 'warning' => $warning,
                 'light' => $light,
                 'dark' => $dark,
-                'default' => $info
+                'default' => $info,
             };
             $alert = Alert::widget()
                      ->addClass('shadow')
@@ -57,7 +57,7 @@ foreach ($flash->getAll() as $key => $value) {
                      ])
                      ->addClass('btn-flash-message-close')
                      ->closeButtonTag('button')
-                     ->closeButtonAttributes(['style' => 'font-size:'. $alertCloseButtonFontSize. 'px'])
+                     ->closeButtonAttributes(['style' => 'font-size:' . $alertCloseButtonFontSize . 'px'])
                      ->variant($matchedKey)
                      // do not html encode since not user-generated code.
                      ->body($body, false)

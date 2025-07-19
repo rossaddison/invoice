@@ -52,25 +52,25 @@ use Yiisoft\Html\Html;
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #                    
-                    <?= (Html::encode($invoice->getNumber() ?? '')). ' => '.
-                     (Html::encode($invoice->getClient()?->getClient_name() ?? '')). ' '.
-                     (Html::encode($invoice->getClient()?->getClient_surname() ?? '')). ' '.
+                    <?= (Html::encode($invoice->getNumber() ?? '')) . ' => ' .
+                     (Html::encode($invoice->getClient()?->getClient_name() ?? '')) . ' ' .
+                     (Html::encode($invoice->getClient()?->getClient_surname() ?? '')) . ' ' .
                      $numberHelper->format_currency($balance); ?>
                 </div>
             </div>
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
     </div>
     <?php
         include 'vendor/autoload.php';
     $version = "using https://github.com/amzn/amazon-pay-api-sdk-php version: " . \Amazon\Pay\API\Client::SDK_VERSION . "\n";
     ?>
-    <br><?= Html::tag('Div', Html::tag('H4', $title.'  '. $version)); ?><br>
+    <br><?= Html::tag('Div', Html::tag('H4', $title . '  ' . $version)); ?><br>
 <div class="card-body p-5 text-center">    
     <?= $alert; ?>
     <br>
@@ -83,7 +83,7 @@ use Yiisoft\Html\Html;
     <button type="submit" id="submit" class="btn btn-lg btn-success fa fa-credit-card fa-margin">
         <div class="spinner hidden" id="spinner"></div>
         <span id="button-text">
-            <?= ' '.$translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance) ?>
+            <?= ' ' . $translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance) ?>
         </span>
     </button>
 <?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
@@ -136,13 +136,13 @@ use Yiisoft\Html\Html;
 $js20 =
 "const amazonPayButton = amazon.Pay.renderButton('#AmazonPayButton', {"
 // set checkout environment
-. 'merchantId: "'. (string)$amazonPayButton['merchantId']. '",'
+. 'merchantId: "' . (string) $amazonPayButton['merchantId'] . '",'
 // SANDBOX-xxxxxxxxxx
-. 'publicKeyId: "'. (string)$amazonPayButton['publicKeyId'].'",'
+. 'publicKeyId: "' . (string) $amazonPayButton['publicKeyId'] . '",'
 // eg. Currency shortcode eg. GBP
-. 'ledgerCurrency: "'. (string)$amazonPayButton['ledgerCurrency'].'",'
+. 'ledgerCurrency: "' . (string) $amazonPayButton['ledgerCurrency'] . '",'
 // customize the buyer experience eg. en_GB
-. 'checkoutLanguage: "'. (string)$amazonPayButton['checkoutLanguage']. '",'
+. 'checkoutLanguage: "' . (string) $amazonPayButton['checkoutLanguage'] . '",'
 // 'PayAndShip' - Offer checkout using buyer's Amazon wallet and address book.
 //              Select this product type if you need the buyer's shipping details
 // 'PayOnly' - Offer checkout using only the buyer's Amazon wallet.
@@ -150,7 +150,7 @@ $js20 =
 // 'SignIn' - Offer Amazon Sign-in. Select this product type if you need buyer details
 //              before the buyer starts Amazon Pay checkout. See Amazon Sign-in
 //              for more information.
-. 'productType: "'. (string)$amazonPayButton['productType'].'",'
+. 'productType: "' . (string) $amazonPayButton['productType'] . '",'
 //'Home' - Initial or main page
 //'Product' - Product details page
 //'Cart' - Cart review page before buyer starts checkout
@@ -159,13 +159,13 @@ $js20 =
 . 'placement: "Other",'
 . 'buttonColor: "Gold",'
 // Currency shortcode eg. GBP
-. 'estimatedOrderAmount: { "amount": "'. (string)$amazonPayButton['amount'].'", "currencyCode": "'. (string)$amazonPayButton['ledgerCurrency'].'"},'
+. 'estimatedOrderAmount: { "amount": "' . (string) $amazonPayButton['amount'] . '", "currencyCode": "' . (string) $amazonPayButton['ledgerCurrency'] . '"},'
 // configure Create Checkout Session request
 . 'createCheckoutSessionConfig: {'
 // json encoded string generated in step 2
-. "           payloadJSON: '". (string)$amazonPayButton['payloadJSON']."',"
+. "           payloadJSON: '" . (string) $amazonPayButton['payloadJSON'] . "',"
 // signature generated in step 3
-. "signature: '". (string)$amazonPayButton['signature']."'"
+. "signature: '" . (string) $amazonPayButton['signature'] . "'"
 . '}'
 . '});';
 echo Html::script($js20)->type('module')

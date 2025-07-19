@@ -37,7 +37,7 @@ final class PostalAddressController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->postaladdressService = $postaladdressService;
@@ -53,18 +53,18 @@ final class PostalAddressController extends BaseController
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
         $queryParams = $request->getQueryParams();
         /**
          * @var array $queryParams
          */
-        $origin = (string)$queryParams['origin'];
-        $origin_id = (int)$queryParams['origin_id'];
-        $action = (string)$queryParams['action'];
+        $origin = (string) $queryParams['origin'];
+        $origin_id = (int) $queryParams['origin_id'];
+        $action = (string) $queryParams['action'];
         $postalAddress = new PostalAddress();
-        $form = new PostalAddressForm($this->translator, $postalAddress, (int)$client_id);
+        $form = new PostalAddressForm($this->translator, $postalAddress, (int) $client_id);
         $parameters = [
             'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
             'client_id' => $client_id,
@@ -118,7 +118,8 @@ final class PostalAddressController extends BaseController
         CurrentRoute $routeCurrent,
         PostalAddressRepository $postaladdressRepository,
         ClientRepository $cR,
-        #[RouteArgument('page')] string $page = '1'
+        #[RouteArgument('page')]
+        string $page = '1',
     ): Response {
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
@@ -132,7 +133,7 @@ final class PostalAddressController extends BaseController
             'postaladdresses' => $postaladdresses,
             'alert' => $this->alert(),
             'paginator' => $paginator,
-            'max' => (int)$this->sR->getSetting('default_list_limit'),
+            'max' => (int) $this->sR->getSetting('default_list_limit'),
             'cR' => $cR,
             'routeCurrent' => $routeCurrent,
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
@@ -172,7 +173,7 @@ final class PostalAddressController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        PostalAddressRepository $postalAddressRepository
+        PostalAddressRepository $postalAddressRepository,
     ): Response {
         $postalAddress = $this->postaladdress($currentRoute, $postalAddressRepository);
         if ($postalAddress) {
@@ -181,10 +182,10 @@ final class PostalAddressController extends BaseController
              * @see config/common/routes/routes.php '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
              * @var array $queryParams
              */
-            $origin = (string)$queryParams['origin'];
-            $origin_id = (int)$queryParams['origin_id'];
-            $action = (string)$queryParams['action'];
-            $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
+            $origin = (string) $queryParams['origin'];
+            $origin_id = (int) $queryParams['origin_id'];
+            $action = (string) $queryParams['action'];
+            $form = new PostalAddressForm($this->translator, $postalAddress, (int) $postalAddress->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'postaladdress/edit',
@@ -260,11 +261,11 @@ final class PostalAddressController extends BaseController
      */
     public function view(
         CurrentRoute $currentRoute,
-        PostalAddressRepository $postalAddressRepository
+        PostalAddressRepository $postalAddressRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $postalAddress = $this->postaladdress($currentRoute, $postalAddressRepository);
         if ($postalAddress) {
-            $form = new PostalAddressForm($this->translator, $postalAddress, (int)$postalAddress->getClient_id());
+            $form = new PostalAddressForm($this->translator, $postalAddress, (int) $postalAddress->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'postaladdress/view',

@@ -33,7 +33,7 @@ final class GroupController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->groupService = $groupService;
@@ -46,18 +46,18 @@ final class GroupController extends BaseController
      */
     public function index(GroupRepository $groupRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
     {
-        $page = (int)$request->getAttribute('page', '1');
+        $page = (int) $request->getAttribute('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         // Generate a flash message in the index if the user does not have permission
         $this->rbac();
         $parameters = [
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'paginator' => $paginator,
             'groups' => $this->groups($groupRepository),
             'alert' => $this->alert(),
@@ -72,7 +72,7 @@ final class GroupController extends BaseController
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $group = new Group();
         $form = new GroupForm($group);
@@ -109,7 +109,7 @@ final class GroupController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        GroupRepository $groupRepository
+        GroupRepository $groupRepository,
     ): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
@@ -144,7 +144,7 @@ final class GroupController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        GroupRepository $groupRepository
+        GroupRepository $groupRepository,
     ): Response {
         try {
             $group = $this->group($currentRoute, $groupRepository);
@@ -167,7 +167,7 @@ final class GroupController extends BaseController
      */
     public function view(
         CurrentRoute $currentRoute,
-        GroupRepository $groupRepository
+        GroupRepository $groupRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {

@@ -96,7 +96,7 @@ final class SalesOrderController extends BaseController
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
     }
@@ -116,7 +116,7 @@ final class SalesOrderController extends BaseController
         CurrentRoute $currentRoute,
         SoR $soR,
         UCR $ucR,
-        UIR $uiR
+        UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $query_params = $request->getQueryParams();
         /**
@@ -124,12 +124,12 @@ final class SalesOrderController extends BaseController
          */
         $pageNum = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$pageNum > 0 ? (int)$pageNum : 1;
+        $currentPageNeverZero = (int) $pageNum > 0 ? (int) $pageNum : 1;
         //status 0 => 'all';
-        $status = (int)$currentRoute->getArgument('status', '0');
+        $status = (int) $currentRoute->getArgument('status', '0');
         /** @psalm-suppress MixedAssignment $sort_string */
         $sort_string = $query_params['sort'] ?? '-id';
-        $sort = Sort::only(['status_id','number','date_created', 'id','client_id'])->withOrderString((string)$sort_string);
+        $sort = Sort::only(['status_id','number','date_created', 'id','client_id'])->withOrderString((string) $sort_string);
 
         // Get the current user and determine from (@see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
@@ -139,8 +139,8 @@ final class SalesOrderController extends BaseController
         $user = $this->userService->getUser();
         if ($user) {
             // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount((string)$user->getId()) > 0
-                     ? $uiR->repoUserInvUserIdquery((string)$user->getId())
+            $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
+                     ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
             if ($userinv) {
                 // Determine what clients have been allocated to this user (@see Settings...User Account)
@@ -150,7 +150,7 @@ final class SalesOrderController extends BaseController
                 // A user-quest-accountant will be allocated a series of clients
                 // A user-guest-client will be allocated their client number by the administrator so that
                 // they can view their salesorders when they log in
-                $user_clients = $ucR->get_assigned_to_user((string)$user->getId());
+                $user_clients = $ucR->get_assigned_to_user((string) $user->getId());
                 if (!empty($user_clients)) {
                     $salesOrders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
                     $paginator = (new OffsetPaginator($salesOrders))
@@ -166,7 +166,7 @@ final class SalesOrderController extends BaseController
                         'soR' => $soR,
                         'status' => $status,
                         'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                         ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                         ? (int) $this->sR->getSetting('default_list_limit') : 1,
                         'so_statuses' => $so_statuses,
                         'paginator' => $paginator,
                     ];
@@ -193,11 +193,11 @@ final class SalesOrderController extends BaseController
         // If the language dropdown changes
         $this->session->set('_language', $currentRoute->getArgument('_language'));
         $query_params = $request->getQueryParams();
-        $page = (int)$currentRoute->getArgument('page', '1');
+        $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         //status 0 => 'all';
-        $status = (int)$currentRoute->getArgument('status', '0');
+        $status = (int) $currentRoute->getArgument('status', '0');
         /** @psalm-suppress MixedAssignment $sort_string */
         $sort_string = $query_params['sort'] ?? '-id';
         $sort = Sort::only(['id','status_id','number','date_created','client_id'])
@@ -205,12 +205,12 @@ final class SalesOrderController extends BaseController
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest quotes first => -id
                     /** @psalm-suppress MixedArgument $sort_string */
-                    ->withOrderString((string)$sort_string);
+                    ->withOrderString((string) $sort_string);
         $salesorders = $this->salesorders_status_with_sort($soR, $status, $sort);
         $paginator = (new OffsetPaginator($salesorders))
         ->withPageSize($sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $so_statuses = $soR->getStatuses($this->translator);
         $parameters = [
             'alert' => $this->alert(),
@@ -218,7 +218,7 @@ final class SalesOrderController extends BaseController
             'soR' => $soR,
             'status' => $status,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                         ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                         ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'so_statuses' => $so_statuses,
             'paginator' => $paginator,
             'client_count' => $clientRepo->count(),
@@ -261,7 +261,7 @@ final class SalesOrderController extends BaseController
                             'heading' => $so_label,
                             'message' => $this->translator->translate('record.successfully.updated'),
                             'url' => 'salesorder/view','id' => $so_id,
-                        ]
+                        ],
                     ));
                 }
             }
@@ -290,11 +290,11 @@ final class SalesOrderController extends BaseController
                         $this->viewRenderer->renderPartialAsString(
                             '//invoice/setting/salesorder_successful',
                             [
-                                'heading' => $soR->getSpecificStatusArrayLabel((string)9),
+                                'heading' => $soR->getSpecificStatusArrayLabel((string) 9),
                                 'message' => $this->translator->translate('record.successfully.updated'),
                                 'url' => 'salesorder/view','id' => $so_id,
-                            ]
-                        )
+                            ],
+                        ),
                     );
                 }
             }
@@ -378,7 +378,7 @@ final class SalesOrderController extends BaseController
             if (null !== $inv_id) {
                 $inv = $invRepo->repoInvUnloadedquery($inv_id);
             }
-            $inv_number = null !== $inv_id && null !== $inv ? (string)$inv->getNumber() : '';
+            $inv_number = null !== $inv_id && null !== $inv ? (string) $inv->getNumber() : '';
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'salesorder/edit',
@@ -391,12 +391,12 @@ final class SalesOrderController extends BaseController
                 ],
                 // Only make clients that have a user account available in the drop down list
                 'optionsData' => $this->optionsData(
-                    (int)$so->getClient_id(),
+                    (int) $so->getClient_id(),
                     $clientRepo,
                     $delRepo,
                     $gR,
                     $soR,
-                    $ucR
+                    $ucR,
                 ),
                 'errors' => [],
                 'form' => $form,
@@ -455,7 +455,7 @@ final class SalesOrderController extends BaseController
         SoTRR $sotrR,
         SoTRS $sotrS,
         SoAR $soaR,
-        SoAS $soaS
+        SoAS $soaS,
     ): Response {
         try {
             $so = $this->salesorder($currentRoute, $salesorderRepository);
@@ -499,11 +499,11 @@ final class SalesOrderController extends BaseController
         // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the quote or not.
         $include = $currentRoute->getArgument('include');
-        $so_id = (string)$this->session->get('so_id');
+        $so_id = (string) $this->session->get('so_id');
         $salesorder_amount = (($soaR->repoSalesOrderAmountCount($so_id) > 0) ? $soaR->repoSalesOrderquery($so_id) : null);
         if ($salesorder_amount) {
-            $custom = (($include === (string)1) ? true : false);
-            $salesorder_custom_values = $this->salesorder_custom_values((string)$this->session->get('so_id'), $socR);
+            $custom = (($include === (string) 1) ? true : false);
+            $salesorder_custom_values = $this->salesorder_custom_values((string) $this->session->get('so_id'), $socR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
             $pdfhelper = new PdfHelper($sR, $this->session);
             // The salesorder will be streamed ie. shown in the browser, and not archived
@@ -558,13 +558,13 @@ final class SalesOrderController extends BaseController
         TRR $trR,
         UNR $uR,
         SoCR $socR,
-        InvRepo $invRepo
+        InvRepo $invRepo,
     ): Response {
         $so = $this->salesorder($currentRoute, $soR);
         if ($so) {
             $this->session->set('so_id', $so->getId());
-            $salesorder_custom_values = $this->salesorder_custom_values((string)$this->session->get('so_id'), $socR);
-            $so_tax_rates = (($sotrR->repoCount((string)$this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string)$this->session->get('so_id')) : null);
+            $salesorder_custom_values = $this->salesorder_custom_values((string) $this->session->get('so_id'), $socR);
+            $so_tax_rates = (($sotrR->repoCount((string) $this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string) $this->session->get('so_id')) : null);
             $inv_id = $so->getInv_id();
             if (null !== $inv_id) {
                 $inv = $invRepo->repoInvUnloadedquery($inv_id);
@@ -573,7 +573,7 @@ final class SalesOrderController extends BaseController
                 $invNumber = '';
             }
             if ($so_tax_rates) {
-                $so_amount = (($soaR->repoSalesOrderAmountCount((string)$this->session->get('so_id')) > 0) ? $soaR->repoSalesOrderquery((string)$this->session->get('so_id')) : null);
+                $so_amount = (($soaR->repoSalesOrderAmountCount((string) $this->session->get('so_id')) > 0) ? $soaR->repoSalesOrderquery((string) $this->session->get('so_id')) : null);
                 if ($so_amount) {
                     $form = new SalesOrderForm($so);
                     $parameters = [
@@ -583,11 +583,11 @@ final class SalesOrderController extends BaseController
                         'errors' => [],
                         'form' => $form,
                         'so' => $so,
-                        'soItems' => $soiR->repoSalesOrderquery((string)$this->session->get('so_id')),
+                        'soItems' => $soiR->repoSalesOrderquery((string) $this->session->get('so_id')),
                         'soR' => $soR,
                         'invNumber' => $invNumber,
                         // Get all the fields that have been setup for this SPECIFIC salesorder in salesorder_custom.
-                        'fields' => $socR->repoFields((string)$this->session->get('quote_id')),
+                        'fields' => $socR->repoFields((string) $this->session->get('quote_id')),
                         // Get the standard extra custom fields built for EVERY quote.
                         'customFields' => $cfR->repoTablequery('salesorder_custom'),
                         'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
@@ -599,11 +599,11 @@ final class SalesOrderController extends BaseController
                             'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
                             'invView' => $this->userService->hasPermission('viewInv') ? true : false,
                             'numberhelper' => new NumberHelper($settingRepository),
-                            'soItems' => $soiR->repoSalesOrderquery((string)$this->session->get('so_id')),
+                            'soItems' => $soiR->repoSalesOrderquery((string) $this->session->get('so_id')),
                             'soiaR' => $soiaR,
                             'soTaxRates' => $so_tax_rates,
                             'so_amount' => $so_amount,
-                            'so' => $soR->repoSalesOrderLoadedquery((string)$this->session->get('so_id')),
+                            'so' => $soR->repoSalesOrderLoadedquery((string) $this->session->get('so_id')),
                             'trR' => $trR,
                             'uR' => $uR,
                         ]),
@@ -689,10 +689,10 @@ final class SalesOrderController extends BaseController
         SettingRepository $sR,
         UR $uR,
         UCR $ucR,
-        UIR $uiR
+        UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $body = $request->getQueryParams();
-        $so_id = (string)$body['so_id'];
+        $so_id = (string) $body['so_id'];
         $so = $soR->repoSalesOrderUnloadedquery($so_id);
         if ($so) {
             $inv_body = [
@@ -702,7 +702,7 @@ final class SalesOrderController extends BaseController
                 'so_id' => $so->getId(),
                 'status_id' => 2,
                 'password' => $body['password'] ?? '',
-                'number' => $gR->generate_number((int)$body['group_id']),
+                'number' => $gR->generate_number((int) $body['group_id']),
                 'discount_amount' => (float) $so->getDiscount_amount(),
                 'discount_percent' => (float) $so->getDiscount_percent(),
                 'url_key' => $so->getUrl_key(),
@@ -714,7 +714,7 @@ final class SalesOrderController extends BaseController
             $form = new InvForm($inv);
             if ($formHydrator->populateAndValidate($form, $inv_body) &&
                   // Salesorder has not been copied before:  inv_id = 0
-                  ($so->getInv_id() === (string)0)
+                  ($so->getInv_id() === (string) 0)
             ) {
                 /**
                  * @var string $inv_body['client_id']
@@ -803,7 +803,7 @@ final class SalesOrderController extends BaseController
             ];
             // Create an equivalent invoice item for the so item
             $invItem = new InvItem();
-            $form = new InvItemForm($invItem, (int)$inv_id);
+            $form = new InvItemForm($invItem, (int) $inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $this->invItemService->addInvItem_product($invItem, $inv_item, $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR);
             }
@@ -823,7 +823,7 @@ final class SalesOrderController extends BaseController
         /** @var SalesOrderTaxRate $so_tax_rate */
         foreach ($so_tax_rates as $so_tax_rate) {
             $inv_tax_rate = [
-                'inv_id' => (string)$inv_id,
+                'inv_id' => (string) $inv_id,
                 'tax_rate_id' => $so_tax_rate->getTax_rate_id(),
                 'include_item_tax' => $so_tax_rate->getInclude_item_tax(),
                 'inv_tax_rate_amount' => $so_tax_rate->getSo_tax_rate_amount(),
@@ -848,7 +848,7 @@ final class SalesOrderController extends BaseController
         string|null $inv_id,
         SoCR $socR,
         CFR $cfR,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): void {
         $so_customs = $socR->repoFields($so_id);
         // For each salesorder custom field, build a new custom field for 'inv_custom' using the custom_field_id to find details
@@ -858,14 +858,14 @@ final class SalesOrderController extends BaseController
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
             $existing_custom_field = $cfR->repoCustomFieldquery($so_custom->getCustom_field_id());
-            if ($cfR->repoTableAndLabelCountquery('inv_custom', (string)$existing_custom_field->getLabel()) !== 0) {
+            if ($cfR->repoTableAndLabelCountquery('inv_custom', (string) $existing_custom_field->getLabel()) !== 0) {
                 // Build an identitcal custom field for the invoice
                 $custom_field = new CustomField();
                 $custom_field->setTable('inv_custom');
-                $custom_field->setLabel((string)$existing_custom_field->getLabel());
+                $custom_field->setLabel((string) $existing_custom_field->getLabel());
                 $custom_field->setType($existing_custom_field->getType());
-                $custom_field->setLocation((int)$existing_custom_field->getLocation());
-                $custom_field->setOrder((int)$existing_custom_field->getOrder());
+                $custom_field->setLocation((int) $existing_custom_field->getLocation());
+                $custom_field->setOrder((int) $existing_custom_field->getOrder());
                 $cfR->save($custom_field);
                 // Build the inv_custom field record
                 $inv_custom = [
@@ -1005,9 +1005,9 @@ final class SalesOrderController extends BaseController
         DR $delRepo,
         GR $groupRepo,
         SoR $salesOrderRepo,
-        UCR $ucR
+        UCR $ucR,
     ): array {
-        $dLocs = $delRepo->repoClientquery((string)$client_id);
+        $dLocs = $delRepo->repoClientquery((string) $client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc
@@ -1032,7 +1032,7 @@ final class SalesOrderController extends BaseController
          * @var array $status
          */
         foreach ($salesOrderRepo->getStatuses($this->translator) as $key => $status) {
-            $optionsDataSalesOrderStatus[$key] = (string)$status['label'];
+            $optionsDataSalesOrderStatus[$key] = (string) $status['label'];
         }
         return $optionsData = [
             'client' => $clientRepo->optionsData($ucR),

@@ -11,13 +11,13 @@ use Yiisoft\Html\Tag\Img;
  */
 
 echo A::tag()
-    ->href('https://www.braintreegateway.com/merchants/'. $merchantId. '/verified')
+    ->href('https://www.braintreegateway.com/merchants/' . $merchantId . '/verified')
     ->target('_blank')
     ->content(
         Img::tag()
               ->src('https://s3.amazonaws.com/braintree-badges/braintree-badge-wide-dark.png')
               ->width(280)
               ->height(44)
-              ->addAttributes(['border' => 0])
+              ->addAttributes(['border' => 0]),
     )
     ->render();

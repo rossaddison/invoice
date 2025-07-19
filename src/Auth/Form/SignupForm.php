@@ -28,8 +28,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return string[]
@@ -114,7 +113,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                 new Length(min: 1, max: 48, skipOnError: true),
                 function (mixed $value): Result {
                     $result = new Result();
-                    if ($this->userRepository->findByLogin((string)$value) !== null) {
+                    if ($this->userRepository->findByLogin((string) $value) !== null) {
                         $result->addError($this->translator->translate('validator.user.exist'));
                     }
                     return $result;
@@ -125,7 +124,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                 new Email(),
                 function (mixed $value): Result {
                     $result = new Result();
-                    if ($this->userRepository->findByEmail((string)$value) !== null) {
+                    if ($this->userRepository->findByEmail((string) $value) !== null) {
                         $result->addError($this->translator->translate('validator.user.exist'));
                     }
                     return $result;

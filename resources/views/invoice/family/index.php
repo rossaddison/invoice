@@ -40,8 +40,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('family')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('family'))),
+            ),
     )
     ->render();
 
@@ -83,34 +83,34 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Family $model) => Html::encode($model->getFamily_id()),
+            content: static fn(Family $model) => Html::encode($model->getFamily_id()),
             withSorting: true,
         ),
         new DataColumn(
             'id',
             header: $translator->translate('family'),
-            content: static fn (Family $model) => Html::encode($model->getFamily_name() ?? '')
+            content: static fn(Family $model) => Html::encode($model->getFamily_name() ?? ''),
         ),
         new DataColumn(
             'category_primary_id',
             header: $translator->translate('category.primary'),
-            content: static function (Family $model) use ($cpR, $translator) : string {
+            content: static function (Family $model) use ($cpR, $translator): string {
                 $categoryPrimaryId = $model->getCategory_primary_id();
                 $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
-                return null!==$categoryPrimary ? ($categoryPrimary->getName() ?? $translator->translate('not.set')) 
+                return null !== $categoryPrimary ? ($categoryPrimary->getName() ?? $translator->translate('not.set'))
                                                : $translator->translate('not.set');
-            }
+            },
         ),
         new DataColumn(
             'category_secondary_id',
             header: $translator->translate('category.secondary'),
-            content: static function (Family $model) use ($csR, $translator) : string {
+            content: static function (Family $model) use ($csR, $translator): string {
                 $categorySecondaryId = $model->getCategory_secondary_id();
                 $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
-                return null!==$categorySecondary ? $categorySecondary->getName() ?? $translator->translate('not.set') 
+                return null !== $categorySecondary ? $categorySecondary->getName() ?? $translator->translate('not.set')
                                                  : $translator->translate('not.set');
-            }
-        ),        
+            },
+        ),
         new ActionColumn(buttons: [
             new ActionButton(
                 content: '🔎',
@@ -120,7 +120,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -130,7 +130,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -139,19 +139,19 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
-        ])
+        ]),
     ];
 ?>
 <?php
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('families'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .

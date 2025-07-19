@@ -9,9 +9,7 @@ use Sabre\Xml\XmlSerializable;
 
 class ContractDocumentReference implements XmlSerializable
 {
-    public function __construct(private readonly ?string $id)
-    {
-    }
+    public function __construct(private readonly ?string $id) {}
 
     /**
      * @param Writer $writer

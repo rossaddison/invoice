@@ -98,7 +98,7 @@ use Yiisoft\Html\Html;
                     <div class="form-group">
                         <label for="settings[currency_from_to]" <?= $s->where('currency_code_from_to'); ?>>
                             <?= $translator->translate('peppol.currency.from.to'); ?>
-                            <?= '('. (string)Html::a('xe.com', 'https://www.xe.com/') . ')'; ?>
+                            <?= '(' . (string) Html::a('xe.com', 'https://www.xe.com/') . ')'; ?>
                         </label>
                         <?php $body['settings[currency_from_to]'] = $s->getSetting('currency_from_to') ?: '1.00'; ?>
                         <input type="text" name="settings[currency_from_to]" id="settings[currency_from_to]"
@@ -127,7 +127,7 @@ use Yiisoft\Html\Html;
                                         <?= Html::a(
                                             $translator->translate('peppol.include.delivery.period'),
                                             'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/',
-                                            ['style' => 'text-decoration:none']
+                                            ['style' => 'text-decoration:none'],
                                         ); ?>
                                 </label>
                             </div>                            
@@ -154,7 +154,7 @@ use Yiisoft\Html\Html;
                                         <?php
                                                 $s->check_select($body['settings[stand_in_code]'] ?? '', $value['rdf:value']);
                                             ?>>
-                                        <?= $value['rdf:value']. ' '. (string)$value['rdfs:comment']; ?>
+                                        <?= $value['rdf:value'] . ' ' . (string) $value['rdfs:comment']; ?>
                                     </option>
                                 <?php } ?>
                             </select>

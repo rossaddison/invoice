@@ -99,7 +99,7 @@ final class InvRepository extends Select\Repository
             'date_created',
             'like',
             $dateTimeImmutable instanceof \DateTimeImmutable ?
-                                $dateTimeImmutable->format('Y-m') . '%' : ''
+                                $dateTimeImmutable->format('Y-m') . '%' : '',
         );
         return $this->prepareDataReader($query);
     }
@@ -185,7 +185,7 @@ final class InvRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'desc'])
+                ->withOrder(['id' => 'desc']),
         );
     }
 
@@ -619,7 +619,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+            $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
             $sum += (null !== $invoice_amount ? $invoice_amount->getTotal() ?? 0.00 : 0.00);
         }
         return $sum;
@@ -639,7 +639,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = $iaR->repoInvquery((int)$invoice->getId());
+            $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
                 $sum += $invoice_amount->getItem_subtotal() ?: 0.00;
             }
@@ -664,7 +664,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = $iaR->repoInvquery((int)$invoice->getId());
+            $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
                 $sum += $invoice_amount->getTotal() ?? 0.00;
             }
@@ -688,7 +688,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = $iaR->repoInvquery((int)$invoice->getId());
+            $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
                 $sum += $invoice_amount->getItem_subtotal();
             }
@@ -712,7 +712,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = $iaR->repoInvquery((int)$invoice->getId());
+            $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
                 $sum += $invoice_amount->getItem_tax_total();
             }
@@ -729,7 +729,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+            $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
             $sum += (null !== $invoice_amount ? $invoice_amount->getTax_total() ?? 0.00 : 0.00);
         }
         return $sum;
@@ -750,7 +750,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+            $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
             $sum += (null !== $invoice_amount ? $invoice_amount->getPaid() ?? 0.00 : 0.00);
         }
         return $sum;
@@ -769,7 +769,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+            $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
             $sum += (null !== $invoice_amount ? $invoice_amount->getPaid() ?? 0.00 : 0.00);
         }
         return $sum;
@@ -788,7 +788,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+            $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
             $num_invoices += (null !== $invoice_amount && null !== $invoice_amount->getBalance() ? 1 : 0);
         }
         return $num_invoices;
@@ -807,7 +807,7 @@ final class InvRepository extends Select\Repository
          * @var Inv $invoice
          */
         foreach ($invoices as $invoice) {
-            $invoice_amount = ($iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null);
+            $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
             $sum += (null !== $invoice_amount ? $invoice_amount->getBalance() ?? 0.00 : 0.00);
         }
         return $sum;
@@ -917,8 +917,8 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getProduct_id() == (string)$product_id) {
-                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                if ($item->getProduct_id() == (string) $product_id) {
+                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
                         $sum += ($inv_item_amount->getSubtotal() ?? 0.00);
                     }
@@ -949,8 +949,8 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getProduct_id() == (string)$product_id) {
-                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                if ($item->getProduct_id() == (string) $product_id) {
+                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
                         $sum += ($inv_item_amount->getTax_total() ?? 0.00);
                     }
@@ -983,8 +983,8 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getProduct_id() == (string)$product_id) {
-                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                if ($item->getProduct_id() == (string) $product_id) {
+                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
                         $sum += ($inv_item_amount->getTotal() ?? 0.00);
                     }
@@ -1044,8 +1044,8 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getTask_id() == (string)$task_id) {
-                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                if ($item->getTask_id() == (string) $task_id) {
+                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
                         $sum += ($inv_item_amount->getSubtotal() ?? 0.00);
                     }
@@ -1076,8 +1076,8 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getTask_id() == (string)$task_id) {
-                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                if ($item->getTask_id() == (string) $task_id) {
+                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
                         $sum += ($inv_item_amount->getTax_total() ?? 0.00);
                     }
@@ -1110,8 +1110,8 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getTask_id() == (string)$task_id) {
-                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+                if ($item->getTask_id() == (string) $task_id) {
+                    $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
                         $sum += ($inv_item_amount->getTotal() ?? 0.00);
                     }

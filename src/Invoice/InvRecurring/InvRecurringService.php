@@ -14,9 +14,7 @@ final readonly class InvRecurringService
     /**
      * @param InvRecurringRepository $repository
      */
-    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s)
-    {
-    }
+    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s) {}
 
     /**
      * @param InvRecurring $model
@@ -24,11 +22,11 @@ final readonly class InvRecurringService
      */
     public function saveInvRecurring(InvRecurring $model, array $array): void
     {
-        $model->setInv_id((int)$array['inv_id']);
+        $model->setInv_id((int) $array['inv_id']);
 
-        isset($array['frequency']) ? $model->setFrequency((string)$array['frequency']) : '';
+        isset($array['frequency']) ? $model->setFrequency((string) $array['frequency']) : '';
 
-        $baseInvoice = $this->invR->repoInvUnloadedquery((string)$array['inv_id']);
+        $baseInvoice = $this->invR->repoInvUnloadedquery((string) $array['inv_id']);
         if (null !== $baseInvoice) {
             $dateHelper = new DateHelper($this->s);
 
@@ -37,18 +35,18 @@ final readonly class InvRecurringService
             // A new next = start + frequency
             $invNext = $model->getNext();
             if (null !== $invNext && !is_string($invNext) && isset($array['start'])) {
-                $nextDate = $dateHelper->incrementDateStringToDateTime((string)$array['start'], (string)$array['frequency']);
+                $nextDate = $dateHelper->incrementDateStringToDateTime((string) $array['start'], (string) $array['frequency']);
                 $model->setNext($nextDate);
-                $model->setStart(new \DateTime((string)$array['start']));
+                $model->setStart(new \DateTime((string) $array['start']));
             }
 
             // Next is null because it has stopped
             // Restart => allow new start and new next
             // A new next = start + frequency
             if (null == $invNext && isset($array['start'])) {
-                $nextDate = $dateHelper->incrementDateStringToDateTime((string)$array['start'], (string)$array['frequency']);
+                $nextDate = $dateHelper->incrementDateStringToDateTime((string) $array['start'], (string) $array['frequency']);
                 $model->setNext($nextDate);
-                $model->setStart(new \DateTime((string)$array['start']));
+                $model->setStart(new \DateTime((string) $array['start']));
             }
 
             /**

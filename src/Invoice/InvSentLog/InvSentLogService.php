@@ -9,13 +9,11 @@ use DateTimeImmutable;
 
 final readonly class InvSentLogService
 {
-    public function __construct(private InvSentLogRepository $repository)
-    {
-    }
+    public function __construct(private InvSentLogRepository $repository) {}
 
     public function saveInvSentLog(InvSentLog $model, array $array): void
     {
-        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
 
         $datetime_created = new DateTimeImmutable('now');
         /**

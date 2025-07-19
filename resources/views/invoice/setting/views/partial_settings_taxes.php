@@ -36,10 +36,10 @@ declare(strict_types=1);
                                     <option value="<?= $taxRate->getTaxRateId(); ?>"
                                         <?php $s->check_select($body['settings[default_invoice_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php
-                                           $percent = (string)$taxRate->getTaxRatePercent();
+                                           $percent = (string) $taxRate->getTaxRatePercent();
                                         $sign =  '% - ';
                                         $name = $taxRate->getTaxRateName() ?? 'unknown';
-                                        echo $percent.$sign.$name;
+                                        echo $percent . $sign . $name;
                                         ?>
                                     </option>
                                 <?php } ?>
@@ -62,10 +62,10 @@ declare(strict_types=1);
                                     <option value="<?= $taxRate->getTaxRateId(); ?>"
                                         <?php $s->check_select($body['settings[default_item_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php
-                                           $percent = (string)$taxRate->getTaxRatePercent();
+                                           $percent = (string) $taxRate->getTaxRatePercent();
                                         $sign =  '% - ';
                                         $name = $taxRate->getTaxRateName() ?? 'unknown';
-                                        echo $percent.$sign.$name;
+                                        echo $percent . $sign . $name;
                                         ?>
                                     </option>
                                 <?php } ?>
@@ -93,7 +93,7 @@ declare(strict_types=1);
                         </div>
                         <div class="form-group">
                             <label for="settings[this_tax_year_from_date_year]">
-                                <?= $translator->translate('tax').' '.$translator->translate('start'). ' '. $translator->translate('date').' '.$translator->translate('year'); ?>
+                                <?= $translator->translate('tax') . ' ' . $translator->translate('start') . ' ' . $translator->translate('date') . ' ' . $translator->translate('year'); ?>
                             </label>
                             <?php $body['settings[this_tax_year_from_date_year]'] = $s->getSetting('this_tax_year_from_date_year');?>
                             <select name="settings[this_tax_year_from_date_year]" id="settings[this_tax_year_from_date_year]"
@@ -101,8 +101,8 @@ declare(strict_types=1);
                                 <option value=""><?= $translator->translate('none'); ?></option>                                
                                 <?php
                                     $years = [];
-for ($y = 1980, $now = (int)date('Y') + 10; $y <= $now; ++$y) {
-    $years[$y] = array('name' => $y, 'value' => $y);
+for ($y = 1980, $now = (int) date('Y') + 10; $y <= $now; ++$y) {
+    $years[$y] = ['name' => $y, 'value' => $y];
 }
 /**
  * @var array $year
@@ -117,7 +117,7 @@ foreach ($years as $year) { ?>
                         </div>
                         <div class="form-group">
                             <label for="settings[this_tax_year_from_date_month]">
-                                <?= $translator->translate('tax').' '.$translator->translate('start'). ' '. $translator->translate('date').' '.$translator->translate('month'); ?>
+                                <?= $translator->translate('tax') . ' ' . $translator->translate('start') . ' ' . $translator->translate('date') . ' ' . $translator->translate('month'); ?>
                             </label>
                             <?php $body['settings[this_tax_year_from_date_month]'] = $s->getSetting('this_tax_year_from_date_month');?>
                             <select name="settings[this_tax_year_from_date_month]" id="settings[this_tax_year_from_date_month]"
@@ -134,7 +134,7 @@ foreach ($months as $month) { ?>
                         </div>
                         <div class="form-group">
                             <label for="settings[this_tax_year_from_date_day]">
-                                <?= $translator->translate('tax').' '.$translator->translate('start'). ' '. $translator->translate('date').' '.rtrim($translator->translate('days'), 's'); ?>
+                                <?= $translator->translate('tax') . ' ' . $translator->translate('start') . ' ' . $translator->translate('date') . ' ' . rtrim($translator->translate('days'), 's'); ?>
                             </label>
                             <?php $body['settings[this_tax_year_from_date_day]'] = $s->getSetting('this_tax_year_from_date_day');?>
                             <select name="settings[this_tax_year_from_date_day]" id="settings[this_tax_year_from_date_day]"

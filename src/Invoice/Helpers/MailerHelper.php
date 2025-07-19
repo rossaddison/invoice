@@ -49,7 +49,7 @@ class MailerHelper
         PCR $pcR,
         SOCR $socR,
         CFR $cfR,
-        CVR $cvR
+        CVR $cvR,
     ) {
         $this->pdfhelper = new PdfHelper($this->s, $this->session);
         $this->templatehelper = new TemplateHelper($this->s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
@@ -93,14 +93,14 @@ class MailerHelper
                     $subject = sprintf(
                         $this->translator->translate('quote.status.email.subject'),
                         $quote->getClient()?->getClient_name() ?? '',
-                        $quote->getNumber() ?? ''
+                        $quote->getNumber() ?? '',
                     );
                     $body = sprintf(
                         nl2br($this->translator->translate('quote.status.email.body')),
                         $quote->getClient()?->getClient_name() ?? '',
                         // TODO: Hyperlink for base url in Html
                         $quote->getNumber() ?? '',
-                        $url
+                        $url,
                     );
 
                     if ($this->s->getSetting('email_send_method') == 'yiimail') {
@@ -136,7 +136,7 @@ class MailerHelper
         array $attachFiles,
         // $target_path of pdfs generated
         string|null $pdf_template_target_path,
-        UIR|null $uiR
+        UIR|null $uiR,
     ): bool {
         if (null !== $cc && is_string($cc) && (strlen($cc) > 4) && !is_array($cc)) {
             // Allow multiple CC's delimited by comma or semicolon
@@ -150,8 +150,8 @@ class MailerHelper
 
         // Bcc mails to admin && the admin email account has been setup under userinv which is an extension table of user
         if (null !== $uiR) {
-            if (($this->s->getSetting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string)1) > 0)) {
-                $user_inv = $uiR->repoUserInvUserIdquery((string)1) ?: null;
+            if (($this->s->getSetting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string) 1) > 0)) {
+                $user_inv = $uiR->repoUserInvUserIdquery((string) 1) ?: null;
                 $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
                 // $bcc should be an array after the explode
                 is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
@@ -164,7 +164,7 @@ class MailerHelper
             date: new \DateTimeImmutable('now'),
             from: [$from_email => $from_name],
             to: $to,
-            htmlBody: $html_body
+            htmlBody: $html_body,
         );
 
         /** @var array<array-key, string>|string $cc */
@@ -183,9 +183,9 @@ class MailerHelper
                     /** @psalm-suppress MixedAssignment $email */
                     $email = $email->withAttachments(
                         File::fromContent(
-                            (string)$file[0]?->getStream(),
-                            (string)$file[0]?->getClientFilename(),
-                            (string)$file[0]?->getClientMediaType()
+                            (string) $file[0]?->getStream(),
+                            (string) $file[0]?->getClientFilename(),
+                            (string) $file[0]?->getClientMediaType(),
                         ),
                     );
                 }
@@ -201,15 +201,15 @@ class MailerHelper
                 File::fromPath(
                     FileHelper::normalizePath($pdf_template_target_path),
                     $path_info_file_name,
-                    'application/pdf'
-                )
+                    'application/pdf',
+                ),
             );
         } else {
             $email_attachments_with_pdf_template = $email;
         }
         // Ensure that the administrator exists in the userinv extension table. If the email is blank generate a flash
         if (null !== $uiR) {
-            if ($uiR->repoUserInvUserIdcount((string)1) == 0) {
+            if ($uiR->repoUserInvUserIdcount((string) 1) == 0) {
                 $admin = new UserInv();
                 $admin->setUser_id(1);
                 // Administrator's are given a type of 0, Guests eg. Accountant 1

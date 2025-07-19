@@ -32,7 +32,7 @@ echo $alert;
         <?php
             $pagination = OffsetPagination::widget()
             ->paginator($paginator)
-            ->urlGenerator(fn (string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
+            ->urlGenerator(fn(string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
 ?>
         <?php
     if ($pagination->isPaginationRequired()) {
@@ -64,8 +64,8 @@ echo $alert;
                 ->href(
                     $urlGenerator->generate(
                         'emailtemplate/preview',
-                        ['email_template_id' => $email_template->getEmail_template_id()]
-                    )
+                        ['email_template_id' => $email_template->getEmail_template_id()],
+                    ),
                 )
                 ->content('🖼️');
         ?>
@@ -85,7 +85,7 @@ echo $alert;
                                 <a class="dropdown-item" href="
                                     <?= $urlGenerator->generate(
                                         'emailtemplate/view',
-                                        ['email_template_id' => $email_template->getEmail_template_id()]
+                                        ['email_template_id' => $email_template->getEmail_template_id()],
                                     ); ?>" style="text-decoration: none ">
                                             <i class="fa fa-eye fa-margin"></i><?= $translator->translate('view'); ?>
                                 </a>
@@ -93,8 +93,8 @@ echo $alert;
                             <li>
                                 <a class="dropdown-item" href="
                                     <?= $urlGenerator->generate(
-                                        'emailtemplate/edit'.($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),
-                                        ['email_template_id' => $email_template->getEmail_template_id()]
+                                        'emailtemplate/edit' . ($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),
+                                        ['email_template_id' => $email_template->getEmail_template_id()],
                                     ); ?>" style="text-decoration: none ">
                                             <i class="fa fa-edit fa-margin"></i><?= $translator->translate('edit'); ?>
                                 </a>
@@ -103,7 +103,7 @@ echo $alert;
                                 <a class="dropdown-item" href="
                                     <?= $urlGenerator->generate(
                                         'emailtemplate/delete',
-                                        ['email_template_id' => $email_template->getEmail_template_id()]
+                                        ['email_template_id' => $email_template->getEmail_template_id()],
                                     ); ?>" style="text-decoration: none ">
                                             <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>
                                 </a>

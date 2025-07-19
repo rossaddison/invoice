@@ -61,7 +61,7 @@ final class GeneratorRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'small_singular_name', 'pre_entity_table'])
-                ->withOrder(['small_singular_name' => 'asc'])
+                ->withOrder(['small_singular_name' => 'asc']),
         );
     }
 

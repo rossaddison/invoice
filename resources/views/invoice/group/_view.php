@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
-                    'disabled' => 'disabled'
+                    'disabled' => 'disabled',
                 ])
                 ->value(Html::encode($form->getName()))
                 ->placeholder($translator->translate('name'))
@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'identifier_format',
                     'name' => 'identifier_format',
                     'readonly' => 'readonly',
-                    'disabled' => 'disabled'
+                    'disabled' => 'disabled',
                 ])
                 ->value(Html::encode($form->getIdentifier_format()))
                 ->placeholder('INV-{{{id}}}')
@@ -66,7 +66,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
-                    'disabled' => 'disabled'
+                    'disabled' => 'disabled',
                 ])
                 ->value(Html::encode($form->getLeft_pad()) ?: '0')
                 ->placeholder('0')
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'readonly' => 'readonly',
-                    'disabled' => 'disabled'
+                    'disabled' => 'disabled',
                 ])
                 ->value(Html::encode($form->getNext_id()) ?: '1')
                 ->placeholder('1')

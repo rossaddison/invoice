@@ -41,8 +41,8 @@ $header = Div::tag()
             ->content(
                 I::tag()->addClass('bi bi-receipt')
                         ->content(' ' . Html::encode($translator->translate('contract')))
-                        ->encode(true)
-            )
+                        ->encode(true),
+            ),
     )
     ->render();
 
@@ -67,7 +67,7 @@ $toolbar = Div::tag();
             new DataColumn(
                 'id',
                 header: $translator->translate('id'),
-                content: static fn (Contract $model) => Html::encode($model->getId())
+                content: static fn(Contract $model) => Html::encode($model->getId()),
             ),
             new DataColumn(
                 'id',
@@ -82,13 +82,13 @@ $toolbar = Div::tag();
                          * @var Inv $invoice
                          */
                         foreach ($invoices as $invoice) {
-                            $button = (string)Html::a(
+                            $button = (string) Html::a(
                                 $invoice->getNumber() ?? '#',
                                 $urlGenerator->generate('inv/view', ['id' => $invoice->getId()]),
                                 ['class' => 'btn btn-primary btn-sm',
-                              'data-bs-toggle' => 'tooltip',
-                              'title' => $model->getReference()
-                             ]
+                                    'data-bs-toggle' => 'tooltip',
+                                    'title' => $model->getReference(),
+                                ],
                             );
                             $buttons .= $button . str_repeat("&nbsp;", 1);
                         }
@@ -97,7 +97,7 @@ $toolbar = Div::tag();
                         return '';
                     }
                 },
-                encodeContent: false        
+                encodeContent: false,
             ),
             new DataColumn(
                 'client_id',
@@ -105,27 +105,27 @@ $toolbar = Div::tag();
                 content: static function (Contract $model) use ($cR): string {
                     $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
                     return $client;
-                }
+                },
             ),
             new DataColumn(
                 'name',
                 header: $translator->translate('contract.name'),
-                content: static fn (Contract $model): string => Html::encode($model->getName())
+                content: static fn(Contract $model): string => Html::encode($model->getName()),
             ),
             new DataColumn(
                 'reference',
                 header: $translator->translate('contract.reference'),
-                content: static fn (Contract $model): string => Html::encode($model->getReference())
+                content: static fn(Contract $model): string => Html::encode($model->getReference()),
             ),
             new DataColumn(
                 'period_start',
                 header: $translator->translate('contract.period.start'),
-                content: static fn (Contract $model): string => ($model->getPeriod_start())->format('Y-m-d')
+                content: static fn(Contract $model): string => ($model->getPeriod_start())->format('Y-m-d'),
             ),
             new DataColumn(
                 'period_end',
                 header: $translator->translate('contract.period.end'),
-                content: static fn (Contract $model): string => ($model->getPeriod_end())->format('Y-m-d')
+                content: static fn(Contract $model): string => ($model->getPeriod_end())->format('Y-m-d'),
             ),
             new ActionColumn(buttons: [
                 new ActionButton(
@@ -136,7 +136,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('view'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '✎',
@@ -146,7 +146,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('edit'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '❌',
@@ -155,8 +155,8 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'title' => $translator->translate('delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
             ]),
         ];
@@ -169,9 +169,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('contracts'),
-    ''
+    '',
 );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

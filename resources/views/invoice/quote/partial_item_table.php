@@ -172,7 +172,7 @@ foreach ($quoteItems as $item) { ?>
                 <tr>
                     <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
                         <i class="fa fa-arrows"></i>
-                        <h5><bold><?= " ".(string)$count; ?></bold></h5>                       
+                        <h5><bold><?= " " . (string) $count; ?></bold></h5>                       
                     </td>
                     <td class="td-text">
                         <div class="input-group">
@@ -245,7 +245,7 @@ foreach ($quoteItems as $item) { ?>
                     <td class="td-icon text-right td-vert-middle">
                         
                     <?php if ($invEdit) { ?>
-                        <span data-bs-toggle="tooltip" title="<?= $translator->translate('productimage.gallery'). (string)$item->getProduct()?->getProduct_name(); ?>">
+                        <span data-bs-toggle="tooltip" title="<?= $translator->translate('productimage.gallery') . (string) $item->getProduct()?->getProduct_name(); ?>">
                             <a class="btn btn-info fa fa-eye" data-bs-toggle="modal" href="#view-product-<?= $item->getId(); ?>" style="text-decoration:none"></a></span> 
                             <div id="view-product-<?= $item->getId(); ?>" class="modal modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal_view_product_<?= $item->getId(); ?>" aria-hidden="true">
                                 <div class="modal-content">
@@ -253,7 +253,7 @@ foreach ($quoteItems as $item) { ?>
                                       <button type="button" class="close" data-bs-dismiss"modal"><i class="fa fa-times-circle"></i></button>
                                     </div>    
                                     <div>
-                                      <?php $productImages = $piR->repoProductImageProductquery((int)$item->getProduct_id()); ?>
+                                      <?php $productImages = $piR->repoProductImageProductquery((int) $item->getProduct_id()); ?>
                                       <?php
                                        /**
                                         * @var App\Invoice\Entity\ProductImage $productImage
@@ -261,7 +261,7 @@ foreach ($quoteItems as $item) { ?>
                                        foreach ($productImages as $productImage) { ?>
                                        <?php if (!empty($productImage->getFile_name_original())) { ?> 
                                           <a data-bs-toggle="modal" class="col-sm-4">
-                                             <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"  class="img-fluid">
+                                             <img src="<?= '/products/' . $productImage->getFile_name_original(); ?>"  class="img-fluid">
                                           </a>
                                        <?php } ?> 
                                       <?php } ?>
@@ -290,25 +290,25 @@ foreach ($quoteItems as $item) { ?>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('subtotal'); ?></span><br/>                        
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->subtotal">
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int)$item->getId())?->getSubtotal() ?? 0.00); ?>
+                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int) $item->getId())?->getSubtotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span class="input-group-text"><?= $vat === '0' ? $translator->translate('item.discount') : $translator->translate('cash.discount'); ?></span>
                         <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->discount">
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int)$item->getId())?->getDiscount() ?? 0.00); ?>
+                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int) $item->getId())?->getDiscount() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></span><br/>
                         <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->tax_total">
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int)$item->getId())?->getTax_total() ?? 0.00); ?>
+                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int) $item->getId())?->getTax_total() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('total'); ?></span><br/>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="quote_item_amount->total">
-                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int)$item->getId())?->getTotal() ?? 0.00); ?>
+                            <?= $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery((int) $item->getId())?->getTotal() ?? 0.00); ?>
                         </span>
                     </td>                   
                 </tr>
@@ -364,7 +364,7 @@ foreach ($quoteItems as $item) { ?>
                                     <?= $percent = $numberHelper->format_amount($quoteTaxRate->getTaxRate()?->getTaxRatePercent());
                                 $name = Html::encode($quoteTaxRate->getTaxRate()?->getTaxRateName());
                                 if ($percent >= 0.00 && null !== $percent && strlen($name) > 0) {
-                                    $name .' '. $percent. '%';
+                                    $name . ' ' . $percent . '%';
                                 } else {
                                     '#%';
                                 } ?>
