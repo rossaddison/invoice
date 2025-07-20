@@ -179,7 +179,7 @@ foreach ($products as $product) {
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
-                                          $optionsDataTaxRate = [];
+                                         $optionsDataTaxRate = [];
 /**
  * @var App\Invoice\Entity\TaxRate $taxRate
  */
