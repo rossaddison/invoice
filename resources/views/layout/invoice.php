@@ -451,7 +451,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('⬅', 'https://emojipedia.org/left-arrow', $debugMode, false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('➡', 'https://emojipedia.org/right-arrow', $debugMode, false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('🖉', 'https://emojipedia.org/lower-left-pencil', $debugMode, false, ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🔘', 'https://emojipedia.org/radio-button', $debugMode, false, ['style' => 'background-color: #ffcccb']),    
+                DropdownItem::link('🔘', 'https://emojipedia.org/radio-button', $debugMode, false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('☑️', 'https://emojipedia.org/check-box-with-check', $debugMode, false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('🐘', 'https://emojipedia.org/elephant', $debugMode, false, ['style' => 'background-color: #ffcccb']),
             ),
