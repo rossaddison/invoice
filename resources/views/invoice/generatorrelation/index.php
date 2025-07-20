@@ -63,55 +63,55 @@ $toolbar = Div::tag();
     <?= Html::openTag('div'); ?>
 
 <?php
-                                                                                        $columns = [
-                                                                                            new DataColumn(
-                                                                                                'id',
-                                                                                                header: $translator->translate('id'),
-                                                                                                content: static fn(GentorRelation $model) => Html::encode($model->getRelation_id()),
-                                                                                            ),
-                                                                                            new DataColumn(
-                                                                                                'lowercasename',
-                                                                                                header: $translator->translate('generator.relation.form.lowercase.name'),
-                                                                                                content: static fn(GentorRelation $model) => Html::encode($model->getLowercase_name()),
-                                                                                            ),
-                                                                                            new DataColumn(
-                                                                                                'camelcasename',
-                                                                                                header: $translator->translate('generator.relation.form.camelcase.name'),
-                                                                                                content: static fn(GentorRelation $model) => Html::encode($model->getCamelcase_name()),
-                                                                                            ),
-                                                                                            new ActionColumn(buttons: [
-                                                                                                new ActionButton(
-                                                                                                    content: '🔎',
-                                                                                                    url: static function (GentorRelation $model) use ($urlGenerator): string {
-                                                                                                        return $urlGenerator->generate('generatorrelation/view', ['id' => $model->getRelation_id()]);
-                                                                                                    },
-                                                                                                    attributes: [
-                                                                                                        'data-bs-toggle' => 'tooltip',
-                                                                                                        'title' => $translator->translate('view'),
-                                                                                                    ],
-                                                                                                ),
-                                                                                                new ActionButton(
-                                                                                                    content: '✎',
-                                                                                                    url: static function (GentorRelation $model) use ($urlGenerator): string {
-                                                                                                        return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->getRelation_id()]);
-                                                                                                    },
-                                                                                                    attributes: [
-                                                                                                        'data-bs-toggle' => 'tooltip',
-                                                                                                        'title' => $translator->translate('edit'),
-                                                                                                    ],
-                                                                                                ),
-                                                                                                new ActionButton(
-                                                                                                    content: '❌',
-                                                                                                    url: static function (GentorRelation $model) use ($urlGenerator): string {
-                                                                                                        return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelation_id()]);
-                                                                                                    },
-                                                                                                    attributes: [
-                                                                                                        'title' => $translator->translate('delete'),
-                                                                                                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                                                                                                    ],
-                                                                                                ),
-                                                                                            ]),
-                                                                                        ];
+                                                                                                    $columns = [
+                                                                                                        new DataColumn(
+                                                                                                            'id',
+                                                                                                            header: $translator->translate('id'),
+                                                                                                            content: static fn(GentorRelation $model) => Html::encode($model->getRelation_id()),
+                                                                                                        ),
+                                                                                                        new DataColumn(
+                                                                                                            'lowercasename',
+                                                                                                            header: $translator->translate('generator.relation.form.lowercase.name'),
+                                                                                                            content: static fn(GentorRelation $model) => Html::encode($model->getLowercase_name()),
+                                                                                                        ),
+                                                                                                        new DataColumn(
+                                                                                                            'camelcasename',
+                                                                                                            header: $translator->translate('generator.relation.form.camelcase.name'),
+                                                                                                            content: static fn(GentorRelation $model) => Html::encode($model->getCamelcase_name()),
+                                                                                                        ),
+                                                                                                        new ActionColumn(buttons: [
+                                                                                                            new ActionButton(
+                                                                                                                content: '🔎',
+                                                                                                                url: static function (GentorRelation $model) use ($urlGenerator): string {
+                                                                                                                    return $urlGenerator->generate('generatorrelation/view', ['id' => $model->getRelation_id()]);
+                                                                                                                },
+                                                                                                                attributes: [
+                                                                                                                    'data-bs-toggle' => 'tooltip',
+                                                                                                                    'title' => $translator->translate('view'),
+                                                                                                                ],
+                                                                                                            ),
+                                                                                                            new ActionButton(
+                                                                                                                content: '✎',
+                                                                                                                url: static function (GentorRelation $model) use ($urlGenerator): string {
+                                                                                                                    return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->getRelation_id()]);
+                                                                                                                },
+                                                                                                                attributes: [
+                                                                                                                    'data-bs-toggle' => 'tooltip',
+                                                                                                                    'title' => $translator->translate('edit'),
+                                                                                                                ],
+                                                                                                            ),
+                                                                                                            new ActionButton(
+                                                                                                                content: '❌',
+                                                                                                                url: static function (GentorRelation $model) use ($urlGenerator): string {
+                                                                                                                    return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelation_id()]);
+                                                                                                                },
+                                                                                                                attributes: [
+                                                                                                                    'title' => $translator->translate('delete'),
+                                                                                                                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                                                                                                                ],
+                                                                                                            ),
+                                                                                                        ]),
+                                                                                                    ];
 ?>
 <?php
 $toolbarString =
