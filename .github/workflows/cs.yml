@@ -48,11 +48,13 @@ jobs:
       - name: Set BASE_REF
         id: vars
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "branch" ]]; then
-            echo "base=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
-          else
-            echo "base=main" >> $GITHUB_OUTPUT
-          fi    
+          # Default to 'main' if not a branch
+          BASE_REF="main"
+          # If GITHUB_REF starts with refs/heads/, use the branch name
+          if [[ "${GITHUB_REF}" == refs/heads/* ]]; then
+            BASE_REF="${GITHUB_REF_NAME}"
+          fi
+          echo "base=${BASE_REF}" >> $GITHUB_OUTPUT
 
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
