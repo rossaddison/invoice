@@ -49,106 +49,106 @@ use Yiisoft\Html\Tag\Form;
                     ->header($translator->translate('error.summary'))
                     // all properties
                     ->onlyCommonErrors()
-                ?>
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_created')
-                    ->label($translator->translate('common.date.created'))
-                    ->value(Html::encode(($form->getDate_created())->format('Y-m-d')))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('common.date.created'),
-                        'readonly' => 'readonly',
-                    ])
-                ?>
+    ->label($translator->translate('common.date.created'))
+    ->value(Html::encode(($form->getDate_created())->format('Y-m-d')))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('common.date.created'),
+        'readonly' => 'readonly',
+    ])
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_modified')
-                    ->label($translator->translate('common.date.modified'))
-                    ->value(Html::encode(($form->getDate_modified())->format('Y-m-d')))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('common.date.modified'),
-                        'readonly' => 'readonly',
-                    ])
-                ?>
+    ->label($translator->translate('common.date.modified'))
+    ->value(Html::encode(($form->getDate_modified())->format('Y-m-d')))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('common.date.modified'),
+        'readonly' => 'readonly',
+    ])
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'name')
-                    ->label($translator->translate('name'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('name'),
-                    ])
-                    ->value(Html::encode($form->getName() ?? ''))
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('name'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('name'),
+    ])
+    ->value(Html::encode($form->getName() ?? ''))
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'building_number')
-                    ->label($translator->translate('delivery.location.building.number'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('delivery.location.building.number'),
-                    ])
-                    ->value(Html::encode($form->getBuildingNumber() ?? ''))
-                ?>
+    ->label($translator->translate('delivery.location.building.number'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('delivery.location.building.number'),
+    ])
+    ->value(Html::encode($form->getBuildingNumber() ?? ''))
+?>
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_1')
-                    ->label($translator->translate('street.address'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('street.address'),
-                    ])
-                    ->value(Html::encode($form->getAddress_1() ?? ''))
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('street.address'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('street.address'),
+    ])
+    ->value(Html::encode($form->getAddress_1() ?? ''))
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_2')
-                    ->label($translator->translate('street.address.2'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('street.address.2'),
-                        'value' => Html::encode($form->getAddress_2() ?? ''),
-                    ])
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('street.address.2'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('street.address.2'),
+        'value' => Html::encode($form->getAddress_2() ?? ''),
+    ])
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'city')
-                    ->label($translator->translate('city'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('city'),
-                        'value' => Html::encode($form->getCity() ?? ''),
-                    ])
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('city'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('city'),
+        'value' => Html::encode($form->getCity() ?? ''),
+    ])
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'state')
-                    ->label($translator->translate('state'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('state'),
-                        'value' => Html::encode($form->getState() ?? ''),
-                    ])
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('state'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('state'),
+        'value' => Html::encode($form->getState() ?? ''),
+    ])
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'zip')
-                    ->label($translator->translate('zip'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('zip'),
-                        'value' => Html::encode($form->getZip() ?? ''),
-                    ])
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('zip'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('zip'),
+        'value' => Html::encode($form->getZip() ?? ''),
+    ])
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'country')
-                    ->label($translator->translate('country'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('country'),
-                    ])
-                    ->value(Html::encode($form->getCountry() ?? ''))
-                    ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+    ->label($translator->translate('country'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('country'),
+    ])
+    ->value(Html::encode($form->getCountry() ?? ''))
+    ->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::a(
@@ -162,27 +162,27 @@ use Yiisoft\Html\Tag\Form;
                         'placeholder' => $translator->translate('delivery.location.global.location.number'),
                         'value' => Html::encode($form->getGlobal_location_number() ?? ''),
                     ])                                                                                 ->hint($translator->translate('hint.this.field.is.not.required'));
-                ?>
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?php
-                $optionsDataEAS = [];
-                /**
-                 * @see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
-                 * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
-                 * @var int $key
-                 * @var array $value
-                 */
-                foreach ($electronic_address_scheme as $key => $value) {
-                    $optionsDataEAS[(string) $value['code']] = (string) $value['code'] . str_repeat("-", 10) . (string) $value['description'];
-                }
-                ?>
+$optionsDataEAS = [];
+/**
+ * @see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
+ * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
+ * @var int $key
+ * @var array $value
+ */
+foreach ($electronic_address_scheme as $key => $value) {
+    $optionsDataEAS[(string) $value['code']] = (string) $value['code'] . str_repeat("-", 10) . (string) $value['description'];
+}
+?>
                 <?= Html::a('EAS', 'https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>
                 <?= Field::select($form, 'electronic_address_scheme')
-                    ->label($translator->translate('delivery.location.electronic.address.scheme'))
-                    ->optionsData($optionsDataEAS)
-                    ->hint($translator->translate('hint.this.field.is.not.required'));
-                ?>
+    ->label($translator->translate('delivery.location.electronic.address.scheme'))
+    ->optionsData($optionsDataEAS)
+    ->hint($translator->translate('hint.this.field.is.not.required'));
+?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
