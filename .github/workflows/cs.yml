@@ -10,6 +10,7 @@ on:
       - '.gitattributes'
       - 'infection.json.dist'
       - 'psalm.xml'
+      - 'fixer-output.txt'
   pull_request:
     paths-ignore:
       - 'docs/**'
@@ -19,7 +20,7 @@ on:
       - '.gitattributes'
       - 'infection.json.dist'
       - 'psalm.xml'
-
+      - 'fixer-output.txt'
 jobs:
   cs-fix:
     runs-on: ubuntu-latest
