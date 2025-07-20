@@ -238,6 +238,7 @@ trait OpenBankingProviders
         ],
     ];
 
+
     public function getOpenBankingProvidersWithAuthUrl(): array
     {
         $names = array_keys(
