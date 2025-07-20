@@ -43,7 +43,7 @@ jobs:
       - name: Run PHP CS Fixer dry-run
         id: csfixer
         run: |
-          php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff > fixer-output.txt
+          php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff --verbose | tee fixer-output.txt
           if grep -q 'fixed' fixer-output.txt; then
             echo "has_changes=true" >> $GITHUB_ENV
           else
@@ -65,3 +65,4 @@ jobs:
           body: |
             This pull request contains automated code style fixes as detected by PHP CS Fixer.
           labels: style, automated
+          delete-branch: false   
