@@ -35,74 +35,74 @@ use Yiisoft\Html\Tag\Form;
 
 <?php
     $js3 =
-       'function parsedata(data) {'.
-            'if (!data) return {};'.
-            "if (typeof data === 'object') return data;".
-            "if (typeof data === 'string') return JSON.parse(data);".
-            'return {};'.
-        '};'.
+       'function parsedata(data) {' .
+            'if (!data) return {};' .
+            "if (typeof data === 'object') return data;" .
+            "if (typeof data === 'string') return JSON.parse(data);" .
+            'return {};' .
+        '};' .
 
-       "$(document).ready(function ()  {".
-       'var new_key = "";'.
-       'var new_val = "";'.
-       'var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];'.
-       "$('#mailerquoteform-email_template').change(function () {".
-            'var email_template_id = $(this).val();'.
-            "if (email_template_id === '') return;".
+       "$(document).ready(function ()  {" .
+       'var new_key = "";' .
+       'var new_val = "";' .
+       'var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];' .
+       "$('#mailerquoteform-email_template').change(function () {" .
+            'var email_template_id = $(this).val();' .
+            "if (email_template_id === '') return;" .
 
-            "var url =  $(location).attr('origin') + ".'"/invoice/emailtemplate/get_content/"'.'+ email_template_id;'.
-            "$.ajax({ type: 'GET',".
-                'contentType: "application/json; charset=utf-8",'.
-                'data: {'.
-                        'email_template_id: email_template_id'.
-                '},'.
-                'url: url,'.
-                'cache: false,'.
-                "dataType: 'json',".
-                'success: function (data) {'.
-                    'var response = parsedata(data);'.
-                    'if (response.success === 1) {'.
-                        'for (var key in response.email_template) {'.
-                            'if (response.email_template.hasOwnProperty(key)) {'.
-                                'new_key = key.replace("email_template_", "");'.
-                                'new_val = response.email_template[key];'.
-                                'switch(new_key) {'.
-                                    'case "subject":'.
-                                        '$("#mailerquoteform-subject.email-template-subject.form-control").val(new_val);'.
-                                        'break;'.
-                                    'case "body":'.
-                                        '$("textarea#mailerquoteform-body.email-template-body.form-control.taggable").val(new_val);'.
-                                        'break;'.
-                                    'case "from_name":'.
-                                        '$("#mailerquoteform-from_name.email-template-from-name.form-control").val(new_val);'.
-                                        'break;'.
-                                    'case "from_email":'.
-                                        '$("#mailerquoteform-from_email.email-template-from-email.form-control").val(new_val);'.
-                                        'break;'.
-                                    'case "cc":'.
-                                        '$("#mailerquoteform-cc.email-template-cc.form-control").val(new_val);'.
-                                        'break;'.
-                                    'case "bcc":'.
-                                        '$("#mailerquoteform-bcc.email-template-bcc.form-control").val(new_val);'.
-                                        'break;'.
-                                    'case "pdf_template":'.
-                                        '$("#mailerquoteform-pdf_template.email-template-pdf-template.form-control").val(new_val).trigger('."'change');".
-                                        'break;'.
-                                    'default:'.
-                                '}'.
+            "var url =  $(location).attr('origin') + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
+            "$.ajax({ type: 'GET'," .
+                'contentType: "application/json; charset=utf-8",' .
+                'data: {' .
+                        'email_template_id: email_template_id' .
+                '},' .
+                'url: url,' .
+                'cache: false,' .
+                "dataType: 'json'," .
+                'success: function (data) {' .
+                    'var response = parsedata(data);' .
+                    'if (response.success === 1) {' .
+                        'for (var key in response.email_template) {' .
+                            'if (response.email_template.hasOwnProperty(key)) {' .
+                                'new_key = key.replace("email_template_", "");' .
+                                'new_val = response.email_template[key];' .
+                                'switch(new_key) {' .
+                                    'case "subject":' .
+                                        '$("#mailerquoteform-subject.email-template-subject.form-control").val(new_val);' .
+                                        'break;' .
+                                    'case "body":' .
+                                        '$("textarea#mailerquoteform-body.email-template-body.form-control.taggable").val(new_val);' .
+                                        'break;' .
+                                    'case "from_name":' .
+                                        '$("#mailerquoteform-from_name.email-template-from-name.form-control").val(new_val);' .
+                                        'break;' .
+                                    'case "from_email":' .
+                                        '$("#mailerquoteform-from_email.email-template-from-email.form-control").val(new_val);' .
+                                        'break;' .
+                                    'case "cc":' .
+                                        '$("#mailerquoteform-cc.email-template-cc.form-control").val(new_val);' .
+                                        'break;' .
+                                    'case "bcc":' .
+                                        '$("#mailerquoteform-bcc.email-template-bcc.form-control").val(new_val);' .
+                                        'break;' .
+                                    'case "pdf_template":' .
+                                        '$("#mailerquoteform-pdf_template.email-template-pdf-template.form-control").val(new_val).trigger(' . "'change');" .
+                                        'break;' .
+                                    'default:' .
+                                '}' .
 
-                            '}'.
-                        '}'.
-                    '}'.
-                '}'.
-            '});'.
-        '});'.
-    '});'.
+                            '}' .
+                        '}' .
+                    '}' .
+                '}' .
+            '});' .
+        '});' .
+    '});' .
 
-    '$(document).ready(function() {'.
+    '$(document).ready(function() {' .
         // this is the email quote window, disable the invoice select
-        "$('#tags_invoice').prop('disabled', disabled);".
-        "$('#tags_quote').prop('disabled', 'false');".
+        "$('#tags_invoice').prop('disabled', disabled);" .
+        "$('#tags_quote').prop('disabled', 'false');" .
     '});';
 echo Html::script($js3)->type('module');
 ?>
@@ -112,7 +112,7 @@ echo Html::script($js3)->type('module');
         <div class="col-12 col-md-8 col-lg-6 col-xl-8">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('email.quote'). ' #'. ($quote->getNumber() ?? '#'). ' => '. ($quote->getClient()?->getClient_email() ?? '#') ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('email.quote') . ' #' . ($quote->getNumber() ?? '#') . ' => ' . ($quote->getClient()?->getClient_email() ?? '#') ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
@@ -134,9 +134,9 @@ echo Html::script($js3)->type('module');
                                 'Label',
                                 Input::radio('email_template_type', 'invoice')
                                             ->disabled(true)
-                                            ->id('email_template_type_invoice')
+                                            ->id('email_template_type_invoice'),
                             ),
-                            ['class' => 'radio']
+                            ['class' => 'radio'],
                         ); ?>                                            
                         <?= Html::tag(
                             'Div',
@@ -146,9 +146,9 @@ echo Html::script($js3)->type('module');
                                             ->disabled(false)
                                             ->readonly(true)
                                             ->id('email_template_type_quote')
-                                            ->attribute('checked', 'checked')
+                                            ->attribute('checked', 'checked'),
                             ),
-                            ['class' => 'radio']
+                            ['class' => 'radio'],
                         ); ?>
                     </div>
                     <?= Html::tag('Label', $translator->translate('to.email')) ?>
@@ -167,7 +167,7 @@ echo Html::script($js3)->type('module');
                                                            ->hideLabel()
                                                            ->required(true); ?>
                     
-                    <?= (string)Html::tag('Label', $translator->translate('from.email')). str_repeat("&nbsp;", 2). ($autoTemplate['from_email'] ? $translator->translate('email.source.email.template') : $translator->translate('email.source.user.account')) ?>
+                    <?= (string) Html::tag('Label', $translator->translate('from.email')) . str_repeat("&nbsp;", 2) . ($autoTemplate['from_email'] ? $translator->translate('email.source.email.template') : $translator->translate('email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')->addInputAttributes(['value' => $autoTemplate['from_email'] ?? '' ?: Html::encode($userInv->getUser()?->getEmail())])->hideLabel()
                                                              ->addInputAttributes(['class' => 'email-template-from-email form-control'])
                                                              ->required(true); ?>                            
@@ -185,7 +185,7 @@ echo Html::script($js3)->type('module');
                     <?= Html::tag('Label', $translator->translate('subject')) ?>
                     <?= Field::text($form, 'subject')->addInputAttributes(['id' => 'mailerquoteform-subject'])
                                                          ->addInputAttributes(['class' => 'email-template-subject form-control'])
-                                                         ->addInputAttributes(['value' => $autoTemplate['subject'] ?? '' ?: $translator->translate('quote'). '#'. ($quote->getNumber() ?? '#')])
+                                                         ->addInputAttributes(['value' => $autoTemplate['subject'] ?? '' ?: $translator->translate('quote') . '#' . ($quote->getNumber() ?? '#')])
                                                          ->hideLabel()
                                                          ->required(true); ?>
                     
@@ -266,16 +266,16 @@ echo Html::script($js3)->type('module');
                         <?=
         Field::text($form, 'guest_url')->readonly(true)
                                       ->addInputAttributes(['id' => 'quote-guest-url','readonly' => 'true',
-                                      'value' => $urlGenerator->generate(
-                                          'quote/url_key',
-                                          ['url_key' => $quote->getUrl_key()]
-                                      ),'class' => 'form-control']);
+                                          'value' => $urlGenerator->generate(
+                                              'quote/url_key',
+                                              ['url_key' => $quote->getUrl_key()],
+                                          ),'class' => 'form-control']);
 
 echo Html::tag(
     'Div',
     Html::tag('i', '', ['class' => 'fa fa-clipboard fa-fw']),
     ['class' => 'input-group-text to-clipboard cursor-pointer',
-                       'data-clipboard-target' => '#quote-guest-url','style' => 'height : 38px']
+        'data-clipboard-target' => '#quote-guest-url','style' => 'height : 38px'],
 );
 ?>
                         </div>
@@ -288,13 +288,13 @@ echo Html::tag(
         $translator->translate('cancel'),
         'type' => 'reset',
         'class' => 'btn btn-lg btn-danger',
-        'name' => 'btn_cancel'
+        'name' => 'btn_cancel',
     ],
     [
         $translator->translate('send'),
         'type' => 'submit',
         'class' => 'btn btn-lg btn-primary',
-        'name' => 'btn_send'
+        'name' => 'btn_send',
     ],
 ]) ?>
                     <?= Form::tag()->close(); ?>                    
@@ -304,9 +304,9 @@ echo Html::tag(
     </div>
 </div>
 <?php
-$js9 = "$(document).ready(function() {".
-        'var textContent = '.$autoTemplate['body'].';'.
-        '$("#mailerquoteform-body").val(textContent);'.
+$js9 = "$(document).ready(function() {" .
+        'var textContent = ' . $autoTemplate['body'] . ';' .
+        '$("#mailerquoteform-body").val(textContent);' .
         '});';
 echo Html::script($js9)->type('module');
 ?>

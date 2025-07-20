@@ -30,9 +30,7 @@ use App\Invoice\Payment\PaymentRepository as PYMR;
 
 final readonly class NumberHelper
 {
-    public function __construct(private SRepo $s)
-    {
-    }
+    public function __construct(private SRepo $s) {}
 
     /**
      * @param mixed|null $amount
@@ -45,12 +43,12 @@ final readonly class NumberHelper
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
         if ($currency_symbol_placement == 'before') {
-            return $currency_symbol . number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
+            return $currency_symbol . number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
         if ($currency_symbol_placement == 'afterspace') {
-            return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
+            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
         }
-        return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
+        return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
     }
 
     /**
@@ -65,7 +63,7 @@ final readonly class NumberHelper
         if (null !== $amount) {
             $thousands_separator = $this->s->getSetting('thousands_separator');
             $decimal_point = $this->s->getSetting('decimal_point');
-            return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
+            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
         return null;
     }
@@ -97,8 +95,8 @@ final readonly class NumberHelper
         // Quote Subtotal + Item Tax
         // -------------------------
         $quote_item_amounts = $this->quote_calculateTotalsofItemTotals($quote_id, $qiR, $qiaR);
-        $quote_item_subtotal_discount_inclusive = (float)$quote_item_amounts['subtotal'] - (float)$quote_item_amounts['discount'];
-        $quote_subtotal_discount_and_tax_included = $quote_item_subtotal_discount_inclusive + (float)$quote_item_amounts['tax_total'];
+        $quote_item_subtotal_discount_inclusive = (float) $quote_item_amounts['subtotal'] - (float) $quote_item_amounts['discount'];
+        $quote_subtotal_discount_and_tax_included = $quote_item_subtotal_discount_inclusive + (float) $quote_item_amounts['tax_total'];
         //----------
         // Quote Tax
         // ---------
@@ -126,9 +124,9 @@ final readonly class NumberHelper
         if (($count > 0) && ($count_quote_amount > 0)) {
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
-                $quote_amount->setQuote_id((int)$quote_id);
+                $quote_amount->setQuote_id((int) $quote_id);
                 $quote_amount->setItem_subtotal($quote_item_subtotal_discount_inclusive ?: 0.00);
-                $quote_amount->setItem_tax_total((float)$quote_item_amounts['tax_total'] ?: 0.00);
+                $quote_amount->setItem_tax_total((float) $quote_item_amounts['tax_total'] ?: 0.00);
                 $quote_amount->setTax_total($quote_tax_rate_total ?: 0.00);
                 $quote_amount->setTotal($quote_total ?: 0.00);
                 $qaR->save($quote_amount);
@@ -138,7 +136,7 @@ final readonly class NumberHelper
         if (($count === 0) && ($count_quote_amount > 0)) {
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
-                $quote_amount->setQuote_id((int)$quote_id);
+                $quote_amount->setQuote_id((int) $quote_id);
                 $quote_amount->setItem_subtotal(0.00);
                 $quote_amount->setItem_tax_total(0.00);
                 $quote_amount->setTax_total(0.00);
@@ -149,7 +147,7 @@ final readonly class NumberHelper
         if (($count === 0) && ($count_quote_amount === 0)) {
             // Create a Quote Amount Record for this quote if it does not exist even if there are no items
             $quote_amount = new QuoteAmount();
-            $quote_amount->setQuote_id((int)$quote_id);
+            $quote_amount->setQuote_id((int) $quote_id);
             $quote_amount->setItem_subtotal(0.00);
             $quote_amount->setItem_tax_total(0.00);
             $quote_amount->setTax_total(0.00);
@@ -170,12 +168,12 @@ final readonly class NumberHelper
         $inv_item_amounts = $this->inv_calculateTotalsofItemTotals($inv_id, $iiR, $iiaR);
         $inv_item_subtotal_discount =
         // individual inv_item_amount['subtotal'] already includes charges and allowances
-        (float)$inv_item_amounts['subtotal']
-        - (float)$inv_item_amounts['discount'];
+        (float) $inv_item_amounts['subtotal']
+        - (float) $inv_item_amounts['discount'];
 
         $inv_subtotal_discount_and_charge_and_tax_included =
         $inv_item_subtotal_discount
-        + (float)$inv_item_amounts['tax_total'];
+        + (float) $inv_item_amounts['tax_total'];
 
         //----------
         // Invoice Tax
@@ -188,11 +186,11 @@ final readonly class NumberHelper
             foreach ($inv_allowance_charges as $inv_allowance_charge) {
                 $isCharge = $inv_allowance_charge->getAllowanceCharge()?->getIdentifier();
                 if ($isCharge) {
-                    $inv_allowance_charge_amount_total += (float)$inv_allowance_charge->getAmount();
-                    $inv_allowance_charge_vat_total += (float)$inv_allowance_charge->getVat();
+                    $inv_allowance_charge_amount_total += (float) $inv_allowance_charge->getAmount();
+                    $inv_allowance_charge_vat_total += (float) $inv_allowance_charge->getVat();
                 } else {
-                    $inv_allowance_charge_amount_total -= (float)$inv_allowance_charge->getAmount();
-                    $inv_allowance_charge_vat_total -= (float)$inv_allowance_charge->getVat();
+                    $inv_allowance_charge_amount_total -= (float) $inv_allowance_charge->getAmount();
+                    $inv_allowance_charge_vat_total -= (float) $inv_allowance_charge->getVat();
                 }
             }
             $inv_tax_rate_total = $inv_allowance_charge_vat_total;
@@ -213,14 +211,14 @@ final readonly class NumberHelper
         // Give the Invoice its summary of amounts at the bottom of the invoice
         //---------------------------------------------------------------------
         $count = $iiR->repoCount($inv_id);
-        $count_inv_amount = $iaR->repoInvAmountCount((int)$inv_id);
+        $count_inv_amount = $iaR->repoInvAmountCount((int) $inv_id);
         //At least one item and a preexisting invoice amount record exists => Update the Invoice Amount Record
         if (($count > 0) && ($count_inv_amount > 0)) {
-            $inv_amount = $iaR->repoInvquery((int)$inv_id);
+            $inv_amount = $iaR->repoInvquery((int) $inv_id);
             if ($inv_amount) {
-                $inv_amount->setInv_id((int)$inv_id);
+                $inv_amount->setInv_id((int) $inv_id);
                 $inv_amount->setItem_subtotal($inv_item_subtotal_discount ?: 0.00);
-                $inv_amount->setItem_tax_total((float)$inv_item_amounts['tax_total'] ?: 0.00);
+                $inv_amount->setItem_tax_total((float) $inv_item_amounts['tax_total'] ?: 0.00);
                 $inv_amount->setTax_total($inv_tax_rate_total ?: 0.00);
                 $inv_amount->setTotal($inv_total ?: 0.00);
                 // The balance will be reduced with each payment
@@ -228,7 +226,7 @@ final readonly class NumberHelper
                 $total_paid = 0.00;
                 /** @var Payment $payment */
                 foreach ($payments as $payment) {
-                    $paid = (float)$payment->getAmount();
+                    $paid = (float) $payment->getAmount();
                     $total_paid = $total_paid + $paid;
                 }
                 $inv_amount->setPaid($total_paid);
@@ -243,9 +241,9 @@ final readonly class NumberHelper
         }
         // There are no longer any items on the invoice so initialize the Invoice Amount Record to zero
         if (($count === 0) && ($count_inv_amount > 0)) {
-            $inv_amount = $iaR->repoInvquery((int)$inv_id);
+            $inv_amount = $iaR->repoInvquery((int) $inv_id);
             if ($inv_amount) {
-                $inv_amount->setInv_id((int)$inv_id);
+                $inv_amount->setInv_id((int) $inv_id);
                 $inv_amount->setItem_subtotal(0.00);
                 $inv_amount->setItem_tax_total(0.00);
                 $inv_amount->setTax_total(0.00);
@@ -256,7 +254,7 @@ final readonly class NumberHelper
         if (($count === 0) && ($count_inv_amount === 0)) {
             // Create an Invoice  Amount Record for this invoice if it does not exist even if there are no items
             $inv_amount = new InvAmount();
-            $inv_amount->setInv_id((int)$inv_id);
+            $inv_amount->setInv_id((int) $inv_id);
             $inv_amount->setItem_subtotal(0.00);
             $inv_amount->setItem_tax_total(0.00);
             $inv_amount->setTax_total(0.00);
@@ -296,7 +294,7 @@ final readonly class NumberHelper
             foreach ($item as $key => $value) {
                 if ($key === 'id') {
                     /** @var QuoteItemAmount $quote_item_amount */
-                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int)$value);
+                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $value);
                     $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
                     $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?? 0.00);
                     $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?? 0.00);
@@ -321,7 +319,7 @@ final readonly class NumberHelper
         // draft => 1, sent => 2, viewed => 3, paid => 4
         // As soon as the balance on the invoice is zero and the read-only-toggle is 4 ie. paid,
         // for Administrative purposes set the invoice to read-only to avoid tampering
-        if (($sR->getSetting('read_only_toggle') === (string)4) && null !== $invoice) {
+        if (($sR->getSetting('read_only_toggle') === (string) 4) && null !== $invoice) {
             // Force the user to set the status to read-only manually i.e. view..edit  if it is a deliberate zero invoice
             // i.e. `paid` and `total` equaling zero .... here by only setting to read only if `paid` and `total` are greater than zero.
             if ($balance == 0.00 && ($invoice->getInvAmount()->getPaid() > 0.00) && ($invoice->getInvAmount()->getTotal() > 0.00)) {
@@ -358,7 +356,7 @@ final readonly class NumberHelper
         ];
         /** @var InvItem $item */
         foreach ($get_all_items_in_inv as $item) {
-            $inv_item_amount = $iiaR->repoInvItemAmountquery((string)$item->getId());
+            $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
             if (null !== $inv_item_amount) {
                 $grand_sub_total = $grand_sub_total + ($inv_item_amount->getSubtotal() ?? 0.00);
                 $grand_taxtotal = $grand_taxtotal + ($inv_item_amount->getTax_total() ?? 0.00);
@@ -392,8 +390,8 @@ final readonly class NumberHelper
         $discount_amount = 0.00;
         $discount_percent = 0.00;
         if ($quote) {
-            $discount_amount = (float)$quote->getDiscount_amount();
-            $discount_percent = (float)$quote->getDiscount_percent();
+            $discount_amount = (float) $quote->getDiscount_amount();
+            $discount_percent = (float) $quote->getDiscount_percent();
         }
         // Subtract Quote Table's discount amount from Quote Amount Table's quote_total
         // Discount and Percent are mutually exclusive ie. if you use the one you exclude the other.
@@ -416,8 +414,8 @@ final readonly class NumberHelper
         $discount_percent = 0.00;
         $total = $inv_total;
         if ($inv) {
-            $discount_amount = (float)$inv->getDiscount_amount();
-            $discount_percent = (float)$inv->getDiscount_percent();
+            $discount_amount = (float) $inv->getDiscount_amount();
+            $discount_percent = (float) $inv->getDiscount_percent();
         }
         // Subtract Invoice Table's discount amount from Invoice Amount Table's inv_total
         // Discount and Percent are mutually exclusive ie. if you use the one you exclude the other.
@@ -488,9 +486,9 @@ final readonly class NumberHelper
         $inv_tax_rates = $itrR->repoInvquery($inv_id);
         $inv_tax_rates_count = $itrR->repoCount($inv_id);
         // At least one invoice tax rate has been set and the invoice has amounts that invoice tax rates can be applied to
-        if (($inv_tax_rates_count > 0) && $iaR->repoInvAmountCount((int)$inv_id) > 0) {
+        if (($inv_tax_rates_count > 0) && $iaR->repoInvAmountCount((int) $inv_id) > 0) {
             // There are invoice taxes applied
-            $inv_amount = $iaR->repoInvquery((int)$inv_id);
+            $inv_amount = $iaR->repoInvquery((int) $inv_id);
             if ($inv_amount) {
                 // Loop through the invoice taxes and update inv_tax_rate_amount for each of the applied inv taxes
                 /** @var InvTaxRate  $inv_tax_rate */

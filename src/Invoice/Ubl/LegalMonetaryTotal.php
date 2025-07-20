@@ -10,9 +10,7 @@ use Sabre\Xml\XmlSerializable;
 /** @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-LegalMonetaryTotal/ */
 class LegalMonetaryTotal implements XmlSerializable
 {
-    public function __construct(private readonly float $lineExtensionAmount, private readonly float $taxExclusiveAmount, private readonly float $taxInclusiveAmount, private readonly float $allowanceTotalAmount, private readonly float $payableAmount, private readonly string $document_currency)
-    {
-    }
+    public function __construct(private readonly float $lineExtensionAmount, private readonly float $taxExclusiveAmount, private readonly float $taxInclusiveAmount, private readonly float $allowanceTotalAmount, private readonly float $payableAmount, private readonly string $document_currency) {}
 
     /**
      * @param Writer $writer

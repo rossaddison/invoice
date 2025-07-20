@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('number'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->placeholder($translator->translate('successful'))
     ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('reason.uknown')))
@@ -63,8 +63,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::checkbox($form, 'successful')
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->addInputAttributes([
-            'readonly' => 'readonly',
-            'disabled' => 'disabled'
+        'readonly' => 'readonly',
+        'disabled' => 'disabled',
     ])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('successful'))
@@ -75,7 +75,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('date'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '')
 ?>
@@ -86,7 +86,7 @@ use Yiisoft\Html\Tag\Form;
     ->placeholder($translator->translate('merchant.driver'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getDriver() ?? ''))
 ?>
@@ -97,7 +97,7 @@ use Yiisoft\Html\Tag\Form;
     ->placeholder($translator->translate('merchant.response'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getResponse() ?? ''))
 ?>
@@ -108,7 +108,7 @@ use Yiisoft\Html\Tag\Form;
     ->placeholder($translator->translate('merchant.reference'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getReference() ?? ''))
 ?>

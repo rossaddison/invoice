@@ -26,10 +26,10 @@ $this->setTitle($translator->translate('layout.page.user-cancelled-oauth2'));
                 $currentPath = $currentRoute->getUri()?->getPath();
 null !== $currentPath ?
     $translator->translate('layout.page.user-cancelled-oauth2', [
-    'url' => Html::span(
-        Html::encode($currentPath),
-        ['class' => 'text-muted']
-    ),
+        'url' => Html::span(
+            Html::encode($currentPath),
+            ['class' => 'text-muted'],
+        ),
     ]) : '';
 ?>
         </p>
@@ -37,7 +37,7 @@ null !== $currentPath ?
             <?= Html::a(
                 $translator->translate('layout.go.home'),
                 $urlGenerator->generate('site/index'),
-                ['class' => 'btn btn-outline-primary mt-5']
+                ['class' => 'btn btn-outline-primary mt-5'],
             );
 ?>
         </p>

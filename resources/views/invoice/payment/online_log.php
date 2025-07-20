@@ -45,13 +45,13 @@ $toolbar = Div::tag();
 $columns = [
     new DataColumn(
         'id',
-        header:  $translator->translate('id'),
-        content: static fn (Merchant $model) => $model->getId()
+        header: $translator->translate('id'),
+        content: static fn(Merchant $model) => $model->getId(),
     ),
     new DataColumn(
         field: 'inv_id',
         property: 'filterInvNumber',
-        header:  $translator->translate('invoice'),
+        header: $translator->translate('invoice'),
         content: static function (Merchant $model) use ($urlGenerator): string|A {
             $return = '';
             if (null !== $model->getInv()) {
@@ -59,37 +59,37 @@ $columns = [
             }
             return $return;
         },
-        filter: true
+        filter: true,
     ),
     new DataColumn(
         'successful',
-        header:  $translator->translate('transaction.successful'),
+        header: $translator->translate('transaction.successful'),
         content: static function (Merchant $model) use ($translator): Yiisoft\Html\Tag\CustomTag {
             return $model->getSuccessful() ? Html::tag('Label', $translator->translate('yes'), ['class' => 'btn btn-success']) : Html::tag('Label', $translator->translate('no'), ['class' => 'btn btn-danger']);
-        }
+        },
     ),
     new DataColumn(
         'date',
-        header:  $translator->translate('payment.date'),
-        content: static fn (Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate())
-                                                                          ? $date->format('Y-m-d') : ''
+        header: $translator->translate('payment.date'),
+        content: static fn(Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate())
+                                                                          ? $date->format('Y-m-d') : '',
     ),
     new DataColumn(
         field: 'driver',
         property: 'filterPaymentProvider',
-        header:  $translator->translate('payment.provider'),
-        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
-        filter: true
+        header: $translator->translate('payment.provider'),
+        content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
+        filter: true,
     ),
     new DataColumn(
         'response',
-        header:  $translator->translate('provider.response'),
-        content: static fn (Merchant $model): string => Html::encode($model->getResponse())
+        header: $translator->translate('provider.response'),
+        content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
     ),
     new DataColumn(
         'reference',
-        header:  $translator->translate('transaction.reference'),
-        content: static fn (Merchant $model): string => Html::encode($model->getReference())
+        header: $translator->translate('transaction.reference'),
+        content: static fn(Merchant $model): string => Html::encode($model->getReference()),
     ),
 ];
 ?>
@@ -99,7 +99,7 @@ $grid_summary = $s->grid_summary(
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('payment.logs'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
                  Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
@@ -117,5 +117,5 @@ echo GridView::widget()
 /**
  * @see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in payment/index
  */
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment') . ' ' . $grid_summary)
 ->toolbar($toolbarString);

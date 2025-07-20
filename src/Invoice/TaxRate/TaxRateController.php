@@ -34,7 +34,7 @@ final class TaxRateController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->taxRateService = $taxRateService;
@@ -102,7 +102,7 @@ final class TaxRateController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         TaxRateRepository $taxRateRepository,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();
@@ -160,7 +160,7 @@ final class TaxRateController extends BaseController
      */
     public function view(
         CurrentRoute $currentRoute,
-        TaxRateRepository $taxRateRepository
+        TaxRateRepository $taxRateRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();

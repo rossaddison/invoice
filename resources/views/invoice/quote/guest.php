@@ -43,8 +43,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('quote'))
-            )
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('quote')),
+            ),
     )
     ->render();
 
@@ -100,20 +100,20 @@ $toolbar = Div::tag();
             content: static function (Quote $model): string {
                 return (string) $model->getId();
             },
-            withSorting: true
+            withSorting: true,
         ),
         new DataColumn(
             'status_id',
             header: $translator->translate('status'),
             content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
                 if (null !== $model->getStatus_id()) {
-                    $span = $qR->getSpecificStatusArrayLabel((string)$model->getStatus_id());
-                    $class = $qR->getSpecificStatusArrayClass((string)$model->getStatus_id());
-                    return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label '. $class]);
+                    $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
+                    $class = $qR->getSpecificStatusArrayClass((string) $model->getStatus_id());
+                    return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label ' . $class]);
                 }
                 return '';
             },
-            withSorting: true
+            withSorting: true,
         ),
         new DataColumn(
             field: 'number',
@@ -122,28 +122,28 @@ $toolbar = Div::tag();
             content: static function (Quote $model) use ($urlGenerator): A {
                 return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
             },
-            filter:\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+            filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 80px']),
         ),
         new DataColumn(
             'client_id',
             header: $translator->translate('id'),
-            content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? '')
+            content: static fn(Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
         ),
         new DataColumn(
             'date_created',
             header: $translator->translate('date.created'),
-            content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
-            withSorting: true
+            content: static fn(Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+            withSorting: true,
         ),
         new DataColumn(
             'date_expires',
-            content: static fn (Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
-            withSorting: true
+            content: static fn(Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+            withSorting: true,
         ),
         new DataColumn(
             'date_required',
-            content: static fn (Quote $model): string => ($model->getDate_required())->format('Y-m-d')
+            content: static fn(Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
         ),
         new DataColumn(
             'id',
@@ -155,7 +155,7 @@ $toolbar = Div::tag();
                     return $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
                 }
                 return '';
-            }
+            },
         ),
     ];
 ?>
@@ -163,9 +163,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('quotes'),
-    ''
+    '',
 );
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
@@ -191,7 +191,7 @@ echo GridView::widget()
 ->id('w7-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '').' '.$grid_summary)
+->summaryTemplate(($editInv ? $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') : '') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

@@ -55,7 +55,7 @@ final class UserInvController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         // @see yiisoft/rbac-php
@@ -78,10 +78,11 @@ final class UserInvController extends BaseController
      */
     public function add(
         Request $request,
-        #[RouteArgument('_language')] string $_language,
+        #[RouteArgument('_language')]
+        string $_language,
         FormHydrator $formHydrator,
         uR $uR,
-        uiR $uiR
+        uiR $uiR,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
@@ -179,16 +180,22 @@ final class UserInvController extends BaseController
         uiR $uiR,
         ucR $ucR,
         sR $sR,
-        #[RouteArgument('_language')] string $_language,
-        #[RouteArgument('page')] string $page = '1',
-        #[RouteArgument('active')] string $active = '2',
-        #[Query('page')] string $queryPage = null,
-        #[Query('sort')] string $querySort = null,
-        #[Query('filterUser')] string $queryFilterUser = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[RouteArgument('page')]
+        string $page = '1',
+        #[RouteArgument('active')]
+        string $active = '2',
+        #[Query('page')]
+        string $queryPage = null,
+        #[Query('sort')]
+        string $querySort = null,
+        #[Query('filterUser')]
+        string $queryFilterUser = null,
     ): \Yiisoft\DataResponse\DataResponse {
         $canEdit = $this->rbac();
         $page = $queryPage ?? $page;
-        $activeInt = (int)$active;
+        $activeInt = (int) $active;
         $sortString = $querySort ?? '-user_id';
         $sort = Sort::only(['user_id', 'name'])
             ->withOrderString($sortString);
@@ -207,7 +214,7 @@ final class UserInvController extends BaseController
             'locale' => $_language,
             'alert' => $this->alert(),
             // Parameters for GridView->requestArguments
-            'page' => (int)$page > 0 ? (int)$page : 1,
+            'page' => (int) $page > 0 ? (int) $page : 1,
             'sortOrder' => $querySort ?? '',
             'manager' => $this->manager,
             'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($uiR),
@@ -224,7 +231,7 @@ final class UserInvController extends BaseController
     public function guest(
         Request $request,
         FormHydrator $formHydrator,
-        uiR $uiR
+        uiR $uiR,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
@@ -273,13 +280,16 @@ final class UserInvController extends BaseController
      * @return Response
      */
     public function guestlimit(
-        #[RouteArgument('userinv_id')] string $userInvId,
-        #[RouteArgument('origin')] string $origin,
-        #[RouteArgument('limit')] string $limit,
-        uiR $uiR
+        #[RouteArgument('userinv_id')]
+        string $userInvId,
+        #[RouteArgument('origin')]
+        string $origin,
+        #[RouteArgument('limit')]
+        string $limit,
+        uiR $uiR,
     ): Response {
         if (strlen($userInvId) > 0 && strlen($origin) > 0) {
-            $limitInt = (int)$limit;
+            $limitInt = (int) $limit;
             $userInv = $uiR->repoUserInvquery($userInvId);
             if (null !== $userInv) {
                 $userInv->setListLimit($limitInt);
@@ -349,7 +359,8 @@ final class UserInvController extends BaseController
      */
     public function edit(
         Request $request,
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         FormHydrator $formHydrator,
         uiR $userinvRepository,
         uR $uR,
@@ -454,8 +465,9 @@ final class UserInvController extends BaseController
      */
     public function delete(
         TranslatorInterface $translator,
-        #[RouteArgument('id')] int $id,
-        uiR $userinvRepository
+        #[RouteArgument('id')]
+        int $id,
+        uiR $userinvRepository,
     ): Response {
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
@@ -481,16 +493,20 @@ final class UserInvController extends BaseController
      */
     public function signup(
         // cldr e.g. 'en'
-        #[RouteArgument('_language')] string $_language,
+        #[RouteArgument('_language')]
+        string $_language,
         // language e.g. 'English'
-        #[RouteArgument('language')] string $language,
-        #[RouteArgument('token')] string $tokenMasked,
-        #[RouteArgument('tokenType')] string $tokenType,
+        #[RouteArgument('language')]
+        string $language,
+        #[RouteArgument('token')]
+        string $tokenMasked,
+        #[RouteArgument('tokenType')]
+        string $tokenType,
         cR $cR,
         uiR $uiR,
         ucR $ucR,
         sR $sR,
-        tR $tR
+        tR $tR,
     ): Response {
         // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
         $unMaskedToken = TokenMask::remove($tokenMasked);
@@ -499,7 +515,7 @@ final class UserInvController extends BaseController
             $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
             $lengthTimeStamp = strlen($timestamp);
             $tokenWithoutTimestamp = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
-            if ((int)$timestamp + 3600 >= time()) {
+            if ((int) $timestamp + 3600 >= time()) {
                 $identity = $tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
                 if (null !== $identity) {
                     $userId = $identity->getUser()?->getId();
@@ -515,7 +531,7 @@ final class UserInvController extends BaseController
                                 /**
                                  * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
                                  */
-                                $tokenEntity->setToken('already_used_token_' . (string)time());
+                                $tokenEntity->setToken('already_used_token_' . (string) time());
                                 $tR->save($tokenEntity);
                                 // $email address field in signup form and a field in the user table
                                 $email = $identity->getUser()?->getEmail();
@@ -535,7 +551,7 @@ final class UserInvController extends BaseController
                                         $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
                                         if (null !== ($clientId = $client->getClient_id())) {
                                             $userClient = new UserClient();
-                                            $userClient->setUser_id((int)$userInv->getUser_id());
+                                            $userClient->setUser_id((int) $userInv->getUser_id());
                                             $userClient->setClient_id($clientId);
                                             $ucR->save($userClient);
                                         }
@@ -590,7 +606,7 @@ final class UserInvController extends BaseController
                 'actionArguments' => ['id' => $userinv->getId()],
                 'errors' => [],
                 'form' => $form,
-                'userinv' => $userinvRepository->repoUserInvquery((string)$userinv->getId()),
+                'userinv' => $userinvRepository->repoUserInvquery((string) $userinv->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }
@@ -633,7 +649,7 @@ final class UserInvController extends BaseController
     private function userinv(int $id, uiR $userinvRepository): UserInv|null
     {
         if ($id) {
-            return $userinvRepository->repoUserInvquery((string)$id);
+            return $userinvRepository->repoUserInvquery((string) $id);
         }
         return null;
     }

@@ -21,9 +21,8 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
 
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly UserRepository $userRepository
-    ) {
-    }
+        private readonly UserRepository $userRepository,
+    ) {}
 
     /**
      * @return string[]
@@ -76,7 +75,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
                 new Email(),
                 function (mixed $value): Result {
                     $result = new Result();
-                    if ($this->userRepository->findByEmail((string)$value) === null) {
+                    if ($this->userRepository->findByEmail((string) $value) === null) {
                         $result->addError($this->translator->translate('validator.user.exist.not'));
                     }
                     return $result;

@@ -58,7 +58,7 @@ echo Field::select($form, 'gentor_id')
     'class' => 'form-control',
     'id' => 'gentor_id',
     'readonly' => 'readonly',
-    'disabled' => 'disabled'
+    'disabled' => 'disabled',
 ])
 ->prompt($translator->translate('none'))
 ->optionsData($optionsDataGenerators)
@@ -73,7 +73,7 @@ echo Field::select($form, 'gentor_id')
         'class' => 'form-control',
         'id' => 'lowercasename',
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getLowercase_name()))
 ?>
@@ -87,7 +87,7 @@ echo Field::select($form, 'gentor_id')
         'class' => 'form-control',
         'id' => 'camelcasename',
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getCamelcase_name()))
 ?>
@@ -101,7 +101,7 @@ echo Field::select($form, 'gentor_id')
         'class' => 'form-control',
         'id' => 'view_field_name',
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getView_field_name()))
 ?>

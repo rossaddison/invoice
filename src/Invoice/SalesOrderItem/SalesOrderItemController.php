@@ -42,7 +42,7 @@ final class SalesOrderItemController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->salesorderitemService = $salesorderitemService;
@@ -57,7 +57,7 @@ final class SalesOrderItemController extends BaseController
         TRR $trR,
         PR $pR,
         UR $uR,
-        SOR $qR
+        SOR $qR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $so_item = $this->salesorderitem($currentRoute, $soiR);
         if ($so_item) {
@@ -89,7 +89,7 @@ final class SalesOrderItemController extends BaseController
                                 'message' => $this->translator->translate('record.successfully.updated'),
                                 'url' => 'salesorder/view',
                                 'id' => $so_item->getSales_order_id(),
-                            ]
+                            ],
                         ));
                     } // is_array
                 }
@@ -119,7 +119,7 @@ final class SalesOrderItemController extends BaseController
 
     public function taxrate_percentage(int $id, TRR $trr): float|null
     {
-        $taxrate = $trr->repoTaxRatequery((string)$id);
+        $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }
@@ -157,10 +157,10 @@ final class SalesOrderItemController extends BaseController
             $soias_array['subtotal'] = $sub_total;
             $soias_array['taxtotal'] = $tax_total;
             $soias_array['total'] = $sub_total - $discount_total + $tax_total;
-            if ($soiar->repoCount((string)$so_item_id) === 0) {
+            if ($soiar->repoCount((string) $so_item_id) === 0) {
                 $soias->saveSalesOrderItemAmountNoForm(new SalesOrderItemAmount(), $soias_array);
             } else {
-                $so_item_amount = $soiar->repoSalesOrderItemAmountquery((string)$so_item_id);
+                $so_item_amount = $soiar->repoSalesOrderItemAmountquery((string) $so_item_id);
                 if ($so_item_amount) {
                     $soias->saveSalesOrderItemAmountNoForm($so_item_amount, $soias_array);
                 }

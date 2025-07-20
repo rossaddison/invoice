@@ -33,7 +33,7 @@ final class ProjectController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->projectService = $projectService;
@@ -66,7 +66,7 @@ final class ProjectController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
     ): Response {
         $project = new Project();
         $form = new ProjectForm($project);
@@ -106,7 +106,7 @@ final class ProjectController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ProjectRepository $projectRepository,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
     ): Response {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
@@ -142,7 +142,7 @@ final class ProjectController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        ProjectRepository $projectRepository
+        ProjectRepository $projectRepository,
     ): Response {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {

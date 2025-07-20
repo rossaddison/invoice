@@ -79,7 +79,7 @@ final class SalesOrderAmountRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 
@@ -199,7 +199,7 @@ final class SalesOrderAmountRepository extends Select\Repository
             $total = 0.00;
             /** @var SalesOrderAmount $so_amount */
             foreach ($status_specific_sos as $so_amount) {
-                $total = $total + (float)$so_amount->getTotal();
+                $total = $total + (float) $so_amount->getTotal();
             }
             $return[$key] = [
                 'so_status_id' => $key,

@@ -33,7 +33,7 @@ final class MerchantController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->merchantService = $merchantService;
@@ -65,7 +65,7 @@ final class MerchantController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        InvRepository $invRepository
+        InvRepository $invRepository,
     ): Response {
         $merchant = new Merchant();
         $form = new MerchantForm($merchant);
@@ -105,7 +105,7 @@ final class MerchantController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         MerchantRepository $merchantRepository,
-        InvRepository $invRepository
+        InvRepository $invRepository,
     ): Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
@@ -141,7 +141,7 @@ final class MerchantController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        MerchantRepository $merchantRepository
+        MerchantRepository $merchantRepository,
     ): Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
@@ -159,7 +159,7 @@ final class MerchantController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         InvRepository $invRepository,
-        MerchantRepository $merchantRepository
+        MerchantRepository $merchantRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {

@@ -27,7 +27,7 @@ final class ResetPasswordController
         private ViewRenderer $viewRenderer,
         private UrlGenerator $urlGenerator,
         private TranslatorInterface $translator,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
         $this->webService = $webService;
         $this->viewRenderer = $viewRenderer->withControllerName('resetpassword');
@@ -48,12 +48,13 @@ final class ResetPasswordController
      * @return Response
      */
     public function resetpassword(
-        #[RouteArgument('token')] string $maskedToken,
+        #[RouteArgument('token')]
+        string $maskedToken,
         FormHydrator $formHydrator,
         ServerRequestInterface $request,
         ResetPasswordForm $resetPasswordForm,
         idR $idR,
-        tR $tR
+        tR $tR,
     ): Response {
         $unMaskedToken = TokenMask::remove($maskedToken);
         $positionFromUnderscore = strrpos($unMaskedToken, '_');
@@ -61,7 +62,7 @@ final class ResetPasswordController
             $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
             $lengthTimeStamp = strlen($timestamp);
             $tokenRandomStringOnly = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
-            if ((int)$timestamp + 3600 >= time()) {
+            if ((int) $timestamp + 3600 >= time()) {
                 $identity = $tR->findIdentityByToken($tokenRandomStringOnly, self::REQUEST_PASSWORD_RESET_TOKEN);
                 if (null !== $identity) {
                     if (null !== ($user = $identity->getUser()) && null !== ($identityId = $identity->getId())) {

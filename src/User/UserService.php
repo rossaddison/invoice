@@ -12,9 +12,8 @@ final readonly class UserService
     public function __construct(
         private CurrentUser $currentUser,
         private UserRepository $repository,
-        private AccessCheckerInterface $accessChecker
-    ) {
-    }
+        private AccessCheckerInterface $accessChecker,
+    ) {}
 
     /**
      * @return User|null

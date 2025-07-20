@@ -39,8 +39,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('client.postaladdress'))
-            )
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('client.postaladdress')),
+            ),
     )
     ->render();
 
@@ -59,20 +59,20 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('id'),
-            content: static fn (PostalAddress $model) => $model->getId()
+            header: $translator->translate('id'),
+            content: static fn(PostalAddress $model) => $model->getId(),
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('client.name'),
+            header: $translator->translate('client.name'),
             content: static function (PostalAddress $model) use ($cR): string {
                 $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ? Html::encode(($cR->repoClientquery($model->getClient_id()))->getClient_name()) : '');
                 return $clientName;
-            }
+            },
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('client.surname'),
+            header: $translator->translate('client.surname'),
             content: static function (PostalAddress $model) use ($cR): string {
                 $clientId = $model->getClient_id();
                 if ($clientId) {
@@ -80,11 +80,11 @@ $toolbar = Div::tag();
                     return $clientSurname;
                 }
                 return '';
-            }
+            },
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('active'),
+            header: $translator->translate('active'),
             content: static function (PostalAddress $model) use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
                 $client = $cR->repoClientquery($model->getClient_id());
                 if (null !== $client->getPostaladdress_id() && $client->getPostaladdress_id() > 0) {
@@ -93,37 +93,37 @@ $toolbar = Div::tag();
                     return Html::a('Not used - assign postal address to client', $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'inv']));
                 }
                 return 'no client assigned to postal address';
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('view'),
+            header: $translator->translate('view'),
             content: static function (PostalAddress $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/view', ['id' => $model->getId()]), []);
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('edit'),
+            header: $translator->translate('edit'),
             content: static function (PostalAddress $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/edit', ['id' => $model->getId()]), []);
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('delete'),
+            header: $translator->translate('delete'),
             content: static function (PostalAddress $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        ],
                     ),
                     $urlGenerator->generate('postaladdress/delete', ['id' => $model->getId()]),
-                    []
+                    [],
                 );
-            }
+            },
         ),
     ];
 ?>
@@ -131,9 +131,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('postaladdresses'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
@@ -147,6 +147,6 @@ echo GridView::widget()
 ->header($header)
 ->id('w3-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress') . ' ' . $grid_summary)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->toolbar($toolbarString);

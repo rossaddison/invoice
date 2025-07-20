@@ -10,9 +10,7 @@ use Yiisoft\Files\FileHelper;
 
 final readonly class ProductImageService
 {
-    public function __construct(private ProductImageRepository $repository, private SettingRepository $s)
-    {
-    }
+    public function __construct(private ProductImageRepository $repository, private SettingRepository $s) {}
 
     /**
      * @param ProductImage $model
@@ -20,18 +18,18 @@ final readonly class ProductImageService
      */
     public function saveProductImage(ProductImage $model, array $array): void
     {
-        $model->nullifyRelationOnChange((int)$array['product_id']);
+        $model->nullifyRelationOnChange((int) $array['product_id']);
 
         $datetime_created = new \DateTimeImmutable();
         $model->setUploaded_date(
-            $datetime_created::createFromFormat('Y-m-d', (string)$array['uploaded_date'])
-            ?: new \DateTimeImmutable('now')
+            $datetime_created::createFromFormat('Y-m-d', (string) $array['uploaded_date'])
+            ?: new \DateTimeImmutable('now'),
         );
 
-        isset($array['product_id']) ? $model->setProduct_id((int)$array['product_id']) : '';
-        isset($array['file_name_original']) ? $model->setFile_name_original((string)$array['file_name_original']) : '';
-        isset($array['file_name_new']) ? $model->setFile_name_new((string)$array['file_name_new']) : '';
-        isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
+        isset($array['product_id']) ? $model->setProduct_id((int) $array['product_id']) : '';
+        isset($array['file_name_original']) ? $model->setFile_name_original((string) $array['file_name_original']) : '';
+        isset($array['file_name_new']) ? $model->setFile_name_new((string) $array['file_name_new']) : '';
+        isset($array['description']) ? $model->setDescription((string) $array['description']) : '';
 
         $this->repository->save($model);
     }

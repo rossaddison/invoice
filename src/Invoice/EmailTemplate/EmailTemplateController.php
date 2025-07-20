@@ -38,7 +38,7 @@ final class EmailTemplateController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->emailTemplateService = $emailTemplateService;
@@ -51,7 +51,7 @@ final class EmailTemplateController extends BaseController
      */
     public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Yiisoft\DataResponse\DataResponse
     {
-        $page = (int)$currentRoute->getArgument('page', '1');
+        $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $this->rbac();
@@ -76,7 +76,7 @@ final class EmailTemplateController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         CustomFieldRepository $customfieldRepository,
-        FromDropDownRepository $fromR
+        FromDropDownRepository $fromR,
     ): Response {
         $email_template = new EmailTemplate();
         $form = new EmailTemplateForm($email_template);
@@ -127,7 +127,7 @@ final class EmailTemplateController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         CustomFieldRepository $customfieldRepository,
-        FromDropDownRepository $fromR
+        FromDropDownRepository $fromR,
     ): Response {
         $email_template = new EmailTemplate();
         $form = new EmailTemplateForm($email_template);
@@ -293,7 +293,7 @@ final class EmailTemplateController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        EmailTemplateRepository $emailtemplateRepository
+        EmailTemplateRepository $emailtemplateRepository,
     ): Response {
         $email_template = $this->emailtemplate($currentRoute, $emailtemplateRepository);
         if ($email_template) {
@@ -314,7 +314,7 @@ final class EmailTemplateController extends BaseController
         $get_content = $request->getQueryParams();
         /** @var int $get_content['email_template_id'] */
         $email_template_id = $get_content['email_template_id'];
-        $email_template = $etR->repoEmailTemplateCount((string)$email_template_id) > 0 ? $etR->repoEmailTemplatequery((string)$email_template_id) : null;
+        $email_template = $etR->repoEmailTemplateCount((string) $email_template_id) > 0 ? $etR->repoEmailTemplatequery((string) $email_template_id) : null;
         return $this->factory->createResponse(Json::htmlEncode($email_template ?
             ['email_template' => [
                 'email_template_body' => $email_template->getEmail_template_body(),

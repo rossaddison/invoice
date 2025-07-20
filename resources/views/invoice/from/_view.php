@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
         'placeholder' => $translator->translate('email'),
         'value' => Html::encode($form->getEmail() ?? ''),
         'class' => 'form-control disabled readonly',
-        'id' => 'email'
+        'id' => 'email',
     ])
 ?>
                 <?= Html::closeTag('div'); ?>

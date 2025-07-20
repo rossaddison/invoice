@@ -8,5 +8,5 @@ declare(strict_types=1);
  * @var string $message
  */
 
-echo '<pre>'.$result.'</pre>';
-echo '<span class="label label-'.$status.'">'. $message.'</span>';
+echo '<pre>' . $result . '</pre>';
+echo '<span class="label label-' . $status . '">' . $message . '</span>';

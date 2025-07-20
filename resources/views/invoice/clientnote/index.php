@@ -36,8 +36,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('client.note')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('client.note'))),
+            ),
     )
     ->render();
 
@@ -70,22 +70,22 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (ClientNote $model) => Html::encode($model->getId())
+            content: static fn(ClientNote $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'client_id',
             header: $translator->translate('client'),
-            content: static fn (ClientNote $model): string => Html::encode(($model->getClient()?->getClient_name() ?? '#') . ' '.($model->getClient()?->getClient_surname() ?? '#'))
+            content: static fn(ClientNote $model): string => Html::encode(($model->getClient()?->getClient_name() ?? '#') . ' ' . ($model->getClient()?->getClient_surname() ?? '#')),
         ),
         new DataColumn(
             'note',
             header: $translator->translate('client.note'),
-            content: static fn (ClientNote $model): string => Html::encode(ucfirst($model->getNote()))
+            content: static fn(ClientNote $model): string => Html::encode(ucfirst($model->getNote())),
         ),
         new DataColumn(
             'date_note',
             header: $translator->translate('client.note.date'),
-            content: static fn (ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDate_note()) ? $dateNote->format('Y-m-d') : ''))
+            content: static fn(ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDate_note()) ? $dateNote->format('Y-m-d') : '')),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -96,7 +96,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -106,7 +106,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -115,8 +115,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -125,9 +125,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('client.notes'),
-    ''
+    '',
 );
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('clientnote/index'))->csrf($csrf)->open() .

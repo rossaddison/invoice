@@ -24,6 +24,6 @@ final class Timer
         /**
          * @var string $this->timers[$name]
          */
-        return microtime(true) - (float)$this->timers[$name];
+        return microtime(true) - (float) $this->timers[$name];
     }
 }

@@ -14,14 +14,14 @@ class Product
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[BelongsTo(target:Family::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Family::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Family $family = null;
 
     // A product has to have a tax rate before it can be created even if it is a zero tax rate
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
-    #[BelongsTo(target:Unit::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
 
     public function __construct(#[Column(type: 'text', nullable: true)]
@@ -44,9 +44,7 @@ class Product
         private ?int $tax_rate_id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $unit_id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $unit_peppol_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $family_id = null)
-    {
-    }
+        private ?int $family_id = null) {}
 
     //get relation $family
     public function getFamily(): ?Family
@@ -86,12 +84,12 @@ class Product
 
     public function getProduct_id(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function getFamily_id(): string
     {
-        return (string)$this->family_id;
+        return (string) $this->family_id;
     }
 
     public function setFamily_id(int $family_id): void
@@ -287,7 +285,7 @@ class Product
 
     public function getTax_rate_id(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setUnit_id(int $unit_id): void
@@ -297,7 +295,7 @@ class Product
 
     public function getUnit_id(): string
     {
-        return (string)$this->unit_id;
+        return (string) $this->unit_id;
     }
 
     public function setUnit_peppol_id(int $unit_peppol_id): void
@@ -307,7 +305,7 @@ class Product
 
     public function getUnit_peppol_id(): string
     {
-        return (string)$this->unit_peppol_id;
+        return (string) $this->unit_peppol_id;
     }
 
     public function getProduct_tariff(): float|null

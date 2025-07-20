@@ -21,9 +21,9 @@ final class InvAllowanceChargeForm extends FormModel
 
     public function __construct(InvAllowanceCharge $invAllowanceCharge, private readonly ?int $inv_id)
     {
-        $this->allowance_charge_id = (int)$invAllowanceCharge->getAllowance_charge_id();
-        $this->amount = (int)$invAllowanceCharge->getAmount();
-        $this->vat = (int)$invAllowanceCharge->getVat();
+        $this->allowance_charge_id = (int) $invAllowanceCharge->getAllowance_charge_id();
+        $this->amount = (int) $invAllowanceCharge->getAmount();
+        $this->vat = (int) $invAllowanceCharge->getVat();
     }
 
     public function getId(): int|null

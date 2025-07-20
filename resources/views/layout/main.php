@@ -73,9 +73,9 @@ $this->beginPage();
             ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin,
-                                    'width' => $companyLogoWidth,
-                                    'height' => $companyLogoHeight])
-            ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
+                'width' => $companyLogoWidth,
+                'height' => $companyLogoHeight])
+            ->brandText(str_repeat('&nbsp;', 7) . $brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
             ->class()
             ->container(false)
@@ -99,21 +99,21 @@ $this->beginPage();
             $urlGenerator->generate('auth/login'),
             $isGuest && !$stopLoggingIn,
             !$isGuest && $stopLoggingIn,
-            false
+            false,
         ),
         NavLink::to(
             Label::tag()
             ->attributes([
                 'class' => 'bi bi-person-plus-fill',
                 'data-bs-toggle' => 'tooltip',
-                'title' => str_repeat(' ', 1).$translator->translate('setup.create.user')
+                'title' => str_repeat(' ', 1) . $translator->translate('setup.create.user'),
             ])
             ->content(),
             $urlGenerator->generate('auth/signup'),
             $isGuest && !$stopSigningUp,
             !$isGuest && $stopSigningUp,
-            false
-        )
+            false,
+        ),
     )
     ->styles(NavStyle::NAVBAR) : '';
 ?>
@@ -122,7 +122,7 @@ $this->beginPage();
     ->addAttributes([
         'style' => 'font-size: 1rem; color: cornflowerblue;',
         'title' => $translator->translate('language'),
-        'url' => '#'
+        'url' => '#',
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent('')
@@ -147,7 +147,7 @@ $this->beginPage();
         DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+        DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
     )->render();
@@ -158,8 +158,8 @@ $this->beginPage();
                     ->csrf($csrf)
                     ->open()
                 . '<div class="mb-1">'
-                . (string)Button::submit(
-                    $translator->translate('logout', ['login' => Html::encode(null !== $user ? preg_replace('/\d+/', '', $user->getLogin()) : '')])
+                . (string) Button::submit(
+                    $translator->translate('logout', ['login' => Html::encode(null !== $user ? preg_replace('/\d+/', '', $user->getLogin()) : '')]),
                 )
                     ->class('btn btn-xs btn-warning')
                 . '</div>'

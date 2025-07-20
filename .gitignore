@@ -30,3 +30,6 @@ c3.php
 
 #assets
 !assets
+
+# Code Style
+php-cs-fixer.cache

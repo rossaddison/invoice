@@ -15,7 +15,7 @@ declare(strict_types=1);
         <div class="panel panel-default">
             <div class="panel-heading">
                 <label <?= $s->where('front_page_file_locations_tooltip'); ?>><i class="bi bi-info-circle"></i>
-                    <?= $translator->translate('front.page') . ' '.'⛔'; ?>
+                    <?= $translator->translate('front.page') . ' ' . '⛔'; ?>
                 </label>    
             </div>
             <div class="panel-body">

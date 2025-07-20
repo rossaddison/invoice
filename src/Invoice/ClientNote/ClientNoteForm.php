@@ -22,7 +22,7 @@ final class ClientNoteForm extends FormModel
 
     public function __construct(ClientNote $clientNote)
     {
-        $this->client_id = (int)$clientNote->getClient_id();
+        $this->client_id = (int) $clientNote->getClient_id();
         $this->date_note = $clientNote->getDate_note();
         $this->note = $clientNote->getNote();
     }

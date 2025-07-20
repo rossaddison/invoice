@@ -14,20 +14,18 @@ class GentorRelation
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[BelongsTo(target: Gentor::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Gentor::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Gentor $gentor = null;
 
     public function __construct(#[Column(type: 'text', nullable: true)]
         private ?string $lowercasename = '', #[Column(type: 'text', nullable: true)]
         private ?string $camelcasename = '', #[Column(type: 'text', nullable: true)]
         private ?string $view_field_name = '', #[Column(type: 'integer(11)', nullable: true, default: null)]
-        private ?int $gentor_id = null)
-    {
-    }
+        private ?int $gentor_id = null) {}
 
     public function getRelation_id(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     //relation $gentor

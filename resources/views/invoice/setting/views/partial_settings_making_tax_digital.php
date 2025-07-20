@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Button;
                         </label>
                         <br>
                         <label for="settings[fph_screen_width]">
-                                <?= $translator->translate('mtd.gov.client.screens.width').' (' . $translator->translate('mtd.gov.client.screens.pixels') .')'; ?>
+                                <?= $translator->translate('mtd.gov.client.screens.width') . ' (' . $translator->translate('mtd.gov.client.screens.pixels') . ')'; ?>
                         </label>
                         <?php
                             $body['settings[fph_screen_width]'] = $s->getSetting('fph_screen_width'); ?>
@@ -76,7 +76,7 @@ use Yiisoft\Html\Tag\Button;
                             class="form-control" readonly
                             value="<?= $body['settings[fph_screen_width]']; ?>">
                         <label for="settings[fph_screen_height]">
-                            <?= $translator->translate('mtd.gov.client.screens.height') . ' (' . $translator->translate('mtd.gov.client.screens.pixels') .')'; ?>
+                            <?= $translator->translate('mtd.gov.client.screens.height') . ' (' . $translator->translate('mtd.gov.client.screens.pixels') . ')'; ?>
                         </label>
                         <?php
                             $body['settings[fph_screen_height]'] = $s->getSetting('fph_screen_height'); ?>
@@ -110,7 +110,7 @@ use Yiisoft\Html\Tag\Button;
         <!-- Client Window Size -->
                         <label for="settings[fph_window_size]">
                             <h4>
-                                <?= $translator->translate('mtd.gov.client.window.size').' (' . $translator->translate('mtd.gov.client.window.size.pixels') .')'; ?>
+                                <?= $translator->translate('mtd.gov.client.window.size') . ' (' . $translator->translate('mtd.gov.client.window.size.pixels') . ')'; ?>
                             </h4>     
                         </label>
                         <?php
@@ -121,7 +121,7 @@ use Yiisoft\Html\Tag\Button;
         <!-- Client User Id -->
                         <label for="settings[fph_gov_client_user_id]">
                             <h4>
-                                <?= $translator->translate('mtd.gov.client.user.ids').' (' . $translator->translate('mtd.gov.client.user.ids.uuid') .')'; ?>
+                                <?= $translator->translate('mtd.gov.client.user.ids') . ' (' . $translator->translate('mtd.gov.client.user.ids.uuid') . ')'; ?>
                             </h4>     
                         </label>
                         <?php
@@ -131,14 +131,14 @@ use Yiisoft\Html\Tag\Button;
                             value="<?= $body['settings[fph_gov_client_user_id]']; ?>">                
                     <?= Button::tag()
                         ->id('btn_fph_generate')
-                        ->addAttributes(['type' => 'reset', 'name' => 'btn_fph_generate'])                            
+                        ->addAttributes(['type' => 'reset', 'name' => 'btn_fph_generate'])
                         ->addAttributes([
-                            'onclick' => 'return confirm("'. $translator->translate('mtd.fph.record.alert'). '")',
+                            'onclick' => 'return confirm("' . $translator->translate('mtd.fph.record.alert') . '")',
                         ])
                         ->addClass('btn btn-success me-1')
                         ->content($translator->translate('mtd.fph.generate'))
                         ->render();
-                    ?>    
+?>    
                     </div>
                 </div>                
             </div>

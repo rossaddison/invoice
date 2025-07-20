@@ -47,7 +47,7 @@ final class SettingRepository extends Select\Repository
         private readonly EntityWriter $entityWriter,
         private readonly TranslatorInterface $translator,
         private readonly compR $compR,
-        private readonly compPR $compPR
+        private readonly compPR $compPR,
     ) {
         parent::__construct($select);
     }
@@ -104,7 +104,7 @@ final class SettingRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'setting_key', 'setting_value'])
-                ->withOrder(['setting_key' => 'asc'])
+                ->withOrder(['setting_key' => 'asc']),
         );
     }
 
@@ -117,7 +117,7 @@ final class SettingRepository extends Select\Repository
     {
         $config = $this->get_config_params();
         $params = $config->get('params');
-        return (string)$params['env'];
+        return (string) $params['env'];
     }
 
     /**
@@ -127,7 +127,7 @@ final class SettingRepository extends Select\Repository
     {
         $config = $this->get_config_params();
         $params = $config->get('params');
-        return (array)$params['server'];
+        return (array) $params['server'];
     }
 
     /**
@@ -137,7 +137,7 @@ final class SettingRepository extends Select\Repository
     {
         $config = $this->get_config_params();
         $params = $config->get('params');
-        return (array)$params['license'];
+        return (array) $params['license'];
     }
 
     /**
@@ -147,7 +147,7 @@ final class SettingRepository extends Select\Repository
     {
         $config = $this->get_config_params();
         $params = $config->get('params');
-        return (array)$params['product'];
+        return (array) $params['product'];
     }
 
     /**
@@ -178,13 +178,13 @@ final class SettingRepository extends Select\Repository
 
         // Prefer HTTP_CLIENT_IP if set (rarely used, sometimes unreliable)
         if (!empty($server['http_client_ip'])) {
-            return (string)$server['http_client_ip'];
+            return (string) $server['http_client_ip'];
         }
 
         // Prefer the first valid IP from X-Forwarded-For
         if (!empty($server['http_x_forwarded_for'])) {
             // X-Forwarded-For can contain multiple IPs, pick the first one
-            $ips = explode(',', (string)$server['http_x_forwarded_for']);
+            $ips = explode(',', (string) $server['http_x_forwarded_for']);
             $clientIp = trim(reset($ips));
             if (filter_var($clientIp, FILTER_VALIDATE_IP)) {
                 return $clientIp;
@@ -193,7 +193,7 @@ final class SettingRepository extends Select\Repository
 
         // Fallback to remote_addr
         if (!empty($server['remote_addr'])) {
-            return (string)$server['remote_addr'];
+            return (string) $server['remote_addr'];
         }
 
         return null;
@@ -231,7 +231,7 @@ final class SettingRepository extends Select\Repository
     public function getGovClientPublicPort(): int
     {
         $server = $this->getServer();
-        return (int)($server['remote_port'] ?? 0);
+        return (int) ($server['remote_port'] ?? 0);
     }
 
     /**
@@ -302,7 +302,7 @@ final class SettingRepository extends Select\Repository
     public function getGovVendorLicenseIDs(): string
     {
         $license = $this->getLicense();
-        return 'my-licensed-software=' . (string)$license['id'];
+        return 'my-licensed-software=' . (string) $license['id'];
     }
 
     /**
@@ -312,7 +312,7 @@ final class SettingRepository extends Select\Repository
     public function getGovVendorProductName(): string
     {
         $product = $this->getProduct();
-        return rawurlencode((string)$product['name']) ?: 'unknown';
+        return rawurlencode((string) $product['name']) ?: 'unknown';
     }
 
     public function getGovVendorPublicIP(): string
@@ -337,7 +337,7 @@ final class SettingRepository extends Select\Repository
     public function getGovVendorVersion(): string
     {
         $product = $this->getProduct();
-        return rawurlencode('client') . '=' . rawurlencode((string)$product['client']) . '&' . rawurlencode('server') . '=' . rawurlencode((string)$product['server']);
+        return rawurlencode('client') . '=' . rawurlencode((string) $product['client']) . '&' . rawurlencode('server') . '=' . rawurlencode((string) $product['server']);
     }
 
     /**
@@ -410,7 +410,7 @@ final class SettingRepository extends Select\Repository
      */
     public function positiveListLimit(): int
     {
-        $defaultListLimit = (int)$this->getSetting('default_list_limit');
+        $defaultListLimit = (int) $this->getSetting('default_list_limit');
         if ($defaultListLimit > 0) {
             /**
              * @psalm-var positive-int $positiveInt
@@ -589,11 +589,11 @@ final class SettingRepository extends Select\Repository
              * @var CompanyPrivate $private
              */
             foreach ($this->compPR->findAllPreloaded() as $private) {
-                if ($private->getCompany_id() == (string)$company->getId()) {
+                if ($private->getCompany_id() == (string) $company->getId()) {
                     // site's logo: take the first logo where the current date falls within the logo's start and end dates
                     if ($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')
                     && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                        $companyLogoFileNameWithSuffix = (string)$private->getLogo_filename();
+                        $companyLogoFileNameWithSuffix = (string) $private->getLogo_filename();
                         //  break;
                     }
                 }
@@ -674,7 +674,7 @@ final class SettingRepository extends Select\Repository
         $params = $config->get('params');
 
         // Currently two adminEmail and senderEmail
-        return (array)$params['mailer'];
+        return (array) $params['mailer'];
     }
 
     /**
@@ -780,10 +780,10 @@ final class SettingRepository extends Select\Repository
         $config = $this->get_config_params();
         $params = $config->get('params');
 
-        $yii_cycle_array = (array)$params['yiisoft/yii-cycle'];
-        $schema_providers_array = (array)$yii_cycle_array['schema-providers'];
-        $php_file_array = (array)$schema_providers_array[\Cycle\Schema\Provider\PhpFileSchemaProvider::class];
-        return (int)$php_file_array['mode'];
+        $yii_cycle_array = (array) $params['yiisoft/yii-cycle'];
+        $schema_providers_array = (array) $yii_cycle_array['schema-providers'];
+        $php_file_array = (array) $schema_providers_array[\Cycle\Schema\Provider\PhpFileSchemaProvider::class];
+        return (int) $php_file_array['mode'];
     }
 
     /**
@@ -1151,12 +1151,12 @@ final class SettingRepository extends Select\Repository
         $decimal_point = $this->getSetting('decimal_point');
 
         if ($currency_symbol_placement == 'before') {
-            return $currency_symbol . number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
+            return $currency_symbol . number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
         if ($currency_symbol_placement == 'afterspace') {
-            return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
+            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
         }
-        return number_format((float)$amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
+        return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
     }
 
     //show the decimal point representation character whether a comma, a dot, or something else with maximum of 2 decimal points after the point
@@ -1186,7 +1186,7 @@ final class SettingRepository extends Select\Repository
         $this->load_settings();
         $thousands_separator = $this->getSetting('thousands_separator');
         $decimal_point = $this->getSetting('decimal_point');
-        $amt = str_replace($thousands_separator, '', (string)$amount);
+        $amt = str_replace($thousands_separator, '', (string) $amount);
         return str_replace($decimal_point, '.', $amt);
     }
 
@@ -1654,7 +1654,7 @@ final class SettingRepository extends Select\Repository
         $available_drivers = [];
         $gateways = $this->active_payment_gateways();
         foreach ($gateways as $driver => $_fields) {
-            $d = strtolower((string)$driver);
+            $d = strtolower((string) $driver);
             if ($this->getSetting('gateway_' . $d . '_enabled') === '1') {
                 $available_drivers[] = $driver;
             }
@@ -2400,18 +2400,18 @@ final class SettingRepository extends Select\Repository
     {
         $pageSize = $paginator->getCurrentPageSize();
         if ($pageSize > 0) {
-            return (string)Html::tag(
+            return (string) Html::tag(
                 'b',
                 sprintf($translator->translate('showing.of') .
                       $translator->translate('max') .
-                      ' ' . (string)$max . ' ' .
+                      ' ' . (string) $max . ' ' .
                       $entity_plural .
                       $translator->translate('per.page.total') .
                       $entity_plural . ': ' .
-                      (string)$paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
-                ['class' => 'card-header bg-warning text-black']
+                      (string) $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
+                ['class' => 'card-header bg-warning text-black'],
             ) . (!empty($status_string) ?
-            (string)Html::tag('b', $status_string, ['class' => 'card-header bg-info text-black']) : '');
+            (string) Html::tag('b', $status_string, ['class' => 'card-header bg-info text-black']) : '');
         }
         return '';
     }

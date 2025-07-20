@@ -17,7 +17,7 @@ return [
             $dbManager,
             null,
             $factory,
-            new DoctrineCollectionFactory()
+            new DoctrineCollectionFactory(),
         );
     },
 ];

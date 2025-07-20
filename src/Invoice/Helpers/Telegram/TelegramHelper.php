@@ -32,14 +32,14 @@ final class TelegramHelper
 
     public function __construct(
         private readonly string $settingRepositoryTelegramToken,
-        private Logger $logger
+        private Logger $logger,
     ) {
         $this->logger = $logger;
         $this->botApi = new TelegramBotApi(
             $this->settingRepositoryTelegramToken,
             'https://api.telegram.org',
             new CurlTransport(),
-            $this->logger
+            $this->logger,
         );
     }
 
@@ -59,7 +59,7 @@ final class TelegramHelper
         ?int $maxConnections = null,
         ?array $allowUpdates = null,
         ?bool $dropPendingUpdates = null,
-        ?string $secretToken = null
+        ?string $secretToken = null,
     ): true|FailResult {
         return $this->botApi->setWebhook(
             $urlGenerator->generateAbsolute('telegram/webhook', ['_language' => 'en']),
@@ -67,7 +67,7 @@ final class TelegramHelper
             $maxConnections,
             $allowUpdates,
             $dropPendingUpdates,
-            $secretToken
+            $secretToken,
         );
     }
 
@@ -87,7 +87,7 @@ final class TelegramHelper
         ?int $offset = null,
         ?int $limit = null,
         ?int $timeout = null,
-        ?array $allowedUpdates = null
+        ?array $allowedUpdates = null,
     ): FailResult|array {
         return $this->botApi->getUpdates($offset, $limit, $timeout, $allowedUpdates);
     }

@@ -11,9 +11,7 @@ use InvalidArgumentException;
 
 class AdditionalDocumentReference implements XmlSerializable
 {
-    public function __construct(private readonly Translator $translator, private readonly string $id, private readonly ?string $documentType, private readonly ?string $documentDescription, private readonly array $attachments, private readonly bool $ubl_cr_114 = false)
-    {
-    }
+    public function __construct(private readonly Translator $translator, private readonly string $id, private readonly ?string $documentType, private readonly ?string $documentDescription, private readonly array $attachments, private readonly bool $ubl_cr_114 = false) {}
 
     /**
      * @throws InvalidArgumentException

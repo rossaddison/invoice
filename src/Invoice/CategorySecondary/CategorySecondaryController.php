@@ -37,7 +37,7 @@ final class CategorySecondaryController extends BaseController
         WebControllerService $webService,
         sR $sR,
         TranslatorInterface $translator,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->categorySecondaryService = $categorySecondaryService;
@@ -47,7 +47,7 @@ final class CategorySecondaryController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        CategoryPrimaryRepository $categoryPrimaryRepository
+        CategoryPrimaryRepository $categoryPrimaryRepository,
     ): Response {
         $categorySecondary = new CategorySecondary();
         $form = new CategorySecondaryForm($categorySecondary);
@@ -77,27 +77,29 @@ final class CategorySecondaryController extends BaseController
     public function index(
         CategorySecondaryRepository $categorySecondaryRepository,
         sR $settingRepository,
-        #[RouteArgument('page')] int $page = 1
+        #[RouteArgument('page')]
+        int $page = 1,
     ): Response {
         $categorySecondary = $categorySecondaryRepository->findAllPreloaded();
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new OffsetPaginator($categorySecondary))
             ->withPageSize($settingRepository->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
-            ->withToken(PageToken::next((string)$page));
+            ->withToken(PageToken::next((string) $page));
         $parameters = [
             'categorysecondarys' => $this->categorysecondarys($categorySecondaryRepository),
             'paginator' => $paginator,
             'alert' => $this->alert(),
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
-                ? (int)$settingRepository->getSetting('default_list_limit') : 1,
+                ? (int) $settingRepository->getSetting('default_list_limit') : 1,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
 
     public function delete(
         CategorySecondaryRepository $categorySecondaryRepository,
-        #[RouteArgument('id')] int $id
+        #[RouteArgument('id')]
+        int $id,
     ): Response {
         try {
             $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
@@ -118,7 +120,8 @@ final class CategorySecondaryController extends BaseController
         FormHydrator $formHydrator,
         CategorySecondaryRepository $categorySecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
-        #[RouteArgument('id')] int $id
+        #[RouteArgument('id')]
+        int $id,
     ): Response {
         $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
         if ($categorySecondary) {
@@ -150,7 +153,7 @@ final class CategorySecondaryController extends BaseController
     private function categorysecondary(CategorySecondaryRepository $categorySecondaryRepository, int $id): CategorySecondary|null
     {
         if ($id) {
-            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery((string)$id);
+            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery((string) $id);
         }
         return null;
     }
@@ -169,7 +172,8 @@ final class CategorySecondaryController extends BaseController
     public function view(
         CategorySecondaryRepository $categorysecondaryRepository,
         CategoryPrimaryRepository $categoryPrimaryRepository,
-        #[RouteArgument('id')] int $id
+        #[RouteArgument('id')]
+        int $id,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $categorysecondary = $this->categorysecondary($categorysecondaryRepository, $id);
         if ($categorysecondary) {

@@ -52,7 +52,7 @@ class InvItem
         private ?float $price = null,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount_amount = null,
-        #[Column(type: 'integer(2)', nullable: true, default:0)]
+        #[Column(type: 'integer(2)', nullable: true, default: 0)]
         private ?int $order = null,
         #[Column(type: 'boolean', nullable: false)]
         private ?bool $is_recurring = false,
@@ -62,15 +62,15 @@ class InvItem
         private ?int $inv_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $so_item_id = null,
-        #[Column(type: 'integer(11)', nullable: false, default:0)]
+        #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $tax_rate_id = null,
-        #[Column(type: 'integer(11)', nullable: true, default:null)]
+        #[Column(type: 'integer(11)', nullable: true, default: null)]
         private ?int $product_id = null,
-        #[Column(type: 'integer(11)', nullable: true, default:null)]
+        #[Column(type: 'integer(11)', nullable: true, default: null)]
         private ?int $task_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_unit_id = null,
-        #[Column(type: 'integer(2)', nullable: true, default:0)]
+        #[Column(type: 'integer(2)', nullable: true, default: 0)]
         private ?int $belongs_to_vat_invoice = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $delivery_id = null,
@@ -152,7 +152,7 @@ class InvItem
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void
@@ -162,7 +162,7 @@ class InvItem
 
     public function getSo_item_id(): string
     {
-        return (string)$this->so_item_id;
+        return (string) $this->so_item_id;
     }
 
     public function setSo_item_id(int $so_item_id): void
@@ -172,7 +172,7 @@ class InvItem
 
     public function getTax_rate_id(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setTax_rate_id(int $tax_rate_id): void
@@ -193,7 +193,7 @@ class InvItem
 
     public function getProduct_id(): string|null
     {
-        return null !== $this->product_id ? (string)$this->product_id : null;
+        return null !== $this->product_id ? (string) $this->product_id : null;
     }
 
     public function setProduct_id(int $product_id): void
@@ -203,7 +203,7 @@ class InvItem
 
     public function getTask_id(): string|null
     {
-        return null !== $this->task_id ? (string)$this->task_id : null;
+        return null !== $this->task_id ? (string) $this->task_id : null;
     }
 
     public function setTask_id(int $task_id): void
@@ -306,7 +306,7 @@ class InvItem
 
     public function getProduct_unit_id(): string
     {
-        return (string)$this->product_unit_id;
+        return (string) $this->product_unit_id;
     }
 
     public function setProduct_unit_id(int $product_unit_id): void
@@ -321,12 +321,12 @@ class InvItem
 
     public function getBelongs_to_vat_invoice(): string
     {
-        return (string)$this->belongs_to_vat_invoice;
+        return (string) $this->belongs_to_vat_invoice;
     }
 
     public function getDelivery_id(): string
     {
-        return (string)$this->delivery_id;
+        return (string) $this->delivery_id;
     }
 
     public function setDelivery_id(int $delivery_id): void

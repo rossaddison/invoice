@@ -15,7 +15,7 @@ class CategoryPrimary
 
     public function __construct(
         #[Column(type: 'text', nullable: true)]
-        public ?string $name = ''
+        public ?string $name = '',
     ) {
         $this->name = $name;
     }

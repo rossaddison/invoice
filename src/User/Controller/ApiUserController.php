@@ -18,9 +18,7 @@ use Yiisoft\Router\CurrentRoute;
  */
 final readonly class ApiUserController
 {
-    public function __construct(private DataResponseFactoryInterface $responseFactory)
-    {
-    }
+    public function __construct(private DataResponseFactoryInterface $responseFactory) {}
 
     /**
      * @OA\Get (
@@ -73,7 +71,7 @@ final readonly class ApiUserController
             return $this->responseFactory->createResponse(
                 ['login' => $user->getLogin(), 'created_at' => $user
                     ->getCreatedAt()
-                    ->format('H:i:s d.m.Y'), ]
+                    ->format('H:i:s d.m.Y'), ],
             );
         }
         return $this->responseFactory->createResponse('Page not found', 404);

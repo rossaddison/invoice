@@ -13,7 +13,7 @@ use Yiisoft\Bootstrap5\AlertVariant;
 $alert = Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::WARNING)
-        ->body((string)$onetimepassworderror['onetimePasswordError'], true)
+        ->body((string) $onetimepassworderror['onetimePasswordError'], true)
         ->dismissable(true)
         ->render();
 echo $alert;

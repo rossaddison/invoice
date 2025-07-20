@@ -19,8 +19,8 @@ final class PaymentCustomForm extends FormModel
 
     public function __construct(PaymentCustom $paymentCustom)
     {
-        $this->payment_id = (int)$paymentCustom->getPayment_id();
-        $this->custom_field_id = (int)$paymentCustom->getCustom_field_id();
+        $this->payment_id = (int) $paymentCustom->getPayment_id();
+        $this->custom_field_id = (int) $paymentCustom->getCustom_field_id();
         $this->value = $paymentCustom->getValue();
     }
 

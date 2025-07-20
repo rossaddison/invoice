@@ -52,7 +52,7 @@ foreach ($clients as $client) {
     $clientId = $client->getClient_id();
     // Only add to the dropdown if the following conditions are satisfied
     if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0) && (null !== $clientId)) {
-        $optionsDataClient[$clientId] = $clientName . ' '. $clientSurname;
+        $optionsDataClient[$clientId] = $clientName . ' ' . $clientSurname;
     }
 }
 echo Field::select($form, 'client_id')
@@ -61,7 +61,7 @@ echo Field::select($form, 'client_id')
     'id' => 'client_id',
     'class' => 'form-control',
     'readonly' => 'readonly',
-    'disabled' => 'disabled'
+    'disabled' => 'disabled',
 ])
 ->optionsData($optionsDataClient)
 ?>
@@ -75,7 +75,7 @@ echo Field::select($form, 'client_id')
         'class' => 'form-control',
         'placeholder' => $translator->translate('project.name'),
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
 ?>
                 <?= Html::closeTag('div'); ?>

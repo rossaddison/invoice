@@ -182,7 +182,7 @@ final class InvController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->date_helper = new DateHelper($sR);
@@ -247,7 +247,7 @@ final class InvController extends BaseController
                 '//invoice/inv/partial_inv_archive',
                 [
                     'invoices_archive' => $invoice_archive,
-                ]
+                ],
             ),
             'alert' => $this->alert(),
             'body' => $request->getParsedBody(),
@@ -270,7 +270,7 @@ final class InvController extends BaseController
         int $client_id,
         string $url_key,
         string $fileName,
-        UPR $uPR
+        UPR $uPR,
     ): bool {
         $file_exists = file_exists($target);
         // The file does not exist yet in the target path but it exists in the tmp folder on the server
@@ -315,7 +315,7 @@ final class InvController extends BaseController
                 'message' => $this->translator->translate('path') .
                              $this->translator->translate('is.not.writable'),
                 'url' => 'inv/view', 'id' => $inv_id,
-            ]
+            ],
         );
     }
 
@@ -330,7 +330,7 @@ final class InvController extends BaseController
             [
                 'heading' => '',
                 'message' => $this->translator->translate('record.successfully.created'),
-                'url' => 'inv/view', 'id' => $inv_id]
+                'url' => 'inv/view', 'id' => $inv_id],
         );
     }
 
@@ -346,7 +346,7 @@ final class InvController extends BaseController
                 'heading' => $this->translator->translate('errors'),
                 'message' => $this->translator->translate('no.file.uploaded'),
                 'url' => 'inv/view', 'id' => $inv_id,
-            ]
+            ],
         );
     }
 
@@ -364,7 +364,7 @@ final class InvController extends BaseController
             if (!is_writable($targetPath)) {
                 return $this->factory->createResponse($this->attachment_not_writable($inv_id));
             }
-            $invoice = $iR->repoInvLoadedquery((string)$inv_id) ?: null;
+            $invoice = $iR->repoInvLoadedquery((string) $inv_id) ?: null;
             if ($invoice instanceof Inv) {
                 $client_id = $invoice->getClient()?->getClient_id();
                 if (null !== $client_id) {
@@ -450,7 +450,8 @@ final class InvController extends BaseController
      */
     public function add(
         Request $request,
-        #[RouteArgument('origin')] string $origin,
+        #[RouteArgument('origin')]
+        string $origin,
         FormHydrator $formHydrator,
         CR $clientRepository,
         GR $gR,
@@ -458,7 +459,7 @@ final class InvController extends BaseController
         TRR $trR,
         UR $uR,
         UCR $ucR,
-        UIR $uiR
+        UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv = new Inv();
         $errors = [];
@@ -470,7 +471,7 @@ final class InvController extends BaseController
             $gR,
             $this->sR,
             $ucR,
-            $form
+            $form,
         );
 
         $layoutWithForm = $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors);
@@ -609,7 +610,7 @@ final class InvController extends BaseController
         $bootstrap5ModalPdf = new Bootstrap5ModalPdf(
             $this->translator,
             $this->viewRenderer,
-            'inv'
+            'inv',
         );
         // show the pdf inside a modal when engaging with a view
         return $bootstrap5ModalPdf->renderPartialLayoutWithPdfAsString();
@@ -638,7 +639,7 @@ final class InvController extends BaseController
         TRR $trR,
         UR $uR,
         UCR $ucR,
-        UIR $uiR
+        UIR $uiR,
     ): Response {
         $inv = new Inv();
         $form = new InvForm($inv);
@@ -709,7 +710,7 @@ final class InvController extends BaseController
                     // In the event of the database being manually edited (highly unlikely) present this warning anyway
                     $message = '';
                     if (!empty($client_fullname)) {
-                        $message = $this->translator->translate('user.inv.more.than.one.assigned') . ' ' . (string)$client_fullname;
+                        $message = $this->translator->translate('user.inv.more.than.one.assigned') . ' ' . (string) $client_fullname;
                         $this->flashMessage('warning', $message);
                     }
                     return $this->webService->getRedirectResponse('inv/index');
@@ -780,7 +781,7 @@ final class InvController extends BaseController
                             'flash_message' => $this->translator->translate('credit.note.creation.successful'),
                         ];
                         // Record the new Credit Note's $saved_inv_id in the basis invoice
-                        $basis_inv->setCreditinvoice_parent_id((int)$saved_inv_id);
+                        $basis_inv->setCreditinvoice_parent_id((int) $saved_inv_id);
                         $iR->save($basis_inv);
                         //return response to inv.js to reload page at location
                         return $this->factory->createResponse(Json::encode($parameters));
@@ -852,7 +853,8 @@ final class InvController extends BaseController
      * @return Response
      */
     public function delete(
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         IR $invRepo,
         ACIR $aciR,
         ACIIR $aciiR,
@@ -866,7 +868,7 @@ final class InvController extends BaseController
         IAR $iaR,
         InvAmountService $iaS,
         paR $paR,
-        PAS $paS
+        PAS $paS,
     ): Response {
         try {
             $inv = $this->inv($id, $invRepo);
@@ -920,7 +922,7 @@ final class InvController extends BaseController
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('items'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+            ['heading' => $this->translator->translate('items'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
         ));
     }
 
@@ -940,7 +942,7 @@ final class InvController extends BaseController
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('tax.rate'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id]
+            ['heading' => $this->translator->translate('tax.rate'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
         ));
     }
 
@@ -964,7 +966,7 @@ final class InvController extends BaseController
     public function download_file(#[RouteArgument('upload_id')] int $upload_id, UPR $upR)
     {
         if ($upload_id) {
-            $upload = $upR->repoUploadquery((string)$upload_id);
+            $upload = $upR->repoUploadquery((string) $upload_id);
             if (null !== $upload) {
                 $aliases = $this->sR->get_customer_files_folder_aliases();
                 $targetPath = $aliases->get('@customer_files');
@@ -988,7 +990,7 @@ final class InvController extends BaseController
                         header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                         header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                         header('Content-Type: ' . $ctype);
-                        header('Content-Length: ' . (string)$file_size);
+                        header('Content-Length: ' . (string) $file_size);
                         echo file_get_contents($target_path_with_filename, true);
                     } // file size <> false
                     exit;
@@ -1077,7 +1079,7 @@ final class InvController extends BaseController
         IR $invRepo,
         paR $paR,
         PMR $pmRepo,
-        UCR $ucR
+        UCR $ucR,
     ): array {
         $contracts = $contractRepo->repoClient($inv->getClient_id());
         $optionsDataContract = [];
@@ -1117,7 +1119,7 @@ final class InvController extends BaseController
             }
         }
 
-        $dLocs = $delRepo->repoClientquery((string)$client_id);
+        $dLocs = $delRepo->repoClientquery((string) $client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc
@@ -1157,7 +1159,7 @@ final class InvController extends BaseController
         /**
          * @var PostalAddress $postalAddress
          */
-        foreach ($paR->repoClientAll((string)$client_id) as $postalAddress) {
+        foreach ($paR->repoClientAll((string) $client_id) as $postalAddress) {
             $optionsDataPostalAddress[$postalAddress->getId()] = $postalAddress->getStreet_name() . ', ' . $postalAddress->getAdditional_street_name() . ', ' . $postalAddress->getBuilding_number() . ', ' . $postalAddress->getCity_name();
         }
 
@@ -1167,7 +1169,7 @@ final class InvController extends BaseController
          * @var array $status
          */
         foreach ($invRepo->getStatuses($this->translator) as $key => $status) {
-            $optionsDataInvoiceStatus[$key] = (string)$status['label'];
+            $optionsDataInvoiceStatus[$key] = (string) $status['label'];
         }
         return $optionsData = [
             'client' => $clientRepo->optionsData($ucR),
@@ -1203,7 +1205,8 @@ final class InvController extends BaseController
      */
     public function edit(
         Request $request,
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         FormHydrator $formHydrator,
         IR $invRepo,
         CR $clientRepo,
@@ -1219,7 +1222,7 @@ final class InvController extends BaseController
         ICR $icR,
         paR $paR,
         UCR $ucR,
-        UIR $uiR
+        UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
@@ -1258,7 +1261,7 @@ final class InvController extends BaseController
                 'optionsData' => $this->editOptionsData(
                     $peppol_array,
                     $inv,
-                    (int)$client_id,
+                    (int) $client_id,
                     $clientRepo,
                     $contractRepo,
                     $deliveryRepo,
@@ -1267,7 +1270,7 @@ final class InvController extends BaseController
                     $invRepo,
                     $paR,
                     $pmRepo,
-                    $ucR
+                    $ucR,
                 ),
                 'paR' => $paR,
                 'postalAddressCount' => $paR->repoClientCount($inv->getClient_id()),
@@ -1285,7 +1288,7 @@ final class InvController extends BaseController
                             [
                                 'heading' => $this->translator->translate('errors'),
                                 'message' => $this->translator->translate('error') . $this->translator->translate('balance.does.not.equal.zero'),
-                                'url' => 'inv/view', 'id' => $inv_id]
+                                'url' => 'inv/view', 'id' => $inv_id],
                         ));
                     }
                     $returned_form = $this->edit_save_form_fields($body, $id, $formHydrator, $invRepo, $groupRepo, $userRepo, $ucR, $uiR);
@@ -1422,7 +1425,8 @@ final class InvController extends BaseController
      */
     public function email_stage_0(
         ViewRenderer $head,
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         CCR $ccR,
         CFR $cfR,
         CVR $cvR,
@@ -1432,7 +1436,7 @@ final class InvController extends BaseController
         PCR $pcR,
         SOCR $socR,
         QCR $qcR,
-        UIR $uiR
+        UIR $uiR,
     ): Response {
         $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
@@ -1465,12 +1469,12 @@ final class InvController extends BaseController
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
                     $this->translator->translate('default.email.template') . '=>' .
-                                        $this->translator->translate('not.set')
+                                        $this->translator->translate('not.set'),
                 ) : '';
                 empty($template_helper->select_pdf_invoice_template($invoice)) ? $this->flashMessage(
                     'info',
                     $this->translator->translate('default.pdf.template') . '=>' .
-                                        $this->translator->translate('not.set')
+                                        $this->translator->translate('not.set'),
                 ) : '';
                 $parameters = [
                     'head' => $head,
@@ -1601,7 +1605,7 @@ final class InvController extends BaseController
         SOR $soR,
         UIR $uiR,
         SumexR $sumexR,
-        ViewRenderer $viewrenderer
+        ViewRenderer $viewrenderer,
     ): bool {
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $mailer_helper = new MailerHelper(
@@ -1616,7 +1620,7 @@ final class InvController extends BaseController
             $pcR,
             $socR,
             $cfR,
-            $cvR
+            $cvR,
         );
         if (null !== $inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
@@ -1655,7 +1659,7 @@ final class InvController extends BaseController
                         $mail_bcc,
                         $attachFiles,
                         $pdf_template_target_path,
-                        $uiR
+                        $uiR,
                     );
                 } //is_string
             } //inv
@@ -1693,7 +1697,8 @@ final class InvController extends BaseController
      */
     public function email_stage_2(
         Request $request,
-        #[RouteArgument('id')] int $inv_id,
+        #[RouteArgument('id')]
+        int $inv_id,
         CR $cR,
         CCR $ccR,
         CFR $cfR,
@@ -1713,7 +1718,7 @@ final class InvController extends BaseController
         SOR $soR,
         UIR $uiR,
         SumexR $sumexR,
-        ISLR $islR
+        ISLR $islR,
     ): Response {
         if ($inv_id) {
             $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
@@ -1731,7 +1736,7 @@ final class InvController extends BaseController
                 if (empty($to)) {
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
-                        ['heading' => '', 'message' => $this->translator->translate('email.to.address.missing'), 'url' => 'inv/view', 'id' => $inv_id]
+                        ['heading' => '', 'message' => $this->translator->translate('email.to.address.missing'), 'url' => 'inv/view', 'id' => $inv_id],
                     ));
                 }
                 /**
@@ -1745,7 +1750,7 @@ final class InvController extends BaseController
                 if (empty($from[0])) {
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
-                        ['heading' => '', 'message' => $this->translator->translate('email.to.address.missing'), 'url' => 'inv/view', 'id' => $inv_id]
+                        ['heading' => '', 'message' => $this->translator->translate('email.to.address.missing'), 'url' => 'inv/view', 'id' => $inv_id],
                     ));
                 }
                 /** @var array $body['MailerInvForm'] */
@@ -1760,11 +1765,11 @@ final class InvController extends BaseController
 
                 $attachFiles = $request->getUploadedFiles();
 
-                $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
+                $this->generate_inv_number_if_applicable((string) $inv_id, $iR, $this->sR, $gR);
 
                 // Custom fields are automatically included on the invoice
                 if ($this->email_stage_1(
-                    (string)$inv_id,
+                    (string) $inv_id,
                     $from,
                     $to,
                     $subject,
@@ -1790,9 +1795,9 @@ final class InvController extends BaseController
                     $soR,
                     $uiR,
                     $sumexR,
-                    $this->viewRenderer
+                    $this->viewRenderer,
                 )) {
-                    $invoice = $iR->repoInvUnloadedquery((string)$inv_id);
+                    $invoice = $iR->repoInvUnloadedquery((string) $inv_id);
                     if ($invoice) {
                         //draft->sent->view->paid
                         //set the invoice to sent ie. 2
@@ -1811,7 +1816,7 @@ final class InvController extends BaseController
                         ['heading' => '',
                             'message' => $this->translator->translate('email.successfully.sent'),
                             'url' => 'inv/view',
-                            'id' => $inv_id]
+                            'id' => $inv_id],
                     ));
                 }
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
@@ -1820,20 +1825,20 @@ final class InvController extends BaseController
                     ['heading' => '',
                         'message' => $this->translator->translate('email.not.sent.successfully'),
                         'url' => 'inv/view',
-                        'id' => $inv_id]
+                        'id' => $inv_id],
                 ));
                 //$this->email_stage_1
             } //is_array(body)
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/inv_message',
                 ['heading' => '', 'message' => $this->translator->translate('email.not.sent.successfully'),
-                    'url' => 'inv/view', 'id' => $inv_id]
+                    'url' => 'inv/view', 'id' => $inv_id],
             ));
         }
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => '', 'message' => $this->translator->translate('email.not.sent'),
-                'url' => 'inv/view', 'id' => $inv_id]
+                'url' => 'inv/view', 'id' => $inv_id],
         ));
     }
 
@@ -1844,8 +1849,8 @@ final class InvController extends BaseController
     private function emailedThereforeAddLog(Inv $invoice, ISLR $islR): void
     {
         $invSentLog = new InvSentLog();
-        $invSentLog->setClient_id((int)$invoice->getClient_id());
-        $invSentLog->setInv_id((int)$invoice->getId());
+        $invSentLog->setClient_id((int) $invoice->getClient_id());
+        $invSentLog->setInv_id((int) $invoice->getId());
         $invSentLog->setDate_sent(new \DateTimeImmutable('now'));
         $islR->save($invSentLog);
     }
@@ -1872,12 +1877,18 @@ final class InvController extends BaseController
         IR $iR,
         UCR $ucR,
         UIR $uiR,
-        #[RouteArgument('page')] string $page = '1',
-        #[RouteArgument('status')] string $status = '0',
-        #[Query('page')] string $queryPage = null,
-        #[Query('sort')] string $querySort = null,
-        #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
-        #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null
+        #[RouteArgument('page')]
+        string $page = '1',
+        #[RouteArgument('status')]
+        string $status = '0',
+        #[Query('page')]
+        string $queryPage = null,
+        #[Query('sort')]
+        string $querySort = null,
+        #[Query('filterInvNumber')]
+        string $queryFilterInvNumber = null,
+        #[Query('filterInvAmountTotal')]
+        string $queryFilterInvAmountTotal = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
@@ -1911,13 +1922,13 @@ final class InvController extends BaseController
                     }
                     if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
                        (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
-                        $invs = $iR->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float)$queryFilterInvAmountTotal);
+                        $invs = $iR->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);
                     }
                     $inv_statuses = $iR->getStatuses($this->translator);
                     $label = $iR->getSpecificStatusArrayLabel($status);
                     $parameters = [
                         'alert' => $this->alert(),
-                        'decimalPlaces' => (int)$this->sR->getSetting('tax_rate_decimal_places'),
+                        'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
                         'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberGuestFilter($preFilterInvs),
                         'iaR' => $iaR,
                         'iR' => $iR,
@@ -1933,7 +1944,7 @@ final class InvController extends BaseController
                         // numbered tiles between the arrrows
                         'maxNavLinkCount' => 10,
                         'invStatuses' => $inv_statuses,
-                        'page' => (int)$page > 0 ? (int)$page : 1,
+                        'page' => (int) $page > 0 ? (int) $page : 1,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
                         'sortOrder' => $querySort ?? '',
                         'sortString' => $sortString,
@@ -1990,7 +2001,7 @@ final class InvController extends BaseController
                     $itrR,
                     $uiR,
                     $sumexR,
-                    $this->viewRenderer
+                    $this->viewRenderer,
                 );
                 return $this->factory->createResponse('<pre>' . Html::encode($html) . '</pre>');
             } // $inv
@@ -2033,16 +2044,26 @@ final class InvController extends BaseController
         SOR $soR,
         DLR $dlR,
         UCR $ucR,
-        #[RouteArgument('_language')] string $_language,
-        #[RouteArgument('page')] string $page = '1',
-        #[RouteArgument('status')] string $status = '0',
-        #[Query('page')] string $queryPage = null,
-        #[Query('sort')] string $querySort = null,
-        #[Query('filterInvNumber')] string $queryFilterInvNumber = null,
-        #[Query('filterClient')] string $queryFilterClient = null,
-        #[Query('filterInvAmountTotal')] string $queryFilterInvAmountTotal = null,
-        #[Query('filterClientGroup')] string $queryFilterClientGroup = null,
-        #[Query('filterDateCreatedYearMonth')] string $queryFilterDateCreatedYearMonth = null
+        #[RouteArgument('_language')]
+        string $_language,
+        #[RouteArgument('page')]
+        string $page = '1',
+        #[RouteArgument('status')]
+        string $status = '0',
+        #[Query('page')]
+        string $queryPage = null,
+        #[Query('sort')]
+        string $querySort = null,
+        #[Query('filterInvNumber')]
+        string $queryFilterInvNumber = null,
+        #[Query('filterClient')]
+        string $queryFilterClient = null,
+        #[Query('filterInvAmountTotal')]
+        string $queryFilterInvAmountTotal = null,
+        #[Query('filterClientGroup')]
+        string $queryFilterClientGroup = null,
+        #[Query('filterDateCreatedYearMonth')]
+        string $queryFilterDateCreatedYearMonth = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
@@ -2056,7 +2077,7 @@ final class InvController extends BaseController
             $groupRepo,
             $this->sR,
             $ucR,
-            $invForm
+            $invForm,
         );
         // If the language dropdown changes
         $this->session->set('_language', $_language);
@@ -2077,7 +2098,7 @@ final class InvController extends BaseController
             }
             if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
                (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
-                $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float)$queryFilterInvAmountTotal);
+                $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);
             }
             if (isset($queryFilterClient) && !empty($queryFilterClient)) {
                 $invs = $invRepo->filterClient($queryFilterClient);
@@ -2096,9 +2117,9 @@ final class InvController extends BaseController
             $parameters = [
                 'alert' => $this->alert(),
                 'clientCount' => $clientRepo->count(),
-                'decimalPlaces' => (int)$this->sR->getSetting('tax_rate_decimal_places'),
+                'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
                 'defaultInvoiceGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_invoice_group')))
                                             ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName
                                                                                                : $this->sR->getSetting('i.not_set'))
@@ -2112,7 +2133,7 @@ final class InvController extends BaseController
                 'invs' => $invs,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->getSetting('default_list_limit'),
-                'page' => (int)$page > 0 ? (int)$page : 1,
+                'page' => (int) $page > 0 ? (int) $page : 1,
                 'status' => $status,
                 'qR' => $qR,
                 'dlR' => $dlR,
@@ -2167,7 +2188,7 @@ final class InvController extends BaseController
      */
     private function invs_status_guest(IR $iR, mixed $status, array $user_clients): \Yiisoft\Data\Reader\SortableDataInterface
     {
-        return $iR->repoGuest_Clients_Post_Draft((int)$status, $user_clients);
+        return $iR->repoGuest_Clients_Post_Draft((int) $status, $user_clients);
     }
 
     // Called from ..src\Invoice\Asset\rebuild\js\inv.js inv_to_pdf_confirm_with_custom_fields
@@ -2226,12 +2247,12 @@ final class InvController extends BaseController
         if ($this->sR->getSetting('pdf_archive_inv') == '1') {
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/pdf_close',
-                ['heading' => '', 'message' => $this->translator->translate('pdf.archived.yes')]
+                ['heading' => '', 'message' => $this->translator->translate('pdf.archived.yes')],
             ));
         }
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/pdf_close',
-            ['heading' => '', 'message' => $this->translator->translate('pdf.archived.no')]
+            ['heading' => '', 'message' => $this->translator->translate('pdf.archived.no')],
         ));
     }
 
@@ -2256,20 +2277,20 @@ final class InvController extends BaseController
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
-                $inv_custom_values = $this->inv_custom_values((string)$inv_id, $icR);
+                $inv_custom_values = $this->inv_custom_values((string) $inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
                 $pdfhelper = new PdfHelper($this->sR, $this->session);
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
                 if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                    $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
-                    $this->sR->invoice_mark_sent((string)$inv_id, $iR);
+                    $this->generate_inv_number_if_applicable((string) $inv_id, $iR, $this->sR, $gR);
+                    $this->sR->invoice_mark_sent((string) $inv_id, $iR);
                 }
-                $inv = $iR->repoInvUnloadedquery((string)$inv_id);
+                $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf((string)$inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 } //inv
             } //$inv_amount
         } //$inv_id
@@ -2296,20 +2317,20 @@ final class InvController extends BaseController
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
-                $inv_custom_values = $this->inv_custom_values((string)$inv_id, $icR);
+                $inv_custom_values = $this->inv_custom_values((string) $inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
                 $pdfhelper = new PdfHelper($this->sR, $this->session);
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
                 if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                    $this->generate_inv_number_if_applicable((string)$inv_id, $iR, $this->sR, $gR);
-                    $this->sR->invoice_mark_sent((string)$inv_id, $iR);
+                    $this->generate_inv_number_if_applicable((string) $inv_id, $iR, $this->sR, $gR);
+                    $this->sR->invoice_mark_sent((string) $inv_id, $iR);
                 }
-                $inv = $iR->repoInvUnloadedquery((string)$inv_id);
+                $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf((string)$inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 } //inv
             } //inv_amount
         } // inv_id
@@ -2386,7 +2407,7 @@ final class InvController extends BaseController
                                     header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                                     header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                                     header('Content-Type: ' . $ctype);
-                                    header('Content-Length: ' . (string)$file_size);
+                                    header('Content-Length: ' . (string) $file_size);
                                     echo file_get_contents($temp_aliase, true);
                                 }
                                 exit;
@@ -2469,7 +2490,7 @@ final class InvController extends BaseController
                                     header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                                     header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                                     header('Content-Type: ' . $ctype);
-                                    header('Content-Length: ' . (string)$file_size);
+                                    header('Content-Length: ' . (string) $file_size);
                                     echo file_get_contents($temp_aliase, true);
                                 }
                                 exit;
@@ -2509,7 +2530,7 @@ final class InvController extends BaseController
         ACIR $aciR,
         PCR $pcR,
         PYMR $pymR,
-        IR $iR
+        IR $iR,
     ): Response {
         /** @var InvSentLog $isl */ foreach ($islR->findAllPreloaded() as $isl) {
             $islR->delete($isl);
@@ -2619,7 +2640,7 @@ final class InvController extends BaseController
     private function inv(int $id, IR $invRepo, bool $unloaded = false): Inv|null
     {
         if ($id) {
-            $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string)$id) : $invRepo->repoInvLoadedquery((string)$id));
+            $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string) $id) : $invRepo->repoInvLoadedquery((string) $id));
             if (null !== $inv) {
                 return $inv;
             }
@@ -2656,7 +2677,7 @@ final class InvController extends BaseController
                  * @var string $val
                  */
                 foreach ($inv_custom_fields as $key => $val) {
-                    $custom_field_form_values['custom[' . (string)$key . ']'] = $val;
+                    $custom_field_form_values['custom[' . (string) $key . ']'] = $val;
                 }
             }
             return $custom_field_form_values;
@@ -2672,7 +2693,7 @@ final class InvController extends BaseController
     private function inv_item(int $id, IIR $invitemRepository): InvItem|null
     {
         if ($id) {
-            $invitem = $invitemRepository->repoInvItemquery((string)$id) ?: null;
+            $invitem = $invitemRepository->repoInvItemquery((string) $id) ?: null;
             if ($invitem === null) {
                 return null;
             }
@@ -2742,7 +2763,7 @@ final class InvController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-        UNR $unR
+        UNR $unR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $data_inv_js = $request->getQueryParams();
         $inv_id = (string) $data_inv_js['inv_id'];
@@ -2779,7 +2800,7 @@ final class InvController extends BaseController
                         $this->inv_to_inv_inv_items($inv_id, $copy_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR, $formHydrator, $unR);
                         $this->inv_to_inv_inv_tax_rates($inv_id, $copy_id, $itrR, $formHydrator);
                         $this->inv_to_inv_inv_custom($inv_id, $copy_id, $icR, $formHydrator);
-                        $this->inv_to_inv_inv_amount((int)$inv_id, (int)$copy_id, $iaR);
+                        $this->inv_to_inv_inv_amount((int) $inv_id, (int) $copy_id, $iaR);
                         $iR->save($copy);
                         $parameters = ['success' => 1];
                         //return response to inv.js to reload page at location
@@ -2837,7 +2858,7 @@ final class InvController extends BaseController
         TRR $trR,
         ACIIR $aciiR,
         FormHydrator $formHydrator,
-        UNR $unR
+        UNR $unR,
     ): void {
         // Get all items that belong to the original invoice
         $items = $iiR->repoInvItemIdquery($inv_id);
@@ -2883,9 +2904,9 @@ final class InvController extends BaseController
             if (null !== $originalInvItemId) {
                 // Create an equivalent invoice item for the invoice item
                 $invItem = new InvItem();
-                $form = new InvItemForm($invItem, (int)$inv_id);
+                $form = new InvItemForm($invItem, (int) $inv_id);
                 if ($formHydrator->populateAndValidate($form, $copy_item)) {
-                    $productId = (int)$inv_item->getProduct_id();
+                    $productId = (int) $inv_item->getProduct_id();
                     if ($productId > 0) {
                         $newInvItemId = $this->inv_item_service->addInvItem_product($invItem, $copy_item, $copy_id, $pR, $trR, $iiaS, $iiaR, $this->sR, $unR);
                         if (null !== $newInvItemId) {
@@ -2907,12 +2928,12 @@ final class InvController extends BaseController
                                     $inv_item->getTaxRate()?->getTaxRatePercent() ?? 0.00,
                                     $iiaS,
                                     $iiaR,
-                                    $this->sR
+                                    $this->sR,
                                 );
                             }
                         }
                     }
-                    $taskId = (int)$inv_item->getTask_id();
+                    $taskId = (int) $inv_item->getTask_id();
                     if ($taskId > 0) {
                         $newInvItemId = $this->inv_item_service->addInvItem_task($invItem, $copy_item, $copy_id, $taskR, $trR, $iiaS, $iiaR, $this->sR);
                         if (null !== $newInvItemId) {
@@ -2934,14 +2955,14 @@ final class InvController extends BaseController
                                     $inv_item->getTaxRate()?->getTaxRatePercent() ?? 0.00,
                                     $iiaS,
                                     $iiaR,
-                                    $this->sR
+                                    $this->sR,
                                 );
                             }
                         }
                     }
                 } else {
                     if (!empty($errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
-                        $this->flashMessage('danger', 'You have validation errors on ' . (string)$inv_item->getId());
+                        $this->flashMessage('danger', 'You have validation errors on ' . (string) $inv_item->getId());
                     }
                 }
             } // null!==originalItemId
@@ -2981,7 +3002,7 @@ final class InvController extends BaseController
     private function invtaxrate(int $id, ITRR $invtaxrateRepository): InvTaxRate|null
     {
         if ($id) {
-            $invtaxrate = $invtaxrateRepository->repoInvTaxRatequery((string)$id);
+            $invtaxrate = $invtaxrateRepository->repoInvTaxRatequery((string) $id);
             if (null !== $invtaxrate) {
                 return $invtaxrate;
             }
@@ -3016,7 +3037,7 @@ final class InvController extends BaseController
                 if (null !== $inv->getInvAmount()->getTotal() && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatus_id(2);
                     if (strlen($inv->getNumber() ?? '') == 0) {
-                        $inv->setNumber((string)$gR->generate_number((int)$inv->getGroup_id(), true));
+                        $inv->setNumber((string) $gR->generate_number((int) $inv->getGroup_id(), true));
                     }
                     /**
                      * If the invoice has been sent either by 1. checkbox and the 'sent' button in the index or by 2. 'email' then
@@ -3114,7 +3135,7 @@ final class InvController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-        UNR $unR
+        UNR $unR,
     ): \Yiisoft\DataResponse\DataResponse {
         $data = $request->getQueryParams();
         /**
@@ -3149,7 +3170,7 @@ final class InvController extends BaseController
                         // the company will be registered for their own personal peppol stand-in-code
                         'stand_in_code' => $this->sR->getSetting('stand_in_code'),
                         // if draft invoices must get invoice numbers
-                        'number' => $this->sR->getSetting('generate_invoice_number_for_draft') === '1' ? (string)$gR->generate_number((int)$original->getGroup_id(), true) : '',
+                        'number' => $this->sR->getSetting('generate_invoice_number_for_draft') === '1' ? (string) $gR->generate_number((int) $original->getGroup_id(), true) : '',
                         'discount_amount' => (float) $original->getDiscount_amount(),
                         'discount_percent' => (float) $original->getDiscount_percent(),
                         'terms' => $original->getTerms(),
@@ -3177,7 +3198,7 @@ final class InvController extends BaseController
                             /**
                              * Note: Reset the immutable date_created outside the inv_service
                              */
-                            $copied->setDate_created((string)$data['modal_created_date']);
+                            $copied->setDate_created((string) $data['modal_created_date']);
                             $copied_id = $copied->getId();
                             $iR->save($copied);
                             // Transfer each inv_item to inv_item and the corresponding inv_item_amount to inv_item_amount for each item
@@ -3186,7 +3207,7 @@ final class InvController extends BaseController
                                 $this->inv_to_inv_inv_items($invId, $copied_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR, $formHydrator, $unR);
                                 $this->inv_to_inv_inv_tax_rates($invId, $copied_id, $itrR, $formHydrator);
                                 $this->inv_to_inv_inv_custom($invId, $copied_id, $icR, $formHydrator);
-                                $this->inv_to_inv_inv_amount((int)$invId, (int)$copied_id, $iaR);
+                                $this->inv_to_inv_inv_amount((int) $invId, (int) $copied_id, $iaR);
                                 $iR->save($copy);
                             }
                         }
@@ -3362,9 +3383,12 @@ final class InvController extends BaseController
      * @return Response
      */
     public function url_key(
-        #[RouteArgument('url_key')] string $urlKey,
-        #[RouteArgument('gateway')] string $clientChosenGateway,
-        #[RouteArgument('_language')] string $_language,
+        #[RouteArgument('url_key')]
+        string $urlKey,
+        #[RouteArgument('gateway')]
+        string $clientChosenGateway,
+        #[RouteArgument('_language')]
+        string $_language,
         CurrentUser $currentUser,
         CFR $cfR,
         IAR $iaR,
@@ -3377,7 +3401,7 @@ final class InvController extends BaseController
         UIR $uiR,
         PMR $pmR,
         SumexR $sumexR,
-        UPR $upR
+        UPR $upR,
     ): Response {
         // if the current user is a guest it will return a null value
         if ($urlKey === '' || $currentUser->isGuest()) {
@@ -3579,7 +3603,8 @@ final class InvController extends BaseController
      * @return Response
      */
     public function peppol(
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         CurrentUser $currentUser,
         cpR $cpR,
         IAR $iaR,
@@ -3597,18 +3622,18 @@ final class InvController extends BaseController
         ACIR $aciR,
         ACIIR $aciiR,
         SOIR $soiR,
-        TRR $trR
+        TRR $trR,
     ): Response {
         if ($currentUser->isGuest()) {
             return $this->webService->getNotFoundResponse();
         }
         // Load the inv's HASONE relation 'invamount'
         if ($id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery((string)$id);
+            $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->getClient_id();
                 if (null !== $client_id) {
-                    if ($this->peppol_client_fully_setup((string)$client_id, $cpR)) {
+                    if ($this->peppol_client_fully_setup((string) $client_id, $cpR)) {
                         $delivery_location = $dlR->repoDeliveryLocationquery((string) $client_id);
                         if (null !== $delivery_location) {
                             $inv_amount = $invoice->getInvAmount();
@@ -3642,7 +3667,7 @@ final class InvController extends BaseController
                                 $aciR,
                                 $aciiR,
                                 $soiR,
-                                $trR
+                                $trR,
                             );
                             if ($this->sR->getSetting('peppol_xml_stream') == '1') {
                                 $xml = $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
@@ -3677,7 +3702,8 @@ final class InvController extends BaseController
      * @return Response
      */
     public function peppol_stream_toggle(
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         CurrentUser $currentUser,
     ): Response {
         if ($currentUser->isGuest()) {
@@ -3725,7 +3751,8 @@ final class InvController extends BaseController
      * @return Response
      */
     public function storecove(
-        #[RouteArgument('id')] int $id,
+        #[RouteArgument('id')]
+        int $id,
         CurrentUser $currentUser,
         cpR $cpR,
         IIAR $iiaR,
@@ -3742,14 +3769,14 @@ final class InvController extends BaseController
         ACIR $aciR,
         ACIIR $aciiR,
         SOIR $soiR,
-        TRR $trR
+        TRR $trR,
     ): Response {
         if ($currentUser->isGuest()) {
             return $this->webService->getNotFoundResponse();
         }
         // Load the inv's HASONE relation 'invamount'
         if ($id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery((string)$id);
+            $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->getClient_id();
                 if (null !== $client_id) {
@@ -3769,7 +3796,7 @@ final class InvController extends BaseController
                             $this->sR->getSetting('currency_from_to'),
                             // one of 'to currency' converts to this of 'from currency':
                             $this->sR->getSetting('currency_to_from'),
-                            $this->crypt
+                            $this->crypt,
                         );
                         $storecove_array = $storecovehelper->maximum_pre_json_php_object_for_an_invoice(
                             $soR,
@@ -3787,12 +3814,12 @@ final class InvController extends BaseController
                             $aciR,
                             $aciiR,
                             $soiR,
-                            $trR
+                            $trR,
                         );
                         echo Json::encode(
                             $storecove_array,
                             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
-                            512
+                            512,
                         );
                     }
                 }
@@ -3830,7 +3857,7 @@ final class InvController extends BaseController
                 header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                 header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                 header('Content-Type: ' . $ctype);
-                header('Content-Length: ' . (string)$file_size);
+                header('Content-Length: ' . (string) $file_size);
                 return file_get_contents($uploads_temp_peppol_absolute_path_dot_xml, true);
             }
         }
@@ -3874,8 +3901,10 @@ final class InvController extends BaseController
      */
     public function view(
         ViewRenderer $head,
-        #[RouteArgument('id')] int $id,
-        #[RouteArgument('_language')] string $_language,
+        #[RouteArgument('id')]
+        int $id,
+        #[RouteArgument('_language')]
+        string $_language,
         CFR $cfR,
         CVR $cvR,
         PR $pR,
@@ -3904,7 +3933,7 @@ final class InvController extends BaseController
         UPR $upR,
         SOR $soR,
         SumexR $sumexR,
-        DLR $dlR
+        DLR $dlR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv = $this->inv($id, $iR, false);
         $enabled_gateways = $this->sR->payment_gateways_enabled_DriverList();
@@ -3919,7 +3948,7 @@ final class InvController extends BaseController
             }
             $invoice = $inv->getId();
             $invAllowanceCharge = new InvAllowanceCharge();
-            $invAllowanceChargeForm = new InvAllowanceChargeForm($invAllowanceCharge, (int)$invoice);
+            $invAllowanceChargeForm = new InvAllowanceChargeForm($invAllowanceCharge, (int) $invoice);
             $sumex = $sumexR->repoSumexInvoicequery((string) $invoice);
             $is_recurring = false;
             $read_only = $inv->getIs_read_only();
@@ -3935,7 +3964,7 @@ final class InvController extends BaseController
                 $client_id = $inv->getClient_id();
                 $delivery_location_id = $inv->getDelivery_location_id();
                 $bootstrap5ModalTranslatorMessageWithoutAction = new Bootstrap5ModalTranslatorMessageWithoutAction(
-                    $this->viewRenderer
+                    $this->viewRenderer,
                 );
                 $parameters = [
                     'aciR' => $aciR,
@@ -3973,9 +4002,9 @@ final class InvController extends BaseController
                         'actionName' => 'invitem/add_product',
                         'actionArguments' => ['_language' => $_language],
                         'errors' => [],
-                        'form' => new InvItemForm(new InvItem(), (int)$this->session->get('inv_id')),
-                        'inv' => $iR->repoInvLoadedquery((string)$invoice),
-                        'isRecurring' => ($irR->repoCount((string)$invoice) > 0) ? true : false,
+                        'form' => new InvItemForm(new InvItem(), (int) $this->session->get('inv_id')),
+                        'inv' => $iR->repoInvLoadedquery((string) $invoice),
+                        'isRecurring' => ($irR->repoCount((string) $invoice) > 0) ? true : false,
                         'inv_id' => $this->session->get('inv_id'),
                         'invItemAllowancesCharges' => $aciiR->repoACIquery((string) $this->session->get('inv_id')),
                         'invItemAllowancesChargesCount' => $aciiR->repoInvcount((string) $this->session->get('inv_id')),
@@ -3988,7 +4017,7 @@ final class InvController extends BaseController
                         'actionName' => 'invitem/add_task',
                         'actionArguments' => ['_language' => $_language],
                         'errors' => [],
-                        'form' => new InvItemForm(new InvItem(), (int)$this->session->get('inv_id')),
+                        'form' => new InvItemForm(new InvItem(), (int) $this->session->get('inv_id')),
                         'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
                         'isRecurring' => $is_recurring,
                         'inv_id' => (string) $this->session->get('inv_id'),
@@ -4010,7 +4039,7 @@ final class InvController extends BaseController
                             'partial_product_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/product/_partial_product_table_modal', [
                                 'products' => $pR->findAllPreloaded(),
                             ]),
-                        ]
+                        ],
                     ),
                     'modal_choose_tasks' => $this->viewRenderer->renderPartialAsString(
                         '//invoice/task/modal_task_lookups_inv',
@@ -4025,7 +4054,7 @@ final class InvController extends BaseController
                             'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
                             'tasks' => $pR->findAllPreloaded(),
                             'head' => $head,
-                        ]
+                        ],
                     ),
                     'modal_add_inv_tax' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_add_inv_tax', [
                         'taxRates' => $trR->findAllPreloaded(),
@@ -4042,9 +4071,9 @@ final class InvController extends BaseController
                                     'errors' => [],
                                     'title' => $this->translator->translate('allowance.or.charge.add'),
                                     'form' => $invAllowanceChargeForm,
-                                ]
+                                ],
                             ),
-                        ]
+                        ],
                     ),
                     'modal_copy_inv' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_copy_inv', [
                         'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
@@ -4067,7 +4096,7 @@ final class InvController extends BaseController
                         $trR,
                         $uR,
                         $itrR,
-                        $inv_amount
+                        $inv_amount,
                     ),
                     'modal_delete_inv' => $this->view_modal_delete_inv($_language),
                     'modal_delete_items' => $this->view_modal_delete_items($iiR),
@@ -4084,7 +4113,7 @@ final class InvController extends BaseController
                         ->renderPartialLayoutWithTranslatorMessageAsString(
                             $this->translator->translate('payment.method'),
                             $this->translator->translate('payment.information.payment.method.required'),
-                            'inv'
+                            'inv',
                         ),
                 ];
                 return $this->viewRenderer->render('view', $parameters);
@@ -4350,7 +4379,7 @@ final class InvController extends BaseController
         $on_off = $draft == '0' ? 'off' : 'on';
         $message = $this->translator->translate('draft.number.'
           . $on_off) . str_repeat('&nbsp;', 2)
-          . (!empty($setting_url) ? (string)Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil']), $setting_url, ['class' => 'btn btn-primary'])
+          . (!empty($setting_url) ? (string) Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil']), $setting_url, ['class' => 'btn btn-primary'])
           : '');
         $this->flashMessage($level, $message);
     }
@@ -4380,14 +4409,14 @@ final class InvController extends BaseController
          */
         $message = ($mark_sent == '0' ? '✔' : '❌') . $this->translator->translate('mark.sent.'
           . $on_off) . str_repeat('&nbsp;', 2)
-          . (!empty($setting_url) ? (string)Html::a(
+          . (!empty($setting_url) ? (string) Html::a(
               Html::tag(
                   'i',
                   '',
-                  ['class' => 'fa fa-pencil']
+                  ['class' => 'fa fa-pencil'],
               ),
               $setting_url,
-              ['class' => $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger']
+              ['class' => $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger'],
           )
           : '');
         $this->flashMessage($level, $message);
@@ -4420,10 +4449,10 @@ final class InvController extends BaseController
     public function optionsDataYearMonthFilter(): array
     {
         $ym = [];
-        for ($y = 2024, $now = (int)date('Y') + 10; $y <= $now; ++$y) {
+        for ($y = 2024, $now = (int) date('Y') + 10; $y <= $now; ++$y) {
             $months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
             foreach ($months as $month) {
-                $yearMonth = (string)$y . '-' . $month;
+                $yearMonth = (string) $y . '-' . $month;
                 $ym[$yearMonth] = $yearMonth;
             }
         }

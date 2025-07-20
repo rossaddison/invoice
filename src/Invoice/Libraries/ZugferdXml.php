@@ -75,7 +75,7 @@ final class ZugferdXml
         $node = $doc->createElement('rsm:HeaderExchangedDocument');
         $node->appendChild($doc->createElement('ram:ID', $this->invoice->getNumber() ?? ''));
         $node->appendChild($doc->createElement('ram:Name', $this->sR->trans('invoice')));
-        $node->appendChild($doc->createElement('ram:TypeCode', (string)380));
+        $node->appendChild($doc->createElement('ram:TypeCode', (string) 380));
 
         // IssueDateTime
         $dateNode = $doc->createElement('ram:IssueDateTime');
@@ -98,7 +98,7 @@ final class ZugferdXml
     protected function dateElement(DOMDocument $doc, \DateTimeImmutable $date): DOMElement
     {
         $el = $doc->createElement('udt:DateTimeString', $this->zugferdFormattedDate($date) ?? 'YYYYmmdd');
-        $el->setAttribute('format', (string)102);
+        $el->setAttribute('format', (string) 102);
         return $el;
     }
 
@@ -271,13 +271,13 @@ final class ZugferdXml
             if ($item->getTaxRate()?->getTaxRatePercent() == 0) {
                 continue;
             }
-            $key = (int)$item->getTaxRate()?->getTaxRatePercent();
+            $key = (int) $item->getTaxRate()?->getTaxRatePercent();
             if (!isset($result[$key])) {
                 $result[$key] = 0.00;
             }
             $item_id = $item->getId();
             /** @var \App\Invoice\Entity\InvItemAmount $inv_item_amount */
-            $inv_item_amount = $this->iiaR->repoInvItemAmountquery((string)$item_id);
+            $inv_item_amount = $this->iiaR->repoInvItemAmountquery((string) $item_id);
 
             $result[$key] += $inv_item_amount->getSubtotal() ?? 0.00;
         }
@@ -297,7 +297,7 @@ final class ZugferdXml
         $node->appendChild($doc->createElement('ram:TypeCode', 'VAT'));
         $node->appendChild($this->currencyElement($doc, 'ram:BasisAmount', $subtotal));
         $node->appendChild($doc->createElement('ram:CategoryCode', 'S'));
-        $node->appendChild($doc->createElement('ram:ApplicablePercent', (string)$percent));
+        $node->appendChild($doc->createElement('ram:ApplicablePercent', (string) $percent));
         return $node;
     }
 
@@ -355,7 +355,7 @@ final class ZugferdXml
 
         // AssociatedDocumentLineDocument
         $lineNode = $doc->createElement('ram:AssociatedDocumentLineDocument');
-        $lineNode->appendChild($doc->createElement('ram:LineID', (string)$lineNumber));
+        $lineNode->appendChild($doc->createElement('ram:LineID', (string) $lineNumber));
         $node->appendChild($lineNode);
 
         // SpecifiedSupplyChainTradeAgreement
@@ -425,7 +425,7 @@ final class ZugferdXml
         if ($item->getTaxRate()?->getTaxRatePercent() > 0) {
             $taxNode = $doc->createElement('ram:ApplicableTradeTax');
             $taxNode->appendChild($doc->createElement('ram:TypeCode', 'VAT'));
-            $taxNode->appendChild($doc->createElement('ram:ApplicablePercent', (string)$item->getTaxRate()?->getTaxRatePercent()));
+            $taxNode->appendChild($doc->createElement('ram:ApplicablePercent', (string) $item->getTaxRate()?->getTaxRatePercent()));
             $node->appendChild($taxNode);
         }
 

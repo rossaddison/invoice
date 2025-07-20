@@ -61,7 +61,7 @@ echo Field::select($form, 'gentor_id')
 ->label($translator->translate('generator.relation.form.entity.generator'))
 ->addInputAttributes([
     'class' => 'form-control',
-    'id' => 'gentor_id'
+    'id' => 'gentor_id',
 ])
 ->prompt($translator->translate('none'))
 ->optionsData($optionsDataGenerators)
@@ -76,7 +76,7 @@ echo Field::select($form, 'gentor_id')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.lowercase.name'),
         'class' => 'form-control',
-        'id' => 'lowercasename'
+        'id' => 'lowercasename',
     ])
     ->value(Html::encode($form->getLowercase_name()))
     ->required(true)
@@ -90,7 +90,7 @@ echo Field::select($form, 'gentor_id')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.camelcase.name'),
         'class' => 'form-control',
-        'id' => 'camelcasename'
+        'id' => 'camelcasename',
     ])
     ->value(Html::encode($form->getCamelcase_name()))
     ->required(true)
@@ -104,7 +104,7 @@ echo Field::select($form, 'gentor_id')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.view.field.name'),
         'class' => 'form-control',
-        'id' => 'view_field_name'
+        'id' => 'view_field_name',
     ])
     ->value(Html::encode($form->getView_field_name()))
     ->required(true)

@@ -38,7 +38,7 @@ return [
             ->middleware(FormatDataResponse::class)
             ->addRoute(
                 Group::create('/{_language}')
-                    ->routes(...$routes)
+                    ->routes(...$routes),
             );
         return new RouteCollection($collector);
     },

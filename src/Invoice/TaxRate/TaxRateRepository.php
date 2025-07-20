@@ -65,7 +65,7 @@ final class TaxRateRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'tax_rate_name'])
-                ->withOrder(['tax_rate_name' => 'asc'])
+                ->withOrder(['tax_rate_name' => 'asc']),
         );
     }
 
@@ -126,7 +126,7 @@ final class TaxRateRepository extends Select\Repository
         foreach ($taxRates as $taxRate) {
             $taxRateId = $taxRate->getTaxRateId();
             if (null !== $taxRateId) {
-                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . (string)($taxRate->getTaxRatePercent() ?? '');
+                $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '') . '  ' . (string) ($taxRate->getTaxRatePercent() ?? '');
             }
         }
         return $optionsDataTaxRates;

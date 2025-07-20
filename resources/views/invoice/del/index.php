@@ -49,8 +49,8 @@ $header = Div::tag()
       H5::tag()
     ->addClass('bg-primary text-white p-3 rounded-top')
     ->content(
-        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.location'))
-    )
+        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.location')),
+    ),
   )
   ->render();
 
@@ -69,23 +69,23 @@ $toolbar = Div::tag();
     $columns = [
         new DataColumn(
             'id',
-            header:  'id',
-            content: static fn (DeliveryLocation $model) => (string)$model->getId(),
-            withSorting: true
+            header: 'id',
+            content: static fn(DeliveryLocation $model) => (string) $model->getId(),
+            withSorting: true,
         ),
         new DataColumn(
             'client_id',
-            header:  $translator->translate('client'),
+            header: $translator->translate('client'),
             content: static function (DeliveryLocation $model) use ($cR): string {
                 if ($cR->repoClientCount($model->getClient_id()) > 0) {
                     return $cR->repoClientquery($model->getClient_id())->getClient_name();
                 }
                 return '#';
-            }
+            },
         ),
         new DataColumn(
             'id',
-            header:  $translator->translate('quote.delivery.location.index.button.list'),
+            header: $translator->translate('quote.delivery.location.index.button.list'),
             content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
                 $deliveryLocationId = $model->getId();
                 if (null !== $deliveryLocationId) {
@@ -98,15 +98,15 @@ $toolbar = Div::tag();
                     foreach ($quotes as $quote) {
                         $quoteId = $quote->getId();
                         if (null !== $quoteId) {
-                            $button = (string)Html::a(
-                                ($quote->getNumber() ?? '#').
-                                       ' '.
+                            $button = (string) Html::a(
+                                ($quote->getNumber() ?? '#') .
+                                       ' ' .
                                        ($quote->getDate_created())->format('Y-m-d'),
                                 $urlGenerator->generate('quote/view', ['id' => $quoteId]),
                                 ['class' => 'btn btn-primary btn-sm',
-                               'data-bs-toggle' => 'tooltip',
-                               'title' => $quoteId
-                              ]
+                                    'data-bs-toggle' => 'tooltip',
+                                    'title' => $quoteId,
+                                ],
                             );
                             $buttons .= $button . str_repeat("&nbsp;", 1);
                         }
@@ -116,11 +116,11 @@ $toolbar = Div::tag();
                 return '';
             },
             withSorting: true,
-            encodeContent: false        
+            encodeContent: false,
         ),
         new DataColumn(
             'id',
-            header:  $translator->translate('delivery.location.index.button.list'),
+            header: $translator->translate('delivery.location.index.button.list'),
             content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
                 $deliveryLocationId = $model->getId();
                 if (null !== $deliveryLocationId) {
@@ -133,20 +133,20 @@ $toolbar = Div::tag();
                     foreach ($invoices as $invoice) {
                         $invoiceId = $invoice->getId();
                         if (null !== $invoiceId) {
-                            $button = (string)Html::a(
-                                ($invoice->getNumber() ?? '#').
-                                    ' '.
+                            $button = (string) Html::a(
+                                ($invoice->getNumber() ?? '#') .
+                                    ' ' .
                                     ($invoice->getDate_created())->format(
-                                        'Y-m-d'
+                                        'Y-m-d',
                                     ),
                                 $urlGenerator->generate(
                                     'inv/view',
-                                    ['id' => $invoiceId]
+                                    ['id' => $invoiceId],
                                 ),
                                 ['class' => 'btn btn-primary btn-sm',
-                             'data-bs-toggle' => 'tooltip',
-                             'title' => $invoiceId
-                            ]
+                                    'data-bs-toggle' => 'tooltip',
+                                    'title' => $invoiceId,
+                                ],
                             );
                             $buttons .= $button . str_repeat("&nbsp;", 1);
                         }
@@ -156,72 +156,72 @@ $toolbar = Div::tag();
                 return '';
             },
             withSorting: true,
-            encodeContent: false
+            encodeContent: false,
         ),
         new DataColumn(
             'global_location_number',
-            header:  $translator->translate('delivery.location.global.location.number'),
+            header: $translator->translate('delivery.location.global.location.number'),
             content: static function (DeliveryLocation $model): string {
                 return $model->getGlobal_location_number() ?? '';
             },
-            encodeContent: true        
+            encodeContent: true,
         ),
         new DataColumn(
             'date_created',
-            header:  $translator->translate('date.created'),
-            content: static fn (DeliveryLocation $model): string => ($model->getDate_created())->format(
+            header: $translator->translate('date.created'),
+            content: static fn(DeliveryLocation $model): string => ($model->getDate_created())->format(
                 'Y-m-d',
             ),
         ),
         new DataColumn(
-            header:  $translator->translate('view'),
+            header: $translator->translate('view'),
             content: static function (DeliveryLocation $model) use ($urlGenerator): string {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
                     $urlGenerator->generate('del/view', ['id' => $model->getId()]),
                     [
-                        ]
+                    ],
                 )->render();
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('edit'),
+            header: $translator->translate('edit'),
             content: static function (DeliveryLocation $model) use ($urlGenerator): string {
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
                     $urlGenerator->generate(
                         'del/edit',
                         ['id' => $model->getId()],
-                        ['origin' => 'del', 'origin_id' => '', 'action' => 'index']
+                        ['origin' => 'del', 'origin_id' => '', 'action' => 'index'],
                     ),
-                    []
+                    [],
                 )->render();
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('delete'),
+            header: $translator->translate('delete'),
             content: static function (DeliveryLocation $model) use ($translator, $urlGenerator): string {
                 return Html::a(
                     Html::tag(
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                                'type' => 'submit',
-                                'class' => 'dropdown-button',
-                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
-                            ]
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        ],
                     ),
                     $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
-                    []
+                    [],
                 )->render();
-            }
-        )
+            },
+        ),
     ];
 ?>
 <?php
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
-$defaultPageSizeOffsetPaginator = (int)$s->getSetting('default_list_limit');
+$defaultPageSizeOffsetPaginator = (int) $s->getSetting('default_list_limit');
 
 $sort = Sort::only(['id'])
     // (@see vendor\yiisoft\data\src\Reader\Sort
@@ -232,14 +232,14 @@ $sortedAndPagedPaginator = (new OffsetPaginator($dels))
     ->withPageSize($defaultPageSizeOffsetPaginator > 0 ? $defaultPageSizeOffsetPaginator : 1)
     ->withCurrentPage($page)
     ->withSort($sort)
-    ->withToken(PageToken::next((string)$page));
+    ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('delivery.location.plural'),
-    ''
+    '',
 );
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('del/index'))->csrf($csrf)->open() .
@@ -263,7 +263,7 @@ echo GridView::widget()
 ->header($header)
 ->id('w341-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

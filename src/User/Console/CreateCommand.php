@@ -24,7 +24,7 @@ final class CreateCommand extends Command
     public function __construct(
         private readonly SignupForm $signupForm,
         private readonly Manager $manager,
-        private readonly FormHydrator $formHydrator
+        private readonly FormHydrator $formHydrator,
     ) {
         parent::__construct();
     }
@@ -82,7 +82,7 @@ final class CreateCommand extends Command
 
         if (!$user instanceof User) {
             $errors = $this->signupForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-            array_walk($errors, fn (string $error, string $attribute): mixed => $io->error("$attribute: $error"));
+            array_walk($errors, fn(string $error, string $attribute): mixed => $io->error("$attribute: $error"));
             return ExitCode::DATAERR;
         }
 

@@ -47,32 +47,32 @@ use Yiisoft\Html\Tag\Span;
 ?>
 
 <?php ThemeContainer::initialize([
-            'A' => [
-                'containerClass' => 'mb-3',
-                'hintClass' => 'text-danger h6',
-                'errorClass' => 'fw-bold fst-italic text-info',
-            ],
-            'B' => [
-                'containerClass' => 'form-floating mb-3',
-                'hintClass' => 'text-danger h6',
-                'errorClass' => 'fw-bold fst-italic text-info',
-            ],
-        ]);
+    'A' => [
+        'containerClass' => 'mb-3',
+        'hintClass' => 'text-danger h6',
+        'errorClass' => 'fw-bold fst-italic text-info',
+    ],
+    'B' => [
+        'containerClass' => 'form-floating mb-3',
+        'hintClass' => 'text-danger h6',
+        'errorClass' => 'fw-bold fst-italic text-info',
+    ],
+]);
 ?>
 
 <?= Field::errorSummary($form)
     ->errors($errors)
     ->header($translator->translate('email.template.error.summary'))
     ->onlyProperties(...['email_template_title',
-                         'email_template_type',
-                         'email_template_body',
-                         'email_template_subject',
-                         'email_template_from_name',
-                         'email_template_from_email',
-                         'email_template_cc',
-                         'email_template_bcc',
-                         'email_template_pdf_tempalte'
-                        ])
+        'email_template_type',
+        'email_template_body',
+        'email_template_subject',
+        'email_template_from_name',
+        'email_template_from_email',
+        'email_template_cc',
+        'email_template_bcc',
+        'email_template_pdf_tempalte',
+    ])
     ->onlyCommonErrors()
 ?>
 
@@ -88,7 +88,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('title'))
             ->required(true)
             ->addInputAttributes([
-                'class' => 'form-control'
+                'class' => 'form-control',
             ])
             ->value(Html::encode($form->getEmail_template_title() ?? ''))
             ->placeholder($translator->translate('title'))
@@ -99,7 +99,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('from.name'))
             ->required(true)
             ->addInputAttributes([
-                'class' => 'form-control'
+                'class' => 'form-control',
             ])
             ->value(Html::encode($form->getEmail_template_from_name() ?? ''))
             ->placeholder($translator->translate('from.name'))
@@ -113,7 +113,7 @@ use Yiisoft\Html\Tag\Span;
                         <?= $translator->translate('email.template.from.source'); ?>
                     <?= Html::closeTag('h5'); ?>
                     <?= Html::openTag('h6'); ?>
-                        <?= str_repeat("&nbsp;", 5). $translator->translate('email.template.from.email.leave.blank'); ?>
+                        <?= str_repeat("&nbsp;", 5) . $translator->translate('email.template.from.email.leave.blank'); ?>
                     <?= Html::closeTag('h6'); ?>
                 <?= Html::closeTag('fieldset'); ?>
                 <?= Html::openTag('div', ['id' => 'email_option']); ?>
@@ -122,7 +122,7 @@ use Yiisoft\Html\Tag\Span;
                             'type' => 'radio',
                             'id' => 'adminEmail',
                             'name' => 'from_email',
-                            'value' => $admin_email
+                            'value' => $admin_email,
                         ]); ?>
                         <?= Html::openTag('label', ['for' => 'adminEmail']); ?>
                             <?= $translator->translate('email.template.from.source.admin.email'); ?>
@@ -156,7 +156,7 @@ use Yiisoft\Html\Tag\Span;
                         <?= Field::text($form, 'email_template_from_email')
                             ->label($translator->translate('from.email'))
                             ->addInputAttributes([
-                                'class' => 'form-control'
+                                'class' => 'form-control',
                             ])
                             ->value(Html::encode($form->getEmail_template_from_email() ?? ''))
                             ->placeholder($translator->translate('from.email'))
@@ -171,7 +171,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('cc'))
             ->required(false)
             ->addInputAttributes([
-                'class' => 'form-control taggable'
+                'class' => 'form-control taggable',
             ])
             ->value(Html::encode($form->getEmail_template_cc() ?? ''))
             ->placeholder($translator->translate('cc'))
@@ -182,7 +182,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('bcc'))
             ->required(false)
             ->addInputAttributes([
-                'class' => 'form-control taggable'
+                'class' => 'form-control taggable',
             ])
             ->value(Html::encode($form->getEmail_template_bcc() ?? ''))
             ->placeholder($translator->translate('bcc'))
@@ -193,7 +193,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('subject'))
             ->required(true)
             ->addInputAttributes([
-                'class' => 'form-control taggable'
+                'class' => 'form-control taggable',
             ])
             ->value(Html::encode($form->getEmail_template_subject() ?? ''))
             ->placeholder($translator->translate('subject'))
@@ -294,7 +294,7 @@ use Yiisoft\Html\Tag\Span;
 ->required(true)
 ->addInputAttributes([
     'class' => 'email-template-body form-control taggable',
-    'rows' => '20'
+    'rows' => '20',
 ])
 ->value($form->getEmail_template_body() ?? '')
 ->hint($translator->translate('hint.this.field.is.required')); ?>

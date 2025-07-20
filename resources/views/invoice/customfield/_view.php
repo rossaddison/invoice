@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'table')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('table'))
-    ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string)$custom_tables[$table])) : ''))
+    ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string) $custom_tables[$table])) : ''))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'type')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('type'))
-    ->value(Html::encode($translator->translate(''.str_replace("-", "_", strtolower($form->getType() ?? '')).'')))
+    ->value(Html::encode($translator->translate('' . str_replace("-", "_", strtolower($form->getType() ?? '')) . '')))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>

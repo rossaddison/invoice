@@ -11,19 +11,17 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\QuoteCustom\QuoteCustomRepository::class)]
 class QuoteCustom
 {
-    #[BelongsTo(target:CustomField::class, nullable: false)]
+    #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    #[BelongsTo(target:Quote::class, nullable: false)]
+    #[BelongsTo(target: Quote::class, nullable: false)]
     private ?Quote $quote = null;
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $quote_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
-        private string $value = '')
-    {
-    }
+        private string $value = '') {}
 
     public function getCustomField(): ?CustomField
     {
@@ -37,7 +35,7 @@ class QuoteCustom
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -47,7 +45,7 @@ class QuoteCustom
 
     public function getQuote_id(): string
     {
-        return (string)$this->quote_id;
+        return (string) $this->quote_id;
     }
 
     public function setQuote_id(int $quote_id): void
@@ -57,7 +55,7 @@ class QuoteCustom
 
     public function getCustom_field_id(): string
     {
-        return (string)$this->custom_field_id;
+        return (string) $this->custom_field_id;
     }
 
     public function setCustom_field_id(int $custom_field_id): void

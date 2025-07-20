@@ -13,10 +13,10 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Payment\PaymentRepository::class)]
 class Payment
 {
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[BelongsTo(target:PaymentMethod::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: PaymentMethod::class, nullable: false, fkAction: 'NO ACTION')]
     private ?PaymentMethod $payment_method = null;
 
     #[Column(type: 'date', nullable: false)]
@@ -25,11 +25,9 @@ class Payment
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $payment_method_id = null, #[Column(type: 'decimal(20,2)', nullable:true, default: 0.00)]
-        private ?float $amount = 0.00, #[Column(type: 'longText', nullable:false)]
-        private string $note = '')
-    {
-    }
+        private ?int $payment_method_id = null, #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
+        private ?float $amount = 0.00, #[Column(type: 'longText', nullable: false)]
+        private string $note = '') {}
 
     public function getInv(): ?Inv
     {
@@ -54,7 +52,7 @@ class Payment
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -64,7 +62,7 @@ class Payment
 
     public function getPayment_method_id(): string
     {
-        return (string)$this->payment_method_id;
+        return (string) $this->payment_method_id;
     }
 
     public function setPayment_method_id(int $payment_method_id): void
@@ -105,7 +103,7 @@ class Payment
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void

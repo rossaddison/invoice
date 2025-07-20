@@ -37,9 +37,7 @@ use DateTimeImmutable;
 
 final readonly class InvService
 {
-    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator)
-    {
-    }
+    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator) {}
 
     public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
     {
@@ -50,7 +48,7 @@ final readonly class InvService
          * 3. Has a status of 'sent'
          */
         if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)  && ($array['status_id'] == 2)) {
-            $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));
+            $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
         }
 
         /**
@@ -76,7 +74,7 @@ final readonly class InvService
         $datetimeimmutable_tax_point = $this->set_tax_point(
             $model,
             $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'),
-            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('1901/01/01')
+            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('1901/01/01'),
         );
         null !== $datetimeimmutable_tax_point ? $model->setDate_tax_point($datetimeimmutable_tax_point) : '';
 
@@ -88,26 +86,26 @@ final readonly class InvService
         /**
          * The following fields can be edited and set on the form with a value that is not null.
          */
-        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
-        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+        isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : '';
         /** user_id set on adding */
 
-        isset($array['so_id']) ? $model->setSo_id((int)$array['so_id']) : '';
-        isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
-        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
-        isset($array['delivery_id']) ? $model->setDelivery_id((int)$array['delivery_id']) : '';
-        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int)$array['delivery_location_id']) : '';
-        isset($array['postal_address_id']) ? $model->setPostal_address_id((int)$array['postal_address_id']) : '';
-        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
-        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
-        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
-        isset($array['payment_method']) ? $model->setPayment_method((int)$array['payment_method']) : '';
-        isset($array['terms']) ? $model->setTerms((string)$array['terms'])
+        isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
+        isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
+        isset($array['status_id']) ? $model->setStatus_id((int) $array['status_id']) : '';
+        isset($array['delivery_id']) ? $model->setDelivery_id((int) $array['delivery_id']) : '';
+        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int) $array['delivery_location_id']) : '';
+        isset($array['postal_address_id']) ? $model->setPostal_address_id((int) $array['postal_address_id']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float) $array['discount_percent']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : '';
+        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
+        isset($array['payment_method']) ? $model->setPayment_method((int) $array['payment_method']) : '';
+        isset($array['terms']) ? $model->setTerms((string) $array['terms'])
                                  : $this->translator->translate('payment.term.general');
-        isset($array['note']) ? $model->setNote((string)$array['note']) : '';
-        isset($array['document_description']) ? $model->setDocumentDescription((string)$array['document_description']) : '';
-        isset($array['creditinvoice_parent_id']) ? $model->setCreditinvoice_parent_id((int)$array['creditinvoice_parent_id'] ?: 0) : '';
-        isset($array['contract_id']) ? $model->setContract_id((int)$array['contract_id']) : '';
+        isset($array['note']) ? $model->setNote((string) $array['note']) : '';
+        isset($array['document_description']) ? $model->setDocumentDescription((string) $array['document_description']) : '';
+        isset($array['creditinvoice_parent_id']) ? $model->setCreditinvoice_parent_id((int) $array['creditinvoice_parent_id'] ?: 0) : '';
+        isset($array['contract_id']) ? $model->setContract_id((int) $array['contract_id']) : '';
 
         if ($model->isNewRecord()) {
             if ($s->getSetting('mark_invoices_sent_copy') === '1') {
@@ -121,13 +119,13 @@ final readonly class InvService
             }
             // if draft invoices must get invoice numbers
             if ($s->getSetting('generate_invoice_number_for_draft') === '1') {
-                $model->setNumber((string)$gR->generate_number((int)$array['group_id'], true));
+                $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
             } else {
                 $model->setNumber('');
             }
-            $model->setUser_id((int)$user->getId());
+            $model->setUser_id((int) $user->getId());
             $model->setTime_created((new DateTimeImmutable('now'))->format('H:i:s'));
-            $model->setPayment_method((int)$s->getSetting('invoice_default_payment_method') ?: 4);
+            $model->setPayment_method((int) $s->getSetting('invoice_default_payment_method') ?: 4);
             $model->setDiscount_amount(0.00);
         }
         $this->repository->save($model);
@@ -139,32 +137,32 @@ final readonly class InvService
         /**
          * Follows Inv construct sequence to make sure no fields are missing.
          */
-        $model->setClient_id((int)$array['client_id']);
-        $model->setGroup_id((int)$array['group_id']);
-        $model->setSo_id((int)$array['so_id']);
-        $model->setQuote_id((int)$array['quote_id']);
-        $model->setUser_id((int)$user->getId());
-        $model->setStatus_id((int)$array['status_id']);
-        $model->setIs_read_only((bool)$array['is_read_only']);
-        $model->setPassword((string)$array['password']);
+        $model->setClient_id((int) $array['client_id']);
+        $model->setGroup_id((int) $array['group_id']);
+        $model->setSo_id((int) $array['so_id']);
+        $model->setQuote_id((int) $array['quote_id']);
+        $model->setUser_id((int) $user->getId());
+        $model->setStatus_id((int) $array['status_id']);
+        $model->setIs_read_only((bool) $array['is_read_only']);
+        $model->setPassword((string) $array['password']);
         $model->setDate_due($s);
         $model->setDate_supplied($array['date_supplied'] instanceof DateTimeImmutable ? $array['date_supplied'] : new DateTimeImmutable('now'));
         $model->setDate_tax_point($array['date_tax_point'] instanceof DateTimeImmutable ? $array['date_tax_point'] : new DateTimeImmutable('now'));
-        $model->setTime_created((string)$array['time_created']);
-        $model->setStand_in_code((string)$array['stand_in_code']);
-        $model->setNumber((string)$array['number']);
-        $model->setDiscount_amount((float)$array['discount_amount']);
-        $model->setDiscount_percent((float)$array['discount_percent']);
-        $model->setTerms((string)$array['terms'] ?: $this->translator->translate('payment.term.general'));
-        $model->setNote((string)$array['note']);
-        $model->setDocumentDescription((string)$array['document_description']);
-        $model->setUrl_key((string)$array['url_key']);
-        $model->setPayment_method((int)$array['payment_method'] ?: 4);
-        $model->setCreditinvoice_parent_id((int)$array['creditinvoice_parent_id'] ?: 0);
-        $model->setDelivery_id((int)$array['delivery_id']);
-        $model->setDelivery_location_id((int)$array['delivery_location_id']);
-        $model->setPostal_address_id((int)$array['postal_address_id']);
-        $model->setContract_id((int)$array['contract_id']);
+        $model->setTime_created((string) $array['time_created']);
+        $model->setStand_in_code((string) $array['stand_in_code']);
+        $model->setNumber((string) $array['number']);
+        $model->setDiscount_amount((float) $array['discount_amount']);
+        $model->setDiscount_percent((float) $array['discount_percent']);
+        $model->setTerms((string) $array['terms'] ?: $this->translator->translate('payment.term.general'));
+        $model->setNote((string) $array['note']);
+        $model->setDocumentDescription((string) $array['document_description']);
+        $model->setUrl_key((string) $array['url_key']);
+        $model->setPayment_method((int) $array['payment_method'] ?: 4);
+        $model->setCreditinvoice_parent_id((int) $array['creditinvoice_parent_id'] ?: 0);
+        $model->setDelivery_id((int) $array['delivery_id']);
+        $model->setDelivery_location_id((int) $array['delivery_location_id']);
+        $model->setPostal_address_id((int) $array['postal_address_id']);
+        $model->setContract_id((int) $array['contract_id']);
         $this->repository->save($model);
         return $model;
     }
@@ -182,7 +180,7 @@ final readonly class InvService
         if (null !== $inv->getClient()?->getClient_vat_id()) {
             if ($date_created > $date_supplied && null !== $date_created && null !== $date_supplied) {
                 $diff = $date_supplied->diff($date_created)->format('%R%a');
-                if ((int)$diff > 14) {
+                if ((int) $diff > 14) {
                     // date supplied more than 14 days before invoice date
                     return $date_supplied;
                 }
@@ -234,7 +232,7 @@ final readonly class InvService
         ITRR $itrR,
         ITRS $itrS,
         IAR $iaR,
-        IAS $iaS
+        IAS $iaS,
     ): void {
         // Compare with function flush which follows LIFO (Last In First Out) record creation
         // To avoid foreign key constraint violations, delete entities that have FK's first
@@ -246,12 +244,12 @@ final readonly class InvService
                 $itemId = $item->getId();
                 if (null !== $itemId) {
                     // InvItemAmount has inv_item_id as a foreign key so delete first to avoid Fk integrity error
-                    $invItemAmount = $iiaR->repoInvItemAmountquery((string)$itemId);
+                    $invItemAmount = $iiaR->repoInvItemAmountquery((string) $itemId);
                     if (null !== $invItemAmount) {
                         $iiaR->delete($invItemAmount);
                     }
                     // InvItemAllowanceCharge has an inv_item_id as a foreign key so delete first to avoid FK integrity error
-                    $invItemAllowanceCharges = $aciiR->repoInvItemquery((string)$itemId);
+                    $invItemAllowanceCharges = $aciiR->repoInvItemquery((string) $itemId);
                     /** @var InvItemAllowanceCharge $invItemAllowanceCharge */
                     foreach ($invItemAllowanceCharges as $invItemAllowanceCharge) {
                         $aciiR->delete($invItemAllowanceCharge);
@@ -260,9 +258,9 @@ final readonly class InvService
                     $iiS->deleteInvItem($item);
                 }
             }
-            $count = $iaR->repoInvAmountCount((int)$inv_id);
+            $count = $iaR->repoInvAmountCount((int) $inv_id);
             if ($count > 0) {
-                $inv_amount = $iaR->repoInvquery((int)$inv_id);
+                $inv_amount = $iaR->repoInvquery((int) $inv_id);
                 null !== $inv_amount ? $iaS->deleteInvAmount($inv_amount) : '';
             }
             /** @var InvTaxRate */
@@ -305,23 +303,23 @@ final readonly class InvService
 
         $model->setDate_due($s);
         //$model->setDate_created($form->getDate_created());
-        $model->setClient_id((int)$details['client_id']);
-        $model->setGroup_id((int)$details['group_id']);
-        $model->setStatus_id((int)$details['status_id']);
-        $model->setDiscount_percent((float)$details['discount_percent']);
-        $model->setDiscount_amount((float)$details['discount_amount']);
-        $model->setUrl_key((string)$details['url_key']);
-        $model->setPassword((string)$details['password']);
-        $model->setPayment_method((int)$details['payment_method']);
-        $model->setTerms((string)$details['terms']);
-        $model->setCreditinvoice_parent_id((int)$details['creditinvoice_parent_id'] ?: 0);
-        $model->setDelivery_id((int)$details['delivery_id'] ?: 0);
-        $model->setDelivery_location_id((int)$details['delivery_location_id'] ?: 0);
-        $model->setPostal_address_id((int)$details['postal_address_id'] ?: 0);
-        $model->setContract_id((int)$details['contract_id'] ?: 0);
+        $model->setClient_id((int) $details['client_id']);
+        $model->setGroup_id((int) $details['group_id']);
+        $model->setStatus_id((int) $details['status_id']);
+        $model->setDiscount_percent((float) $details['discount_percent']);
+        $model->setDiscount_amount((float) $details['discount_amount']);
+        $model->setUrl_key((string) $details['url_key']);
+        $model->setPassword((string) $details['password']);
+        $model->setPayment_method((int) $details['payment_method']);
+        $model->setTerms((string) $details['terms']);
+        $model->setCreditinvoice_parent_id((int) $details['creditinvoice_parent_id'] ?: 0);
+        $model->setDelivery_id((int) $details['delivery_id'] ?: 0);
+        $model->setDelivery_location_id((int) $details['delivery_location_id'] ?: 0);
+        $model->setPostal_address_id((int) $details['postal_address_id'] ?: 0);
+        $model->setContract_id((int) $details['contract_id'] ?: 0);
         if ($model->isNewRecord()) {
             $model->setStatus_id(1);
-            $model->setNumber((string)$details['number']);
+            $model->setNumber((string) $details['number']);
             $random = new Random();
             $model->setUser($user);
             $model->setUrl_key($random::string(32));

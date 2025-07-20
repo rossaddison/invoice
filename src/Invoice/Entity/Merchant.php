@@ -13,7 +13,7 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Merchant\MerchantRepository::class)]
 class Merchant
 {
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
     #[Column(type: 'date', nullable: false)]
@@ -21,13 +21,11 @@ class Merchant
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $inv_id = null, #[Column(type: 'boolean', nullable: true, default:1)]
+        private ?int $inv_id = null, #[Column(type: 'boolean', nullable: true, default: 1)]
         private ?bool $successful = true, #[Column(type: 'string(35)', nullable: false)]
         private string $driver = '', #[Column(type: 'string(151)', nullable: false)]
         private string $response = '', #[Column(type: 'string(151)', nullable: false)]
-        private string $reference = '')
-    {
-    }
+        private string $reference = '') {}
 
     public function getInv(): ?Inv
     {
@@ -36,7 +34,7 @@ class Merchant
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -46,7 +44,7 @@ class Merchant
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void

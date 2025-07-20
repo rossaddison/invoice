@@ -23,9 +23,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -56,7 +59,7 @@ trait Callback
             // code and state are both present
         }
 
-        $codeVerifier = (string)$this->session->get('code_verifier');
+        $codeVerifier = (string) $this->session->get('code_verifier');
         /**
          * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
          * For user-restricted access, the 'Authorization Code' Grant Type is used
@@ -73,7 +76,7 @@ trait Callback
         // e.g. string 'bearer'
         $this->session->set('hmrc_token_type', $oAuthToken->getParam('token_type'));
         // default 'expires_in' int 14400
-        $this->session->set('hmrc_token_expires', time() + (int)$oAuthToken->getParam('expires_in'));
+        $this->session->set('hmrc_token_expires', time() + (int) $oAuthToken->getParam('expires_in'));
         // e.g. read:self-assessment write:self-assessment'
         $this->session->set('hmrc_scope', $oAuthToken->getParam('scope'));
         // e.g. string 'cbe7c4f01a6bc55034237718d3e4ded2'
@@ -99,7 +102,7 @@ trait Callback
 
         if ($hmrcId > 0) {
             // the id will be removed in the logout button
-            $login = 'hmrc' . (string)$hmrcId;
+            $login = 'hmrc' . (string) $hmrcId;
             /**
              * Depending on the environment i.e. prod or dev, getApiBaseUrl1() will vary between 'https://api.service.hmrc.gov.uk' or 'https://test-api.service.hmrc.gov.uk' respectively
              *
@@ -186,12 +189,18 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-        #[Query('error')] string $error = null,
-        #[Query('error_code')] string $errorCode = null,
-        #[Query('error_reason')] string $errorReason = null
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
+        #[Query('error')]
+        string $error = null,
+        #[Query('error_code')]
+        string $errorCode = null,
+        #[Query('error_reason')]
+        string $errorReason = null,
     ): ResponseInterface {
         // Avoid MissingRequiredArgumentException
         if ($code == null || $state == null) {
@@ -245,7 +254,7 @@ trait Callback
             $facebookLogin = strtolower($userArray['name'] ?? '');
             if (strlen($facebookLogin) > 0) {
                 // the id will be removed in the logout button
-                $login = 'facebook' . (string)$facebookId . $facebookLogin;
+                $login = 'facebook' . (string) $facebookId . $facebookLogin;
                 /**
                  * @var string $userArray['email']
                  */
@@ -331,9 +340,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -387,7 +399,7 @@ trait Callback
             if (strlen($githubLogin) > 0) {
                 // Append github in case user has used same login for other identity providers
                 // the id will be removed in the logout button
-                $login = 'github' . (string)$githubId . $githubLogin;
+                $login = 'github' . (string) $githubId . $githubLogin;
                 /**
                  * @var string $userArray['email']
                  */
@@ -461,9 +473,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -522,7 +537,7 @@ trait Callback
 
         if ($googleId > 0) {
             // the id will be removed in the logout button
-            $login = 'google' . (string)$googleId;
+            $login = 'google' . (string) $googleId;
             /**
              * @var string $userArray['email']
              */
@@ -589,9 +604,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -632,7 +650,7 @@ trait Callback
         $govUkId = $userArray['id'] ?? 0;
         if ($govUkId > 0) {
             // the id will be removed in the logout button
-            $login = 'govuk' . (string)$govUkId;
+            $login = 'govuk' . (string) $govUkId;
             /**
              * @var string $userArray['email']
              */
@@ -699,9 +717,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -826,10 +847,14 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-        #[Query('session_state')] string $sessionState = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
+        #[Query('session_state')]
+        string $sessionState = null,
     ): ResponseInterface {
         if ($code == null || $state == null || $sessionState == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -874,7 +899,7 @@ trait Callback
         $microsoftOnlineId = $userArray['id'] ?? 0;
         if ($microsoftOnlineId > 0) {
             // Append the last four digits of the Id
-            $login = 'ms' . substr((string)$microsoftOnlineId, strlen((string)$microsoftOnlineId) - 4, strlen((string)$microsoftOnlineId));
+            $login = 'ms' . substr((string) $microsoftOnlineId, strlen((string) $microsoftOnlineId) - 4, strlen((string) $microsoftOnlineId));
             /**
              * @var string $userArray['email']
              */
@@ -941,9 +966,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code === null || $state === null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -964,7 +992,7 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
 
-        $codeVerifier = (string)$this->session->get('code_verifier');
+        $codeVerifier = (string) $this->session->get('code_verifier');
 
         // Exchange code for token with PKCE
         $oAuthToken = $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, [
@@ -978,7 +1006,7 @@ trait Callback
         $this->session->set('openbanking_refresh_token', $oAuthToken->getParam('refresh_token'));
         $this->session->set('openbanking_id_token', $oAuthToken->getParam('id_token'));
         $this->session->set('openbanking_token_type', $oAuthToken->getParam('token_type'));
-        $this->session->set('openbanking_token_expires', time() + (int)$oAuthToken->getParam('expires_in'));
+        $this->session->set('openbanking_token_expires', time() + (int) $oAuthToken->getParam('expires_in'));
         $this->session->set('openbanking_scope', $oAuthToken->getParam('scope'));
 
         // Optionally: store user claims from id_token if using OpenID Connect
@@ -996,9 +1024,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -1021,7 +1052,7 @@ trait Callback
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             );
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
@@ -1035,7 +1066,7 @@ trait Callback
         if (strlen($state) == 0) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
-        $codeVerifier = (string)$this->session->get('code_verifier');
+        $codeVerifier = (string) $this->session->get('code_verifier');
         $params = [
             'grant_type' => 'authorization_code',
             'redirect_uri' => $this->x->getOauth2ReturnUrl(),
@@ -1052,9 +1083,9 @@ trait Callback
          */
         $xId = $data['id'] ?? 0;
         if ($xId > 0) {
-            $xLogin = (string)$data['username'];
+            $xLogin = (string) $data['username'];
             if (strlen($xLogin) > 0) {
-                $login = 'twitter' . (string)$xId . $xLogin;
+                $login = 'twitter' . (string) $xId . $xLogin;
                 /**
                  * @var string $userArray['email']
                  */
@@ -1110,7 +1141,7 @@ trait Callback
                         $language,
                         $_language,
                         $randomAndTimeToken,
-                        'x'
+                        'x',
                     );
                     return $this->viewRenderer->render('proceed', [
                         'proceedToMenuButton' => $proceedToMenuButton,
@@ -1129,10 +1160,14 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
-        #[Query('device_id')] string $device_id = null
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
+        #[Query('device_id')]
+        string $device_id = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -1156,7 +1191,7 @@ trait Callback
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                     'device_id' => $device_id,
-                ]
+                ],
             );
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
@@ -1170,7 +1205,7 @@ trait Callback
         if (strlen($state) == 0) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
-        $codeVerifier = (string)$this->session->get('code_verifier');
+        $codeVerifier = (string) $this->session->get('code_verifier');
         $params = [
             'device_id' => $device_id,
             'grant_type' => 'authorization_code',
@@ -1229,7 +1264,7 @@ trait Callback
                 $userName = 'fullname unknown';
             }
             // Append the last four digits of the Id
-            $login = '' . $userName . substr((string)$id, strlen((string)$id) - 4, strlen((string)$id));
+            $login = '' . $userName . substr((string) $id, strlen((string) $id) - 4, strlen((string) $id));
             /**
              * @var string $userArray['email']
              */
@@ -1289,7 +1324,7 @@ trait Callback
                     $language,
                     $_language,
                     $randomAndTimeToken,
-                    'vkontakte'
+                    'vkontakte',
                 );
                 return $this->viewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
@@ -1307,9 +1342,12 @@ trait Callback
         TokenRepository $tR,
         UserInvRepository $uiR,
         UserRepository $uR,
-        #[RouteArgument('_language')] string $_language,
-        #[Query('code')] string $code = null,
-        #[Query('state')] string $state = null,
+        #[RouteArgument('_language')]
+        string $_language,
+        #[Query('code')]
+        string $code = null,
+        #[Query('state')]
+        string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -1332,7 +1370,7 @@ trait Callback
                 [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             );
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
@@ -1346,7 +1384,7 @@ trait Callback
         if (strlen($state) == 0) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
         }
-        $codeVerifier = (string)$this->session->get('code_verifier');
+        $codeVerifier = (string) $this->session->get('code_verifier');
         $params = [
             'grant_type' => 'authorization_code',
             'redirect_uri' => $this->yandex->getOauth2ReturnUrl(),
@@ -1367,7 +1405,7 @@ trait Callback
              */
             $userName = $userArray['login'];
             // Append the last four digits of the Id
-            $login = 'yx' . $userName . substr((string)$id, strlen((string)$id) - 4, strlen((string)$id));
+            $login = 'yx' . $userName . substr((string) $id, strlen((string) $id) - 4, strlen((string) $id));
             $email = 'noemail' . $login . '@yandex.com';
             $password = Random::string(32);
             // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
@@ -1424,7 +1462,7 @@ trait Callback
                     $language,
                     $_language,
                     $randomAndTimeToken,
-                    'yandex'
+                    'yandex',
                 );
                 return $this->viewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,

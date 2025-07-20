@@ -20,8 +20,7 @@ class Family
         private ?int $category_primary_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_secondary_id = null,
-    ) {
-    }
+    ) {}
 
     public function getFamily_id(): ?int
     {
@@ -40,7 +39,7 @@ class Family
 
     public function getCategory_primary_id(): string
     {
-        return (string)$this->category_primary_id;
+        return (string) $this->category_primary_id;
     }
 
     public function setCategory_primary_id(int $category_primary_id): void
@@ -50,7 +49,7 @@ class Family
 
     public function getCategory_secondary_id(): string
     {
-        return (string)$this->category_secondary_id;
+        return (string) $this->category_secondary_id;
     }
 
     public function setCategory_secondary_id(int $category_secondary_id): void

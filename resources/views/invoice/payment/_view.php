@@ -65,8 +65,8 @@ echo Field::select($form, 'payment_method_id')
 ->label($translator->translate('payment.method'))
 ->optionsData($optionsDataPaymentMethod)
 ->addInputAttributes([
-        'readonly' => 'readonly',
-        'disabled' => 'disabled'
+    'readonly' => 'readonly',
+    'disabled' => 'disabled',
 ])
 ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -75,7 +75,7 @@ echo Field::select($form, 'payment_method_id')
         ->label($translator->translate('invoice'))
         ->addInputAttributes([
             'readonly' => 'readonly',
-            'disabled' => 'disabled'
+            'disabled' => 'disabled',
         ])
         ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('number.no')))
 ?>
@@ -85,7 +85,7 @@ echo Field::select($form, 'payment_method_id')
     ->label($translator->translate('date'))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : ''))
 ?>
@@ -99,8 +99,8 @@ echo Field::select($form, 'payment_method_id')
         'class' => 'form-control',
         'id' => 'note',
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
-])
+        'disabled' => 'disabled',
+    ])
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -110,7 +110,7 @@ echo Field::select($form, 'payment_method_id')
     ->value(Html::encode($form->getAmount() ?? ''))
     ->addInputAttributes([
         'readonly' => 'readonly',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
 ?>
                 <?= Html::closeTag('div'); ?>

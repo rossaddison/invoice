@@ -38,7 +38,7 @@ if (!empty($errors)) {
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('paymentpeppols.form'); ?></h1>
-    <?= (string)$response->getBody(); ?>
+    <?= (string) $response->getBody(); ?>
     <div id="content">
         <div class = 'row'>
            <div class="mb3 form-group">

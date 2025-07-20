@@ -20,7 +20,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
- * @var string                                  $govUkAuthUrl 
+ * @var string                                  $govUkAuthUrl
  * @var string                                  $linkedInAuthUrl
  * @var string                                  $telegramToken
  * @var string                                  $microsoftOnlineAuthUrl
@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
  * @var bool                                    $noFacebookContinueButton
  * @var bool                                    $noGithubContinueButton
  * @var bool                                    $noGoogleContinueButton
- * @var bool                                    $noGovUkContinueButton 
+ * @var bool                                    $noGovUkContinueButton
  * @var bool                                    $noLinkedInContinueButton
  * @var bool                                    $noMicrosoftOnlineContinueButton
  * @var bool                                    $noOpenBankingContinueButton
@@ -49,7 +49,7 @@ $this->setTitle($translator->translate('login'));
 
 <!-- Fade-out CSS for TFA badge -->
 <?= \Yiisoft\Html\Tag\Style::tag()->content(
-    '.fade-out { opacity: 1; transition: opacity 40s ease-in; } .fade-out.hidden { opacity: 0; }'
+    '.fade-out { opacity: 1; transition: opacity 40s ease-in; } .fade-out.hidden { opacity: 0; }',
 ) ?>
 
 <div class="container py-5 h-100">
@@ -89,7 +89,7 @@ $this->setTitle($translator->translate('login'));
                         <br><br>
                         <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
                     <?php } ?>
-                    <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton && null!==$selectedOpenBankingProvider) { ?>
+                    <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton && null !== $selectedOpenBankingProvider) { ?>
                         <br><br>
                         <?= $button->openbanking($openBankingAuthUrl ?: '', $selectedOpenBankingProvider);?>
                     <?php } ?>    
@@ -108,14 +108,17 @@ $this->setTitle($translator->translate('login'));
                 </div>
                 <?php if (($s->getSetting('enable_tfa') == '1')) { ?>
                 <div id="tfa-badge" class="card-body p-2 text-center fade-out">
-                        <?=         
-                            Html::tag('span', $s->getSetting('enable_tfa_with_disabling') == '1' ?
+                        <?=
+                            Html::tag(
+                                'span',
+                                $s->getSetting('enable_tfa_with_disabling') == '1' ?
                                     $translator->translate('two.factor.authentication.enabled.with.disabling') :
-                                    $translator->translate('two.factor.authentication.enabled.without.disabling'), 
-                            [
-                                'class' => 'badge bg-primary',
-                                'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;'
-                            ]); ?>
+                                    $translator->translate('two.factor.authentication.enabled.without.disabling'),
+                                [
+                                    'class' => 'badge bg-primary',
+                                    'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;',
+                                ],
+                            ); ?>
                 </div>
                 <?php } ?>
                 <div class="card-body p-2 text-center">
@@ -134,28 +137,28 @@ $this->setTitle($translator->translate('login'));
                         ->addInputAttributes(['autocomplete' => 'current-password'])
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.password'))
-                    ?>
+?>
                     <?= Field::checkbox($formModel, 'rememberMe')
-                        ->containerClass('form-check form-switch text-start mt-2')
-                        ->inputClass('form-check-input form-control')
-                        ->label($translator->translate('layout.remember'))
-                        ->inputLabelClass('form-check-label') 
-                    ?>
+    ->containerClass('form-check form-switch text-start mt-2')
+    ->inputClass('form-check-input form-control')
+    ->label($translator->translate('layout.remember'))
+    ->inputLabelClass('form-check-label')
+?>
                     <?= Field::submitButton()
-                        ->buttonId('login-button')
-                        ->buttonClass('btn btn-primary')
-                        ->name('login-button')
-                        ->content($translator->translate('layout.submit')) 
-                    ?>
+    ->buttonId('login-button')
+    ->buttonClass('btn btn-primary')
+    ->name('login-button')
+    ->content($translator->translate('layout.submit'))
+?>
                     <?= Form::tag()->close() ?>
                     <?= Html::br(); ?>
                     <?= A::tag()
-                        ->attribute('style', 'color:#999;text-decoration:none')
-                        ->addClass('my-1 mx-0')
-                        ->href($urlGenerator->generate('auth/forgotpassword'))
-                        ->content($translator->translate('forgot.your.password'))
-                        ->render();
-                    ?>
+    ->attribute('style', 'color:#999;text-decoration:none')
+    ->addClass('my-1 mx-0')
+    ->href($urlGenerator->generate('auth/forgotpassword'))
+    ->content($translator->translate('forgot.your.password'))
+    ->render();
+?>
                 </div>
             </div>
         </div>

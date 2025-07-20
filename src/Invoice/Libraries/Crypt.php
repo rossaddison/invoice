@@ -36,7 +36,7 @@ final class Crypt
          * Use of Password Hash With Insufficient Computational Effort
          * @see https://www.php.net/manual/en/function.hash-algos.php
          */
-        $random = (string)mt_rand();
+        $random = (string) mt_rand();
         $hash = hash('256', $random);
         return substr($hash, 0, 22);
     }

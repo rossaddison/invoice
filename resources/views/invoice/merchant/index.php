@@ -37,8 +37,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('merchant')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('merchant'))),
+            ),
     )
     ->render();
 
@@ -71,32 +71,32 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Merchant $model) => Html::encode($model->getId())
+            content: static fn(Merchant $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'inv',
             header: $translator->translate('invoice'),
-            content: static fn (Merchant $model): string => Html::encode($model->getInv()?->getNumber())
+            content: static fn(Merchant $model): string => Html::encode($model->getInv()?->getNumber()),
         ),
         new DataColumn(
             'date',
             header: $translator->translate('date'),
-            content: static fn (Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '')
+            content: static fn(Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : ''),
         ),
         new DataColumn(
             'driver',
             header: $translator->translate('merchant.driver'),
-            content: static fn (Merchant $model): string => Html::encode($model->getDriver())
+            content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
         ),
         new DataColumn(
             'response',
             header: $translator->translate('merchant.response'),
-            content: static fn (Merchant $model): string => Html::encode($model->getResponse())
+            content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
         ),
         new DataColumn(
             'reference',
             header: $translator->translate('merchant.reference'),
-            content: static fn (Merchant $model): string => Html::encode($model->getReference())
+            content: static fn(Merchant $model): string => Html::encode($model->getReference()),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -107,7 +107,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -117,7 +117,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -126,8 +126,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -136,9 +136,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('merchant'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('merchant/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

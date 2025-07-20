@@ -28,7 +28,7 @@ echo $alert;
 <?php
 $pagination = OffsetPagination::widget()
 ->paginator($paginator)
-->urlGenerator(fn (int $page) => $urlGenerator->generate('setting/debug_index', ['page' => $page]));
+->urlGenerator(fn(int $page) => $urlGenerator->generate('setting/debug_index', ['page' => $page]));
 
 ?>
 
@@ -88,8 +88,8 @@ $pagination = OffsetPagination::widget()
     $pageSize = $paginator->getCurrentPageSize();
 if ($pageSize > 0) {
     echo Html::p(
-        sprintf($translator->translate('index.footer.showing').' settings', $pageSize, $paginator->getTotalItems()),
-        ['class' => 'text-muted']
+        sprintf($translator->translate('index.footer.showing') . ' settings', $pageSize, $paginator->getTotalItems()),
+        ['class' => 'text-muted'],
     );
 } else {
     echo Html::p($translator->translate('records.no'));

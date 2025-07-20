@@ -95,7 +95,7 @@ class CustomValuesHelper
         FormModel $formModel,
         Translator $translator,
         array $entity_custom_values,
-        array $custom_value
+        array $custom_value,
     ): void {
         $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? gettype($this->form_value($entity_custom_values, $custom_field->getId()));
 
@@ -125,7 +125,7 @@ class CustomValuesHelper
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[(int)$choice->getId()] = Html::encode($choice->getValue());
+                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
                 echo Label::tag()
@@ -138,7 +138,7 @@ class CustomValuesHelper
                         'id' => $custom_field->getId(),
                         'name' => 'custom[' . $custom_field->getId() . ']',
                         'class' => 'form-control',
-                    ]
+                    ],
                 )
                 ->disabled(false)
                 ->optionsData($optionsData)
@@ -156,11 +156,11 @@ class CustomValuesHelper
                 // The mySql serialized $fieldValue eg. a:2:{i:0;s:2:"41";i:1;s:2:"43";}
                 // must now be unserialized to an array and placed in '->values($selChoices)'
                 // Search 'serialize' in e.g. src/Invoice/Client/ClientController
-                $selChoices = $this->is_serialized($fieldValue, true) ? (array)unserialize((string)$fieldValue) : [];
+                $selChoices = $this->is_serialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[(int)$choice->getId()] = Html::encode($choice->getValue());
+                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
                 echo Label::tag()
@@ -202,14 +202,14 @@ class CustomValuesHelper
                     'custom_field_id',
                     [],
                     //$this->s->get_config_theme_bootstrap5_horizontal(),
-                    'bootstrap5-vertical'
+                    'bootstrap5-vertical',
                 )
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
                     'name' => 'custom[' . $custom_field->getId() . ']',
                     'id' => $custom_field->getId(),
                 ])
-                ->value((int)$fieldValue ?: 0)
+                ->value((int) $fieldValue ?: 0)
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
                     ? $translator->translate('hint.this.field.is.required')
@@ -228,7 +228,7 @@ class CustomValuesHelper
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
-                ->value(Html::encode((string)$fieldValue ?: ''));
+                ->value(Html::encode((string) $fieldValue ?: ''));
         }
     }
 
@@ -261,20 +261,20 @@ class CustomValuesHelper
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[(int)$choice->getId()] = Html::encode($choice->getValue());
+                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
                 echo Label::tag()
                 ->forId('custom[' . $custom_field->getId() . ']')
                 ->content(Html::encode($custom_field->getLabel()));
-                if (strlen((string)$fieldValue) > 0) {
+                if (strlen((string) $fieldValue) > 0) {
                     echo Select::tag()
                     ->addAttributes(
                         [
                             'id' => $custom_field->getId(),
                             'name' => 'custom[' . $custom_field->getId() . ']',
                             'class' => 'form-control',
-                        ]
+                        ],
                     )
                     ->disabled(true)
                     ->optionsData($optionsData)
@@ -290,12 +290,12 @@ class CustomValuesHelper
                 /** @var array $choices */
                 $choices = $custom_value[$custom_field->getId()];
 
-                $selChoices = $this->is_serialized($fieldValue, true) ? (array)unserialize((string)$fieldValue) : [];
+                $selChoices = $this->is_serialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
 
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[(int)$choice->getId()] = Html::encode($choice->getValue());
+                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
                 echo Label::tag()
@@ -327,19 +327,19 @@ class CustomValuesHelper
                 ->inputLabelAttributes(['class' => 'form-check-label'])
                 ->inputLabel($custom_field->getLabel())
                 ->inputClass('form-check-input')
-                ->value((string)$fieldValue ?: '0');
+                ->value((string) $fieldValue ?: '0');
                 break;
             case 'NUMBER':
                 echo Field::number($formModel, 'custom_field_id')
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value(Html::encode((int)$fieldValue ?: 0));
+                ->value(Html::encode((int) $fieldValue ?: 0));
                 break;
             default:
                 echo Field::text($formModel, 'custom_field_id')
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value(Html::encode((string)$fieldValue ?: ''));
+                ->value(Html::encode((string) $fieldValue ?: ''));
         }
     }
 
@@ -364,18 +364,18 @@ class CustomValuesHelper
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
                 echo Label::tag()
-                ->content((string)$dateValue);
+                ->content((string) $dateValue);
                 echo Br::tag();
                 echo Br::tag();
                 break;
             case 'SINGLE-CHOICE':
                 echo Label::tag()
-                ->content((string)$this->selected_value($entity_custom_values, $custom_field->getId(), $cvR));
+                ->content((string) $this->selected_value($entity_custom_values, $custom_field->getId(), $cvR));
                 echo Br::tag();
                 break;
             case 'MULTIPLE-CHOICE':
                 if ($this->is_serialized($fieldValue, true)) {
-                    $array = (array)unserialize((string)$fieldValue);
+                    $array = (array) unserialize((string) $fieldValue);
                     /**
                      * @var int $key
                      * @var string $value
@@ -507,7 +507,7 @@ class CustomValuesHelper
     {
         $form_custom_value = $this->form_value($entity_custom_values, $custom_field_id);
         if (($form_custom_value !== '') && (null !== $form_custom_value)) {
-            $custom_value = $cvR->repoCustomValuequery((string)$form_custom_value);
+            $custom_value = $cvR->repoCustomValuequery((string) $form_custom_value);
             /** @var CustomValue $custom_value */
             return $custom_value->getValue();
         }

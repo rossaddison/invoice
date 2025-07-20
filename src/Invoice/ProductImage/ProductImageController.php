@@ -37,7 +37,7 @@ final class ProductImageController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->factory = $factory;
@@ -94,11 +94,11 @@ final class ProductImageController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
     ): Response {
         $product_id = $currentRoute->getArgument('product_id');
         $productImage = new ProductImage();
-        $productImageForm = new ProductImageForm($productImage, (int)$product_id);
+        $productImageForm = new ProductImageForm($productImage, (int) $product_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'productimage/add',
@@ -145,7 +145,7 @@ final class ProductImageController extends BaseController
                         'message' => $this->translator->translate('record.successfully.deleted'),
                         'url' => 'product/view',
                         'id' => $product_id,
-                    ]
+                    ],
                 ));
             }
             return $this->webService->getRedirectResponse('productimage/index');
@@ -168,12 +168,12 @@ final class ProductImageController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ProductImageRepository $productimageRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
     ): Response {
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
             $product_id = $productImage->getProduct_id();
-            $form = new ProductImageForm($productImage, (int)$product_id);
+            $form = new ProductImageForm($productImage, (int) $product_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productimage/edit',
@@ -211,7 +211,7 @@ final class ProductImageController extends BaseController
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productimage/view',
                 'actionArguments' => ['id' => $productImage->getId()],
-                'form' => new ProductImageForm($productImage, (int)$productImage->getProduct_id()),
+                'form' => new ProductImageForm($productImage, (int) $productImage->getProduct_id()),
                 'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);

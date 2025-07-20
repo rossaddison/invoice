@@ -21,9 +21,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
     private string $password = '';
     private bool $rememberMe = false;
 
-    public function __construct(private readonly AuthService $authService, private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly AuthService $authService, private readonly TranslatorInterface $translator) {}
 
     /**
      * @return string[]

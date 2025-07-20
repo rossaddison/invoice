@@ -55,7 +55,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Entity\Company $company
  */
 foreach ($companies as $company) {
-    $companyId = (string)$company->getId();
+    $companyId = (string) $company->getId();
     $companyName = $company->getName();
     if (strlen($companyId) > 0 && null !== $companyName) {
         $optionsDataCompany[$companyId] = $companyName;

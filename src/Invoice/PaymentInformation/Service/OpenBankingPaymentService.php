@@ -19,7 +19,7 @@ final class OpenBankingPaymentService
     public function __construct(
         OpenBanking $openBanking,
         SessionInterface $session,
-        UrlGenerator $urlGenerator
+        UrlGenerator $urlGenerator,
     ) {
         $this->openBanking = $openBanking;
         $this->session = $session;
@@ -36,15 +36,15 @@ final class OpenBankingPaymentService
             return '';
         }
 
-        $this->openBanking->setAuthUrl((string)$providerConfig['authUrl']);
-        $this->openBanking->setTokenUrl((string)$providerConfig['tokenUrl']);
-        $this->openBanking->setScope(isset($providerConfig['scope']) ? (string)$providerConfig['scope'] : null);
+        $this->openBanking->setAuthUrl((string) $providerConfig['authUrl']);
+        $this->openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
+        $this->openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
 
         $codeVerifier = Random::string(128);
         $codeChallenge = strtr(
             rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='),
             '+/',
-            '-_'
+            '-_',
         );
         $this->session->set('code_verifier', $codeVerifier);
 
@@ -71,7 +71,7 @@ final class OpenBankingPaymentService
         ServerRequestInterface $request,
         string $code,
         ?array $providerConfig,
-        string $url_key
+        string $url_key,
     ): \Yiisoft\Yii\AuthClient\OAuthToken {
         if ($providerConfig === null) {
             throw new \RuntimeException('Open Banking provider is not configured.');
@@ -90,7 +90,7 @@ final class OpenBankingPaymentService
             [
                 'redirect_uri' => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
                 'code_verifier' => $codeVerifier,
-            ]
+            ],
         );
     }
 }

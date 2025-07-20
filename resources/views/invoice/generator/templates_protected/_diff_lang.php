@@ -20,6 +20,6 @@ return [
      */
     foreach ($combined_array as $key => $value) {
         $rtrim = rtrim($value, ',');
-        echo "'".$key."' => '".$rtrim."',"."\n";
+        echo "'" . $key . "' => '" . $rtrim . "'," . "\n";
     }?>
 ];

@@ -8,9 +8,7 @@ use App\Invoice\Entity\QuoteItemAmount;
 
 final readonly class QuoteItemAmountService
 {
-    public function __construct(private QuoteItemAmountRepository $repository)
-    {
-    }
+    public function __construct(private QuoteItemAmountRepository $repository) {}
 
     /**
      * @param QuoteItemAmount $model
@@ -18,7 +16,7 @@ final readonly class QuoteItemAmountService
      */
     public function saveQuoteItemAmountNoForm(QuoteItemAmount $model, array $quoteitem): void
     {
-        $model->setQuote_item_id((int)$quoteitem['quote_item_id']);
+        $model->setQuote_item_id((int) $quoteitem['quote_item_id']);
         /**
          * @var float $quoteitem['subtotal']
          * @var float $quoteitem['taxtotal']

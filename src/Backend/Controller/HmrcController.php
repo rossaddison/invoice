@@ -61,10 +61,11 @@ final class HmrcController extends BaseController
      * @return Response
      */
     public function fphFeedback(
-        #[RouteArgument('api')] string $api
+        #[RouteArgument('api')]
+        string $api,
     ): Response {
         $logFile = $this->sR->specificCommonConfigAliase('@hmrc') . '/hmrc-requests.log';
-        $otpReference = (string)$this->session->get('otpRef');
+        $otpReference = (string) $this->session->get('otpRef');
         $client = $this->createLoggedGuzzleClient($logFile);
 
         return $client->post($this->getFphValidationFeedbackUrl($api), [
@@ -75,12 +76,12 @@ final class HmrcController extends BaseController
     public function fphValidate(): Response
     {
         $headers = [];
-        $otp = (int)$this->session->get('otp');
-        $otpReference = (string)$this->session->get('otpRef');
+        $otp = (int) $this->session->get('otp');
+        $otpReference = (string) $this->session->get('otpRef');
         if ($otp > 99999 && $otp < 1000000 && strlen($otpReference) > 0) {
             $headers = $this->getWebAppViaServerHeaders($otpReference);
 
-            $tokenString = (string)$this->session->get('hmrc_access_token');
+            $tokenString = (string) $this->session->get('hmrc_access_token');
 
             if (strlen($tokenString) > 0) {
                 $requestPartOne = $this->createRequest('GET', $this->getfphValidateHeadersUrl());
@@ -161,7 +162,7 @@ final class HmrcController extends BaseController
          * @see src\Auth\Controller\AuthController
          *      function callbackDeveloperSandboxHmrc
          */
-        $tokenString = (string)$this->session->get('hmrc_access_token');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
 
         if (strlen($tokenString) > 0) {
             // Define the URL for the create-test-user/individuals endpoint
@@ -176,19 +177,19 @@ final class HmrcController extends BaseController
                 [
                     'Authorization' => 'Bearer ' . $tokenString,
                     'Content-Type' => 'application/json',
-                ]
+                ],
             );
 
             // Add the JSON payload to the request body
             $request = $request->withBody(
-                \GuzzleHttp\Psr7\Utils::streamFor(json_encode($requestBody))
+                \GuzzleHttp\Psr7\Utils::streamFor(json_encode($requestBody)),
             );
 
             // Send the request and retrieve the response
             $response = $this->sendRequest($request);
 
             // Decode the JSON response into an array and return it
-            return (array)json_decode($response->getBody()->getContents(), true);
+            return (array) json_decode($response->getBody()->getContents(), true);
         }
 
         return [];
@@ -234,7 +235,7 @@ final class HmrcController extends BaseController
         string $govVendorLicenseIDs,
         string $govVendorProductName,
         string $govVendorPublicIP,
-        string $govVendorVersion
+        string $govVendorVersion,
     ): array {
         return [
             // Example: "WEB_APP_VIA_SERVER"
@@ -316,7 +317,7 @@ final class HmrcController extends BaseController
                 date('c'),
                 $request->getMethod(),
                 (string) $request->getUri(),
-                $headersJson
+                $headersJson,
             );
             // Use file_put_contents with LOCK_EX to prevent concurrent writes
             file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);

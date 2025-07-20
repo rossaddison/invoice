@@ -38,7 +38,7 @@ final class CustomFieldController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->customFieldService = $customFieldService;
@@ -64,14 +64,14 @@ final class CustomFieldController extends BaseController
         $paginator = (new DataOffsetPaginator($customFields))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $this->rbac();
         $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                  ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                  ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'custom_tables' => $this->custom_tables(),
             'custom_value_fields' => self::custom_value_fields(),
             'alert' => $this->alert(),
@@ -100,7 +100,7 @@ final class CustomFieldController extends BaseController
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $body = $request->getParsedBody() ?? [];
         $custom_field = new CustomField();
@@ -143,7 +143,7 @@ final class CustomFieldController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        CustomFieldRepository $customfieldRepository
+        CustomFieldRepository $customfieldRepository,
     ): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
@@ -184,7 +184,7 @@ final class CustomFieldController extends BaseController
     {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field instanceof CustomField) {
-            $custom_values = $customvalueRepository->repoCustomFieldquery_count((int)$custom_field->getId());
+            $custom_values = $customvalueRepository->repoCustomFieldquery_count((int) $custom_field->getId());
             // Make sure all custom values associated with the custom field have been deleted first before commencing
             if (!($custom_values > 0)) {
                 $this->customFieldService->deleteCustomField($custom_field);

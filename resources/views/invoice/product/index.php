@@ -35,7 +35,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var string $csrf
  * @var string $sortString
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataProductsDropdownFilter
- * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFamiliesDropdownFilter 
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFamiliesDropdownFilter
  * @psalm-var positive-int $page
  */
 
@@ -50,8 +50,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('product')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('product'))),
+            ),
     )
     ->render();
 
@@ -95,18 +95,18 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Product $model) => Html::encode($model->getProduct_id()),
+            content: static fn(Product $model) => Html::encode($model->getProduct_id()),
             withSorting: true,
         ),
         new DataColumn(
             field: 'family_id',
-            property: 'filter_family_id',    
+            property: 'filter_family_id',
             header: $translator->translate('family.name'),
-            encodeHeader: true,    
-            content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
+            encodeHeader: true,
+            content: static fn(Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
             filter: $optionsDataFamiliesDropdownFilter,
-            visible: true,    
-            withSorting: true
+            visible: true,
+            withSorting: true,
         ),
         new DataColumn(
             /**
@@ -115,54 +115,54 @@ $toolbar = Div::tag();
              */
             field: 'product_sku',
             property: 'filter_product_sku',
-            header:  $translator->translate('product.sku'),
+            header: $translator->translate('product.sku'),
             encodeHeader: true,
-            content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
+            content: static fn(Product $model): string => Html::encode($model->getProduct_sku()),
             // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below
             filter: $optionsDataProductsDropdownFilter,
             visible: true,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'product_description',
             header: $translator->translate('product.description'),
-            content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
-            withSorting: true
+            content: static fn(Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
+            withSorting: true,
         ),
         new DataColumn(
             field: 'product_price',
             property: 'filter_product_price',
-            header: $translator->translate('product.price'). ' ( '. $s->getSetting('currency_symbol'). ' ) ',
-            content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
+            header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
+            content: static fn(Product $model): string => Html::encode($model->getProduct_price()),
             filter: true,
-            withSorting: false
+            withSorting: false,
         ),
         new DataColumn(
             'product_price_base_quantity',
             header: $translator->translate('product.price.base.quantity'),
-            content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
-            withSorting: true
+            content: static fn(Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
+            withSorting: true,
         ),
         new DataColumn(
             'product_unit',
             header: $translator->translate('product.unit'),
-            content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? '')))
+            content: static fn(Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
         ),
         new DataColumn(
             'tax_rate_id',
             header: $translator->translate('tax.rate'),
-            content: static fn (Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
+            content: static fn(Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
                         ? Html::encode($model->getTaxrate()?->getTaxRateName())
                         : $translator->translate('none'),
-            withSorting: true
+            withSorting: true,
         ),
         new DataColumn(
             'product_tariff',
-            header: $s->getSetting('sumex') ? $translator->translate('product.tariff'). '('. $s->getSetting('currency_symbol'). ')' : '',
-            content: static fn (Product $model): string => ($s->getSetting('sumex')
+            header: $s->getSetting('sumex') ? $translator->translate('product.tariff') . '(' . $s->getSetting('currency_symbol') . ')' : '',
+            content: static fn(Product $model): string => ($s->getSetting('sumex')
                         ? Html::encode($model->getProduct_tariff())
                         : Html::encode($translator->translate('none'))),
-            visible: $s->getSetting('sumex') ? true : false
+            visible: $s->getSetting('sumex') ? true : false,
         ),
         new DataColumn(
             header: $translator->translate('product.property.add'),
@@ -170,7 +170,7 @@ $toolbar = Div::tag();
                 return Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-plus fa-margin dropdown-button text-decoration-none']),
                     $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProduct_id()]),
-                    []
+                    [],
                 );
             },
         ),
@@ -184,7 +184,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -195,7 +195,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -205,8 +205,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -215,22 +215,22 @@ $toolbar = Div::tag();
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $sort = Sort::only(['id', 'family_id', 'unit_id', 'tax_rate_id',
-                    'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity'
-                   ])
+    'product_name', 'product_sku', 'product_price', 'product_description', 'product_price_base_quantity',
+])
         ->withOrderString($sortString);
 
 $sortedAndPagedPaginator = (new OffsetPaginator($products))
     ->withPageSize($s->positiveListLimit())
     ->withCurrentPage($page)
     ->withSort($sort)
-    ->withToken(PageToken::next((string)$page));
+    ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('products'),
-    ''
+    '',
 );
 
 $toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
@@ -261,7 +261,7 @@ echo GridView::widget()
 ->id('w4-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

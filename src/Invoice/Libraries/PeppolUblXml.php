@@ -133,11 +133,11 @@ final readonly class PeppolUblXml
             new InvoicePeriod(
                 $start_date,
                 $end_date,
-                $description_code
+                $description_code,
             ),
             new OrderReference(
                 $order_id,
-                $sales_order_id
+                $sales_order_id,
             ),
             new ContractDocumentReference($cdr_id),
             $additionalDocumentReference,
@@ -160,7 +160,7 @@ final readonly class PeppolUblXml
                 $supplier_partyTaxScheme,
                 $supplier_partyLegalEntity,
                 $supplier_endpointID,
-                $supplier_endpointID_schemeID
+                $supplier_endpointID_schemeID,
             ),
             // Accounting Customer Party
             new Party(
@@ -189,17 +189,17 @@ final readonly class PeppolUblXml
                  * Error message: Buyer electronic address MUST be provided
                  */
                 $customer_endpointID,
-                $customer_endpointID_schemeID
+                $customer_endpointID_schemeID,
             ),
             new Delivery(
                 $actualDeliveryDate,
                 $deliveryLocationID_scheme,
                 $deliveryLocation,
-                $deliveryParty
+                $deliveryParty,
             ),
             new PaymentMeans(
                 $payeeFinancialAccount,
-                $paymentId
+                $paymentId,
             ),
             new PaymentTerms($payment_terms),
             $allowanceCharges,
@@ -212,7 +212,7 @@ final readonly class PeppolUblXml
                 $allowanceTotalAmount,
                 $payableAmount,
                 $this->sR->getSetting('currency_code_to') ?:
-        $this->sR->getSetting('currency_code_from')
+        $this->sR->getSetting('currency_code_from'),
             ),
             $invoiceLines,
             $isCopyIndicator,

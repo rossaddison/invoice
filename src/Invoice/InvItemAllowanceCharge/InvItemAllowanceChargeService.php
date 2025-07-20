@@ -13,9 +13,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 
 final readonly class InvItemAllowanceChargeService
 {
-    public function __construct(private ACIIR $repository)
-    {
-    }
+    public function __construct(private ACIIR $repository) {}
 
     /**
      * @param InvItemAllowanceCharge $model
@@ -24,10 +22,10 @@ final readonly class InvItemAllowanceChargeService
      */
     public function saveInvItemAllowanceCharge(InvItemAllowanceCharge $model, array $array, float $vat): void
     {
-        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
-        isset($array['inv_item_id']) ? $model->setInv_item_id((int)$array['inv_item_id']) : '';
-        isset($array['allowance_charge_id']) ? $model->setAllowance_charge_id((int)$array['allowance_charge_id']) : '';
-        isset($array['amount']) ? $model->setAmount((int)$array['amount']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
+        isset($array['inv_item_id']) ? $model->setInv_item_id((int) $array['inv_item_id']) : '';
+        isset($array['allowance_charge_id']) ? $model->setAllowance_charge_id((int) $array['allowance_charge_id']) : '';
+        isset($array['amount']) ? $model->setAmount((int) $array['amount']) : '';
         $model->setVat($vat);
         $this->repository->save($model);
     }
@@ -50,12 +48,12 @@ final readonly class InvItemAllowanceChargeService
             foreach ($aciis as $acii) {
                 // charge add
                 if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
-                    $all_charges += (float)$acii->getAmount();
-                    $all_charges_vat += (float)$acii->getVat();
+                    $all_charges += (float) $acii->getAmount();
+                    $all_charges_vat += (float) $acii->getVat();
                 } else {
                     // allowance subtract
-                    $all_allowances += (float)$acii->getAmount();
-                    $all_allowances_vat += (float)$acii->getVat();
+                    $all_allowances += (float) $acii->getAmount();
+                    $all_allowances_vat += (float) $acii->getVat();
                 }
             }
             // Record the rebuilt accumulative charges and allowances totals in the InvItemAmount Entity

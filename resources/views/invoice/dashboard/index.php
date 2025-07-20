@@ -103,12 +103,12 @@ use Yiisoft\Html\Html;
                         foreach ($quote_status_totals as $total) { ?>
                         <tr>
                              <td>
-                                <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1, 'status' => (int)$total['href']]); ?>">
-                                    <?php echo (string)$total['label']; ?>
+                                <a href="<?= $urlGenerator->generate('quote/index', ['page' => 1, 'status' => (int) $total['href']]); ?>">
+                                    <?php echo (string) $total['label']; ?>
                                 </a>
                             </td>
                             <td class="amount">
-                        <span class="<?php echo (string)$total['class']; ?>">
+                        <span class="<?php echo (string) $total['class']; ?>">
                             <?php echo $s->format_currency($total['sum_total']); ?>
                         </span>
                             </td>
@@ -138,12 +138,12 @@ use Yiisoft\Html\Html;
                         foreach ($invoice_status_totals as $total) { ?>
                         <tr>
                             <td>
-                                <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => (int)$total['href']]); ?>">
-                                    <?php echo (string)$total['label']; ?>
+                                <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => (int) $total['href']]); ?>">
+                                    <?php echo (string) $total['label']; ?>
                                 </a>
                             </td>
                             <td class="amount">
-                        <span class="<?php echo (string)$total['class']; ?>">
+                        <span class="<?php echo (string) $total['class']; ?>">
                             <?= $s->format_currency($total['sum_total']); ?>
                         </span>
                             </td>
@@ -183,8 +183,8 @@ use Yiisoft\Html\Html;
                                 <td>
                                 <?php if (null !== $statusId = $quote->getStatus_id()) { ?>    
                                     <span class="label label-
-                                    <?= $qR->getSpecificStatusArrayClass((string)$statusId); ?>">
-                                        <?= $qR->getSpecificStatusArrayLabel((string)$statusId); ?>
+                                    <?= $qR->getSpecificStatusArrayClass((string) $statusId); ?>">
+                                        <?= $qR->getSpecificStatusArrayLabel((string) $statusId); ?>
                                     </span>
                                 <?php } ?>    
                                 </td>
@@ -198,7 +198,7 @@ use Yiisoft\Html\Html;
                                     <a href="<?= $urlGenerator->generate('client/view', ['id' => $quote->getClient_id()]); ?>" title="<?=  (($quote->getNumber() ?? '#') ?: ($quote->getId() ?? '#')); ?>" class="btn btn-default" style="text-decoration:none"><?= Html::encode($clientHelper->format_client($quote->getClient())); ?></a>                                   
                                 </td>
                                 <td class="amount">
-<?php $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote->getId()) > 0) ? $qaR->repoQuotequery((string)$quote->getId()) : null) ?>
+<?php $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote->getId()) > 0) ? $qaR->repoQuotequery((string) $quote->getId()) : null) ?>
 <?= $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>                                    
                                 </td>
                                 <td style="text-align: center;">
@@ -260,15 +260,15 @@ use Yiisoft\Html\Html;
                                     <?php if (null !== ($statusId = $invoice->getStatus_id())) { ?>
                                         <span class="label label-<?= $iR->getSpecificStatusArrayClass($statusId); ?>">
 
-                                            <?= $iR->getSpecificStatusArrayLabel((string)$statusId);
-                                        if (null !== $iaR->repoCreditInvoicequery((string)$invoice->getId())) { ?>
+                                            <?= $iR->getSpecificStatusArrayLabel((string) $statusId);
+                                        if (null !== $iaR->repoCreditInvoicequery((string) $invoice->getId())) { ?>
                                                 &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('credit.invoice') ?>"></i>
                                             <?php } ?>
 
                                             <?php if ($invoice->getIs_read_only()) { ?>
                                                 &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('read.only') ?>"></i>
                                             <?php } ?>
-                                            <?php if (($irR->repoCount((string)$invoice->getId()) > 0)) { ?>
+                                            <?php if (($irR->repoCount((string) $invoice->getId()) > 0)) { ?>
                                                 &nbsp;<i class="fa fa-refresh" title="<?php $translator->translate('recurring') ?>"></i>
                                             <?php } ?>
                                         </span>
@@ -281,7 +281,7 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('inv/view', ['id' => $invoice->getId()]); ?>" class="btn btn-default" style="text-decoration:none">
-                                        <?= ($invoice->getNumber() ?? '#'.($invoice->getId() ?? '#')) ;?>
+                                        <?= ($invoice->getNumber() ?? '#' . ($invoice->getId() ?? '#')) ;?>
                                     </a>                
                                 </td>
                                 <td>
@@ -290,7 +290,7 @@ use Yiisoft\Html\Html;
                                     </a>
                                 </td>
                                 <td class="amount">
-                                    <?php $inv_amount = (($iaR->repoInvAmountCount((int)$invoice->getId()) > 0) ? $iaR->repoInvquery((int)$invoice->getId()) : null) ?>
+                                    <?php $inv_amount = (($iaR->repoInvAmountCount((int) $invoice->getId()) > 0) ? $iaR->repoInvquery((int) $invoice->getId()) : null) ?>
                                     <?= $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00) ?> 
                                     <?php //= $s->format_currency($iaR->repoInvQuery((int)$invoice->getId())->getBalance() * $iaR->repoInvQuery((int)$invoice->getId())->getSign());?>
                                 </td>                               
@@ -404,7 +404,7 @@ use Yiisoft\Html\Html;
                                 <tr>
                                     <td>
                                     <span class="label <?= $taskR->getSpecificStatusArrayClass($task->getStatus() ?? 1); ?>">
-                                        <?= $taskR->getSpecificStatusArrayLabel((string)($task->getStatus() ?? 1)); ?>
+                                        <?= $taskR->getSpecificStatusArrayLabel((string) ($task->getStatus() ?? 1)); ?>
                                     </span>
                                     </td>
                                     <td>

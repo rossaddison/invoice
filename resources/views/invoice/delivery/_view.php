@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
                 'placeholder' => $translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')',
                 'id' => 'date_created',
                 'role' => 'presentation',
-                'autocomplete' => 'off'
+                'autocomplete' => 'off',
             ])
             ->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '');
 ?>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
         'placeholder' => $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
         'id' => 'date_modified',
         'role' => 'presentation',
-        'autocomplete' => 'off'
+        'autocomplete' => 'off',
     ])
     ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '')
 ?>
@@ -98,14 +98,14 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::hidden($form, 'id')
     ->addInputAttributes([
         'form-control',
-        'id' => 'id'
+        'id' => 'id',
     ])
     ->value(Html::encode($form->getId()))
 ?>
             <?= Field::hidden($form, 'inv_id')
     ->addInputAttributes([
         'form-control',
-        'id' => 'inv_id'
+        'id' => 'inv_id',
     ])
     ->value(Html::encode($form->getInv_id()))
 ?>
@@ -117,14 +117,14 @@ use Yiisoft\Html\Tag\Form;
          */
         foreach ($dels as $del) {
             if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress_1() ?? ''). ', '. ($del->getAddress_2() ?? '') .', '. ($del->getCity() ?? '').', '. ($del->getZip() ?? '');
+                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '') . ', ' . ($del->getAddress_2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
             }
         }
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
             'class' => 'form-control',
-            'id' => 'delivery_location_id'
+            'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)
         ->value(Html::encode($form->getDelivery_location_id()));

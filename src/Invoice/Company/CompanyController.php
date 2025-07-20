@@ -32,7 +32,7 @@ final class CompanyController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->companyService = $companyService;
@@ -100,7 +100,7 @@ final class CompanyController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         CompanyRepository $companyRepository,
-        CurrentRoute $currentRoute
+        CurrentRoute $currentRoute,
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
@@ -136,7 +136,7 @@ final class CompanyController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
@@ -154,7 +154,7 @@ final class CompanyController extends BaseController
      */
     public function view(
         CurrentRoute $currentRoute,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {

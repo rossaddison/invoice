@@ -97,7 +97,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             $taxRatePercent = $taxRate->getTaxRatePercent();
                         $taxRateName = $taxRate->getTaxRateName();
                         if (null !== $taxRatePercent && null !== $taxRateName) {
-                            echo $numberHelper->format_amount((string)$taxRatePercent . '% - ' . $taxRateName);
+                            echo $numberHelper->format_amount((string) $taxRatePercent . '% - ' . $taxRateName);
                         }; ?>
                                 </option>
                             <?php } ?>
@@ -170,7 +170,7 @@ foreach ($soItems as $item) { ?>
                 <tr>
                     <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
                         <i class="fa fa-arrows"></i>
-                        <h5><bold><?= " ".(string)$count; ?></bold></h5>                       
+                        <h5><bold><?= " " . (string) $count; ?></bold></h5>                       
                     </td>
                     <td class="td-text">
                         <div class="input-group">
@@ -236,7 +236,7 @@ foreach ($soItems as $item) { ?>
                         if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
                                         <?php
                         if (null !== $taxRatePercentNumber && null !== $taxRateName) {
-                            echo  Html::encode($taxRatePercentNumber. '% - ' . $taxRateName);
+                            echo  Html::encode($taxRatePercentNumber . '% - ' . $taxRateName);
                         }
                         ?>
                                     </option>
@@ -324,7 +324,7 @@ foreach ($soItems as $item) { ?>
                     </td>                    
                 </tr>
                 <?php } ?>
-                <?php if ($vat == (string)0) { ?>
+                <?php if ($vat == (string) 0) { ?>
                 <tr>
                     <td class="td-vert-middle"><?= $translator->translate('discount'); ?></td>
                     <td class="clearfix">

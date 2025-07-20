@@ -55,7 +55,7 @@ final class InvoiceController extends BaseController
         SessionInterface $session,
         SettingRepository $sR,
         protected Crypt $crypt,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
     }
@@ -223,7 +223,7 @@ final class InvoiceController extends BaseController
 
     public function phpinfo(#[RouteArgument('selection')] string $selection = '-1'): Response
     {
-        $view = $this->viewRenderer->renderPartialAsString('//invoice/info/phpinfo', ['selection' => (int)$selection]);
+        $view = $this->viewRenderer->renderPartialAsString('//invoice/info/phpinfo', ['selection' => (int) $selection]);
         return $this->viewRenderer->render('info/view', ['topic' => $view]);
     }
 
@@ -366,7 +366,7 @@ final class InvoiceController extends BaseController
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int)$this->sR->getSetting('storecove_legal_entity_id');
+        $legal_entity_id_as_integer = (int) $this->sR->getSetting('storecove_legal_entity_id');
         /**
          * @var mixed $api_key_here
          */
@@ -385,7 +385,7 @@ final class InvoiceController extends BaseController
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
             $data = '{
-                "legalEntityId": ' . (string)$legal_entity_id_as_integer . ',
+                "legalEntityId": ' . (string) $legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -468,7 +468,7 @@ final class InvoiceController extends BaseController
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int)$this->sR->getSetting('storecove_legal_entity_id');
+        $legal_entity_id_as_integer = (int) $this->sR->getSetting('storecove_legal_entity_id');
         /**
          * @var mixed $api_key_here
          */
@@ -487,7 +487,7 @@ final class InvoiceController extends BaseController
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
             $data = '{
-                "legalEntityId": ' . (string)$legal_entity_id_as_integer . ',
+                "legalEntityId": ' . (string) $legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
                     "test@example.com"
@@ -799,7 +799,7 @@ final class InvoiceController extends BaseController
         SettingRepository $sR,
         TaskRepository $taskR,
         ProjectRepository $prjctR,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ): \Yiisoft\DataResponse\DataResponse {
         $data = [
             'alerts' => $this->alert(),
@@ -867,7 +867,7 @@ final class InvoiceController extends BaseController
         PaymentMethodRepository $pmR,
         ProductRepository $pR,
         ClientRepository $cR,
-        GroupRepository $gR
+        GroupRepository $gR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         if ($this->userService->hasPermission('noEntryToBaseController')) {
             return $this->webService->getNotFoundResponse();
@@ -901,7 +901,7 @@ final class InvoiceController extends BaseController
         UnitRepository $uR,
         ProductRepository $pR,
         TaxRateRepository $trR,
-        ClientRepository $cR
+        ClientRepository $cR,
     ): void {
         // The setting install_test_data exists
         if ($sR->repoCount('install_test_data') === 1
@@ -937,7 +937,7 @@ final class InvoiceController extends BaseController
             $setting = new Setting();
             $setting->setSetting_key($key);
             /** @psalm-suppress RedundantCastGivenDocblockType */
-            $setting->setSetting_value((string)$value);
+            $setting->setSetting_value((string) $value);
             $sR->save($setting);
         }
     }
@@ -1304,7 +1304,7 @@ final class InvoiceController extends BaseController
         ClientRepository $cR,
         QuoteRepository $qR,
         InvRepository $iR,
-        TaxRateRepository $trR
+        TaxRateRepository $trR,
     ): \Yiisoft\DataResponse\DataResponse {
         $flash = '';
         if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting('install_test_data') == 1) {

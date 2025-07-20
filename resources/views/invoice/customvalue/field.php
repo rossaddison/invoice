@@ -34,14 +34,14 @@ use Yiisoft\FormModel\Field;
         <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
             <?= Html::openTag('div', ['class' => 'btn-group btn-group-sm']); ?>
                 <?= Html::openTag('a', [
-                        'class' => 'btn btn-default',
-                        'href' => $urlGenerator->generate('customfield/index')]); ?>
+                    'class' => 'btn btn-default',
+                    'href' => $urlGenerator->generate('customfield/index')]); ?>
                         <?= Html::openTag('i', ['class' => 'fa fa-arrow-left']);?>
                         <?= Html::closeTag('i'); ?><?= $translator->translate('back'); ?>    
                 <?= Html::closeTag('a'); ?>
                 <?= Html::openTag('a', [
-                        'class' => 'btn btn-primary',
-                        'href' => $urlGenerator->generate('customvalue/new', ['id' => $custom_field->getId()])]); ?>
+                    'class' => 'btn btn-primary',
+                    'href' => $urlGenerator->generate('customvalue/new', ['id' => $custom_field->getId()])]); ?>
                         <?= Html::openTag('i', ['class' => 'fa fa-plus']);?>
                         <?= Html::closeTag('i'); ?><?= $translator->translate('new'); ?>    
                 <?= Html::closeTag('a'); ?>
@@ -71,7 +71,7 @@ $optionsDataType = [];
  */
 foreach ($custom_values_types as $type) {
     $alpha = str_replace('-', '_', strtolower($type));
-    $optionsDataType[$type] = $translator->translate(''.$alpha.'');
+    $optionsDataType[$type] = $translator->translate('' . $alpha . '');
 }
 ?>
                     <?= Html::openTag('div', ['class' => 'form-group']); ?>    
@@ -81,7 +81,7 @@ foreach ($custom_values_types as $type) {
         ->addInputAttributes([
             'class' => 'form-control',
             'id' => 'type',
-            'disabled' => 'disabled'
+            'disabled' => 'disabled',
         ])
         ->optionsData($optionsDataType);
 ?>    
@@ -109,9 +109,9 @@ foreach ($custom_values_types as $type) {
                                     <?= Html::openTag('td'); ?>
                                         <?= Html::openTag('div', ['class' => 'options btn-group']); ?>
                                             <?= Html::openTag('a', [
-                        'class' => 'btn btn-default btn-sm dropdown-toggle',
-                        'data-toggle' => 'dropdown',
-                        'href' => '#']); ?>
+                                                'class' => 'btn btn-default btn-sm dropdown-toggle',
+                                                'data-toggle' => 'dropdown',
+                                                'href' => '#']); ?>
                                                 <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
                                             <?= Html::closeTag('a'); ?>
                                             <?= Html::openTag('ul', ['class' => 'dropdown-menu']); ?>
@@ -119,10 +119,10 @@ foreach ($custom_values_types as $type) {
                                                     <?= Html::openTag(
                                                         'a',
                                                         [
-                                                                                    'href' => $urlGenerator->generate('customvalue/view', ['id' => $custom_value->getId()]),
-                                                                                    'style' => 'text-decoration:none',
-                                                                                    'class' => 'btn'
-                                                                                ]
+                                                            'href' => $urlGenerator->generate('customvalue/view', ['id' => $custom_value->getId()]),
+                                                            'style' => 'text-decoration:none',
+                                                            'class' => 'btn',
+                                                        ],
                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' => 'font-size:10px']); ?>            
                                                             <i class="fa fa-eye fa-margin"></i><?= $translator->translate('view'); ?>
@@ -133,10 +133,10 @@ foreach ($custom_values_types as $type) {
                                                     <?= Html::openTag(
                                                         'a',
                                                         [
-                                                                                    'href' => $urlGenerator->generate('customvalue/edit', ['id' => $custom_value->getId()]),
-                                                                                    'style' => 'text-decoration:none',
-                                                                                    'class' => 'btn'
-                                                                                ]
+                                                            'href' => $urlGenerator->generate('customvalue/edit', ['id' => $custom_value->getId()]),
+                                                            'style' => 'text-decoration:none',
+                                                            'class' => 'btn',
+                                                        ],
                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' => 'font-size:10px']); ?>            
                                                             <i class="fa fa-edit fa-margin"></i><?= $translator->translate('edit'); ?>
@@ -147,11 +147,11 @@ foreach ($custom_values_types as $type) {
                                                     <?= Html::openTag(
                                                         'a',
                                                         [
-                                                                                    'href' => $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->getId()]),
-                                                                                    'style' => 'text-decoration:none',
-                                                                                    'class' => 'btn',
-                                                                                    'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."')"
-                                                                                ]
+                                                            'href' => $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->getId()]),
+                                                            'style' => 'text-decoration:none',
+                                                            'class' => 'btn',
+                                                            'onclick' => 'return confirm(' . "'" . $translator->translate('delete.record.warning') . "')",
+                                                        ],
                                                     ); ?>
                                                         <?= Html::openTag('p', ['style' => 'font-size:10px']); ?>            
                                                             <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>

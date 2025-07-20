@@ -55,24 +55,24 @@ $invoice_list_split = $invoice_count > 3 ? $invoice_count / 2 : 9999;
  */
 foreach ($invoices as $invoice) {
     // Disable read-only if not applicable
-    if ($s->getSetting('disable_read_only') === (string)1) {
+    if ($s->getSetting('disable_read_only') === (string) 1) {
         $invoice->setIs_read_only(false);
     }
     // Convert the dropdown menu to a dropup if invoice is after the invoice split
     $dropup = $invoice_idx > $invoice_list_split ? true : false;
-    $actionDeleteArguments = ['_language' => (string)$session->get('_language'), 'id' => $invoice->getId()];
-    $actionEmailArguments = ['_language' => (string)$session->get('_language'), 'id' => $invoice->getId()];
-    $actionPdfArguments = ['_language' => (string)$session->get('_language'), 'include' => true, 'inv_id' => $invoice->getId()];
-    $actionClientViewArguments = ['_language' => (string)$session->get('_language'), 'id' => $invoice->getClient_id()];
-    $actionViewArguments = ['_language' => (string)$session->get('_language'), 'id' => $invoice->getId()];
-    $statusId = (string)$invoice->getStatus_id();
+    $actionDeleteArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
+    $actionEmailArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
+    $actionPdfArguments = ['_language' => (string) $session->get('_language'), 'include' => true, 'inv_id' => $invoice->getId()];
+    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getClient_id()];
+    $actionViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
+    $statusId = (string) $invoice->getStatus_id();
     ?>
             <tr>
                 <td>
-                    <span class="label label-<?= $iR->getSpecificStatusArrayClass((int)$statusId); ?>">
+                    <span class="label label-<?= $iR->getSpecificStatusArrayClass((int) $statusId); ?>">
                         <?= $iR->getSpecificStatusArrayLabel($statusId); ?>
                         <?php
-                    $invoiceId = (int)$invoice->getId();
+                    $invoiceId = (int) $invoice->getId();
     if (!empty($invoiceId)) {
         $invAmount = $iaR->repoInvquery($invoiceId);
         if (null !== $invAmount) {
@@ -89,7 +89,7 @@ foreach ($invoices as $invoice) {
                         <?php if ($invoice->getIs_read_only()) { ?>
                             &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('read.only') ?>"></i>
                         <?php } ?>
-                        <?php if ($irR->repoCount((string)$invoice->getId()) > 0) { ?>
+                        <?php if ($irR->repoCount((string) $invoice->getId()) > 0) { ?>
                             &nbsp;<i class="fa fa-refresh" title="<?= $translator->translate('recurring') ?>"></i>
                         <?php } ?>
                     </span>
@@ -121,7 +121,7 @@ foreach ($invoices as $invoice) {
 
                 <td class="amount 
                 <?php
-                    $inv_amount = $iaR->repoInvAmountCount((int)$invoice->getId()) > 0 ? $iaR->repoInvquery((int)$invoice->getId()) : null;
+                    $inv_amount = $iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null;
     if ((null !== $inv_amount) && ($inv_amount->getSign() === -1)) {
         echo 'text-danger';
     } ?>">  

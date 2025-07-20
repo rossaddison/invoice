@@ -82,7 +82,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('treatment.start'))
     ->value(Html::encode($form->getTreatmentstart() instanceof \DateTimeImmutable ?
                  $form->getTreatmentstart()->format('Y-m-d') : (is_string(
-                     $form->getTreatmentstart()
+                     $form->getTreatmentstart(),
                  ) ?
                  $form->getTreatmentstart() : '')))
     ->required(true)
@@ -94,7 +94,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('treatment.end'))
     ->value(Html::encode($form->getTreatmentend() instanceof \DateTimeImmutable ?
                  $form->getTreatmentend()->format('Y-m-d') : (is_string(
-                     $form->getTreatmentend()
+                     $form->getTreatmentend(),
                  ) ?
                  $form->getTreatmentend() : '')))
     ->required(true)
@@ -106,7 +106,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('case.date'))
     ->value(Html::encode($form->getCasedate() instanceof \DateTimeImmutable ?
                  $form->getCasedate()->format('Y-m-d') : (is_string(
-                     $form->getCasedate()
+                     $form->getCasedate(),
                  ) ?
                  $form->getCasedate() : '')))
     ->required(true)

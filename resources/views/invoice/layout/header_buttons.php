@@ -20,7 +20,7 @@ use Yiisoft\Html\Html;
             'class' => 'btn btn-danger',
             'id' => 'btn-cancel',
             'name' => 'btn_cancel',
-            'value' => '1'
+            'value' => '1',
         ],
         [
             $translator->translate('save'),
@@ -28,7 +28,7 @@ use Yiisoft\Html\Html;
             'class' => 'btn btn-success',
             'id' => 'btn-submit',
             'name' => 'btn_submit',
-            'value' => '1'
+            'value' => '1',
         ],
     ]
 ?>

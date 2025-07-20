@@ -34,7 +34,7 @@ final class InvAmountForm extends FormModel
 
     public function __construct(InvAmount $invAmount)
     {
-        $this->inv_id = (int)$invAmount->getInv_id();
+        $this->inv_id = (int) $invAmount->getInv_id();
         $this->sign = $invAmount->getSign();
         $this->item_subtotal = $invAmount->getItem_subtotal();
         $this->item_tax_total = $invAmount->getItem_tax_total();

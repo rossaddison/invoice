@@ -99,7 +99,7 @@ final class AuthController
         private readonly UrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
         private readonly Flash $flash,
-        private readonly CounterInterface $rateLimiter
+        private readonly CounterInterface $rateLimiter,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
@@ -114,7 +114,7 @@ final class AuthController
             $openBanking,
             $vkontakte,
             $x,
-            $yandex
+            $yandex,
         );
         $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
         $this->telegramToken = $this->sR->getSetting('telegram_token');
@@ -141,9 +141,9 @@ final class AuthController
         if (strlen($selectedOpenBankingProvider) > 0) {
             $providerConfig = $this->getOpenBankingProviderConfig($selectedOpenBankingProvider);
             if ($providerConfig !== null) {
-                $this->openBanking->setAuthUrl((string)$providerConfig['authUrl']);
-                $this->openBanking->setTokenUrl((string)$providerConfig['tokenUrl']);
-                $this->openBanking->setScope(isset($providerConfig['scope']) ? (string)$providerConfig['scope'] : null);
+                $this->openBanking->setAuthUrl((string) $providerConfig['authUrl']);
+                $this->openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
+                $this->openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
                 $codeVerifier = Random::string(128);
                 $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
                 $this->session->set('code_verifier', $codeVerifier);
@@ -249,7 +249,7 @@ final class AuthController
                     $params = [
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
-                    ]
+                    ],
                 ) : '',
                 'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
                 'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
@@ -260,7 +260,7 @@ final class AuthController
                         'return_type' => 'id_token',
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
-                    ]
+                    ],
                 ) : '',
                 'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
                 'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
@@ -271,7 +271,7 @@ final class AuthController
                     $params = [
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
-                    ]
+                    ],
                 ) : '',
                 /**
                  * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
@@ -284,14 +284,14 @@ final class AuthController
                     $params = [
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
-                    ]
+                    ],
                 ) : '',
                 'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl(
                     $request,
                     $params = [
                         'code_challenge' => $codeChallenge,
                         'code_challenge_method' => 'S256',
-                    ]
+                    ],
                 ) : '',
                 'noDeveloperSandboxHmrcContinueButton' => $noDeveloperSandboxHmrcContinueButton,
                 'noGithubContinueButton' => $noGithubContinueButton,
@@ -304,7 +304,7 @@ final class AuthController
                 'noVKontakteContinueButton' => $noVKontakteContinueButton,
                 'noXContinueButton' => $noXContinueButton,
                 'noYandexContinueButton' => $noYandexContinueButton,
-            ]
+            ],
         );
     }
 
@@ -328,8 +328,8 @@ final class AuthController
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
-        $userId = (int)$this->session->get('pending_2fa_user_id');
-        $user = $userRepository->findById((string)$userId);
+        $userId = (int) $this->session->get('pending_2fa_user_id');
+        $user = $userRepository->findById((string) $userId);
         if (null !== $user) {
             $email = $user->getEmail();
             if (strlen($email) > 0) {
@@ -381,7 +381,7 @@ final class AuthController
     public function verifySetup(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
-        UserRepository $userRepository
+        UserRepository $userRepository,
     ): ResponseInterface {
         // Apply rate limiting for setup verification attempts
         $clientIp = $this->getClientIpAddress($request);
@@ -392,13 +392,13 @@ final class AuthController
             return $this->redirectToOneTimePasswordError();
         }
 
-        $pendingUserId = (int)$this->session->get('pending_2fa_user_id');
+        $pendingUserId = (int) $this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
         if (is_array($body)) {
             $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
             if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
-                    $user = $userRepository->findById((string)$pendingUserId);
+                    $user = $userRepository->findById((string) $pendingUserId);
                     if (null !== $user) {
                         /** @var mixed $tempSecretRaw */
                         $tempSecretRaw = $this->session->get('2fa_temp_secret');
@@ -471,10 +471,10 @@ final class AuthController
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
-        $verifiedUserId = (int)$this->session->get('verified_2fa_user_id');
+        $verifiedUserId = (int) $this->session->get('verified_2fa_user_id');
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
-        $user = $userRepository->findById((string)$verifiedUserId);
+        $user = $userRepository->findById((string) $verifiedUserId);
         if (null !== $user) {
             // Only display the recovery codes once i.e. if the user does not have any
             if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
@@ -518,7 +518,7 @@ final class AuthController
                 $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
                 if (null !== $inputCode) {
                     if ($verifiedUserId > 0) {
-                        $user = $userRepository->findById((string)$verifiedUserId);
+                        $user = $userRepository->findById((string) $verifiedUserId);
                         if (null !== $user) {
                             $totpSecretRaw = $user->getTotpSecret();
                             $totpSecret = (\is_string($totpSecretRaw) && $totpSecretRaw !== '') ? $totpSecretRaw : null;
@@ -600,7 +600,7 @@ final class AuthController
 
         // Verify session has required 2FA data
         /** @var int $verifiedUserId */
-        $verifiedUserId = (int)$this->session->get('verified_2fa_user_id');
+        $verifiedUserId = (int) $this->session->get('verified_2fa_user_id');
 
         return $verifiedUserId === $userId;
     }
@@ -608,12 +608,12 @@ final class AuthController
     public function disableToken(
         TokenRepository $tR,
         ?string $userId = null,
-        string $identityProvider = ''
+        string $identityProvider = '',
     ): void {
         if (null !== $userId) {
             $token = $tR->findTokenByIdentityIdAndType($userId, $this->getTokenType($identityProvider));
             if (null !== $token) {
-                $token->setToken('already_used_token_' . (string)time());
+                $token->setToken('already_used_token_' . (string) time());
                 $tR->save($token);
             }
         }
@@ -657,12 +657,12 @@ final class AuthController
             'openBanking' => $this->openBanking->getSessionAuthState() ?? null,
             'vkontakte' => $this->vkontakte->getSessionAuthState() ?? null,
             'x' => $this->x->getSessionAuthState() ?? null,
-            'yandex' => $this->yandex->getSessionAuthState() ?? null
+            'yandex' => $this->yandex->getSessionAuthState() ?? null,
         };
 
         if (null !== $sessionState && null !== $state) {
             // Use constant-time comparison to prevent timing attacks
-            if (!$sessionState || !hash_equals((string)$sessionState, $state)) {
+            if (!$sessionState || !hash_equals((string) $sessionState, $state)) {
                 // State is invalid, possible cross-site request forgery. Exit with an error code.
                 $this->logger->log(LogLevel::ALERT, 'CSRF attack attempt detected for provider: ' . $identityProvider);
                 exit(1);
@@ -689,7 +689,7 @@ final class AuthController
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
         if (null !== ($userId = $user->getId())) {
-            $userInv->setUser_id((int)$userId);
+            $userInv->setUser_id((int) $userId);
             // if the user is administrator assign 0 => 'Administrator', 1 => Not Administrator
             $userInv->setType($user->getId() == 1 ? 0 : 1);
             // when the user clicks on the button, make the user active in the userinv extension table. Initially keep the user inactive.
@@ -707,7 +707,7 @@ final class AuthController
                         'language' => $language,
                         'token' => $tokenWithMask,
                         'tokenType' => $tokenType,
-                    ]
+                    ],
                 ))
                 ->addClass('btn btn-success')
                 ->content($translator->translate('identity.provider.authentication.successful'))
@@ -892,7 +892,7 @@ final class AuthController
         }
 
         // Convert to string and trim whitespace
-        $code = trim((string)$input);
+        $code = trim((string) $input);
 
         // Remove any non-alphanumeric characters
         $code = preg_replace('/[^A-Za-z0-9]/', '', $code);
@@ -930,7 +930,7 @@ final class AuthController
         $eccLevel = $this->sR->getSetting('qr_ecc_level');
         // @psalm-suppress RedundantCondition
         $options = new QROptions([
-            'eccLevel' => strlen($eccLevel) > 0 ? (int)$eccLevel : 0b01,
+            'eccLevel' => strlen($eccLevel) > 0 ? (int) $eccLevel : 0b01,
             'imageBase64' => true,
             'scale' => 4,
         ]);

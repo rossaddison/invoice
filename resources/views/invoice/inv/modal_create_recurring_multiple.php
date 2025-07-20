@@ -45,8 +45,8 @@ declare(strict_types=1);
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="recur_next_date" class="label-info"><?= $translator->translate('start'). '➕'.
-                                                                            $translator->translate('every') .'🟰'.
+                        <label for="recur_next_date" class="label-info"><?= $translator->translate('start') . '➕' .
+                                                                            $translator->translate('every') . '🟰' .
                                                                             $translator->translate('next'); ?></label>
                     </div>
                     <div class="form-group has-feedback">

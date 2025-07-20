@@ -32,7 +32,7 @@ use Yiisoft\Html\Html;
         echo Html::openTag('td');
         echo Html::a($productProperty->getName() ?? '#', $urlGenerator->generate(
             'productproperty/view',
-            $productPropertyArguments
+            $productPropertyArguments,
         ));
         echo Html::closeTag('td');
         echo Html::openTag('td');

@@ -76,7 +76,7 @@ final class InvAmountRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 
@@ -122,9 +122,9 @@ final class InvAmountRepository extends Select\Repository
      */
     public function AgingCount(int $interval_end, int $interval_start): int
     {
-        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_end . 'D'))
+        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string) $interval_end . 'D'))
                                               ->format('Y-m-d');
-        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_start . 'D'))
+        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string) $interval_start . 'D'))
                                                 ->format('Y-m-d');
         return $this->select()
                       ->load('inv')
@@ -141,10 +141,10 @@ final class InvAmountRepository extends Select\Repository
      */
     public function Aging(int $interval_end, int $interval_start): EntityReader
     {
-        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_end . 'D'))
+        $end = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string) $interval_end . 'D'))
                                               ->format('Y-m-d');
 
-        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string)$interval_start . 'D'))
+        $start = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P' . (string) $interval_start . 'D'))
                                                 ->format('Y-m-d');
         $query = $this->select()
                       ->load('inv')
@@ -225,11 +225,11 @@ final class InvAmountRepository extends Select\Repository
 
         /** @var array $status */
         foreach ($iR->getStatuses($translator) as $key => $status) {
-            $status_specific_invoices = $this->repoStatusTotals((int)$key, $range, $sR);
+            $status_specific_invoices = $this->repoStatusTotals((int) $key, $range, $sR);
             $total = 0.00;
             /** @var InvAmount $inv_amount */
             foreach ($status_specific_invoices as $inv_amount) {
-                $total = $total + (float)$inv_amount->getTotal();
+                $total = $total + (float) $inv_amount->getTotal();
             }
             $return[$key] = [
                 'inv_status_id' => $key,
@@ -237,7 +237,7 @@ final class InvAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total((int)$key, $range, $sR),
+                'num_total' => $this->repoStatusTotals_Num_Total((int) $key, $range, $sR),
             ];
         }
         return $return;

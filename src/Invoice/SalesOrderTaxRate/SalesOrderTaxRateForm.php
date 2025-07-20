@@ -20,8 +20,8 @@ final class SalesOrderTaxRateForm extends FormModel
 
     public function __construct(SalesOrderTaxRate $salesOrderTaxRate)
     {
-        $this->so_id = (int)$salesOrderTaxRate->getSo_id();
-        $this->tax_rate_id = (int)$salesOrderTaxRate->getTax_rate_id();
+        $this->so_id = (int) $salesOrderTaxRate->getSo_id();
+        $this->tax_rate_id = (int) $salesOrderTaxRate->getTax_rate_id();
         $this->include_item_tax = $salesOrderTaxRate->getInclude_item_tax();
         $this->so_tax_rate_amount = $salesOrderTaxRate->getSo_tax_rate_amount();
     }

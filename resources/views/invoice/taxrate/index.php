@@ -44,8 +44,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('tax.rate')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('tax.rate'))),
+            ),
     )
     ->render();
 
@@ -81,34 +81,34 @@ $toolbar = Div::tag();
             new DataColumn(
                 'tax_rate_id',
                 header: $translator->translate('id'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateId())
+                content: static fn(TaxRate $model) => Html::encode($model->getTaxRateId()),
             ),
             new DataColumn(
                 'tax_rate_name',
                 header: $translator->translate('tax.rate.name'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateName())
+                content: static fn(TaxRate $model) => Html::encode($model->getTaxRateName()),
             ),
             new DataColumn(
                 'tax_rate_percent',
                 header: $translator->translate('tax.rate.percent'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTaxRatePercent())
+                content: static fn(TaxRate $model) => Html::encode($model->getTaxRatePercent()),
             ),
             new DataColumn(
                 'peppol_tax_rate_code',
                 header: $translator->translate('peppol.tax.rate.code'),
-                content: static fn (TaxRate $model) => Html::encode($model->getPeppolTaxRateCode())
+                content: static fn(TaxRate $model) => Html::encode($model->getPeppolTaxRateCode()),
             ),
             new DataColumn(
                 'storecove_tax_type',
                 header: $translator->translate('storecove.tax.rate.code'),
-                content: static fn (TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType())))
+                content: static fn(TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))),
             ),
             new DataColumn(
                 'tax_rate_default',
                 header: $translator->translate('default'),
-                content: static fn (TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ?
-                                                                  ($translator->translate('active').' '.'✔️') :
-                                                                   $translator->translate('inactive').' '.'❌')
+                content: static fn(TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ?
+                                                                  ($translator->translate('active') . ' ' . '✔️') :
+                                                                   $translator->translate('inactive') . ' ' . '❌'),
             ),
             new ActionColumn(buttons: [
                 new ActionButton(
@@ -119,7 +119,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('view'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '✎',
@@ -129,7 +129,7 @@ $toolbar = Div::tag();
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('edit'),
-                    ]
+                    ],
                 ),
                 new ActionButton(
                     content: '❌',
@@ -138,8 +138,8 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'title' => $translator->translate('delete'),
-                        'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                    ]
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
                 ),
             ]),
         ];
@@ -149,14 +149,14 @@ $toolbar = Div::tag();
 $paginator = (new OffsetPaginator($taxrates))
     ->withPageSize($s->positiveListLimit())
     ->withCurrentPage($page)
-    ->withToken(PageToken::next((string)$page));
+    ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('tax.rates'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

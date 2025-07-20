@@ -46,7 +46,7 @@ final class QuoteItemController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->quoteitemService = $quoteitemService;
@@ -72,7 +72,7 @@ final class QuoteItemController extends BaseController
         QIAR $qiar,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // This function is used
-        $quote_id = (string)$this->session->get('quote_id');
+        $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $parameters = [
@@ -124,9 +124,9 @@ final class QuoteItemController extends BaseController
         UR $uR,
         QR $qR,
         QIAS $qias,
-        QIAR $qiar
+        QIAR $qiar,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        $quote_id = (string)$this->session->get('quote_id');
+        $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if (null !== $quoteItem) {
             $form = new QuoteItemForm($quoteItem, $quote_id);
@@ -156,7 +156,7 @@ final class QuoteItemController extends BaseController
                             /**
                              * @psalm-suppress PossiblyNullReference getId
                              */
-                            $request_quote_item = (int)$this->quoteitem($currentRoute, $qiR)->getId();
+                            $request_quote_item = (int) $this->quoteitem($currentRoute, $qiR)->getId();
                             $this->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
@@ -164,7 +164,7 @@ final class QuoteItemController extends BaseController
                                 $discount,
                                 $tax_rate_percentage,
                                 $qias,
-                                $qiar
+                                $qiar,
                             );
                             $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
@@ -186,7 +186,7 @@ final class QuoteItemController extends BaseController
      */
     public function taxrate_percentage(int $id, TRR $trr): float|null
     {
-        $taxrate = $trr->repoTaxRatequery((string)$id);
+        $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }
@@ -224,7 +224,7 @@ final class QuoteItemController extends BaseController
             $qias_array['subtotal'] = $sub_total;
             $qias_array['taxtotal'] = $tax_total;
             $qias_array['total'] = $sub_total - $discount_total + $tax_total;
-            if ($qiar->repoCount((string)$quote_item_id) === 0) {
+            if ($qiar->repoCount((string) $quote_item_id) === 0) {
                 $qias->saveQuoteItemAmountNoForm(new QuoteItemAmount(), $qias_array);
             } else {
                 $quote_item_amount = $qiar->repoQuoteItemAmountquery($quote_item_id);
@@ -281,7 +281,7 @@ final class QuoteItemController extends BaseController
         PR $pR,
         UR $uR,
         TRR $trR,
-        QIR $qiR
+        QIR $qiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if ($quoteItem) {

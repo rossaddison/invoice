@@ -23,7 +23,7 @@ final class Bootstrap5ModalTranslatorMessageWithAction
         string $translatedMessage,
         string $origin,
         string $urlString,
-        string $id
+        string $id,
     ): string {
         $this->layoutParameters = [
             'type' => $origin,
@@ -34,7 +34,7 @@ final class Bootstrap5ModalTranslatorMessageWithAction
                     'translatedMessage' => $translatedMessage,
                     'urlString' => $urlString,
                     'id' => $id,
-                ]
+                ],
             ),
         ];
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_message_layout', $this->layoutParameters);

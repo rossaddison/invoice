@@ -14,7 +14,7 @@ use Yiisoft\Html\Html;
 ?>
     
 <?= Html::openTag('div', [
-    'id' => 'modal-message-'.$type,
+    'id' => 'modal-message-' . $type,
     'class' => 'modal',
     'tab-index' => '-1']); ?>
     <?= Html::openTag('div', ['class' => 'modal-dialog']); ?>
@@ -24,9 +24,9 @@ use Yiisoft\Html\Html;
                     <?= Html::openTag(
                         'button',
                         ['class' => 'btn btn-light',
-                                             'type' => 'button',
-                                             'data-bs-dismiss' => 'modal',
-                                            ]
+                            'type' => 'button',
+                            'data-bs-dismiss' => 'modal',
+                        ],
                     ); ?>
                         <?= '❌'; ?>        
                     <?= Html::closeTag('button'); ?>

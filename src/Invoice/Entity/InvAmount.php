@@ -11,7 +11,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\InvAmount\InvAmountRepository::class)]
 class InvAmount
 {
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
     public function __construct(#[Column(type: 'primary')]
@@ -25,9 +25,7 @@ class InvAmount
         /** Note the $total is calculated after taking into account invoice discount i.e. $inv->getDiscount */
         private ?float $total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $paid = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $balance = 0.00)
-    {
-    }
+        private ?float $balance = 0.00) {}
 
     public function getInv(): ?Inv
     {
@@ -36,7 +34,7 @@ class InvAmount
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -46,7 +44,7 @@ class InvAmount
 
     public function getInv_id(): string
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     public function setInv_id(int $inv_id): void

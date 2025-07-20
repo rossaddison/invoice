@@ -67,7 +67,7 @@ final class SettingController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->settingService = $settingService;
@@ -81,7 +81,7 @@ final class SettingController extends BaseController
      */
     public function debug_index(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse
     {
-        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        $pageNum = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->settings()))
@@ -116,7 +116,8 @@ final class SettingController extends BaseController
         GR $gR,
         PM $pm,
         TR $tR,
-        #[Query('active')] string $active = null,
+        #[Query('active')]
+        string $active = null,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => '@invoice/Language',
@@ -150,7 +151,7 @@ final class SettingController extends BaseController
                 'date_formats' => $datehelper->date_formats(),
                 // Used in ClientForm
                 'time_zones' => DateTimeZone::listIdentifiers(),
-                'countries' => $countries->get_country_list((string)$this->session->get('_language')),
+                'countries' => $countries->get_country_list((string) $this->session->get('_language')),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'number_formats' => $this->sR->number_formats(),
                 'current_date' => new \DateTime(),
@@ -211,7 +212,7 @@ final class SettingController extends BaseController
                 'crypt' => $crypt,
             ]),
             'storecove' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
-                'countries' => $countries->get_country_list((string)$this->session->get('_language')),
+                'countries' => $countries->get_country_list((string) $this->session->get('_language')),
                 'sender_identifier_array' => StoreCoveArrays::store_cove_sender_identifier_array(),
             ]),
             'invoiceplane' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoiceplane', [
@@ -234,13 +235,13 @@ final class SettingController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
-                $settings = (array)$body['settings'];
+                $settings = (array) $body['settings'];
                 /**
                  * @var string $key
                  * @var string $value
                  */
                 foreach ($settings as $key => $value) {
-                    $key === 'tax_rate_decimal_places' && (int)$value !== 2 ? $this->tab_index_change_decimal_column((int)$value) : '';
+                    $key === 'tax_rate_decimal_places' && (int) $value !== 2 ? $this->tab_index_change_decimal_column((int) $value) : '';
                     // Deal with existing keys after first installation
                     if ($this->sR->repoCount($key) > 0) {
                         // Warn if duplicates
@@ -258,10 +259,10 @@ final class SettingController extends BaseController
                         }
                         if (isset($settings[$key . '_field_is_password']) && $value !== '') {
                             // Encrypt passwords but don't save empty passwords
-                            $this->tab_index_settings_save($key, (string)$crypt->encode(trim($value)));
+                            $this->tab_index_settings_save($key, (string) $crypt->encode(trim($value)));
                         } elseif (isset($settings[$key . '_field_is_amount'])) {
                             // Format amount inputs
-                            $this->tab_index_settings_save($key, (string)$numberhelper->standardize_amount($value));
+                            $this->tab_index_settings_save($key, (string) $numberhelper->standardize_amount($value));
                         } else {
                             $this->tab_index_settings_save($key, $value);
                         }
@@ -310,7 +311,7 @@ final class SettingController extends BaseController
             'scalingFactor' => $query_params['scalingFactor'],
             'colourDepth' => $query_params['colourDepth'],
             'timestamp' => (new DateTimeImmutable())->getTimestamp(),
-            'windowSize' => (string)$query_params['windowInnerWidth'] . 'x' . (string)$query_params['windowInnerHeight'],
+            'windowSize' => (string) $query_params['windowInnerWidth'] . 'x' . (string) $query_params['windowInnerHeight'],
             'userUuid' => $userUuid,
         ]));
     }
@@ -349,13 +350,13 @@ final class SettingController extends BaseController
                 if ($this->sR->repoCount('decimal_point') == 1) {
                     $this->tab_index_settings_save(
                         'decimal_point',
-                        (string)$number_formats[$value]['decimal_point']
+                        (string) $number_formats[$value]['decimal_point'],
                     );
                 }
                 if ($this->sR->repoCount('thousands_separator') == 1) {
                     $this->tab_index_settings_save(
                         'thousands_separator',
-                        (string)$number_formats[$value]['thousands_separator']
+                        (string) $number_formats[$value]['thousands_separator'],
                     );
                 }
             }
@@ -399,7 +400,7 @@ final class SettingController extends BaseController
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            $key = (string)($body['setting_key'] ?? '');
+            $key = (string) ($body['setting_key'] ?? '');
             if ($this->sR->repoCount($key) == 1) {
                 $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
                 return $this->webService->getRedirectResponse('setting/debug_index');
@@ -554,7 +555,7 @@ final class SettingController extends BaseController
         $origin = $currentRoute->getArgument('origin') ?? 'inv';
         $limit = $currentRoute->getArgument('limit');
         if ($setting) {
-            $setting->setSetting_value((string)$limit);
+            $setting->setSetting_value((string) $limit);
             $this->sR->save($setting);
         }
         return $this->webService->getRedirectResponse($origin . '/index');
@@ -569,7 +570,7 @@ final class SettingController extends BaseController
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $setting = $this->setting($currentRoute);
         if ($setting) {
@@ -671,7 +672,7 @@ final class SettingController extends BaseController
      * @return Setting|null
      */
     private function setting(
-        CurrentRoute $currentRoute
+        CurrentRoute $currentRoute,
     ): Setting|null {
         $setting_id = $currentRoute->getArgument('setting_id');
         if (null !== $setting_id) {
@@ -702,13 +703,13 @@ final class SettingController extends BaseController
             $this->flashMessage('info', $this->translator->translate('setting.assets.cleared.at') . $directory);
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/successful',
-                ['heading' => $this->translator->translate('successful'),'message' => $this->translator->translate('setting.you.have.cleared.the.cache')]
+                ['heading' => $this->translator->translate('successful'),'message' => $this->translator->translate('setting.you.have.cleared.the.cache')],
             ));
         } catch (\Exception $e) {
             $this->flashMessage('warning', $this->translator->translate('setting.assets.were.not.cleared.at') . $directory . $this->translator->translate('setting.as.a.result.of') . $e->getMessage());
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/unsuccessful',
-                ['heading' => $this->translator->translate('unsuccessful'),'message' => $this->translator->translate('setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('setting.error.on.the.public.assets.folder')]
+                ['heading' => $this->translator->translate('unsuccessful'),'message' => $this->translator->translate('setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('setting.error.on.the.public.assets.folder')],
             ));
         }
     }
@@ -738,7 +739,7 @@ final class SettingController extends BaseController
                 '3306',
                 [
                     'charset' => 'utf8mb4',
-                ]
+                ],
             )
             )->asString();
             $arrayCache = new ArrayCache();

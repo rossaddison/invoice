@@ -104,7 +104,7 @@ final class SalesOrderRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'desc'])
+                ->withOrder(['id' => 'desc']),
         );
     }
 
@@ -323,7 +323,7 @@ final class SalesOrderRepository extends Select\Repository
      */
     public function get_salesorder_number(string $group_id, GR $gR): mixed
     {
-        return $gR->generate_number((int)$group_id);
+        return $gR->generate_number((int) $group_id);
     }
 
     /**

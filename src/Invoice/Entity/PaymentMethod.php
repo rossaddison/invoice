@@ -13,13 +13,11 @@ class PaymentMethod
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'text', nullable: true)]
         private ?string $name = '', #[Column(type: 'bool', default: true)]
-        private bool $active = true)
-    {
-    }
+        private bool $active = true) {}
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void

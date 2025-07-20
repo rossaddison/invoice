@@ -92,7 +92,7 @@ class GeneratorController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->aliases = $this->setAliases();
@@ -142,7 +142,7 @@ class GeneratorController extends BaseController
          * @var string $value
          */
         foreach ($arrayEnAppDotPhp as $key => $value) {
-            if (!array_key_exists($key, (array)$arrayTargetLocaleDotPhp)) {
+            if (!array_key_exists($key, (array) $arrayTargetLocaleDotPhp)) {
                 $diff[$key] = $value;
             }
         }
@@ -201,7 +201,7 @@ class GeneratorController extends BaseController
             if ($data != false) {
                 /** @var array $json */
                 $json = Json::decode($data, true);
-                $projectId = (string)$json['project_id'];
+                $projectId = (string) $json['project_id'];
                 putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
                 try {
                     $translationClient = new TranslationServiceClient([]);
@@ -261,9 +261,9 @@ class GeneratorController extends BaseController
                     ];
                     $file_content = $this->viewRenderer->renderPartialAsString(
                         '//invoice/generator/templates_protected/' . $templateFile,
-                        $content_params
+                        $content_params,
                     );
-                    $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage . '_' . $type . '_' . (string)time();
+                    $prefixToFileAsLocaleWithFileTypeAndTimeStamp = $targetLanguage . '_' . $type . '_' . (string) time();
                     $this->flashMessage(
                         'success',
                         sprintf(
@@ -272,8 +272,8 @@ class GeneratorController extends BaseController
                             $numItems,
                             $batchSize,
                             $path,
-                            $prefixToFileAsLocaleWithFileTypeAndTimeStamp
-                        )
+                            $prefixToFileAsLocaleWithFileTypeAndTimeStamp,
+                        ),
                     );
                     // output to //invoice/generator/output_overwrite/
                     $this->build_and_save($path, $file_content, $templateFile, $prefixToFileAsLocaleWithFileTypeAndTimeStamp);
@@ -379,7 +379,7 @@ class GeneratorController extends BaseController
      */
     public function index(
         GeneratorRepository $generatorRepository,
-        GeneratorRelationRepository $grR
+        GeneratorRelationRepository $grR,
     ): \Yiisoft\DataResponse\DataResponse {
         $this->rbac();
         $generators = $this->generators($generatorRepository);
@@ -559,7 +559,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::ENTITY;
         /** @var Gentor $g */
@@ -603,7 +603,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::REPO;
         /** @var Gentor $g */
@@ -647,7 +647,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::SERVICE;
         /** @var Gentor $g */
@@ -691,7 +691,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::FORM;
         /** @var Gentor $g */
@@ -736,7 +736,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::CONTROLLER;
         /** @var Gentor $g */
@@ -780,7 +780,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::INDEX;
         /** @var Gentor $g */
@@ -824,7 +824,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::_FORM;
         /** @var Gentor $g */
@@ -867,7 +867,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::_VIEW;
         /** @var Gentor $g */
@@ -913,7 +913,7 @@ class GeneratorController extends BaseController
         GeneratorRepository $gr,
         GeneratorRelationRepository $grr,
         DatabaseManager $dbal,
-        View $view
+        View $view,
     ): Response {
         $file = self::_ROUTE;
         $path = $this->aliases->get('@generated');

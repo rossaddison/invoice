@@ -31,7 +31,7 @@ use Yiisoft\Html\Html;
                                         <?= Html::a(
                                             $translator->translate('telegram.bot.api.enable'),
                                             'https://core.telegram.org/bots/api',
-                                            ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']
+                                            ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => ''],
                                         );
 ?>
                                 </label>

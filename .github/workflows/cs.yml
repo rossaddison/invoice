@@ -1,0 +1,76 @@
+name: Code Style
+
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'infection.json.dist'
+      - 'psalm.xml'
+      - 'fixer-output.txt'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'infection.json.dist'
+      - 'psalm.xml'
+      - 'fixer-output.txt'
+jobs:
+  cs-fix:
+    runs-on: ubuntu-latest
+    # Settings ...
+    # Actions ...
+    # General ...
+    # Workflow permissions ... 
+    # 🔘 Read repository contents and package permissions ... 
+    # ☑ ️Allow Github Actions to create and approve pull requests
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+
+      - name: Install composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHP CS Fixer dry-run
+        id: csfixer
+        run: |
+          php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff --verbose | tee fixer-output.txt
+          if grep -q 'fixed' fixer-output.txt; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          else
+            echo "has_changes=false" >> $GITHUB_ENV
+          fi
+
+      - name: Apply PHP CS Fixer if needed
+        if: env.has_changes == 'true'
+        run: php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
+
+      - name: Create Pull Request for style fixes
+        if: env.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: apply PHP CS Fixer"
+          branch: cs-fixer/style-fixes
+          title: "Automated style fixes from PHP CS Fixer"
+          body: |
+            This pull request contains automated code style fixes as detected by PHP CS Fixer.
+          labels: style, automated
+          delete-branch: false   

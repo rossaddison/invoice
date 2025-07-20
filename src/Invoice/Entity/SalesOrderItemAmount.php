@@ -11,7 +11,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository::class)]
 class SalesOrderItemAmount
 {
-    #[BelongsTo(target:SalesOrderItem::class, nullable: false)]
+    #[BelongsTo(target: SalesOrderItem::class, nullable: false)]
     private ?SalesOrderItem $so_item = null;
 
     public function __construct(#[Column(type: 'primary')]
@@ -21,9 +21,7 @@ class SalesOrderItemAmount
         private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $charge = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
-    }
+        private ?float $total = 0.00) {}
 
     public function getSalesOrderItem(): ?SalesOrderItem
     {
@@ -32,7 +30,7 @@ class SalesOrderItemAmount
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -42,7 +40,7 @@ class SalesOrderItemAmount
 
     public function getSo_item_id(): string
     {
-        return (string)$this->so_item_id;
+        return (string) $this->so_item_id;
     }
 
     public function setSo_item_id(int $so_item_id): void

@@ -82,13 +82,13 @@ foreach ($custom_fields as $custom_field) {
                 <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-success"  style="text-decoration:none">
                    <i class="fa fa-file-text"></i><?= $translator->translate('create.invoice'); ?>
                 </a>
-                <?php if ($cpR->repoClientCount($clientId = (string)$client->getClient_id()) === 0 && strlen($clientId) > 0) { ?>
+                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClient_id()) === 0 && strlen($clientId) > 0) { ?>
                 <a href="<?= $urlGenerator->generate('clientpeppol/add', ['client.id' => $client->getClient_id()]); ?>" 
                    class="btn btn-info" style="text-decoration:none">
                      <i class="fa fa-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
                 </a>
                 <?php } ?>
-                <?php if ($cpR->repoClientCount($clientId = (string)$client->getClient_id()) > 0 && strlen($clientId) > 0) { ?>
+                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClient_id()) > 0 && strlen($clientId) > 0) { ?>
                 <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClient_id()]); ?>" 
                    class="btn btn-warning" style="text-decoration:none">
                      <i class="fa fa-edit"></i> <?= $translator->translate('client.peppol.edit'); ?>
@@ -114,7 +114,7 @@ foreach ($custom_fields as $custom_field) {
                                     'origin' => 'client',
                                     'origin_id' => $clientIdPostalAdd,
 
-                                    'action' => 'add']
+                                    'action' => 'add'],
                             ) : ''; ?>"
                    class="btn btn-primary" style="text-decoration:none">
                     <i class="fa fa-plus"></i><?= $translator->translate('client.postaladdress.add'); ?>
@@ -122,7 +122,7 @@ foreach ($custom_fields as $custom_field) {
                 <a href="<?= null !== ($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate(
                     'del/add',
                     ['client_id' => $clientIdDelAdd],
-                    ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']
+                    ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view'],
                 ) : ''; ?>"
                    class="btn btn-success" style="text-decoration:none">
                    <i class="fa fa-plus fa-margin"></i><?= $translator->translate('delivery.location.add'); ?>

@@ -37,8 +37,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('group')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('group'))),
+            ),
     )
     ->render();
 
@@ -55,7 +55,7 @@ $toolbar = Div::tag();
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('h5'); ?><?= $translator->translate('group'); ?><?= Html::closeTag('h5'); ?>
         <?= Html::openTag('div'); ?>
-            <?= Html::a(I::tag()->addClass('bi bi-plus')->content(' '.Html::encode($translator->translate('new'))), $urlGenerator->generate('group/add'), ['class' => 'btn btn-success']); ?>
+            <?= Html::a(I::tag()->addClass('bi bi-plus')->content(' ' . Html::encode($translator->translate('new'))), $urlGenerator->generate('group/add'), ['class' => 'btn btn-success']); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::br(); ?>
     <?= Html::openTag('div'); ?>
@@ -65,27 +65,27 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Group $model) => Html::encode($model->getId())
+            content: static fn(Group $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'name',
             header: $translator->translate('name'),
-            content: static fn (Group $model) => Html::encode($model->getName())
+            content: static fn(Group $model) => Html::encode($model->getName()),
         ),
         new DataColumn(
             'identifier_format',
             header: $translator->translate('identifier.format'),
-            content: static fn (Group $model) => Html::encode($model->getIdentifier_format())
+            content: static fn(Group $model) => Html::encode($model->getIdentifier_format()),
         ),
         new DataColumn(
             'left_pad',
             header: $translator->translate('left.pad'),
-            content: static fn (Group $model) => Html::encode($model->getLeft_pad())
+            content: static fn(Group $model) => Html::encode($model->getLeft_pad()),
         ),
         new DataColumn(
             'next_id',
             header: $translator->translate('next.id'),
-            content: static fn (Group $model) => Html::encode($model->getNext_id())
+            content: static fn(Group $model) => Html::encode($model->getNext_id()),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -96,7 +96,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -106,7 +106,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -115,8 +115,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -129,9 +129,9 @@ $toolbarString =
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('groups'),
-    ''
+    '',
 );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
@@ -143,7 +143,7 @@ echo GridView::widget()
 ->id('w75-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'group').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'group') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

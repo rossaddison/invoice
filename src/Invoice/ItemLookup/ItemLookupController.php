@@ -32,7 +32,7 @@ final class ItemLookupController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->itemlookupService = $itemlookupService;
@@ -61,7 +61,7 @@ final class ItemLookupController extends BaseController
      */
     public function add(
         Request $request,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $itemLookup = new ItemLookup();
         $form = new ItemLookupForm($itemLookup);
@@ -97,7 +97,7 @@ final class ItemLookupController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        ItemLookupRepository $itemlookupRepository
+        ItemLookupRepository $itemlookupRepository,
     ): Response {
         $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $lookup) {
@@ -132,7 +132,7 @@ final class ItemLookupController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        ItemLookupRepository $itemlookupRepository
+        ItemLookupRepository $itemlookupRepository,
     ): Response {
         $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if ($lookup) {
@@ -149,7 +149,7 @@ final class ItemLookupController extends BaseController
      */
     public function view(
         CurrentRoute $currentRoute,
-        ItemLookupRepository $itemlookupRepository
+        ItemLookupRepository $itemlookupRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $itemLookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $itemLookup) {

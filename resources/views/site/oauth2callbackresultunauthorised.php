@@ -25,10 +25,10 @@ $this->setTitle($translator->translate('layout.not-found'));
                 $currentPath = $currentRoute->getUri()?->getPath();
 null !== $currentPath ?
     $translator->translate('layout.page.not-authorised', [
-    'url' => Html::span(
-        Html::encode($currentPath),
-        ['class' => 'text-muted']
-    ),
+        'url' => Html::span(
+            Html::encode($currentPath),
+            ['class' => 'text-muted'],
+        ),
     ]) : '';
 ?>
         </p>
@@ -36,7 +36,7 @@ null !== $currentPath ?
             <?= Html::a(
                 $translator->translate('layout.go.home'),
                 $urlGenerator->generate('site/index'),
-                ['class' => 'btn btn-outline-primary mt-5']
+                ['class' => 'btn btn-outline-primary mt-5'],
             );
 ?>
         </p>

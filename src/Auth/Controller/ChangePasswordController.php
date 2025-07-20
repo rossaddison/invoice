@@ -42,7 +42,7 @@ final class ChangePasswordController
         IdentityRepository $identityRepository,
         ServerRequestInterface $request,
         FormHydrator $formHydrator,
-        ChangePasswordForm $changePasswordForm
+        ChangePasswordForm $changePasswordForm,
     ): ResponseInterface {
         if ($authService->isGuest()) {
             return $this->redirectToMain();

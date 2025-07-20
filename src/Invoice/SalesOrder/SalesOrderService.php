@@ -27,9 +27,7 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class SalesOrderService
 {
-    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session)
-    {
-    }
+    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session) {}
 
     /**
      * @param User $user
@@ -38,23 +36,23 @@ final readonly class SalesOrderService
      */
     public function addSo(User $user, SalesOrder $model, array $array): void
     {
-        isset($array['quote_id']) ? $model->setQuote_id((int)$array['quote_id']) : '';
-        isset($array['inv_id']) ? $model->setInv_id((int)$array['inv_id']) : '';
-        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';
-        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
-        isset($array['client_po_number']) ? $model->setClient_po_number((string)$array['client_po_number']) : '';
-        isset($array['client_po_person']) ? $model->setClient_po_person((string)$array['client_po_person']) : '';
-        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
-        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
-        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
-        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : Random::string(32);
-        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
-        isset($array['notes']) ? $model->setNotes((string)$array['notes']) : '';
-        isset($array['payment_term']) ? $model->setPaymentTerm((string)$array['payment_term']) : '';
-        $model->setNumber((string)$array['number']);
+        isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
+        isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+        isset($array['client_po_number']) ? $model->setClient_po_number((string) $array['client_po_number']) : '';
+        isset($array['client_po_person']) ? $model->setClient_po_person((string) $array['client_po_person']) : '';
+        isset($array['status_id']) ? $model->setStatus_id((int) $array['status_id']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float) $array['discount_percent']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string) $array['url_key']) : Random::string(32);
+        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
+        isset($array['notes']) ? $model->setNotes((string) $array['notes']) : '';
+        isset($array['payment_term']) ? $model->setPaymentTerm((string) $array['payment_term']) : '';
+        $model->setNumber((string) $array['number']);
         if ($model->isNewRecord()) {
             $model->setStatus_id(1);
-            $model->setUser_id((int)$user->getId());
+            $model->setUser_id((int) $user->getId());
             $model->setDate_created(new \DateTimeImmutable('now'));
             $model->setDiscount_amount(0.00);
         }
@@ -68,19 +66,19 @@ final readonly class SalesOrderService
      */
     public function saveSo(SalesOrder $model, array $array): SalesOrder
     {
-        $model->setQuote_id((int)$array['quote_id']);
-        $model->setInv_id((int)$array['inv_id']);
-        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
-        isset($array['group_id']) ? $model->setGroup_id((int)$array['group_id']) : '';
-        isset($array['client_po_number']) ? $model->setClient_po_number((string)$array['client_po_number']) : '';
-        isset($array['client_po_person']) ? $model->setClient_po_person((string)$array['client_po_person']) : '';
-        isset($array['status_id']) ? $model->setStatus_id((int)$array['status_id']) : '';
-        isset($array['discount_percent']) ? $model->setDiscount_percent((float)$array['discount_percent']) : '';
-        isset($array['discount_amount']) ? $model->setDiscount_amount((float)$array['discount_amount']) : '';
-        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
-        isset($array['password']) ? $model->setPassword((string)$array['password']) : '';
-        isset($array['notes']) ? $model->setNotes((string)$array['notes']) : '';
-        isset($array['payment_term']) ? $model->setPaymentTerm((string)$array['payment_term']) : '';
+        $model->setQuote_id((int) $array['quote_id']);
+        $model->setInv_id((int) $array['inv_id']);
+        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+        isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : '';
+        isset($array['client_po_number']) ? $model->setClient_po_number((string) $array['client_po_number']) : '';
+        isset($array['client_po_person']) ? $model->setClient_po_person((string) $array['client_po_person']) : '';
+        isset($array['status_id']) ? $model->setStatus_id((int) $array['status_id']) : '';
+        isset($array['discount_percent']) ? $model->setDiscount_percent((float) $array['discount_percent']) : '';
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string) $array['url_key']) : '';
+        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
+        isset($array['notes']) ? $model->setNotes((string) $array['notes']) : '';
+        isset($array['payment_term']) ? $model->setPaymentTerm((string) $array['payment_term']) : '';
         $this->repository->save($model);
         return $model;
     }

@@ -35,7 +35,7 @@ final class CompanyPrivateController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->companyPrivateService = $companyPrivateService;
@@ -67,7 +67,7 @@ final class CompanyPrivateController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $company_private = new CompanyPrivate();
         $form = new CompanyPrivateForm($company_private);
@@ -148,7 +148,7 @@ final class CompanyPrivateController extends BaseController
     public function file_uploading_errors(
         string $tmp,
         string $target_file_name,
-        string $target_public_logo
+        string $target_public_logo,
     ): bool {
         $return = true;
         if (is_uploaded_file($tmp)) {
@@ -192,7 +192,7 @@ final class CompanyPrivateController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         CompanyPrivateRepository $companyprivateRepository,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
         if ($company_private) {
@@ -222,10 +222,10 @@ final class CompanyPrivateController extends BaseController
                  * @var array $_FILES['logo_filename']
                  * @var array $body
                  */
-                $body['logo_filename'] = (string)$_FILES['logo_filename']['name'];
+                $body['logo_filename'] = (string) $_FILES['logo_filename']['name'];
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
-                    $modified_original_file_name = Random::string(4) . '_' . (string)preg_replace('/\s+/', '_', $body['logo_filename']);
+                    $modified_original_file_name = Random::string(4) . '_' . (string) preg_replace('/\s+/', '_', $body['logo_filename']);
                     // Build a unique target file name
                     $target_file_name = $targetPath . '/' . $modified_original_file_name;
                     $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
@@ -233,7 +233,7 @@ final class CompanyPrivateController extends BaseController
                     $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
 
                     // Prepare the after save for the logo_filename field
-                    $after_save = $companyprivateRepository->repoCompanyPrivatequery((string)$company_private->getId());
+                    $after_save = $companyprivateRepository->repoCompanyPrivatequery((string) $company_private->getId());
                     if ($after_save) {
                         // A new file upload must replace the previous one or keep existing file
                         /**
@@ -251,7 +251,7 @@ final class CompanyPrivateController extends BaseController
                             ? $modified_original_file_name
 
                             // or Existing database file name
-                            : $existing_logo_filename
+                            : $existing_logo_filename,
                         );
                         $companyprivateRepository->save($after_save);
 
@@ -275,7 +275,7 @@ final class CompanyPrivateController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        CompanyPrivateRepository $companyprivateRepository
+        CompanyPrivateRepository $companyprivateRepository,
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
         if ($company_private) {
@@ -304,7 +304,7 @@ final class CompanyPrivateController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         CompanyPrivateRepository $companyprivateRepository,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
         if ($company_private) {

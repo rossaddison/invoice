@@ -10,9 +10,7 @@ use Yiisoft\Files\FileHelper;
 
 final readonly class UploadService
 {
-    public function __construct(private UploadRepository $repository)
-    {
-    }
+    public function __construct(private UploadRepository $repository) {}
 
     /**
      * @param Upload $model
@@ -22,15 +20,15 @@ final readonly class UploadService
     {
         $model->nullifyRelationOnChange((int) $array['client_id']);
         /** @psalm-suppress PossiblyNullArgument $array['client_id'] */
-        isset($array['client_id']) ? $model->setClient_id((int)$array['client_id']) : '';
-        isset($array['url_key']) ? $model->setUrl_key((string)$array['url_key']) : '';
-        isset($array['file_name_original']) ? $model->setFile_name_original((string)$array['file_name_original']) : '';
-        isset($array['file_name_new']) ? $model->setFile_name_new((string)$array['file_name_new']) : '';
+        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+        isset($array['url_key']) ? $model->setUrl_key((string) $array['url_key']) : '';
+        isset($array['file_name_original']) ? $model->setFile_name_original((string) $array['file_name_original']) : '';
+        isset($array['file_name_new']) ? $model->setFile_name_new((string) $array['file_name_new']) : '';
 
-        $uploadedDate = (new \DateTimeImmutable())::createFromFormat('Y-m-d', (string)$array['uploaded_date']);
+        $uploadedDate = (new \DateTimeImmutable())::createFromFormat('Y-m-d', (string) $array['uploaded_date']);
         $uploadedDate ? $model->setUploaded_date($uploadedDate) : '';
 
-        isset($array['description']) ? $model->setDescription((string)$array['description']) : '';
+        isset($array['description']) ? $model->setDescription((string) $array['description']) : '';
         $this->repository->save($model);
     }
 

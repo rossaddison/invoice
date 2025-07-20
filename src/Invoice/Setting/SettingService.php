@@ -8,9 +8,7 @@ use App\Invoice\Entity\Setting;
 
 final readonly class SettingService
 {
-    public function __construct(private SettingRepository $repository)
-    {
-    }
+    public function __construct(private SettingRepository $repository) {}
 
     /**
      * @param Setting $setting
@@ -18,8 +16,8 @@ final readonly class SettingService
      */
     public function saveSetting(Setting $setting, array $body): void
     {
-        isset($body['setting_key']) ? $setting->setSetting_key((string)$body['setting_key']) : '';
-        isset($body['setting_value']) ? $setting->setSetting_value((string)$body['setting_value']) : '';
+        isset($body['setting_key']) ? $setting->setSetting_key((string) $body['setting_key']) : '';
+        isset($body['setting_value']) ? $setting->setSetting_value((string) $body['setting_value']) : '';
         $this->repository->save($setting);
     }
 

@@ -81,7 +81,7 @@ $locale = match ($currentRoute->getArgument('_language')) {
     'zh-CN' => 'ChineseSimplified',
     'zh-TW' => 'TiawaneseMandarin',
     'zu-ZA' => 'ZuluSouthAfrican',
-    default   => 'English'
+    default   => 'English',
 };
 
 $this->addCssFiles($assetManager->getCssFiles());
@@ -122,8 +122,8 @@ echo NavBar::widget()
     ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
     ->brandImage($logoPath)
     ->brandImageAttributes(['margin' => $companyLogoMargin,
-                            'width' => $companyLogoWidth,
-                            'height' => $companyLogoHeight])
+        'width' => $companyLogoWidth,
+        'height' => $companyLogoHeight])
     //->brandText(str_repeat('&nbsp;', 7).$brandLabel)
     ->brandUrl($urlGenerator->generate('site/index'))
     ->class()
@@ -147,7 +147,7 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('client'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('client/guest'))
+        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('client/guest')),
     )
     ->render();
 
@@ -161,7 +161,7 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('quote'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('quote/guest'))
+        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('quote/guest')),
     )
     ->render();
 
@@ -175,7 +175,7 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('salesorder'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/guest'))
+        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/guest')),
     )
     ->render();
 
@@ -189,7 +189,7 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('invoice'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/guest'))
+        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/guest')),
     )
     ->render();
 
@@ -200,11 +200,11 @@ if ((null !== $currentPath) && !$isGuest) {
         'style' => 'font-size: 1rem; color: cornflowerblue;',
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string)I::tag()->addClass('bi bi-coin').' '.$translator->translate('payment'))
+    ->togglerContent((string) I::tag()->addClass('bi bi-coin') . ' ' . $translator->translate('payment'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'), $urlGenerator->generate('payment/guest')),
-        DropdownItem::link($translator->translate('online.log'), $urlGenerator->generate('payment/guest_online_log'))
+        DropdownItem::link($translator->translate('online.log'), $urlGenerator->generate('payment/guest_online_log')),
     )
     ->render();
 
@@ -215,7 +215,7 @@ if ((null !== $currentPath) && !$isGuest) {
         'style' => 'font-size: 1rem;',
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string)I::tag()->addClass('fa fa-cogs'). ' '. $translator->translate('settings'))
+    ->togglerContent((string) I::tag()->addClass('fa fa-cogs') . ' ' . $translator->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'), $urlGenerator->generate('userinv/guest')),
@@ -230,7 +230,7 @@ if ((null !== $currentPath) && !$isGuest) {
         'style' => 'font-size: 1rem; color: cornflowerblue;',
         'data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('language'),
-        'url' => '#'
+        'url' => '#',
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent(I::tag()->addClass('bi bi-translate'))
@@ -255,7 +255,7 @@ if ((null !== $currentPath) && !$isGuest) {
         DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+        DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
     )->render();
@@ -267,28 +267,28 @@ if (null !== $currentPath && $isGuest) {
         NavLink::to(
             Label::tag()
             ->attributes([
-                'class' => 'bi bi-door-open-fill text-success'
+                'class' => 'bi bi-door-open-fill text-success',
             ])
             ->content(),
             $urlGenerator->generate('auth/login'),
             true,
             false,
-            false
+            false,
         ),
         NavLink::to(
             Label::tag()
             ->attributes(
                 [
-                'class' => 'bi bi-person-plus-fill',
-                'data-bs-toggle' => 'tooltip',
-                'title' => str_repeat(' ', 1).$translator->translate('setup.create.user')
-                ]
+                    'class' => 'bi bi-person-plus-fill',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => str_repeat(' ', 1) . $translator->translate('setup.create.user'),
+                ],
             ),
             $urlGenerator->generate('auth/signup'),
             true,
             false,
-            false
-        )
+            false,
+        ),
     )
     ->styles(NavStyle::NAVBAR);
 }
@@ -299,7 +299,7 @@ if (!$isGuest) {
     ->csrf($csrf)
     ->open()
     . '<div class="mb-1">'
-    . (string)Button::submit(null !== $user ? (string)preg_replace('/\d+/', '', $user->getLogin().' '.$translator->translate('logout')) : ''. ' '.
+    . (string) Button::submit(null !== $user ? (string) preg_replace('/\d+/', '', $user->getLogin() . ' ' . $translator->translate('logout')) : '' . ' ' .
         $translator->translate('logout'))->class('btn btn-primary')
     . '</div>'
     . Form::tag()->close();

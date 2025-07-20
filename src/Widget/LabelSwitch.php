@@ -14,7 +14,7 @@ final class LabelSwitch
         string $checkbox_label_text_zero,
         string $checkbox_label_text_one,
         string $checkbox_label_id,
-        string $fontsize
+        string $fontsize,
     ): void {
         echo Html::openTag('div', ['class' => 'form-check form-switch']);
         echo Html::checkbox($checkbox_name, $checkbox_value_zero_or_one, ['class' => 'form-check-input','checked' => 'checked', 'disabled' => 'disabled', 'style' => 'font-size:' . $fontsize . 'px;'])->render();

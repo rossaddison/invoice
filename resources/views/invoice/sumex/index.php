@@ -39,8 +39,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('sumex')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('sumex'))),
+            ),
     )
     ->render();
 
@@ -61,12 +61,12 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Sumex $model) => Html::encode($model->getId())
+            content: static fn(Sumex $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'casenumber',
             header: $translator->translate('case.number'),
-            content: static fn (Sumex $model) => Html::encode($model->getCasenumber())
+            content: static fn(Sumex $model) => Html::encode($model->getCasenumber()),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -77,7 +77,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -87,7 +87,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -96,8 +96,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -106,9 +106,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('sumex'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

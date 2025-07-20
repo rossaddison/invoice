@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'name')
         ->label($translator->translate('name'))
         ->addInputAttributes([
-            'class' => 'form-control'
+            'class' => 'form-control',
         ])
         ->value(Html::encode($form->getName()))
         ->placeholder($translator->translate('name'))
@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'description')
         ->label($translator->translate('description'))
         ->addInputAttributes([
-            'class' => 'form-control'
+            'class' => 'form-control',
         ])
         ->value(Html::encode($form->getDescription()))
         ->placeholder($translator->translate('description'))
@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::select($form, 'project_id')
         ->label($translator->translate('project'))
         ->addInputAttributes([
-            'class' => 'form-control'
+            'class' => 'form-control',
         ])
         ->optionsData($projects)
         ->value($form->getProject_id())
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::select($form, 'tax_rate_id')
     ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->optionsData($taxRates)
     ->value($form->getTax_rate_id())
@@ -79,7 +79,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'price')
     ->label($translator->translate('price'))
     ->addInputAttributes([
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->value($s->format_amount(($form->getPrice() ?? 0.00)))
     ->placeholder($translator->translate('price'))
@@ -88,11 +88,11 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::date($form, 'finish_date')
     ->label($translator->translate('task.finish.date'))
     ->addInputAttributes([
-        'class' => 'form-control'
+        'class' => 'form-control',
     ])
     ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable ?
                          $form->getFinish_date()->format('Y-m-d') : (is_string(
-                             $form->getFinish_date()
+                             $form->getFinish_date(),
                          ) ?
                          $form->getFinish_date() : '')))
     ->hint($translator->translate('hint.this.field.is.required')); ?>         
@@ -102,20 +102,20 @@ use Yiisoft\Html\Tag\Form;
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft'
+        'class' => 'draft',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed'
+        'class' => 'viewed',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent'
+        'class' => 'sent',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid'
-    ]
+        'class' => 'paid',
+    ],
 ];
 /**
  * @var int $key
@@ -133,7 +133,7 @@ foreach ($statuses as $key => $status) {
     ->label($translator->translate('status'))
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'status'
+        'id' => 'status',
     ])
     ->optionsData($optionsDataStatus)
     ->value($form->getStatus())

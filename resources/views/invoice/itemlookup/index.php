@@ -34,8 +34,8 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('item.lookup')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('item.lookup'))),
+            ),
     )
     ->render();
 
@@ -68,22 +68,22 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (ItemLookup $model) => Html::encode($model->getId())
+            content: static fn(ItemLookup $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'name',
             header: $translator->translate('name'),
-            content: static fn (ItemLookup $model): string => Html::encode($model->getName())
+            content: static fn(ItemLookup $model): string => Html::encode($model->getName()),
         ),
         new DataColumn(
             'description',
             header: $translator->translate('description'),
-            content: static fn (ItemLookup $model): string => Html::encode($model->getDescription())
+            content: static fn(ItemLookup $model): string => Html::encode($model->getDescription()),
         ),
         new DataColumn(
             'price',
             header: $translator->translate('price'),
-            content: static fn (ItemLookup $model): string => Html::encode($model->getPrice())
+            content: static fn(ItemLookup $model): string => Html::encode($model->getPrice()),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -94,7 +94,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -104,7 +104,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -113,8 +113,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -123,9 +123,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('item.lookup'),
-    ''
+    '',
 );
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('itemlookup/index'))->csrf($csrf)->open() .

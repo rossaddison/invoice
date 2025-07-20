@@ -19,9 +19,7 @@ class UserCustom
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $fieldid = null, #[Column(type: 'text', nullable: true)]
-        private ?string $fieldvalue = '')
-    {
-    }
+        private ?string $fieldvalue = '') {}
 
     public function getUser(): ?User
     {
@@ -30,7 +28,7 @@ class UserCustom
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -40,7 +38,7 @@ class UserCustom
 
     public function getUser_id(): string
     {
-        return (string)$this->user_id;
+        return (string) $this->user_id;
     }
 
     public function setUser_id(int $user_id): void
@@ -50,7 +48,7 @@ class UserCustom
 
     public function getFieldid(): string
     {
-        return (string)$this->fieldid;
+        return (string) $this->fieldid;
     }
 
     public function setFieldid(int $fieldid): void

@@ -9,9 +9,7 @@ use Yiisoft\Widget\Widget;
 
 final class PerformanceMetrics extends Widget
 {
-    public function __construct(private readonly Timer $timer)
-    {
-    }
+    public function __construct(private readonly Timer $timer) {}
 
     #[\Override]
     public function render(): string
@@ -30,17 +28,17 @@ final class PerformanceMetrics extends Widget
             $status = opcache_get_status();
             $statusOpcacheStatistics = [];
             if (is_array($status) && isset($status['opcache_statistics'])) {
-                $statusOpcacheStatistics = (array)$status['opcache_statistics'];
+                $statusOpcacheStatistics = (array) $status['opcache_statistics'];
             }
             $config = opcache_get_configuration();
-            $configDirectives = (array)$config['directives'];
-            $cacheFull = (bool)($status['cache_full'] ?? false);
-            $numCachedKeys = (int)($status['num_cached_keys'] ?? 0);
-            $maxCachedKeys = (int)($configDirectives['opcache.max_accelerated_files'] ?? 0);
-            $currentWastedPercentage = (float)($status['current_wasted_percentage'] ?? 0.0);
-            $maxWastedPercentage = (float)($configDirectives['opcache.max_wasted_percentage'] ?? 0.0);
-            $opcacheHitRate = (float)($statusOpcacheStatistics['opcache_hit_rate'] ?? 0.0);
-            $memoryConsumption = (int)($configDirectives['opcache.memory_consumption'] ?? 0);
+            $configDirectives =  (array) $config['directives'];
+            $cacheFull = (bool) ($status['cache_full'] ?? false);
+            $numCachedKeys = (int) ($status['num_cached_keys'] ?? 0);
+            $maxCachedKeys = (int) ($configDirectives['opcache.max_accelerated_files'] ?? 0);
+            $currentWastedPercentage = (float) ($status['current_wasted_percentage'] ?? 0.0);
+            $maxWastedPercentage = (float) ($configDirectives['opcache.max_wasted_percentage'] ?? 0.0);
+            $opcacheHitRate = (float) ($statusOpcacheStatistics['opcache_hit_rate'] ?? 0.0);
+            $memoryConsumption = (int) ($configDirectives['opcache.memory_consumption'] ?? 0);
 
             // Condition 1
             if ($cacheFull && ($currentWastedPercentage < $maxWastedPercentage)) {
@@ -60,10 +58,12 @@ final class PerformanceMetrics extends Widget
             }
             // Condition 4
             if (
-                isset($status['interned_strings_usage'], $status['interned_strings_usage']['free_memory'], $status['interned_strings_usage']['buffer_size'])
+                isset($status['interned_strings_usage']) &&
+                isset($status['interned_strings_usage']['free_memory']) &&
+                isset($status['interned_strings_usage']['buffer_size'])
             ) {
-                $bufferSize = (int)$status['interned_strings_usage']['buffer_size'];
-                $freeMemory = (int)$status['interned_strings_usage']['free_memory'];
+                $bufferSize = (int) $status['interned_strings_usage']['buffer_size'];
+                $freeMemory = (int) $status['interned_strings_usage']['free_memory'];
                 // Calculate % free
                 $freePercent = $bufferSize > 0 ? ($freeMemory / $bufferSize) * 100 : 100;
                 // Dangerous if less than 10% free or less than 1MB free

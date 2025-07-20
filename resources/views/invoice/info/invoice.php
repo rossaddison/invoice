@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>19th July 2025</b></p>
+<p>Replace styleci.yml with cs.yml</p>
+<p>Purpose: The cs.yml has been restructured to complete a dry-run, then create a pull request if changes are needed ... similar to styleci.yml</p>
+<p><a href="https://github.com/copilot/c/39b041f7-aa7a-4a44-91ee-c541f003c78d" target="_blank">PHP CS Fixer GitHub Actions workflow: General Questions</a></p>
 <p><b>18th July 2025</b></p>
 <p>Include a new function opCacheHealthCheck() in App\Widget\PerformanceMetrics</p>
 <p>Used in resources/views/layout/invoice.php to identify poor php.ini setups</p>

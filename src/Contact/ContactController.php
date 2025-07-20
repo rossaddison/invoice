@@ -19,7 +19,7 @@ final class ContactController
         private readonly ContactMailer $mailer,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly UrlGeneratorInterface $url,
-        private ViewRenderer $viewRenderer
+        private ViewRenderer $viewRenderer,
     ) {
         $this->viewRenderer = $viewRenderer
             ->withControllerName('contact')

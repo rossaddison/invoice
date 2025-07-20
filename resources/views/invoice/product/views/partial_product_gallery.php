@@ -34,7 +34,7 @@ if ($invEdit && $invView) {
                 */
                foreach ($productImages as $productImage) { ?>
                 <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                    <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"   class="img-fluid">
+                    <img src="<?= '/products/' . $productImage->getFile_name_original(); ?>"   class="img-fluid">
                 </a>
              <?php } ?> 
         </div>

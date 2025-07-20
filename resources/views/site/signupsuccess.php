@@ -17,7 +17,7 @@ use Yiisoft\Bootstrap5\AlertVariant;
 $alert = Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::SUCCESS)
-        ->body((string)$signupsuccess['emailSuccessfullySent'])
+        ->body((string) $signupsuccess['emailSuccessfullySent'])
         ->dismissable(true)
         ->render();
 echo $alert;

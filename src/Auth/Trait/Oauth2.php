@@ -55,7 +55,7 @@ trait Oauth2
         OpenBanking $openBanking,
         VKontakte $vkontakte,
         X $x,
-        Yandex $yandex
+        Yandex $yandex,
     ): void {
         /**
          * @see config/common/params.php
@@ -138,13 +138,13 @@ trait Oauth2
     private function getAccessToken(User $user, TokenRepository $tR, string $self): string
     {
         $identity = $user->getIdentity();
-        $identityId = (int)$identity->getId();
+        $identityId = (int) $identity->getId();
         // This records the fact that the user has signed up with e.g. a Github 'access-token'
         $token = new Token($identityId, $self);
         // store the token amongst all the other types of tokens e.g. password-rest, email-verification, github-access
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string)$token->getCreated_at()->getTimestamp();
+        $timeString = (string) $token->getCreated_at()->getTimestamp();
         // build the token with a timestamp built into it for comparison later
         return null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
     }

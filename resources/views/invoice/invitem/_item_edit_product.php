@@ -44,9 +44,9 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
-                'title' => $s->isDebugMode(14)
+                'title' => $s->isDebugMode(14),
             ])
-            ->content(' '.$translator->translate('product'));
+            ->content(' ' . $translator->translate('product'));
 ?>
     <?= Html::closeTag('div'); ?>    
     <?= Form::tag()
@@ -68,7 +68,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                         <?= I::tag()
                                     ->addAttributes([
                                         'title' => $translator->translate('recurring'),
-                                        'class' => 'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted'
+                                        'class' => 'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted',
                                     ]);
                                     ?>
                                         <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'is_recurring', 'value' => '/']); ?>
@@ -143,12 +143,12 @@ foreach ($products as $product) {
                                 <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?= Html::i(
                                     Html::a(
-                                        '  '.$add,
+                                        '  ' . $add,
                                         $url,
                                         ['class' => 'btn btn-primary',
-                                                     'style' => 'font-family:Arial']
+                                            'style' => 'font-family:Arial'],
                                     ),
-                                    ['class' => 'btn btn-primary fa fa-plus']
+                                    ['class' => 'btn btn-primary fa fa-plus'],
                                 ); ?>
                                  <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('td'); ?>
@@ -164,12 +164,12 @@ foreach ($products as $product) {
                                 <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                     <?= Html::i(
                                         Html::a(
-                                            '  '.$add,
+                                            '  ' . $add,
                                             $url,
                                             ['class' => 'btn btn-primary',
-                                                                     'style' => 'font-family:Arial']
+                                                'style' => 'font-family:Arial'],
                                         ),
-                                        ['class' => 'btn btn-primary fa fa-item']
+                                        ['class' => 'btn btn-primary fa fa-item'],
                                     ); ?>
                                  <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('td'); ?>
@@ -179,7 +179,7 @@ foreach ($products as $product) {
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
                                 <?php
-                                            $optionsDataTaxRate = [];
+                                       $optionsDataTaxRate = [];
 /**
  * @var App\Invoice\Entity\TaxRate $taxRate
  */
@@ -189,7 +189,7 @@ foreach ($taxRates as $taxRate) {
     $taxRateName = $taxRate->getTaxRateName() ?? '';
     $formattedNumber = $numberHelper->format_amount($taxRatePercent);
     if ((null !== $taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
-        $optionsDataTaxRate[$taxRateId] = (string)$formattedNumber . '% - ' . $taxRateName;
+        $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber . '% - ' . $taxRateName;
     }
 }
 ?>    
@@ -205,10 +205,10 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
                             <!-- see line 896 InvController: id modal-choose-items lies on views/product/modal_product_lookups_inv.php-->
                             <?= Html::openTag('button', [
-'type' => 'submit',
-'class' => 'btn btn-info',
-'data-toggle' => 'tooltip',
-'title' => 'invitem/add_product']); ?>
+                                'type' => 'submit',
+                                'class' => 'btn btn-info',
+                                'data-toggle' => 'tooltip',
+                                'title' => 'invitem/add_product']); ?>
                                 <?= I::tag()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>

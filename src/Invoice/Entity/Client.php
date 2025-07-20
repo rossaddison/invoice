@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository:\App\Invoice\Client\ClientRepository::class)]
+#[Entity(repository: \App\Invoice\Client\ClientRepository::class)]
 #[Behavior\CreatedAt(field: 'client_date_created', column: 'client_date_created')]
 #[Behavior\UpdatedAt(field: 'client_date_modified', column: 'client_date_modified')]
 class Client
@@ -93,14 +93,14 @@ class Client
         private ?string $client_insurednumber = '',
         #[Column(type: 'string(30)', nullable: true)]
         private ?string $client_veka = '',
-        #[Column(type:'date', nullable: true)]
+        #[Column(type: 'date', nullable: true)]
         private mixed $client_birthdate = null,
-        #[Column(type:'integer', nullable: false, default: 0)]
+        #[Column(type: 'integer', nullable: false, default: 0)]
         private ?int $client_age = 0,
         #[Column(type: 'tinyInteger(4)', nullable: false, default: 0)]
         private ?int $client_gender = 0,
-        #[Column(type: 'integer(11)', nullable:true)]
-        private ?int $postaladdress_id = null
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $postaladdress_id = null,
     ) {
         $this->client_full_name = ltrim(rtrim($this->client_name . ' ' . ($this->client_surname ?? 'surname_unknown')));
         $this->client_date_created = new DateTimeImmutable();
@@ -328,7 +328,7 @@ class Client
 
     public function getClient_vat_id(): string
     {
-        return (string)$this->client_vat_id;
+        return (string) $this->client_vat_id;
     }
 
     public function setClient_vat_id(string $client_vat_id): void

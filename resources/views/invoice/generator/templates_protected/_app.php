@@ -19,6 +19,6 @@ return [
      * @var string $value
      */
     foreach ($combined_array as $key => $value) {
-        echo "'".$key."' => '".$value."',\n";
+        echo "'" . $key . "' => '" . $value . "',\n";
     }?>
 ];

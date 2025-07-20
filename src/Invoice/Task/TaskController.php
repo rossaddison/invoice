@@ -51,7 +51,7 @@ final class TaskController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->invitemService = $invitemService;
@@ -86,7 +86,7 @@ final class TaskController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         prjctR $pR,
-        trR $trR
+        trR $trR,
     ): Response {
         $task = new Task();
         $form = new TaskForm($task);
@@ -131,7 +131,7 @@ final class TaskController extends BaseController
         FormHydrator $formHydrator,
         tR $tR,
         prjctR $pR,
-        trR $trR
+        trR $trR,
     ): Response {
         $task = $this->task($currentRoute, $tR);
         if ($task) {
@@ -170,7 +170,7 @@ final class TaskController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        tR $tR
+        tR $tR,
     ): Response {
         $task = $this->task($currentRoute, $tR);
         /** @var Task $task */
@@ -232,12 +232,12 @@ final class TaskController extends BaseController
         itrR $itrR,
         iaR $iaR,
         iR $iR,
-        pymR $pymR
+        pymR $pymR,
     ): \Yiisoft\DataResponse\DataResponse {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
-        $inv_id = (string)$select_items['inv_id'];
+        $inv_id = (string) $select_items['inv_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
@@ -245,11 +245,11 @@ final class TaskController extends BaseController
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
-            $task->setPrice((float)$numberHelper->format_amount($task->getPrice()));
+            $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
             $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_inv((string)$this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
@@ -265,7 +265,7 @@ final class TaskController extends BaseController
     private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
-        $form = new InvItemForm($invItem, (int)$inv_id);
+        $form = new InvItemForm($invItem, (int) $inv_id);
         $ajax_content = [
             'name' => $task->getName(),
             'inv_id' => $inv_id,
@@ -297,7 +297,7 @@ final class TaskController extends BaseController
         CurrentRoute $currentRoute,
         tR $tR,
         trR $trR,
-        prjctR $pR
+        prjctR $pR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $task = $this->task($currentRoute, $tR);
         if ($task) {

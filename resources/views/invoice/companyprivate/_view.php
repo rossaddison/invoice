@@ -80,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::image()
-                               ->src('/logo/'. ($form->getLogo_filename() ?? '#'))
+                               ->src('/logo/' . ($form->getLogo_filename() ?? '#'))
                                ->height($form->getLogo_height())
                                ->width($form->getLogo_width()); ?>
                         <?= Html::closeTag('div'); ?>
@@ -104,10 +104,10 @@ use Yiisoft\Html\Tag\Form;
                             ->addInputAttributes(
                                 [
                                     'class' => 'form-control',
-                                    'placeholder' => ' ('.$dateHelper->display().')',
+                                    'placeholder' => ' (' . $dateHelper->display() . ')',
                                     'readonly' => 'readonly',
-                                    'disabled' => 'disabled'
-                                ]
+                                    'disabled' => 'disabled',
+                                ],
                             )
                             ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
                                                 ? $startdate->format('Y-m-d')
@@ -121,10 +121,10 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes(
         [
             'class' => 'form-control',
-            'placeholder' => ' ('.$dateHelper->display().')',
+            'placeholder' => ' (' . $dateHelper->display() . ')',
             'readonly' => 'readonly',
-            'disabled' => 'disabled'
-        ]
+            'disabled' => 'disabled',
+        ],
     )
     ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
                         ? $enddate->format('Y-m-d')

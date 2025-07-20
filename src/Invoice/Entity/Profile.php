@@ -14,7 +14,7 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Profile
 {
-    #[BelongsTo(target:Company::class, nullable: false)]
+    #[BelongsTo(target: Company::class, nullable: false)]
     private ?Company $company = null;
 
     #[Column(type: 'datetime')]
@@ -28,7 +28,7 @@ class Profile
         private ?int $id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $company_id = null,
-        #[Column(type: 'tinyInteger(11)', default:0)]
+        #[Column(type: 'tinyInteger(11)', default: 0)]
         private ?int $current = 0,
         #[Column(type: 'text', nullable: true)]
         private ?string $mobile = '',
@@ -58,7 +58,7 @@ class Profile
 
     public function getCompany_id(): string
     {
-        return (string)$this->company_id;
+        return (string) $this->company_id;
     }
 
     public function setCompany_id(int $company_id): void

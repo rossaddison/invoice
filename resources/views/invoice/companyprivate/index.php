@@ -40,7 +40,7 @@ if ($canEdit) {
     echo Html::a(
         $translator->translate('add'),
         $urlGenerator->generate('companyprivate/add'),
-        ['class' => 'btn btn-outline-secondary btn-md-12 mb-3']
+        ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
     );
 }
 ?>
@@ -54,8 +54,8 @@ if ($canEdit) {
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('setting.company.private')))
-            )
+                        ->content(' ' . Html::encode($translator->translate('setting.company.private'))),
+            ),
     )
     ->render();
 
@@ -71,11 +71,11 @@ $columns = [
     new DataColumn(
         'company_public_name',
         header: $translator->translate('company.public'),
-        content: static fn (CompanyPrivate $model) => Html::encode($model->getCompany()?->getName())
+        content: static fn(CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
     ),
     new DataColumn(
         'logo_filename',
-        content: static fn (CompanyPrivate $model) => Html::encode($model->getLogo_filename())
+        content: static fn(CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -86,7 +86,7 @@ $columns = [
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('view'),
-            ]
+            ],
         ),
         new ActionButton(
             content: '✎',
@@ -96,7 +96,7 @@ $columns = [
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('edit'),
-            ]
+            ],
         ),
         new ActionButton(
             content: '❌',
@@ -105,10 +105,10 @@ $columns = [
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-            ]
+                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+            ],
         ),
-    ])
+    ]),
 ];
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('companyprivate/index'))->csrf($csrf)->open() .
@@ -117,9 +117,9 @@ $toolbarString =
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('setting.company.private'),
-    ''
+    '',
 );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

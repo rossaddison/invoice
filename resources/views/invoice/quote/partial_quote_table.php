@@ -52,16 +52,16 @@ $quote_list_split = $quote_count > 3 ? $quote_count / 2 : 9999;
 foreach ($quotes as $quote) {
     // Convert the dropdown menu to a dropup if quote is after the invoice split
     $dropup = $quote_idx > $quote_list_split ? true : false;
-    $actionDeleteArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getId()];
-    $actionEmailArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getId()];
-    $actionPdfArguments = ['_language' => (string)$session->get('_language'), 'include' => true, 'quote_id' => $quote->getId()];
-    $actionClientViewArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getClient_id()];
-    $actionViewArguments = ['_language' => (string)$session->get('_language'), 'id' => $quote->getId()];
+    $actionDeleteArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getId()];
+    $actionEmailArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getId()];
+    $actionPdfArguments = ['_language' => (string) $session->get('_language'), 'include' => true, 'quote_id' => $quote->getId()];
+    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getClient_id()];
+    $actionViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getId()];
     ?>
             <tr>
                 <td>
-                    <span class="label <?= $qR->getSpecificStatusArrayClass((string)$quote->getStatus_id()); ?>">
-                        <?= $qR->getSpecificStatusArrayLabel((string)$quote->getStatus_id()); ?>
+                    <span class="label <?= $qR->getSpecificStatusArrayClass((string) $quote->getStatus_id()); ?>">
+                        <?= $qR->getSpecificStatusArrayLabel((string) $quote->getStatus_id()); ?>
                     </span>
                 </td>
                 <td>
@@ -83,7 +83,7 @@ foreach ($quotes as $quote) {
                     </a>
                 </td>
                 <td style="text-align: right; padding-right: 25px;">
-                    <?php $quote_amount = (($qaR->repoQuoteAmountCount((string)$quote->getId()) > 0) ? $qaR->repoQuotequery((string)$quote->getId()) : null) ?>
+                    <?php $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote->getId()) > 0) ? $qaR->repoQuotequery((string) $quote->getId()) : null) ?>
                     <?= $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
                 </td>
                 <td>

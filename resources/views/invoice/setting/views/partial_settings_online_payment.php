@@ -96,7 +96,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                      * @var string $setting['type']
                      */
                     foreach ($fields as $key => $setting) { ?>
-                <?php $body['settings[gateway_' . $d . '_'.$key.']'] = $s->getSetting('gateway_' . $d . '_' . $key);?>
+                <?php $body['settings[gateway_' . $d . '_' . $key . ']'] = $s->getSetting('gateway_' . $d . '_' . $key);?>
                 <?php if ($setting['type'] == 'checkbox') : ?>
 
                     <div class="checkbox">
@@ -104,7 +104,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                             <input type="hidden" name="settings[gateway_<?= $d; ?>_<?= $key ?>]"
                                 value="0">
                             <input type="checkbox" name="settings[gateway_<?= $d; ?>_<?= $key ?>]"
-                                value="1" <?php $s->check_select($body['settings[gateway_' . $d . '_'.$key.']'], 1, '==', true) ?>>
+                                value="1" <?php $s->check_select($body['settings[gateway_' . $d . '_' . $key . ']'], 1, '==', true) ?>>
                             <?= $setting['label']; ?>
                         </label>
                     </div>
@@ -120,11 +120,11 @@ foreach ($gateway_drivers as $driver => $fields) :
                             id="settings[gateway_<?= $d; ?>_<?= $key ?>]" 
                                     <?php
                                         if ($setting['type'] == 'password') : ?>
-                                        value="<?= (string)(strlen((string)$body['settings[gateway_' . $d . '_'.$key.']']) > 0
-                                                ? $crypt->decode((string)$body['settings[gateway_' . $d . '_'.$key.']'])
+                                        value="<?= (string) (strlen((string) $body['settings[gateway_' . $d . '_' . $key . ']']) > 0
+                                                ? $crypt->decode((string) $body['settings[gateway_' . $d . '_' . $key . ']'])
                                                 : ''); ?>"
                                     <?php else : ?>
-                                        value="<?= (string)$body['settings[gateway_' . $d . '_'.$key.']']; ?>"
+                                        value="<?= (string) $body['settings[gateway_' . $d . '_' . $key . ']']; ?>"
                                     <?php endif; ?>
                                 >
                         <?php if ($setting['type'] == 'password') : ?>

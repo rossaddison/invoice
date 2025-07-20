@@ -14,7 +14,7 @@ use Yiisoft\Html\Tag\Td;
 /**
  * @var array $codes
  * @var string $csrf
- * @var string|null $error 
+ * @var string|null $error
  * @var App\Auth\Form\TwoFactorAuthenticationVerifyLoginForm $formModel
  * @var Yiisoft\View\WebView $this
  * @var Yiisoft\Router\CurrentRoute             $currentRoute
@@ -68,70 +68,70 @@ use Yiisoft\Html\Tag\Td;
                         </style>
                         CSS;
 
-                        // Table header
-                        $headerRow = Thead::tag()
-                            ->rows(
-                                Tr::tag()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
-                            );
-                        $rows = [];
-                        /**
-                         * @var string $index
-                         * @var string $code
-                         */
-                        foreach ($codes as $index => $code) {
-                            $rows[] = Tr::tag()->cells(
-                                Td::tag()->content((string)((int)$index + 1)),
-                                Td::tag()->content(Html::encode($code))
-                            );
-                        }
-                        
-                        // Render the table with a custom class for styling
-                        echo $style;
-                        
-                        if (!empty($codes)) {
-                            echo Table::tag()
-                                ->header($headerRow)    
-                                ->rows(...$rows)    
-                                ->addAttributes(['class' => 'recovery-table'])
-                                ->render();
-                        }
-                    ?>
+// Table header
+$headerRow = Thead::tag()
+    ->rows(
+        Tr::tag()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
+    );
+$rows = [];
+/**
+ * @var string $index
+ * @var string $code
+ */
+foreach ($codes as $index => $code) {
+    $rows[] = Tr::tag()->cells(
+        Td::tag()->content((string) ((int) $index + 1)),
+        Td::tag()->content(Html::encode($code)),
+    );
+}
+
+// Render the table with a custom class for styling
+echo $style;
+
+if (!empty($codes)) {
+    echo Table::tag()
+        ->header($headerRow)
+        ->rows(...$rows)
+        ->addAttributes(['class' => 'recovery-table'])
+        ->render();
+}
+?>
                     <?php
-                        $button = new Button($currentRoute, $translator, $urlGenerator);
-                        $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
-                        echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
-                    ?>
+    $button = new Button($currentRoute, $translator, $urlGenerator);
+$regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
+echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
+?>
                 </div>    
                 <div class="card-body p-2 text-center">    
                     <?= Form::tag()
-                        ->post($urlGenerator->generate('auth/verifyLogin'))
-                        ->class('form-floating')
-                        ->csrf($csrf)
-                        ->id('twoFactorAuthenticationVerfiyForm')
-                        ->open(); ?>
+    ->post($urlGenerator->generate('auth/verifyLogin'))
+    ->class('form-floating')
+    ->csrf($csrf)
+    ->id('twoFactorAuthenticationVerfiyForm')
+    ->open(); ?>
                     <?= Field::text($formModel, 'code')
-                        ->addInputAttributes(
-                            [
-                                'autocomplete' => 'current-code', 
-                                'id' => 'code', 
-                                'name' => 'code',
-                                'minlength' => 6,
-                                // otp = 6 digits, backup recovery code = 8 digits
-                                'maxlength' => 8,
-                                'type' => 'tel',
-                            ]
-                        )
-                        ->error($error ?? '')
-                        ->required(true)        
-                        ->inputClass('form-control')
-                        ->label($translator->translate('layout.password.otp.6.8'))
-                        ->autofocus();
-                    ?>
+    ->addInputAttributes(
+        [
+            'autocomplete' => 'current-code',
+            'id' => 'code',
+            'name' => 'code',
+            'minlength' => 6,
+            // otp = 6 digits, backup recovery code = 8 digits
+            'maxlength' => 8,
+            'type' => 'tel',
+        ],
+    )
+    ->error($error ?? '')
+    ->required(true)
+    ->inputClass('form-control')
+    ->label($translator->translate('layout.password.otp.6.8'))
+    ->autofocus();
+?>
                     <?= Field::submitButton()
-                        ->buttonId('code-button')
-                        ->buttonClass('btn btn-primary')
-                        ->name('code-button')
-                        ->content($translator->translate('layout.submit')) ?>
+    ->buttonId('code-button')
+    ->buttonClass('btn btn-primary')
+    ->name('code-button')
+    ->content($translator->translate('layout.submit')) ?>
                     <?= Form::tag()->close() ?>
                 </div>
                 <div class="card-body p-1 text-center">

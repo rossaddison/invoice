@@ -1,5 +1,6 @@
 <?php
-return array (
+
+return array(
   'gallery.caption.slide1' => 'From ../resources/messages/en/app.php you can alter this text.',
   'gallery.caption.slide10' => 'From ../resources/messages/en/app.php you can alter this text.',
   'gallery.caption.slide11' => 'From ../resources/messages/en/app.php you can alter this text.',

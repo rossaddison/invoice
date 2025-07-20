@@ -58,10 +58,10 @@ final class InvForm extends FormModel
         $this->client_id = $inv->getClient_id();
         $this->group_id = $inv->getGroup_id();
         $this->status_id = $inv->getStatus_id();
-        $this->contract_id = (int)$inv->getContract_id();
-        $this->delivery_id = (int)$inv->getDelivery_id();
-        $this->delivery_location_id = (int)$inv->getDelivery_location_id();
-        $this->postal_address_id = (int)$inv->getPostal_address_id();
+        $this->contract_id = (int) $inv->getContract_id();
+        $this->delivery_id = (int) $inv->getDelivery_id();
+        $this->delivery_location_id = (int) $inv->getDelivery_location_id();
+        $this->postal_address_id = (int) $inv->getPostal_address_id();
         $this->so_id = $inv->getSo_id();
         $this->quote_id = $inv->getQuote_id();
         $this->is_read_only = $inv->getIs_read_only();
@@ -79,7 +79,7 @@ final class InvForm extends FormModel
         $this->document_description = $inv->getDocumentDescription();
         $this->url_key = $inv->getUrl_key();
         $this->payment_method = $inv->getPayment_method();
-        $this->creditinvoice_parent_id = (int)$inv->getCreditinvoice_parent_id();
+        $this->creditinvoice_parent_id = (int) $inv->getCreditinvoice_parent_id();
         /**
          * @see App\Invoice\Entity\Client
                 #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]

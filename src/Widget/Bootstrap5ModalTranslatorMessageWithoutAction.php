@@ -27,7 +27,7 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
     public function renderPartialLayoutWithTranslatorMessageAsString(
         string $translatedHeading,
         string $translatedMessage,
-        string $origin
+        string $origin,
     ): string {
         $this->layoutParameters = [
             'type' => $origin,
@@ -36,7 +36,7 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
                 [
                     'translatedHeading' => $translatedHeading,
                     'translatedMessage' => $translatedMessage,
-                ]
+                ],
             ),
         ];
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_message_layout', $this->layoutParameters);

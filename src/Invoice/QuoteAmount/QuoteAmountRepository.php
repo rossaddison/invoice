@@ -79,7 +79,7 @@ final class QuoteAmountRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 
@@ -200,7 +200,7 @@ final class QuoteAmountRepository extends Select\Repository
             $total = 0.00;
             /** @var QuoteAmount $quote_amount */
             foreach ($status_specific_quotes as $quote_amount) {
-                $total = $total + (float)$quote_amount->getTotal();
+                $total = $total + (float) $quote_amount->getTotal();
             }
             $return[$key] = [
                 'quote_status_id' => $key,

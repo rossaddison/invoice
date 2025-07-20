@@ -125,7 +125,7 @@ class Inv
         private ?int $contract_id = null,
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
         #[Column(type: 'string(3)', nullable: false)]
-        private string $stand_in_code = ''
+        private string $stand_in_code = '',
     ) {
         $this->items = new ArrayCollection();
         // create also the invoice amount when the invoice is created.
@@ -367,7 +367,7 @@ class Inv
             $days = $sR->getSetting('invoices_due_after');
         }
 
-        $this->date_due = $this->date_created->add(new \DateInterval('P' . (string)$days . 'D'));
+        $this->date_due = $this->date_created->add(new \DateInterval('P' . (string) $days . 'D'));
     }
 
     public function getDate_due(): DateTimeImmutable

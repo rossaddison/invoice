@@ -11,9 +11,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class Party implements XmlSerializable
 {
-    public function __construct(private readonly Translator $translator, private readonly ?string $name, private readonly ?string $partyIdentificationId, private readonly ?string $partyIdentificationSchemeId, private readonly ?Address $postalAddress, private readonly ?Address $physicalLocation, private readonly ?Contact $contact, private readonly ?PartyTaxScheme $partyTaxScheme, private readonly ?PartyLegalEntity $partyLegalEntity, private readonly ?string $endpointID, private readonly mixed $endpointID_schemeID)
-    {
-    }
+    public function __construct(private readonly Translator $translator, private readonly ?string $name, private readonly ?string $partyIdentificationId, private readonly ?string $partyIdentificationSchemeId, private readonly ?Address $postalAddress, private readonly ?Address $physicalLocation, private readonly ?Contact $contact, private readonly ?PartyTaxScheme $partyTaxScheme, private readonly ?PartyLegalEntity $partyLegalEntity, private readonly ?string $endpointID, private readonly mixed $endpointID_schemeID) {}
 
     public function getPartyName(): ?string
     {

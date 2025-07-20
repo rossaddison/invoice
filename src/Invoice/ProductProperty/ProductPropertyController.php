@@ -35,7 +35,7 @@ final class ProductPropertyController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->productpropertyService = $productpropertyService;
@@ -52,11 +52,11 @@ final class ProductPropertyController extends BaseController
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
     ): Response {
         $product_id = $currentRoute->getArgument('product_id');
         $productProperty = new ProductProperty();
-        $form = new ProductPropertyForm($productProperty, (int)$product_id);
+        $form = new ProductPropertyForm($productProperty, (int) $product_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'productproperty/add',
@@ -87,14 +87,14 @@ final class ProductPropertyController extends BaseController
      */
     public function index(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): Response
     {
-        $page = (int)$currentRoute->getArgument('page', '1');
+        $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $productproperty = $productpropertyRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($productproperty))
         ->withPageSize($this->sR->positiveListLimit())
         ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string)$page));
+        ->withToken(PageToken::next((string) $page));
         $parameters = [
             'productpropertys' => $this->productpropertys($productpropertyRepository),
             'paginator' => $paginator,
@@ -111,7 +111,7 @@ final class ProductPropertyController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        ProductPropertyRepository $productpropertyRepository
+        ProductPropertyRepository $productpropertyRepository,
     ): Response {
         try {
             $productproperty = $this->productproperty($currentRoute, $productpropertyRepository);
@@ -140,11 +140,11 @@ final class ProductPropertyController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ProductPropertyRepository $productpropertyRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
     ): Response {
         $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());
+            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProduct_id());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productproperty/edit',
@@ -204,7 +204,7 @@ final class ProductPropertyController extends BaseController
     {
         $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int)$productProperty->getProduct_id());
+            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProduct_id());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productproperty/view',

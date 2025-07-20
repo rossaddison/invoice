@@ -41,14 +41,14 @@ $this->setTitle($translator->translate('password.change'));
                                 ->label($translator->translate('layout.login'))
                                 ->addInputAttributes([
                                     'autocomplete' => 'username',
-                                    'value' => $login ?? ''
+                                    'value' => $login ?? '',
                                 ])
                             : Field::text($formModel, 'login')
                                 ->label($translator->translate('layout.login'))
                                 ->addInputAttributes([
                                     'autocomplete' => 'username',
                                     'value' => $login ?? '',
-                                    'readonly' => 'readonly'
+                                    'readonly' => 'readonly',
                                 ]);
 ?>
                     <?= Field::password($formModel, 'password')

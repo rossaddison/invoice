@@ -8,13 +8,11 @@ use App\Invoice\Entity\DeliveryParty;
 
 final readonly class DeliveryPartyService
 {
-    public function __construct(private DeliveryPartyRepository $repository)
-    {
-    }
+    public function __construct(private DeliveryPartyRepository $repository) {}
 
     public function saveDeliveryParty(DeliveryParty $model, array $array): void
     {
-        isset($array['party_name']) ? $model->setPartyName((string)$array['party_name']) : '';
+        isset($array['party_name']) ? $model->setPartyName((string) $array['party_name']) : '';
         $this->repository->save($model);
     }
 

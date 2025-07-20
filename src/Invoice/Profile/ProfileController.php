@@ -33,7 +33,7 @@ final class ProfileController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->profileService = $profileService;
@@ -44,7 +44,7 @@ final class ProfileController extends BaseController
      */
     public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository): \Yiisoft\DataResponse\DataResponse
     {
-        $page = (int)$currentRoute->getArgument('page', '1');
+        $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $canEdit = $this->rbac();
@@ -71,7 +71,7 @@ final class ProfileController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $form = new ProfileForm(new Profile(), $this->translator);
         $parameters = [
@@ -110,7 +110,7 @@ final class ProfileController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ProfileRepository $profileRepository,
-        CompanyRepository $companyRepository
+        CompanyRepository $companyRepository,
     ): Response {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
@@ -146,7 +146,7 @@ final class ProfileController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        ProfileRepository $profileRepository
+        ProfileRepository $profileRepository,
     ): Response {
         try {
             $profile = $this->profile($currentRoute, $profileRepository);
@@ -182,7 +182,7 @@ final class ProfileController extends BaseController
                 'companies' => $companyRepository->findAllPreloaded(),
                 'form' => $form,
                 'errors' => [],
-                'profile' => $profileRepository->repoProfilequery((string)$profile->getId()),
+                'profile' => $profileRepository->repoProfilequery((string) $profile->getId()),
             ];
             return $this->viewRenderer->render('_view', $parameters);
         }

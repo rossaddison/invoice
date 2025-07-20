@@ -94,19 +94,19 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
                 <?= Html::closeTag('div'); ?>            
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'next')
-    ->label($translator->translate('next') ." (".  $dateHelper->display().") ")
+    ->label($translator->translate('next') . " (" . $dateHelper->display() . ") ")
     ->value(!is_string($next = $form->getNext()) ? $next?->format('Y-m-d') : '')
     // Always disabled because it is always the result of start + frequency
     ->disabled(true)
     ->addInputAttributes([
         'data-bs-toggle' => 'tooltip',
-        'title' => $translator->translate('recurring.tooltip.next')
+        'title' => $translator->translate('recurring.tooltip.next'),
     ])
 ?>
                 <?= Html::closeTag('div'); ?>                
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'end')
-        ->label($translator->translate('end.date') ."(".$translator->translate('optional'))
+        ->label($translator->translate('end.date') . "(" . $translator->translate('optional'))
         ->value(!is_string($end = $form->getEnd()) ? $end?->format('Y-m-d') : '')
 ?>
                 <?= Html::closeTag('div'); ?>

@@ -19,6 +19,6 @@ echo A::tag()
               ->src($src)
               ->width(280)
               ->height(44)
-              ->addAttributes(['border' => 0])
+              ->addAttributes(['border' => 0]),
     )
     ->render();

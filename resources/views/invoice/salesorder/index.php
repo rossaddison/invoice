@@ -43,8 +43,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('salesorder'))
-            )
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('salesorder')),
+            ),
     )
     ->render();
 
@@ -69,44 +69,44 @@ $toolbar = Div::tag();
                     <?= $translator->translate('all'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 1]); ?>" style="text-decoration:none"
-                   class="btn <?php echo $status == 1 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(1) ?>">
+                   class="btn <?php echo $status == 1 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(1) ?>">
                     <?= $soR->getSpecificStatusArrayLabel('1');  ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
                    data-bs-toggle = "tooltip" title="<?= $s->getSetting('debug_mode') === '1' ? $translator->translate('payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
-                   class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(2) ?>">
+                   class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(2) ?>">
                     <?= $soR->getSpecificStatusArrayLabel('2'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 3]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 3 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(3)  ?>">
+                   class="btn  <?php echo $status == 3 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(3)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('3'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 4]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 4 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(4) ?>">
+                   class="btn  <?php echo $status == 4 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(4) ?>">
                     <?= $soR->getSpecificStatusArrayLabel('4'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 5]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 5 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(5)  ?>">
+                   class="btn  <?php echo $status == 5 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(5)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('5'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 6]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 6 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(6)  ?>">
+                   class="btn  <?php echo $status == 6 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(6)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('6'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 7]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 7 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(7)  ?>">
+                   class="btn  <?php echo $status == 7 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(7)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('7'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 8]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 8 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(8)  ?>">
+                   class="btn  <?php echo $status == 8 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(8)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('8'); ?>
                 </a>
                  <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 9]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 9 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(9)  ?>">
+                   class="btn  <?php echo $status == 9 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(9)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('9'); ?>
                 </a>
                 <a href="<?= $urlGenerator->generate('salesorder/index', ['page' => 1,'status' => 10]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 10 ? 'btn-primary' : 'label '.$soR->getSpecificStatusArrayClass(10)  ?>">
+                   class="btn  <?php echo $status == 10 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(10)  ?>">
                     <?= $soR->getSpecificStatusArrayLabel('10'); ?>
                 </a>
             </div>
@@ -120,7 +120,7 @@ $toolbar = Div::tag();
             header: $translator->translate('id'),
             content: static function (SalesOrder $model): string {
                 return (string) $model->getId();
-            }
+            },
         ),
         new DataColumn(
             'status_id',
@@ -128,25 +128,25 @@ $toolbar = Div::tag();
             content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
                 $statusId = $model->getStatus_id();
                 if (null !== $statusId) {
-                    $span = $soR->getSpecificStatusArrayLabel((string)$statusId);
+                    $span = $soR->getSpecificStatusArrayLabel((string) $statusId);
                     $class = $soR->getSpecificStatusArrayClass($statusId);
-                    return Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label '. $class]);
+                    return Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label ' . $class]);
                 }
                 return Html::tag('span');
-            }
+            },
         ),
         new DataColumn(
             'number',
             content: static function (SalesOrder $model) use ($urlGenerator): A {
                 return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
-            }
+            },
         ),
         new DataColumn(
             'quote_id',
             content: static function (SalesOrder $model) use ($urlGenerator): string|A {
                 return ($model->getQuote_id() ?
                 Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']) : '');
-            }
+            },
         ),
         new DataColumn(
             'inv_id',
@@ -154,7 +154,7 @@ $toolbar = Div::tag();
                 $invId = $model->getInv_id();
                 return (null !== $invId ?
                 Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none']) : '');
-            }
+            },
         ),
         new DataColumn(
             'date_created',
@@ -167,12 +167,12 @@ $toolbar = Div::tag();
                         $model->getDate_created()->format('Y-m-d')
                         : '';
             },
-            encodeContent: true        
+            encodeContent: true,
         ),
         new DataColumn(
             'client_id',
             header: $translator->translate('client'),
-            content:static function (SalesOrder $model): string {
+            content: static function (SalesOrder $model): string {
                 $clientName = $model->getClient()?->getClient_name();
                 if (null !== $clientName) {
                     return $clientName;
@@ -186,25 +186,25 @@ $toolbar = Div::tag();
             header: $translator->translate('total'),
             content: function (SalesOrder $model) use ($s, $soaR): string {
                 $so_id = $model->getId();
-                $so_amount = (($soaR->repoSalesOrderAmountCount((string)$so_id) > 0) ? $soaR->repoSalesOrderquery((string)$so_id) : null);
+                $so_amount = (($soaR->repoSalesOrderAmountCount((string) $so_id) > 0) ? $soaR->repoSalesOrderquery((string) $so_id) : null);
                 return $s->format_currency(null !== $so_amount ? $so_amount->getTotal() : 0.00);
-            }
+            },
         ),
         new DataColumn(
             header: $translator->translate('view'),
             content: static function (SalesOrder $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('salesorder/view', ['id' => $model->getId()]), []);
-            }
-        )
+            },
+        ),
     ];
 ?>
 <?php
 $grid_summary =  $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('salesorders'),
-    (string)$so_statuses[$status]['label']
+    (string) $so_statuses[$status]['label'],
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
@@ -219,7 +219,7 @@ echo GridView::widget()
 ->id('w12-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'salesorder').' '.$grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'salesorder') . ' ' . $grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
 ->emptyText($translator->translate('no.records'))
 ->toolbar($toolbarString);

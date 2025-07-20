@@ -19,17 +19,21 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 final class UserController
 {
     public function __construct(
-        private ViewRenderer $viewRenderer
+        private ViewRenderer $viewRenderer,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('user');
     }
 
     public function index(
         UserRepository $userRepository,
-        #[Body] ?array $body,
-        #[Query('sort')] ?string $sortOrder = null,
-        #[RouteArgument('page')] int $page = 1,
-        #[RouteArgument('pagesize')] int $pageSize = null,
+        #[Body]
+        ?array $body,
+        #[Query('sort')]
+        ?string $sortOrder = null,
+        #[RouteArgument('page')]
+        int $page = 1,
+        #[RouteArgument('pagesize')]
+        int $pageSize = null,
     ): Response {
         $order = null !== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
         $sort = Sort::only(['id', 'login'])->withOrder($order);
@@ -52,9 +56,10 @@ final class UserController
     }
 
     public function profile(
-        #[RouteArgument('login')] string $login,
+        #[RouteArgument('login')]
+        string $login,
         ResponseFactoryInterface $responseFactory,
-        UserRepository $userRepository
+        UserRepository $userRepository,
     ): Response {
         $item = $userRepository->findByLogin($login);
 

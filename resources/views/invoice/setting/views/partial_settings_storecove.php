@@ -89,7 +89,7 @@ use Yiisoft\Html\Html;
                                                 . str_repeat("&nbsp;", 2)
                                                 . str_repeat("-", 10)
                                                 . str_repeat("&nbsp;", 2) .
-                                                (!empty($value['Tax']) ? $value['Tax'] : $translator->translate('storecove.not.available'))
+                                                (!empty($value['Tax']) ? $value['Tax'] : $translator->translate('storecove.not.available')),
                                         );
                                     ?>
                                     </option>

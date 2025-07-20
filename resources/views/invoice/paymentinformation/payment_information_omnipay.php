@@ -53,16 +53,16 @@ use Yiisoft\Html\Tag\Form;
         <h2 class="fw-normal h3 text-center"><?= $translator->translate('online.payment.for.invoice'); ?> #
             <?php echo Html::tag('br');
     echo $companyLogo; ?><?= $translator->translate('online.payment.for.invoice'); ?> #
-            <?= Html::encode($invoice->getNumber() ?? ''). ' => '.
-        Html::encode($invoice->getClient()?->getClient_name() ?? ''). ' '.
-        Html::encode($invoice->getClient()?->getClient_surname() ?? ''). ' '.
+            <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
+        Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
+        Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
          $numberHelper->format_currency($balance); ?>
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('yes').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_exclude_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-danger fw-normal h3 text-center" style="text-decoration:none">
-            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf').'=>'.$translator->translate('no').' '.$translator->translate('custom.fields'); ?>
+            <i class="fa fa-file-pdf-o"></i> <?= $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields'); ?>
         </a>
     </div>    
     <?= Html::tag('Div', Html::tag('H4', $title)); ?>
@@ -102,7 +102,7 @@ use Yiisoft\Html\Tag\Form;
     <?= $translator->translate('creditcard.expiry.year'); ?>
     <?= Field::text($form, 'creditcard_expiry_year')
     ->addInputAttributes(['class' => 'input-sm form-control'])
-    ->addInputAttributes(['min' => date('Y'),'max' => (int)date('Y') + 20])
+    ->addInputAttributes(['min' => date('Y'),'max' => (int) date('Y') + 20])
     ->addInputAttributes(['value' => $body['creditcard_expiry_year'] ?? '2030' ])
     ->hideLabel()
     ?>
@@ -116,12 +116,12 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::buttonGroup()
     ->addContainerClass('btn-group btn-toolbar float-end')
     ->buttonsData([
-    [
-        ' '.$translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance),
-        'type' => 'submit',
-        'class' => 'btn btn-lg btn-success fa fa-credit-card fa-margin',
-        'name' => 'btn_send'
-    ],
+        [
+            ' ' . $translator->translate('pay.now') . ': ' . $numberHelper->format_currency($balance),
+            'type' => 'submit',
+            'class' => 'btn btn-lg btn-success fa fa-credit-card fa-margin',
+            'name' => 'btn_send',
+        ],
     ]) ?>
 <?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
 <?= $partial_client_address; ?>

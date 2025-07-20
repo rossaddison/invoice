@@ -22,9 +22,7 @@ class EmailTemplate
         private ?string $email_template_from_email = '', #[Column(type: 'text', nullable: true)]
         private ?string $email_template_cc = '', #[Column(type: 'text', nullable: true)]
         private ?string $email_template_bcc = '', #[Column(type: 'string(151)', nullable: true)]
-        private ?string $email_template_pdf_template = '')
-    {
-    }
+        private ?string $email_template_pdf_template = '') {}
 
     public function getEmail_template_id(): ?int
     {

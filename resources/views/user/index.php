@@ -33,8 +33,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-people-fill')->content(' ' . $translator->translate('gridview.title'))
-            )
+                I::tag()->addClass('bi bi-people-fill')->content(' ' . $translator->translate('gridview.title')),
+            ),
     )
     ->render();
 
@@ -86,17 +86,17 @@ $toolbar = Div::tag();
             'id',
             content: static function (User $data): string {
                 return (string) $data->getId();
-            }
+            },
         ),
         new DataColumn(
             'login',
-            content: static fn (User $data) => $data->getLogin(),
-            header:  $translator->translate('gridview.login')
+            content: static fn(User $data) => $data->getLogin(),
+            header: $translator->translate('gridview.login'),
         ),
         new DataColumn(
             'create_at',
-            content: static fn (User $data) => $data->getCreatedAt()->format('r'),
-            header:  $translator->translate('gridview.create.at')
+            content: static fn(User $data) => $data->getCreatedAt()->format('r'),
+            header: $translator->translate('gridview.create.at'),
         ),
         new DataColumn(
             'api',
@@ -105,12 +105,12 @@ $toolbar = Div::tag();
                     'API User Data',
                     $urlGenerator->generate(
                         'api/user/profile',
-                        ['login' => $data->getLogin()]
+                        ['login' => $data->getLogin()],
                     ),
                     ['target' => '_blank'],
                 );
             },
-            header:  $translator->translate('gridview.api')
+            header: $translator->translate('gridview.api'),
         ),
         new DataColumn(
             'profile',
@@ -124,7 +124,7 @@ $toolbar = Div::tag();
                     ['class' => 'btn btn-link'],
                 );
             },
-            header:  $translator->translate('gridview.profile'),
+            header: $translator->translate('gridview.profile'),
         ),
     ];
 ?>

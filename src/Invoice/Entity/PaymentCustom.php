@@ -11,19 +11,17 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\PaymentCustom\PaymentCustomRepository::class)]
 class PaymentCustom
 {
-    #[BelongsTo(target:Payment::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Payment::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Payment $payment = null;
 
-    #[BelongsTo(target:CustomField::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: CustomField::class, nullable: false, fkAction: 'NO ACTION')]
     private ?CustomField $custom_field = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable:true)]
-        private ?int $payment_id = null, #[Column(type: 'integer(11)', nullable:true)]
-        private ?int $custom_field_id = null, #[Column(type: 'text', nullable:true)]
-        private string $value = '')
-    {
-    }
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $payment_id = null, #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+        private string $value = '') {}
 
     public function getPayment(): ?Payment
     {
@@ -47,7 +45,7 @@ class PaymentCustom
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -57,7 +55,7 @@ class PaymentCustom
 
     public function getPayment_id(): string
     {
-        return (string)$this->payment_id;
+        return (string) $this->payment_id;
     }
 
     public function setPayment_id(int $payment_id): void
@@ -67,7 +65,7 @@ class PaymentCustom
 
     public function getCustom_field_id(): string
     {
-        return (string)$this->custom_field_id;
+        return (string) $this->custom_field_id;
     }
 
     public function setCustom_field_id(int $custom_field_id): void

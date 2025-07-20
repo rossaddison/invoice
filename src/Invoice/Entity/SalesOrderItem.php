@@ -16,14 +16,14 @@ class SalesOrderItem
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
-    #[BelongsTo(target:SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
     private ?SalesOrder $sales_order = null;
 
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
     // Mandatory: The item MUST have a product however psalm testing requires it to be in the constructor => nullable
-    #[BelongsTo(target:Product::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 
     public function __construct(
@@ -46,7 +46,7 @@ class SalesOrderItem
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $charge_amount = 0.00,
         // the relative order of the item on the invoice.
-        #[Column(type: 'integer(2)', nullable: false, default:0)]
+        #[Column(type: 'integer(2)', nullable: false, default: 0)]
         private ?int $order = null,
         #[Column(type: 'string(50)', nullable: true)]
         private ?string $product_unit = '',
@@ -57,7 +57,7 @@ class SalesOrderItem
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $product_unit_id = null
+        private ?int $product_unit_id = null,
     ) {
         $this->date_added = new DateTimeImmutable();
     }
@@ -97,7 +97,7 @@ class SalesOrderItem
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -107,7 +107,7 @@ class SalesOrderItem
 
     public function getSales_order_id(): string
     {
-        return (string)$this->sales_order_id;
+        return (string) $this->sales_order_id;
     }
 
     public function setSales_order_id(int $sales_order_id): void
@@ -137,7 +137,7 @@ class SalesOrderItem
 
     public function getTax_rate_id(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setTax_rate_id(int $tax_rate_id): void
@@ -147,7 +147,7 @@ class SalesOrderItem
 
     public function getProduct_id(): string
     {
-        return (string)$this->product_id;
+        return (string) $this->product_id;
     }
 
     public function setProduct_id(int $product_id): void
@@ -248,7 +248,7 @@ class SalesOrderItem
 
     public function getProduct_unit_id(): string
     {
-        return (string)$this->product_unit_id;
+        return (string) $this->product_unit_id;
     }
 
     public function setProduct_unit_id(int $product_unit_id): void

@@ -64,7 +64,7 @@ echo $alert;
                                          ->addInputAttributes([
                                              'class' => 'form-control',
                                              'readonly' => 'readonly',
-                                           ])
+                                         ])
                                          ->value(Html::encode($form->getNumber()))
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -107,14 +107,14 @@ echo $alert;
                                         'del/edit',
                                         // Argument Parameters
                                         [
-                                            'id' => $form->getDelivery_location_id()
+                                            'id' => $form->getDelivery_location_id(),
                                         ],
                                         // Query Parameters
                                         [
                                             'origin' => 'quote',
                                             'origin_id' => $quote->getId(),
-                                            'action' => 'edit'
-                                        ]
+                                            'action' => 'edit',
+                                        ],
                                     ); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('delivery.location'); ?></a>
                                 </span>  
                                 <?php } ?>
@@ -126,18 +126,18 @@ echo $alert;
                                         'del/add',
                                         // Argument Parameters
                                         [
-                                            'client_id' => $quote->getClient_id()
+                                            'client_id' => $quote->getClient_id(),
                                         ],
                                         // Query Parameters
                                         [
                                             'origin' => 'quote',
                                             'origin_id' => $quote->getId(),
-                                            'action' => $returnUrlAction
-                                        ]
+                                            'action' => $returnUrlAction,
+                                        ],
                                     ),
                                     [
-                                                 'class' => 'btn btn-danger btn-lg mt-3'
-                                             ]
+                                        'class' => 'btn btn-danger btn-lg mt-3',
+                                    ],
                                 );
                             }
 ?>
@@ -188,7 +188,7 @@ if ($form->getStatus_id() == 1) { ?>
                             <?= Field::text($form, 'discount_amount')
                                 ->hideLabel(false)
                                 ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
-                                ->label($translator->translate('discount.amount').' '. $s->getSetting('currency_symbol'))
+                                ->label($translator->translate('discount.amount') . ' ' . $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
                                 ->value(Html::encode($s->format_amount($form->getDiscount_amount() ?? 0.00)))
                                 ->placeholder($translator->translate('discount.amount'));

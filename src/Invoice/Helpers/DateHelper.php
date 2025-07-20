@@ -15,9 +15,7 @@ class DateHelper
     /**
      * @param SRepo $s
      */
-    public function __construct(private readonly SRepo $s)
-    {
-    }
+    public function __construct(private readonly SRepo $s) {}
 
     /**
      * @return string

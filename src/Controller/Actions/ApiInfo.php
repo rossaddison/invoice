@@ -16,9 +16,7 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
  */
 final readonly class ApiInfo implements MiddlewareInterface
 {
-    public function __construct(private DataResponseFactoryInterface $responseFactory)
-    {
-    }
+    public function __construct(private DataResponseFactoryInterface $responseFactory) {}
 
     /**
      * @OA\Get(

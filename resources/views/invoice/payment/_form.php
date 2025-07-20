@@ -99,9 +99,9 @@ if ($openInvsCount > 0) {
      * @var App\Invoice\Entity\Inv $inv
      */
     foreach ($openInvs as $inv) {
-        $invAmount = $iaR->repoInvquery((int)$inv->getId());
+        $invAmount = $iaR->repoInvquery((int) $inv->getId());
         if (null !== $invAmount) {
-            $optionsDataInvId[(int)$inv->getId()] =
+            $optionsDataInvId[(int) $inv->getId()] =
                ($inv->getNumber() ?? $translator->translate('number.no')) .
                ' - ' .
                ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id()))) .

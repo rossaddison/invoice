@@ -30,7 +30,7 @@ class EventListenerConfigurationTest extends TestCase
         $container = new Container(
             ContainerConfig::create()
                 ->withDefinitions($config->get('di-console'))
-                ->withProviders($config->get('di-providers-console'))
+                ->withProviders($config->get('di-providers-console')),
         );
 
         $checker = $container->get(ListenerConfigurationChecker::class);

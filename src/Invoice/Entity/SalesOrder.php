@@ -17,62 +17,62 @@ use App\User\User;
 
 class SalesOrder
 {
-    #[BelongsTo(target:Client::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[BelongsTo(target:Group::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Group::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Group $group = null;
 
-    #[BelongsTo(target:User::class, nullable: false)]
+    #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_created;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private readonly DateTimeImmutable $date_modified;
 
-    #[Column(type: 'datetime', nullable:false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_expires;
 
     public function __construct(
         // The purchase order is derived from the quote =>quote_id
         // If a contract has been established between the supplier and the client, use the contract reference
-        #[Column(type: 'integer(11)', nullable:false, default:0)]
+        #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $quote_id = null,
-        #[Column(type: 'integer(11)', nullable:false, default:0)]
+        #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $inv_id = null,
-        #[Column(type: 'integer(11)', nullable:false)]
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
-        #[Column(type: 'integer(11)', nullable:false)]
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null,
-        #[Column(type: 'integer(11)', nullable:false)]
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $group_id = null,
-        #[Column(type: 'tinyInteger(2)', nullable:false, default:1)]
+        #[Column(type: 'tinyInteger(2)', nullable: false, default: 1)]
         private ?int $status_id = null,
-        #[Column(type: 'string(100)', nullable:true)]
+        #[Column(type: 'string(100)', nullable: true)]
         private ?string $number = '',
-        #[Column(type: 'string(100)', nullable:true)]
+        #[Column(type: 'string(100)', nullable: true)]
         private ?string $client_po_number = '',
-        #[Column(type: 'string(100)', nullable:true)]
+        #[Column(type: 'string(100)', nullable: true)]
         private ?string $client_po_line_number = '',
-        #[Column(type: 'string(100)', nullable:true)]
+        #[Column(type: 'string(100)', nullable: true)]
         private ?string $client_po_person = '',
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount_amount = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount_percent = 0.00,
-        #[Column(type: 'string(32)', nullable:true)]
+        #[Column(type: 'string(32)', nullable: true)]
         private string $url_key = '',
-        #[Column(type: 'string(90)', nullable:true)]
+        #[Column(type: 'string(90)', nullable: true)]
         private ?string $password = '',
-        #[Column(type: 'longText', nullable:true)]
+        #[Column(type: 'longText', nullable: true)]
         private ?string $notes = '',
-        #[Column(type: 'longText', nullable:true)]
-        private ?string $payment_term = ''
+        #[Column(type: 'longText', nullable: true)]
+        private ?string $payment_term = '',
     ) {
         $this->date_modified = new DateTimeImmutable();
         $this->date_created = new DateTimeImmutable();
@@ -124,7 +124,7 @@ class SalesOrder
      */
     public function getId(): string|null
     {
-        return $this->id === null ? null : (string)$this->id;
+        return $this->id === null ? null : (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -134,7 +134,7 @@ class SalesOrder
 
     public function getUser_id(): string
     {
-        return (string)$this->user_id;
+        return (string) $this->user_id;
     }
 
     public function setUser_id(int $user_id): void
@@ -147,17 +147,17 @@ class SalesOrder
      */
     public function setQuote_id(string|int|null $quote_id): void
     {
-        $quote_id === null ? $this->quote_id = null : $this->quote_id = (int)$quote_id ;
+        $quote_id === null ? $this->quote_id = null : $this->quote_id = (int) $quote_id ;
     }
 
     public function getQuote_id(): string
     {
-        return (string)$this->quote_id;
+        return (string) $this->quote_id;
     }
 
     public function getInv_id(): string|null
     {
-        return (string)$this->inv_id;
+        return (string) $this->inv_id;
     }
 
     /**
@@ -165,12 +165,12 @@ class SalesOrder
      */
     public function setInv_id(string|int|null $inv_id): void
     {
-        $inv_id === null ? $this->inv_id = null : $this->inv_id = (int)$inv_id ;
+        $inv_id === null ? $this->inv_id = null : $this->inv_id = (int) $inv_id ;
     }
 
     public function getClient_id(): string
     {
-        return (string)$this->client_id;
+        return (string) $this->client_id;
     }
 
     public function setClient_id(int $client_id): void
@@ -180,7 +180,7 @@ class SalesOrder
 
     public function getGroup_id(): string
     {
-        return (string)$this->group_id;
+        return (string) $this->group_id;
     }
 
     public function setGroup_id(int $group_id): void
@@ -229,7 +229,7 @@ class SalesOrder
 
     public function setDate_expires(): void
     {
-        $days = (string)1;
+        $days = (string) 1;
         $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
     }
 

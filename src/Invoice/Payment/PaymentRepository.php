@@ -96,7 +96,7 @@ final class PaymentRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'desc'])
+                ->withOrder(['id' => 'desc']),
         );
     }
 

@@ -51,13 +51,13 @@ use Yiisoft\Html\Tag\Form;
             $translator->translate('cancel'),
             'type' => 'reset',
             'class' => 'btn btn-sm btn-danger',
-            'name' => 'btn_cancel'
+            'name' => 'btn_cancel',
         ],
         [
             $translator->translate('submit'),
             'type' => 'submit',
             'class' => 'btn btn-sm btn-primary',
-            'name' => 'btn_send'
+            'name' => 'btn_send',
         ],
     ]) ?>
     
@@ -80,7 +80,7 @@ Field::hidden($form, 'date_created')
     'placeholder' => $translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')',
     'id' => 'date_created',
     'role' => 'presentation',
-    'autocomplete' => 'off'
+    'autocomplete' => 'off',
 ])
 ->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '')
 ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -93,7 +93,7 @@ Field::hidden($form, 'date_created')
             'placeholder' => $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
             'id' => 'date_modified',
             'role' => 'presentation',
-            'autocomplete' => 'off'
+            'autocomplete' => 'off',
         ])
         ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '')
         ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -135,14 +135,14 @@ Field::hidden($form, 'date_created')
          */
         foreach ($dels as $del) {
             if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress_1() ?? ''). ', '. ($del->getAddress_2() ?? '') .', '. ($del->getCity() ?? '').', '. ($del->getZip() ?? '');
+                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '') . ', ' . ($del->getAddress_2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
             }
         }
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
             'class' => 'form-control',
-            'id' => 'delivery_location_id'
+            'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)
         ->value(Html::encode($form->getDelivery_location_id()));
@@ -153,10 +153,10 @@ Field::hidden($form, 'date_created')
                 'del/add',
                 ['client_id' => $inv->getClient_id()],
                 ['origin' => 'delivery',
-                         'origin_id' => $currentRoute->getArgument('inv_id'),
-                         'action' => 'add']
+                    'origin_id' => $currentRoute->getArgument('inv_id'),
+                    'action' => 'add'],
             ),
-            ['class' => 'btn btn-danger btn-lg mt-3']
+            ['class' => 'btn btn-danger btn-lg mt-3'],
         );
     }
 ?>

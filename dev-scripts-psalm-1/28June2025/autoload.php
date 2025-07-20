@@ -20,7 +20,7 @@ if (!file_exists($autoloadPath)) {
     fwrite(
         STDERR,
         "Dependencies not found. Please run 'composer install' in the project directory first.\n" .
-        "If Composer is not installed, visit https://getcomposer.org/download/ for instructions.\n"
+        "If Composer is not installed, visit https://getcomposer.org/download/ for instructions.\n",
     );
     exit(1);
 }

@@ -26,7 +26,7 @@ final class CompanyPrivateForm extends FormModel
     private ?string $gln = '';
     private ?string $rcc = '';
 
-    #[Required, Length(exactly: null, min: 1, max:150)]
+    #[Required, Length(exactly: null, min: 1, max: 150)]
     private ?string $logo_filename = '';
 
     private ?string $logo_width = '';
@@ -40,7 +40,7 @@ final class CompanyPrivateForm extends FormModel
     public function __construct(CompanyPrivate $company_private)
     {
         $this->id = $company_private->getId();
-        $this->company_id = (int)$company_private->getCompany_id();
+        $this->company_id = (int) $company_private->getCompany_id();
         $this->company_public_name = $company_private->getCompany()?->getName();
         $this->vat_id = $company_private->getVat_id();
         $this->tax_code = $company_private->getTax_code();
@@ -48,9 +48,9 @@ final class CompanyPrivateForm extends FormModel
         $this->gln = $company_private->getGln();
         $this->rcc = $company_private->getRcc();
         $this->logo_filename = $company_private->getLogo_filename();
-        $this->logo_width = (string)$company_private->getLogo_width();
-        $this->logo_height = (string)$company_private->getLogo_height();
-        $this->logo_margin = (string)$company_private->getLogo_margin();
+        $this->logo_width = (string) $company_private->getLogo_width();
+        $this->logo_height = (string) $company_private->getLogo_height();
+        $this->logo_margin = (string) $company_private->getLogo_margin();
         $this->start_date = $company_private->getStart_date();
         $this->end_date = $company_private->getEnd_date();
     }

@@ -67,7 +67,7 @@ final class GeneratorRelationRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['lowercasename','camelcasename','gentor_id'])
-                ->withOrder(['gentor_id' => 'asc'])
+                ->withOrder(['gentor_id' => 'asc']),
         );
     }
 

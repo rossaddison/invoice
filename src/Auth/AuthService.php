@@ -15,8 +15,7 @@ final readonly class AuthService
         private CurrentUser $currentUser,
         private UserRepository $userRepository,
         private IdentityRepository $identityRepository,
-    ) {
-    }
+    ) {}
 
     public function login(string $login, string $password): bool
     {

@@ -55,8 +55,8 @@ final class InvItemForm extends FormModel
 
     public function __construct(InvItem $invitem, int $inv_id)
     {
-        $this->id = (string)$invitem->getId();
-        $this->inv_id = (string)$inv_id;
+        $this->id = (string) $invitem->getId();
+        $this->inv_id = (string) $inv_id;
         $this->so_item_id = $invitem->getSo_item_id();
         $this->tax_rate_id = $invitem->getTax_rate_id();
         $this->product_id = $invitem->getProduct_id();
@@ -67,11 +67,11 @@ final class InvItemForm extends FormModel
         $this->quantity = $invitem->getQuantity();
         $this->price = $invitem->getPrice();
         $this->discount_amount = $invitem->getDiscount_amount();
-        $this->order = (string)$invitem->getOrder();
+        $this->order = (string) $invitem->getOrder();
         $this->product_unit = $invitem->getProduct_unit();
-        $this->product_unit_id = (int)$invitem->getProduct_unit_id();
+        $this->product_unit_id = (int) $invitem->getProduct_unit_id();
         $this->date = $invitem->getDate();
-        $this->belongs_to_vat_invoice = (int)$invitem->getBelongs_to_vat_invoice();
+        $this->belongs_to_vat_invoice = (int) $invitem->getBelongs_to_vat_invoice();
         $this->delivery_id = $invitem->getDelivery_id();
     }
 

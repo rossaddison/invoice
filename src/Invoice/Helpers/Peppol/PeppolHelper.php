@@ -170,7 +170,7 @@ class PeppolHelper
         ACIR $aciR,
         ACIIR $aciiR,
         SOIR $soiR,
-        TRR $trR
+        TRR $trR,
     ): string {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -438,7 +438,7 @@ class PeppolHelper
                       // 'filePath' used to generate file_contents
                       $target_path_with_filename,
                       // see Invoice/Ubl/Attachment
-                      'invoice/download_file/' . $inv_attachment->getId()
+                      'invoice/download_file/' . $inv_attachment->getId(),
                   );
             } else {
                 throw new PeppolTryingToSendNonPdfFileException($this->t);
@@ -460,7 +460,7 @@ class PeppolHelper
              * XPath test: not(cac:AdditionalDocumentReference/cbc:DocumentType)
              * Error message: [UBL-CR-114]-A UBL invoice should not include the AdditionalDocumentReference DocumentType
              */
-            true
+            true,
         );
     }
 
@@ -510,7 +510,7 @@ class PeppolHelper
              * Error message: [UBL-CR-254]-A UBL invoice should not include the AccountingCustomerParty Party Contact Telefax
              */
             null,
-            $ElectronicMail
+            $ElectronicMail,
         );
     }
 
@@ -545,7 +545,7 @@ class PeppolHelper
             $registration_name,
             $company_id,
             $attributes,
-            $company_legal_form
+            $company_legal_form,
         );
     }
 
@@ -577,7 +577,7 @@ class PeppolHelper
 
         return new PartyTaxScheme(
             $party_tax_scheme_companyID,
-            new TaxScheme($party_tax_scheme_ID)
+            new TaxScheme($party_tax_scheme_ID),
         );
     }
 
@@ -641,12 +641,12 @@ class PeppolHelper
             $country_sub_entity,
             new Country(
                 $identification_code,
-                $listId
+                $listId,
             ),
             // this is a customer related address therefore exclude building number UBL_CR_218
             false,
             true,
-            false
+            false,
         );
     }
 
@@ -691,7 +691,7 @@ class PeppolHelper
                 $postalZone,
                 $countrySubEntity,
                 // Use the country_name to build Invoice\Ubl\Country
-                $country_name
+                $country_name,
             );
         }
         throw new PeppolDeliveryLocationCountryNameNotFoundException($this->t);
@@ -727,7 +727,7 @@ class PeppolHelper
             new FinancialInstitutionBranch($branch_ID),
             // $id eg. IBAN123456789
             $payee_ID,
-            $payee_name
+            $payee_name,
         );
     }
 
@@ -1066,7 +1066,7 @@ class PeppolHelper
                                 // Note: The following string interpolation, ie. curly brackets within double quotes, conforms with php 8.2 requirements
                                 $invoiceLines[(int) $item_id] = ['name' => "{$a}InvoiceLine",
                                     'value' => [
-                                        ['name' => "{$b}ID", 'value' => (string)$item_id],
+                                        ['name' => "{$b}ID", 'value' => (string) $item_id],
                                         ['name' => "{$b}Note", 'value' => $item->getDescription()],
                                         ['name' => "{$b}InvoicedQuantity",
                                             'value' => (string) $item->getQuantity(),
@@ -1501,7 +1501,7 @@ class PeppolHelper
          */
         return new PartyTaxScheme(
             (string) $config['PartyTaxScheme']['CompanyID'],
-            $taxScheme
+            $taxScheme,
         );
     }
 
@@ -1526,7 +1526,7 @@ class PeppolHelper
             (string) $config['SupplierPartyIdentificationPostalAddress']['CountrySubentity'],
             new Country(
                 (string) $config['SupplierPartyIdentificationPostalAddress']['Country']['IdentificationCode'],
-                (string) $config['SupplierPartyIdentificationPostalAddress']['Country']['ListId']
+                (string) $config['SupplierPartyIdentificationPostalAddress']['Country']['ListId'],
             ),
             /**
              * Warning
@@ -1537,7 +1537,7 @@ class PeppolHelper
              */
             true,
             false,
-            false
+            false,
         );
     }
 
@@ -1695,7 +1695,7 @@ class PeppolHelper
              * XPath test: not(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:BuildingNumber)
              * Error message: [UBL-CR-367]-A UBL invoice should not include the Delivery DeliveryLocation Address BuildingNumber
              */
-            true
+            true,
         );
     }
 

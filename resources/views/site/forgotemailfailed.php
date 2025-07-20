@@ -16,9 +16,9 @@ use Yiisoft\Bootstrap5\AlertVariant;
 $alert =  Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::INFO)
-        ->body((string)$forgotemailfailed['passwordResetFailed'].
-               "\n".
-               (string)$forgotemailfailed['invoiceEmailException']. ' Check your config/common/params.php mailer senderEmail configuration'.
+        ->body((string) $forgotemailfailed['passwordResetFailed'] .
+               "\n" .
+               (string) $forgotemailfailed['invoiceEmailException'] . ' Check your config/common/params.php mailer senderEmail configuration' .
                "\n", true)
         ->dismissable(true)
         ->render();

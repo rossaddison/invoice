@@ -24,7 +24,7 @@ final class Installer
         chmod($path, $mode);
         $iterator = new RIterator(
             new DirIterator($path, FSIterator::SKIP_DOTS | FSIterator::CURRENT_AS_PATHNAME),
-            RIterator::SELF_FIRST
+            RIterator::SELF_FIRST,
         );
         /** @var string $item */
         foreach ($iterator as $item) {

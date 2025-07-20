@@ -34,8 +34,8 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge.inv'))
-            )
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge.inv')),
+            ),
     )
     ->render();
 
@@ -64,7 +64,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (InvAllowanceCharge $model) => $model->getId()
+            content: static fn(InvAllowanceCharge $model) => $model->getId(),
         ),
         new DataColumn(
             'inv_id',
@@ -72,27 +72,27 @@ $toolbar = Div::tag();
             content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
                 return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
             },
-            encodeContent: false
+            encodeContent: false,
         ),
         new DataColumn(
             header: $translator->translate('allowance.or.charge.reason.code'),
             content: static function (InvAllowanceCharge $model): string {
                 return $model->getAllowanceCharge()?->getReasonCode() ?? '';
-            }
+            },
         ),
         new DataColumn(
             header: $translator->translate('allowance.or.charge.reason'),
             content: static function (InvAllowanceCharge $model): string {
                 return $model->getAllowanceCharge()?->getReason() ?? '';
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('allowance.or.charge.amount'),
-            content: static fn (InvAllowanceCharge $model) => $model->getAmount()
+            header: $translator->translate('allowance.or.charge.amount'),
+            content: static fn(InvAllowanceCharge $model) => $model->getAmount(),
         ),
         new DataColumn(
-            header:  $translator->translate('vat'),
-            content: static fn (InvAllowanceCharge $model) => $model->getVat()
+            header: $translator->translate('vat'),
+            content: static fn(InvAllowanceCharge $model) => $model->getVat(),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -103,7 +103,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('view'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '✎',
@@ -113,7 +113,7 @@ $toolbar = Div::tag();
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('edit'),
-                ]
+                ],
             ),
             new ActionButton(
                 content: '❌',
@@ -122,8 +122,8 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("."'".$translator->translate('delete.record.warning')."');"
-                ]
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                ],
             ),
         ]),
     ];
@@ -132,9 +132,9 @@ $toolbar = Div::tag();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('allowance.or.charge'),
-    ''
+    '',
 );
 $toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .

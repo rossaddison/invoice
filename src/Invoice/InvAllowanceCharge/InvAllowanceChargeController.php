@@ -34,7 +34,7 @@ final class InvAllowanceChargeController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->invallowancechargeService = $invallowancechargeService;
@@ -51,11 +51,11 @@ final class InvAllowanceChargeController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        AllowanceChargeRepository $allowanceChargeRepository
+        AllowanceChargeRepository $allowanceChargeRepository,
     ): Response {
         $invAllowanceCharge = new InvAllowanceCharge();
         $inv_id = $currentRoute->getArgument('inv_id');
-        $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
+        $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'invallowancecharge/add',
@@ -102,7 +102,7 @@ final class InvAllowanceChargeController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        InvAllowanceChargeRepository $invallowancechargeRepository
+        InvAllowanceChargeRepository $invallowancechargeRepository,
     ): Response {
         try {
             $invallowancecharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
@@ -131,12 +131,12 @@ final class InvAllowanceChargeController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         InvAllowanceChargeRepository $invAllowanceChargeRepository,
-        AllowanceChargeRepository $allowanceChargeRepository
+        AllowanceChargeRepository $allowanceChargeRepository,
     ): Response {
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invAllowanceChargeRepository);
         if ($invAllowanceCharge) {
             $inv_id = $invAllowanceCharge->getInv_id();
-            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
+            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge'),
                 'action' => ['invallowancecharge/edit', ['id' => $invAllowanceCharge->getId()]],
@@ -194,12 +194,12 @@ final class InvAllowanceChargeController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         InvAllowanceChargeRepository $invallowancechargeRepository,
-        AllowanceChargeRepository $allowanceChargeRepository
+        AllowanceChargeRepository $allowanceChargeRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
         if ($invAllowanceCharge) {
             $inv_id = $invAllowanceCharge->getInv_id();
-            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int)$inv_id);
+            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'action' => ['invallowancecharge/view', ['id' => $invAllowanceCharge->getId()]],

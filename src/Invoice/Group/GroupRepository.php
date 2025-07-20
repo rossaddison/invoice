@@ -75,7 +75,7 @@ final class GroupRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id'])
-                ->withOrder(['id' => 'asc'])
+                ->withOrder(['id' => 'asc']),
         );
     }
 
@@ -87,11 +87,11 @@ final class GroupRepository extends Select\Repository
     public function generate_number(int $id, bool $set_next = false): mixed
     {
         /** @var Group $group */
-        $group = $this->repoGroupquery((string)$id);
+        $group = $this->repoGroupquery((string) $id);
         $my_result = $this->parse_identifier_format(
-            (string)$group->getIdentifier_format(),
-            (int)$group->getNext_id(),
-            (int)$group->getLeft_pad()
+            (string) $group->getIdentifier_format(),
+            (int) $group->getNext_id(),
+            (int) $group->getLeft_pad(),
         );
         if ($set_next) {
             $this->set_next_number($id);
@@ -119,7 +119,7 @@ final class GroupRepository extends Select\Repository
                     'yy' => date('y'),
                     'month' => date('m'),
                     'day' => date('d'),
-                    'id' => str_pad((string)$next_id, $left_pad, '0', STR_PAD_LEFT),
+                    'id' => str_pad((string) $next_id, $left_pad, '0', STR_PAD_LEFT),
                     default => '',
                 };
                 $identifier_format = str_replace('{{{' . $var . '}}}', $replace, $identifier_format);
@@ -159,13 +159,13 @@ final class GroupRepository extends Select\Repository
      */
     public function set_next_number(int $id): int
     {
-        $result = $this->repoGroupquery((string)$id) ?: null;
+        $result = $this->repoGroupquery((string) $id) ?: null;
         if (null !== $result) {
             $current_id = $result->getNext_id();
-            $incremented_next_id = (int)$result->getNext_id() + 1;
+            $incremented_next_id = (int) $result->getNext_id() + 1;
             $result->setNext_id($incremented_next_id);
             $this->save($result);
-            return (int)$current_id;
+            return (int) $current_id;
         }
         return 0;
     }

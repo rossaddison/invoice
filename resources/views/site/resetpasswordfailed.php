@@ -17,7 +17,7 @@ use Yiisoft\Bootstrap5\AlertVariant;
 $alert = Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::WARNING)
-        ->body((string)$resetpasswordfailed['resetPasswordFailed'], true)
+        ->body((string) $resetpasswordfailed['resetPasswordFailed'], true)
         ->dismissable(true)
         ->render();
 echo $alert;

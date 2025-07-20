@@ -9,26 +9,26 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTimeImmutable;
 
-#[Entity(repository:\App\Invoice\InvSentLog\InvSentLogRepository::class)]
+#[Entity(repository: \App\Invoice\InvSentLog\InvSentLogRepository::class)]
 
 class InvSentLog
 {
-    #[BelongsTo(target:Client::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[BelongsTo(target:Inv::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    #[Column(type:'datetime', nullable: false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_sent;
 
     public function __construct(
-        #[Column(type:'primary')]
+        #[Column(type: 'primary')]
         private ?int $id = null,
-        #[Column(type:'integer(11)', nullable: false)]
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $inv_id = null,
-        #[Column(type:'integer(11)', nullable: false)]
-        private ?int $client_id = null
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
     ) {
         $this->date_sent = new DateTimeImmutable('now');
     }

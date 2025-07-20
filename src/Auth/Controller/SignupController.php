@@ -113,7 +113,7 @@ final class SignupController
             $openBanking,
             $vkontakte,
             $x,
-            $yandex
+            $yandex,
         );
         $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
         $this->translator = $translator;
@@ -145,7 +145,7 @@ final class SignupController
         SignupForm $signupForm,
         tR $tR,
         uiR $uiR,
-        uR $uR
+        uR $uR,
     ): ResponseInterface {
         if (!$authService->isGuest()) {
             return $this->webService->getRedirectResponse('site/index');
@@ -194,7 +194,7 @@ final class SignupController
                         date: new \DateTimeImmutable('now'),
                         from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('administrator')],
                         to: $to,
-                        htmlBody: $htmlBody
+                        htmlBody: $htmlBody,
                     );
                     $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
 
@@ -234,7 +234,7 @@ final class SignupController
                          $request,
                          $params = [
                              'response_type' => 'code',
-                         ]
+                         ],
                      ) : '',
             'sessionOtp' => $this->session->get('otp'),
             'telegramToken' => $this->telegramToken,
@@ -247,7 +247,7 @@ final class SignupController
                     'return_type' => 'id_token',
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             ) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
@@ -257,14 +257,14 @@ final class SignupController
                     'return_type' => 'id_token',
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             ) : '',
             'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
                 $request,
                 $params = [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             ) : '',
             /**
              * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
@@ -277,14 +277,14 @@ final class SignupController
                 $params = [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             ) : '',
             'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl(
                 $request,
                 $params = [
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
-                ]
+                ],
             ) : '',
             'noDeveloperSandboxHmrcContinueButton' => $noDeveloperSandboxHmrcContinueButton,
             'noFacebookContinueButton' => $noFacebookContinueButton,
@@ -313,7 +313,7 @@ final class SignupController
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
         if (null !== ($userId = $user->getId())) {
-            $userInv->setUser_id((int)$userId);
+            $userInv->setUser_id((int) $userId);
             // if the user is administrator assign 0 => 'Administrator', 1 => Not Administrator
             $userInv->setType($user->getId() == 1 ? 0 : 1);
             // when the user clicks on the link click confirm url, make the user active in the userinv extension table. Initially keep the user inactive.
@@ -326,7 +326,7 @@ final class SignupController
                        // edit their userinv details on the client side as well as the client record.
                        ->href($this->urlGenerator->generateAbsolute(
                            'userinv/signup',
-                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification']
+                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification'],
                        ))
                        ->content($this->translator->translate('email.link.click.confirm'));
             return Body::tag()
@@ -344,12 +344,12 @@ final class SignupController
     private function getEmailVerificationToken(User $user, tR $tR): string
     {
         $identity = $user->getIdentity();
-        $identityId = (int)$identity->getId();
+        $identityId = (int) $identity->getId();
         $token = new Token($identityId, self::EMAIL_VERIFICATION_TOKEN);
         // store the token amongst all the other types of tokens e.g. password_reset_token, email_verification_token etc
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string)$token->getCreated_at()->getTimestamp();
+        $timeString = (string) $token->getCreated_at()->getTimestamp();
         // build the token
         return $emailVerificationToken = null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
     }

@@ -31,7 +31,7 @@ final class PaymentMethodController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->paymentmethodService = $paymentmethodService;
@@ -129,7 +129,7 @@ final class PaymentMethodController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        PaymentMethodRepository $paymentmethodRepository
+        PaymentMethodRepository $paymentmethodRepository,
     ): Response {
         try {
             $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
@@ -188,7 +188,7 @@ final class PaymentMethodController extends BaseController
      */
     private function paymentmethod(
         CurrentRoute $currentRoute,
-        PaymentMethodRepository $paymentmethodRepository
+        PaymentMethodRepository $paymentmethodRepository,
     ): PaymentMethod|null {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

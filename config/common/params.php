@@ -368,11 +368,10 @@ return [
             ],
             'connections' => [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
-                    connection:
-                    new Cycle\Database\Config\MySQL\DsnConnectionConfig(
+                    connection: new Cycle\Database\Config\MySQL\DsnConnectionConfig(
                         'mysql:host=' . $dbHost . ';dbname=yii3_i',
                         $dbUser,
-                        $dbPassword
+                        $dbPassword,
                     ),
                     driver: Cycle\Database\Driver\MySQL\MySQLDriver::class,
                 ),

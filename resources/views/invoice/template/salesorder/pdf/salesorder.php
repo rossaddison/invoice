@@ -32,7 +32,7 @@ $vat = $s->getSetting('enable_vat_registration');
 <html class="h-100" lang="<?= $cldr; ?>">
 <?php
     /** Set the locale when the view is being rendered partially i.e. without a layout */
-    $translator->setLocale($cldr); 
+    $translator->setLocale($cldr);
 ?>
 <head>
     <meta charset="utf-8">
@@ -47,13 +47,13 @@ $vat = $s->getSetting('enable_vat_registration');
             <b><?= Html::encode($salesorder->getClient()?->getClient_name()); ?></b>
         </div>
         <?php if (strlen($clientVatId = $salesorder->getClient()?->getClient_vat_id() ?? '') > 0) {
-            echo '<div>' .$translator->translate('vat.reg.no')
-                         .': '
+            echo '<div>' . $translator->translate('vat.reg.no')
+                         . ': '
                          . $clientVatId
                          . '</div>';
         }
 if (strlen($clientTaxCode = $salesorder->getClient()?->getClient_tax_code() ?? '') > 0) {
-    echo '<div>' .$translator->translate('tax.code.short') . ': ' . $clientTaxCode . '</div>';
+    echo '<div>' . $translator->translate('tax.code.short') . ': ' . $clientTaxCode . '</div>';
 }
 echo '<div>' . Html::encode(strlen($salesorder->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('street.address')) . '</div>';
 echo '<div>' . Html::encode(strlen($salesorder->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('street.address.2')) . '</div>';
@@ -80,7 +80,7 @@ if (strlen($clientCountry = $salesorder->getClient()?->getClient_country() ?? ''
 echo '<br/>';
 
 if (strlen($clientPhone = $salesorder->getClient()?->getClient_phone() ?? '') > 0) {
-    echo '<div>' .$translator->translate('phone.abbr') . ': ' . Html::encode($clientPhone) . '</div>';
+    echo '<div>' . $translator->translate('phone.abbr') . ': ' . Html::encode($clientPhone) . '</div>';
 } ?>
 
     </div>
@@ -133,7 +133,7 @@ if ($items) {
      * @var App\Invoice\Entity\InvItem $item
      */
     foreach ($items as $item) {
-        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string)$item->getId());
+        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string) $item->getId());
         ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>
@@ -174,12 +174,12 @@ if ($items) {
             <?php if ($vat === '0') { ?>
             <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?>
                     class="text-right"><?= Html::encode(
-                        $translator->translate('subtotal')
-                    )." (".Html::encode($translator->translate('price'))."-".Html::encode($translator->translate('discount')).") x ".Html::encode($translator->translate('qty')); ?></td>
+                        $translator->translate('subtotal'),
+                    ) . " (" . Html::encode($translator->translate('price')) . "-" . Html::encode($translator->translate('discount')) . ") x " . Html::encode($translator->translate('qty')); ?></td>
             <?php } else { ?>
             <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?>
                     class="text-right"><?= Html::encode(
-                        $translator->translate('subtotal')
+                        $translator->translate('subtotal'),
                     ); ?></td> 
             <?php } ?> 
             <td class="text-right"><?php echo Html::encode($s->format_currency($so_amount->getItem_subtotal())); ?></td>

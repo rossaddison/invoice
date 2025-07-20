@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'name')
                 ->label($translator->translate('name'))
                 ->addInputAttributes([
-                    'class' => 'form-control  alert alert-warning'
+                    'class' => 'form-control  alert alert-warning',
                 ])
                 ->readonly(true)
                 ->value(Html::encode($form->getName())); ?>

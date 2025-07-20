@@ -34,7 +34,7 @@ final class UnitController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->unitService = $unitService;
@@ -48,7 +48,7 @@ final class UnitController extends BaseController
     public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR): \Yiisoft\DataResponse\DataResponse
     {
         $units = $this->units($unitRepository);
-        $pageNum = (int)$currentRoute->getArgument('page', '1');
+        $pageNum = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($units))
@@ -103,9 +103,10 @@ final class UnitController extends BaseController
      */
     public function edit(
         Request $request,
-        #[RouteArgument('unit_id')] string $unit_id,
+        #[RouteArgument('unit_id')]
+        string $unit_id,
         UnitRepository $unitRepository,
-        FormHydrator $formHydrator
+        FormHydrator $formHydrator,
     ): Response {
         $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {

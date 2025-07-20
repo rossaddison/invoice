@@ -94,7 +94,7 @@ final class ProductController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->responseFactory = $responseFactory;
@@ -128,7 +128,7 @@ final class ProductController extends BaseController
             'title' => $this->translator->translate('add'),
             'actionName' => 'product/add',
             'actionArguments' => [],
-            'countries' => $countries->get_country_list((string)$this->session->get('_language')),
+            'countries' => $countries->get_country_list((string) $this->session->get('_language')),
             'alert' => $this->alert(),
             'form' => $form,
             'errors' => [],
@@ -203,7 +203,8 @@ final class ProductController extends BaseController
      */
     public function edit(
         Request $request,
-        #[RouteArgument('id')] string $id,
+        #[RouteArgument('id')]
+        string $id,
         FormHydrator $formHydrator,
         pR $pR,
         fR $fR,
@@ -212,7 +213,7 @@ final class ProductController extends BaseController
         cvR $cvR,
         cfR $cfR,
         pcR $pcR,
-        upR $upR
+        upR $upR,
     ): Response {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
@@ -228,7 +229,7 @@ final class ProductController extends BaseController
                     'actionName' => 'product/edit',
                     'actionArguments' => ['id' => $product_id],
                     'alert' => $this->alert(),
-                    'countries' => $countries->get_country_list((string)$this->session->get('_language')),
+                    'countries' => $countries->get_country_list((string) $this->session->get('_language')),
                     'form' => $form,
                     'errors' => [],
                     'errorsCustom' => [],
@@ -257,14 +258,14 @@ final class ProductController extends BaseController
                         // Only save custom fields if they exist
                         if ($cfR->repoTableCountquery('product_custom') > 0) {
                             if (isset($body['custom'])) {
-                                $custom = (array)$body['custom'];
+                                $custom = (array) $body['custom'];
                                 /** @var array|string $value */
                                 foreach ($custom as $custom_field_id => $value) {
-                                    $product_custom = $pcR->repoFormValuequery($product_id, (string)$custom_field_id);
+                                    $product_custom = $pcR->repoFormValuequery($product_id, (string) $custom_field_id);
                                     if (null !== $product_custom) {
                                         $product_custom_input = [
                                             'product_id' => $product_id,
-                                            'custom_field_id' => (int)$custom_field_id,
+                                            'custom_field_id' => (int) $custom_field_id,
                                             'value' => is_array($value) ? serialize($value) : $value,
                                         ];
                                         $productCustomForm = new ProductCustomForm($product_custom);
@@ -425,26 +426,26 @@ final class ProductController extends BaseController
          */
         $currentPage = $query_params['page'] ?? $page;
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$currentPage > 0 ? (int)$currentPage : 1;
+        $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
         $products = $pR->findAllPreloaded();
         if (isset($query_params['filter_family_id']) && !empty($query_params['filter_family_id'])) {
-            $products = $pR->filter_family_id((string)$query_params['filter_family_id']);
+            $products = $pR->filter_family_id((string) $query_params['filter_family_id']);
         }
         if (isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) {
-            $products = $pR->filter_product_sku((string)$query_params['filter_product_sku']);
+            $products = $pR->filter_product_sku((string) $query_params['filter_product_sku']);
         }
         if (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price'])) {
-            $products = $pR->filter_product_price((string)$query_params['filter_product_price']);
+            $products = $pR->filter_product_price((string) $query_params['filter_product_price']);
         }
         if ((isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) &&
            (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price']))) {
-            $products = $pR->filter_product_sku_price((string)$query_params['filter_product_price'], (string)$query_params['filter_product_sku']);
+            $products = $pR->filter_product_sku_price((string) $query_params['filter_product_price'], (string) $query_params['filter_product_sku']);
         }
 
         $parameters = [
             'alert' => $this->alert(),
             'page' => $currentPageNeverZero,
-            'defaultPageSizeOffsetPaginator' => (int)$this->sR->getSetting('default_list_limit'),
+            'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
             'optionsDataProductsDropdownFilter' => $this->optionsDataProducts($pR),
             'optionsDataFamiliesDropdownFilter' => $this->optionsDataFamilies($fR),
             'products' => $products,
@@ -464,7 +465,7 @@ final class ProductController extends BaseController
     public function search(Request $request): \Yiisoft\DataResponse\DataResponse
     {
         $query_params = $request->getQueryParams();
-        $product_sku = (string)$query_params['product_sku'];
+        $product_sku = (string) $query_params['product_sku'];
         if ($product_sku) {
             $parameters = [
                 'success' => 1,
@@ -563,7 +564,7 @@ final class ProductController extends BaseController
     private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
-        $form = new InvItemForm($invItem, (int)$inv_id);
+        $form = new InvItemForm($invItem, (int) $inv_id);
         $ajax_content = [
             'name' => $product->getProduct_name(),
             'inv_id' => $inv_id,
@@ -615,7 +616,7 @@ final class ProductController extends BaseController
         trR $trR,
         uR $uR,
         qiaR $qiaR,
-        qiaS $qiaS
+        qiaS $qiaS,
     ): \Yiisoft\DataResponse\DataResponse {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
@@ -629,11 +630,11 @@ final class ProductController extends BaseController
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
-            $product->setProduct_price((float)$numberHelper->format_amount($product->getProduct_price()));
+            $product->setProduct_price((float) $numberHelper->format_amount($product->getProduct_price()));
             $this->save_product_lookup_item_quote($order, $product, $quote_id, $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_quote((string)$this->session->get('quote_id'), $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $numberHelper->calculate_quote((string) $this->session->get('quote_id'), $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
@@ -667,11 +668,11 @@ final class ProductController extends BaseController
         $order = 1;
         /** @var Product $product */
         foreach ($products as $product) {
-            $product->setProduct_price((float)$numberHelper->format_amount($product->getProduct_price()));
+            $product->setProduct_price((float) $numberHelper->format_amount($product->getProduct_price()));
             $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $trR, $uR, $iiaR, $uR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_inv((string)$this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
@@ -705,7 +706,7 @@ final class ProductController extends BaseController
              * @var string $val
              */
             foreach ($product_custom_fields as $key => $val) {
-                $custom_field_form_values['custom[' . (string)$key . ']'] = $val;
+                $custom_field_form_values['custom[' . (string) $key . ']'] = $val;
             }
         }
         return $custom_field_form_values;
@@ -748,17 +749,18 @@ final class ProductController extends BaseController
         trR $trR,
         uR $uR,
         upR $upR,
-        #[RouteArgument('id')] string $id,
+        #[RouteArgument('id')]
+        string $id,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $product = $this->product($id, $pR);
-        $language = (string)$this->session->get('_language');
+        $language = (string) $this->session->get('_language');
         $peppolarrays = new PeppolArrays();
         if ($product) {
             $productForm = new ProductForm($product);
             $productCustom = new ProductCustom();
             $productCustomForm = new ProductCustomForm($productCustom);
             $product_id = $product->getProduct_id();
-            $product_images = $piR->repoProductImageProductquery((int)$product_id);
+            $product_images = $piR->repoProductImageProductquery((int) $product_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'product/view',
@@ -781,7 +783,7 @@ final class ProductController extends BaseController
                         'upR' => $upR,
                         //load Entity\Product BelongTo relations ie. $family, $tax_rate, $unit by means of repoProductQuery
                         'product' => $pR->repoProductquery($product_id),
-                    ]
+                    ],
                 ),
                 'partial_product_properties' => $this->viewRenderer->renderPartialAsString(
                     '//invoice/product/views/partial_product_properties',
@@ -792,7 +794,7 @@ final class ProductController extends BaseController
                             'all' => $ppR->findAllProduct($product_id),
                             'language' => $language,
                         ]),
-                    ]
+                    ],
                 ),
                 'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR),
                 'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
@@ -820,7 +822,7 @@ final class ProductController extends BaseController
         string $target,
         int $product_id,
         string $fileName,
-        piR $piR
+        piR $piR,
     ): bool {
         $file_exists = file_exists($target);
         // The file does not exist yet in the target path but it exists in the tmp folder on the server
@@ -873,7 +875,7 @@ final class ProductController extends BaseController
                         $original_file_name = preg_replace('/\s+/', '_', $_FILES['ImageAttachForm']['name']['attachFile']);
                         if (null !== $original_file_name) {
                             $target_path_with_filename = $targetPath . '/' . $original_file_name;
-                            if ($this->image_attachment_move_to($temporary_file, $target_path_with_filename, (int)$product_id, $original_file_name, $piR)) {
+                            if ($this->image_attachment_move_to($temporary_file, $target_path_with_filename, (int) $product_id, $original_file_name, $piR)) {
                                 return $this->responseFactory->createResponse($this->image_attachment_successfully_created((int) $product_id));
                             }
                             return $this->responseFactory->createResponse($this->image_attachment_no_file_uploaded((int) $product_id));
@@ -926,7 +928,7 @@ final class ProductController extends BaseController
                 'heading' => $this->translator->translate('errors'),
                 'message' => $this->translator->translate('path') . $this->translator->translate('is.not.writable'),
                 'url' => 'product/view', 'id' => $product_id,
-            ]
+            ],
         );
     }
 
@@ -942,7 +944,7 @@ final class ProductController extends BaseController
                 'heading' => '',
                 'message' => $this->translator->translate('record.successfully.created'),
                 'url' => 'product/view', 'id' => $product_id,
-            ]
+            ],
         );
     }
 
@@ -958,7 +960,7 @@ final class ProductController extends BaseController
                 'heading' => $this->translator->translate('errors'),
                 'message' => $this->translator->translate('productimage.no.file.uploaded'),
                 'url' => 'product/view', 'id' => $product_id,
-            ]
+            ],
         );
     }
 
@@ -967,9 +969,10 @@ final class ProductController extends BaseController
      * @param piR $piR
      */
     public function download_image_file(
-        #[RouteArgument('product_image_id')] string $product_image_id,
+        #[RouteArgument('product_image_id')]
+        string $product_image_id,
         piR $piR,
-        sR $sR
+        sR $sR,
     ): void {
         if ($product_image_id) {
             $product_image = $piR->repoProductImagequery($product_image_id);
@@ -995,7 +998,7 @@ final class ProductController extends BaseController
                         header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                         header("Content-Disposition: attachment; filename=\"$original_file_name\"");
                         header('Content-Type: ' . $ctype);
-                        header('Content-Length: ' . (string)$file_size);
+                        header('Content-Length: ' . (string) $file_size);
                         echo file_get_contents($target_path_with_filename, true);
                     } // if file_size <> false
                     exit;
@@ -1050,7 +1053,7 @@ final class ProductController extends BaseController
             // Remove repeats
             if (!in_array($family->getFamily_id(), $optionsDataFamilies)) {
                 if (null !== $familyId) {
-                    $optionsDataFamilies[(string)$familyId] = (string)$family->getFamily_name();
+                    $optionsDataFamilies[(string) $familyId] = (string) $family->getFamily_name();
                 }
             }
         }

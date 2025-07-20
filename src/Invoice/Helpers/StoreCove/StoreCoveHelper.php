@@ -93,7 +93,7 @@ final readonly class StoreCoveHelper
         private string $to_currency,
         private string $from_to_manual_input,
         private string $to_from_manual_input,
-        private Crypt $crypt
+        private Crypt $crypt,
     ) {
         $this->datehelper = new DateHelper($this->s);
     }
@@ -314,7 +314,7 @@ final readonly class StoreCoveHelper
                             $references[$incrementor] = [
                                 'documentType' => 'purchase_order',
                                 'documentId' => 'So_item_id/Po_item_id - ' . $so_item_id . '/' . $po_itemid,
-                                'lineId' => 'Seller Inv Line - ' . (string)$line_number,
+                                'lineId' => 'Seller Inv Line - ' . (string) $line_number,
                                 'issueDate' => $invoice->getDate_created(),
                             ];
                             $incrementor += 1;
@@ -575,7 +575,7 @@ final readonly class StoreCoveHelper
                     if (null !== $item_id) {
                         // if the additionalitemproperty field has been used, use the product property name value pairs to build an array
                         $product_properties_array = $this->build_product_property_array((string) $item_id, $ppR);
-                        $inv_item_amount = $this->getInvItemAmount((string)$item_id, $iiaR);
+                        $inv_item_amount = $this->getInvItemAmount((string) $item_id, $iiaR);
                         if (isset($inv_item_amount)) {
                             $sub_total = $inv_item_amount->getSubtotal();
 
@@ -591,7 +591,7 @@ final readonly class StoreCoveHelper
                                 // baseQuantity: number of sub-items included in the price of the item
                                 'baseQuantity' => $item->getProduct()?->getProduct_price_base_quantity(),
                                 'quantity' => $item->getQuantity(),
-                                'quantityUnitCode' => $this->UnitCode((string)$item->getProduct()?->getUnit()?->getUnit_id(), $unpR),
+                                'quantityUnitCode' => $this->UnitCode((string) $item->getProduct()?->getUnit()?->getUnit_id(), $unpR),
                                 'tax' => [
                                     'percentage' => $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
                                     'country' => $item->getProduct()?->getProduct_country_of_origin_code(),
@@ -777,7 +777,7 @@ final readonly class StoreCoveHelper
             $registration_name,
             $company_id,
             $attributes,
-            $company_legal_form
+            $company_legal_form,
         );
     }
 
@@ -809,7 +809,7 @@ final readonly class StoreCoveHelper
 
         return new PartyTaxScheme(
             $party_tax_scheme_companyID,
-            new TaxScheme($party_tax_scheme_ID)
+            new TaxScheme($party_tax_scheme_ID),
         );
     }
 
@@ -873,7 +873,7 @@ final readonly class StoreCoveHelper
             $country_sub_entity,
             new Country(
                 $identification_code,
-                $listId
+                $listId,
             ),
         );
     }
@@ -938,7 +938,7 @@ final readonly class StoreCoveHelper
             $country_sub_entity,
             new Country(
                 $identification_code,
-                $listId
+                $listId,
             ),
         );
     }
@@ -983,7 +983,7 @@ final readonly class StoreCoveHelper
             $Telephone,
             // Telefax
             '',
-            $ElectronicMail
+            $ElectronicMail,
         );
     }
 
@@ -1014,7 +1014,7 @@ final readonly class StoreCoveHelper
                 $postalZone,
                 $countrySubEntity,
                 // Use the country_name to build Invoice\Ubl\Country
-                $country_name
+                $country_name,
             );
         }
         throw new PeppolDeliveryLocationCountryNameNotFoundException($this->t);
@@ -1348,7 +1348,7 @@ final readonly class StoreCoveHelper
             $cityName,
             $postalZone,
             $countrySubEntity,
-            $country
+            $country,
         );
     }
 
@@ -1381,7 +1381,7 @@ final readonly class StoreCoveHelper
         ACIR $aciR,
         ACIIR $aciiR,
         SOIR $soiR,
-        TRR $trR
+        TRR $trR,
     ): array {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -1472,7 +1472,7 @@ final readonly class StoreCoveHelper
              * @var string $payeeFinancialAccount['ID']
              */
             $pm_id = $payeeFinancialAccount['ID'];
-            $payment_id = $this->build_peppol_payment_for_reference('storecove', (int)$invoice_id);
+            $payment_id = $this->build_peppol_payment_for_reference('storecove', (int) $invoice_id);
             $invoice_period = $this->ubl_invoice_period($invoice, $this->s);
             $invoice_lines = $this->build_invoice_lines_array($invoice, $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR, $ppR);
             $allowance_charges = $this->DocumentLevelAllowanceCharges($invoice, $aciR);

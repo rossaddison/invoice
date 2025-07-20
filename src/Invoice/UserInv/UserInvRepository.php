@@ -76,7 +76,7 @@ final class UserInvRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['user_id','name'])
-                ->withOrder(['user_id' => 'asc'])
+                ->withOrder(['user_id' => 'asc']),
         );
     }
 

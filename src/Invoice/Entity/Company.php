@@ -23,7 +23,7 @@ class Company
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-        #[Column(type: 'tinyInteger(1)', nullable: false, default:0)]
+        #[Column(type: 'tinyInteger(1)', nullable: false, default: 0)]
         private ?int $current = 0,
         #[Column(type: 'text', nullable: true)]
         private ?string $name = '',
@@ -60,7 +60,7 @@ class Company
         #[Column(type: 'text', nullable: true)]
         private ?string $arbitrationBody = '',
         #[Column(type: 'text', nullable: true)]
-        private ?string $arbitrationJurisdiction = ''
+        private ?string $arbitrationJurisdiction = '',
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();

@@ -85,7 +85,7 @@ final class ClientController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->clientService = $clientService;
@@ -134,7 +134,7 @@ final class ClientController extends BaseController
              * @var string $val
              */
             foreach ($client_custom_fields as $key => $val) {
-                $custom_field_form_values['custom[' . (string)$key . ']'] = $val;
+                $custom_field_form_values['custom[' . (string) $key . ']'] = $val;
             }
         }
         return $custom_field_form_values;
@@ -153,7 +153,7 @@ final class ClientController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         cfR $cfR,
-        cvR $cvR
+        cvR $cvR,
     ): Response {
         $origin = $currentRoute->getArgument('origin');
         $countries = new CountryHelper();
@@ -245,7 +245,7 @@ final class ClientController extends BaseController
         cvR $cvR,
         FormHydrator $formHydrator,
         paR $paR,
-        CurrentRoute $currentRoute
+        CurrentRoute $currentRoute,
     ): Response {
         $origin = $currentRoute->getArgument('origin');
         $client = $this->client($currentRoute, $cR) ?? null;
@@ -258,7 +258,7 @@ final class ClientController extends BaseController
             $countries = new CountryHelper();
             $client_id = $client->getClient_id();
             if (null !== $client_id) {
-                $postaladdresses = $paR->repoClientAll((string)$client_id);
+                $postaladdresses = $paR->repoClientAll((string) $client_id);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'client/edit',
@@ -276,7 +276,7 @@ final class ClientController extends BaseController
                     'selectedCountry' => $selected_country ?? $this->sR->getSetting('default_country'),
                     'selectedLanguage' => $selected_language ?? $this->sR->getSetting('default_language'),
                     'datepicker_dropdown_locale_cldr' => $currentRoute->getArgument('_language', 'en'),
-                    'postal_address_count' => $paR->repoClientCount((string)$client_id),
+                    'postal_address_count' => $paR->repoClientCount((string) $client_id),
                     /**
                     * Default to en so that all country names are in English if route language not found
                     * TODO: rebuild country list to match currently available languages
@@ -285,7 +285,7 @@ final class ClientController extends BaseController
                     'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
                     'customFields' => $cfR->repoTablequery('client_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
-                    'clientCustomValues' => $this->client_custom_values((string)$client_id, $ccR),
+                    'clientCustomValues' => $this->client_custom_values((string) $client_id, $ccR),
                     'clientCustomForm' => $clientCustomForm,
                 ];
                 if ($request->getMethod() === Method::POST) {
@@ -301,14 +301,14 @@ final class ClientController extends BaseController
                         // Only save custom fields if they exist
                         if ($cfR->repoTableCountquery('client_custom') > 0) {
                             if (isset($body['custom'])) {
-                                $custom = (array)$body['custom'];
+                                $custom = (array) $body['custom'];
                                 /** @var array|string $value */
                                 foreach ($custom as $custom_field_id => $value) {
-                                    $client_custom = $ccR->repoFormValuequery((string)$client_id, (string)$custom_field_id);
+                                    $client_custom = $ccR->repoFormValuequery((string) $client_id, (string) $custom_field_id);
                                     if (null !== $client_custom) {
                                         $client_custom_input = [
                                             'client_id' => $client_id,
-                                            'custom_field_id' => (int)$custom_field_id,
+                                            'custom_field_id' => (int) $custom_field_id,
                                             'value' => is_array($value) ? serialize($value) : $value,
                                         ];
                                         $clientCustomForm = new ClientCustomForm($client_custom);
@@ -356,10 +356,10 @@ final class ClientController extends BaseController
              * @var array $custom
              */
             foreach ($body['custom'] as $custom) {
-                if (preg_match("/^(.*)\[\]$/i", (string)$custom['name'], $matches)) {
-                    $values[$matches[1]][] = (string)$custom['value'];
+                if (preg_match("/^(.*)\[\]$/i", (string) $custom['name'], $matches)) {
+                    $values[$matches[1]][] = (string) $custom['value'];
                 } else {
-                    $values[(string)$custom['name']] = (string)$custom['value'];
+                    $values[(string) $custom['name']] = (string) $custom['value'];
                 }
             }
 
@@ -434,7 +434,7 @@ final class ClientController extends BaseController
      */
     public function add_custom_field(string $client_id, int $custom_field_id, ccR $ccR): bool
     {
-        return $ccR->repoClientCustomCount($client_id, (string)$custom_field_id) > 0 ? false : true;
+        return $ccR->repoClientCustomCount($client_id, (string) $custom_field_id) > 0 ? false : true;
     }
 
     /**
@@ -456,7 +456,7 @@ final class ClientController extends BaseController
         iaR $iaR,
         iR $iR,
         cpR $cpR,
-        ucR $ucR
+        ucR $ucR,
     ): \Yiisoft\DataResponse\DataResponse {
         /**
          * @see $canEdit used in client/index.php to display via label
@@ -469,8 +469,8 @@ final class ClientController extends BaseController
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
-        $active = (int)$currentRoute->getArgument('active', '2');
+        $currentPageNeverZero = (int) $page > 0 ? (int) $page : 1;
+        $active = (int) $currentRoute->getArgument('active', '2');
         /** @var string $query_params['sort'] */
         $sortString = $query_params['sort'] ?? '-id';
         $urlCreator = new UrlCreator($urlGenerator);
@@ -486,19 +486,19 @@ final class ClientController extends BaseController
          */
         $clients = $this->clients_with_sort($cR, $sort, $active);
         if (isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) {
-            $clients = $cR->filter_client_name((string)$query_params['filter_client_name']);
+            $clients = $cR->filter_client_name((string) $query_params['filter_client_name']);
         }
         if (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname'])) {
-            $clients = $cR->filter_client_surname((string)$query_params['filter_client_surname']);
+            $clients = $cR->filter_client_surname((string) $query_params['filter_client_surname']);
         }
         if ((isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) &&
            (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname']))) {
-            $clients = $cR->filter_client_name_surname((string)$query_params['filter_client_name'], (string)$query_params['filter_client_surname']);
+            $clients = $cR->filter_client_name_surname((string) $query_params['filter_client_name'], (string) $query_params['filter_client_surname']);
         }
         $paginator = (new DataOffsetPaginator($clients))
             ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
-            ->withToken(PageToken::next((string)$page));
+            ->withToken(PageToken::next((string) $page));
         $parameters = [
             'paginator' => $paginator,
             'alert' => $this->alert(),
@@ -509,7 +509,7 @@ final class ClientController extends BaseController
             'cpR' => $cpR,
             'ucR' => $ucR,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                    ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
             'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
@@ -542,7 +542,7 @@ final class ClientController extends BaseController
         iR $iR,
         cpR $cpR,
         ucR $ucR,
-        uiR $uiR
+        uiR $uiR,
     ): Response {
         $query_params = $request->getQueryParams();
         /**
@@ -550,8 +550,8 @@ final class ClientController extends BaseController
          */
         $page = $query_params['page'] ?? $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = (int)$page > 0 ? (int)$page : 1;
-        $active = (int)$currentRoute->getArgument('active', '2');
+        $currentPageNeverZero = (int) $page > 0 ? (int) $page : 1;
+        $active = (int) $currentRoute->getArgument('active', '2');
         /** @var string $query_params['sort'] */
         $sortString = $query_params['sort'] ?? '-id';
         $urlCreator = new UrlCreator($urlGenerator);
@@ -575,7 +575,7 @@ final class ClientController extends BaseController
                         $paginator = (new DataOffsetPaginator($clients))
                             ->withPageSize($listLimit)
                             ->withCurrentPage($currentPageNeverZero)
-                            ->withToken(PageToken::next((string)$page));
+                            ->withToken(PageToken::next((string) $page));
                         $parameters = [
                             'paginator' => $paginator,
                             'alert' => $this->alert(),
@@ -585,7 +585,7 @@ final class ClientController extends BaseController
                             'active' => $active,
                             'cpR' => $cpR,
                             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                                ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                                ? (int) $this->sR->getSetting('default_list_limit') : 1,
                             'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
                             'userInv' => $userInv,
                             'urlCreator' => $urlCreator,
@@ -605,7 +605,7 @@ final class ClientController extends BaseController
         $body = $request->getQueryParams();
         /** @var int $body['client_id'] */
         $client_id = $body['client_id'];
-        $data = $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string)$client_id) : null;
+        $data = $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string) $client_id) : null;
         $parameters = [
             'success' => 1,
             'data' => $data,
@@ -635,11 +635,11 @@ final class ClientController extends BaseController
     public function save_custom(FormHydrator $formHydrator, Request $request, ccR $ccR): \Yiisoft\DataResponse\DataResponse
     {
         $body = $request->getQueryParams();
-        $custom = $body['custom'] ? (array)$body['custom'] : '';
+        $custom = $body['custom'] ? (array) $body['custom'] : '';
         $custom_field_body = [
             'custom' => $custom,
         ];
-        $client_id = (string)$this->session->get('client_id');
+        $client_id = (string) $this->session->get('client_id');
         if (isset($custom_field_body['custom'])) {
             $db_array = [];
             $values = [];
@@ -648,8 +648,8 @@ final class ClientController extends BaseController
              * @var array $custom
              */
             foreach ($custom_field_body['custom'] as $custom) {
-                $customName = (string)$custom['name'];
-                $customValue = (string)$custom['value'];
+                $customName = (string) $custom['name'];
+                $customValue = (string) $custom['value'];
                 if (preg_match("/^(.*)\[\]$/i", $customName, $matches)) {
                     $values[$matches[1]][] = $customValue;
                 } else {
@@ -741,7 +741,7 @@ final class ClientController extends BaseController
             $this->translator->translate('gender.other'),
         ];
         foreach ($genders_array as $key => $val) {
-            $optionsDataGender[(string)$key] = $val;
+            $optionsDataGender[(string) $key] = $val;
         }
         return $optionsDataGender;
     }
@@ -757,7 +757,7 @@ final class ClientController extends BaseController
          * @var PostalAddress $postalAddress
          */
         foreach ($postalAddresses as $postalAddress) {
-            $paId = (int)$postalAddress->getId();
+            $paId = (int) $postalAddress->getId();
             $address = [];
             if ($paId > 0) {
                 if ($postalAddress->getStreet_name()) {
@@ -864,7 +864,7 @@ final class ClientController extends BaseController
         irR $irR,
         qR $qR,
         pymtR $pymtR,
-        ucR $ucR
+        ucR $ucR,
     ): Response {
         $quote = new Quote();
         $quoteForm = new QuoteForm($quote);
@@ -893,15 +893,15 @@ final class ClientController extends BaseController
                     'custom_fields' => $cfR->repoTablequery('client_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
                     'cpR' => $cpR,
-                    'clientCustomValues' => $this->client_custom_values((string)$client_id, $ccR),
+                    'clientCustomValues' => $this->client_custom_values((string) $client_id, $ccR),
                     'client' => $client,
-                    'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string)$client_id) : [],
+                    'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string) $client_id) : [],
                     'partial_client_address' => $this->viewRenderer->renderPartialAsString('//invoice/client/partial_client_address', [
                         'client' => $client,
                     ]),
                     // Note here the client_id is presented as the 'origin'. Origin could be 'quote', 'main', 'dashboard'
-                    'client_modal_layout_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string)$client_id, []),
-                    'client_modal_layout_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string)$client_id, []),
+                    'client_modal_layout_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string) $client_id, []),
+                    'client_modal_layout_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string) $client_id, []),
                     'quote_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->repoCountByClient($client_id),
                         'quotes' => $qR->repoClient($client_id),
@@ -1002,16 +1002,16 @@ final class ClientController extends BaseController
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
                     'partial_notes' => $this->viewRenderer->renderPartialAsString('//invoice/clientnote/partial_notes', [
-                        'client_notes' => $cnR->repoClientquery((string)$client_id),
+                        'client_notes' => $cnR->repoClientquery((string) $client_id),
                     ]),
                     'payment_table' => $this->viewRenderer->renderPartialAsString('//invoice/payment/partial_payment_table', [
                         'client' => $client,
                         // All payments from the client are loaded and filtered in the view with
                         // if ($payment->getInv()->getClient_id() === $client->getClient_id())
-                        'payments' => $pymtR->repoPaymentInvLoadedAll((int)$this->sR->getSetting('payment_list_limit') ?: 10),
+                        'payments' => $pymtR->repoPaymentInvLoadedAll((int) $this->sR->getSetting('payment_list_limit') ?: 10),
                     ]),
                     'delivery_locations' => $this->viewRenderer->renderPartialAsString('//invoice/client/client_delivery_location_list', [
-                        'locations' => $delR->repoClientquery((string)$client->getClient_id()),
+                        'locations' => $delR->repoClientquery((string) $client->getClient_id()),
                     ]),
                 ];
                 return $this->viewRenderer->render('view', $parameters);

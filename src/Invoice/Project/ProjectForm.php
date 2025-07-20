@@ -18,7 +18,7 @@ final class ProjectForm extends FormModel
 
     public function __construct(Project $project)
     {
-        $this->client_id = (int)$project->getClient_id();
+        $this->client_id = (int) $project->getClient_id();
         $this->name = $project->getName();
     }
 

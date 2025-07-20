@@ -18,8 +18,8 @@ final class QuoteTaxRateForm extends FormModel
 
     public function __construct(QuoteTaxRate $quoteTaxRate)
     {
-        $this->quote_id = (int)$quoteTaxRate->getQuote_id();
-        $this->tax_rate_id = (int)$quoteTaxRate->getTax_rate_id();
+        $this->quote_id = (int) $quoteTaxRate->getQuote_id();
+        $this->tax_rate_id = (int) $quoteTaxRate->getTax_rate_id();
         $this->include_item_tax = $quoteTaxRate->getInclude_item_tax();
         $this->quote_tax_rate_amount = $quoteTaxRate->getQuote_tax_rate_amount();
     }

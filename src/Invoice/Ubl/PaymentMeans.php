@@ -14,9 +14,7 @@ class PaymentMeans implements XmlSerializable
         'name' => 'Credit Transfer',
     ];
 
-    public function __construct(private readonly ?PayeeFinancialAccount $payeeFinancialAccount, private readonly ?string $paymentId = '')
-    {
-    }
+    public function __construct(private readonly ?PayeeFinancialAccount $payeeFinancialAccount, private readonly ?string $paymentId = '') {}
 
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentMeans

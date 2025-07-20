@@ -25,7 +25,7 @@ final class Bootstrap5ModalInv
         private readonly GroupRepository $gR,
         private readonly SettingRepository $sR,
         private readonly UserClientRepository $ucR,
-        private readonly InvForm $invForm
+        private readonly InvForm $invForm,
     ) {
         $this->layoutParameters = [];
         $this->formParameters = [];

@@ -12,9 +12,8 @@ final class TwoFactorAuthenticationSetupForm extends FormModel
     private string $code = '';
 
     public function __construct(
-        private readonly TranslatorInterface $translator
-    ) {
-    }
+        private readonly TranslatorInterface $translator,
+    ) {}
 
     /**
      * @return string[]

@@ -12,18 +12,16 @@ use App\User\User;
 #[Entity(repository: \App\Invoice\UserClient\UserClientRepository::class)]
 class UserClient
 {
-    #[BelongsTo(target:User::class, nullable: false)]
+    #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
-    #[BelongsTo(target:Client::class, nullable: false)]
+    #[BelongsTo(target: Client::class, nullable: false)]
     private ?Client $client = null;
 
     public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable:false)]
-        private ?int $user_id = null, #[Column(type: 'integer(11)', nullable:false)]
-        private ?int $client_id = null)
-    {
-    }
+        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null) {}
 
     public function getUser(): ?User
     {
@@ -37,7 +35,7 @@ class UserClient
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -47,7 +45,7 @@ class UserClient
 
     public function getUser_id(): string
     {
-        return (string)$this->user_id;
+        return (string) $this->user_id;
     }
 
     public function setUser_id(int $user_id): void
@@ -57,7 +55,7 @@ class UserClient
 
     public function getClient_id(): string
     {
-        return (string)$this->client_id;
+        return (string) $this->client_id;
     }
 
     public function setClient_id(int $client_id): void

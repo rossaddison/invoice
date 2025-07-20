@@ -14,9 +14,9 @@ echo "<?php\n";
 
 declare(strict_types=1); 
 
-namespace <?= $generator->getNamespace_path() .DIRECTORY_SEPARATOR. $generator->getCamelcase_capital_name().";\n"; ?>
+namespace <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . ";\n"; ?>
 
-use <?= $generator->getNamespace_path() .DIRECTORY_SEPARATOR.'Entity' .DIRECTORY_SEPARATOR.$generator->getCamelcase_capital_name().";\n"; ?>
+use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . ";\n"; ?>
 
 
 final class <?= $generator->getCamelcase_capital_name(); ?>Service
@@ -128,16 +128,16 @@ foreach ($orm_schema->getColumns() as $column) {
                 break;
         }
         if ($column->getAbstractType() <> 'date') {
-            echo '   isset($array['."'". $column->getName()."']) ? ". '$model->set'. ucfirst($column->getName()).'('.$typecast.'$array['."'".$column->getName()."']) : '';"."\n";
+            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . '$model->set' . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
         }
         if ($column->getAbstractType() === 'date') {
-            echo '   isset($array['."'". $column->getName()."']) ? ". '$model->set'. ucfirst($column->getName()).'('.$typecast.'$array['."'".$column->getName()."']) : '';"."\n";
+            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . '$model->set' . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
             echo '$datetime = new \DateTime();';
             echo '/**';
-            echo ' * @var string $array['. "'". $column->getName(). "'".']';
+            echo ' * @var string $array[' . "'" . $column->getName() . "'" . ']';
             echo ' */';
-            echo '$date = $array'."['". $column->getName() ."'] ?? '';";
-            echo '$model->set'.ucfirst($column->getName()).'($datetime::createFromFormat('."'". "Y-m-d" ."',". '$date));';
+            echo '$date = $array' . "['" . $column->getName() . "'] ?? '';";
+            echo '$model->set' . ucfirst($column->getName()) . '($datetime::createFromFormat(' . "'" . "Y-m-d" . "'," . '$date));';
         }
     }
 }

@@ -13,18 +13,16 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\ClientNote\ClientNoteRepository::class)]
 class ClientNote
 {
-    #[BelongsTo(target: Client::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[Column(type:'primary')]
+    #[Column(type: 'primary')]
     private ?int $id = null;
 
-    public function __construct(#[Column(type:'integer(11)', nullable: false)]
-        private ?int $client_id = null, #[Column(type: 'longText', nullable:false)]
+    public function __construct(#[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null, #[Column(type: 'longText', nullable: false)]
         private string $note = '', #[Column(type: 'date', nullable: false)]
-        private mixed $date_note = '')
-    {
-    }
+        private mixed $date_note = '') {}
 
     public function getClient(): ?Client
     {
@@ -41,7 +39,7 @@ class ClientNote
      */
     public function getId(): string|null
     {
-        return $this->id === null ? null : (string)$this->id;
+        return $this->id === null ? null : (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -51,7 +49,7 @@ class ClientNote
 
     public function getClient_id(): string
     {
-        return (string)$this->client_id;
+        return (string) $this->client_id;
     }
 
     public function setClient_id(int $client_id): void

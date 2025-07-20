@@ -36,7 +36,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
-                'title' => $s->isDebugMode(13)
+                'title' => $s->isDebugMode(13),
             ]);
 ?>
     <?= Html::closeTag('div'); ?>    
@@ -119,7 +119,7 @@ foreach ($taxRates as $taxRate) {
     $taxRateName = $taxRate->getTaxRateName();
     // Only build the drop down item if all values are present
     if (null !== $taxRatePercentNumber && null !== $taxRateName && null !== $taxRateId) {
-        $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber. '% - ' . $taxRateName;
+        $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber . '% - ' . $taxRateName;
     }
 }
 ?>    
@@ -135,10 +135,10 @@ foreach ($taxRates as $taxRate) {
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
                             <!-- This  button is used to save the details entered here.   -->
                             <?= Html::openTag('button', [
-'type' => 'submit',
-'class' => 'btn btn-info',
-'data-bs-toggle' => 'tooltip',
-'title' => 'quoteitem/add']); ?>
+                                'type' => 'submit',
+                                'class' => 'btn btn-info',
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => 'quoteitem/add']); ?>
                                 <?= I::tag()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>

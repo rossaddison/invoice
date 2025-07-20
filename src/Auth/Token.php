@@ -14,23 +14,23 @@ use Yiisoft\Security\Random;
 
 class Token
 {
-    #[Column(type:'primary')]
+    #[Column(type: 'primary')]
     private ?int $id = null;
 
-    #[BelongsTo(target:Identity::class, nullable: false, fkAction:'NO ACTION')]
+    #[BelongsTo(target: Identity::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Identity $identity = null;
 
-    #[Column(type:'string(32)', nullable: false)]
+    #[Column(type: 'string(32)', nullable: false)]
     private ?string $token = null;
 
-    #[Column(type:'datetime)', nullable: false)]
+    #[Column(type: 'datetime)', nullable: false)]
     private DateTimeImmutable $created_at;
 
     public function __construct(
-        #[Column(type:'integer(11)', nullable: false)]
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $identity_id = null,
-        #[Column(type:'string(50)', nullable: false)]
-        private ?string $type = ''
+        #[Column(type: 'string(50)', nullable: false)]
+        private ?string $type = '',
     ) {
         $this->token = Random::string(32);
         $this->created_at = new DateTimeImmutable();
@@ -43,7 +43,7 @@ class Token
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -53,7 +53,7 @@ class Token
 
     public function getIdentity_id(): string
     {
-        return (string)$this->identity_id;
+        return (string) $this->identity_id;
     }
 
     public function setIdentity_id(int $identity_id): void

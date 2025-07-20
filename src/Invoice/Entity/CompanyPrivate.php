@@ -15,7 +15,7 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class CompanyPrivate
 {
-    #[BelongsTo(target:Company::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: Company::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Company $company = null;
 
     #[Column(type: 'datetime')]
@@ -47,9 +47,9 @@ class CompanyPrivate
         private ?int $logo_height = null,
         #[Column(type: 'int', nullable: false, default: 10)]
         private ?int $logo_margin = null,
-        #[Column(type:'date', nullable: true)]
+        #[Column(type: 'date', nullable: true)]
         private mixed $start_date = null,
-        #[Column(type:'date', nullable: true)]
+        #[Column(type: 'date', nullable: true)]
         private mixed $end_date = null,
     ) {
         $this->date_created = new DateTimeImmutable();
@@ -80,7 +80,7 @@ class CompanyPrivate
 
     public function getCompany_id(): string
     {
-        return (string)$this->company_id;
+        return (string) $this->company_id;
     }
 
     public function setCompany_id(int $company_id): void
@@ -90,7 +90,7 @@ class CompanyPrivate
 
     public function getVat_id(): string
     {
-        return (string)$this->vat_id;
+        return (string) $this->vat_id;
     }
 
     public function setVat_id(string $vat_id): void

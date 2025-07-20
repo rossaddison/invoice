@@ -55,7 +55,7 @@ final class RecoveryCodeService
         $codes = [];
         // Ensure length is at least 2 and even
         $length = ($length < 2) ? 2 : (($length % 2 === 0) ? $length : $length + 1);
-        $lenDiv2 = (int)($length / 2);
+        $lenDiv2 = (int) ($length / 2);
 
         for ($i = 0; $i < $count; $i++) {
             /** @var int<1, max> $lenDiv2 */

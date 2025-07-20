@@ -33,7 +33,7 @@ use Yiisoft\View\WebView;
  * @var string                                  $facebookAuthUrl
  * @var string                                  $githubAuthUrl
  * @var string                                  $googleAuthUrl
- * @var string                                  $govUkAuthUrl  
+ * @var string                                  $govUkAuthUrl
  * @var string                                  $linkedInAuthUrl
  * @var string                                  $microsoftOnlineAuthUrl
  * @var string                                  $telegramToken
@@ -100,26 +100,26 @@ $this->setTitle($translator->translate('menu.signup'));
                         ->csrf($csrf)
                         ->id('signupForm')
                         ->open();
-                    ?>
+?>
                     <?= Field::text($formModel, 'login')
-                        ->label($translator->translate('layout.login'))
-                        ->autofocus()
-                    ?>
+    ->label($translator->translate('layout.login'))
+    ->autofocus()
+?>
                     <?= Field::email($formModel, 'email')
-                        ->label($translator->translate('email'))
-                        ->autofocus()
-                    ?>
+    ->label($translator->translate('email'))
+    ->autofocus()
+?>
                     <?= Field::password($formModel, 'password')
-                        ->label($translator->translate('layout.password'))
-                    ?>
+    ->label($translator->translate('layout.password'))
+?>
                     <?= Field::password($formModel, 'passwordVerify')
-                        ->label($translator->translate('layout.password-verify.new'))
-                    ?>
+    ->label($translator->translate('layout.password-verify.new'))
+?>
                     <?= Field::submitButton()
-                        ->buttonId('register-button')
-                        ->name('register-button')
-                        ->content($translator->translate('layout.submit'))
-                    ?>
+    ->buttonId('register-button')
+    ->name('register-button')
+    ->content($translator->translate('layout.submit'))
+?>
                     <?= Form::tag()->close() ?>
                 </div>
             </div>

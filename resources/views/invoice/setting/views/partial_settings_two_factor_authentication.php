@@ -30,8 +30,8 @@ declare(strict_types=1);
                         </div>
                         <div class="form-group">
                             <label for="settings[enable_tfa_with_disabling]">
-                                <p><?= $translator->translate('yes').' = '; ?><?= $translator->translate('two.factor.authentication.enabled.with.disabling'); ?></p>
-                                <p><?= $translator->translate('no').' = '; ?><?= $translator->translate('two.factor.authentication.enabled.without.disabling'); ?></p>
+                                <p><?= $translator->translate('yes') . ' = '; ?><?= $translator->translate('two.factor.authentication.enabled.with.disabling'); ?></p>
+                                <p><?= $translator->translate('no') . ' = '; ?><?= $translator->translate('two.factor.authentication.enabled.without.disabling'); ?></p>
                             </label>
                             <?php $body['settings[enable_tfa_with_disabling]'] = $s->getSetting('enable_tfa_with_disabling'); ?>
                             <select name="settings[enable_tfa_with_disabling]" id="settings[enable_tfa_with_disabling]" class="form-control">
@@ -41,7 +41,7 @@ declare(strict_types=1);
                                 <option value="1" 
                                     <?php
                                         $s->check_select($body['settings[enable_tfa_with_disabling]'], '1');
-                                    ?>>
+?>>
                                     <?= $translator->translate('yes'); ?>
                                 </option>
                             </select>

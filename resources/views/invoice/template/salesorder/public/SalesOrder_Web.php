@@ -70,19 +70,19 @@ $vat = $s->getSetting('enable_vat_registration');
                 // 2=>Terms Agreement Required
                 // 3=>Client Agreed to Terms
                 // 8=>Rejected
-                if (in_array($salesorder->getStatus_id(), array(2, 8)) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') : ?>
+                if (in_array($salesorder->getStatus_id(), [2, 8]) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') : ?>
                 <a href="<?= $urlGenerator->generate('salesorder/agree_to_terms', ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-success" data-bs-toggle = "tooltip" title="Goods and Services will now be assembled/packaged/prepared">
                     <i class="fa fa-check"></i><?= $translator->translate('salesorder.agree.to.terms'); ?>
                 </a>
             <?php endif; ?>                
-            <?php if (in_array($salesorder->getStatus_id(), array(2)) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') :  ?>
+            <?php if (in_array($salesorder->getStatus_id(), [2]) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') :  ?>
                 <a href="<?= $urlGenerator->generate('salesorder/reject', ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-danger">
                     <i class="fa fa-times-circle"></i><?= $translator->translate('salesorder.reject'); ?>
                 </a>
             <?php endif; ?>
-            <?php if (in_array($salesorder->getStatus_id(), array(3)) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') :  ?>
+            <?php if (in_array($salesorder->getStatus_id(), [3]) && $salesorder->getQuote_id() !== '0' && $salesorder->getInv_id() === '0') :  ?>
                 <label class="btn btn-success"><?= $translator->translate('salesorder.client.confirmed.terms'); ?></label>
             <?php endif; ?>
         </div>
@@ -212,7 +212,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <?php $query = $soiaR->repoSalesOrderItemAmountquery((string)$item->getId()); ?>
+                                <?php $query = $soiaR->repoSalesOrderItemAmountquery((string) $item->getId()); ?>
                                 <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>
                             </tr>
                         <?php endforeach ?>
@@ -258,7 +258,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <?php
                                     $percent = $salesorder->getDiscount_percent();
                             if ($percent >= 0.00) {
-                                echo (string)$numberHelper->format_amount($percent) . ' %';
+                                echo (string) $numberHelper->format_amount($percent) . ' %';
                             } else {
                                 $discountAmount = $salesorder->getDiscount_amount();
                                 if ($discountAmount >= 0.00) {

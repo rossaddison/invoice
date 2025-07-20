@@ -26,9 +26,9 @@ final class ClientCustomForm extends FormModel
 
     public function __construct(ClientCustom $clientCustom)
     {
-        $this->client_id = (int)$clientCustom->getClient_id();
-        $this->custom_field_id = (int)$clientCustom->getCustom_field_id();
-        $this->value = (string)$clientCustom->getValue();
+        $this->client_id = (int) $clientCustom->getClient_id();
+        $this->custom_field_id = (int) $clientCustom->getCustom_field_id();
+        $this->value = (string) $clientCustom->getValue();
     }
 
     public function getClient_id(): int|null

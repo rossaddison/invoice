@@ -12,24 +12,22 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class AllowanceCharge
 {
-    #[BelongsTo(target:TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
-    public function __construct(#[Column(type:'primary')]
-        private ?int $id = null, #[Column(type:'bool', typecast:'bool', default:false, nullable: false)]
-        private bool $identifier = false, #[Column(type:'string(3)', nullable: false)]
-        private string $reason_code = '', #[Column(type:'longText)', nullable: false)]
-        private string $reason = '', #[Column(type:'integer(11)', nullable: false)]
-        private int $multiplier_factor_numeric = 0, #[Column(type:'integer(11)', nullable: false)]
-        private int $amount = 0, #[Column(type:'integer(11)', nullable: false)]
-        private int $base_amount = 0, #[Column(type:'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null)
-    {
-    }
+    public function __construct(#[Column(type: 'primary')]
+        private ?int $id = null, #[Column(type: 'bool', typecast: 'bool', default: false, nullable: false)]
+        private bool $identifier = false, #[Column(type: 'string(3)', nullable: false)]
+        private string $reason_code = '', #[Column(type: 'longText)', nullable: false)]
+        private string $reason = '', #[Column(type: 'integer(11)', nullable: false)]
+        private int $multiplier_factor_numeric = 0, #[Column(type: 'integer(11)', nullable: false)]
+        private int $amount = 0, #[Column(type: 'integer(11)', nullable: false)]
+        private int $base_amount = 0, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null) {}
 
     public function getId(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -109,7 +107,7 @@ class AllowanceCharge
 
     public function getTaxRateId(): string
     {
-        return (string)$this->tax_rate_id;
+        return (string) $this->tax_rate_id;
     }
 
     public function setTaxRateId(int $tax_rate_id): void

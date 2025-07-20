@@ -70,7 +70,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
      ->addInputAttributes([
          'class' => 'form-control',
          'readonly' => 'readonly',
-       ])
+     ])
      ->value(Html::encode($form->getNumber()))
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -101,7 +101,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             if ($delCount == 0) {
                                 echo Html::a(
                                     $translator->translate('delivery.location.add'),
-                                    $urlGenerator->generate('del/add', $actionArgumentsDelAdd, ['class' => 'btn btn-danger btn-lg mt-3'])
+                                    $urlGenerator->generate('del/add', $actionArgumentsDelAdd, ['class' => 'btn btn-danger btn-lg mt-3']),
                                 );
                             } else { ?>
                                <div class="form-group">
@@ -123,9 +123,9 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                                         $delAddress2 = $del->getAddress_2();
                                                         $delCity = $del->getCity();
                                                         $delZip = $del->getZip();
-                                                        echo (null !== $delAddress1 ? $delAddress1 : ''). ', '.
-                                                             (null !== $delAddress2 ? $delAddress2 : ''). ', '.
-                                                             (null !== $delCity ? $delCity : ''). ', '.
+                                                        echo (null !== $delAddress1 ? $delAddress1 : '') . ', ' .
+                                                             (null !== $delAddress2 ? $delAddress2 : '') . ', ' .
+                                                             (null !== $delCity ? $delCity : '') . ', ' .
                                                              (null !== $delZip ? $delZip : ''); ?>
                                                     </option>
                                                 <?php } ?>
@@ -142,9 +142,9 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 ->value(
                                     Html::encode($form->getDate_created() instanceof \DateTimeImmutable ?
                                     $form->getDate_created()->format('Y-m-d') : (is_string(
-                                        $form->getDate_created()
+                                        $form->getDate_created(),
                                     ) ?
-                                    $form->getDate_created() : ''))
+                                    $form->getDate_created() : '')),
                                 )
                                 ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -187,7 +187,7 @@ if ($form->getStatus_id() == 1) { ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form, 'discount_amount')
                                 ->hideLabel(false)
-                                ->label($translator->translate('discount').' '. $s->getSetting('currency_symbol'))
+                                ->label($translator->translate('discount') . ' ' . $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
                                 ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
                                 ->placeholder($translator->translate('discount'));

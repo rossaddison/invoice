@@ -46,7 +46,7 @@ final class UserRepository extends Select\Repository
                 ->withOrder([
                     'id' => 'desc',
                     'login' => 'desc',
-                ])
+                ]),
         );
     }
 

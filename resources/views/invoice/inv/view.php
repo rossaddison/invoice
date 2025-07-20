@@ -128,7 +128,7 @@ echo $modal_pdf;
         <?= A::tag()
         ->addAttributes([
             'data-bs-toggle' => 'tab',
-            'style' => 'text-decoration:none'
+            'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-info me-1')
         ->content(Html::b($translator->translate('add.product')))
@@ -141,7 +141,7 @@ echo $modal_pdf;
         <?= A::tag()
         ->addAttributes([
             'data-bs-toggle' => 'tab',
-            'style' => 'text-decoration:none'
+            'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-info me-1')
         ->content(Html::b($translator->translate('add.task')))
@@ -157,7 +157,7 @@ echo $modal_pdf;
             'onclick' => 'window.history.back()',
             'value' => '1',
             'data-bs-toggle' => 'tab',
-            'style' => 'text-decoration:none'
+            'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-danger bi bi-arrow-left')
         ->id('back')
@@ -176,15 +176,15 @@ echo $modal_pdf;
                                     'class' => 'btn btn-primary',
                                     'href' => '#modal-choose-items',
                                     'id' => '#modal-choose-items',
-                                    'data-bs-toggle' => 'modal'
-                                ]
+                                    'data-bs-toggle' => 'modal',
+                                ],
                             );
     ?>
                             <?= I::tag()
         ->addClass('fa fa-list')
         ->addAttributes([
             'data-bs-toggle' => 'tooltip',
-            'title' => $translator->translate('add.product')
+            'title' => $translator->translate('add.product'),
         ]);
     ?>
                             <?= $translator->translate('add.product'); ?>
@@ -197,10 +197,10 @@ echo $modal_pdf;
                     <div class="panel-heading">
                         <?= Html::openTag('td'); ?>
                             <?= Html::openTag('button', [
-        'class' => 'btn btn-primary bi bi-ui-checks',
-        'href' => '#modal-choose-tasks',
-        'id' => 'modal-choose-tasks',
-        'data-bs-toggle' => 'modal']);
+                                'class' => 'btn btn-primary bi bi-ui-checks',
+                                'href' => '#modal-choose-tasks',
+                                'id' => 'modal-choose-tasks',
+                                'data-bs-toggle' => 'modal']);
     ?>
                             <?= $translator->translate('add.task'); ?>
                             <?= Html::closeTag('button'); ?>
@@ -302,7 +302,7 @@ if ($showButtons && $invEdit) {
                      * @see Modal string activated with #create-credit-inv. Modal string from InvController/index output to $modal_create_credit
                      * @see InvController/create_credit_confirm run from src\Invoice\Asset\rebuild-1.1.3\inv.js create-credit-confirm
                      */
-                    if (($readOnly === true || $inv->getStatus_id() === 4) && $invEdit && !(int)$inv->getCreditinvoice_parent_id() > 0) {
+                    if (($readOnly === true || $inv->getStatus_id() === 4) && $invEdit && !(int) $inv->getCreditinvoice_parent_id() > 0) {
                         ?>
                         <li>
                             <a href="#create-credit-inv" data-bs-toggle="modal" data-invoice-id="<?= $inv->getId(); ?>" style="text-decoration:none">
@@ -379,21 +379,21 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                                 <i class="fa fa-print fa-margin"></i>
                                 <?= Html::encode($translator->translate('download.pdf')); ?>
                             </a>
-                            <?php 
-// Options ... Modal PDF                            
+                            <?php
+// Options ... Modal PDF
                             if ($s->getSetting('pdf_stream_inv') == '1') { ?>
                             <a href="#inv-to-modal-pdf" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-desktop fa-margin"></i>
-                                <?= Html::encode($translator->translate('pdf.modal').' ✅'); ?>
+                                <?= Html::encode($translator->translate('pdf.modal') . ' ✅'); ?>
                             </a>
                             <?php } else { ?>
                             <a href="<?= $urlGenerator->generate(
-                                        'setting/tab_index',
-                                        [],
-                                        ['active' => 'invoices'],
-                                       'settings[pdf_stream_inv]'); ?>" style="text-decoration:none">
+                                'setting/tab_index',
+                                [],
+                                ['active' => 'invoices'],
+                                'settings[pdf_stream_inv]'); ?>" style="text-decoration:none">
                                 <i class="fa fa-desktop fa-margin"></i>
-                                <?= Html::encode($translator->translate('pdf.modal').' ❌'); ?>
+                                <?= Html::encode($translator->translate('pdf.modal') . ' ❌'); ?>
                             </a>
                             <?php } ?>
                         
@@ -675,8 +675,8 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                                  * @var array $status
                                                  */
                                                 foreach ($inv_statuses as $key => $status) { ?>
-                                                <option value="<?php echo $key; ?>" <?php if ($key == (string)$form->getStatus_id()) {
-                                                    $s->check_select((string)$form->getStatus_id(), $key);
+                                                <option value="<?php echo $key; ?>" <?php if ($key == (string) $form->getStatus_id()) {
+                                                    $s->check_select((string) $form->getStatus_id(), $key);
                                                 } ?>>
                                                         <?= Html::encode($status['label']); ?>
                                                 </option>
@@ -697,7 +697,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                                 foreach ($payment_methods as $payment_method) { ?>
                                                     <option <?php $s->check_select(
                                                         (string) $inv->getPayment_method(),
-                                                        $payment_method->getId()
+                                                        $payment_method->getId(),
                                                     )
                                                     ?>
                                                         value="<?= $payment_method->getId(); ?>">
@@ -776,7 +776,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
     Html::a(
         $sales_order_number,
         $urlGenerator->generate('salesorder/view', ['id' => $inv->getSo_id()]),
-        ['class' => 'btn btn-success']
+        ['class' => 'btn btn-success'],
     );
     Html::closeTag('div');
 } ?>
@@ -800,9 +800,9 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                             <?= Html::encode($translator->translate('terms')); ?>
                             <?php
                                 $paymentTermArray = $s->get_payment_term_array($translator);
-                                $termsKey = (int)$inv->getTerms() ?: 0;
-                                $terms = (string)$paymentTermArray[$termsKey];
-                            ?>    
+$termsKey = (int) $inv->getTerms() ?: 0;
+$terms = (string) $paymentTermArray[$termsKey];
+?>    
                         </b>        
                     </div>
                     <div class="panel-body">

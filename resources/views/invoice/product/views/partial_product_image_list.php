@@ -25,69 +25,69 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
         $columns = [
             new DataColumn(
                 'file_name_original',
-                header:  $translator->translate('name'),
-                content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original())
+                header: $translator->translate('name'),
+                content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_original()),
             ),
             new DataColumn(
                 'uploaded_date',
-                header:  $translator->translate('date'),
-                content: static fn (ProductImage $model): string => ($model->getUploaded_date())->format('Y-m-d')
+                header: $translator->translate('date'),
+                content: static fn(ProductImage $model): string => ($model->getUploaded_date())->format('Y-m-d'),
             ),
             new DataColumn(
-                header:  $translator->translate('download'),
+                header: $translator->translate('download'),
                 content: static function (ProductImage $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
                             [
-                                  'type' => 'submit',
-                                  'class' => 'dropdown-button'
-                              ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                            ],
                         ),
                         // route action => product/download_image_file
                         // route name => /image
                         $urlGenerator->generate('product/download_image_file', ['product_image_id' => $model->getId(), '_language' => 'en']),
-                        []
+                        [],
                     );
-                }
+                },
             ),
             new DataColumn(
                 visible: $invEdit,
-                header:  $translator->translate('edit'),
+                header: $translator->translate('edit'),
                 content: static function (ProductImage $model) use ($urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
                             [
-                                        'type' => 'submit',
-                                        'class' => 'dropdown-button'
-                                    ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                            ],
                         ),
                         $urlGenerator->generate('productimage/edit', ['id' => $model->getId(), '_language' => 'en']),
-                        []
+                        [],
                     );
-                }
+                },
             ),
             new DataColumn(
                 visible: $invEdit,
-                header:  $translator->translate('delete'),
+                header: $translator->translate('delete'),
                 content: static function (ProductImage $model) use ($translator, $urlGenerator): A {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                             [
-                                        'type' => 'submit',
-                                        'class' => 'dropdown-button',
-                                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
-                                    ]
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                            ],
                         ),
                         $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']),
-                        []
+                        [],
                     );
-                }
+                },
             ),
         ]
 ?>
@@ -95,9 +95,9 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
     $grid_summary = $s->grid_summary(
         $paginator,
         $translator,
-        (int)$s->getSetting('default_list_limit'),
+        (int) $s->getSetting('default_list_limit'),
         $translator->translate('productimage.list'),
-        ''
+        '',
     );
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

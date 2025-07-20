@@ -35,7 +35,7 @@ final class AllowanceChargeController extends BaseController
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->allowanceChargeService = $allowanceChargeService;
@@ -50,7 +50,7 @@ final class AllowanceChargeController extends BaseController
     public function add_allowance(
         Request $request,
         FormHydrator $formHydrator,
-        TaxRateRepository $tR
+        TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = new AllowanceCharge();
         $form = new AllowanceChargeForm($allowanceCharge);
@@ -111,7 +111,7 @@ final class AllowanceChargeController extends BaseController
     public function add_charge(
         Request $request,
         FormHydrator $formHydrator,
-        TaxRateRepository $tR
+        TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = new AllowanceCharge();
         $form = new AllowanceChargeForm($allowanceCharge);
@@ -178,7 +178,7 @@ final class AllowanceChargeController extends BaseController
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                          ? (int)$this->sR->getSetting('default_list_limit') : 1,
+                                                          ? (int) $this->sR->getSetting('default_list_limit') : 1,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -190,7 +190,7 @@ final class AllowanceChargeController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        AllowanceChargeRepository $allowanceChargeRepository
+        AllowanceChargeRepository $allowanceChargeRepository,
     ): Response {
         try {
             $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
@@ -219,7 +219,7 @@ final class AllowanceChargeController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         AllowanceChargeRepository $allowanceChargeRepository,
-        TaxRateRepository $tR
+        TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];
@@ -265,7 +265,7 @@ final class AllowanceChargeController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         AllowanceChargeRepository $allowanceChargeRepository,
-        TaxRateRepository $tR
+        TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];

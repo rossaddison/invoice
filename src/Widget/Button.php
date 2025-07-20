@@ -17,9 +17,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class Button
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
-    {
-    }
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator) {}
 
     public static function tfaToggleSecret(): string
     {
@@ -58,7 +56,7 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        $string .= (string)Field::buttongroup()
+        $string .= (string) Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         return $string .= Html::closeTag('div');
     }
@@ -87,7 +85,7 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        $string .= (string)Field::buttongroup()
+        $string .= (string) Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         return $string .= Html::closeTag('div');
     }
@@ -106,7 +104,7 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        $string .= (string)Field::buttongroup()
+        $string .= (string) Field::buttongroup()
             ->buttonsData($buttonsDataArray);
         return $string .= Html::closeTag('div');
     }
@@ -137,8 +135,8 @@ final readonly class Button
                             'style' => 'text-decoration:none',
                             'tooltip' => 'data-bs-toggle',
                             'title' => $translator->translate('client.has.not.user.account'),
-                        ]
-                    )
+                        ],
+                    ),
                 );
     }
 
@@ -162,11 +160,11 @@ final readonly class Button
         iR $iR,
         int $status,
         string $translated,
-        bool $guest = false
+        bool $guest = false,
     ): string {
         return A::tag()
         ->addClass('btn btn-' . $iR->getSpecificStatusArrayClass($status))
-        ->content($iR->getSpecificStatusArrayEmoji($status) . ' ' . $iR->getSpecificStatusArrayLabel((string)$status))
+        ->content($iR->getSpecificStatusArrayEmoji($status) . ' ' . $iR->getSpecificStatusArrayLabel((string) $status))
         ->href($generator->generate('inv/' . ($guest ? 'guestmark' : 'indexmark'), ['status' => $status]))
         ->id('btn-' . $iR->getSpecificStatusArrayClass($status))
         ->render() . ' ' . $translated . ' ';

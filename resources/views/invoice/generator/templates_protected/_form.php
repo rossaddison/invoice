@@ -48,7 +48,7 @@ echo "<?= Form::tag()";
 echo '->post($urlGenerator->generate($actionName, $actionArguments))';
 echo "->enctypeMultipartFormData()";
 echo '->csrf($csrf)';
-echo "->id('".$generator->getCamelcase_capital_name()."Form')";
+echo "->id('" . $generator->getCamelcase_capital_name() . "Form')";
 echo "->open()";
 echo "?>";
 echo '<?= $button::backSave(); ?>';
@@ -65,13 +65,13 @@ echo "      <?= Html::closeTag('h5'); ?>";
  */
 foreach ($relations as $relation) {
     echo "    <?= Html::openTag('div'); ?>";
-    echo '    <?= Field::select($'.'form, '."'". ($relation->getLowercase_name() ?? '')  ."_id')";
+    echo '    <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercase_name() ?? '') . "_id')";
     echo "      ->addInputAttributes([";
     echo "           'class' => 'form-control'";
     echo "      ])";
-    echo '      ->value($form->get'.ucfirst($relation->getLowercase_name() ?? '')."_id())";
+    echo '      ->value($form->get' . ucfirst($relation->getLowercase_name() ?? '') . "_id())";
     echo '      ->prompt($translator->translate(\'i.none\'))';
-    echo '      ->optionsData($'. ($relation->getLowercase_name() ?? '').'s)';
+    echo '      ->optionsData($' . ($relation->getLowercase_name() ?? '') . 's)';
     echo '    ?>';
 }
 echo '      <?= Html::closeTag(\'div\'); ?>';
@@ -95,10 +95,10 @@ foreach ($orm_schema->getColumns() as $column) {
          */
         if (($column->getType() === 'bool') && ($column->getAbstractType() === 'bool')) {
             echo "<?= Html::openTag('div'); ?>";
-            echo '<?= Field::checkbox($form,'. "'". $column->getName()."')";
+            echo '<?= Field::checkbox($form,' . "'" . $column->getName() . "')";
             echo "    ->inputLabelAttributes(['class' => 'form-check-label'])";
             echo "    ->inputClass('form-check-input')";
-            echo '    ->ariaDescribedBy($translator->translate('."'".$column->getName().'))';
+            echo '    ->ariaDescribedBy($translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
@@ -109,9 +109,9 @@ foreach ($orm_schema->getColumns() as $column) {
          */
         if (($column->getType() === 'mixed') && (($column->getAbstractType() === 'date'))) {
             echo "<?= Html::openTag('div'); ?>";
-            echo '<?= Field::date($form,'. "'". $column->getName()."')";
+            echo '<?= Field::date($form,' . "'" . $column->getName() . "')";
             echo "    ->label()";
-            echo '    ->value($form->get'. ucfirst($column->getName()). '() ? ($form->get'.ucfirst($column->getName()).'())->format(\'Y-m-d\') : \'\')';
+            echo '    ->value($form->get' . ucfirst($column->getName()) . '() ? ($form->get' . ucfirst($column->getName()) . '())->format(\'Y-m-d\') : \'\')';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
@@ -122,13 +122,13 @@ foreach ($orm_schema->getColumns() as $column) {
          */
         if (($column->getType() === 'float') && ($column->getAbstractType() === 'decimal')) {
             echo "<?= Html::openTag('div'); ?>";
-            echo '<?= Field::text($form,'. "'". $column->getName()."')";
-            echo '    ->label($translator->translate('.$column->getName().'))';
+            echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
+            echo '    ->label($translator->translate(' . $column->getName() . '))';
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control'";
             echo '    ])';
-            echo '    ->value($s->format_amount((float)($form->get'. ucfirst($column->getName()).'() ?? 0.00)))';
-            echo '    ->placeholder($translator->translate('."'". $column->getName(). '))';
+            echo '    ->value($s->format_amount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))';
+            echo '    ->placeholder($translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
@@ -139,26 +139,26 @@ foreach ($orm_schema->getColumns() as $column) {
          */
         if (($column->getType() === 'string') && ($column->getAbstractType() <> 'date')) {
             echo "<?= Html::openTag('div'); ?>";
-            echo '<?= Field::text($form,'. "'". $column->getName()."')";
-            echo '    ->label($translator->translate('.$column->getName().'))';
+            echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
+            echo '    ->label($translator->translate(' . $column->getName() . '))';
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control'";
             echo '    ])';
-            echo '    ->value(Html::encode(' .'$'.'form->get'.$column->getName().'()'.'))';
-            echo '    ->placeholder($'.'translator->translate('."'".$column->getName().'))';
+            echo '    ->value(Html::encode(' . '$' . 'form->get' . $column->getName() . '()' . '))';
+            echo '    ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
 
         if (($column->getType() === 'int') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'primary')) {
             echo "<?= Html::openTag('div'); ?>";
-            echo '<?= Field::text($form,'. "'". $column->getName()."')";
-            echo '    ->label($translator->translate('.$column->getName().'))';
+            echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
+            echo '    ->label($translator->translate(' . $column->getName() . '))';
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control'";
             echo '    ])';
-            echo '    ->value(Html::encode(' .'$'.'form->get'.$column->getName().'))';
-            echo '    ->placeholder($'.'translator->translate('."'".$column->getName().'))';
+            echo '    ->value(Html::encode(' . '$' . 'form->get' . $column->getName() . '))';
+            echo '    ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
         }

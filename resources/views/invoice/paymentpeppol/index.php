@@ -31,38 +31,38 @@ echo $alert;
     $columns = [
         new DataColumn(
             'id',
-            header:  $translator->translate('id'),
-            content: static fn (PaymentPeppol $model) => $model->getId()
+            header: $translator->translate('id'),
+            content: static fn(PaymentPeppol $model) => $model->getId(),
         ),
         new DataColumn(
-            header:  $translator->translate('view'),
+            header: $translator->translate('view'),
             content: static function (PaymentPeppol $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->getId()]), []);
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('edit'),
+            header: $translator->translate('edit'),
             content: static function (PaymentPeppol $model) use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->getId()]), []);
-            }
+            },
         ),
         new DataColumn(
-            header:  $translator->translate('delete'),
+            header: $translator->translate('delete'),
             content: static function (PaymentPeppol $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                  'type' => 'submit',
-                  'class' => 'dropdown-button',
-                  'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');"
-                ]
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        ],
                     ),
                     $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->getId()]),
-                    []
+                    [],
                 );
-            }
+            },
         ),
     ];
 ?>
@@ -73,8 +73,8 @@ $header = Div::tag()
       H5::tag()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('paymentpeppol'))
-        )
+            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('paymentpeppol')),
+        ),
   )
 ->render();
 $toolbarReset = A::tag()
@@ -91,9 +91,9 @@ $toolbarString = Form::tag()->post($urlGenerator->generate('paymentpeppol/index'
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
-    (int)$s->getSetting('default_list_limit'),
+    (int) $s->getSetting('default_list_limit'),
     $translator->translate('paymentpeppol.reference.plural'),
-    ''
+    '',
 );
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])

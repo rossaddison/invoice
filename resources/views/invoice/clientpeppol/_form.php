@@ -56,7 +56,7 @@ use App\Widget\LabelSwitch;
             $translator->translate('peppol.label.switch.on'),
             $translator->translate('peppol.label.switch.off'),
             'client-peppol-label-switch-id',
-            '16'
+            '16',
         );
 ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
@@ -135,7 +135,7 @@ use App\Widget\LabelSwitch;
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
-                                (!empty($value['tax']) ? $value['tax'] : $translator->translate('storecove.not.available'))
+                                (!empty($value['tax']) ? $value['tax'] : $translator->translate('storecove.not.available')),
                                 );
                             ?>
                           </option>
@@ -171,7 +171,7 @@ use App\Widget\LabelSwitch;
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
-                                $value['Description']
+                                $value['Description'],
                                 );
                             ?>
                           </option>
@@ -202,7 +202,7 @@ use App\Widget\LabelSwitch;
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
                                 . str_repeat("&nbsp;", 2) .
-                                $value['Description']
+                                $value['Description'],
                                 );
                             ?>
                           </option>

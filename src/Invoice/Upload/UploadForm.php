@@ -28,7 +28,7 @@ final class UploadForm extends FormModel
 
     public function __construct(Upload $upload)
     {
-        $this->client_id = (int)$upload->getClient_id();
+        $this->client_id = (int) $upload->getClient_id();
         $this->url_key = $upload->getUrl_key();
         $this->file_name_original = $upload->getFile_name_original();
         $this->file_name_new = $upload->getFile_name_new();

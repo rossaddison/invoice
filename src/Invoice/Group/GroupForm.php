@@ -23,8 +23,8 @@ final class GroupForm extends FormModel
     {
         $this->name = $group->getName();
         $this->identifier_format = $group->getIdentifier_format();
-        $this->next_id = (int)$group->getNext_id();
-        $this->left_pad = (int)$group->getLeft_pad();
+        $this->next_id = (int) $group->getNext_id();
+        $this->left_pad = (int) $group->getLeft_pad();
     }
 
     public function getName(): string|null

@@ -57,7 +57,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <h2><?= $translator->translate('quote'); ?>&nbsp;<?= $quote->getNumber(); ?></h2>
             <div class="btn-group">
                 <?php
-                    if (in_array($quote->getStatus_id(), array(2, 3, 5)) && $quote->getSo_id() === '0') : ?>
+                    if (in_array($quote->getStatus_id(), [2, 3, 5]) && $quote->getSo_id() === '0') : ?>
                     <?= $modal_purchase_order_number; ?>
                     <a href="#purchase-order-number" data-bs-toggle="modal" 
                        class="btn btn-warning">
@@ -221,7 +221,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <?php $query = $qiaR->repoQuoteItemAmountquery((int)$item->getId()); ?>
+                                <?php $query = $qiaR->repoQuoteItemAmountquery((int) $item->getId()); ?>
                                 <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>
                             </tr>
                         <?php endforeach ?>
@@ -272,7 +272,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <?php
                                     $percent = $quote->getDiscount_percent();
                             if ($percent >= 0.00) {
-                                echo (string)$numberHelper->format_amount($percent) . ' %';
+                                echo (string) $numberHelper->format_amount($percent) . ' %';
                             } else {
                                 $discountAmount = $quote->getDiscount_amount();
                                 if ($discountAmount >= 0.00) {

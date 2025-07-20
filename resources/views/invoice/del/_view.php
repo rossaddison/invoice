@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
                     ->value(Html::encode(($form->getDate_created())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('common.date.created'),
-                        'readonly' => 'readonly'
+                        'readonly' => 'readonly',
                     ])
 ?>
             <?= Html::closeTag('div'); ?>
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode(($form->getDate_modified())->format('Y-m-d')))
     ->addInputAttributes([
         'placeholder' => $translator->translate('common.date.modified'),
-        'readonly' => 'readonly'
+        'readonly' => 'readonly',
     ])
 ?>
             <?= Html::closeTag('div'); ?>
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('name'),
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getName() ?? ''))
 ?>
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('delivery.location.building.number'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('delivery.location.building.number'),
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getBuildingNumber() ?? ''))
 ?>
@@ -87,7 +87,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('street.address'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('street.address'),
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getAddress_1() ?? ''));
 ?>
@@ -137,7 +137,7 @@ use Yiisoft\Html\Tag\Form;
     ->label($translator->translate('country'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('country'),
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
     ])
     ->value(Html::encode($form->getCountry() ?? ''));
 ?>
@@ -146,15 +146,15 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::a(
                     $translator->translate('delivery.location.global.location.number'),
                     'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/',
-                    ['style' => 'text-decoration:none']
+                    ['style' => 'text-decoration:none'],
                 ); ?>
                 <?= Field::text($form, 'global_location_number')
-                    ->label($translator->translate('delivery.location.global.location.number'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
-                        'disabled' => 'disabled',
-                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
-                    ]);
+                                                                                                    ->label($translator->translate('delivery.location.global.location.number'))
+                                                                                                    ->addInputAttributes([
+                                                                                                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
+                                                                                                        'disabled' => 'disabled',
+                                                                                                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
+                                                                                                    ]);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -167,7 +167,7 @@ use Yiisoft\Html\Tag\Form;
  * @var array $value
  */
 foreach ($electronic_address_scheme as $key => $value) {
-    $optionsDataEAS[(string)$value['code']] = (string)$value['code'] . str_repeat("-", 10) . (string)$value['description'];
+    $optionsDataEAS[(string) $value['code']] = (string) $value['code'] . str_repeat("-", 10) . (string) $value['description'];
 }
 ?>
                 <?= Html::a('EAS', 'https://docs.peppol.eu/poacc/upgrade-3/codelist/eas'); ?>

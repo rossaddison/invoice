@@ -37,7 +37,7 @@ final class UnitPeppolController extends BaseController
         UserService $userService,
         ViewRenderer $viewRenderer,
         WebControllerService $webService,
-        Flash $flash
+        Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->unitpeppolService = $unitpeppolService;
@@ -52,7 +52,7 @@ final class UnitPeppolController extends BaseController
     public function add(
         Request $request,
         FormHydrator $formHydrator,
-        UnitRepository $unitRepository
+        UnitRepository $unitRepository,
     ): Response {
         $enece = new Peppol_UNECERec20_11e();
         /** @var array $enece_array */
@@ -76,7 +76,7 @@ final class UnitPeppolController extends BaseController
             /**
              * @var string $body['code']
              */
-            $key = (int)$body['code'];
+            $key = (int) $body['code'];
             /**
              *  @var array $enece_array[$key]
              *  @var string $enece_array[$key]['Name']
@@ -117,9 +117,9 @@ final class UnitPeppolController extends BaseController
             'grid_summary' => $this->sR->grid_summary(
                 $paginator,
                 $this->translator,
-                (int)$this->sR->getSetting('default_list_limit'),
+                (int) $this->sR->getSetting('default_list_limit'),
                 $this->translator->translate('unit.peppol'),
-                ''
+                '',
             ),
             'paginator' => $paginator,
         ];
@@ -133,7 +133,7 @@ final class UnitPeppolController extends BaseController
      */
     public function delete(
         CurrentRoute $currentRoute,
-        UnitPeppolRepository $unitpeppolRepository
+        UnitPeppolRepository $unitpeppolRepository,
     ): Response {
         try {
             $unitpeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
@@ -162,7 +162,7 @@ final class UnitPeppolController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         UnitPeppolRepository $unitpeppolRepository,
-        UnitRepository $unitRepository
+        UnitRepository $unitRepository,
     ): Response {
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
@@ -231,7 +231,7 @@ final class UnitPeppolController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         UnitRepository $unitRepository,
-        UnitPeppolRepository $unitpeppolRepository
+        UnitPeppolRepository $unitpeppolRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();

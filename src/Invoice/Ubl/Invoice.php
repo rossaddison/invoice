@@ -19,9 +19,7 @@ class Invoice implements XmlSerializable
     protected ?int $invoiceTypeCode = InvoiceTypeCode::INVOICE;
     private string $documentCurrencyCode = 'EUR';
 
-    public function __construct(private readonly SettingRepository $settingRepository, private readonly ?string $profileID, private readonly ?string $id, private readonly DateTime $issueDate, private readonly ?DateTime $dueDate, private readonly ?string $note, private readonly ?DateTime $taxPointDate, private readonly ?string $accountingCostCode, private readonly ?string $buyerReference, private readonly ?InvoicePeriod $invoicePeriod, private readonly ?OrderReference $orderReference, private readonly ?ContractDocumentReference $contractDocumentReference, private readonly ?AdditionalDocumentReference $additionalDocumentReference, private readonly ?Party $accountingSupplierParty, private readonly ?Party $accountingCustomerParty, private readonly ?Delivery $delivery, private readonly ?PaymentMeans $paymentMeans, private readonly ?PaymentTerms $paymentTerms, private readonly array $allowanceCharges, private readonly array $taxAmounts, private readonly array $taxSubTotal, private readonly ?LegalMonetaryTotal $legalMonetaryTotal, protected array $invoiceLines, private readonly ?bool $isCopyIndicator, private readonly ?string $supplierAssignedAccountID)
-    {
-    }
+    public function __construct(private readonly SettingRepository $settingRepository, private readonly ?string $profileID, private readonly ?string $id, private readonly DateTime $issueDate, private readonly ?DateTime $dueDate, private readonly ?string $note, private readonly ?DateTime $taxPointDate, private readonly ?string $accountingCostCode, private readonly ?string $buyerReference, private readonly ?InvoicePeriod $invoicePeriod, private readonly ?OrderReference $orderReference, private readonly ?ContractDocumentReference $contractDocumentReference, private readonly ?AdditionalDocumentReference $additionalDocumentReference, private readonly ?Party $accountingSupplierParty, private readonly ?Party $accountingCustomerParty, private readonly ?Delivery $delivery, private readonly ?PaymentMeans $paymentMeans, private readonly ?PaymentTerms $paymentTerms, private readonly array $allowanceCharges, private readonly array $taxAmounts, private readonly array $taxSubTotal, private readonly ?LegalMonetaryTotal $legalMonetaryTotal, protected array $invoiceLines, private readonly ?bool $isCopyIndicator, private readonly ?string $supplierAssignedAccountID) {}
 
     /**
      * @return string|null
@@ -334,7 +332,7 @@ class Invoice implements XmlSerializable
             $writer->write([
                 [
                     'name' => Schema::CBC . 'TaxAmount',
-                    'value' => number_format((float)(string)$doc_cc_tax_amount ?: 0.00, 2, '.', ''),
+                    'value' => number_format((float) (string) $doc_cc_tax_amount ?: 0.00, 2, '.', ''),
                     'attributes' => [
                         'currencyID' => $doc_cc,
                     ],

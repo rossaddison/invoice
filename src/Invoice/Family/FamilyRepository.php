@@ -65,7 +65,7 @@ final class FamilyRepository extends Select\Repository
     {
         return (new EntityReader($query))->withSort(
             Sort::only(['id', 'family_name'])
-                ->withOrder(['family_name' => 'asc'])
+                ->withOrder(['family_name' => 'asc']),
         );
     }
 

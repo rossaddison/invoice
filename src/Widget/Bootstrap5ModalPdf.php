@@ -12,9 +12,8 @@ final readonly class Bootstrap5ModalPdf
     public function __construct(
         private Translator $translator,
         private ViewRenderer $viewRenderer,
-        private string $type
-    ) {
-    }
+        private string $type,
+    ) {}
 
     public function renderPartialLayoutWithPdfAsString(): string
     {
@@ -26,9 +25,9 @@ final readonly class Bootstrap5ModalPdf
                     '//invoice/' . $this->type . '/modal_view_' . $this->type . '_pdf',
                     [
                         'title' => $this->translator->translate('view'),
-                    ]
+                    ],
                 ),
-            ]
+            ],
         );
     }
 }

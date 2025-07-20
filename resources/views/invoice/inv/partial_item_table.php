@@ -188,8 +188,8 @@ foreach ($invItems as $item) {
                         <b>
                             <div class="input-group">
                                 
-                        <?php echo (string)$count.'-'.$item->getInv_id().'-'.(string)$item->getId().'-'.
-        (null !== $productId ? $productRef : '').
+                        <?php echo (string) $count . '-' . $item->getInv_id() . '-' . (string) $item->getId() . '-' .
+        (null !== $productId ? $productRef : '') .
         (null !== $taskId ? $taskRef : ''); ?>
                                 
                             </div>
@@ -279,8 +279,8 @@ foreach ($invItems as $item) {
 <?php // Buttons for line item start here?>
                     <td class="td-icon text-right td-vert-middle">                        
                         <?php if ($showButtons === true && $userCanEdit === true && $draft === true) { ?>
-                            <?php if ($piR->repoCount((int)$item->getProduct_id()) > 0) { ?>
-                            <span data-bs-toggle="tooltip" title="<?= $translator->translate('productimage.gallery'). (null !== ($item->getProduct_id()) ? ($item->getProduct()?->getProduct_name() ?? '') : ($item->getTask()?->getName() ?? '')); ?>">
+                            <?php if ($piR->repoCount((int) $item->getProduct_id()) > 0) { ?>
+                            <span data-bs-toggle="tooltip" title="<?= $translator->translate('productimage.gallery') . (null !== ($item->getProduct_id()) ? ($item->getProduct()?->getProduct_name() ?? '') : ($item->getTask()?->getName() ?? '')); ?>">
                             <a class="btn btn-info fa fa-eye" data-bs-toggle="modal" href="#view-product-<?= $item->getId(); ?>" style="text-decoration:none"></a></span> 
                             <div id="view-product-<?= $item->getId(); ?>" class="modal modal-lg" tabindex="-1">
                                 <div class="modal-dialog">
@@ -292,7 +292,7 @@ foreach ($invItems as $item) {
                                             <form>
                                                 <div class="form-group">
                                                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                                                    <?php $productImages = $piR->repoProductImageProductquery((int)$item->getProduct_id()); ?>
+                                                    <?php $productImages = $piR->repoProductImageProductquery((int) $item->getProduct_id()); ?>
                                                     <?php
                                     /**
                                      * @var App\Invoice\Entity\ProductImage $productImage
@@ -300,7 +300,7 @@ foreach ($invItems as $item) {
                                     foreach ($productImages as $productImage) { ?>
                                                         <?php if (!empty($productImage->getFile_name_original())) { ?> 
                                                            <a data-bs-toggle="modal" class="col-sm-4">
-                                                              <img src="<?= '/products/'. $productImage->getFile_name_original(); ?>"  class="img-fluid">
+                                                              <img src="<?= '/products/' . $productImage->getFile_name_original(); ?>"  class="img-fluid">
                                                            </a>
                                                         <?php } ?> 
                                                     <?php } ?>
@@ -319,13 +319,13 @@ foreach ($invItems as $item) {
                                 <a href="<?= $urlGenerator->generate(
                                     'invitemallowancecharge/index',
                                     ['inv_item_id' => $item->getId(),
-                                             '_language' => $currentRoute->getArgument('_language')],
-                                    ['inv_item_id' => $item->getId()]
+                                        '_language' => $currentRoute->getArgument('_language')],
+                                    ['inv_item_id' => $item->getId()],
                                 ) ?>" 
                                             class="btn btn-primary btn" 
                                             data-bs-toggle = "tooltip" 
                                             title="<?= $translator->translate('allowance.or.charge.index'); ?>">
-                                            <i class="<?= $aciiR->repoInvItemCount((string)$item->getId()) > 0 ? 'fa fa-list' : 'fa fa-plus'; ?>"></i>
+                                            <i class="<?= $aciiR->repoInvItemCount((string) $item->getId()) > 0 ? 'fa fa-list' : 'fa fa-plus'; ?>"></i>
                                 </a>
                              <?php } ?>  
                              <a href="<?= $urlGenerator->generate('inv/delete_inv_item', ['id' => $item->getId(),'_language' => $currentRoute->getArgument('_language')]) ?>" class="btn btn-danger btn" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');"><i class="fa fa-trash"></i></a>
@@ -375,14 +375,14 @@ foreach ($invItems as $item) {
                      * Used if Peppol is enabled in order to generate electronic invoices
                      * @var App\Invoice\Entity\InvItemAllowanceCharge $invItemAllowanceCharge
                      */
-                    foreach ($aciiR->repoInvItemquery((string)$item->getId()) as $invItemAllowanceCharge) { ?>
+                    foreach ($aciiR->repoInvItemquery((string) $item->getId()) as $invItemAllowanceCharge) { ?>
                         <tr>
                             <td class="td-amount"><b><?= $invItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == '1'
                                                        ? $translator->translate('allowance.or.charge.charge')
                                                        : $translator->translate('allowance.or.charge.allowance'); ?></b></td>
-                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason.code').
-                                                     ': '.($invItemAllowanceCharge->getAllowanceCharge()?->getReasonCode() ?? '#'); ?></b></td>
-                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason'). ': '.
+                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason.code') .
+                                                     ': ' . ($invItemAllowanceCharge->getAllowanceCharge()?->getReasonCode() ?? '#'); ?></b></td>
+                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason') . ': ' .
                                                          ($invItemAllowanceCharge->getAllowanceCharge()?->getReason() ?? '#'); ?></b></td>
                             <td class="td-amount"><b><?= $numberHelper->format_currency($invItemAllowanceCharge->getAmount()); ?></b></td>
                             <td class="td-amount"></td>
@@ -400,25 +400,25 @@ foreach ($invItems as $item) {
                         
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->subtotal using InvItemController/edit_product->saveInvItemAmount">
                             <!-- This subtotal is worked out in InvItemController/edit_product->saveInvItemAmount function -->
-                            <?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string)$item->getId())?->getSubtotal()); ?>
+                            <?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string) $item->getId())?->getSubtotal()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><b>(<?= $vat === '0' ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?>)</b></span><br/>
                         <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->discount">
-                            (<?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string)$item->getId())?->getDiscount()); ?>)
+                            (<?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string) $item->getId())?->getDiscount()); ?>)
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><b><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></b></span><br/>
                         <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->tax_total">
-                            <?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string)$item->getId())?->getTax_total()); ?>
+                            <?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string) $item->getId())?->getTax_total()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><b><?= $translator->translate('total'); ?></b></span><br/>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="inv_item_amount->total">
-                            <?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string)$item->getId())?->getTotal()); ?>
+                            <?= $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery((string) $item->getId())?->getTotal()); ?>
                         </span>
                     </td>                   
                 </tr>
@@ -479,7 +479,7 @@ foreach ($invItems as $item) {
                                         <a  href="<?= $urlGenerator->generate(
                                             'inv/delete_inv_tax_rate',
                                             ['_language' => $currentRoute->getArgument('_language'),
-                                                                    'id' => $invTaxRate->getId()]
+                                                'id' => $invTaxRate->getId()],
                                         ) ?>">
                                         <i class="fa fa-trash"></i></a>
                                     </span>
@@ -490,7 +490,7 @@ foreach ($invItems as $item) {
                                 $numberPercent = $numberHelper->format_amount($taxRatePercent);
                                 $taxRateName = $invTaxRate->getTaxRate()?->getTaxRateName();
                                 if ($taxRatePercent >= 0.00 && null !== $taxRateName && $numberPercent >= 0.00 && null !== $numberPercent) {
-                                    Html::encode($taxRateName . ' '. $numberPercent);
+                                    Html::encode($taxRateName . ' ' . $numberPercent);
                                 }
                                 ?>
                                     </span>
@@ -538,14 +538,14 @@ foreach ($invItems as $item) {
                    */
                   foreach ($dlAcis as $aci) { ?>
                   <tr>
-                    <td class="td-vert-middle"><?php echo ($aci->getAllowanceCharge()?->getIdentifier() ? $translator->translate('allowance.or.charge.charge') : $translator->translate('allowance.or.charge.allowance')). ': '. ($aci->getAllowanceCharge()?->getReason() ?? ''); ?>
+                    <td class="td-vert-middle"><?php echo ($aci->getAllowanceCharge()?->getIdentifier() ? $translator->translate('allowance.or.charge.charge') : $translator->translate('allowance.or.charge.allowance')) . ': ' . ($aci->getAllowanceCharge()?->getReason() ?? ''); ?>
                         <a href="<?= $urlGenerator->generate('invallowancecharge/edit', ['id' => $aci->getId()]); ?>"><i class="fa fa-pencil"></i></a>
                         <a href="<?= $urlGenerator->generate('invallowancecharge/delete', ['id' => $aci->getId()]); ?>"><i class="fa fa-trash"></i></a></td>
-                    <td class="amount"><?= ($aci->getAllowanceCharge()?->getIdentifier() === false ? '(' : '').$numberHelper->format_currency($aci->getAmount() !== '0' ? $aci->getAmount() : '').($aci->getAllowanceCharge()?->getIdentifier() === false ? ')' : ''); ?></td>    
+                    <td class="amount"><?= ($aci->getAllowanceCharge()?->getIdentifier() === false ? '(' : '') . $numberHelper->format_currency($aci->getAmount() !== '0' ? $aci->getAmount() : '') . ($aci->getAllowanceCharge()?->getIdentifier() === false ? ')' : ''); ?></td>    
                   </tr>
                   <tr>
-                    <td class="td-vert-middle"><?php echo ($aci->getAllowanceCharge()?->getIdentifier() ? $translator->translate('allowance.or.charge.charge.vat') : $translator->translate('allowance.or.charge.allowance.vat')). ': '. ($aci->getAllowanceCharge()?->getReason() ?? ''); ?></td>
-                    <td class="amount"><?= ($aci->getAllowanceCharge()?->getIdentifier() === false ? '(' : '').$numberHelper->format_currency($aci->getVat() !== '0' ? $aci->getVat() : '').($aci->getAllowanceCharge()?->getIdentifier() === false ? ')' : ''); ?></td>    
+                    <td class="td-vert-middle"><?php echo ($aci->getAllowanceCharge()?->getIdentifier() ? $translator->translate('allowance.or.charge.charge.vat') : $translator->translate('allowance.or.charge.allowance.vat')) . ': ' . ($aci->getAllowanceCharge()?->getReason() ?? ''); ?></td>
+                    <td class="amount"><?= ($aci->getAllowanceCharge()?->getIdentifier() === false ? '(' : '') . $numberHelper->format_currency($aci->getVat() !== '0' ? $aci->getVat() : '') . ($aci->getAllowanceCharge()?->getIdentifier() === false ? ')' : ''); ?></td>    
                   </tr> 
                   <?php } ?>
                 <?php } ?>

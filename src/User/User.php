@@ -40,10 +40,11 @@ class User
     #[Column(type: 'string', nullable: true)]
     private ?string $totpSecret = '';
 
-    public function __construct
-    (
-        #[Column(type: 'string(48)')] private string $login,
-        #[Column(type: 'string(254)')] private readonly string $email,
+    public function __construct(
+        #[Column(type: 'string(48)')]
+        private string $login,
+        #[Column(type: 'string(254)')]
+        private readonly string $email,
         string $password,
     ) {
         $this->created_at = new DateTimeImmutable();
