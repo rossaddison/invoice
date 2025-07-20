@@ -44,6 +44,15 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
+          
+      - name: Set BASE_REF
+        id: vars
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "branch" ]]; then
+            echo "base=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          else
+            echo "base=main" >> $GITHUB_OUTPUT
+          fi    
 
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
