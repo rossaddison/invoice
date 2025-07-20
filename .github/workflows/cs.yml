@@ -80,6 +80,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: apply PHP CS Fixer"
           branch: cs-fixer/style-fixes
+          base: ${{ steps.vars.outputs.base }}
           title: "Automated style fixes from PHP CS Fixer"
           body: |
             This pull request contains automated code style fixes as detected by PHP CS Fixer.
