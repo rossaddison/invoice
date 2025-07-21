@@ -7,7 +7,7 @@
 ![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
-[![StyleCI](https://github.styleci.io/repos/708781821/shield?branch=main)](https://github.styleci.io/repos/708781821?branch=main)
+[![PHP-CS-Fixer](https://img.shields.io/badge/php--cs--fixer-enabled-blue?logo=php)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 ![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(209.250.232.212)-blue?logo=vultr&style=flat-square)
 
