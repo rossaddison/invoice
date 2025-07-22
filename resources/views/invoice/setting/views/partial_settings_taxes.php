@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\Setting\SettingRepository  $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array $body
- * @var array $tax_rates
+ * @var array                                  $body
+ * @var array                                  $tax_rates
  */
 ?>
 <div class = 'row'>
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= $translator->translate('taxes'); ?>
+                <?php echo $translator->translate('taxes'); ?>
             </div>
             <div class="panel-body">
 
@@ -22,24 +22,24 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[default_invoice_tax_rate]">
-                                <?= $translator->translate('default.invoice.tax.rate'); ?>
+                                <?php echo $translator->translate('default.invoice.tax.rate'); ?>
                             </label>
-                            <?php $body['settings[default_invoice_tax_rate]'] = $s->getSetting('default_invoice_tax_rate');?>
+                            <?php $body['settings[default_invoice_tax_rate]'] = $s->getSetting('default_invoice_tax_rate'); ?>
                             <select name="settings[default_invoice_tax_rate]" id="settings[default_invoice_tax_rate]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('none'); ?></option>
+                                <option value=""><?php echo $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
                                     foreach ($tax_rates as $taxRate) { ?>
-                                    <option value="<?= $taxRate->getTaxRateId(); ?>"
+                                    <option value="<?php echo $taxRate->getTaxRateId(); ?>"
                                         <?php $s->check_select($body['settings[default_invoice_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php
                                            $percent = (string) $taxRate->getTaxRatePercent();
-                                        $sign =  '% - ';
-                                        $name = $taxRate->getTaxRateName() ?? 'unknown';
-                                        echo $percent . $sign . $name;
+                                        $sign       = '% - ';
+                                        $name       = $taxRate->getTaxRateName() ?? 'unknown';
+                                        echo $percent.$sign.$name;
                                         ?>
                                     </option>
                                 <?php } ?>
@@ -48,24 +48,24 @@ declare(strict_types=1);
 
                         <div class="form-group">
                             <label for="settings[default_item_tax_rate]">
-                                <?= $translator->translate('default.item.tax.rate'); ?>
+                                <?php echo $translator->translate('default.item.tax.rate'); ?>
                             </label>                            
-                            <?php $body['settings[default_item_tax_rate]'] = $s->getSetting('default_item_tax_rate');?>
+                            <?php $body['settings[default_item_tax_rate]'] = $s->getSetting('default_item_tax_rate'); ?>
                             <select name="settings[default_item_tax_rate]" id="settings[default_item_tax_rate]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('none'); ?></option>
+                                <option value=""><?php echo $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
                                     foreach ($tax_rates as $taxRate) { ?>
-                                    <option value="<?= $taxRate->getTaxRateId(); ?>"
+                                    <option value="<?php echo $taxRate->getTaxRateId(); ?>"
                                         <?php $s->check_select($body['settings[default_item_tax_rate]'], $taxRate->getTaxRateId()); ?>>
                                         <?php
                                            $percent = (string) $taxRate->getTaxRatePercent();
-                                        $sign =  '% - ';
-                                        $name = $taxRate->getTaxRateName() ?? 'unknown';
-                                        echo $percent . $sign . $name;
+                                        $sign       = '% - ';
+                                        $name       = $taxRate->getTaxRateName() ?? 'unknown';
+                                        echo $percent.$sign.$name;
                                         ?>
                                     </option>
                                 <?php } ?>
@@ -76,75 +76,75 @@ declare(strict_types=1);
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
-                            <label for="settings[default_include_item_tax]" <?= $s->where('default_include_item_tax'); ?>>
-                                <?= $translator->translate('default.invoice.tax.rate.placement'); ?>
+                            <label for="settings[default_include_item_tax]" <?php echo $s->where('default_include_item_tax'); ?>>
+                                <?php echo $translator->translate('default.invoice.tax.rate.placement'); ?>
                             </label>
-                            <?php $body['settings[default_include_item_tax]'] = $s->getSetting('default_include_item_tax');?>
+                            <?php $body['settings[default_include_item_tax]'] = $s->getSetting('default_include_item_tax'); ?>
                             <select name="settings[default_include_item_tax]" id="settings[default_include_item_tax]"
                                 class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('none'); ?></option>
+                                <option value=""><?php echo $translator->translate('none'); ?></option>
                                 <option value="0" <?php $s->check_select($body['settings[default_include_item_tax]'], '0'); ?>>
-                                    <?= $translator->translate('apply.before.item.tax'); ?>
+                                    <?php echo $translator->translate('apply.before.item.tax'); ?>
                                 </option>
                                 <option value="1" <?php $s->check_select($body['settings[default_include_item_tax]'], '1'); ?>>
-                                    <?= $translator->translate('apply.after.item.tax'); ?>
+                                    <?php echo $translator->translate('apply.after.item.tax'); ?>
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="settings[this_tax_year_from_date_year]">
-                                <?= $translator->translate('tax') . ' ' . $translator->translate('start') . ' ' . $translator->translate('date') . ' ' . $translator->translate('year'); ?>
+                                <?php echo $translator->translate('tax').' '.$translator->translate('start').' '.$translator->translate('date').' '.$translator->translate('year'); ?>
                             </label>
-                            <?php $body['settings[this_tax_year_from_date_year]'] = $s->getSetting('this_tax_year_from_date_year');?>
+                            <?php $body['settings[this_tax_year_from_date_year]'] = $s->getSetting('this_tax_year_from_date_year'); ?>
                             <select name="settings[this_tax_year_from_date_year]" id="settings[this_tax_year_from_date_year]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('none'); ?></option>                                
+                                <option value=""><?php echo $translator->translate('none'); ?></option>                                
                                 <?php
                                     $years = [];
 for ($y = 1980, $now = (int) date('Y') + 10; $y <= $now; ++$y) {
     $years[$y] = ['name' => $y, 'value' => $y];
 }
 /**
- * @var array $year
+ * @var array  $year
  * @var string $year['value']
  */
 foreach ($years as $year) { ?>
-                                    <option value="<?= $year['value']; ?>" <?php $s->check_select($body['settings[this_tax_year_from_date_year]'], $year['value']); ?>>                                                                          
-                                         <?= $year['value']; ?>
+                                    <option value="<?php echo $year['value']; ?>" <?php $s->check_select($body['settings[this_tax_year_from_date_year]'], $year['value']); ?>>                                                                          
+                                         <?php echo $year['value']; ?>
                                     </option>
                                 <?php } ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="settings[this_tax_year_from_date_month]">
-                                <?= $translator->translate('tax') . ' ' . $translator->translate('start') . ' ' . $translator->translate('date') . ' ' . $translator->translate('month'); ?>
+                                <?php echo $translator->translate('tax').' '.$translator->translate('start').' '.$translator->translate('date').' '.$translator->translate('month'); ?>
                             </label>
-                            <?php $body['settings[this_tax_year_from_date_month]'] = $s->getSetting('this_tax_year_from_date_month');?>
+                            <?php $body['settings[this_tax_year_from_date_month]'] = $s->getSetting('this_tax_year_from_date_month'); ?>
                             <select name="settings[this_tax_year_from_date_month]" id="settings[this_tax_year_from_date_month]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('none'); ?></option>                                
+                                <option value=""><?php echo $translator->translate('none'); ?></option>                                
                                 <?php
-$months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+$months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 foreach ($months as $month) { ?>
-                                    <option value="<?= $month; ?>" <?php $s->check_select($body['settings[this_tax_year_from_date_month]'], $month); ?>>                                                                          
-                                         <?= $month; ?>
+                                    <option value="<?php echo $month; ?>" <?php $s->check_select($body['settings[this_tax_year_from_date_month]'], $month); ?>>                                                                          
+                                         <?php echo $month; ?>
                                     </option>
                                 <?php } ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="settings[this_tax_year_from_date_day]">
-                                <?= $translator->translate('tax') . ' ' . $translator->translate('start') . ' ' . $translator->translate('date') . ' ' . rtrim($translator->translate('days'), 's'); ?>
+                                <?php echo $translator->translate('tax').' '.$translator->translate('start').' '.$translator->translate('date').' '.rtrim($translator->translate('days'), 's'); ?>
                             </label>
-                            <?php $body['settings[this_tax_year_from_date_day]'] = $s->getSetting('this_tax_year_from_date_day');?>
+                            <?php $body['settings[this_tax_year_from_date_day]'] = $s->getSetting('this_tax_year_from_date_day'); ?>
                             <select name="settings[this_tax_year_from_date_day]" id="settings[this_tax_year_from_date_day]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('none'); ?></option>                                
+                                <option value=""><?php echo $translator->translate('none'); ?></option>                                
                                 <?php
-$days = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
+$days = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
 foreach ($days as $day) { ?>
-                                    <option value="<?= $day; ?>" <?php $s->check_select($body['settings[this_tax_year_from_date_day]'], $day); ?>>                                                                          
-                                         <?= $day; ?>
+                                    <option value="<?php echo $day; ?>" <?php $s->check_select($body['settings[this_tax_year_from_date_day]'], $day); ?>>                                                                          
+                                         <?php echo $day; ?>
                                     </option>
                                 <?php } ?>
                             </select>

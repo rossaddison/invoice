@@ -9,7 +9,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 class NoClientsAssignedToUserException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     #[\Override]
     public function getName(): string
@@ -17,9 +19,6 @@ class NoClientsAssignedToUserException extends \RuntimeException implements Frie
         return $this->translator->translate('user.clients.assigned.not');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

@@ -6,20 +6,19 @@ namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
 use Cycle\ORM\Select;
-use Throwable;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of ClientNote
+ *
  * @extends Select\Repository<TEntity>
  */
 final class ClientNoteRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -27,13 +26,14 @@ final class ClientNoteRepository extends Select\Repository
     }
 
     /**
-     * Get clientnotes  without filter
+     * Get clientnotes  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
+
         return $this->prepareDataReader($query);
     }
 
@@ -53,8 +53,8 @@ final class ClientNoteRepository extends Select\Repository
 
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|ClientNote|null $clientnote
-     * @throws Throwable
+     *
+     * @throws \Throwable
      */
     public function save(array|ClientNote|null $clientnote): void
     {
@@ -63,8 +63,8 @@ final class ClientNoteRepository extends Select\Repository
 
     /**
      * @see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|ClientNote|null $clientnote
-     * @throws Throwable
+     *
+     * @throws \Throwable
      */
     public function delete(array|ClientNote|null $clientnote): void
     {
@@ -80,14 +80,13 @@ final class ClientNoteRepository extends Select\Repository
     }
 
     /**
-     * @return ClientNote|null
-     *
      * @psalm-return TEntity|null
      */
-    public function repoClientNotequery(string $id): ClientNote|null
+    public function repoClientNotequery(string $id): ?ClientNote
     {
         $query = $this->select()->load('client')->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;
+
+        return $query->fetchOne() ?: null;
     }
 
     /**
@@ -96,13 +95,14 @@ final class ClientNoteRepository extends Select\Repository
     public function repoClientquery(string $client_id): EntityReader
     {
         $query = $this->select()->load('client')->where(['client_id' => $client_id]);
+
         return $this->prepareDataReader($query);
     }
 
     public function repoClientNoteCount(int $client_id): int
     {
         return $this->select()
-                      ->where(['client_id' => $client_id])
-                      ->count();
+            ->where(['client_id' => $client_id])
+            ->count();
     }
 }

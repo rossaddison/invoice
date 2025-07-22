@@ -6,44 +6,43 @@ use App\Invoice\Helpers\ClientHelper;
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Entity\UserClient $userClient
- * @var App\Invoice\Entity\UserInv $userInv
- * @var App\Invoice\Client\ClientRepository $cR
- * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Invoice\Entity\UserClient               $userClient
+ * @var App\Invoice\Entity\UserInv                  $userInv
+ * @var App\Invoice\Client\ClientRepository         $cR
+ * @var App\Invoice\Setting\SettingRepository       $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
- * @var Yiisoft\Data\Cycle\Reader\EntityReader $users;
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var string $csrf
- * @var string $alert
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader      $users;
+ * @var Yiisoft\Router\UrlGeneratorInterface        $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface      $translator
+ * @var string                                      $csrf
+ * @var string                                      $alert
  */
-
 echo $alert;
 $client_helper = new ClientHelper($s);
 
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= $translator->translate('assigned.clients'); ?></h1>
+    <h1 class="headerbar-title"><?php echo $translator->translate('assigned.clients'); ?></h1>
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-            <a class="btn btn-default" href="<?= $urlGenerator->generate('userinv/index'); ?>">
-                <i class="fa fa-arrow-left"></i> <?= $translator->translate('back'); ?>
+            <a class="btn btn-default" href="<?php echo $urlGenerator->generate('userinv/index'); ?>">
+                <i class="fa fa-arrow-left"></i> <?php echo $translator->translate('back'); ?>
             </a>
-            <a class="btn btn-primary" href="<?= $urlGenerator->generate('userclient/new', ['user_id' => $userInv->getUser_id()]); ?>">
-                <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?>
+            <a class="btn btn-primary" href="<?php echo $urlGenerator->generate('userclient/new', ['user_id' => $userInv->getUser_id()]); ?>">
+                <i class="fa fa-plus"></i> <?php echo $translator->translate('new'); ?>
             </a>
         </div>
     </div>
 </div>
 
 <div id="content">
-    <?= Html::openTag('div', ['class' => 'row']); ?>
+    <?php echo Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-6 col-md-offset-3">
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <?= $translator->translate('user') . ': ' . Html::encode($userInv->getName()); ?>
+                    <?php echo $translator->translate('user').': '.Html::encode($userInv->getName()); ?>
                 </div>
 
                 <div class="panel-body table-content">
@@ -52,8 +51,8 @@ $client_helper = new ClientHelper($s);
 
                             <thead>
                             <tr>
-                                <th><?= $translator->translate('client'); ?></th>
-                                <th><?= $translator->translate('options'); ?></th>
+                                <th><?php echo $translator->translate('client'); ?></th>
+                                <th><?php echo $translator->translate('options'); ?></th>
                             </tr>
                             </thead>
 
@@ -65,7 +64,7 @@ $client_helper = new ClientHelper($s);
                                 foreach ($ucR->repoClientquery($userInv->getUser_id()) as $userClient) { ?>
                                 <tr>
                                     <td>
-                                        <a href="<?= $urlGenerator->generate('client/view', ['id' => $userClient->getClient_id()]); ?>" style="text-decoration:none">
+                                        <a href="<?php echo $urlGenerator->generate('client/view', ['id' => $userClient->getClient_id()]); ?>" style="text-decoration:none">
                                             <?php
                                                 $client = $cR->repoClientquery($userClient->getClient_id());
                                     echo $client_helper->format_client($client);
@@ -74,12 +73,12 @@ $client_helper = new ClientHelper($s);
                                     </td>
                                     <td>
                                         <form
-                                            action="<?= $urlGenerator->generate('userclient/delete', ['id' => $userClient->getId()]); ?>"
+                                            action="<?php echo $urlGenerator->generate('userclient/delete', ['id' => $userClient->getId()]); ?>"
                                             method="POST" enctype="multipart/form-data">
-                                            <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+                                            <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
                                             <button type="submit" class="btn btn-default btn-sm"
-                                                    onclick="return confirm('<?= $translator->translate('delete.user.client.warning'); ?>');">
-                                                <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('remove'); ?>
+                                                    onclick="return confirm('<?php echo $translator->translate('delete.user.client.warning'); ?>');">
+                                                <i class="fa fa-trash fa-margin"></i> <?php echo $translator->translate('remove'); ?>
                                             </button>
                                         </form>
                                     </td>

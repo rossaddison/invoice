@@ -9,17 +9,18 @@ use Sabre\Xml\XmlSerializable;
 
 class PaymentTerms implements XmlSerializable
 {
-    public function __construct(private readonly ?string $note) {}
+    public function __construct(private readonly ?string $note)
+    {
+    }
 
     /**
      * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentTerms
-     * @param Writer $writer
      */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
-        if ($this->note !== null) {
-            $writer->write([ Schema::CBC . 'Note' => $this->note ]);
+        if (null !== $this->note) {
+            $writer->write([Schema::CBC.'Note' => $this->note]);
         }
     }
 }

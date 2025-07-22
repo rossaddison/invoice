@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @var App\Invoice\Entity\UserInv $userinv
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Setting\SettingRepository $s
@@ -24,52 +24,52 @@ use Yiisoft\Html\Html;
  */
 
 ?>
-<?= Html::openTag('form', ['method' => 'post']); ?>
-<?= Html::openTag('input', ['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
-<?= Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-        <?= $translator->translate('assign.client'); ?>
-    <?= Html::closeTag('h1'); ?>
-    <?= $button::backSave(); ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::openTag('form', ['method' => 'post']); ?>
+<?php echo Html::openTag('input', ['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); ?>
+<?php echo Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?php echo Html::openTag('h1', ['class' => 'headerbar-title']); ?>
+        <?php echo $translator->translate('assign.client'); ?>
+    <?php echo Html::closeTag('h1'); ?>
+    <?php echo $button::backSave(); ?>
+<?php echo Html::closeTag('div'); ?>
 
-<?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
-            <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'user_id', 'id' => 'user_id', 'value' => $userinv->getUser_id() ]); ?>
-                <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
-                    <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-                        <?= Html::encode($userinv->getName()); ?>
-                    <?= Html::closeTag('div'); ?>
-                    <?= Html::openTag('div', ['class' => 'panel-body']); ?>
-                        <?= Html::openTag('div', ['class' => 'alert alert-info']); ?>
-                            <?= Field::errorSummary($form)
-                                ->errors($errors)
-                                ->header($translator->translate('client.error.summary'))
-                                ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
-                                ->onlyCommonErrors()
+<?php echo Html::openTag('div', ['id' => 'content']); ?>
+    <?php echo Html::openTag('div', ['class' => 'row']); ?>
+        <?php echo Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+            <?php echo Html::openTag('input', ['type' => 'hidden', 'name' => 'user_id', 'id' => 'user_id', 'value' => $userinv->getUser_id()]); ?>
+                <?php echo Html::openTag('div', ['class' => 'panel panel-default']); ?>
+                    <?php echo Html::openTag('div', ['class' => 'panel-heading']); ?>
+                        <?php echo Html::encode($userinv->getName()); ?>
+                    <?php echo Html::closeTag('div'); ?>
+                    <?php echo Html::openTag('div', ['class' => 'panel-body']); ?>
+                        <?php echo Html::openTag('div', ['class' => 'alert alert-info']); ?>
+                            <?php echo Field::errorSummary($form)
+    ->errors($errors)
+    ->header($translator->translate('client.error.summary'))
+    ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
+    ->onlyCommonErrors();
 ?>
                             
-                            <?= Field::checkbox($form, 'user_all_clients')
-    ->inputLabelAttributes([
-        'class' => 'form-check-label',
-    ])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('user.all.clients'))
+                            <?php echo Field::checkbox($form, 'user_all_clients')
+                                ->inputLabelAttributes([
+                                    'class' => 'form-check-label',
+                                ])
+                                ->inputClass('form-check-input')
+                                ->ariaDescribedBy($translator->translate('user.all.clients'));
 ?>    
-                            <?= Html::openTag('div'); ?>
-                                <?= $translator->translate('user.all.clients.text') ?>
-                            <?= Html::closeTag('div'); ?>
-                        <?= Html::closeTag('div'); ?>
+                            <?php echo Html::openTag('div'); ?>
+                                <?php echo $translator->translate('user.all.clients.text'); ?>
+                            <?php echo Html::closeTag('div'); ?>
+                        <?php echo Html::closeTag('div'); ?>
 
-                        <?= Html::openTag('div', ['id' => 'list_client']); ?>
+                        <?php echo Html::openTag('div', ['id' => 'list_client']); ?>
                             <?php
    $clients = !empty($availableClientIdList) ? $cR->repoUserClient($availableClientIdList) : [];
 if ($clients) {
     $optionsDataClient = [];
     /**
      * @var Yiisoft\Data\Cycle\Reader\EntityReader|array $clients
-     * @var App\Invoice\Entity\Client $client
+     * @var App\Invoice\Entity\Client                    $client
      */
     foreach ($clients as $client) {
         $clientId = $client->getClient_id();
@@ -78,31 +78,29 @@ if ($clients) {
         }
     }
     echo Field::select($form, 'client_id')
-    ->label($translator->translate('client'))
-    ->addInputAttributes([
-        'id' => 'client_id',
-        'class' => 'form-control',
-        'autofocus' => 'autofocus',
-        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()),
-    ])
-    ->optionsData($optionsDataClient);
-
+        ->label($translator->translate('client'))
+        ->addInputAttributes([
+            'id'        => 'client_id',
+            'class'     => 'form-control',
+            'autofocus' => 'autofocus',
+            'selected'  => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()),
+        ])
+        ->optionsData($optionsDataClient);
 } else {
-
     $optionsDataClient[0] = $translator->translate('none');
     echo Field::select($form, 'client_id')
-    ->label($translator->translate('client'))
-    ->addInputAttributes([
-        'id' => 'client_id',
-        'class' => 'form-control',
-        'autofocus' => 'autofocus',
-    ])
-    ->optionsData($optionsDataClient);
+        ->label($translator->translate('client'))
+        ->addInputAttributes([
+            'id'        => 'client_id',
+            'class'     => 'form-control',
+            'autofocus' => 'autofocus',
+        ])
+        ->optionsData($optionsDataClient);
 } ?>
-                        <?= Html::closeTag('div'); ?>
-                    <?= Html::closeTag('div'); ?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('form'); ?>
+                        <?php echo Html::closeTag('div'); ?>
+                    <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>
+    <?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('form'); ?>

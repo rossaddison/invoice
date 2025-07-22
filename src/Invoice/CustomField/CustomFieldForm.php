@@ -26,53 +26,51 @@ final class CustomFieldForm extends FormModel
 
     public function __construct(CustomField $custom_field)
     {
-        $this->id = (int) $custom_field->getId();
-        $this->table = $custom_field->getTable();
-        $this->label = $custom_field->getLabel();
-        $this->type = $custom_field->getType();
+        $this->id       = (int) $custom_field->getId();
+        $this->table    = $custom_field->getTable();
+        $this->label    = $custom_field->getLabel();
+        $this->type     = $custom_field->getType();
         $this->location = $custom_field->getLocation();
-        $this->order = $custom_field->getOrder();
+        $this->order    = $custom_field->getOrder();
         $this->required = $custom_field->getRequired();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTable(): string|null
+    public function getTable(): ?string
     {
         return $this->table;
     }
 
-    public function getLabel(): string|null
+    public function getLabel(): ?string
     {
         return $this->label;
     }
 
-    public function getType(): string|null
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function getLocation(): int|null
+    public function getLocation(): ?int
     {
         return $this->location;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }
 
-    public function getRequired(): bool|null
+    public function getRequired(): ?bool
     {
         return $this->required;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

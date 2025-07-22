@@ -9,25 +9,24 @@ use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\Php\AssignmentsStorage;
 use Yiisoft\Rbac\Php\ItemsStorage;
 
-/**
+/*
  * @var array $params
  * @var array $params['yiisoft/aliases']
  * @var array $params['yiisoft/aliases']['aliases']
  * @var string $params['yiisoft/aliases']['aliases']['@root']
  */
 
-
 return [
     ItemsStorageInterface::class => [
-        'class' => ItemsStorage::class,
+        'class'         => ItemsStorage::class,
         '__construct()' => [
-            'filePath' => $params['yiisoft/aliases']['aliases']['@root'] . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'rbac' . DIRECTORY_SEPARATOR . 'items.php',
+            'filePath' => $params['yiisoft/aliases']['aliases']['@root'].DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'rbac'.DIRECTORY_SEPARATOR.'items.php',
         ],
     ],
     AssignmentsStorageInterface::class => [
-        'class' => AssignmentsStorage::class,
+        'class'         => AssignmentsStorage::class,
         '__construct()' => [
-            'filePath' => $params['yiisoft/aliases']['aliases']['@root'] . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'rbac' . DIRECTORY_SEPARATOR . 'assignments.php',
+            'filePath' => $params['yiisoft/aliases']['aliases']['@root'].DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'rbac'.DIRECTORY_SEPARATOR.'assignments.php',
         ],
     ],
     AccessCheckerInterface::class => Manager::class,

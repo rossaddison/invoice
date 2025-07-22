@@ -15,10 +15,10 @@ use Yiisoft\Validator\RulesProviderInterface;
 
 final class ContactForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
 {
-    private string $name = '';
-    private string $email = '';
+    private string $name    = '';
+    private string $email   = '';
     private string $subject = '';
-    private string $body = '';
+    private string $body    = '';
 
     #[UploadedFiles('ContactForm.attachFiles')]
     private array $attachFiles = [];
@@ -32,16 +32,14 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
     public function getPropertyLabels(): array
     {
         return [
-            'name' => 'Name',
-            'email' => 'Email',
+            'name'    => 'Name',
+            'email'   => 'Email',
             'subject' => 'Subject',
-            'body' => 'Body',
+            'body'    => 'Body',
         ];
     }
 
     /**
-     * @return string
-     *
      * @psalm-return 'ContactForm'
      */
     #[\Override]
@@ -59,10 +57,10 @@ final class ContactForm extends FormModel implements RulesProviderInterface, Pro
     public function getRules(): array
     {
         return [
-            'name' => [new Required()],
-            'email' => [new Required(), new Email()],
+            'name'    => [new Required()],
+            'email'   => [new Required(), new Email()],
             'subject' => [new Required()],
-            'body' => [new Required()],
+            'body'    => [new Required()],
         ];
     }
 

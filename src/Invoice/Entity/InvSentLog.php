@@ -7,10 +7,8 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\InvSentLog\InvSentLogRepository::class)]
-
 class InvSentLog
 {
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
@@ -20,7 +18,7 @@ class InvSentLog
     private ?Inv $inv = null;
 
     #[Column(type: 'datetime', nullable: false)]
-    private DateTimeImmutable $date_sent;
+    private \DateTimeImmutable $date_sent;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -30,7 +28,7 @@ class InvSentLog
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
     ) {
-        $this->date_sent = new DateTimeImmutable('now');
+        $this->date_sent = new \DateTimeImmutable('now');
     }
 
     public function getClient(): ?Client
@@ -53,7 +51,7 @@ class InvSentLog
         $this->inv = $inv;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -63,7 +61,7 @@ class InvSentLog
         $this->id = $id;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
@@ -73,7 +71,7 @@ class InvSentLog
         $this->inv_id = $inv_id;
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
@@ -83,12 +81,12 @@ class InvSentLog
         $this->client_id = $client_id;
     }
 
-    public function getDate_sent(): DateTimeImmutable
+    public function getDate_sent(): \DateTimeImmutable
     {
         return $this->date_sent;
     }
 
-    public function setDate_sent(DateTimeImmutable $date_sent): void
+    public function setDate_sent(\DateTimeImmutable $date_sent): void
     {
         $this->date_sent = $date_sent;
     }

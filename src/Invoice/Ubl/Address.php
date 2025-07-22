@@ -10,7 +10,9 @@ use Sabre\Xml\XmlSerializable;
 // Usage: Search 'new Address' under PeppolHelper
 class Address implements XmlSerializable
 {
-    public function __construct(private readonly ?string $streetName, private readonly ?string $additionalStreetName, private readonly ?string $buildingNumber, private readonly ?string $cityName, private readonly ?string $postalZone, private readonly ?string $countrySubentity, private readonly ?Country $country, private readonly bool $ubl_cr_155 = false, private readonly bool $ubl_cr_218 = false, private readonly bool $ubl_cr_367 = false) {}
+    public function __construct(private readonly ?string $streetName, private readonly ?string $additionalStreetName, private readonly ?string $buildingNumber, private readonly ?string $cityName, private readonly ?string $postalZone, private readonly ?string $countrySubentity, private readonly ?Country $country, private readonly bool $ubl_cr_155 = false, private readonly bool $ubl_cr_218 = false, private readonly bool $ubl_cr_367 = false)
+    {
+    }
 
     // The getters are used in StoreCoveHelper
     public function getStreetName(): ?string
@@ -48,48 +50,45 @@ class Address implements XmlSerializable
         return $this->country;
     }
 
-    /**
-     * @param Writer $writer
-     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
-        if ($this->streetName !== null) {
+        if (null !== $this->streetName) {
             $writer->write([
-                Schema::CBC . 'StreetName' => $this->streetName,
+                Schema::CBC.'StreetName' => $this->streetName,
             ]);
         }
-        if ($this->additionalStreetName !== null) {
+        if (null !== $this->additionalStreetName) {
             $writer->write([
-                Schema::CBC . 'AdditionalStreetName' => $this->additionalStreetName,
+                Schema::CBC.'AdditionalStreetName' => $this->additionalStreetName,
             ]);
         }
-        if ($this->buildingNumber !== null
-            && $this->ubl_cr_218 === false
-            && $this->ubl_cr_155 === false
-            && $this->ubl_cr_367 === false) {
+        if (null !== $this->buildingNumber
+            && false === $this->ubl_cr_218
+            && false === $this->ubl_cr_155
+            && false === $this->ubl_cr_367) {
             $writer->write([
-                Schema::CBC . 'BuildingNumber' => $this->buildingNumber,
+                Schema::CBC.'BuildingNumber' => $this->buildingNumber,
             ]);
         }
-        if ($this->cityName !== null) {
+        if (null !== $this->cityName) {
             $writer->write([
-                Schema::CBC . 'CityName' => $this->cityName,
+                Schema::CBC.'CityName' => $this->cityName,
             ]);
         }
-        if ($this->postalZone !== null) {
+        if (null !== $this->postalZone) {
             $writer->write([
-                Schema::CBC . 'PostalZone' => $this->postalZone,
+                Schema::CBC.'PostalZone' => $this->postalZone,
             ]);
         }
-        if ($this->countrySubentity !== null) {
+        if (null !== $this->countrySubentity) {
             $writer->write([
-                Schema::CBC . 'CountrySubentity' => $this->countrySubentity,
+                Schema::CBC.'CountrySubentity' => $this->countrySubentity,
             ]);
         }
-        if ($this->country !== null) {
+        if (null !== $this->country) {
             $writer->write([
-                Schema::CAC . 'Country' => $this->country,
+                Schema::CAC.'Country' => $this->country,
             ]);
         }
     }

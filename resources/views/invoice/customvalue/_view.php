@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\CustomValue\CustomValueForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -19,42 +19,42 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CustomValueForm')
-    ->open()
+    ->open();
 ?> 
 
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['class' => 'row']); ?>
-    <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
-        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                <?= Field::text($form, 'value')
-                    ->label($translator->translate('value'))
-                    ->addInputAttributes([
-                        'class' => 'form-control',
-                        'style' => 'background:lightblue',
-                        'disabled' => 'disabled',
-                        'id' => 'value'])
-                    ->readonly(true)
-                    ->value(Html::encode($form->getValue()));
+<?php echo Html::openTag('h1'); ?><?php echo Html::encode($title); ?><?php echo Html::closeTag('h1'); ?>
+<?php echo Html::openTag('div', ['class' => 'row']); ?>
+    <?php echo Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+        <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?php echo Field::text($form, 'value')
+    ->label($translator->translate('value'))
+    ->addInputAttributes([
+        'class'    => 'form-control',
+        'style'    => 'background:lightblue',
+        'disabled' => 'disabled',
+        'id'       => 'value'])
+    ->readonly(true)
+    ->value(Html::encode($form->getValue()));
 ?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                <?= Field::text($form, 'custom_field_id')
+        <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?php echo Field::text($form, 'custom_field_id')
     ->label($translator->translate('field'))
     ->addInputAttributes([
-        'class' => 'form-control',
-        'style' => 'background:lightblue',
+        'class'    => 'form-control',
+        'style'    => 'background:lightblue',
         'disabled' => 'disabled',
-        'id' => 'value'])
+        'id'       => 'value'])
     ->readonly(true)
     ->value(Html::encode(strlen($label = $form->getCustomField()?->getLabel() ?? '') > 0 ? $label : ''));
 ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+        <?php echo Html::closeTag('div'); ?>
+    <?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo $button::back(); ?>
+<?php echo Form::tag()->close(); ?>

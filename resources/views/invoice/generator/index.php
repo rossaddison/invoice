@@ -16,19 +16,18 @@ use Yiisoft\Yii\DataView\GridView;
 
 /**
  * @var App\Invoice\GeneratorRelation\GeneratorRelationRepository $grR
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
- * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
- * @var int $defaultPageSizeOffsetPaginator
- * @var string $alert
- * @var string $csrf
+ * @var App\Invoice\Setting\SettingRepository                     $s
+ * @var App\Widget\GridComponents                                 $gridComponents
+ * @var App\Widget\PageSizeLimiter                                $pageSizeLimiter
+ * @var Yiisoft\Router\CurrentRoute                               $currentRoute
+ * @var Yiisoft\Data\Paginator\OffsetPaginator                    $paginator
+ * @var Yiisoft\Translator\TranslatorInterface                    $translator
+ * @var Yiisoft\Router\UrlGeneratorInterface                      $urlGenerator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator                     $urlFastRouteGenerator
+ * @var int                                                       $defaultPageSizeOffsetPaginator
+ * @var string                                                    $alert
+ * @var string                                                    $csrf
  */
-
 echo $alert;
 ?>
 <?php
@@ -39,7 +38,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('generator'))),
+                    ->content(' '.Html::encode($translator->translate('generator'))),
             ),
     )
     ->render();
@@ -54,26 +53,26 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 ?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('h5'); ?><?= $translator->translate('generator'); ?><?= Html::closeTag('h5'); ?>
-        <?= Html::openTag('div'); ?>
-            <?= Html::a(I::tag()->addClass('bi bi-plus')->content(' ' . Html::encode($translator->translate('new'))), $urlGenerator->generate('generator/add'), ['class' => 'btn btn-success']); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::br(); ?>
-    <?= Html::openTag('div'); ?>
+<?php echo Html::openTag('div'); ?>
+    <?php echo Html::openTag('h5'); ?><?php echo $translator->translate('generator'); ?><?php echo Html::closeTag('h5'); ?>
+        <?php echo Html::openTag('div'); ?>
+            <?php echo Html::a(I::tag()->addClass('bi bi-plus')->content(' '.Html::encode($translator->translate('new'))), $urlGenerator->generate('generator/add'), ['class' => 'btn btn-success']); ?>
+        <?php echo Html::closeTag('div'); ?>
+    <?php echo Html::br(); ?>
+    <?php echo Html::openTag('div'); ?>
 
 <?php
     $columns = [
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn(Gentor $model) => Html::encode($model->getGentor_id() . '➡️' . $model->getCamelcase_capital_name()),
+            content: static fn (Gentor $model) => Html::encode($model->getGentor_id().'➡️'.$model->getCamelcase_capital_name()),
             encodeContent: false,
         ),
         new DataColumn(
             'id',
             header: $translator->translate('generator.relations'),
-            content: static function (Gentor $model) use ($urlGenerator, $translator, $grR): string {
+            content: static function (Gentor $model) use ($urlGenerator, $grR): string {
                 $div_open_tag = Html::openTag('div', ['class' => 'btn-group']);
 
                 $entity_name_render = Html::a(
@@ -82,10 +81,10 @@ $toolbar = Div::tag();
                         'generator/view',
                         ['id' => $model->getGentor_id()],
                     ),
-                    ['class' => 'btn btn-primary btn-sm active','aria-current' => 'page'],
+                    ['class' => 'btn btn-primary btn-sm active', 'aria-current' => 'page'],
                 )->render();
 
-                $relations = $grR->repoGeneratorquery($model->getGentor_id());
+                $relations                = $grR->repoGeneratorquery($model->getGentor_id());
                 $relations_content_render = '';
                 /**
                  * @var App\Invoice\Entity\GentorRelation $relation
@@ -101,14 +100,14 @@ $toolbar = Div::tag();
                     )->render();
                 }
 
-                //modal delete button
+                // modal delete button
                 $div_close_tag = Html::closeTag('div');
 
                 return
 
-                $div_open_tag .
-                    $entity_name_render .
-                    $relations_content_render .
+                $div_open_tag.
+                    $entity_name_render.
+                    $relations_content_render.
                 $div_close_tag;
             },
             encodeContent: false,
@@ -121,7 +120,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('view'),
+                    'title'          => $translator->translate('view'),
                 ],
             ),
             new ActionButton(
@@ -131,7 +130,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('edit'),
+                    'title'          => $translator->translate('edit'),
                 ],
             ),
             new ActionButton(
@@ -140,8 +139,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('generator/delete', ['id' => $model->getGentor_id()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    'title'   => $translator->translate('delete'),
+                    'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
                 ],
             ),
         ]),
@@ -152,7 +151,7 @@ $toolbar = Div::tag();
                 return
 
                 Html::a(
-                    'Entity' . DIRECTORY_SEPARATOR . $model->getCamelcase_capital_name(),
+                    'Entity'.DIRECTORY_SEPARATOR.$model->getCamelcase_capital_name(),
                     $urlGenerator->generate('generator/entity', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2'],
                 );
@@ -165,7 +164,7 @@ $toolbar = Div::tag();
                 return
 
                 Html::a(
-                    $model->getCamelcase_capital_name() . 'Controller',
+                    $model->getCamelcase_capital_name().'Controller',
                     $urlGenerator->generate('generator/controller', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2'],
                 );
@@ -178,7 +177,7 @@ $toolbar = Div::tag();
                 return
 
                 Html::a(
-                    $model->getCamelcase_capital_name() . 'Form',
+                    $model->getCamelcase_capital_name().'Form',
                     $urlGenerator->generate('generator/form', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2'],
                 );
@@ -191,7 +190,7 @@ $toolbar = Div::tag();
                 return
 
                 Html::a(
-                    $model->getCamelcase_capital_name() . 'Repository',
+                    $model->getCamelcase_capital_name().'Repository',
                     $urlGenerator->generate('generator/repo', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2'],
                 );
@@ -204,7 +203,7 @@ $toolbar = Div::tag();
                 return
 
                 Html::a(
-                    $model->getCamelcase_capital_name() . 'Service',
+                    $model->getCamelcase_capital_name().'Service',
                     $urlGenerator->generate('generator/service', ['id' => $model->getGentor_id()]),
                     ['class' => 'btn btn-secondary btn-sm ms-2'],
                 );
@@ -264,9 +263,8 @@ $toolbar = Div::tag();
     ];
 ?>
 <?php
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open().
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
     Form::tag()->close();
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -276,18 +274,18 @@ $grid_summary = $s->grid_summary(
     '',
 );
 echo GridView::widget()
-->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-generator'])
-->columns(...$columns)
-->dataReader($paginator)
-->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
-->id('w21-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
-->toolbar($toolbarString);
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-generator'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w21-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);
 ?>
 

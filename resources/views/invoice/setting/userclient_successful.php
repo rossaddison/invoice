@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 /**
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $csrf
- * @var string $heading
- * @var string $id
- * @var string $message
- * @var string $url
+ * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var string                                 $csrf
+ * @var string                                 $heading
+ * @var string                                 $id
+ * @var string                                 $message
+ * @var string                                 $url
+ *
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
@@ -18,8 +19,8 @@ declare(strict_types=1);
 <head>
     <meta charset="utf-8">
     <title>
-        <?= $heading; ?>
-        <?= $translator->translate('invoice'); ?>
+        <?php echo $heading; ?>
+        <?php echo $translator->translate('invoice'); ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -73,8 +74,8 @@ declare(strict_types=1);
 <body>   
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionArguments = ['id' => $id]); ?>">
-    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+<form method="POST" class="form-inline" action="<?php echo $urlGenerator->generate($url, $actionArguments = ['id' => $id]); ?>">
+    <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
     <button type="submit" class="btn btn-xs btn-link">✅</button>
 </form>
 </body>

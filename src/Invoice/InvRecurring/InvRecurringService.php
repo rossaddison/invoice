@@ -6,20 +6,15 @@ namespace App\Invoice\InvRecurring;
 
 use App\Invoice\Entity\InvRecurring;
 use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Inv\InvRepository;
+use App\Invoice\Setting\SettingRepository;
 
 final readonly class InvRecurringService
 {
-    /**
-     * @param InvRecurringRepository $repository
-     */
-    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s) {}
+    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s)
+    {
+    }
 
-    /**
-     * @param InvRecurring $model
-     * @param array $array
-     */
     public function saveInvRecurring(InvRecurring $model, array $array): void
     {
         $model->setInv_id((int) $array['inv_id']);
@@ -59,9 +54,6 @@ final readonly class InvRecurringService
         }
     }
 
-    /**
-     * @param InvRecurring $model
-     */
     public function deleteInvRecurring(InvRecurring $model): void
     {
         $this->repository->delete($model);

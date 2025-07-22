@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Img;
 
-/**
+/*
  * @var string $csrf
  * @var string|null $error
  * @var string $qrDataUri
@@ -29,66 +29,65 @@ use Yiisoft\Html\Tag\Img;
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">                
                 <div class="card-header bg-dark text-white">
-                    <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication.setup'); ?></h5>
+                    <h5 class="fw-normal h3 text-center"><?php echo $translator->translate('two.factor.authentication.setup'); ?></h5>
                 </div>
                 <div class="card-body p-1 text-center">
-                    <p><?= $translator->translate('two.factor.authentication.scan'); ?></p>
-                    <?=
-                        Img::tag()
+                    <p><?php echo $translator->translate('two.factor.authentication.scan'); ?></p>
+                    <?php echo Img::tag()
                         ->width($s->getSetting('qr_height_and_width'))
                         ->height($s->getSetting('qr_height_and_width'))
                         ->src(Html::encode($qrDataUri))
-                        ->alt("2FA QR Code")
+                        ->alt('2FA QR Code')
                         ->render();
 ?>
-                    <p><?= $translator->translate('two.factor.authentication.qr.code.enter.manually'); ?></p>
+                    <p><?php echo $translator->translate('two.factor.authentication.qr.code.enter.manually'); ?></p>
                 </div>
                 <div class="card-body p-1 text-center" style="max-width:400px;">
                     <div class="input-group">
-                        <?= Html::input('password', 'secret', Html::encode($totpSecret), [
-                            'class' => 'form-control',
-                            'id' => 'secretInput',
+                        <?php echo Html::input('password', 'secret', Html::encode($totpSecret), [
+                            'class'    => 'form-control',
+                            'id'       => 'secretInput',
                             'readonly' => true,
                         ]); ?>
-                        <?= Button::tfaToggleSecret(); ?>
-                        <?= Button::tfaCopyToClipboard(); ?>
+                        <?php echo Button::tfaToggleSecret(); ?>
+                        <?php echo Button::tfaCopyToClipboard(); ?>
                     </div>
                 </div>   
                 <div class="card-body p-1 text-center">
-                    <?= Form::tag()
-    ->post($urlGenerator->generate('auth/verifySetup'))
-    ->class('form-floating')
-    ->csrf($csrf)
-    ->id('twoFactorAuthenticationSetupForm')
-    ->open(); ?> 
-                    <?= Field::text($formModel, 'code')
-    ->addInputAttributes([
-        'autocomplete' => 'current-code',
-        'id' => 'code',
-        'name' => 'code',
-        'minlength' => 6,
-        // Only the otp is entered here (6 digit).
-        // Not the recovery code (8 digit).
-        'maxlength' => 6,
-        'type' => 'tel',
-    ])
-    ->error($error ?? '')
-    ->required(true)
-    ->inputClass('form-control')
-    ->label($translator->translate('layout.password.otp.6'))
-    ->autofocus();
+                    <?php echo Form::tag()
+                        ->post($urlGenerator->generate('auth/verifySetup'))
+                        ->class('form-floating')
+                        ->csrf($csrf)
+                        ->id('twoFactorAuthenticationSetupForm')
+                        ->open(); ?> 
+                    <?php echo Field::text($formModel, 'code')
+                        ->addInputAttributes([
+                            'autocomplete' => 'current-code',
+                            'id'           => 'code',
+                            'name'         => 'code',
+                            'minlength'    => 6,
+                            // Only the otp is entered here (6 digit).
+                            // Not the recovery code (8 digit).
+                            'maxlength' => 6,
+                            'type'      => 'tel',
+                        ])
+                        ->error($error ?? '')
+                        ->required(true)
+                        ->inputClass('form-control')
+                        ->label($translator->translate('layout.password.otp.6'))
+                        ->autofocus();
 ?>
-                    <?= Field::submitButton()
+                    <?php echo Field::submitButton()
     ->buttonId('code-button')
     ->buttonClass('btn btn-primary')
     ->name('code-button')
-    ->content($translator->translate('layout.submit')) ?>
-                    <?= Form::tag()->close() ?>
+    ->content($translator->translate('layout.submit')); ?>
+                    <?php echo Form::tag()->close(); ?>
                 </div>
                 <div class="card-body p-1 text-center">
-                    <?php for ($i = 1; $i <= 9; $i++): ?>
-                        <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="<?= $i ?>"><?= $i ?></button>
-                    <?php endfor; ?>
+                    <?php for ($i = 1; $i <= 9; ++$i) { ?>
+                        <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="<?php echo $i; ?>"><?php echo $i; ?></button>
+                    <?php } ?>
                     <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="0">0</button>
                     <button type="button" class="btn btn-info btn-sm btn-clear-otp">Clear</button>
                 </div>

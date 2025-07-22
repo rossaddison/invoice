@@ -12,18 +12,17 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Helpers\DateHelper            $dateHelper
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $alert
- * @var string $csrf
+ * @var App\Invoice\Setting\SettingRepository     $s
+ * @var App\Widget\GridComponents                 $gridComponents
+ * @var Yiisoft\Data\Paginator\OffsetPaginator    $paginator
+ * @var Yiisoft\Translator\TranslatorInterface    $translator
+ * @var Yiisoft\Router\CurrentRoute               $currentRoute
+ * @var Yiisoft\Router\UrlGeneratorInterface      $urlGenerator
+ * @var string                                    $alert
+ * @var string                                    $csrf
  */
-
 echo $alert;
 
 ?>
@@ -46,13 +45,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn(Payment $model): string => Html::encode($model->getId()),
+            content: static fn (Payment $model): string => Html::encode($model->getId()),
         ),
         new DataColumn(
             field: 'payment_date',
             property: 'paymentDateFilter',
             header: $translator->translate('payment.date'),
-            content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
+            content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
                                                                             ? $date->format('Y-m-d') : '',
             filter: true,
         ),
@@ -69,7 +68,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'note',
             header: $translator->translate('note'),
-            content: static fn(Payment $model): string => Html::encode($model->getNote()),
+            content: static fn (Payment $model): string => Html::encode($model->getNote()),
         ),
         new DataColumn(
             'inv_id',
@@ -83,6 +82,7 @@ $toolbar = Div::tag();
             header: $translator->translate('total'),
             content: static function (Payment $model) use ($s, $iaR): string {
                 $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
+
                 return $s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
             },
         ),
@@ -90,6 +90,7 @@ $toolbar = Div::tag();
             header: $translator->translate('paid'),
             content: static function (Payment $model) use ($s, $iaR): string {
                 $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
+
                 return $s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
             },
         ),
@@ -98,6 +99,7 @@ $toolbar = Div::tag();
             header: $translator->translate('balance'),
             content: static function (Payment $model) use ($s, $iaR): string {
                 $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
+
                 return $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
             },
         ),
@@ -108,19 +110,19 @@ $toolbar = Div::tag();
                 return $model->getPaymentMethod()?->getName() ?? '';
             },
         ),
-    ]
+    ];
 ?>
 <?php
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open().
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
         Form::tag()->close();
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-payment-guest'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-payment-guest'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->header($gridComponents->header(' ' . $translator->translate('payment')))
+    ->header($gridComponents->header(' '.$translator->translate('payment')))
     ->id('w148-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

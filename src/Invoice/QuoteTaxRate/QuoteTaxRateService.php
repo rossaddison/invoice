@@ -8,12 +8,10 @@ use App\Invoice\Entity\QuoteTaxRate;
 
 final readonly class QuoteTaxRateService
 {
-    public function __construct(private QuoteTaxRateRepository $repository) {}
+    public function __construct(private QuoteTaxRateRepository $repository)
+    {
+    }
 
-    /**
-     * @param QuoteTaxRate $model
-     * @param array $array
-     */
     public function saveQuoteTaxRate(QuoteTaxRate $model, array $array): void
     {
         isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
@@ -24,9 +22,6 @@ final readonly class QuoteTaxRateService
         $this->repository->save($model);
     }
 
-    /**
-     * @param array|QuoteTaxRate|null $model
-     */
     public function deleteQuoteTaxRate(array|QuoteTaxRate|null $model): void
     {
         $this->repository->delete($model);

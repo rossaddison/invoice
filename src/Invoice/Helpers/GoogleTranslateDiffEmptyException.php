@@ -9,8 +9,6 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 class GoogleTranslateDiffEmptyException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
-     * @return string
-     *
      * @psalm-return 'The diff array that has been built is empty. The existing target locale app.php already has all the necessary keys of the source app.php.'
      */
     #[\Override]
@@ -19,9 +17,6 @@ class GoogleTranslateDiffEmptyException extends \RuntimeException implements Fri
         return 'The diff array that has been built is empty. The existing target locale app.php already has all the necessary keys of the source app.php.';
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

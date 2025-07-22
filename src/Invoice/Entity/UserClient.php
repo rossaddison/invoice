@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use App\User\User;
 
 #[Entity(repository: \App\Invoice\UserClient\UserClientRepository::class)]
 class UserClient
@@ -21,7 +21,9 @@ class UserClient
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null) {}
+        private ?int $client_id = null)
+    {
+    }
 
     public function getUser(): ?User
     {

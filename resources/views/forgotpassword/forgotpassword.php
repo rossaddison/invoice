@@ -10,7 +10,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 
-/**
+/*
  * @var WebView                         $this
  * @var TranslatorInterface             $translator
  * @var UrlGeneratorInterface           $urlGenerator
@@ -25,25 +25,25 @@ $this->setTitle($translator->translate('password.reset.request.token'));
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?php echo Html::encode($this->getTitle()); ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= Form::tag()
+                    <?php echo Form::tag()
                         ->post($urlGenerator->generate('auth/forgotpassword'))
                         ->csrf($csrf)
                         ->id('requestPasswordResetTokenForm')
                         ->open();
 ?>
-                    <?= Field::email($formModel, 'email')
+                    <?php echo Field::email($formModel, 'email')
     ->label($translator->translate('email'))
-    ->autofocus()
+    ->autofocus();
 ?>
-                    <?= Field::submitButton()
+                    <?php echo Field::submitButton()
     ->buttonId('password-reset-token-button')
     ->name('password-reset-token-button')
-    ->content($translator->translate('layout.submit'))
+    ->content($translator->translate('layout.submit'));
 ?>
-                    <?= Form::tag()->close() ?>
+                    <?php echo Form::tag()->close(); ?>
                 </div>
             </div>
         </div>

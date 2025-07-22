@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $body
@@ -14,36 +14,36 @@ use Yiisoft\Html\Html;
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= 'Google Translate'; ?>
+                <?php echo 'Google Translate'; ?>
             </div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <?php echo Html::openTag('div', ['class' => 'row']); ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="settings[google_translate_json_filename]" <?= $s->where('google_translate_json_filename'); ?>> <i class="bi bi-info-circle"></i>
-                                <?= 'Google Translate Json Filename (eg. my_json_filename.json)'; ?>
+                            <label for="settings[google_translate_json_filename]" <?php echo $s->where('google_translate_json_filename'); ?>> <i class="bi bi-info-circle"></i>
+                                <?php echo 'Google Translate Json Filename (eg. my_json_filename.json)'; ?>
                             </label>
-                            <?php $body['settings[google_translate_json_filename]'] = $s->getSetting('google_translate_json_filename');?>
+                            <?php $body['settings[google_translate_json_filename]'] = $s->getSetting('google_translate_json_filename'); ?>
                             <input type="text" class="input-sm form-control" name="settings[google_translate_json_filename]" 
-                            id="settings[google_translate_json_filename]" value="<?= $s->getSetting('google_translate_json_filename'); ?>">
+                            id="settings[google_translate_json_filename]" value="<?php echo $s->getSetting('google_translate_json_filename'); ?>">
                         </div>
                         <div class="form-group">
-                            <label for="settings[google_translate_locale]" <?= $s->where('google_translate_locale'); ?>>
-                                <?= 'Google Translate Locale'; ?>
+                            <label for="settings[google_translate_locale]" <?php echo $s->where('google_translate_locale'); ?>>
+                                <?php echo 'Google Translate Locale'; ?>
                             </label>
-                            <?php $body['settings[google_translate_locale]'] = $s->getSetting('google_translate_locale');?>
+                            <?php $body['settings[google_translate_locale]'] = $s->getSetting('google_translate_locale'); ?>
                             <select name="settings[google_translate_locale]" id="settings[google_translate_locale]"
                                 class="form-control">
-                                <option value=""><?= $translator->translate('none'); ?></option>
+                                <option value=""><?php echo $translator->translate('none'); ?></option>
                                 <?php
                                     /**
                                      * @var string $key
                                      * @var string $value
                                      */
                                     foreach ($locales as $key => $value) { ?>
-                                    <option value="<?= $value; ?>"
+                                    <option value="<?php echo $value; ?>"
                                         <?php $s->check_select($body['settings[google_translate_locale]'], $value); ?>>
-                                        <?= $value; ?>
+                                        <?php echo $value; ?>
                                     </option>
                                     <?php } ?>
                             </select>

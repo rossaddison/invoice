@@ -9,7 +9,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class ContactNameNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     #[\Override]
     public function getName(): string
@@ -17,9 +19,6 @@ final class ContactNameNotFoundException extends \RuntimeException implements Fr
         return $this->translator->translate('storecove.supplier.contact.name.not.found');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

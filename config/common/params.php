@@ -2,15 +2,34 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Client\ClientRepository;
+use App\Invoice\Helpers\ClientHelper;
+use App\Invoice\Helpers\CountryHelper;
+use App\Invoice\Helpers\CustomValuesHelper;
+use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Helpers\NumberHelper;
+use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
+use App\Invoice\Inv\InvRepository;
+use App\Invoice\InvAmount\InvAmountRepository;
+use App\Invoice\InvRecurring\InvRecurringRepository;
+use App\Invoice\Quote\QuoteRepository;
+use App\Invoice\QuoteAmount\QuoteAmountRepository;
+use App\Invoice\Setting\SettingRepository;
 use App\ViewInjection\CommonViewInjection;
 use App\ViewInjection\LayoutViewInjection;
 use App\ViewInjection\LinkTagsViewInjection;
 use App\ViewInjection\MetaTagsViewInjection;
+use App\Widget\Button;
+use App\Widget\GridComponents;
+use App\Widget\PageSizeLimiter;
+// yii3-i
+use App\Widget\SubMenu;
+use Cycle\Schema\Provider\PhpFileSchemaProvider;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
-use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
 use Yiisoft\Form\Field\ErrorSummary;
+use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\FormModel\ValidationRulesEnricher;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -18,207 +37,188 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\Cycle\Schema\Conveyor\MetadataSchemaConveyor;
 use Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider;
-use Cycle\Schema\Provider\PhpFileSchemaProvider;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
-// yii3-i
-use App\Invoice\Helpers\ClientHelper;
-use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Helpers\CustomValuesHelper;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
-use App\Invoice\Client\ClientRepository;
-use App\Invoice\Inv\InvRepository;
-use App\Invoice\InvAmount\InvAmountRepository;
-use App\Invoice\InvRecurring\InvRecurringRepository;
-use App\Invoice\Quote\QuoteRepository;
-use App\Invoice\QuoteAmount\QuoteAmountRepository;
-use App\Invoice\Setting\SettingRepository;
-use App\Widget\Button;
-use App\Widget\GridComponents;
-use App\Widget\PageSizeLimiter;
-use App\Widget\SubMenu;
 
 $env = $_ENV['APP_ENV'] ?? 'local';
 
 switch ($env) {
     case 'docker':
         // Running docker with wampserver
-        $dbHost = '192.168.0.24';
-        $dbUser = 'root';
+        $dbHost     = '192.168.0.24';
+        $dbUser     = 'root';
         $dbPassword = null;
         break;
     case 'wamp':
-        $dbHost = 'localhost';
-        $dbUser = 'root';
+        $dbHost     = 'localhost';
+        $dbUser     = 'root';
         $dbPassword = null;
         break;
     case 'lamp':
-        $dbHost = 'localhost';
-        $dbUser = 'root';
+        $dbHost     = 'localhost';
+        $dbUser     = 'root';
         $dbPassword = null;
         break;
     case 'local':
-        $dbHost = 'localhost';
-        $dbUser = 'root';
+        $dbHost     = 'localhost';
+        $dbUser     = 'root';
         $dbPassword = null;
         break;
         // Add more as needed
     default:
-        $dbHost = 'localhost';
-        $dbUser = 'root';
+        $dbHost     = 'localhost';
+        $dbUser     = 'root';
         $dbPassword = null;
 }
 
 return [
-    'env' => $_ENV['YII_ENV'] ?? '',
+    'env'    => $_ENV['YII_ENV'] ?? '',
     'server' => [
-        'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
+        'remote_port'          => $_SERVER['REMOTE_PORT']          ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
-        'http_client_ip' => $_SERVER['HTTP_CLIENT_IP'] ?? null,
+        'http_client_ip'       => $_SERVER['HTTP_CLIENT_IP']       ?? null,
     ],
     'license' => [
         'id' => 'invoice_BSD-3-Clause_20250511',
     ],
     'product' => [
-        'name' => 'RossAddison Invoice',
+        'name'    => 'RossAddison Invoice',
         'version' => 'pre-release',
     ],
     'mailer' => [
         'adminEmail' => 'admin@example.com',
-        /**
-     * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
-     * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd
-     * src/Auth/Controller/ForgotController function forgot
-     */
+        /*
+         * Note: This setting is critical to the sending of emails since it is used in SettingsRepository getConfigSenderEmail()
+         * Used in critical function e.g src/Auth/Controller/SignUpController function signup amd
+         * src/Auth/Controller/ForgotController function forgot
+         */
         'senderEmail' => 'sender@your.web.site.domain.com',
     ],
 
-    /**
-   * @see src/Invoice/Setting/SettingRepository function getOauth2IdentityProviderConfigParamsClientsArray()
-   * @see App\Widgets\Button function facebook, github, google
-   * @see App\Auth\Controller\AuthController function login
-   * @see resources\views\auth\login.php
-   */
+    /*
+     * @see src/Invoice/Setting/SettingRepository function getOauth2IdentityProviderConfigParamsClientsArray()
+     * @see App\Widgets\Button function facebook, github, google
+     * @see App\Auth\Controller\AuthController function login
+     * @see resources\views\auth\login.php
+     */
     'yiisoft/yii-auth-client' => [
         'enabled' => true,
         'clients' => [
             'developersandboxhmrc' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc::class',
-                'clientId' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc::class',
+                'clientId'     => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'facebook' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\Facebook::class',
-                'clientId' => $_ENV['FACEBOOK_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['FACEBOOK_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['FACEBOOK_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\Facebook::class',
+                'clientId'     => $_ENV['FACEBOOK_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['FACEBOOK_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['FACEBOOK_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'github' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\Github::class',
-                'clientId' => $_ENV['GITHUB_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['GITHUB_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['GITHUB_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\Github::class',
+                'clientId'     => $_ENV['GITHUB_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['GITHUB_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['GITHUB_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'google' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\Google::class',
-                'clientId' => $_ENV['GOOGLE_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['GOOGLE_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['GOOGLE_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\Google::class',
+                'clientId'     => $_ENV['GOOGLE_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['GOOGLE_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['GOOGLE_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'govuk' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\GovUk::class',
-                'clientId' => $_ENV['GOVUK_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['GOVUK_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['GOVUK_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\GovUk::class',
+                'clientId'     => $_ENV['GOVUK_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['GOVUK_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['GOVUK_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'linkedin' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\LinkedIn::class',
-                'clientId' => $_ENV['LINKEDIN_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['LINKEDIN_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['LINKEDIN_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\LinkedIn::class',
+                'clientId'     => $_ENV['LINKEDIN_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['LINKEDIN_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['LINKEDIN_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'microsoftonline' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\MicrosoftOnline::class',
-                'clientId' => $_ENV['MICROSOFTONLINE_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['MICROSOFTONLINE_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['MICROSOFTONLINE_API_CLIENT_RETURN_URL'] ?? '',
-                /**
-               * tenant can be one of 'common', 'organisations', 'consumers', or a tenant ID
-               * @see https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
-               */
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\MicrosoftOnline::class',
+                'clientId'     => $_ENV['MICROSOFTONLINE_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['MICROSOFTONLINE_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['MICROSOFTONLINE_API_CLIENT_RETURN_URL'] ?? '',
+                /*
+                 * tenant can be one of 'common', 'organisations', 'consumers', or a tenant ID
+                 * @see https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
+                 */
                 'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common',
             ],
             'openbanking' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\OpenBanking::class',
-                'clientId' => $_ENV['OPENBANKING_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['OPENBANKING_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['OPENBANKING_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\OpenBanking::class',
+                'clientId'     => $_ENV['OPENBANKING_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['OPENBANKING_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['OPENBANKING_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'vkontakte' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\VKontakte::class',
-                'clientId' => $_ENV['VKONTAKTE_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['VKONTAKTE_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['VKONTAKTE_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\VKontakte::class',
+                'clientId'     => $_ENV['VKONTAKTE_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['VKONTAKTE_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['VKONTAKTE_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'x' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\X::class',
-                'clientId' => $_ENV['X_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['X_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['X_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\X::class',
+                'clientId'     => $_ENV['X_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['X_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['X_API_CLIENT_RETURN_URL'] ?? '',
             ],
             'yandex' => [
-                'class' => 'Yiisoft\Yii\AuthClient\Client\Yandex::class',
-                'clientId' => $_ENV['YANDEX_API_CLIENT_ID'] ?? '',
-                'clientSecret' => $_ENV['YANDEX_API_CLIENT_SECRET'] ?? '',
-                'returnUrl' => $_ENV['YANDEX_API_CLIENT_RETURN_URL'] ?? '',
+                'class'        => 'Yiisoft\Yii\AuthClient\Client\Yandex::class',
+                'clientId'     => $_ENV['YANDEX_API_CLIENT_ID']         ?? '',
+                'clientSecret' => $_ENV['YANDEX_API_CLIENT_SECRET']     ?? '',
+                'returnUrl'    => $_ENV['YANDEX_API_CLIENT_RETURN_URL'] ?? '',
             ],
         ],
     ],
     'yiisoft/aliases' => [
         'aliases' => [
-            '@root' => dirname(__DIR__, 2),
-            '@assets' => '@root/public/assets',
-            '@assetsUrl' => '@baseUrl/assets',
-            '@baseUrl' => '',
-            '@hmrc' => '@resources/backend/views/hmrc',
-            '@messages' => '@resources/messages',
-            '@English' => '@src/Invoice/Language/English',
-            '@generated' => '@views/invoice/generator/output_overwrite',
-            '@npm' => '@root/node_modules',
-            '@public' => '@root/public',
-            '@resources' => '@root/resources',
-            '@runtime' => '@root/runtime',
-            '@src' => '@root/src',
+            '@root'              => dirname(__DIR__, 2),
+            '@assets'            => '@root/public/assets',
+            '@assetsUrl'         => '@baseUrl/assets',
+            '@baseUrl'           => '',
+            '@hmrc'              => '@resources/backend/views/hmrc',
+            '@messages'          => '@resources/messages',
+            '@English'           => '@src/Invoice/Language/English',
+            '@generated'         => '@views/invoice/generator/output_overwrite',
+            '@npm'               => '@root/node_modules',
+            '@public'            => '@root/public',
+            '@resources'         => '@root/resources',
+            '@runtime'           => '@root/runtime',
+            '@src'               => '@root/src',
             '@validatorMessages' => '@vendor/yiisoft/validator/messages',
-            '@vendor' => '@root/vendor',
-            '@layout' => '@views/layout',
-            '@views' => '@resources/views',
+            '@vendor'            => '@root/vendor',
+            '@layout'            => '@views/layout',
+            '@views'             => '@resources/views',
         ],
     ],
     'yiisoft/form' => [
         'themes' => [
-            'defaultTheme' => 'bootstrap5-vertical',
+            'defaultTheme'            => 'bootstrap5-vertical',
             'validationRulesEnricher' => new ValidationRulesEnricher(),
             // currently being used
             'default' => [
                 'containerClass' => 'form-floating mb-3',
-                'inputClass' => 'form-control h3',
-                'invalidClass' => 'is-invalid',
-                'validClass' => 'is-valid',
-                'template' => '{input}{label}{hint}{error}',
-                'labelClass' => 'floatingInput h6',
-                'errorClass' => 'fw-bold fst-italic badge bg-danger text-wrap',
-                /**
-                * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
-                */
-                'hintClass' => 'text-danger h4',
+                'inputClass'     => 'form-control h3',
+                'invalidClass'   => 'is-invalid',
+                'validClass'     => 'is-valid',
+                'template'       => '{input}{label}{hint}{error}',
+                'labelClass'     => 'floatingInput h6',
+                'errorClass'     => 'fw-bold fst-italic badge bg-danger text-wrap',
+                /*
+                 * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
+                 */
+                'hintClass'    => 'text-danger h4',
                 'fieldConfigs' => [
                     SubmitButton::class => [
-                        'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
+                        'buttonClass()'    => ['btn btn-primary btn-sm mt-3'],
                         'containerClass()' => ['d-grid gap-2 form-floating'],
                     ],
                     // if this Checkbox class is not used then the checkbox ends up floating
@@ -231,30 +231,30 @@ return [
                         'containerClass()' => ['form-group'],
                     ],
                     OffsetPagination::class => [
-                        'listTag()' => ['ul'],
-                        'listAttributes()' => [['class' => 'pagination']],
-                        'itemTag()' => ['li'],
-                        'itemAttributes()' => [['class' => 'page-item']],
-                        'linkAttributes()' => [['class' => 'page-link']],
-                        'currentItemClass()' => ['active'],
+                        'listTag()'           => ['ul'],
+                        'listAttributes()'    => [['class' => 'pagination']],
+                        'itemTag()'           => ['li'],
+                        'itemAttributes()'    => [['class' => 'page-item']],
+                        'linkAttributes()'    => [['class' => 'page-link']],
+                        'currentItemClass()'  => ['active'],
                         'disabledItemClass()' => ['disabled'],
                     ],
                 ],
             ],
             'bootstrap5-vertical' => [
-                'template' => "{label}\n{input}\n{hint}\n{error}",
-                'containerClass' => 'mb-3',
-                'labelClass' => 'form-label',
-                'inputClass' => 'form-control',
-                'hintClass' => 'form-text',
-                'errorClass' => 'invalid-feedback',
-                'inputValidClass' => 'is-valid',
+                'template'          => "{label}\n{input}\n{hint}\n{error}",
+                'containerClass'    => 'mb-3',
+                'labelClass'        => 'form-label',
+                'inputClass'        => 'form-control',
+                'hintClass'         => 'form-text',
+                'errorClass'        => 'invalid-feedback',
+                'inputValidClass'   => 'is-valid',
                 'inputInvalidClass' => 'is-invalid',
-                'fieldConfigs' => [
+                'fieldConfigs'      => [
                     ErrorSummary::class => [
                         'containerClass()' => ['alert alert-danger'],
                         'listAttributes()' => [['class' => 'mb-0']],
-                        'header()' => [''],
+                        'header()'         => [''],
                     ],
                     SubmitButton::class => [
                         'buttonClass()' => ['btn btn-primary'],
@@ -263,22 +263,22 @@ return [
                 'enrichFromValidationRules' => true,
             ],
             'bootstrap5-horizontal' => [
-                'template' => "{label}\n<div class=\"col-sm-10\">{input}\n{hint}\n{error}</div>",
-                'containerClass' => 'row mb-3',
-                'labelClass' => 'col-sm-2 col-form-label',
-                'inputClass' => 'form-control',
-                'hintClass' => 'form-text',
-                'errorClass' => 'invalid-feedback',
-                'inputValidClass' => 'is-valid',
+                'template'          => "{label}\n<div class=\"col-sm-10\">{input}\n{hint}\n{error}</div>",
+                'containerClass'    => 'row mb-3',
+                'labelClass'        => 'col-sm-2 col-form-label',
+                'inputClass'        => 'form-control',
+                'hintClass'         => 'form-text',
+                'errorClass'        => 'invalid-feedback',
+                'inputValidClass'   => 'is-valid',
                 'inputInvalidClass' => 'is-invalid',
-                'fieldConfigs' => [
+                'fieldConfigs'      => [
                     SubmitButton::class => [
                         'buttonClass()' => ['btn btn-primary'],
                     ],
                     ErrorSummary::class => [
                         'containerClass()' => ['alert alert-danger'],
-                        'listClass()' => ['mb-0'],
-                        'header()' => [''],
+                        'listClass()'      => ['mb-0'],
+                        'header()'         => [''],
                     ],
                 ],
                 'enrichFromValidationRules' => true,
@@ -286,45 +286,45 @@ return [
         ],
     ],
     'yiisoft/rbac-rules-container' => [
-        'rules' => require __DIR__ . '/rbac-rules.php',
+        'rules' => require __DIR__.'/rbac-rules.php',
     ],
     'yiisoft/router-fastroute' => [
         'enableCache' => false,
-        'encodeRaw' => true,
+        'encodeRaw'   => true,
     ],
     'yiisoft/translator' => [
-        'locale' => 'en',
-        'fallbackLocale' => 'en',
-        'defaultCategory' => 'app',
+        'locale'            => 'en',
+        'fallbackLocale'    => 'en',
+        'defaultCategory'   => 'app',
         'validatorCategory' => 'yii-validator',
     ],
     'yiisoft/view' => [
-        'basePath' => '@views',
+        'basePath'   => '@views',
         'parameters' => [
             'assetManager' => Reference::to(AssetManager::class),
             'urlGenerator' => Reference::to(UrlGeneratorInterface::class),
             'currentRoute' => Reference::to(CurrentRoute::class),
-            'translator' => Reference::to(TranslatorInterface::class),
+            'translator'   => Reference::to(TranslatorInterface::class),
             // yii-invoice - Below parameters are specifically used in views/layout/invoice
-            's' => Reference::to(SettingRepository::class),
-            'button' => Reference::to(Button::class),
-            'session' => Reference::to(SessionInterface::class),
-            'clientHelper' => Reference::to(ClientHelper::class),
-            'countryHelper' => Reference::to(CountryHelper::class),
-            'cvH' => Reference::to(CustomValuesHelper::class),
-            'datehelper' => Reference::to(DateHelper::class),
-            'dateHelper' => Reference::to(DateHelper::class),
-            'numberHelper' => Reference::to(NumberHelper::class),
-            'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
+            's'                   => Reference::to(SettingRepository::class),
+            'button'              => Reference::to(Button::class),
+            'session'             => Reference::to(SessionInterface::class),
+            'clientHelper'        => Reference::to(ClientHelper::class),
+            'countryHelper'       => Reference::to(CountryHelper::class),
+            'cvH'                 => Reference::to(CustomValuesHelper::class),
+            'datehelper'          => Reference::to(DateHelper::class),
+            'dateHelper'          => Reference::to(DateHelper::class),
+            'numberHelper'        => Reference::to(NumberHelper::class),
+            'pageSizeLimiter'     => Reference::to(PageSizeLimiter::class),
             'peppolUNECERec2011e' => Reference::to(Peppol_UNECERec20_11e::class),
-            'gridComponents' => Reference::to(GridComponents::class),
-            'subMenu' => Reference::to(SubMenu::class),
+            'gridComponents'      => Reference::to(GridComponents::class),
+            'subMenu'             => Reference::to(SubMenu::class),
             // Appear in client/view.php and duplication taken out of ClientController function view
-            'cR' => Reference::to(ClientRepository::class),
-            'iR' => Reference::to(InvRepository::class),
+            'cR'  => Reference::to(ClientRepository::class),
+            'iR'  => Reference::to(InvRepository::class),
             'iaR' => Reference::to(InvAmountRepository::class),
             'irR' => Reference::to(InvRecurringRepository::class),
-            'qR' => Reference::to(QuoteRepository::class),
+            'qR'  => Reference::to(QuoteRepository::class),
             'qaR' => Reference::to(QuoteAmountRepository::class),
         ],
     ],
@@ -341,8 +341,8 @@ return [
     ],
     'yiisoft/yii-view-renderer' => [
         'viewPath' => '@views',
-        //'layout' => '@views/layout/main.php',
-        'layout' => '@views/layout/templates/soletrader/main.php',
+        // 'layout' => '@views/layout/main.php',
+        'layout'     => '@views/layout/templates/soletrader/main.php',
         'injections' => [
             Reference::to(CommonViewInjection::class),
             Reference::to(CsrfViewInjection::class),
@@ -359,17 +359,17 @@ return [
             // For example, \Yiisoft\Yii\Cycle\Logger\StdoutQueryLogger::class
             'query-logger' => null,
             // Default database
-            'default' => 'default',
-            'aliases' => [],
+            'default'   => 'default',
+            'aliases'   => [],
             'databases' => [
-                //'default' => ['connection' => 'sqlite'],
+                // 'default' => ['connection' => 'sqlite'],
                 // yii-invoice
                 'default' => ['connection' => 'mysql'],
             ],
             'connections' => [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
                     connection: new Cycle\Database\Config\MySQL\DsnConnectionConfig(
-                        'mysql:host=' . $dbHost . ';dbname=yii3_i',
+                        'mysql:host='.$dbHost.';dbname=yii3_i',
                         $dbUser,
                         $dbPassword,
                     ),
@@ -381,10 +381,10 @@ return [
         'migrations' => [
             'directory' => '@root/migrations',
             'namespace' => 'App\\Migration',
-            'table' => 'migration',
-            'safe' => false,
+            'table'     => 'migration',
+            'safe'      => false,
         ],
-        /**
+        /*
          * SchemaProvider list for {@see \Yiisoft\Yii\Cycle\Schema\Provider\Support\SchemaProviderPipeline}
          * Array of classname and {@see SchemaProviderInterface} object.
          * You can configure providers if you pass classname as key and parameters as array:
@@ -403,7 +403,7 @@ return [
          * ]
          */
 
-        /**
+        /*
          * To update a table structure and related schema use MODE_WRITE_ONLY ...then revert back to MODE_READ_AND_WRITE
          * For faster performance use MODE_READ_AND_WRITE
          * Note as at 15/06/2024: If you have adjusted any Entity file you will have to always make two adjustments to
@@ -415,7 +415,7 @@ return [
          */
         'schema-providers' => [
             PhpFileSchemaProvider::class => [
-                /**
+                /*
                  * @psalm-suppress RiskyTruthyFalsyComparison
                  */
                 'mode' => $_ENV['BUILD_DATABASE'] ?? '' ? PhpFileSchemaProvider::MODE_WRITE_ONLY : PhpFileSchemaProvider::MODE_READ_AND_WRITE,
@@ -427,11 +427,11 @@ return [
                 ],
             ],
         ],
-        /**
-     * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
-     * Annotated entity directories list.
-     * {@see \Yiisoft\Aliases\Aliases} are also supported.
-     */
+        /*
+         * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
+         * Annotated entity directories list.
+         * {@see \Yiisoft\Aliases\Aliases} are also supported.
+         */
         'entity-paths' => [
             '@src',
         ],
@@ -445,12 +445,12 @@ return [
     ],
     'yiisoft/yii-sentry' => [
         'handleConsoleErrors' => false, // Add to disable console errors.
-        'options' => [
+        'options'             => [
             // Set to `null` to disable error sending (note that in case of web application errors it only prevents
             // sending them via HTTP). To disable interactions with Sentry SDK completely, remove middleware and the
             // rest of the config.
-            'dsn' => $_ENV['SENTRY_DSN'] ?? null,
-            'environment' => $_ENV['YII_ENV'] ?? null, // Add to separate "production" / "staging" environment errors.
+            'dsn'         => $_ENV['SENTRY_DSN'] ?? null,
+            'environment' => $_ENV['YII_ENV']    ?? null, // Add to separate "production" / "staging" environment errors.
         ],
     ],
     'yiisoft/mailer' => [
@@ -460,50 +460,50 @@ return [
     ],
     'yiisoft/mailer-symfony' => [
         'esmtpTransport' => [
-            /**
-       * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/config/params.php
-       * @see SettingRepository function config_params()
-       */
-            'enabled' => true,
+            /*
+             * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/config/params.php
+             * @see SettingRepository function config_params()
+             */
+            'enabled'     => true,
             'useSendMail' => false,
-            'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
-            'host' => 'mail.yourinternet.com',
-            'port' => 25,
-            'username' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '',
-            /**
-       * Avoid the use of hard-coded credentials
-       * @see https://cwe.mitre.org/data/definitions/798.html
-       * @see The .env file in the root folder
-       * @see https://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
-       */
+            'scheme'      => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
+            'host'        => 'mail.yourinternet.com',
+            'port'        => 25,
+            'username'    => filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '',
+            /*
+             * Avoid the use of hard-coded credentials
+             * @see https://cwe.mitre.org/data/definitions/798.html
+             * @see The .env file in the root folder
+             * @see https://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
+             */
             'password' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_PASSWORD') ?? '',
-            'options' => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
+            'options'  => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
         ],
         'messageSettings' => [
-            'charset' => 'utf-8',
-            'from' => null,
-            'addFrom' => null,
-            'to' => null,
-            'addTo' => null,
-            'replyTo' => null,
-            'addReplyTo' => null,
-            'cc' => null,
-            'addCc' => null,
-            'bcc' => null,
-            'addBcc' => null,
-            'subject' => null,
-            'date' => null,
-            'priority' => null,
-            'returnPath' => null,
-            'sender' => null,
-            'textBody' => null,
-            'htmlBody' => null,
-            'attachments' => null,
-            'addAttachments' => null,
-            'embeddings' => null,
-            'addEmbeddings' => null,
-            'headers' => [],
-            'overwriteHeaders' => null,
+            'charset'           => 'utf-8',
+            'from'              => null,
+            'addFrom'           => null,
+            'to'                => null,
+            'addTo'             => null,
+            'replyTo'           => null,
+            'addReplyTo'        => null,
+            'cc'                => null,
+            'addCc'             => null,
+            'bcc'               => null,
+            'addBcc'            => null,
+            'subject'           => null,
+            'date'              => null,
+            'priority'          => null,
+            'returnPath'        => null,
+            'sender'            => null,
+            'textBody'          => null,
+            'htmlBody'          => null,
+            'attachments'       => null,
+            'addAttachments'    => null,
+            'embeddings'        => null,
+            'addEmbeddings'     => null,
+            'headers'           => [],
+            'overwriteHeaders'  => null,
             'convertHtmlToText' => true,
         ],
     ],
@@ -512,21 +512,21 @@ return [
     // see settingRepository->get_config_company_details() function
     // see also src\Invoice\Helpers\PeppolHelper
     'company' => [
-        'logopublicsource' => 'site',
-        'logofilenamewithsuffix' => 'logo.png',
-        'name' => 'MyCompanyName',
-        'address_1' => '1 MyCompany Street',
-        'address_2' => 'MyCompany Area',
-        'city' => 'MyCompanyCity',
-        'country' => 'MyCompanyCountry',
-        'zip' => 'A11 1AA',
-        'state' => 'My State',
-        'vat_id' => 'GB123456789',
-        'tax_code' => 'Tax Code',
-        'tax_currency' => 'Tax Currency',
-        'phone' => '02000000000',
-        'fax' => '0200000000',
-        'iso_3166_country_identification_code' => 'GB',
+        'logopublicsource'                        => 'site',
+        'logofilenamewithsuffix'                  => 'logo.png',
+        'name'                                    => 'MyCompanyName',
+        'address_1'                               => '1 MyCompany Street',
+        'address_2'                               => 'MyCompany Area',
+        'city'                                    => 'MyCompanyCity',
+        'country'                                 => 'MyCompanyCountry',
+        'zip'                                     => 'A11 1AA',
+        'state'                                   => 'My State',
+        'vat_id'                                  => 'GB123456789',
+        'tax_code'                                => 'Tax Code',
+        'tax_currency'                            => 'Tax Currency',
+        'phone'                                   => '02000000000',
+        'fax'                                     => '0200000000',
+        'iso_3166_country_identification_code'    => 'GB',
         'iso_3166_country_identification_list_id' => 'ISO3166-1:Alpha2',
     ],
     // In association with src/Invoice/Setting/SettingRepository/get_config_peppol()
@@ -540,24 +540,24 @@ return [
     'peppol' => [
         'invoice' => [
             'CustomizationID' => 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
-            'ProfileID' => 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+            'ProfileID'       => 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
             'InvoiceTypeCode' => '380',
-            'Note' => 'Please use our latest telephone number',
-            /**
-       * @see $settingRepository->getSetting('currency_code_to')
-       */
-            //'DocumentCurrencyCode' => 'EUR',
-            /**
-       * @see $settingRepository->getSetting('currency_code_from')
-       */
-            'TaxCurrencyCode' => 'GBP',
+            'Note'            => 'Please use our latest telephone number',
+            /*
+             * @see $settingRepository->getSetting('currency_code_to')
+             */
+            // 'DocumentCurrencyCode' => 'EUR',
+            /*
+             * @see $settingRepository->getSetting('currency_code_from')
+             */
+            'TaxCurrencyCode'         => 'GBP',
             'AccountingSupplierParty' => [
                 'Party' => [
                     'EndPointID' => [
-                        'value' => '7300010000001',
+                        'value'    => '7300010000001',
                         'schemeID' => '0088',
                     ],
-                    //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingSupplierParty/cac-Party/cac-PartyIdentification/
+                    // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingSupplierParty/cac-Party/cac-PartyIdentification/
                     'PartyIdentification' => [
                         'ID' => [
                             'value' => '5060012349998',
@@ -566,43 +566,43 @@ return [
                         ],
                     ],
                     'PostalAddress' => [
-                        'StreetName' => 'Main Street 1',
+                        'StreetName'           => 'Main Street 1',
                         'AdditionalStreetName' => 'Po Box 351',
-                        'AddressLine' => [
+                        'AddressLine'          => [
                             'Line' => 'Building 23',
                         ],
-                        'CityName' => 'London',
-                        'PostalZone' => 'W1G 8LZ',
+                        'CityName'         => 'London',
+                        'PostalZone'       => 'W1G 8LZ',
                         'CountrySubentity' => 'Region A',
-                        'Country' => [
+                        'Country'          => [
                             'IdentificationCode' => 'GB',
-                            //https://docs.peppol.eu/poacc/billing/3.0/codelist/ISO3166/
-                            //Alpha 2 => 2 digit code eg. GB
-                            //Alpha 3 => 3 digit code eg. GBP
-                            /**
-               * ListId should not be shown => see src/Invoice/Ubl/Country
-               * Warning
-               * Location: invoice_a-362E8wINV107_peppol
-               * Element/context: /:Invoice[1]
-               * XPath test: not(//cac:Country/cbc:IdentificationCode/@listID)
-               * Error message: [UBL-CR-660]-A UBL invoice should not include the Country Identification code listID
-               */
+                            // https://docs.peppol.eu/poacc/billing/3.0/codelist/ISO3166/
+                            // Alpha 2 => 2 digit code eg. GB
+                            // Alpha 3 => 3 digit code eg. GBP
+                            /*
+                             * ListId should not be shown => see src/Invoice/Ubl/Country
+                             * Warning
+                             * Location: invoice_a-362E8wINV107_peppol
+                             * Element/context: /:Invoice[1]
+                             * XPath test: not(//cac:Country/cbc:IdentificationCode/@listID)
+                             * Error message: [UBL-CR-660]-A UBL invoice should not include the Country Identification code listID
+                             */
                             'ListId' => 'ISO3166-1:Alpha2',
                         ],
                     ],
                     'Contact' => [
-                        'Name' => 'Joe Bloggs',
+                        'Name'      => 'Joe Bloggs',
                         'FirstName' => 'Joe',
-                        'LastName' => 'Bloggs',
+                        'LastName'  => 'Bloggs',
                         'Telephone' => '801 801 801',
-                        /**
-             * Warning from Ecosio Validator: OpenPeppol UBL Invoice (3.15.0) (a.k.a BIS Billing 3.0.14)
-             * Location: invoice_a0oVdj0WINV107_peppol
-             * Element/context: /:Invoice[1]
-             * XPath test: not(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telefax)
-             * Error message: [UBL-CR-190]-A UBL invoice should not include the AccountingSupplierParty Party Contact Telefax
-             */
-                        'Telefax' => '',
+                        /*
+                         * Warning from Ecosio Validator: OpenPeppol UBL Invoice (3.15.0) (a.k.a BIS Billing 3.0.14)
+                         * Location: invoice_a0oVdj0WINV107_peppol
+                         * Element/context: /:Invoice[1]
+                         * XPath test: not(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telefax)
+                         * Error message: [UBL-CR-190]-A UBL invoice should not include the AccountingSupplierParty Party Contact Telefax
+                         */
+                        'Telefax'        => '',
                         'ElectronicMail' => 'test.name@foo.bar',
                     ],
                     'PartyTaxScheme' => [
@@ -616,12 +616,12 @@ return [
                     ],
                     'PartyLegalEntity' => [
                         'RegistrationName' => 'Full Formal Seller Name LTD.',
-                        'CompanyID' => '987654321',
-                        /**
-             * @see src/Invoice/Ubl/PartyLegalEntity
-             * @see src/Invoice/Setting/SettingRepository function get_config_peppol
-             * @see src/Invoice/Helpers/PeppolHelper function SupplierPartyLegalEntity()
-             */
+                        'CompanyID'        => '987654321',
+                        /*
+                         * @see src/Invoice/Ubl/PartyLegalEntity
+                         * @see src/Invoice/Setting/SettingRepository function get_config_peppol
+                         * @see src/Invoice/Helpers/PeppolHelper function SupplierPartyLegalEntity()
+                         */
                         'Attributes' => [
                             'schemeID' => '0002',
                         ],
@@ -631,7 +631,7 @@ return [
             ],
             'PayeeParty' => [
                 'PartyIdentification' => [
-                    'ID' => 'FR932874294',
+                    'ID'       => 'FR932874294',
                     'schemeID' => 'SEPA',
                 ],
                 'PartyName' => [
@@ -639,29 +639,29 @@ return [
                 ],
                 'PartyLegalEntity' => [
                     'CompanyID' => '',
-                    'schemeID' => '',
+                    'schemeID'  => '',
                 ],
             ],
             'PaymentMeans' => [
                 'PaymentMeansCode' => '30',
-                'PaymentID' => '432948234234234',
-                'CardAccount' => [
+                'PaymentID'        => '432948234234234',
+                'CardAccount'      => [
                     'PrimaryAccountNumberID' => '1234',
-                    'NetworkID' => 'NA',
-                    'HolderName' => 'John Doe',
+                    'NetworkID'              => 'NA',
+                    'HolderName'             => 'John Doe',
                 ],
                 // Supplier/Designated Payee in company
                 'PayeeFinancialAccount' => [
                     // eg. IBAN number
                     'ID' => 'IBAN number',
                     // Name of account holder
-                    'Name' => 'FF',
+                    'Name'                       => 'FF',
                     'FinancialInstitutionBranch' => [
-                        //Payment service provider identifier
-                        //An identifier for the payment service provider
-                        //where a payment account is located. Such as a
-                        //BIC or a national clearing code where required.
-                        //No identification scheme Identifier to be used.
+                        // Payment service provider identifier
+                        // An identifier for the payment service provider
+                        // where a payment account is located. Such as a
+                        // BIC or a national clearing code where required.
+                        // No identification scheme Identifier to be used.
                         'ID' => '9999',
                     ],
                 ],
@@ -672,7 +672,7 @@ return [
                     // debit mandate. Used in order to
                     // pre-notify the Buyer of a SEPA
                     // direct debit.
-                    'ID' => '123456',
+                    'ID'                    => '123456',
                     'PayerFinancialAccount' => [
                         // Debited account identifier
                         // The account to be debited by

@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\Contract\ContractForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Widget\Button $button
@@ -21,24 +21,23 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?=
-    Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ContractForm')
-    ->open()
+    ->open();
 ?>
 
-<?= Field::text($form, 'client_id')->readonly(true);?>    
-<?= Field::text($form, 'reference')->readonly(true);?>
-<?= Field::text($form, 'name')->readonly(true);?>
-<?= Field::text($form, 'period_start')
+<?php echo Field::text($form, 'client_id')->readonly(true); ?>    
+<?php echo Field::text($form, 'reference')->readonly(true); ?>
+<?php echo Field::text($form, 'name')->readonly(true); ?>
+<?php echo Field::text($form, 'period_start')
     ->value(
         Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d'))),
-    )->readonly(true);?>
-<?= Field::text($form, 'period_end')
+    )->readonly(true); ?>
+<?php echo Field::text($form, 'period_end')
     ->value(
         Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d'))),
-    )->readonly(true);?>
+    )->readonly(true); ?>
 

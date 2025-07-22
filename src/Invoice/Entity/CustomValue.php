@@ -17,7 +17,9 @@ class CustomValue
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: false)]
-        private string $value = '') {}
+        private string $value = '')
+    {
+    }
 
     public function getId(): string
     {
@@ -29,12 +31,12 @@ class CustomValue
         $this->id = $id;
     }
 
-    public function getCustomField(): CustomField|null
+    public function getCustomField(): ?CustomField
     {
         return $this->custom_field;
     }
 
-    public function getCustom_field_id(): int|null
+    public function getCustom_field_id(): ?int
     {
         return $this->custom_field_id;
     }

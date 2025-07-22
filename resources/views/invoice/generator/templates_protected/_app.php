@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 /**
  * @see GeneratorController function google_translate_lang
+ *
  * @var array $combined_array
  */
-
 echo "<?php\n";
 ?>
 
@@ -19,6 +19,6 @@ return [
      * @var string $value
      */
     foreach ($combined_array as $key => $value) {
-        echo "'" . $key . "' => '" . $value . "',\n";
+        echo "'".$key."' => '".$value."',\n";
     }?>
 ];

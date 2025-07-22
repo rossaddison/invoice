@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
+use DateTimeImmutable;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use DateTimeImmutable;
 
 final class ClientNoteForm extends FormModel
 {
@@ -24,30 +24,28 @@ final class ClientNoteForm extends FormModel
     {
         $this->client_id = (int) $clientNote->getClient_id();
         $this->date_note = $clientNote->getDate_note();
-        $this->note = $clientNote->getNote();
+        $this->note      = $clientNote->getNote();
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
 
-    public function getDate_note(): string|DateTimeImmutable
+    public function getDate_note(): string|\DateTimeImmutable
     {
-        /**
+        /*
          * @var DateTimeImmutable|string $this->date_note
          */
         return $this->date_note;
     }
 
-    public function getNote(): string|null
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

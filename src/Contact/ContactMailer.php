@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Contact;
 
-use Exception;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 /**
@@ -26,9 +25,9 @@ final class ContactMailer
         private readonly string $sender,
         private readonly string $to,
     ) {
-        $this->flash = new Flash($session);
-        $this->session = $session;
-        $this->mailer = $mailer;
+        $this->flash      = new Flash($session);
+        $this->session    = $session;
+        $this->mailer     = $mailer;
         $this->translator = $translator;
     }
 
@@ -48,10 +47,11 @@ final class ContactMailer
         foreach ($form->getPropertyValue('attachFiles') as $attachFile) {
             /**
              * @var array $file
+             *
              * @psalm-suppress MixedMethodCall
              */
             foreach ($attachFile as $file) {
-                if ($file[0]?->getError() === UPLOAD_ERR_OK && (null !== $file[0]?->getStream())) {
+                if (UPLOAD_ERR_OK === $file[0]?->getError() && (null !== $file[0]?->getStream())) {
                     /** @psalm-suppress MixedAssignment $message */
                     $message = $message->withAttachments(
                         File::fromContent(
@@ -66,23 +66,20 @@ final class ContactMailer
         try {
             $this->mailer->send($message);
             $this->flashMessage('info', $this->translator->translate('menu.contact.soon'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $flashMsg = $e->getMessage();
             $this->logger->error($flashMsg);
         }
     }
 
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flashMessage(string $level, string $message): Flash|null
+    private function flashMessage(string $level, string $message): ?Flash
     {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
+
             return $this->flash;
         }
+
         return null;
     }
 }

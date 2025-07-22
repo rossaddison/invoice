@@ -6,9 +6,8 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\ORM\Entity\Behavior;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
+use Cycle\ORM\Entity\Behavior;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\CompanyPrivate\CompanyPrivateRepository::class)]
@@ -19,10 +18,10 @@ class CompanyPrivate
     private ?Company $company = null;
 
     #[Column(type: 'datetime')]
-    private readonly DateTimeImmutable $date_created;
+    private readonly \DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime')]
-    private readonly DateTimeImmutable $date_modified;
+    private readonly \DateTimeImmutable $date_modified;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -52,23 +51,23 @@ class CompanyPrivate
         #[Column(type: 'date', nullable: true)]
         private mixed $end_date = null,
     ) {
-        $this->date_created = new DateTimeImmutable();
-        $this->date_modified = new DateTimeImmutable();
+        $this->date_created  = new \DateTimeImmutable();
+        $this->date_modified = new \DateTimeImmutable();
     }
 
-    //get relation $company
+    // get relation $company
     public function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    //set relation $company
+    // set relation $company
     public function setCompany(?Company $company): void
     {
         $this->company = $company;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -98,7 +97,7 @@ class CompanyPrivate
         $this->vat_id = $vat_id;
     }
 
-    public function getTax_code(): string|null
+    public function getTax_code(): ?string
     {
         return $this->tax_code;
     }
@@ -108,7 +107,7 @@ class CompanyPrivate
         $this->tax_code = $tax_code;
     }
 
-    public function getIban(): string|null
+    public function getIban(): ?string
     {
         return $this->iban;
     }
@@ -118,7 +117,7 @@ class CompanyPrivate
         $this->iban = $iban;
     }
 
-    public function getGln(): string|null
+    public function getGln(): ?string
     {
         return $this->gln;
     }
@@ -128,7 +127,7 @@ class CompanyPrivate
         $this->gln = $gln;
     }
 
-    public function getRcc(): string|null
+    public function getRcc(): ?string
     {
         return $this->rcc;
     }
@@ -138,7 +137,7 @@ class CompanyPrivate
         $this->rcc = $rcc;
     }
 
-    public function getLogo_filename(): string|null
+    public function getLogo_filename(): ?string
     {
         return $this->logo_filename;
     }
@@ -148,7 +147,7 @@ class CompanyPrivate
         $this->logo_filename = $logo_filename;
     }
 
-    public function getLogo_width(): int|null
+    public function getLogo_width(): ?int
     {
         return $this->logo_width;
     }
@@ -158,7 +157,7 @@ class CompanyPrivate
         $this->logo_width = $logo_width;
     }
 
-    public function getLogo_height(): int|null
+    public function getLogo_height(): ?int
     {
         return $this->logo_height;
     }
@@ -168,7 +167,7 @@ class CompanyPrivate
         $this->logo_height = $logo_height;
     }
 
-    public function getLogo_Margin(): int|null
+    public function getLogo_Margin(): ?int
     {
         return $this->logo_margin;
     }
@@ -178,36 +177,36 @@ class CompanyPrivate
         $this->logo_margin = $logo_margin;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDate_created(): \DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDate_modified(): \DateTimeImmutable
     {
         return $this->date_modified;
     }
 
-    //cycle
-    public function getStart_date(): DateTimeImmutable|null
+    // cycle
+    public function getStart_date(): ?\DateTimeImmutable
     {
-        /** @var DateTimeImmutable|null $this->start_date */
+        /* @var DateTimeImmutable|null $this->start_date */
         return $this->start_date;
     }
 
-    public function setStart_date(?DateTime $start_date): void
+    public function setStart_date(?\DateTime $start_date): void
     {
         $this->start_date = $start_date;
     }
 
-    //cycle
-    public function getEnd_date(): DateTimeImmutable|null
+    // cycle
+    public function getEnd_date(): ?\DateTimeImmutable
     {
-        /** @var DateTimeImmutable|null $this->end_date */
+        /* @var DateTimeImmutable|null $this->end_date */
         return $this->end_date;
     }
 
-    public function setEnd_date(?DateTime $end_date): void
+    public function setEnd_date(?\DateTime $end_date): void
     {
         $this->end_date = $end_date;
     }
@@ -221,6 +220,6 @@ class CompanyPrivate
 
     public function isNewRecord(): bool
     {
-        return $this->getId() === null;
+        return null === $this->getId();
     }
 }

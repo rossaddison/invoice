@@ -7,7 +7,7 @@ use Cycle\ORM\Collection\DoctrineCollectionFactory;
 use Cycle\ORM\Factory;
 use Cycle\ORM\FactoryInterface;
 
-/** @var array $params */
+/* @var array $params */
 
 return [
     // Replace Factory definition to redefine default collection type

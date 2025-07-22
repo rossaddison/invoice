@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Auth\Form;
 
-use App\User\UserRepository;
 use App\Auth\AuthService;
+use App\User\UserRepository;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Validator\RulesProviderInterface;
+use Yiisoft\Validator\ValidatorInterface;
 
 final class ChangePasswordForm extends FormModel implements RulesProviderInterface
 {
-    private string $login = '';
-    private string $password = '';
-    private string $newPassword = '';
+    private string $login             = '';
+    private string $password          = '';
+    private string $newPassword       = '';
     private string $newPasswordVerify = '';
 
     public function __construct(
@@ -26,7 +26,8 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
         private readonly ValidatorInterface $validator,
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 
     public function change(): bool
     {
@@ -35,28 +36,30 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
             if (null !== $user) {
                 $user->setPassword($this->getNewPassword());
                 $this->userRepository->save($user);
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * @return string[]
+     *
      * @psalm-return array{login: string, password: string, newPassword: string, newPasswordVerify: string}
      */
     public function getAttributeLabels(): array
     {
         return [
-            'login' => $this->translator->translate('layout.login'),
-            'password' => $this->translator->translate('layout.password'),
-            'newPassword' => $this->translator->translate('layout.password.new'),
+            'login'             => $this->translator->translate('layout.login'),
+            'password'          => $this->translator->translate('layout.password'),
+            'newPassword'       => $this->translator->translate('layout.password.new'),
             'newPasswordVerify' => $this->translator->translate('layout.password-verify.new'),
         ];
     }
 
     /**
-     * @return string
      * @psalm-return 'ChangePassword'
      */
     #[\Override]
@@ -86,16 +89,15 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
     }
 
     /**
-     * {@inheritDoc}
      * @return iterable<int|string, callable|iterable<int, callable|\Yiisoft\Validator\RuleInterface>|\Yiisoft\Validator\RuleInterface>
      */
     #[\Override]
     public function getRules(): iterable
     {
         return [
-            'login' => [new Required()],
-            'password' => $this->passwordRules(),
-            'newPassword' => [new Required()],
+            'login'             => [new Required()],
+            'password'          => $this->passwordRules(),
+            'newPassword'       => [new Required()],
             'newPasswordVerify' => $this->newPasswordVerifyRules(),
         ];
     }
@@ -113,6 +115,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
                     if (!$this->authService->login($this->login, $this->password)) {
                         $result->addError($this->translator->translate('validator.invalid.login.password'));
                     }
+
                     return $result;
                 },
                 skipOnEmpty: true,
@@ -133,6 +136,7 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
                     if ($this->newPassword !== $this->newPasswordVerify) {
                         $result->addError($this->translator->translate('validator.password.not.match.new'));
                     }
+
                     return $result;
                 },
                 skipOnEmpty: true,

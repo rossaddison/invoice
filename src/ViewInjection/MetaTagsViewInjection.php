@@ -18,7 +18,7 @@ final class MetaTagsViewInjection implements MetaTagsInjectionInterface
     {
         return [
             'generator' => [
-                'name' => 'generator',
+                'name'    => 'generator',
                 'content' => 'Yii',
             ],
         ];

@@ -8,7 +8,9 @@ use App\Invoice\Entity\UnitPeppol;
 
 final readonly class UnitPeppolService
 {
-    public function __construct(private UnitPeppolRepository $repository) {}
+    public function __construct(private UnitPeppolRepository $repository)
+    {
+    }
 
     public function saveUnitPeppol(UnitPeppol $model, array $array): void
     {

@@ -12,27 +12,26 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Entity\PaymentPeppol $paymentpeppol
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
+ * @var PaymentPeppol                          $paymentpeppol
+ * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Widget\GridComponents              $gridComponents
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Router\CurrentRoute $routeCurrent
+ * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var Yiisoft\Router\CurrentRoute            $routeCurrent
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var string $alert
- * @var string $csrf
- * @var string $id
+ * @var string                                 $alert
+ * @var string                                 $csrf
+ * @var string                                 $id
  */
-
 echo $alert;
 ?>
-<h1><?= $translator->translate('paymentpeppol') ?></h1>
+<h1><?php echo $translator->translate('paymentpeppol'); ?></h1>
 <?php
     $columns = [
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn(PaymentPeppol $model) => $model->getId(),
+            content: static fn (PaymentPeppol $model) => $model->getId(),
         ),
         new DataColumn(
             header: $translator->translate('view'),
@@ -54,9 +53,9 @@ echo $alert;
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                            'type' => 'submit',
-                            'class' => 'dropdown-button',
-                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                            'type'    => 'submit',
+                            'class'   => 'dropdown-button',
+                            'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
                         ],
                     ),
                     $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->getId()]),
@@ -68,25 +67,25 @@ echo $alert;
 ?>
 <?php
 $header = Div::tag()
-  ->addClass('row')
-  ->content(
-      H5::tag()
-        ->addClass('bg-primary text-white p-3 rounded-top')
-        ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('paymentpeppol')),
-        ),
-  )
-->render();
+    ->addClass('row')
+    ->content(
+        H5::tag()
+            ->addClass('bg-primary text-white p-3 rounded-top')
+            ->content(
+                I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('paymentpeppol')),
+            ),
+    )
+    ->render();
 $toolbarReset = A::tag()
-  ->addAttributes(['type' => 'reset'])
-  ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-  ->href($urlGenerator->generate($routeCurrent->getName() ?? 'paymentpeppol/index'))
-  ->id('btn-reset')
-  ->render();
-$toolbar = Div::tag();
-$toolbarString = Form::tag()->post($urlGenerator->generate('paymentpeppol/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+    ->addAttributes(['type' => 'reset'])
+    ->addClass('btn btn-danger me-1 ajax-loader')
+    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($routeCurrent->getName() ?? 'paymentpeppol/index'))
+    ->id('btn-reset')
+    ->render();
+$toolbar       = Div::tag();
+$toolbarString = Form::tag()->post($urlGenerator->generate('paymentpeppol/index'))->csrf($csrf)->open().
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
     Form::tag()->close();
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -96,16 +95,16 @@ $grid_summary = $s->grid_summary(
     '',
 );
 echo GridView::widget()
-  ->bodyRowAttributes(['class' => 'align-middle'])
-  ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-delivery'])
-  ->columns(...$columns)
-  ->dataReader($paginator)
-  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-  ->header($header)
-  ->id('w137-grid')
-  ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-  ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate($grid_summary)
-  ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('no.records'))
-  ->toolbar($toolbarString);
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-delivery'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w137-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);

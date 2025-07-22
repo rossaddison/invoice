@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\ProductImage;
 
 use App\Invoice\Entity\ProductImage;
+use DateTimeImmutable;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
-use DateTimeImmutable;
 
 final class ProductImageForm extends FormModel
 {
@@ -24,12 +24,12 @@ final class ProductImageForm extends FormModel
     public function __construct(ProductImage $productImage, private readonly ?int $product_id)
     {
         $this->file_name_original = $productImage->getFile_name_original();
-        $this->file_name_new = $productImage->getFile_name_new();
-        $this->description = $productImage->getDescription();
-        $this->uploaded_date = $productImage->getUploaded_date();
+        $this->file_name_new      = $productImage->getFile_name_new();
+        $this->description        = $productImage->getDescription();
+        $this->uploaded_date      = $productImage->getUploaded_date();
     }
 
-    public function getProduct_id(): int|null
+    public function getProduct_id(): ?int
     {
         return $this->product_id;
     }
@@ -49,17 +49,15 @@ final class ProductImageForm extends FormModel
         return $this->description;
     }
 
-    public function getUploaded_date(): string|DateTimeImmutable
+    public function getUploaded_date(): string|\DateTimeImmutable
     {
-        /**
+        /*
          * @var DateTimeImmutable|string $this->uploaded_date
          */
         return $this->uploaded_date;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

@@ -9,7 +9,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class TaxSchemeCompanyIdNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     #[\Override]
     public function getName(): string
@@ -17,9 +19,6 @@ final class TaxSchemeCompanyIdNotFoundException extends \RuntimeException implem
         return $this->translator->translate('storecove.tax.scheme.identifier.not.found');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

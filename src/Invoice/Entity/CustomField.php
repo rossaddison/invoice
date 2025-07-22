@@ -17,7 +17,9 @@ class CustomField
         private string $type = '', #[Column(type: 'integer(11)', nullable: true, default: 0)]
         private ?int $location = null, #[Column(type: 'integer(11)', nullable: true, default: 999)]
         private ?int $order = null, #[Column(type: 'bool', default: true)]
-        private bool $required = false) {}
+        private bool $required = false)
+    {
+    }
 
     public function getId(): string
     {

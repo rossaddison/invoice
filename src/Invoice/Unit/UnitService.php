@@ -8,12 +8,10 @@ use App\Invoice\Entity\Unit;
 
 final readonly class UnitService
 {
-    public function __construct(private UnitRepository $repository) {}
+    public function __construct(private UnitRepository $repository)
+    {
+    }
 
-    /**
-     * @param Unit $model
-     * @param array $array
-     */
     public function saveUnit(Unit $model, array $array): void
     {
         isset($array['unit_id']) ? $model->setUnit_id((int) $array['unit_id']) : '';
@@ -22,9 +20,6 @@ final readonly class UnitService
         $this->repository->save($model);
     }
 
-    /**
-     * @param Unit $model
-     */
     public function deleteUnit(Unit $model): void
     {
         $this->repository->delete($model);

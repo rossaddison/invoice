@@ -6,9 +6,9 @@ namespace App\Command\Invoice;
 
 use App\Auth\Identity;
 use App\Auth\Token;
-use App\User\User;
-use App\Invoice\Entity\UserInv;
 use App\Invoice\Entity\UserClient;
+use App\Invoice\Entity\UserInv;
+use App\User\User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,7 +38,6 @@ final class UserRelatedTruncate5Command extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
-
         $io = new SymfonyStyle($input, $output);
 
         $tables = ['user_client', 'user_inv', 'token', 'identity', 'user'];
@@ -52,24 +51,22 @@ final class UserRelatedTruncate5Command extends Command
         }
 
         if (0 === count(is_array($findAll = $this->promise
+            ->getORM()
+            ->getRepository(UserClient::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(UserClient::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(UserInv::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(UserInv::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(Token::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Token::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Identity::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(Identity::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(User::class)->findAll()) ? $findAll : iterator_to_array($findAll))) {
             $io->success('Done');
+
             return ExitCode::OK;
         }
         $io->error('Unspecified error');
+
         return ExitCode::UNSPECIFIED_ERROR;
     }
 }

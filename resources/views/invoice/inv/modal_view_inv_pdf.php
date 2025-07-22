@@ -13,11 +13,11 @@ use Yiisoft\Html\Html;
 
 ?>
 
-<?= Html::openTag('iframe',
+<?php echo Html::openTag('iframe',
     [
-        'id' => 'modal-view-inv-pdf',
-        'src' => '',
-        'style' => 'width: 100%; height: 500px;',
+        'id'          => 'modal-view-inv-pdf',
+        'src'         => '',
+        'style'       => 'width: 100%; height: 500px;',
         'frameborder' => '0',
     ]); ?>
-<?= Html::closeTag('iframe'); ?>
+<?php echo Html::closeTag('iframe'); ?>

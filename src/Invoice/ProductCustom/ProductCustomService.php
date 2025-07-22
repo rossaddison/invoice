@@ -8,12 +8,10 @@ use App\Invoice\Entity\ProductCustom;
 
 final readonly class ProductCustomService
 {
-    public function __construct(private ProductCustomRepository $repository) {}
+    public function __construct(private ProductCustomRepository $repository)
+    {
+    }
 
-    /**
-     * @param ProductCustom $model
-     * @param array $array
-     */
     public function saveProductCustom(ProductCustom $model, array $array): void
     {
         $array['product_id'] ? $model->setProduct_id((int) $array['product_id']) : '';
@@ -22,9 +20,6 @@ final readonly class ProductCustomService
         $this->repository->save($model);
     }
 
-    /**
-     * @param ProductCustom $model
-     */
     public function deleteProductCustom(ProductCustom $model): void
     {
         $this->repository->delete($model);

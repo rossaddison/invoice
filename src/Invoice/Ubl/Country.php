@@ -9,7 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class Country implements XmlSerializable
 {
-    public function __construct(private readonly string $identificationCode, private readonly ?string $listId) {}
+    public function __construct(private readonly string $identificationCode, private readonly ?string $listId)
+    {
+    }
 
     // used in StoreCoveHelper
     public function getIdentificationCode(): string
@@ -17,9 +19,6 @@ class Country implements XmlSerializable
         return $this->identificationCode;
     }
 
-    /**
-     * @param Writer $writer
-     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
@@ -31,16 +30,16 @@ class Country implements XmlSerializable
         }
 
         $writer->write([
-            'name' => Schema::CBC . 'IdentificationCode',
+            'name'  => Schema::CBC.'IdentificationCode',
             'value' => $this->identificationCode,
-            /**
+            /*
              * Warning
              * Location: invoice_a-362E8wINV107_peppol
              * Element/context: /:Invoice[1]
              * XPath test: not(//cac:Country/cbc:IdentificationCode/@listID)
              * Error message: [UBL-CR-660]-A UBL invoice should not include the Country Identification code listID
              */
-            //'attributes' => $attributes
+            // 'attributes' => $attributes
         ]);
     }
 }

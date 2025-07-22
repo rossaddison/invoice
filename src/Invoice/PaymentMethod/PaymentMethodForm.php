@@ -17,23 +17,21 @@ final class PaymentMethodForm extends FormModel
 
     public function __construct(PaymentMethod $paymentMethod)
     {
-        $this->name = $paymentMethod->getName();
+        $this->name   = $paymentMethod->getName();
         $this->active = $paymentMethod->getActive();
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getActive(): bool|null
+    public function getActive(): ?bool
     {
         return $this->active;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

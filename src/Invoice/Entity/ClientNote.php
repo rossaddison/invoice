@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\ClientNote\ClientNoteRepository::class)]
@@ -22,7 +21,9 @@ class ClientNote
     public function __construct(#[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null, #[Column(type: 'longText', nullable: false)]
         private string $note = '', #[Column(type: 'date', nullable: false)]
-        private mixed $date_note = '') {}
+        private mixed $date_note = '')
+    {
+    }
 
     public function getClient(): ?Client
     {
@@ -37,9 +38,9 @@ class ClientNote
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
-        return $this->id === null ? null : (string) $this->id;
+        return null === $this->id ? null : (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -57,15 +58,15 @@ class ClientNote
         $this->client_id = $client_id;
     }
 
-    public function getDate_note(): string|DateTimeImmutable
+    public function getDate_note(): string|\DateTimeImmutable
     {
-        /**
+        /*
          * @var DateTimeImmutable|string $this->date_note
          */
         return $this->date_note;
     }
 
-    public function setDate_note(DateTime $date_note): void
+    public function setDate_note(\DateTime $date_note): void
     {
         $this->date_note = $date_note;
     }

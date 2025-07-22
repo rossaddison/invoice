@@ -8,12 +8,10 @@ use App\Invoice\Entity\EmailTemplate;
 
 final readonly class EmailTemplateService
 {
-    public function __construct(private EmailTemplateRepository $repository) {}
+    public function __construct(private EmailTemplateRepository $repository)
+    {
+    }
 
-    /**
-     * @param EmailTemplate $model
-     * @param array $array
-     */
     public function saveEmailTemplate(EmailTemplate $model, array $array): void
     {
         isset($array['email_template_title']) ? $model->setEmail_template_title((string) $array['email_template_title']) : '';
@@ -28,9 +26,6 @@ final readonly class EmailTemplateService
         $this->repository->save($model);
     }
 
-    /**
-     * @param EmailTemplate $model
-     */
     public function deleteEmailTemplate(EmailTemplate $model): void
     {
         $this->repository->delete($model);

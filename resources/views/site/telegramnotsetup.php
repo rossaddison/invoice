@@ -7,13 +7,13 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
  * @see \src\ViewInjection\CommonViewInjection.php
+ *
  * @var array $telegramnotsetup
  */
-
 $alert = Alert::widget()
-        ->addClass('shadow')
-        ->variant(AlertVariant::WARNING)
-        ->body((string) $telegramnotsetup['telegramNotSetup'], true)
-        ->dismissable(true)
-        ->render();
+    ->addClass('shadow')
+    ->variant(AlertVariant::WARNING)
+    ->body((string) $telegramnotsetup['telegramNotSetup'], true)
+    ->dismissable(true)
+    ->render();
 echo $alert;

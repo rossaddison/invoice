@@ -13,39 +13,38 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
+ * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Widget\GridComponents              $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var string $alert
- * @var string $csrf
+ * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var string                                 $alert
+ * @var string                                 $csrf
  */
-
 echo $alert;
 
 ?>
-<h1><?= $translator->translate('product.property'); ?></h1>
+<h1><?php echo $translator->translate('product.property'); ?></h1>
 <?php
     $header = Div::tag()
-      ->addClass('row')
-      ->content(
-          H5::tag()
-        ->addClass('bg-primary text-white p-3 rounded-top')
+        ->addClass('row')
         ->content(
-            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('product.property')),
-        ),
-      )
-      ->render();
+            H5::tag()
+                ->addClass('bg-primary text-white p-3 rounded-top')
+                ->content(
+                    I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('product.property')),
+                ),
+        )
+        ->render();
 
 $toolbarReset = A::tag()
-  ->addAttributes(['type' => 'reset'])
-  ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-  ->href($urlGenerator->generate($currentRoute->getName() ?? 'productproperty/index '))
-  ->id('btn-reset')
-  ->render();
+    ->addAttributes(['type' => 'reset'])
+    ->addClass('btn btn-danger me-1 ajax-loader')
+    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'productproperty/index '))
+    ->id('btn-reset')
+    ->render();
 
 $toolbar = Div::tag();
 
@@ -60,12 +59,12 @@ $columns = [
     new DataColumn(
         'name',
         header: $translator->translate('product.property.name'),
-        content: static fn(ProductProperty $model) => Html::encode($model->getName()),
+        content: static fn (ProductProperty $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'value',
         header: $translator->translate('product.property.value'),
-        content: static fn(ProductProperty $model) => Html::encode($model->getValue()),
+        content: static fn (ProductProperty $model) => Html::encode($model->getValue()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -87,9 +86,9 @@ $columns = [
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'type'    => 'submit',
+                        'class'   => 'dropdown-button',
+                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
                     ],
                 ),
                 $urlGenerator->generate('productproperty/delete', ['id' => $model->getProperty_id()]),
@@ -105,20 +104,20 @@ $grid_summary = $s->grid_summary(
     $translator->translate('product.property'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('productproperty/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('productproperty/index'))->csrf($csrf)->open().
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
         Form::tag()->close();
 echo GridView::widget()
-  ->bodyRowAttributes(['class' => 'align-middle'])
-  ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-productproperty'])
-  ->columns(...$columns)
-  ->dataReader($paginator)
-  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-  ->header($header)
-  ->id('w28-grid')
-  ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-  ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate($grid_summary)
-  ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-  ->emptyText($translator->translate('no.records'))
-  ->toolbar($toolbarString);
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-productproperty'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w28-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);

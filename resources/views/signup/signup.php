@@ -11,7 +11,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 
-/**
+/*
  * @var SignupForm                              $formModel
  * @var Yiisoft\Router\CurrentRoute             $currentRoute
  * @var WebView                                 $this
@@ -49,78 +49,78 @@ $this->setTitle($translator->translate('menu.signup'));
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?php echo Html::encode($this->getTitle()); ?></h1>
                 </div>
                 <div class="text-center">
                     <?php $button = new Button($currentRoute, $translator, $urlGenerator); ?>
                      <?php if ((strlen($developerSandboxHmrcAuthUrl ?: '') > 0) && !$noDeveloperSandboxHmrcContinueButton) { ?>
                         <br><br>
-                        <?= $button->developerSandboxHmrc($developerSandboxHmrcAuthUrl); ?>
+                        <?php echo $button->developerSandboxHmrc($developerSandboxHmrcAuthUrl); ?>
                     <?php } ?>
                     <?php if ((strlen($facebookAuthUrl ?: '') > 0) && !$noFacebookContinueButton) { ?>
                         <br><br>
-                        <?= $button->facebook($facebookAuthUrl); ?>
+                        <?php echo $button->facebook($facebookAuthUrl); ?>
                     <?php } ?>
                     <?php if ((strlen($githubAuthUrl ?: '') > 0) && !$noGithubContinueButton) { ?>
                         <br><br>
-                        <?= $button->github($githubAuthUrl ?: ''); ?>
+                        <?php echo $button->github($githubAuthUrl ?: ''); ?>
                     <?php } ?>    
                     <?php if ((strlen($googleAuthUrl ?: '') > 0) && !$noGoogleContinueButton) { ?>
                         <br><br>
-                        <?= $button->google($googleAuthUrl ?: ''); ?>
+                        <?php echo $button->google($googleAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($govUkAuthUrl ?: '') > 0) && !$noGovUkContinueButton) { ?>
                         <br><br>
-                        <?= $button->govuk($govUkAuthUrl ?: ''); ?>
+                        <?php echo $button->govuk($govUkAuthUrl ?: ''); ?>
                     <?php } ?>    
                     <?php if ((strlen($linkedInAuthUrl ?: '') > 0) && !$noLinkedInContinueButton) { ?>
                         <br><br>
-                        <?= $button->linkedin($linkedInAuthUrl ?: ''); ?>
+                        <?php echo $button->linkedin($linkedInAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
                         <br><br>
-                        <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
+                        <?php echo $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
                         <br><br>
-                        <?= $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
+                        <?php echo $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
                         <br><br>
-                        <?= $button->x($xAuthUrl ?: ''); ?>
+                        <?php echo $button->x($xAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($yandexAuthUrl ?: '') > 0) && !$noYandexContinueButton) { ?>
                         <br><br>
-                        <?= $button->yandex($yandexAuthUrl ?: ''); ?>
+                        <?php echo $button->yandex($yandexAuthUrl ?: ''); ?>
                     <?php } ?>       
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= Form::tag()
+                    <?php echo Form::tag()
                         ->post($urlGenerator->generate('auth/signup'))
                         ->csrf($csrf)
                         ->id('signupForm')
                         ->open();
 ?>
-                    <?= Field::text($formModel, 'login')
+                    <?php echo Field::text($formModel, 'login')
     ->label($translator->translate('layout.login'))
-    ->autofocus()
+    ->autofocus();
 ?>
-                    <?= Field::email($formModel, 'email')
+                    <?php echo Field::email($formModel, 'email')
     ->label($translator->translate('email'))
-    ->autofocus()
+    ->autofocus();
 ?>
-                    <?= Field::password($formModel, 'password')
-    ->label($translator->translate('layout.password'))
+                    <?php echo Field::password($formModel, 'password')
+    ->label($translator->translate('layout.password'));
 ?>
-                    <?= Field::password($formModel, 'passwordVerify')
-    ->label($translator->translate('layout.password-verify.new'))
+                    <?php echo Field::password($formModel, 'passwordVerify')
+    ->label($translator->translate('layout.password-verify.new'));
 ?>
-                    <?= Field::submitButton()
+                    <?php echo Field::submitButton()
     ->buttonId('register-button')
     ->name('register-button')
-    ->content($translator->translate('layout.submit'))
+    ->content($translator->translate('layout.submit'));
 ?>
-                    <?= Form::tag()->close() ?>
+                    <?php echo Form::tag()->close(); ?>
                 </div>
             </div>
         </div>

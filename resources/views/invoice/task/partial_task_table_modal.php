@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Project\ProjectRepository $prjctR
@@ -17,12 +17,12 @@ use Yiisoft\Html\Html;
     <table id="tasks_table" class="table table-hover table-bordered table-striped no-margin">
         <tr>
             <th>&nbsp;</th>
-            <th><?= $translator->translate('project.name'); ?></th>
-            <th><?= $translator->translate('task.name'); ?></th>
-            <th><?= $translator->translate('task.finish.date'); ?></th>
-            <th><?= $translator->translate('task.description'); ?></th>
+            <th><?php echo $translator->translate('project.name'); ?></th>
+            <th><?php echo $translator->translate('task.name'); ?></th>
+            <th><?php echo $translator->translate('task.finish.date'); ?></th>
+            <th><?php echo $translator->translate('task.description'); ?></th>
             <th class="text-right">
-                <?= $translator->translate('task.price'); ?></th>
+                <?php echo $translator->translate('task.price'); ?></th>
         </tr>
 
         <?php
@@ -33,18 +33,18 @@ use Yiisoft\Html\Html;
             <tr class="task-row">
                 <td class="text-left">
                     <input type="checkbox" class="modal-task-id" name="task_ids[]"
-                           id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
+                           id="task-id-<?php echo $task->getId(); ?>" value="<?php echo $task->getId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= ($prjctR->count($task->getProject_id()) > 0 ? $prjctR->repoProjectquery($task->getProject_id())?->getName() : '') ?></b>
+                    <b><?php echo $prjctR->count($task->getProject_id()) > 0 ? $prjctR->repoProjectquery($task->getProject_id())?->getName() : ''; ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($task->getName()); ?></b>
+                    <b><?php echo Html::encode($task->getName()); ?></b>
                 </td>
                 <td>
                     <?php
                         $finishDate = $task->getFinish_date();
-                if ($finishDate instanceof \DateTimeImmutable) {
+                if ($finishDate instanceof DateTimeImmutable) {
                     $fDate = $finishDate->format('Y-m-d');
                 }
                 if (is_string($finishDate)) {
@@ -54,13 +54,13 @@ use Yiisoft\Html\Html;
                     $fDate = $finishDate;
                 }
                 ?>
-                    <b><?= Html::encode($fDate); ?></b>
+                    <b><?php echo Html::encode($fDate); ?></b>
                 </td>
                 <td>
-                    <?= nl2br(Html::encode($task->getDescription())); ?>
+                    <?php echo nl2br(Html::encode($task->getDescription())); ?>
                 </td>
                 <td class="amount">
-                    <?= $numberHelper->format_currency($task->getPrice()); ?>
+                    <?php echo $numberHelper->format_currency($task->getPrice()); ?>
                 </td>
             </tr>
         <?php } ?>

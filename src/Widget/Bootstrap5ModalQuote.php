@@ -6,9 +6,9 @@ namespace App\Widget;
 
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Group\GroupRepository;
+use App\Invoice\Quote\QuoteForm;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserClient\UserClientRepository;
-use App\Invoice\Quote\QuoteForm;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -28,45 +28,43 @@ final class Bootstrap5ModalQuote
         private readonly QuoteForm $quoteForm,
     ) {
         $this->layoutParameters = [];
-        $this->formParameters = [];
+        $this->formParameters   = [];
     }
 
     public function renderPartialLayoutWithFormAsString(string $origin, array $errors): string
     {
-        $defaultGroupId = $this->sR->getSetting('default_quote_group');
+        $defaultGroupId   = $this->sR->getSetting('default_quote_group');
         $optionsGroupData = [];
-        $groups = $this->gR->findAllPreloaded();
-        /**
+        $groups           = $this->gR->findAllPreloaded();
+        /*
          * @var \App\Invoice\Entity\Group
          */
         foreach ($groups as $group) {
             $optionsGroupData[$group->getId()] = $group->getName();
         }
         $this->formParameters = [
-            'origin' => $origin,
-            'title' => $this->translator->translate('add'),
-            'actionName' => 'quote/add',
+            'origin'          => $origin,
+            'title'           => $this->translator->translate('add'),
+            'actionName'      => 'quote/add',
             'actionArguments' => ['origin' => $origin],
-            'errors' => $errors,
-            'form' => $this->quoteForm,
-            'clients' => $this->cR->optionsData($this->ucR),
-            'groups' => $optionsGroupData,
-            'defaultGroupId' => $defaultGroupId,
-            'urlKey' => Random::string(32),
+            'errors'          => $errors,
+            'form'            => $this->quoteForm,
+            'clients'         => $this->cR->optionsData($this->ucR),
+            'groups'          => $optionsGroupData,
+            'defaultGroupId'  => $defaultGroupId,
+            'urlKey'          => Random::string(32),
         ];
         $this->layoutParameters = [
             'type' => 'quote',
             'form' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_add_quote_form', $this->formParameters),
         ];
+
         return $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_layout', $this->layoutParameters);
     }
 
-    /**
-     * @return array
-     */
     public function getFormParameters(): array
     {
-        /**
+        /*
          * @var array $this->formParameters
          */
         return $this->formParameters;

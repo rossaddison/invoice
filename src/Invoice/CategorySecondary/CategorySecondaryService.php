@@ -8,7 +8,9 @@ use App\Invoice\Entity\CategorySecondary;
 
 final readonly class CategorySecondaryService
 {
-    public function __construct(private CategorySecondaryRepository $repository) {}
+    public function __construct(private CategorySecondaryRepository $repository)
+    {
+    }
 
     public function saveCategorySecondary(CategorySecondary $model, array $array): void
     {

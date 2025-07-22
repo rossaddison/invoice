@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Auth\Controller;
 
 use App\Auth\AuthService;
+use App\Auth\Form\ChangePasswordForm;
 use App\Auth\Identity;
 use App\Auth\IdentityRepository;
-use App\Auth\Form\ChangePasswordForm;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
-use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -29,10 +29,10 @@ final class ChangePasswordController
         private readonly WebControllerService $webService,
         private ViewRenderer $viewRenderer,
     ) {
-        $this->currentUser = $currentUser;
-        $this->session = $session;
-        $this->flash = $flash;
-        $this->translator = $translator;
+        $this->currentUser  = $currentUser;
+        $this->session      = $session;
+        $this->flash        = $flash;
+        $this->translator   = $translator;
         $this->viewRenderer = $viewRenderer->withControllerName('changepassword');
     }
 
@@ -54,11 +54,12 @@ final class ChangePasswordController
             if (null !== $identity) {
                 /**
                  *  Identity and User are in a HasOne relationship so no null value
-                 *  Get the username or emailaddress of the current user
+                 *  Get the username or emailaddress of the current user.
+                 *
                  *  @see src\User\User function getLogin()
                  */
                 $login = $identity->getUser()?->getLogin();
-                if ($request->getMethod() === Method::POST
+                if (Method::POST === $request->getMethod()
                   && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
                   && $changePasswordForm->change()
                 ) {
@@ -69,12 +70,14 @@ final class ChangePasswordController
                     // The authService logout function will regenerate the auth key here => overwriting any auth key
                     $authService->logout();
                     $this->flashMessage('success', $this->translator->translate('validator.password.change'));
+
                     return $this->redirectToMain();
                 }
+
                 return $this->viewRenderer->render('change', [
                     'formModel' => $changePasswordForm,
-                    'login' => $login,
-                    /**
+                    'login'     => $login,
+                    /*
                      * @see resources\rbac\items.php
                      * @see https://github.com/yiisoft/demo/pull/602
                      */
@@ -82,23 +85,21 @@ final class ChangePasswordController
                 ]);
             } // identity
         } // identityId
+
         return $this->redirectToMain();
     } // reset
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash|null
-     */
-    private function flashMessage(string $level, string $message): Flash|null
+    private function flashMessage(string $level, string $message): ?Flash
     {
-        /**
+        /*
          * @see Prevent empty messages from being added to the queue
          */
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
+
             return $this->flash;
         }
+
         return null;
     }
 
