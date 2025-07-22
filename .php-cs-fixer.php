@@ -25,7 +25,21 @@ return (new Config())
     ->setParallelConfig(ParallelConfigFactory::detect())
     ->setRules([
         '@PER-CS2.0' => true,
+        '@Symfony' => true,
         'no_unused_imports' => true,
+        'array_syntax' => [
+            'syntax' => 'short'
+        ],
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha'
+        ],
+        'single_quote' => true,
+        'binary_operator_spaces' => [
+            'default' => 'align_single_space_minimal'
+        ],
+        'blank_line_before_statement' => [
+            'statements' => ['return']
+        ],
         'method_chaining_indentation' => true,
     ])
     ->setFinder($finder);
