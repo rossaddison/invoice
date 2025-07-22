@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01e0153243ae1bfbf3e178bbfe3fdd50",
+    "content-hash": "5d5550737b639d4b2f9392be6c09b5de",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1675,19 +1675,20 @@
         },
         {
             "name": "cycle/annotated",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/annotated.git",
-                "reference": "35890d8fe16b6a7a29cbacef5715d31b13b78212"
+                "reference": "f996d3ee0c22aa8f2c03dca5d693408f8b7fdbbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/annotated/zipball/35890d8fe16b6a7a29cbacef5715d31b13b78212",
-                "reference": "35890d8fe16b6a7a29cbacef5715d31b13b78212",
+                "url": "https://api.github.com/repos/cycle/annotated/zipball/f996d3ee0c22aa8f2c03dca5d693408f8b7fdbbe",
+                "reference": "f996d3ee0c22aa8f2c03dca5d693408f8b7fdbbe",
                 "shasum": ""
             },
             "require": {
+                "cycle/database": "^2.15",
                 "cycle/orm": "^2.9.2",
                 "cycle/schema-builder": "^2.11.1",
                 "doctrine/inflector": "^2.0",
@@ -1744,20 +1745,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-14T14:48:40+00:00"
+            "time": "2025-07-22T06:19:06+00:00"
         },
         {
             "name": "cycle/database",
-            "version": "2.14.0",
+            "version": "2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/database.git",
-                "reference": "876fbc2bc0d068f047388c0bd9b354e4d891af07"
+                "reference": "3d7ee3524b299c5897e2b03dc51bad2ddd609a90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/database/zipball/876fbc2bc0d068f047388c0bd9b354e4d891af07",
-                "reference": "876fbc2bc0d068f047388c0bd9b354e4d891af07",
+                "url": "https://api.github.com/repos/cycle/database/zipball/3d7ee3524b299c5897e2b03dc51bad2ddd609a90",
+                "reference": "3d7ee3524b299c5897e2b03dc51bad2ddd609a90",
                 "shasum": ""
             },
             "require": {
@@ -1837,20 +1838,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-14T11:36:41+00:00"
+            "time": "2025-07-22T05:27:52+00:00"
         },
         {
             "name": "cycle/entity-behavior",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/entity-behavior.git",
-                "reference": "49b0c71485855f16193b0720d637d822d65f688c"
+                "reference": "0c8d84fb3eaa50ec426f336a158d62ad2b4a83b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/entity-behavior/zipball/49b0c71485855f16193b0720d637d822d65f688c",
-                "reference": "49b0c71485855f16193b0720d637d822d65f688c",
+                "url": "https://api.github.com/repos/cycle/entity-behavior/zipball/0c8d84fb3eaa50ec426f336a158d62ad2b4a83b6",
+                "reference": "0c8d84fb3eaa50ec426f336a158d62ad2b4a83b6",
                 "shasum": ""
             },
             "require": {
@@ -1912,7 +1913,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-14T19:37:04+00:00"
+            "time": "2025-07-22T05:27:05+00:00"
         },
         {
             "name": "cycle/migrations",
@@ -7463,16 +7464,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.18",
+            "version": "2.1.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ee1f390b7a70cdf74a2b737e554f68afea885db7"
+                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ee1f390b7a70cdf74a2b737e554f68afea885db7",
-                "reference": "ee1f390b7a70cdf74a2b737e554f68afea885db7",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/473a8c30e450d87099f76313edcbb90852f9afdf",
+                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf",
                 "shasum": ""
             },
             "require": {
@@ -7517,7 +7518,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T17:22:31+00:00"
+            "time": "2025-07-21T19:58:24+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
@@ -9129,16 +9130,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "4.14.1",
+            "version": "4.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "a28c4a6f5fda2bf730789a638501d7a737a64eda"
+                "reference": "bfeec74303d60d3f8bc33701ab3e86f8a8729f17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/a28c4a6f5fda2bf730789a638501d7a737a64eda",
-                "reference": "a28c4a6f5fda2bf730789a638501d7a737a64eda",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/bfeec74303d60d3f8bc33701ab3e86f8a8729f17",
+                "reference": "bfeec74303d60d3f8bc33701ab3e86f8a8729f17",
                 "shasum": ""
             },
             "require": {
@@ -9202,7 +9203,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/4.14.1"
+                "source": "https://github.com/getsentry/sentry-php/tree/4.14.2"
             },
             "funding": [
                 {
@@ -9214,7 +9215,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-06-23T15:25:52+00:00"
+            "time": "2025-07-21T08:28:29+00:00"
         },
         {
             "name": "setasign/fpdf",
@@ -13340,12 +13341,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "46f8cf3ae471d896d9ac9a4e121e610978978109"
+                "reference": "de8fb61c5c2d039c75bb2f4e6b6723a84f66597e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/46f8cf3ae471d896d9ac9a4e121e610978978109",
-                "reference": "46f8cf3ae471d896d9ac9a4e121e610978978109",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/de8fb61c5c2d039c75bb2f4e6b6723a84f66597e",
+                "reference": "de8fb61c5c2d039c75bb2f4e6b6723a84f66597e",
                 "shasum": ""
             },
             "require": {
@@ -13417,7 +13418,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-04T04:19:43+00:00"
+            "time": "2025-07-21T10:54:53+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14415,12 +14416,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "9f3aa25a83042e84561e1fd8512886e553f02d2e"
+                "reference": "6f0ad98d9bcd1f5ef2ddb7b4b6a7cf04b54d5fa6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/9f3aa25a83042e84561e1fd8512886e553f02d2e",
-                "reference": "9f3aa25a83042e84561e1fd8512886e553f02d2e",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/6f0ad98d9bcd1f5ef2ddb7b4b6a7cf04b54d5fa6",
+                "reference": "6f0ad98d9bcd1f5ef2ddb7b4b6a7cf04b54d5fa6",
                 "shasum": ""
             },
             "require": {
@@ -14492,7 +14493,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-20T08:29:11+00:00"
+            "time": "2025-07-21T10:54:30+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14500,12 +14501,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "5f108cd01f9a01a9f8a624363f6a618ac92955cf"
+                "reference": "dc5f0e08c75aab48bb44eff65b863729defc94f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/5f108cd01f9a01a9f8a624363f6a618ac92955cf",
-                "reference": "5f108cd01f9a01a9f8a624363f6a618ac92955cf",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/dc5f0e08c75aab48bb44eff65b863729defc94f3",
+                "reference": "dc5f0e08c75aab48bb44eff65b863729defc94f3",
                 "shasum": ""
             },
             "require": {
@@ -14570,7 +14571,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-20T08:29:51+00:00"
+            "time": "2025-07-21T10:54:36+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -15075,37 +15076,37 @@
         },
         {
             "name": "yiisoft/form-model",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form-model.git",
-                "reference": "f0b6eb17d1a9d04fefbab4013b5177207ed0574a"
+                "reference": "9b45c7f8b4fe103f9571e9931291ea3f1155d466"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form-model/zipball/f0b6eb17d1a9d04fefbab4013b5177207ed0574a",
-                "reference": "f0b6eb17d1a9d04fefbab4013b5177207ed0574a",
+                "url": "https://api.github.com/repos/yiisoft/form-model/zipball/9b45c7f8b4fe103f9571e9931291ea3f1155d466",
+                "reference": "9b45c7f8b4fe103f9571e9931291ea3f1155d466",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.1",
-                "psr/http-message": "^1.0|^2.0",
+                "php": "8.1 - 8.4",
+                "psr/http-message": "^1.0 || ^2.0",
                 "yiisoft/form": "^1.0",
                 "yiisoft/html": "^3.3",
                 "yiisoft/hydrator": "^1.3",
                 "yiisoft/strings": "^2.3",
-                "yiisoft/validator": "^2.1"
+                "yiisoft/validator": "^2.5"
             },
             "require-dev": {
-                "httpsoft/http-message": "^1.1",
-                "maglnet/composer-require-checker": "^4.7",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^1.2",
-                "roave/infection-static-analysis-plugin": "^1.34",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.25",
-                "yiisoft/di": "^1.2"
+                "httpsoft/http-message": "^1.1.6",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "phpunit/phpunit": "^10.5.45",
+                "rector/rector": "^2.0.11",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26.1 || ^6.10",
+                "yiisoft/di": "^1.3"
             },
             "type": "library",
             "extra": {
@@ -15149,7 +15150,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-09-13T07:16:51+00:00"
+            "time": "2025-07-22T07:51:28+00:00"
         },
         {
             "name": "yiisoft/friendly-exception",
@@ -17516,16 +17517,16 @@
         },
         {
             "name": "yiisoft/view",
-            "version": "12.2.0",
+            "version": "12.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/view.git",
-                "reference": "a60d15eb6c12cf0953f8dba340461af25bc81069"
+                "reference": "0c4aaa20f48a80ad075da886a8419044f367b0f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/view/zipball/a60d15eb6c12cf0953f8dba340461af25bc81069",
-                "reference": "a60d15eb6c12cf0953f8dba340461af25bc81069",
+                "url": "https://api.github.com/repos/yiisoft/view/zipball/0c4aaa20f48a80ad075da886a8419044f367b0f7",
+                "reference": "0c4aaa20f48a80ad075da886a8419044f367b0f7",
                 "shasum": ""
             },
             "require": {
@@ -17538,13 +17539,13 @@
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.7.1",
-                "phpunit/phpunit": "^10.5.46",
-                "rector/rector": "^2.0.16",
+                "phpunit/phpunit": "^10.5.48",
+                "rector/rector": "^2.1.2",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.8.9",
                 "yiisoft/aliases": "^3.0",
-                "yiisoft/di": "^1.3",
+                "yiisoft/di": "^1.4",
                 "yiisoft/psr-dummy-provider": "^1.0.2",
                 "yiisoft/test-support": "^3.0.2"
             },
@@ -17592,7 +17593,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-05-16T06:56:40+00:00"
+            "time": "2025-07-20T15:13:49+00:00"
         },
         {
             "name": "yiisoft/widget",
@@ -21858,12 +21859,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "5e472fed1bcf8d3a967247576053a20ef3cfefc0"
+                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5e472fed1bcf8d3a967247576053a20ef3cfefc0",
-                "reference": "5e472fed1bcf8d3a967247576053a20ef3cfefc0",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
+                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
                 "shasum": ""
             },
             "conflict": {
@@ -22024,7 +22025,7 @@
                 "doctrine/mongodb-odm": "<1.0.2",
                 "doctrine/mongodb-odm-bundle": "<3.0.1",
                 "doctrine/orm": ">=1,<1.2.4|>=2,<2.4.8|>=2.5,<2.5.1|>=2.8.3,<2.8.4",
-                "dolibarr/dolibarr": "<19.0.2|==21.0.0.0-beta",
+                "dolibarr/dolibarr": "<=21.0.2",
                 "dompdf/dompdf": "<2.0.4",
                 "doublethreedigital/guest-entries": "<3.1.2",
                 "drupal/admin_audit_trail": "<1.0.5",
@@ -22060,7 +22061,7 @@
                 "elefant/cms": "<2.0.7",
                 "elgg/elgg": "<3.3.24|>=4,<4.0.5",
                 "elijaa/phpmemcacheadmin": "<=1.3",
-                "elmsln/haxcms": "<11",
+                "elmsln/haxcms": "<11.0.8",
                 "encore/laravel-admin": "<=1.8.19",
                 "endroid/qr-code-bundle": "<3.4.2",
                 "enhavo/enhavo-app": "<=0.13.1",
@@ -22188,10 +22189,10 @@
                 "imdbphp/imdbphp": "<=5.1.1",
                 "impresscms/impresscms": "<=1.4.5",
                 "impresspages/impresspages": "<1.0.13",
-                "in2code/femanager": "<5.5.5|>=6,<6.4.1|>=7,<7.4.2|>=8,<8.2.2",
+                "in2code/femanager": "<6.4.2|>=7,<7.5.3|>=8,<8.3.1",
                 "in2code/ipandlanguageredirect": "<5.1.2",
                 "in2code/lux": "<17.6.1|>=18,<24.0.2",
-                "in2code/powermail": "<7.5.1|>=8,<8.5.1|>=9,<10.9.1|>=11,<12.4.1",
+                "in2code/powermail": "<7.5.1|>=8,<8.5.1|>=9,<10.9.1|>=11,<12.5.3|==13",
                 "innologi/typo3-appointments": "<2.0.6",
                 "intelliants/subrion": "<4.2.2",
                 "inter-mediator/inter-mediator": "==5.5",
@@ -22281,8 +22282,10 @@
                 "magneto/core": "<1.9.4.4-dev",
                 "maikuolan/phpmussel": ">=1,<1.6",
                 "mainwp/mainwp": "<=4.4.3.3",
+                "manogi/nova-tiptap": "<=3.2.6",
                 "mantisbt/mantisbt": "<=2.26.3",
                 "marcwillmann/turn": "<0.3.3",
+                "marshmallow/nova-tiptap": "<5.7",
                 "matomo/matomo": "<1.11",
                 "matyhtf/framework": "<3.0.6",
                 "mautic/core": "<5.2.6|>=6.0.0.0-alpha,<6.0.2",
@@ -22513,6 +22516,7 @@
                 "silverstripe/taxonomy": ">=1.3,<1.3.1|>=2,<2.0.1",
                 "silverstripe/userforms": "<3|>=5,<5.4.2",
                 "silverstripe/versioned-admin": ">=1,<1.11.1",
+                "simogeo/filemanager": "<=2.5",
                 "simple-updates/phpwhois": "<=1",
                 "simplesamlphp/saml2": "<=4.16.15|>=5.0.0.0-alpha1,<=5.0.0.0-alpha19",
                 "simplesamlphp/saml2-legacy": "<=4.16.15",
@@ -22807,7 +22811,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-17T21:05:33+00:00"
+            "time": "2025-07-22T16:07:09+00:00"
         },
         {
             "name": "sanmai/later",
