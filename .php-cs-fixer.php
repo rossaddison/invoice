@@ -26,5 +26,6 @@ return (new Config())
     ->setRules([
         '@PER-CS2.0' => true,
         'no_unused_imports' => true,
+        'method_chaining_indentation' => true,
     ])
     ->setFinder($finder);
