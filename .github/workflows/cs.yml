@@ -23,6 +23,7 @@ on:
       - 'fixer-output.txt'
 jobs:
   cs-fix:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     # Settings ...
     # Actions ...
@@ -71,7 +72,7 @@ jobs:
 
       - name: Apply PHP CS Fixer if needed
         if: env.has_changes == 'true'
-        run: php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
+        run: php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php  --process-timeout=300
 
       - name: Create Pull Request for style fixes
         if: env.has_changes == 'true'
