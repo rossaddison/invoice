@@ -6,19 +6,20 @@ namespace App\Invoice\QuoteCustom;
 
 use App\Invoice\Entity\QuoteCustom;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of QuoteCustom
- *
  * @extends Select\Repository<TEntity>
  */
 final class QuoteCustomRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,16 +27,15 @@ final class QuoteCustomRepository extends Select\Repository
     }
 
     /**
-     * Get quotecustoms  without filter.
+     * Get quotecustoms  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-            ->load('custom_field')
-            ->load('quote');
-
+                      ->load('custom_field')
+                      ->load('quote');
         return $this->prepareDataReader($query);
     }
 
@@ -54,9 +54,9 @@ final class QuoteCustomRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|QuoteCustom|null $quotecustom
+     * @throws Throwable
      */
     public function save(array|QuoteCustom|null $quotecustom): void
     {
@@ -64,9 +64,9 @@ final class QuoteCustomRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|QuoteCustom|null $quotecustom
+     * @throws Throwable
      */
     public function delete(array|QuoteCustom|null $quotecustom): void
     {
@@ -81,52 +81,47 @@ final class QuoteCustomRepository extends Select\Repository
         );
     }
 
-    public function repoQuoteCustomquery(string $id): ?QuoteCustom
+    public function repoQuoteCustomquery(string $id): QuoteCustom|null
     {
         $query = $this->select()
-            ->load('custom_field')
-            ->load('quote')
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('custom_field')
+                      ->load('quote')
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $quote_id, string $custom_field_id): ?QuoteCustom
+    public function repoFormValuequery(string $quote_id, string $custom_field_id): QuoteCustom|null
     {
         $query = $this->select()
-            ->where(['quote_id' => $quote_id])
-            ->andWhere(['custom_field_id' => $custom_field_id]);
-
-        return $query->fetchOne();
+                      ->where(['quote_id' => $quote_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
+        return  $query->fetchOne();
     }
 
     public function repoQuoteCustomCount(string $quote_id, string $custom_field_id): int
     {
         $query = $this->select()
-            ->where(['quote_id' => $quote_id])
-            ->andWhere(['custom_field_id' => $custom_field_id]);
-
+                      ->where(['quote_id' => $quote_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
     }
 
     public function repoQuoteCount(string $quote_id): int
     {
         $query = $this->select()
-            ->where(['quote_id' => $quote_id]);
-
+                      ->where(['quote_id' => $quote_id]);
         return $query->count();
     }
 
     /**
-     * Get all fields that have been setup for a particular quote.
+     * Get all fields that have been setup for a particular quote
      *
      * @psalm-return EntityReader
      */
     public function repoFields(string $quote_id): EntityReader
     {
         $query = $this->select()
-            ->where(['quote_id' => $quote_id]);
-
+                      ->where(['quote_id' => $quote_id]);
         return $this->prepareDataReader($query);
     }
 }

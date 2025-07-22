@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Tag\A;
 
-/*
+/**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -18,39 +18,39 @@ use Yiisoft\Html\Tag\A;
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php echo $translator->translate('invoiceplane.tables'); ?>
+                <?= $translator->translate('invoiceplane.tables'); ?>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
-                            <label for="settings[invoiceplane_database_name]"><?php echo $translator->translate('invoiceplane.database.name'); ?></label>
+                            <label for="settings[invoiceplane_database_name]"><?= $translator->translate('invoiceplane.database.name'); ?></label>
                             <?php $body['settings[invoiceplane_database_name]'] = $s->getSetting('invoiceplane_database_name'); ?>
                             <input type="text" name="settings[invoiceplane_database_name]" id="settings[invoiceplane_database_name]"
                                    class="form-control" 
-                                   value="<?php echo $body['settings[invoiceplane_database_name]']; ?>">
+                                   value="<?= $body['settings[invoiceplane_database_name]']; ?>">
                         </div>
                     </div>
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
-                            <label for="settings[invoiceplane_database_username]"><?php echo $translator->translate('invoiceplane.database.username'); ?></label>
+                            <label for="settings[invoiceplane_database_username]"><?= $translator->translate('invoiceplane.database.username'); ?></label>
                             <?php $body['settings[invoiceplane_database_username]'] = $s->getSetting('invoiceplane_database_username'); ?>
                             <input type="text" name="settings[invoiceplane_database_username]" id="settings[invoiceplane_database_username]"
                                    class="form-control" 
-                                   value="<?php echo $body['settings[invoiceplane_database_username]']; ?>">
+                                   value="<?= $body['settings[invoiceplane_database_username]']; ?>">
                         </div>
                     </div>
                     <div class="col-xs-8 col-md-4">
                         <div class="form-group">
-                            <label for="settings[invoiceplane_database_password]"><?php echo $translator->translate('invoiceplane.database.password'); ?></label>
+                            <label for="settings[invoiceplane_database_password]"><?= $translator->translate('invoiceplane.database.password'); ?></label>
                             <?php $body['settings[invoiceplane_database_password]'] = $s->getSetting('invoiceplane_database_password'); ?>
                             <input type="password" name="settings[invoiceplane_database_password]" id="settings[invoiceplane_database_password]"
                                    class="form-control" 
-                                   value="<?php echo $body['settings[invoiceplane_database_password]']; ?>">
+                                   value="<?= $body['settings[invoiceplane_database_password]']; ?>">
                         </div>
                     </div>
                     <div>
-                        <?php echo A::tag()
+                        <?= A::tag()
                             ->href($urlGenerator->generate($actionTestConnectionName, $actionTestConnectionArguments))
                             ->id('btn-reset')
                             ->addAttributes(['type' => 'reset'])
@@ -62,16 +62,16 @@ use Yiisoft\Html\Tag\A;
                     <br>
                     <br>
                     <div>
-                        <?php echo A::tag()
-                            ->href($urlGenerator->generate($actionImportName, $actionImportArguments))
-                            ->id('btn-reset')
-                            ->addAttributes([
-                                'type'    => 'submit',
-                                'onclick' => 'return confirm("'.$translator->translate('invoiceplane.import.proceed.alert').'")',
-                            ])
-                            ->addClass('btn btn-success me-1')
-                            ->content($translator->translate('invoiceplane.import.proceed'))
-                            ->render();
+                        <?= A::tag()
+    ->href($urlGenerator->generate($actionImportName, $actionImportArguments))
+    ->id('btn-reset')
+    ->addAttributes([
+        'type' => 'submit',
+        'onclick' => 'return confirm("' . $translator->translate('invoiceplane.import.proceed.alert') . '")',
+    ])
+    ->addClass('btn btn-success me-1')
+    ->content($translator->translate('invoiceplane.import.proceed'))
+    ->render();
 ?>
                     </div>
                 </div>

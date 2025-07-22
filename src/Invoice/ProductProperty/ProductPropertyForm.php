@@ -21,8 +21,8 @@ final class ProductPropertyForm extends FormModel
 
     public function __construct(ProductProperty $productProperty, private readonly ?int $product_id)
     {
-        $this->name    = $productProperty->getName();
-        $this->value   = $productProperty->getValue();
+        $this->name = $productProperty->getName();
+        $this->value = $productProperty->getValue();
         $this->product = $productProperty->getProduct();
     }
 
@@ -31,22 +31,23 @@ final class ProductPropertyForm extends FormModel
         return $this->product;
     }
 
-    public function getProduct_id(): ?int
+    public function getProduct_id(): int|null
     {
         return $this->product_id;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }
 
     /**
+     * @return string
      * @psalm-return ''
      */
     #[\Override]

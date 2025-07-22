@@ -6,34 +6,35 @@ namespace App\Invoice\PaymentMethod;
 
 use App\Invoice\Entity\PaymentMethod;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of PaymentMethod
- *
  * @extends Select\Repository<TEntity>
  */
 final class PaymentMethodRepository extends Select\Repository
 {
     /**
-     * @param Select<TEntity> $select
-     */
+    * @param Select<TEntity> $select
+    *
+    * @param EntityWriter $entityWriter
+    */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
 
     /**
-     * Get paymentmethods  without filter.
+     * Get paymentmethods  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
-
         return $this->prepareDataReader($query);
     }
 
@@ -52,9 +53,9 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|PaymentMethod|null $paymentmethod
+     * @throws Throwable
      */
     public function save(array|PaymentMethod|null $paymentmethod): void
     {
@@ -62,15 +63,19 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|PaymentMethod|null $paymentmethod
+     * @throws Throwable
      */
     public function delete(array|PaymentMethod|null $paymentmethod): void
     {
         $this->entityWriter->delete([$paymentmethod]);
     }
 
+    /**
+     * @param Select $query
+     * @return EntityReader
+     */
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -80,31 +85,41 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
+     * @param string $id
+     *
+     * @return PaymentMethod|null
+     *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentMethodquery(string $id): ?PaymentMethod
+    public function repoPaymentMethodquery(string $id): PaymentMethod|null
     {
         $query = $this->select()
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
-    }
-
-    public function repoPaymentMethodqueryCount(string $id): int
-    {
-        return $this->select()
-            ->where(['id' => $id])
-            ->count();
-    }
-
-    public function count(): int
-    {
-        return $this->select()
-            ->count();
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
     /**
-     * Get Payment Method with filter active.
+     * @param string $id
+     * @return int
+     */
+    public function repoPaymentMethodqueryCount(string $id): int
+    {
+        return $this->select()
+                      ->where(['id' => $id])
+                      ->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->select()
+                      ->count();
+    }
+
+    /**
+     * Get Payment Method with filter active
      *
      * @psalm-return EntityReader
      */
@@ -112,11 +127,9 @@ final class PaymentMethodRepository extends Select\Repository
     {
         if ($active < 2) {
             $query = $this->select()
-                ->where(['active' => $active]);
-
+                   ->where(['active' => $active]);
             return $this->prepareDataReader($query);
         }
-
         return $this->findAllPreloaded();
     }
 }

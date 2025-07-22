@@ -8,7 +8,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 
-/*
+/**
  * @var TranslatorInterface   $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var CurrentRoute          $currentRoute
@@ -21,7 +21,8 @@ $this->setTitle($translator->translate('layout.not-found'));
     <div class="card-body text-center ">
         <h1 class="card-title display-1 fw-bold">404</h1>
         <p class="card-text">
-            <?php echo $currentPath = $currentRoute->getUri()?->getPath();
+            <?=
+                $currentPath = $currentRoute->getUri()?->getPath();
 null !== $currentPath ?
     $translator->translate('layout.page.not-found', [
         'url' => Html::span(
@@ -32,7 +33,7 @@ null !== $currentPath ?
 ?>
         </p>
         <p>
-            <?php echo Html::a(
+            <?= Html::a(
                 $translator->translate('layout.go.home'),
                 $urlGenerator->generate('site/index'),
                 ['class' => 'btn btn-outline-primary mt-5'],

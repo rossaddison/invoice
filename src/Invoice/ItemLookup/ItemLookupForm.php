@@ -6,8 +6,8 @@ namespace App\Invoice\ItemLookup;
 
 use App\Invoice\Entity\ItemLookup;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\GreaterThan;
 
 final class ItemLookupForm extends FormModel
 {
@@ -22,27 +22,29 @@ final class ItemLookupForm extends FormModel
 
     public function __construct(ItemLookup $itemLookup)
     {
-        $this->name        = $itemLookup->getName();
+        $this->name = $itemLookup->getName();
         $this->description = $itemLookup->getDescription();
-        $this->price       = $itemLookup->getPrice();
+        $this->price = $itemLookup->getPrice();
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string|null
     {
         return $this->description;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float|null
     {
         return $this->price;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

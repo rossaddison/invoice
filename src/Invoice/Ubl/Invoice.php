@@ -5,44 +5,48 @@ declare(strict_types=1);
 namespace App\Invoice\Ubl;
 
 // Sabre
-use App\Invoice\Setting\SettingRepository;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
+use App\Invoice\Setting\SettingRepository;
+use DateTime;
+use InvalidArgumentException;
 
 class Invoice implements XmlSerializable
 {
     // http://www.datypic.com/sc/ubl23/t-ns53_InvoiceType.html
-    private ?string $UBLVersionID        = '2.1';
-    private ?string $customizationID     = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0';
-    protected ?int $invoiceTypeCode      = InvoiceTypeCode::INVOICE;
+    private ?string $UBLVersionID = '2.1';
+    private ?string $customizationID = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0';
+    protected ?int $invoiceTypeCode = InvoiceTypeCode::INVOICE;
     private string $documentCurrencyCode = 'EUR';
 
-    public function __construct(private readonly SettingRepository $settingRepository, private readonly ?string $profileID, private readonly ?string $id, private readonly \DateTime $issueDate, private readonly ?\DateTime $dueDate, private readonly ?string $note, private readonly ?\DateTime $taxPointDate, private readonly ?string $accountingCostCode, private readonly ?string $buyerReference, private readonly ?InvoicePeriod $invoicePeriod, private readonly ?OrderReference $orderReference, private readonly ?ContractDocumentReference $contractDocumentReference, private readonly ?AdditionalDocumentReference $additionalDocumentReference, private readonly ?Party $accountingSupplierParty, private readonly ?Party $accountingCustomerParty, private readonly ?Delivery $delivery, private readonly ?PaymentMeans $paymentMeans, private readonly ?PaymentTerms $paymentTerms, private readonly array $allowanceCharges, private readonly array $taxAmounts, private readonly array $taxSubTotal, private readonly ?LegalMonetaryTotal $legalMonetaryTotal, protected array $invoiceLines, private readonly ?bool $isCopyIndicator, private readonly ?string $supplierAssignedAccountID)
-    {
-    }
+    public function __construct(private readonly SettingRepository $settingRepository, private readonly ?string $profileID, private readonly ?string $id, private readonly DateTime $issueDate, private readonly ?DateTime $dueDate, private readonly ?string $note, private readonly ?DateTime $taxPointDate, private readonly ?string $accountingCostCode, private readonly ?string $buyerReference, private readonly ?InvoicePeriod $invoicePeriod, private readonly ?OrderReference $orderReference, private readonly ?ContractDocumentReference $contractDocumentReference, private readonly ?AdditionalDocumentReference $additionalDocumentReference, private readonly ?Party $accountingSupplierParty, private readonly ?Party $accountingCustomerParty, private readonly ?Delivery $delivery, private readonly ?PaymentMeans $paymentMeans, private readonly ?PaymentTerms $paymentTerms, private readonly array $allowanceCharges, private readonly array $taxAmounts, private readonly array $taxSubTotal, private readonly ?LegalMonetaryTotal $legalMonetaryTotal, protected array $invoiceLines, private readonly ?bool $isCopyIndicator, private readonly ?string $supplierAssignedAccountID) {}
 
+    /**
+     * @return string|null
+     */
     public function getUBLVersionID(): ?string
     {
         return $this->UBLVersionID;
     }
 
     /**
-     * Related logic: see http://www.schemacentral.com Business Document Standards.
-     *
+     * Related logic: see http://www.schemacentral.com Business Document Standards
      * @param string|null $UBLVersionID
-     *                                  eg. '2.0', '2.1', '2.2', '2.3'
+     * eg. '2.0', '2.1', '2.2', '2.3'
+     * @return Invoice
      */
     public function setUBLVersionID(?string $UBLVersionID): self
     {
         $this->UBLVersionID = $UBLVersionID;
-
         return $this;
     }
 
+    /**
+     * @return Invoice
+     */
     public function setDocumentCurrencyCode(): self
     {
         $this->documentCurrencyCode = $this->settingRepository->getSetting('currency_code_to');
-
         return $this;
     }
 
@@ -54,64 +58,67 @@ class Invoice implements XmlSerializable
     /**
      * The validate function that is called during xml writing to validate the data of the object.
      *
-     * @throws \InvalidArgumentException An error with information about required data that is missing to write the XML
+     * @throws InvalidArgumentException An error with information about required data that is missing to write the XML
      */
     public function validate(): void
     {
-        if (null === $this->id) {
-            throw new \InvalidArgumentException('Missing invoice id');
+        if ($this->id === null) {
+            throw new InvalidArgumentException('Missing invoice id');
         }
 
-        if (null === $this->note) {
-            throw new \InvalidArgumentException('Missing invoice note');
+        if ($this->note === null) {
+            throw new InvalidArgumentException('Missing invoice note');
         }
 
-        if (!$this->issueDate instanceof \DateTime) {
-            throw new \InvalidArgumentException('Invalid invoice issueDate');
+        if (!$this->issueDate instanceof DateTime) {
+            throw new InvalidArgumentException('Invalid invoice issueDate');
         }
 
-        if (null === $this->invoiceTypeCode) {
-            throw new \InvalidArgumentException('Missing invoice invoiceTypeCode');
+        if ($this->invoiceTypeCode === null) {
+            throw new InvalidArgumentException('Missing invoice invoiceTypeCode');
         }
 
-        if (null === $this->accountingSupplierParty) {
-            throw new \InvalidArgumentException('Missing invoice accountingSupplierParty');
+        if ($this->accountingSupplierParty === null) {
+            throw new InvalidArgumentException('Missing invoice accountingSupplierParty');
         }
 
-        if (null === $this->accountingCustomerParty) {
-            throw new \InvalidArgumentException('Missing invoice accountingCustomerParty');
+        if ($this->accountingCustomerParty === null) {
+            throw new InvalidArgumentException('Missing invoice accountingCustomerParty');
         }
 
         if (empty($this->invoiceLines)) {
-            throw new \InvalidArgumentException('Missing invoice lines');
+            throw new InvalidArgumentException('Missing invoice lines');
         }
 
-        if (null === $this->legalMonetaryTotal) {
-            throw new \InvalidArgumentException('Missing invoice LegalMonetaryTotal');
+        if ($this->legalMonetaryTotal === null) {
+            throw new InvalidArgumentException('Missing invoice LegalMonetaryTotal');
         }
     }
 
+    /**
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
 
         $writer->write([
-            Schema::CBC.'UBLVersionID'    => $this->UBLVersionID,
-            Schema::CBC.'CustomizationID' => $this->customizationID,
+            Schema::CBC . 'UBLVersionID' => $this->UBLVersionID,
+            Schema::CBC . 'CustomizationID' => $this->customizationID,
         ]);
 
-        if (null !== $this->profileID) {
+        if ($this->profileID !== null) {
             $writer->write([
-                Schema::CBC.'ProfileID' => $this->profileID,
+                Schema::CBC . 'ProfileID' => $this->profileID,
             ]);
         }
 
         $writer->write([
-            Schema::CBC.'ID' => $this->id,
+            Schema::CBC . 'ID' => $this->id,
         ]);
 
-        /*
+        /**
          * Rule set: OpenPeppol UBL Invoice (3.15.0) (a.k.a BIS Billing 3.0.14)
          *
          * Related logic: see https://ecosio.com/en/peppol-and-xml-document-validator-button/
@@ -123,40 +130,40 @@ class Invoice implements XmlSerializable
          * Error message: [UBL-CR-004]-A UBL invoice should not include the CopyIndicator
          */
 
-        // if ($this->isCopyIndicator !== null) {
+        //if ($this->isCopyIndicator !== null) {
         //  $writer->write([
         //    Schema::CBC . 'CopyIndicator' => $this->isCopyIndicator ? 'true' : 'false'
         //  ]);
-        // }
+        //}
 
         $writer->write([
-            Schema::CBC.'IssueDate' => $this->issueDate->format('Y-m-d'),
+            Schema::CBC . 'IssueDate' => $this->issueDate->format('Y-m-d'),
         ]);
 
-        if (null !== $this->dueDate) {
+        if ($this->dueDate !== null) {
             $writer->write([
-                Schema::CBC.'DueDate' => $this->dueDate->format('Y-m-d'),
+                Schema::CBC . 'DueDate' => $this->dueDate->format('Y-m-d'),
             ]);
         }
 
         $writer->write([
-            Schema::CBC.'InvoiceTypeCode' => $this->invoiceTypeCode,
+            Schema::CBC . 'InvoiceTypeCode' => $this->invoiceTypeCode,
         ]);
 
-        if (null !== $this->note) {
+        if ($this->note !== null) {
             $writer->write([
-                Schema::CBC.'Note' => $this->note,
+                Schema::CBC . 'Note' => $this->note,
             ]);
         }
 
-        if (null !== $this->taxPointDate) {
+        if ($this->taxPointDate !== null) {
             $writer->write([
-                Schema::CBC.'TaxPointDate' => $this->taxPointDate->format('Y-m-d'),
+                Schema::CBC . 'TaxPointDate' => $this->taxPointDate->format('Y-m-d'),
             ]);
         }
 
         $writer->write([
-            Schema::CBC.'DocumentCurrencyCode' => $this->getDocumentCurrencyCode(),
+            Schema::CBC . 'DocumentCurrencyCode' => $this->getDocumentCurrencyCode(),
         ]);
 
         /*
@@ -166,38 +173,38 @@ class Invoice implements XmlSerializable
          * XPath test: not(cbc:AccountingCostCode)
          * Error message: [UBL-CR-010]-A UBL invoice should not include the AccountingCostCode
         */
-        // if ($this->accountingCostCode !== null) {
+        //if ($this->accountingCostCode !== null) {
         //
         // $writer->write([
         //   Schema::CBC . 'AccountingCostCode' => $this->accountingCostCode
         // ]);
-        // }
+        //}
 
-        if (null !== $this->buyerReference) {
+        if ($this->buyerReference !== null) {
             $writer->write([
-                Schema::CBC.'BuyerReference' => $this->buyerReference,
+                Schema::CBC . 'BuyerReference' => $this->buyerReference,
             ]);
         }
 
-        if (null !== $this->invoicePeriod) {
+        if ($this->invoicePeriod !== null) {
             $writer->write([
-                Schema::CAC.'InvoicePeriod' => $this->invoicePeriod,
+                Schema::CAC . 'InvoicePeriod' => $this->invoicePeriod,
             ]);
         }
 
-        if (null !== $this->orderReference) {
+        if ($this->orderReference !== null) {
             $writer->write([
-                Schema::CAC.'OrderReference' => $this->orderReference,
+                Schema::CAC . 'OrderReference' => $this->orderReference,
             ]);
         }
 
-        if (null !== $this->contractDocumentReference) {
+        if ($this->contractDocumentReference !== null) {
             $writer->write([
-                Schema::CAC.'ContractDocumentReference' => $this->contractDocumentReference,
+                Schema::CAC . 'ContractDocumentReference' => $this->contractDocumentReference,
             ]);
         }
 
-        /*
+        /**
          * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper
          * Warning
          * Location: src/Invoice/Helpers/Peppol/EcosioTestFiles/invoice_a0Vc8Tz6INV107_peppol
@@ -206,11 +213,12 @@ class Invoice implements XmlSerializable
          * Error message: [UBL-CR-114]-A UBL invoice should not include the AdditionalDocumentReference DocumentType
          */
 
-        if (null !== $this->additionalDocumentReference) {
+        if ($this->additionalDocumentReference !== null) {
             $writer->write([
-                Schema::CAC.'AdditionalDocumentReference' => $this->additionalDocumentReference,
+                Schema::CAC . 'AdditionalDocumentReference' => $this->additionalDocumentReference,
             ]);
         }
+
 
         /*
          * Warning
@@ -219,37 +227,37 @@ class Invoice implements XmlSerializable
          * XPath test: not(cac:AccountingCustomerParty/cbc:SupplierAssignedAccountID)
          * Error message: [UBL-CR-202]-A UBL invoice should not include the AccountingCustomerParty SupplierAssignedAccountID
          */
-        // if ($this->supplierAssignedAccountID !== null) {
+        //if ($this->supplierAssignedAccountID !== null) {
         //  $customerParty = [
         //    Schema::CBC . 'SupplierAssignedAccountID' => $this->supplierAssignedAccountID,
         //    Schema::CAC . "Party" => $this->accountingCustomerParty
         //  ];
-        // } else {
+        //} else {
         $customerParty = [
-            Schema::CAC.'Party' => $this->accountingCustomerParty,
+            Schema::CAC . 'Party' => $this->accountingCustomerParty,
         ];
-        // }
+        //}
 
         $writer->write([
-            Schema::CAC.'AccountingSupplierParty' => [Schema::CAC.'Party' => $this->accountingSupplierParty],
-            Schema::CAC.'AccountingCustomerParty' => $customerParty,
+            Schema::CAC . 'AccountingSupplierParty' => [Schema::CAC . 'Party' => $this->accountingSupplierParty],
+            Schema::CAC . 'AccountingCustomerParty' => $customerParty,
         ]);
 
-        if (null !== $this->delivery) {
+        if ($this->delivery !== null) {
             $writer->write([
-                Schema::CAC.'Delivery' => $this->delivery,
+                Schema::CAC . 'Delivery' => $this->delivery,
             ]);
         }
 
-        if (null !== $this->paymentMeans) {
+        if ($this->paymentMeans !== null) {
             $writer->write([
-                Schema::CAC.'PaymentMeans' => $this->paymentMeans,
+                Schema::CAC . 'PaymentMeans' => $this->paymentMeans,
             ]);
         }
 
-        if (null !== $this->paymentTerms) {
+        if ($this->paymentTerms !== null) {
             $writer->write([
-                Schema::CAC.'PaymentTerms' => $this->paymentTerms,
+                Schema::CAC . 'PaymentTerms' => $this->paymentTerms,
             ]);
         }
 
@@ -257,7 +265,7 @@ class Invoice implements XmlSerializable
             /** @var AllowanceCharge $allowanceCharge */
             foreach ($this->allowanceCharges as $allowanceCharge) {
                 $writer->write([
-                    Schema::CAC.'AllowanceCharge' => $allowanceCharge,
+                    Schema::CAC . 'AllowanceCharge' => $allowanceCharge,
                 ]);
             }
         }
@@ -285,11 +293,11 @@ class Invoice implements XmlSerializable
         if ($doc_cc === $supp_cc) {
             $writer->write([
                 [
-                    'name'  => Schema::CAC.'TaxTotal',
+                    'name' => Schema::CAC . 'TaxTotal',
                     'value' => [
                         [
-                            'name'       => Schema::CBC.'TaxAmount',
-                            'value'      => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                            'name' => Schema::CBC . 'TaxAmount',
+                            'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
                             'attributes' => [
                                 'currencyID' => $supp_cc,
                             ],
@@ -305,11 +313,11 @@ class Invoice implements XmlSerializable
             // Suppliers Tax Amount in Suppliers Currency without subtotal breakdown
             $writer->write([
                 [
-                    'name'  => Schema::CAC.'TaxTotal',
+                    'name' => Schema::CAC . 'TaxTotal',
                     'value' => [
                         [
-                            'name'       => Schema::CBC.'TaxAmount',
-                            'value'      => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                            'name' => Schema::CBC . 'TaxAmount',
+                            'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
                             'attributes' => [
                                 'currencyID' => $supp_cc,
                             ],
@@ -323,8 +331,8 @@ class Invoice implements XmlSerializable
             // Document Recipients TaxAmount in Document Recipient's Currency
             $writer->write([
                 [
-                    'name'       => Schema::CBC.'TaxAmount',
-                    'value'      => number_format((float) (string) $doc_cc_tax_amount ?: 0.00, 2, '.', ''),
+                    'name' => Schema::CBC . 'TaxAmount',
+                    'value' => number_format((float) (string) $doc_cc_tax_amount ?: 0.00, 2, '.', ''),
                     'attributes' => [
                         'currencyID' => $doc_cc,
                     ],
@@ -333,12 +341,11 @@ class Invoice implements XmlSerializable
         } // elseif
 
         $writer->write([
-            Schema::CAC.'LegalMonetaryTotal' => $this->legalMonetaryTotal,
+            Schema::CAC . 'LegalMonetaryTotal' => $this->legalMonetaryTotal,
         ]);
 
         /**
-         * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper function build_invoice_lines_array.
-         *
+         * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper function build_invoice_lines_array
          * @var array $this->invoiceLines
          * @var array $invoiceLine
          */
@@ -360,10 +367,9 @@ class Invoice implements XmlSerializable
          * @var array $value
          */
         foreach ($this->taxSubTotal as $value) {
-            $tst            = new TaxSubTotal($value);
+            $tst = new TaxSubTotal($value);
             $merged_array[] = $tst->build_pre_serialized_array();
         }
-
         return $merged_array;
     }
 }

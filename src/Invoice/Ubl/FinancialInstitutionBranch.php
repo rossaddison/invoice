@@ -9,15 +9,13 @@ use Sabre\Xml\XmlSerializable;
 
 class FinancialInstitutionBranch implements XmlSerializable
 {
-    public function __construct(private readonly ?string $id)
-    {
-    }
+    public function __construct(private readonly ?string $id) {}
 
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([
-            Schema::CBC.'ID' => $this->id,
+            Schema::CBC . 'ID' => $this->id,
         ]);
     }
 }

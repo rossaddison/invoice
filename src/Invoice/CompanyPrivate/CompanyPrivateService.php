@@ -10,13 +10,16 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class CompanyPrivateService
 {
-    public function __construct(private CompanyPrivateRepository $repository)
-    {
-    }
+    public function __construct(private CompanyPrivateRepository $repository) {}
 
+    /**
+     * @param CompanyPrivate $model
+     * @param array $array
+     * @param SettingRepository $s
+     */
     public function saveCompanyPrivate(CompanyPrivate $model, array $array, SettingRepository $s): void
     {
-        // $model->nullifyRelationOnChange((int)$array['company_id']);
+        //$model->nullifyRelationOnChange((int)$array['company_id']);
         isset($array['company_id']) ? $model->setCompany_id((int) $array['company_id']) : '';
 
         isset($array['vat_id']) ? $model->setVat_id((string) $array['vat_id']) : '';
@@ -40,6 +43,9 @@ final readonly class CompanyPrivateService
         $this->repository->save($model);
     }
 
+    /**
+     * @param array|CompanyPrivate|null $model
+     */
     public function deleteCompanyPrivate(array|CompanyPrivate|null $model): void
     {
         $this->repository->delete($model);

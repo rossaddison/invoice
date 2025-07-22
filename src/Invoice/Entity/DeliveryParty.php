@@ -8,15 +8,14 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(repository: \App\Invoice\DeliveryParty\DeliveryPartyRepository::class)]
+
 class DeliveryParty
 {
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $party_name = '')
-    {
-    }
+        private ?string $party_name = '') {}
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -26,7 +25,7 @@ class DeliveryParty
         $this->id = $id;
     }
 
-    public function getPartyName(): ?string
+    public function getPartyName(): string|null
     {
         return $this->party_name;
     }
@@ -38,6 +37,6 @@ class DeliveryParty
 
     public function isNewRecord(): bool
     {
-        return null === $this->getId();
+        return $this->getId() === null;
     }
 }

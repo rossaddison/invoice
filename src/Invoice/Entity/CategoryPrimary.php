@@ -20,7 +20,7 @@ class CategoryPrimary
         $this->name = $name;
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

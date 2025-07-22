@@ -9,12 +9,11 @@ use Sabre\Xml\XmlSerializable;
 
 class Contact implements XmlSerializable
 {
-    public function __construct(private readonly ?string $name, private readonly ?string $firstname, private readonly ?string $lastname, private readonly ?string $telephone, private readonly ?string $telefax, private readonly ?string $electronicMail)
-    {
-    }
+    public function __construct(private readonly ?string $name, private readonly ?string $firstname, private readonly ?string $lastname, private readonly ?string $telephone, private readonly ?string $telefax, private readonly ?string $electronicMail) {}
 
     /**
-     * Related logic: see StoreCoveHelper validate_supplier_contact.
+     * Related logic: see StoreCoveHelper validate_supplier_contact
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -46,36 +45,39 @@ class Contact implements XmlSerializable
         return $this->electronicMail;
     }
 
+    /**
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
-        if (null !== $this->name) {
+        if ($this->name !== null) {
             $writer->write([
-                Schema::CBC.'Name' => $this->name,
+                Schema::CBC . 'Name' => $this->name,
             ]);
         }
 
-        if (null == $this->name && (null !== $this->firstname || null !== $this->lastname)) {
+        if ($this->name == null && ($this->firstname !== null || $this->lastname !== null)) {
             $writer->write([
-                Schema::CBC.'Name' => ($this->firstname ?? '').' '.($this->lastname ?? ''),
+                Schema::CBC . 'Name' => ($this->firstname ?? '') . ' ' . ($this->lastname ?? ''),
             ]);
         }
 
-        if (null !== $this->telephone) {
+        if ($this->telephone !== null) {
             $writer->write([
-                Schema::CBC.'Telephone' => $this->telephone,
+                Schema::CBC . 'Telephone' => $this->telephone,
             ]);
         }
 
-        if (null !== $this->telefax) {
+        if ($this->telefax !== null) {
             $writer->write([
-                Schema::CBC.'Telefax' => $this->telefax,
+                Schema::CBC . 'Telefax' => $this->telefax,
             ]);
         }
 
-        if (null !== $this->electronicMail) {
+        if ($this->electronicMail !== null) {
             $writer->write([
-                Schema::CBC.'ElectronicMail' => $this->electronicMail,
+                Schema::CBC . 'ElectronicMail' => $this->electronicMail,
             ]);
         }
     }

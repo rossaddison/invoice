@@ -9,6 +9,7 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository::class)]
+
 class InvItemAllowanceCharge
 {
     #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
@@ -23,9 +24,7 @@ class InvItemAllowanceCharge
         private ?int $inv_item_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat = null)
-    {
-    }
+        private ?float $vat = null) {}
 
     public function getAllowanceCharge(): ?AllowanceCharge
     {
@@ -110,10 +109,10 @@ class InvItemAllowanceCharge
     public function nullifyRelationOnChange(int $allowance_charge_id, int $inv_item_id): void
     {
         if ($this->allowance_charge_id != $allowance_charge_id) {
-            // $this->allowance_charge = null;
+            //$this->allowance_charge = null;
         }
         if ($this->inv_item_id != $inv_item_id) {
-            // $this->inv_item = null;
+            //$this->inv_item = null;
         }
     }
 }

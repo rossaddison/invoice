@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Console;
 
 use App\User\User;
+use InvalidArgumentException;
 use Stringable;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\Role;
@@ -20,8 +22,9 @@ use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Cycle\Command\CycleDependencyProxy;
 
 /**
- * e.g > yii user/assignRole admin 1.
+ * e.g > yii user/assignRole admin 1
  */
+
 final class AssignRoleCommand extends Command
 {
     protected static string $defaultName = 'user/assignRole';
@@ -50,23 +53,25 @@ final class AssignRoleCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         /**
+         * @var mixed $input->getArgument('role')
          * @var string $roleName
          */
         $roleName = $input->getArgument('role');
         /**
+         * @var mixed $input->getArgument('userId')
          * @var int $userId
          */
         $userId = $input->getArgument('userId');
 
         try {
-            $orm      = $this->promise->getORM();
+            $orm = $this->promise->getORM();
             $userRepo = $orm->getRepository(User::class);
-            $user     = $userRepo->findByPK($userId);
+            $user = $userRepo->findByPK($userId);
             if (null === $user) {
-                throw new \InvalidArgumentException('Can\'t find user');
+                throw new InvalidArgumentException('Can\'t find user');
             }
             if (null === $user->getId()) {
-                throw new \InvalidArgumentException('User Id is NULL');
+                throw new InvalidArgumentException('User Id is NULL');
             }
 
             /**
@@ -89,13 +94,13 @@ final class AssignRoleCommand extends Command
                 $this->manager->addRole($role);
             }
 
-            /*
+            /**
              * @var int|string|Stringable $userId
              */
             $this->manager->assign($roleName, $userId);
 
             $io->success('Role was assigned to given user');
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             $io->error($t->getMessage());
 
             return ExitCode::UNSPECIFIED_ERROR;

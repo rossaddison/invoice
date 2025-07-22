@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice;
 
-use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Traits\FlashMessage;
+use App\Invoice\Setting\SettingRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
+use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
@@ -40,24 +40,26 @@ abstract class BaseController
     {
         if (!$this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                ->withLayout('@views/layout/templates/soletrader/main.php');
+                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                                                     ->withLayout('@views/layout/templates/soletrader/main.php');
         } elseif ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') && !$this->userService->hasPermission('noEntryToBaseController') && $this->userService->hasPermission('entryToBaseController')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                ->withLayout('@views/layout/guest.php');
+                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                                                     ->withLayout('@views/layout/guest.php');
         } elseif ($this->userService->hasPermission('editInv') && !$this->userService->hasPermission('noEntryToBaseController') && $this->userService->hasPermission('entryToBaseController')) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                ->withLayout('@views/layout/invoice.php');
+                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                                                     ->withLayout('@views/layout/invoice.php');
         }
     }
 
     /**
-     * Render a view with common parameters.
-     *
-     * @param array<string, mixed> $parameters
-     */
+      * Render a view with common parameters.
+      *
+      * @param string $view
+      * @param array<string, mixed> $parameters
+      * @return Response
+      */
     protected function render(string $view, array $parameters = []): Response
     {
         return $this->viewRenderer->render($view, $parameters);
@@ -65,6 +67,8 @@ abstract class BaseController
 
     /**
      * Create a flash alert partial.
+     *
+     * @return string
      */
     protected function alert(): string
     {

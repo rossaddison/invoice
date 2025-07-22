@@ -9,9 +9,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 class GroupException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     #[\Override]
     public function getName(): string
@@ -19,6 +17,9 @@ class GroupException extends \RuntimeException implements FriendlyExceptionInter
         return $this->translator->translate('group.document.number');
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

@@ -15,16 +15,17 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var Company                                $company
- * @var App\Invoice\Setting\SettingRepository  $s
- * @var App\Widget\GridComponents              $gridComponents
+ * @var App\Invoice\Entity\Company $company
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\FastRoute\UrlGenerator  $urlGenerator
- * @var string                                 $alert
- * @var string                                 $csrf
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var string $alert
+ * @var string $csrf
  */
+
 echo $alert;
 ?>
 <?php
@@ -35,7 +36,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                    ->content(' '.Html::encode($translator->translate('company'))),
+                        ->content(' ' . Html::encode($translator->translate('company'))),
             ),
     )
     ->render();
@@ -49,21 +50,21 @@ $toolbarReset = A::tag()
     ->render();
 $toolbar = Div::tag();
 ?>
-<?php echo Html::openTag('div'); ?>
-    <?php echo Html::openTag('h5'); ?>
-        <?php echo $translator->translate('company'); ?>
-    <?php echo Html::closeTag('h5'); ?>    
-<?php echo Html::closeTag('div'); ?>
+<?= Html::openTag('div'); ?>
+    <?= Html::openTag('h5'); ?>
+        <?= $translator->translate('company'); ?>
+    <?= Html::closeTag('h5'); ?>    
+<?= Html::closeTag('div'); ?>
 
-<?php echo Html::openTag('div'); ?>
-    <?php echo Html::openTag('div', ['class' => 'btn-group']); ?>
-        <?php echo A::tag()
-    ->addClass('btn btn-success')
-    ->content(I::tag()
-        ->addClass('fa fa-plus'))
-    ->href($urlGenerator->generate('company/add')); ?>
-    <?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
+<?= Html::openTag('div'); ?>
+    <?= Html::openTag('div', ['class' => 'btn-group']); ?>
+        <?= A::tag()
+            ->addClass('btn btn-success')
+            ->content(I::tag()
+                      ->addClass('fa fa-plus'))
+            ->href($urlGenerator->generate('company/add')); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 
 
 <br>
@@ -72,27 +73,27 @@ $toolbar = Div::tag();
             new DataColumn(
                 'id',
                 header: $translator->translate('id'),
-                content: static fn (Company $model) => Html::encode($model->getId()),
+                content: static fn(Company $model) => Html::encode($model->getId()),
             ),
             new DataColumn(
                 'current',
                 header: $translator->translate('active'),
-                content: static fn (Company $model) => Html::encode('1' == $model->getCurrent() ? ($translator->translate('active').' ✔️') : $translator->translate('inactive').' ❌'),
+                content: static fn(Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active') . ' ' . '✔️') : $translator->translate('inactive') . ' ' . '❌'),
             ),
             new DataColumn(
                 'name',
                 header: $translator->translate('name'),
-                content: static fn (Company $model) => Html::encode($model->getName()),
+                content: static fn(Company $model) => Html::encode($model->getName()),
             ),
             new DataColumn(
                 'email',
                 header: $translator->translate('email.address'),
-                content: static fn (Company $model) => Html::encode($model->getEmail()),
+                content: static fn(Company $model) => Html::encode($model->getEmail()),
             ),
             new DataColumn(
                 'phone',
                 header: $translator->translate('phone'),
-                content: static fn (Company $model) => Html::encode($model->getPhone()),
+                content: static fn(Company $model) => Html::encode($model->getPhone()),
             ),
             new ActionColumn(buttons: [
                 new ActionButton(
@@ -102,7 +103,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title'          => $translator->translate('view'),
+                        'title' => $translator->translate('view'),
                     ],
                 ),
                 new ActionButton(
@@ -112,7 +113,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title'          => $translator->translate('edit'),
+                        'title' => $translator->translate('edit'),
                     ],
                 ),
                 new ActionButton(
@@ -121,16 +122,17 @@ $toolbar = Div::tag();
                         return $urlGenerator->generate('company/delete', ['id' => $model->getId()]);
                     },
                     attributes: [
-                        'title'   => $translator->translate('delete'),
-                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                        'title' => $translator->translate('delete'),
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
             ]),
         ];
 ?>
     <?php
-    $toolbarString = Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open().
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+    $toolbarString =
+        Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -140,17 +142,17 @@ $grid_summary = $s->grid_summary(
     '',
 );
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-contract'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->header($header)
-    ->id('w163-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('no.records'))
-    ->toolbar($toolbarString);
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-contract'])
+->columns(...$columns)
+->dataReader($paginator)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($header)
+->id('w163-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate($grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('no.records'))
+->toolbar($toolbarString);
 ?>

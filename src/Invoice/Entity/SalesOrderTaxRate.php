@@ -9,6 +9,7 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository::class)]
+
 class SalesOrderTaxRate
 {
     #[BelongsTo(target: SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
@@ -22,9 +23,7 @@ class SalesOrderTaxRate
         private ?int $so_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable: false, default: 0)]
         private ?int $include_item_tax = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $so_tax_rate_amount = 0.00)
-    {
-    }
+        private ?float $so_tax_rate_amount = 0.00) {}
 
     public function getSalesOrder(): ?SalesOrder
     {
@@ -66,7 +65,7 @@ class SalesOrderTaxRate
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getInclude_item_tax(): ?int
+    public function getInclude_item_tax(): int|null
     {
         return $this->include_item_tax;
     }

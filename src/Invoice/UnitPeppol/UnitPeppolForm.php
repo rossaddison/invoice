@@ -22,39 +22,40 @@ final class UnitPeppolForm extends FormModel
 
     public function __construct(UnitPeppol $unitPeppol)
     {
-        $this->id          = $unitPeppol->getId();
-        $this->unit_id     = $unitPeppol->getUnit_id();
-        $this->code        = $unitPeppol->getCode();
-        $this->name        = $unitPeppol->getName();
+        $this->id = $unitPeppol->getId();
+        $this->unit_id = $unitPeppol->getUnit_id();
+        $this->code = $unitPeppol->getCode();
+        $this->name = $unitPeppol->getName();
         $this->description = $unitPeppol->getDescription();
     }
 
-    public function getId(): ?string
+    public function getId(): string|null
     {
         return $this->id;
     }
 
-    public function getUnit_id(): ?string
+    public function getUnit_id(): string|null
     {
         return $this->unit_id;
     }
 
-    public function getCode(): ?string
+    public function getCode(): string|null
     {
         return $this->code;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string|null
     {
         return $this->description;
     }
 
     /**
+     * @return string
      * @psalm-return ''
      */
     #[\Override]

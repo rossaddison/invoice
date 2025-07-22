@@ -12,23 +12,24 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Helpers\DateHelper            $dateHelper
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
- * @var App\Invoice\Setting\SettingRepository     $s
- * @var App\Widget\GridComponents                 $gridComponents
- * @var App\Widget\Button                         $button
- * @var App\Widget\GridComponents                 $gridComponents
- * @var App\Widget\PageSizeLimiter                $pageSizeLimiter
- * @var Yiisoft\Data\Paginator\OffsetPaginator    $paginator
- * @var Yiisoft\Router\CurrentRoute               $currentRoute
- * @var Yiisoft\Translator\TranslatorInterface    $translator
- * @var Yiisoft\Router\FastRoute\UrlGenerator     $urlGenerator
- * @var int                                       $defaultPageSizeOffsetPaginator
- * @var bool                                      $canEdit
- * @var bool                                      $canView
- * @var string                                    $alert
- * @var string                                    $csrf
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\Button $button
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var int $defaultPageSizeOffsetPaginator
+ * @var bool $canEdit
+ * @var bool $canView
+ * @var string $alert
+ * @var string $csrf
  */
+
 echo $alert;
 
 ?>
@@ -53,9 +54,9 @@ $toolbar = Div::tag();
 
 <?php if ($canEdit && $canView) { ?>
     <div>
-     <h5><?php echo $translator->translate('payment'); ?></h5>
-     <a class="btn btn-success" href="<?php echo $urlGenerator->generate('payment/add'); ?>">
-          <i class="fa fa-plus"></i> <?php echo $translator->translate('new'); ?> </a>
+     <h5><?= $translator->translate('payment'); ?></h5>
+     <a class="btn btn-success" href="<?= $urlGenerator->generate('payment/add'); ?>">
+          <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?> </a>
     </div>
 <?php } ?>
 <br>
@@ -64,13 +65,13 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Payment $model): string => $model->getId(),
+            content: static fn(Payment $model): string => $model->getId(),
         ),
         new DataColumn(
             field: 'payment_date',
             property: 'paymentDateFilter',
             header: $translator->translate('payment.date'),
-            content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
+            content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
                                                                              ? $date->format('Y-m-d')
                                                                              : '',
             filter: true,
@@ -88,7 +89,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'note',
             header: $translator->translate('note'),
-            content: static fn (Payment $model): string => Html::encode($model->getNote()),
+            content: static fn(Payment $model): string => Html::encode($model->getNote()),
         ),
         new DataColumn(
             'inv_id',
@@ -102,7 +103,6 @@ $toolbar = Div::tag();
             header: $translator->translate('total'),
             content: static function (Payment $model) use ($s, $iaR): string {
                 $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
-
                 return $s->format_currency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
             },
         ),
@@ -110,7 +110,6 @@ $toolbar = Div::tag();
             header: $translator->translate('paid'),
             content: static function (Payment $model) use ($s, $iaR): string {
                 $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
-
                 return $s->format_currency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
             },
         ),
@@ -119,7 +118,6 @@ $toolbar = Div::tag();
             header: $translator->translate('balance'),
             content: static function (Payment $model) use ($s, $iaR): string {
                 $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInv_id()) > 0) ? $iaR->repoInvquery((int) $model->getInv_id()) : null);
-
                 return $s->format_currency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
             },
         ),
@@ -148,7 +146,7 @@ $toolbar = Div::tag();
             header: $translator->translate('edit'),
             visible: $canEdit,
             content: static function (Payment $model) use ($s, $urlGenerator): A|string {
-                return false                                  === $model->getInv()?->getIs_read_only()
+                return $model->getInv()?->getIs_read_only() === false
                        && $s->getSetting('disable_read_only') === (string) 0
                        ? Html::a(
                            Html::tag(
@@ -169,14 +167,14 @@ $toolbar = Div::tag();
             header: $translator->translate('delete'),
             visible: $canEdit,
             content: static function (Payment $model) use ($translator, $s, $urlGenerator): string|A {
-                return false === $model->getInv()?->getIs_read_only() && $s->getSetting('disable_read_only') === (string) 0 ? Html::a(
+                return $model->getInv()?->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 ? Html::a(
                     Html::tag(
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                            'type'    => 'submit',
-                            'class'   => 'dropdown-button',
-                            'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                         ],
                     ),
                     $urlGenerator->generate('payment/delete', ['id' => $model->getId()]),
@@ -184,24 +182,24 @@ $toolbar = Div::tag();
                 ) : '';
             },
         ),
-    ];
+    ]
 ?>
 <?php
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open().
-Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
+Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
 Form::tag()->close();
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-payment-index'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->header($gridComponents->header(' '.$translator->translate('payment')))
-    ->id('w147-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment').' '.$grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('no.records'))
-    ->toolbar($toolbarString);
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-payment-index'])
+->columns(...$columns)
+->dataReader($paginator)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($gridComponents->header(' ' . $translator->translate('payment')))
+->id('w147-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment') . ' ' . $grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('no.records'))
+->toolbar($toolbarString);
 ?>

@@ -8,10 +8,12 @@ use App\Invoice\Entity\GentorRelation;
 
 final readonly class GeneratorRelationService
 {
-    public function __construct(private GeneratorRelationRepository $repository)
-    {
-    }
+    public function __construct(private GeneratorRelationRepository $repository) {}
 
+    /**
+     * @param GentorRelation $model
+     * @param array $array
+     */
     public function saveGeneratorRelation(GentorRelation $model, array $array): void
     {
         isset($array['lowercasename']) ? $model->setLowercase_name((string) $array['lowercasename']) : '';
@@ -21,6 +23,9 @@ final readonly class GeneratorRelationService
         $this->repository->save($model);
     }
 
+    /**
+     * @param GentorRelation $model
+     */
     public function deleteGeneratorRelation(GentorRelation $model): void
     {
         $this->repository->delete($model);

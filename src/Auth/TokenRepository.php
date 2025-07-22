@@ -10,7 +10,6 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of Token
- *
  * @extends Select\Repository<TEntity>
  */
 final class TokenRepository extends Select\Repository implements IdentityWithTokenRepositoryInterface
@@ -23,28 +22,43 @@ final class TokenRepository extends Select\Repository implements IdentityWithTok
         parent::__construct($select);
     }
 
+    /**
+     * @param string $token
+     * @param string $type
+     * @return Identity|null
+     */
     #[\Override]
-    public function findIdentityByToken(string $token, ?string $type = null): ?Identity
+    public function findIdentityByToken(string $token, string $type = null): ?Identity
     {
         $tokenRecord = $this->findOne(['token' => $token, 'type' => $type]);
-
         return null !== $tokenRecord ? $tokenRecord->getIdentity() : null;
     }
 
-    public function findTokenByTokenAndType(string $token, ?string $type = null): ?Token
+    /**
+     * @param string $token
+     * @param string $type
+     * @return Token
+     */
+    public function findTokenByTokenAndType(string $token, string $type = null): ?Token
     {
         $tokenRecord = $this->findOne(['token' => $token, 'type' => $type]);
-
         return $tokenRecord ?? null;
     }
 
-    public function findTokenByIdentityIdAndType(string $identityId, ?string $type = null): ?Token
+    /**
+     * @param string $identityId
+     * @param string $type
+     * @return Token|null
+     */
+    public function findTokenByIdentityIdAndType(string $identityId, string $type = null): ?Token
     {
         $tokenRecord = $this->findOne(['identity_id' => $identityId, 'type' => $type]);
-
         return $tokenRecord ?? null;
     }
 
+    /**
+     * @param Token $token
+     */
     public function save(Token $token): void
     {
         $this->entityWriter->write([$token]);

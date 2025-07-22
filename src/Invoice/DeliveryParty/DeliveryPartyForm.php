@@ -18,12 +18,13 @@ final class DeliveryPartyForm extends FormModel
         $this->party_name = $delivery_party->getPartyName();
     }
 
-    public function getParty_name(): ?string
+    public function getParty_name(): string|null
     {
         return $this->party_name;
     }
 
     /**
+     * @return string
      * @psalm-return ''
      */
     #[\Override]

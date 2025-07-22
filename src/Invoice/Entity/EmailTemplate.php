@@ -22,16 +22,14 @@ class EmailTemplate
         private ?string $email_template_from_email = '', #[Column(type: 'text', nullable: true)]
         private ?string $email_template_cc = '', #[Column(type: 'text', nullable: true)]
         private ?string $email_template_bcc = '', #[Column(type: 'string(151)', nullable: true)]
-        private ?string $email_template_pdf_template = '')
-    {
-    }
+        private ?string $email_template_pdf_template = '') {}
 
     public function getEmail_template_id(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail_template_title(): ?string
+    public function getEmail_template_title(): string|null
     {
         return $this->email_template_title;
     }
@@ -41,7 +39,7 @@ class EmailTemplate
         $this->email_template_title = $email_template_title;
     }
 
-    public function getEmail_template_type(): ?string
+    public function getEmail_template_type(): string|null
     {
         return $this->email_template_type;
     }
@@ -61,7 +59,7 @@ class EmailTemplate
         $this->email_template_body = $email_template_body;
     }
 
-    public function getEmail_template_subject(): ?string
+    public function getEmail_template_subject(): string|null
     {
         return $this->email_template_subject;
     }
@@ -71,7 +69,7 @@ class EmailTemplate
         $this->email_template_subject = $email_template_subject;
     }
 
-    public function getEmail_template_from_name(): ?string
+    public function getEmail_template_from_name(): string|null
     {
         return $this->email_template_from_name;
     }
@@ -81,7 +79,7 @@ class EmailTemplate
         $this->email_template_from_name = $email_template_from_name;
     }
 
-    public function getEmail_template_from_email(): ?string
+    public function getEmail_template_from_email(): string|null
     {
         return $this->email_template_from_email;
     }
@@ -91,7 +89,7 @@ class EmailTemplate
         $this->email_template_from_email = $email_template_from_email;
     }
 
-    public function getEmail_template_cc(): ?string
+    public function getEmail_template_cc(): string|null
     {
         return $this->email_template_cc;
     }
@@ -101,7 +99,7 @@ class EmailTemplate
         $this->email_template_cc = $email_template_cc;
     }
 
-    public function getEmail_template_bcc(): ?string
+    public function getEmail_template_bcc(): string|null
     {
         return $this->email_template_bcc;
     }
@@ -111,7 +109,7 @@ class EmailTemplate
         $this->email_template_bcc = $email_template_bcc;
     }
 
-    public function getEmail_template_pdf_template(): ?string
+    public function getEmail_template_pdf_template(): string|null
     {
         return $this->email_template_pdf_template;
     }

@@ -10,19 +10,21 @@ use Yiisoft\Validator\Rule\Required;
 
 final class MailerQuoteForm extends FormModel
 {
-    private string $to_email       = '';
+    private string $to_email = '';
     private string $email_template = '';
-    private string $from_name      = '';
-    private string $from_email     = '';
-    private string $cc             = '';
-    private string $bcc            = '';
-    private string $subject        = '';
-    private string $pdf_template   = '';
-    private string $body           = '';
-    private ?array $attachFiles    = null;
-    private string $guest_url      = '';
+    private string $from_name = '';
+    private string $from_email = '';
+    private string $cc = '';
+    private string $bcc = '';
+    private string $subject = '';
+    private string $pdf_template = '';
+    private string $body = '';
+    private ?array $attachFiles = null;
+    private string $guest_url = '';
 
     /**
+     * @return string
+     *
      * @psalm-return 'MailerQuoteForm'
      */
     #[\Override]
@@ -39,11 +41,11 @@ final class MailerQuoteForm extends FormModel
     public function getRules(): array
     {
         return [
-            'to_email'   => [new Required(), new Email()],
-            'from_name'  => [new Required()],
+            'to_email' => [new Required(), new Email()],
+            'from_name' => [new Required()],
             'from_email' => [new Required(), new Email()],
-            'subject'    => [new Required()],
-            'body'       => [new Required()],
+            'subject' => [new Required()],
+            'body' => [new Required()],
         ];
     }
 }

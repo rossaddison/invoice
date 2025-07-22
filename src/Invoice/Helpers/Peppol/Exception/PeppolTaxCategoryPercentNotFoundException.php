@@ -9,9 +9,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     #[\Override]
     public function getName(): string
@@ -19,6 +17,9 @@ final class PeppolTaxCategoryPercentNotFoundException extends \RuntimeException 
         return $this->translator->translate('peppol.tax.category.percent.not.found');
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

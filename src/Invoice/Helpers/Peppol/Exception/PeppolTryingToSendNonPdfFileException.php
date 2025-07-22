@@ -9,9 +9,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolTryingToSendNonPdfFileException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     #[\Override]
     public function getName(): string
@@ -19,6 +17,9 @@ final class PeppolTryingToSendNonPdfFileException extends \RuntimeException impl
         return $this->translator->translate('peppol.trying.to.send.non.pdf.file');
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

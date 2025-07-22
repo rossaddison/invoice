@@ -8,6 +8,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
+use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\DeliveryLocation\DeliveryLocationRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -15,10 +16,10 @@ use Cycle\ORM\Entity\Behavior;
 class DeliveryLocation
 {
     #[Column(type: 'datetime')]
-    private readonly \DateTimeImmutable $date_created;
+    private readonly DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime')]
-    private readonly \DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
@@ -49,11 +50,11 @@ class DeliveryLocation
         #[Column(type: 'string(4)', nullable: true)]
         private ?string $electronic_address_scheme = '',
     ) {
-        $this->date_created  = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -63,7 +64,7 @@ class DeliveryLocation
         $this->id = $id;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -74,7 +75,7 @@ class DeliveryLocation
     }
 
     // 2.1 ... not 3.0
-    public function getBuildingNumber(): ?string
+    public function getBuildingNumber(): string|null
     {
         return $this->building_number;
     }
@@ -85,7 +86,7 @@ class DeliveryLocation
     }
 
     // building number normally included in address_1 for 3.0
-    public function getAddress_1(): ?string
+    public function getAddress_1(): string|null
     {
         return $this->address_1;
     }
@@ -95,7 +96,7 @@ class DeliveryLocation
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress_2(): string|null
     {
         return $this->address_2;
     }
@@ -105,7 +106,7 @@ class DeliveryLocation
         $this->address_2 = $address_2;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string|null
     {
         return $this->city;
     }
@@ -115,7 +116,7 @@ class DeliveryLocation
         $this->city = $city;
     }
 
-    public function getState(): ?string
+    public function getState(): string|null
     {
         return $this->state;
     }
@@ -125,7 +126,7 @@ class DeliveryLocation
         $this->state = $state;
     }
 
-    public function getZip(): ?string
+    public function getZip(): string|null
     {
         return $this->zip;
     }
@@ -135,7 +136,7 @@ class DeliveryLocation
         $this->zip = $zip;
     }
 
-    public function getCountry(): ?string
+    public function getCountry(): string|null
     {
         return $this->country;
     }
@@ -166,12 +167,12 @@ class DeliveryLocation
         $this->electronic_address_scheme = $electronic_address_scheme;
     }
 
-    public function getDate_created(): \DateTimeImmutable
+    public function getDate_created(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): \DateTimeImmutable
+    public function getDate_modified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
@@ -186,7 +187,7 @@ class DeliveryLocation
         $this->client_id = $client_id;
     }
 
-    public function getClient(): ?Client
+    public function getClient(): Client|null
     {
         return $this->client;
     }
@@ -198,6 +199,6 @@ class DeliveryLocation
 
     public function isNewRecord(): bool
     {
-        return null === $this->getId();
+        return $this->getId() === null;
     }
 }

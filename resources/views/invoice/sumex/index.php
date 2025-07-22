@@ -4,30 +4,31 @@ declare(strict_types=1);
 use App\Invoice\Entity\Sumex;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
+use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Router\CurrentRoute;
 
 /**
- * @var Sumex                                  $sumex
- * @var App\Invoice\Setting\SettingRepository  $s
- * @var App\Widget\GridComponents              $gridComponents
- * @var string                                 $alert
- * @var string                                 $csrf
- * @var CurrentRoute                           $currentRoute
- * @var OffsetPaginator                        $paginator
- * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var App\Invoice\Entity\Sumex $sumex
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var string $alert
+ * @var string $csrf
+ * @var CurrentRoute $currentRoute
+ * @var OffsetPaginator $paginator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var WebView                                $this
+ * @var WebView $this
  */
+
 echo $alert;
 ?>
 <?php
@@ -38,7 +39,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                    ->content(' '.Html::encode($translator->translate('sumex'))),
+                        ->content(' ' . Html::encode($translator->translate('sumex'))),
             ),
     )
     ->render();
@@ -60,12 +61,12 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Sumex $model) => Html::encode($model->getId()),
+            content: static fn(Sumex $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'casenumber',
             header: $translator->translate('case.number'),
-            content: static fn (Sumex $model) => Html::encode($model->getCasenumber()),
+            content: static fn(Sumex $model) => Html::encode($model->getCasenumber()),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -75,7 +76,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title'          => $translator->translate('view'),
+                    'title' => $translator->translate('view'),
                 ],
             ),
             new ActionButton(
@@ -85,7 +86,7 @@ $toolbar = Div::tag();
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
-                    'title'          => $translator->translate('edit'),
+                    'title' => $translator->translate('edit'),
                 ],
             ),
             new ActionButton(
@@ -94,8 +95,8 @@ $toolbar = Div::tag();
                     return $urlGenerator->generate('sumex/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title'   => $translator->translate('delete'),
-                    'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                    'title' => $translator->translate('delete'),
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                 ],
             ),
         ]),
@@ -109,26 +110,26 @@ $grid_summary = $s->grid_summary(
     $translator->translate('sumex'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open().
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
-/*
+/**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-sumex'])
-    ->header($header)
-    ->id('w142-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('no.records'))
-    ->toolbar($toolbarString);
+->bodyRowAttributes(['class' => 'align-middle'])
+->columns(...$columns)
+->dataReader($paginator)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-sumex'])
+->header($header)
+->id('w142-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate($grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('no.records'))
+->toolbar($toolbarString);
 ?>
 </div>
 

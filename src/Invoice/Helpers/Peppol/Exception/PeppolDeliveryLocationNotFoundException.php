@@ -9,6 +9,8 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 final class PeppolDeliveryLocationNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
+     * @return string
+     *
      * @psalm-return 'Delivery Location not found.'
      */
     #[\Override]
@@ -17,6 +19,9 @@ final class PeppolDeliveryLocationNotFoundException extends \RuntimeException im
         return 'Delivery Location not found.';
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

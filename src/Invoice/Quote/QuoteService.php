@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace App\Invoice\Quote;
 
 // Entities
+use App\User\User;
 use App\Invoice\Entity\Quote;
 use App\Invoice\Entity\QuoteCustom;
 use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\QuoteTaxRate;
-use App\Invoice\Group\GroupRepository as GR;
 // Repositories
+use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-use App\Invoice\QuoteAmount\QuoteAmountService as QAS;
 use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
-use App\Invoice\QuoteCustom\QuoteCustomService as QCS;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
-use App\Invoice\QuoteItem\QuoteItemService as QIS;
-// Services
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateService as QTRS;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\User\User;
+// Services
+use App\Invoice\QuoteAmount\QuoteAmountService as QAS;
+use App\Invoice\QuoteCustom\QuoteCustomService as QCS;
+use App\Invoice\QuoteItem\QuoteItemService as QIS;
+use App\Invoice\QuoteTaxRate\QuoteTaxRateService as QTRS;
 // Ancillary
 use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
@@ -29,10 +29,16 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class QuoteService
 {
-    public function __construct(private QuoteRepository $repository, private SessionInterface $session)
-    {
-    }
+    public function __construct(private QuoteRepository $repository, private SessionInterface $session) {}
 
+    /**
+     * @param User $user
+     * @param Quote $model
+     * @param array $array
+     * @param SR $s
+     * @param GR $gR
+     * @return Quote
+     */
     public function saveQuote(User $user, Quote $model, array $array, SR $s, GR $gR): Quote
     {
         $model->nullifyRelationOnChange((int) $array['group_id'], (int) $array['client_id']);
@@ -68,14 +74,24 @@ final readonly class QuoteService
             $model->setDiscount_amount(0.00);
         }
         // Regenerate quote numbers if the setting is changed
-        if (!$model->isNewRecord() && '1' === $s->getSetting('generate_quote_number_for_draft')) {
+        if (!$model->isNewRecord() && $s->getSetting('generate_quote_number_for_draft') === '1') {
             null !== $array['group_id'] ? $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true)) : '';
         }
         $this->repository->save($model);
-
         return $model;
     }
 
+    /**
+     * @param Quote $model
+     * @param QCR $qcR
+     * @param QCS $qcS
+     * @param QIR $qiR
+     * @param QIS $qiS
+     * @param QTRR $qtrR
+     * @param QTRS $qtrS
+     * @param QAR $qaR
+     * @param QAS $qaS
+     */
     public function deleteQuote(Quote $model, QCR $qcR, QCS $qcS, QIR $qiR, QIS $qiS, QTRR $qtrR, QTRS $qtrS, QAR $qaR, QAS $qaS): void
     {
         $quote_id = $model->getId();
@@ -108,11 +124,15 @@ final readonly class QuoteService
         }
     }
 
+    /**
+     * @param string $level
+     * @param string $message
+     * @return Flash
+     */
     private function flash(string $level, string $message): Flash
     {
         $flash = new Flash($this->session);
         $flash->set($level, $message);
-
         return $flash;
     }
 }

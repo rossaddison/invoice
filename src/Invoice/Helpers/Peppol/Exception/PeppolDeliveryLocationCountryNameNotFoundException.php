@@ -9,9 +9,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolDeliveryLocationCountryNameNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     #[\Override]
     public function getName(): string
@@ -19,6 +17,9 @@ final class PeppolDeliveryLocationCountryNameNotFoundException extends \RuntimeE
         return $this->translator->translate('client.peppol.not.found.delivery.location');
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

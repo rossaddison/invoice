@@ -6,8 +6,8 @@ namespace App\Invoice\InvItem;
 
 use App\Invoice\Entity\AllowanceCharge;
 use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\InvItemAmount;
+use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\Task;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
@@ -20,14 +20,22 @@ use App\Invoice\Unit\UnitRepository as UNR;
 
 final readonly class InvItemService
 {
-    public function __construct(private InvItemRepository $repository)
-    {
-    }
+    public function __construct(private InvItemRepository $repository) {}
 
     /**
-     * Related logic: see InvController function inv_to_inv_items.
+     * Related logic: see InvController function inv_to_inv_items
+     * @param InvItem $model
+     * @param array $array
+     * @param string $inv_id
+     * @param PR $pr
+     * @param TRR $trr
+     * @param IIAS $iias
+     * @param IIAR $iiar
+     * @param SR $s
+     * @param UNR $unR
+     * @return int|null
      */
-    public function addInvItem_product(InvItem $model, array $array, string $inv_id, PR $pr, TRR $trr, IIAS $iias, IIAR $iiar, SR $s, UNR $unR): ?int
+    public function addInvItem_product(InvItem $model, array $array, string $inv_id, PR $pr, TRR $trr, IIAS $iias, IIAR $iiar, SR $s, UNR $unR): int|null
     {
         // This function is used in product/save_product_lookup_item_product when adding a product using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
@@ -71,54 +79,53 @@ final readonly class InvItemService
         if ($product_id > 0) {
             $this->repository->save($model);
             // Peppol Allowances / charges can only be added on an existing product => zero for allowances or charges
-            if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $s);
             }
         }
-
         return $model->getId();
     }
 
     public function accumulativeChargeTotal(int $copyInvItemId, ACIIR $aciiR): float
     {
-        $copyAcs                 = $aciiR->repoInvItemquery((string) $copyInvItemId);
+        $copyAcs = $aciiR->repoInvItemquery((string) $copyInvItemId);
         $accumulativeChargeTotal = 0.00;
         /**
-         * If identifier is 1 it is a charge.
-         *
+         * If identifier is 1 it is a charge
          * @var InvItemAllowanceCharge $copyAc
          */
         foreach ($copyAcs as $copyAc) {
             // If the parent allowancecharge is a charge, add to total to appear in InvItemAmount charge total
-            if (1 == $copyAc->getAllowanceCharge()?->getIdentifier()) {
+            if ($copyAc->getAllowanceCharge()?->getIdentifier() == 1) {
                 $accumulativeChargeTotal += (float) $copyAc->getAmount();
             }
         }
-
         return $accumulativeChargeTotal;
     }
 
     public function accumulativeAllowanceTotal(int $copyInvItemId, ACIIR $aciiR): float
     {
-        $copyAcs                    = $aciiR->repoInvItemquery((string) $copyInvItemId);
+        $copyAcs = $aciiR->repoInvItemquery((string) $copyInvItemId);
         $accumulativeAllowanceTotal = 0.00;
         /**
-         * If identifier is 0 it is an allowance.
-         *
+         * If identifier is 0 it is an allowance
          * @var InvItemAllowanceCharge $copyAc
          */
         foreach ($copyAcs as $copyAc) {
             // If the parent allowancecharge is an allowance, add to total to appear in InvItemAmount allowance total
-            if (0 == $copyAc->getAllowanceCharge()?->getIdentifier()) {
+            if ($copyAc->getAllowanceCharge()?->getIdentifier() == 0) {
                 $accumulativeAllowanceTotal += (float) $copyAc->getAmount();
             }
         }
-
         return $accumulativeAllowanceTotal;
     }
 
     /**
-     * Related logic: see InvController function inv_to_inv_inv_items.
+     * Related logic: see InvController function inv_to_inv_inv_items
+     * @param string $copyInvId
+     * @param int $originalId
+     * @param int $newId
+     * @param ACIIR $aciiR
      */
     public function addInvItem_allowance_charges(string $copyInvId, int $originalId, int $newId, ACIIR $aciiR): void
     {
@@ -137,6 +144,15 @@ final readonly class InvItemService
         }
     }
 
+    /**
+     * @param InvItem $model
+     * @param array $array
+     * @param string $inv_id
+     * @param PR $pr
+     * @param SR $s
+     * @param UNR $unR
+     * @return int
+     */
     public function saveInvItem_product(InvItem $model, array $array, string $inv_id, PR $pr, SR $s, UNR $unR): int
     {
         // This function is used in product/save_product_lookup_item_product when adding a product using the modal
@@ -176,14 +192,22 @@ final readonly class InvItemService
         }
         $model->setProduct_unit_id((int) $array['product_unit_id']);
         $product_id > 0 ? $this->repository->save($model) : '';
-
         return (int) $tax_rate_id;
     }
 
     /**
-     * Related logic: see InvController function inv_to_inv_items.
+     * Related logic: see InvController function inv_to_inv_items
+     * @param InvItem $model
+     * @param array $array
+     * @param string $inv_id
+     * @param taskR $taskR
+     * @param TRR $trr
+     * @param IIAS $iias
+     * @param IIAR $iiar
+     * @param SR $s
+     * @return int|null
      */
-    public function addInvItem_task(InvItem $model, array $array, string $inv_id, taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar, SR $s): ?int
+    public function addInvItem_task(InvItem $model, array $array, string $inv_id, taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar, SR $s): int|null
     {
         // This function is used in task/selection_inv when adding a new task from the modal
         // see https://github.com/cycle/orm/issues/348
@@ -221,14 +245,21 @@ final readonly class InvItemService
         $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
         if ($task_id > 0) {
             $this->repository->save($model);
-            if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
+            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $s);
             }
         }
-
         return $model->getId();
     }
 
+    /**
+     * @param InvItem $model
+     * @param array $array
+     * @param string $inv_id
+     * @param taskR $taskR
+     * @param SR $s
+     * @return int
+     */
     public function saveInvItem_task(InvItem $model, array $array, string $inv_id, taskR $taskR, SR $s): int
     {
         // This function is used in invitem/edit_task when editing an item on the inv view
@@ -272,19 +303,28 @@ final readonly class InvItemService
         if ($task_id > 0) {
             $this->repository->save($model);
         }
-
         return (int) $tax_rate_id;
     }
 
     /**
      * Used solely for building up an invoice line item which is an identical copy of the copied invoice
      * The subtotal which is normally just quantity x price has to be adjusted for one or more
-     * inv item allowance or charges if using peppol.
+     * inv item allowance or charges if using peppol
      *
      * Any adjustments to this function should be reflected also in the similar InvItemController function saveInvItemAmount
      * which is used when the user adjusts e.g. a product item
      *
      * Related logic: see Used in InvController function inv_to_inv_items
+     * @param int $inv_item_id
+     * @param float $quantity
+     * @param float $price
+     * @param float $discount
+     * @param float $charge_total
+     * @param float $allowance_total
+     * @param float $tax_rate_percentage
+     * @param IIAS $iias
+     * @param IIAR $iiar
+     * @param SR $s
      */
     public function saveInvItemAmount(
         int $inv_item_id,
@@ -298,29 +338,29 @@ final readonly class InvItemService
         IIAR $iiar,
         SR $s,
     ): void {
-        $iias_array                = [];
+        $iias_array = [];
         $iias_array['inv_item_id'] = $inv_item_id;
-        $sub_total                 = $quantity * $price;
-        $discount_total            = ($quantity * $discount);
-        $tax_total                 = 0.00;
+        $sub_total = $quantity * $price;
+        $discount_total = ($quantity * $discount);
+        $tax_total = 0.00;
         // NO VAT
-        if ('0' === $s->getSetting('enable_vat_registration')) {
+        if ($s->getSetting('enable_vat_registration') === '0') {
             $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100.00));
         }
         // VAT
-        if ('1' === $s->getSetting('enable_vat_registration')) {
+        if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNTS MUST BE REMOVED BEFORE VAT IS DETERMINED
             // Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
             $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100.00));
         }
-        $iias_array['discount']  = $discount_total;
-        $iias_array['charge']    = $charge_total;
+        $iias_array['discount'] = $discount_total;
+        $iias_array['charge'] = $charge_total;
         $iias_array['allowance'] = $allowance_total;
-        $iias_array['subtotal']  = $sub_total - $allowance_total + $charge_total;
-        $iias_array['taxtotal']  = $tax_total;
-        $iias_array['total']     = ($sub_total - $discount_total + $charge_total - $allowance_total + $tax_total);
+        $iias_array['subtotal'] = $sub_total - $allowance_total + $charge_total;
+        $iias_array['taxtotal'] = $tax_total;
+        $iias_array['total'] = ($sub_total - $discount_total + $charge_total - $allowance_total + $tax_total);
         // Create a new Inv Item Amount record if one does not exist
-        if (0 === $iiar->repoCount((string) $inv_item_id)) {
+        if ($iiar->repoCount((string) $inv_item_id) === 0) {
             $iias->saveInvItemAmountNoForm(new InvItemAmount(), $iias_array);
         } else {
             // retrieve the existing InvItemAmount record
@@ -331,21 +371,35 @@ final readonly class InvItemService
         }
     }
 
+    /**
+     * @param InvItem $model
+     */
     public function deleteInvItem(InvItem $model): void
     {
         $this->repository->delete($model);
     }
 
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    /**
+     * @param int $id
+     * @param TRR $trr
+     * @return float|null
+     */
+    public function taxrate_percentage(int $id, TRR $trr): float|null
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }
-
         return null;
     }
 
+    /**
+     * @param int $basis_inv_id
+     * @param string $new_inv_id
+     * @param InvItemRepository $iiR
+     * @param IIAR $iiaR
+     * @param SR $sR
+     */
     public function initializeCreditInvItems(int $basis_inv_id, string $new_inv_id, InvItemRepository $iiR, IIAR $iiaR, SR $sR): void
     {
         // Get the basis invoice's items and balance with a negative quantity

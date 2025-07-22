@@ -7,6 +7,7 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\ORM\Entity\Behavior;
+use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Company\CompanyRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -14,10 +15,10 @@ use Cycle\ORM\Entity\Behavior;
 class Company
 {
     #[Column(type: 'datetime')]
-    private readonly \DateTimeImmutable $date_created;
+    private readonly DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime')]
-    private readonly \DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -61,11 +62,11 @@ class Company
         #[Column(type: 'text', nullable: true)]
         private ?string $arbitrationJurisdiction = '',
     ) {
-        $this->date_created  = new \DateTimeImmutable();
-        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -75,7 +76,7 @@ class Company
         $this->id = $id;
     }
 
-    public function getCurrent(): ?int
+    public function getCurrent(): int|null
     {
         return $this->current;
     }
@@ -85,7 +86,7 @@ class Company
         $this->current = $current;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -95,7 +96,7 @@ class Company
         $this->name = $name;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress_1(): string|null
     {
         return $this->address_1;
     }
@@ -105,7 +106,7 @@ class Company
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress_2(): string|null
     {
         return $this->address_2;
     }
@@ -115,7 +116,7 @@ class Company
         $this->address_2 = $address_2;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string|null
     {
         return $this->city;
     }
@@ -125,7 +126,7 @@ class Company
         $this->city = $city;
     }
 
-    public function getState(): ?string
+    public function getState(): string|null
     {
         return $this->state;
     }
@@ -135,7 +136,7 @@ class Company
         $this->state = $state;
     }
 
-    public function getZip(): ?string
+    public function getZip(): string|null
     {
         return $this->zip;
     }
@@ -145,7 +146,7 @@ class Company
         $this->zip = $zip;
     }
 
-    public function getCountry(): ?string
+    public function getCountry(): string|null
     {
         return $this->country;
     }
@@ -155,7 +156,7 @@ class Company
         $this->country = $country;
     }
 
-    public function getPhone(): ?string
+    public function getPhone(): string|null
     {
         return $this->phone;
     }
@@ -165,7 +166,7 @@ class Company
         $this->phone = $phone;
     }
 
-    public function getFax(): ?string
+    public function getFax(): string|null
     {
         return $this->fax;
     }
@@ -175,7 +176,7 @@ class Company
         $this->fax = $fax;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string|null
     {
         return $this->email;
     }
@@ -185,7 +186,7 @@ class Company
         $this->email = $email;
     }
 
-    public function getWeb(): ?string
+    public function getWeb(): string|null
     {
         return $this->web;
     }
@@ -195,7 +196,7 @@ class Company
         $this->web = $web;
     }
 
-    public function getSlack(): ?string
+    public function getSlack(): string|null
     {
         return $this->slack;
     }
@@ -205,7 +206,7 @@ class Company
         $this->slack = $slack;
     }
 
-    public function getTwitter(): ?string
+    public function getTwitter(): string|null
     {
         return $this->twitter;
     }
@@ -215,7 +216,7 @@ class Company
         $this->twitter = $twitter;
     }
 
-    public function getFacebook(): ?string
+    public function getFacebook(): string|null
     {
         return $this->facebook;
     }
@@ -225,7 +226,7 @@ class Company
         $this->facebook = $facebook;
     }
 
-    public function getLinkedIn(): ?string
+    public function getLinkedIn(): string|null
     {
         return $this->linkedin;
     }
@@ -235,7 +236,7 @@ class Company
         $this->linkedin = $linkedin;
     }
 
-    public function getWhatsapp(): ?string
+    public function getWhatsapp(): string|null
     {
         return $this->whatsapp;
     }
@@ -245,7 +246,7 @@ class Company
         $this->whatsapp = $whatsapp;
     }
 
-    public function getArbitrationBody(): ?string
+    public function getArbitrationBody(): string|null
     {
         return $this->arbitrationBody;
     }
@@ -255,7 +256,7 @@ class Company
         $this->arbitrationBody = $arbitrationBody;
     }
 
-    public function getArbitrationJurisdiction(): ?string
+    public function getArbitrationJurisdiction(): string|null
     {
         return $this->arbitrationJurisdiction;
     }
@@ -265,18 +266,18 @@ class Company
         $this->arbitrationJurisdiction = $arbitrationJurisdiction;
     }
 
-    public function getDate_created(): \DateTimeImmutable
+    public function getDate_created(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): \DateTimeImmutable
+    public function getDate_modified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
     public function isNewRecord(): bool
     {
-        return null === $this->getId();
+        return $this->getId() === null;
     }
 }

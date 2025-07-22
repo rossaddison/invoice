@@ -9,9 +9,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolInvoiceNoteNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     #[\Override]
     public function getName(): string
@@ -19,6 +17,9 @@ final class PeppolInvoiceNoteNotFoundException extends \RuntimeException impleme
         return $this->translator->translate('peppol.invoice.note.not.found');
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

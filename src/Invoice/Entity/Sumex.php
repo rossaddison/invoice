@@ -6,6 +6,7 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Sumex\SumexRepository::class)]
@@ -22,9 +23,7 @@ class Sumex
         private ?string $casenumber = '', #[Column(type: 'date', nullable: true)]
         private mixed $treatmentstart = '', #[Column(type: 'date', nullable: true)]
         private mixed $treatmentend = '', #[Column(type: 'date', nullable: true)]
-        private mixed $casedate = '')
-    {
-    }
+        private mixed $casedate = '') {}
 
     public function getId(): string
     {
@@ -36,7 +35,7 @@ class Sumex
         $this->id = $id;
     }
 
-    public function getInvoice(): ?int
+    public function getInvoice(): int|null
     {
         return $this->invoice;
     }
@@ -46,7 +45,7 @@ class Sumex
         $this->invoice = $invoice;
     }
 
-    public function getReason(): ?int
+    public function getReason(): int|null
     {
         return $this->reason;
     }
@@ -76,35 +75,35 @@ class Sumex
         $this->observations = $observations;
     }
 
-    public function getTreatmentstart(): \DateTimeImmutable|string|null
+    public function getTreatmentstart(): DateTimeImmutable|string|null
     {
-        /* @var DateTimeImmutable|string|null $this->treatmentstart */
+        /** @var DateTimeImmutable|string|null $this->treatmentstart */
         return $this->treatmentstart;
     }
 
-    public function setTreatmentstart(\DateTime $treatmentstart): void
+    public function setTreatmentstart(DateTime $treatmentstart): void
     {
         $this->treatmentstart = $treatmentstart;
     }
 
-    public function getTreatmentend(): \DateTimeImmutable|string|null
+    public function getTreatmentend(): DateTimeImmutable|string|null
     {
-        /* @var DateTimeImmutable|string|null $this->treatmentend */
+        /** @var DateTimeImmutable|string|null $this->treatmentend */
         return $this->treatmentend;
     }
 
-    public function setTreatmentend(\DateTime $treatmentend): void
+    public function setTreatmentend(DateTime $treatmentend): void
     {
         $this->treatmentend = $treatmentend;
     }
 
-    public function getCasedate(): \DateTimeImmutable|string|null
+    public function getCasedate(): DateTimeImmutable|string|null
     {
-        /* @var DateTimeImmutable|string|null $this->casedate */
+        /** @var DateTimeImmutable|string|null $this->casedate */
         return $this->casedate;
     }
 
-    public function setCasedate(\DateTime $casedate): void
+    public function setCasedate(DateTime $casedate): void
     {
         $this->casedate = $casedate;
     }

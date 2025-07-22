@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\H2;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
 
-/*
+/**
  * Related logic: see https://github.com/yiisoft/yii-dataview/blob/master/tests/DetailView/Bootstrap5Test.php
  * @var App\User\User $item
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -19,7 +19,7 @@ $this->setTitle('Profile');
 $title = Html::encode($this->getTitle());
 ?>
 
-<?php echo DetailView::widget()
+<?= DetailView::widget()
     ->attributes(['class' => 'container'])
     ->fieldListAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
     ->fieldAttributes(['class' => 'col-xl-5'])

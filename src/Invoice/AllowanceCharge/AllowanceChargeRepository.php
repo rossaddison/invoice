@@ -6,20 +6,21 @@ namespace App\Invoice\AllowanceCharge;
 
 use App\Invoice\Entity\AllowanceCharge;
 use Cycle\ORM\Select;
-use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of AllowanceCharge
- *
  * @extends Select\Repository<TEntity>
  */
 final class AllowanceChargeRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly TranslatorInterface $translator)
     {
@@ -27,15 +28,14 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * Get allowanceCharges  without filter.
+     * Get allowanceCharges  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-            ->load('tax_rate');
-
+                      ->load('tax_rate');
         return $this->prepareDataReader($query);
     }
 
@@ -48,17 +48,19 @@ final class AllowanceChargeRepository extends Select\Repository
             ->withSort($this->getSort());
     }
 
+    /**
+     * @return Sort
+     */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param AllowanceCharge|array|null $allowanceCharge
      * @psalm-param TEntity $allowanceCharge
-     *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function save(array|AllowanceCharge|null $allowanceCharge): void
     {
@@ -66,15 +68,20 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param AllowanceCharge|array|null $allowanceCharge
+
+     * @throws Throwable
      */
     public function delete(array|AllowanceCharge|null $allowanceCharge): void
     {
         $this->entityWriter->delete([$allowanceCharge]);
     }
 
+    /**
+     * @param Select $query
+     * @return EntityReader
+     */
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -84,29 +91,33 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
+     * @param string $id
      * @psalm-return TEntity|null
+     * @return AllowanceCharge|null
      */
-    public function repoAllowanceChargequery(string $id): ?AllowanceCharge
+    public function repoAllowanceChargequery(string $id): AllowanceCharge|null
     {
         $query = $this->select()
-            ->load('tax_rate')
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('tax_rate')
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
+    /**
+     * @param string $id
+     * @return int
+     */
     public function repoCount(string $id): int
     {
         $query = $this->select()
-            ->where(['id' => $id]);
-
+                      ->where(['id' => $id]);
         return $query->count();
     }
 
     public function optionsDataAllowanceCharges(): array
     {
         $optionsDataAllowanceCharges = [];
-        $allowanceCharges            = $this->findAllPreloaded();
+        $allowanceCharges = $this->findAllPreloaded();
         /**
          * @var AllowanceCharge $allowanceCharge
          */
@@ -114,12 +125,11 @@ final class AllowanceChargeRepository extends Select\Repository
             $key = $allowanceCharge->getId();
             $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
             ? $this->translator->translate('allowance.or.charge.charge')
-            : $this->translator->translate('allowance.or.charge.allowance')).
-            '  '.$allowanceCharge->getReasonCode().
-            ' '.
+            : $this->translator->translate('allowance.or.charge.allowance')) .
+            '  ' . $allowanceCharge->getReasonCode() .
+            ' ' .
             $allowanceCharge->getReason()) : '';
         }
-
         return $optionsDataAllowanceCharges;
     }
 }

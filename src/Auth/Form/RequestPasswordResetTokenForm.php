@@ -22,8 +22,7 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return string[]
@@ -38,6 +37,8 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
     }
 
     /**
+     * @return string
+     *
      * @psalm-return 'RequestPasswordResetToken'
      */
     #[\Override]
@@ -46,6 +47,9 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
         return 'RequestPasswordResetToken';
     }
 
+    /**
+     * @return PropertyTranslatorInterface|null
+     */
     #[\Override]
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
@@ -71,10 +75,9 @@ final class RequestPasswordResetTokenForm extends FormModel implements RulesProv
                 new Email(),
                 function (mixed $value): Result {
                     $result = new Result();
-                    if (null === $this->userRepository->findByEmail((string) $value)) {
+                    if ($this->userRepository->findByEmail((string) $value) === null) {
                         $result->addError($this->translator->translate('validator.user.exist.not'));
                     }
-
                     return $result;
                 },
             ],

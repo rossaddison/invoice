@@ -9,62 +9,63 @@ use Sabre\Xml\XmlSerializable;
 
 class AllowanceCharge implements XmlSerializable
 {
-    public function __construct(private readonly bool $chargeIndicator, private readonly ?int $allowanceChargeReasonCode, private readonly ?string $allowanceChargeReason, private readonly ?int $multiplierFactorNumeric, private readonly ?float $baseAmount, private readonly float $amount, private readonly ?TaxTotal $taxTotal, private readonly ?TaxCategory $taxCategory)
-    {
-    }
+    public function __construct(private readonly bool $chargeIndicator, private readonly ?int $allowanceChargeReasonCode, private readonly ?string $allowanceChargeReason, private readonly ?int $multiplierFactorNumeric, private readonly ?float $baseAmount, private readonly float $amount, private readonly ?TaxTotal $taxTotal, private readonly ?TaxCategory $taxCategory) {}
 
+    /**
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([
-            Schema::CBC.'ChargeIndicator' => $this->chargeIndicator ? 'true' : 'false',
+            Schema::CBC . 'ChargeIndicator' => $this->chargeIndicator ? 'true' : 'false',
         ]);
 
-        if (null !== $this->allowanceChargeReasonCode) {
+        if ($this->allowanceChargeReasonCode !== null) {
             $writer->write([
-                Schema::CBC.'AllowanceChargeReasonCode' => $this->allowanceChargeReasonCode,
+                Schema::CBC . 'AllowanceChargeReasonCode' => $this->allowanceChargeReasonCode,
             ]);
         }
 
-        if (null !== $this->allowanceChargeReason) {
+        if ($this->allowanceChargeReason !== null) {
             $writer->write([
-                Schema::CBC.'AllowanceChargeReason' => $this->allowanceChargeReason,
+                Schema::CBC . 'AllowanceChargeReason' => $this->allowanceChargeReason,
             ]);
         }
 
-        if (null !== $this->multiplierFactorNumeric) {
+        if ($this->multiplierFactorNumeric !== null) {
             $writer->write([
-                Schema::CBC.'MultiplierFactorNumeric' => $this->multiplierFactorNumeric,
+                Schema::CBC . 'MultiplierFactorNumeric' => $this->multiplierFactorNumeric,
             ]);
         }
 
         $writer->write([
             [
-                'name'       => Schema::CBC.'Amount',
-                'value'      => $this->amount,
+                'name' => Schema::CBC . 'Amount',
+                'value' => $this->amount,
                 'attributes' => [
                     'currencyID' => Generator::$currencyID,
                 ],
             ],
         ]);
 
-        if (null !== $this->taxCategory) {
+        if ($this->taxCategory !== null) {
             $writer->write([
-                Schema::CAC.'TaxCategory' => $this->taxCategory,
+                Schema::CAC . 'TaxCategory' => $this->taxCategory,
             ]);
         }
 
-        if (null !== $this->taxTotal) {
+        if ($this->taxTotal !== null) {
             $writer->write([
-                Schema::CAC.'TaxTotal' => $this->taxTotal,
+                Schema::CAC . 'TaxTotal' => $this->taxTotal,
             ]);
         }
 
-        if (null !== $this->baseAmount) {
+        if ($this->baseAmount !== null) {
             $writer->write([
                 [
-                    'name'       => Schema::CBC.'BaseAmount',
-                    'value'      => $this->baseAmount,
+                    'name' => Schema::CBC . 'BaseAmount',
+                    'value' => $this->baseAmount,
                     'attributes' => [
                         'currencyID' => Generator::$currencyID,
                     ],

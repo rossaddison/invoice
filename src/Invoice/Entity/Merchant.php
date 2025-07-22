@@ -7,6 +7,7 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Merchant\MerchantRepository::class)]
@@ -24,9 +25,7 @@ class Merchant
         private ?bool $successful = true, #[Column(type: 'string(35)', nullable: false)]
         private string $driver = '', #[Column(type: 'string(151)', nullable: false)]
         private string $response = '', #[Column(type: 'string(151)', nullable: false)]
-        private string $reference = '')
-    {
-    }
+        private string $reference = '') {}
 
     public function getInv(): ?Inv
     {
@@ -53,7 +52,7 @@ class Merchant
         $this->inv_id = $inv_id;
     }
 
-    public function getSuccessful(): ?bool
+    public function getSuccessful(): bool|null
     {
         return $this->successful;
     }
@@ -63,13 +62,13 @@ class Merchant
         $this->successful = $successful;
     }
 
-    public function getDate(): string|\DateTimeImmutable
+    public function getDate(): string|DateTimeImmutable
     {
-        /* @var DateTimeImmutable|string $this->date */
+        /** @var DateTimeImmutable|string $this->date */
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): void
+    public function setDate(DateTime $date): void
     {
         $this->date = $date;
     }

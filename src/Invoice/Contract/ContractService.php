@@ -10,10 +10,13 @@ use App\Invoice\Setting\SettingRepository as SR;
 
 final readonly class ContractService
 {
-    public function __construct(private ContractRepository $repository)
-    {
-    }
+    public function __construct(private ContractRepository $repository) {}
 
+    /**
+     * @param Contract $model
+     * @param array $array
+     * @param SR $s
+     */
     public function saveContract(Contract $model, array $array, SR $s): void
     {
         $model->nullifyRelationOnChange((int) $array['client_id']);
@@ -21,7 +24,7 @@ final readonly class ContractService
         $datehelper = new DateHelper($s);
 
         $datetime_immutable_period_start = new \DateTimeImmutable();
-        $period_start                    = $datetime_immutable_period_start::createFromFormat(
+        $period_start = $datetime_immutable_period_start::createFromFormat(
             'Y-m-d',
             (string) $array['period_start'],
         );
@@ -29,7 +32,7 @@ final readonly class ContractService
         $period_start ? $model->setPeriod_start($period_start) : '';
 
         $datetime_immutable_period_end = new \DateTimeImmutable();
-        $period_end                    = $datetime_immutable_period_end::createFromFormat(
+        $period_end = $datetime_immutable_period_end::createFromFormat(
             'Y-m-d',
             (string) $array['period_end'],
         );

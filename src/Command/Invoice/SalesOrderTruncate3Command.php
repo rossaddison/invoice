@@ -38,6 +38,7 @@ final class SalesOrderTruncate3Command extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
 
         $tables = ['sales_order_item_amount', 'sales_order_amount', 'sales_order_item', 'sales_order_tax_rate', 'sales_order'];
@@ -51,23 +52,25 @@ final class SalesOrderTruncate3Command extends Command
         }
 
         if (0 === count(is_array($findAll = $this->promise
-            ->getORM()
-            ->getRepository(SalesOrderItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
+                ->getORM()
+                ->getRepository(SalesOrderTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(SalesOrder::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {
             $io->success('Done');
-
             return ExitCode::OK;
         }
         $io->error('Unspecified error');
-
         return ExitCode::UNSPECIFIED_ERROR;
     }
 }

@@ -10,9 +10,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 class NoConnectionException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator, private readonly Exception $e)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator, private readonly Exception $e) {}
 
     #[\Override]
     public function getName(): string
@@ -20,6 +18,9 @@ class NoConnectionException extends \RuntimeException implements FriendlyExcepti
         return $this->translator->translate('invoiceplane.no.connection');
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

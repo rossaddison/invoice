@@ -14,9 +14,7 @@ class ItemLookup
         private ?int $id = null, #[Column(type: 'string(100)', nullable: false)]
         private string $name = '', #[Column(type: 'longText', nullable: false)]
         private string $description = '', #[Column(type: 'decimal(10,2)', nullable: false)]
-        private ?float $price = null)
-    {
-    }
+        private ?float $price = null) {}
 
     public function getId(): string
     {
@@ -48,7 +46,7 @@ class ItemLookup
         $this->description = $description;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float|null
     {
         return $this->price;
     }

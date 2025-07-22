@@ -21,33 +21,35 @@ final class GroupForm extends FormModel
 
     public function __construct(Group $group)
     {
-        $this->name              = $group->getName();
+        $this->name = $group->getName();
         $this->identifier_format = $group->getIdentifier_format();
-        $this->next_id           = (int) $group->getNext_id();
-        $this->left_pad          = (int) $group->getLeft_pad();
+        $this->next_id = (int) $group->getNext_id();
+        $this->left_pad = (int) $group->getLeft_pad();
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getIdentifier_format(): ?string
+    public function getIdentifier_format(): string|null
     {
         return $this->identifier_format;
     }
 
-    public function getNext_id(): ?int
+    public function getNext_id(): int|null
     {
         return $this->next_id;
     }
 
-    public function getLeft_pad(): ?int
+    public function getLeft_pad(): int|null
     {
         return $this->left_pad;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

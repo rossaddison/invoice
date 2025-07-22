@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 use App\Invoice\Entity\ProductImage;
-use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 
-/*
+/**
  * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image
  * Related logic: see ...resources\views\invoice\product\views\partial_product_image.php
  * @var App\Invoice\Setting\SettingRepository $s
@@ -26,12 +26,12 @@ use Yiisoft\Yii\DataView\GridView;
             new DataColumn(
                 'file_name_original',
                 header: $translator->translate('name'),
-                content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original()),
+                content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_original()),
             ),
             new DataColumn(
                 'uploaded_date',
                 header: $translator->translate('date'),
-                content: static fn (ProductImage $model): string => $model->getUploaded_date()->format('Y-m-d'),
+                content: static fn(ProductImage $model): string => ($model->getUploaded_date())->format('Y-m-d'),
             ),
             new DataColumn(
                 header: $translator->translate('download'),
@@ -41,7 +41,7 @@ use Yiisoft\Yii\DataView\GridView;
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
                             [
-                                'type'  => 'submit',
+                                'type' => 'submit',
                                 'class' => 'dropdown-button',
                             ],
                         ),
@@ -61,7 +61,7 @@ use Yiisoft\Yii\DataView\GridView;
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
                             [
-                                'type'  => 'submit',
+                                'type' => 'submit',
                                 'class' => 'dropdown-button',
                             ],
                         ),
@@ -79,9 +79,9 @@ use Yiisoft\Yii\DataView\GridView;
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                             [
-                                'type'    => 'submit',
-                                'class'   => 'dropdown-button',
-                                'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                             ],
                         ),
                         $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']),
@@ -89,7 +89,7 @@ use Yiisoft\Yii\DataView\GridView;
                     );
                 },
             ),
-        ];
+        ]
 ?>
     <?php
     $grid_summary = $s->grid_summary(
@@ -100,13 +100,13 @@ use Yiisoft\Yii\DataView\GridView;
         '',
     );
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-475', 'id' => 'table-product-image-list'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('no.attachments'));
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-475', 'id' => 'table-product-image-list'])
+->columns(...$columns)
+->dataReader($paginator)
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->summaryTemplate($grid_summary)
+->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+->emptyText($translator->translate('no.attachments'))
 ?>
 </div>

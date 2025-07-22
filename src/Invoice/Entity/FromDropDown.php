@@ -8,15 +8,14 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(repository: \App\Invoice\FromDropDown\FromDropDownRepository::class)]
+
 class FromDropDown
 {
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'text)', nullable: false)]
         private string $email = '', #[Column(type: 'bool', default: false, nullable: false)]
         private bool $include = false, #[Column(type: 'bool', default: false, nullable: false)]
-        private bool $default_email = false)
-    {
-    }
+        private bool $default_email = false) {}
 
     public function getId(): string
     {

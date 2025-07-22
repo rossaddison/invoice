@@ -6,19 +6,20 @@ namespace App\Invoice\Project;
 
 use App\Invoice\Entity\Project;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of Project
- *
  * @extends Select\Repository<TEntity>
  */
 final class ProjectRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,14 +27,13 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     * Get projects  without filter.
+     * Get projects  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()->load('client');
-
         return $this->prepareDataReader($query);
     }
 
@@ -52,9 +52,9 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|Project|null $project
+     * @throws Throwable
      */
     public function save(array|Project|null $project): void
     {
@@ -62,9 +62,9 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|Project|null $project
+     * @throws Throwable
      */
     public function delete(array|Project|null $project): void
     {
@@ -80,22 +80,30 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
+     * @return Project|null
+     *
      * @psalm-return TEntity|null
      */
-    public function repoProjectquery(string $id): ?Project
+    public function repoProjectquery(string $id): Project|null
     {
         $query = $this->select()->load('client')->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+        return  $query->fetchOne() ?: null;
     }
 
+    /**
+     * @param string $project_id
+     * @return int
+     */
     public function count(string $project_id): int
     {
         return $this->select()
-            ->where(['id' => $project_id])
-            ->count();
+                      ->where(['id' => $project_id])
+                      ->count();
     }
 
+    /**
+     * @return array
+     */
     public function optionsDataProjects(): array
     {
         $optionsDataProjects = [];
@@ -105,7 +113,6 @@ final class ProjectRepository extends Select\Repository
         foreach ($this->findAllPreloaded() as $project) {
             $optionsDataProjects[$project->getId()] = $project->getName();
         }
-
         return $optionsDataProjects;
     }
 }

@@ -6,19 +6,20 @@ namespace App\Invoice\SalesOrderCustom;
 
 use App\Invoice\Entity\SalesOrderCustom;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of SalesOrderCustom
- *
  * @extends Select\Repository<TEntity>
  */
 final class SalesOrderCustomRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,16 +27,15 @@ final class SalesOrderCustomRepository extends Select\Repository
     }
 
     /**
-     * Get client sales order customs  without filter.
+     * Get client sales order customs  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-            ->load('custom_field')
-            ->load('quote');
-
+                      ->load('custom_field')
+                      ->load('quote');
         return $this->prepareDataReader($query);
     }
 
@@ -54,9 +54,9 @@ final class SalesOrderCustomRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|SalesOrderCustom|null $quotecustom
+     * @throws Throwable
      */
     public function save(array|SalesOrderCustom|null $quotecustom): void
     {
@@ -64,9 +64,9 @@ final class SalesOrderCustomRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|SalesOrderCustom|null $so_custom
+     * @throws Throwable
      */
     public function delete(array|SalesOrderCustom|null $so_custom): void
     {
@@ -81,52 +81,47 @@ final class SalesOrderCustomRepository extends Select\Repository
         );
     }
 
-    public function repoSalesOrderCustomquery(string $id): ?SalesOrderCustom
+    public function repoSalesOrderCustomquery(string $id): SalesOrderCustom|null
     {
         $query = $this->select()
-            ->load('custom_field')
-            ->load('customsalesorder')
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('custom_field')
+                      ->load('customsalesorder')
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $so_id, string $custom_field_id): ?SalesOrderCustom
+    public function repoFormValuequery(string $so_id, string $custom_field_id): SalesOrderCustom|null
     {
         $query = $this->select()
-            ->where(['so_id' => $so_id])
-            ->andWhere(['custom_field_id' => $custom_field_id]);
-
-        return $query->fetchOne();
+                      ->where(['so_id' => $so_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
+        return  $query->fetchOne();
     }
 
     public function repoSalesOrderCustomCount(string $so_id, string $custom_field_id): int
     {
         $query = $this->select()
-            ->where(['so_id' => $so_id])
-            ->andWhere(['custom_field_id' => $custom_field_id]);
-
+                      ->where(['so_id' => $so_id])
+                      ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
     }
 
     public function repoSalesOrderCount(string $so_id): int
     {
         $query = $this->select()
-            ->where(['so_id' => $so_id]);
-
+                      ->where(['so_id' => $so_id]);
         return $query->count();
     }
 
     /**
-     * Get all fields that have been setup for a particular sales order.
+     * Get all fields that have been setup for a particular sales order
      *
      * @psalm-return EntityReader
      */
     public function repoFields(string $so_id): EntityReader
     {
         $query = $this->select()
-            ->where(['so_id' => $so_id]);
-
+                      ->where(['so_id' => $so_id]);
         return $this->prepareDataReader($query);
     }
 }

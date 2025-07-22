@@ -8,10 +8,12 @@ use App\Invoice\Entity\PaymentCustom;
 
 final readonly class PaymentCustomService
 {
-    public function __construct(private PaymentCustomRepository $repository)
-    {
-    }
+    public function __construct(private PaymentCustomRepository $repository) {}
 
+    /**
+     * @param PaymentCustom $model
+     * @param array $array
+     */
     public function savePaymentCustom(PaymentCustom $model, array $array): void
     {
         isset($array['payment_id']) ? $model->setPayment_id((int) $array['payment_id']) : '';
@@ -21,6 +23,9 @@ final readonly class PaymentCustomService
         $this->repository->save($model);
     }
 
+    /**
+     * @param PaymentCustom $model
+     */
     public function deletePaymentCustom(PaymentCustom $model): void
     {
         $this->repository->delete($model);

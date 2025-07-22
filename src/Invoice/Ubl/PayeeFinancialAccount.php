@@ -9,30 +9,28 @@ use Sabre\Xml\XmlSerializable;
 
 class PayeeFinancialAccount implements XmlSerializable
 {
-    public function __construct(private readonly ?FinancialInstitutionBranch $financialInstitutionBranch, private readonly ?string $id, private readonly ?string $name)
-    {
-    }
+    public function __construct(private readonly ?FinancialInstitutionBranch $financialInstitutionBranch, private readonly ?string $id, private readonly ?string $name) {}
 
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([
-            'name'       => Schema::CBC.'ID',
-            'value'      => $this->id,
+            'name' => Schema::CBC . 'ID',
+            'value' => $this->id,
             'attributes' => [
-                // 'schemeID' => 'IBAN'
+                //'schemeID' => 'IBAN'
             ],
         ]);
 
-        if (null !== $this->name) {
+        if ($this->name !== null) {
             $writer->write([
-                Schema::CBC.'Name' => $this->name,
+                Schema::CBC . 'Name' => $this->name,
             ]);
         }
 
-        if (null !== $this->financialInstitutionBranch) {
+        if ($this->financialInstitutionBranch !== null) {
             $writer->write([
-                Schema::CAC.'FinancialInstitutionBranch' => $this->financialInstitutionBranch,
+                Schema::CAC . 'FinancialInstitutionBranch' => $this->financialInstitutionBranch,
             ]);
         }
     }

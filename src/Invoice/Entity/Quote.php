@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\Invoice\Setting\SettingRepository as sR;
-use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -13,6 +11,9 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\User\User;
+use App\Invoice\Setting\SettingRepository as sR;
+use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Quote\QuoteRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -46,16 +47,16 @@ class Quote
     private ?int $id = null;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_created;
+    private DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime', nullable: false)]
-    private readonly \DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_expires;
+    private DateTimeImmutable $date_expires;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_required;
+    private DateTimeImmutable $date_required;
 
     public function __construct(
         #[Column(type: 'integer(11)', nullable: true, default: 0)]
@@ -87,12 +88,12 @@ class Quote
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $contract_id = null,
     ) {
-        $this->items         = new ArrayCollection();
-        $this->quoteAmount   = new QuoteAmount();
-        $this->date_modified = new \DateTimeImmutable();
-        $this->date_created  = new \DateTimeImmutable();
-        $this->date_expires  = new \DateTimeImmutable();
-        $this->date_required = new \DateTimeImmutable();
+        $this->items = new ArrayCollection();
+        $this->quoteAmount = new QuoteAmount();
+        $this->date_modified = new DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_expires = new DateTimeImmutable();
+        $this->date_required = new DateTimeImmutable();
     }
 
     public function getClient(): ?Client
@@ -133,9 +134,9 @@ class Quote
     /**
      * @return numeric-string|null
      */
-    public function getId(): ?string
+    public function getId(): string|null
     {
-        return null === $this->id ? null : (string) $this->id;
+        return $this->id === null ? null : (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -158,9 +159,12 @@ class Quote
         return (string) $this->so_id;
     }
 
+    /**
+     * @param int|string|null $so_id
+     */
     public function setSo_id(string|int|null $so_id): void
     {
-        null === $so_id ? $this->so_id = null : $this->so_id = (int) $so_id;
+        $so_id === null ? $this->so_id = null : $this->so_id = (int) $so_id ;
     }
 
     public function getInv_id(): string
@@ -168,9 +172,12 @@ class Quote
         return (string) $this->inv_id;
     }
 
+    /**
+     * @param int|string|null $inv_id
+     */
     public function setInv_id(string|int|null $inv_id): void
     {
-        null === $inv_id ? $this->inv_id = null : $this->inv_id = (int) $inv_id;
+        $inv_id === null ? $this->inv_id = null : $this->inv_id = (int) $inv_id ;
     }
 
     public function getClient_id(): string
@@ -213,7 +220,7 @@ class Quote
         $this->contract_id = $contract_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatus_id(): int|null
     {
         return $this->status_id;
     }
@@ -221,34 +228,33 @@ class Quote
     public function getStatus(int $status_id): string
     {
         $status = '';
-
         return match ($status_id) {
-            1       => 'draft',
-            2       => 'sent',
-            3       => 'viewed',
-            4       => 'approved',
-            5       => 'rejected',
-            6       => 'cancelled',
+            1 => 'draft',
+            2 => 'sent',
+            3 => 'viewed',
+            4 => 'approved',
+            5 => 'rejected',
+            6 => 'cancelled',
             default => $status,
         };
     }
 
     public function setStatus_id(int $status_id): void
     {
-        !in_array($status_id, [1, 2, 3, 4, 5, 6, 7]) ? $this->status_id = 1 : $this->status_id = $status_id;
+        !in_array($status_id, [1,2,3,4,5,6,7]) ? $this->status_id = 1 : $this->status_id = $status_id ;
     }
 
-    public function getDate_created(): \DateTimeImmutable
+    public function getDate_created(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function setDate_created(\DateTimeImmutable $date_created): void
+    public function setDate_created(DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;
     }
 
-    public function getDate_modified(): \DateTimeImmutable
+    public function getDate_modified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
@@ -256,7 +262,7 @@ class Quote
     public function setDate_expires(sR $sR): void
     {
         $days = 30;
-        if (0 == $sR->repoCount('quotes_expire_after')) {
+        if ($sR->repoCount('quotes_expire_after') == 0) {
             $days = 30;
         } else {
             $setting = $sR->withKey('quotes_expire_after');
@@ -264,20 +270,20 @@ class Quote
                 $days = $setting->getSetting_value() ?: 30;
             }
         }
-        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P'.(string) $days.'D'));
+        $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . (string) $days . 'D'));
     }
 
-    public function getDate_expires(): \DateTimeImmutable
+    public function getDate_expires(): DateTimeImmutable
     {
         return $this->date_expires;
     }
 
-    public function setDate_required(\DateTimeImmutable $date_required): void
+    public function setDate_required(DateTimeImmutable $date_required): void
     {
         $this->date_required = $date_required;
     }
 
-    public function getDate_required(): \DateTimeImmutable
+    public function getDate_required(): DateTimeImmutable
     {
         return $this->date_required;
     }
@@ -347,6 +353,10 @@ class Quote
         return $this->items;
     }
 
+    /**
+     * @param int $group_id
+     * @param int $client_id
+     */
     public function nullifyRelationOnChange(int $group_id, int $client_id): void
     {
         if ($this->group_id != $group_id) {

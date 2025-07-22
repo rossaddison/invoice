@@ -6,19 +6,20 @@ namespace App\Invoice\Upload;
 
 use App\Invoice\Entity\Upload;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of Upload
- *
  * @extends Select\Repository<TEntity>
  */
 final class UploadRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -28,35 +29,40 @@ final class UploadRepository extends Select\Repository
     public string $ctype_default = 'application/octet-stream';
 
     public array $content_types = [
-        'gif'  => 'image/gif',
-        'jpg'  => 'image/jpeg',
+        'gif' => 'image/gif',
+        'jpg' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
-        'pdf'  => 'application/pdf',
-        'png'  => 'image/png',
-        'txt'  => 'text/plain',
-        'xml'  => 'application/xml',
+        'pdf' => 'application/pdf',
+        'png' => 'image/png',
+        'txt' => 'text/plain',
+        'xml' => 'application/xml',
     ];
 
+    /**
+     * @return array
+     */
     public function getContentTypes(): array
     {
         return $this->content_types;
     }
 
+    /**
+     * @return string
+     */
     public function getContentTypeDefaultOctetStream(): string
     {
         return $this->ctype_default;
     }
 
     /**
-     * Get uploads  without filter.
+     * Get uploads  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-            ->load('client');
-
+                      ->load('client');
         return $this->prepareDataReader($query);
     }
 
@@ -69,15 +75,18 @@ final class UploadRepository extends Select\Repository
             ->withSort($this->getSort());
     }
 
+    /**
+     * @return Sort
+     */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|Upload|null $upload
+     * @throws Throwable
      */
     public function save(array|Upload|null $upload): void
     {
@@ -85,9 +94,9 @@ final class UploadRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|Upload|null $upload
+     * @throws Throwable
      */
     public function delete(array|Upload|null $upload): void
     {
@@ -102,34 +111,40 @@ final class UploadRepository extends Select\Repository
         );
     }
 
-    public function repoUploadquery(string $id): ?Upload
+    /**
+     * @param string $id
+     * @return Upload|null
+     */
+    public function repoUploadquery(string $id): Upload|null
     {
         $query = $this->select()
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
     /**
-     * Get uploads.
+     * Get uploads
      *
      * @psalm-return EntityReader
      */
     public function repoUploadUrlClientquery(string $url_key, int $client_id): EntityReader
     {
         $query = $this->select()
-            ->where(['url_key' => $url_key])
-            ->andWhere(['client_id' => $client_id]);
-
+                      ->where(['url_key' => $url_key])
+                      ->andWhere(['client_id' => $client_id]);
         return $this->prepareDataReader($query);
     }
 
+    /**
+     * @param string $url_key
+     * @param int $client_id
+     * @return int
+     */
     public function repoCount(string $url_key, int $client_id): int
     {
         $query = $this->select()
-            ->where(['url_key' => $url_key])
-            ->andWhere(['client_id' => $client_id]);
-
+                      ->where(['url_key' => $url_key])
+                      ->andWhere(['client_id' => $client_id]);
         return $query->count();
     }
 }

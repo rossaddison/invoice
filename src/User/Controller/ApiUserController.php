@@ -18,9 +18,7 @@ use Yiisoft\Router\CurrentRoute;
  */
 final readonly class ApiUserController
 {
-    public function __construct(private DataResponseFactoryInterface $responseFactory)
-    {
-    }
+    public function __construct(private DataResponseFactoryInterface $responseFactory) {}
 
     /**
      * @OA\Get (
@@ -66,7 +64,7 @@ final readonly class ApiUserController
         $login = $currentRoute->getArgument('login');
         if (null !== $login) {
             $user = $userRepository->findByLogin($login);
-            if (null === $user) {
+            if ($user === null) {
                 return $this->responseFactory->createResponse('Page not found', 404);
             }
 
@@ -76,7 +74,6 @@ final readonly class ApiUserController
                     ->format('H:i:s d.m.Y'), ],
             );
         }
-
         return $this->responseFactory->createResponse('Page not found', 404);
     }
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/*
+/**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
 ?>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php echo Html::encode($translator->translate('sales.by.client')); ?></h1>
+    <h1 class="headerbar-title"><?= Html::encode($translator->translate('sales.by.client')); ?></h1>
 </div>
 
 <div id="content">
@@ -26,27 +26,27 @@ use Yiisoft\Html\Html;
     <div class='row'>
         <div class="col-xs-12 col-md-6 col-md-offset-3">
 
-            <?php echo $alert; ?>
+            <?= $alert; ?>
 
             <div id="report_options" class="panel panel-default">
 
                 <div class="panel-heading">
                     <i class="fa fa-print"></i>
-                    <?php echo $translator->translate('report.options'); ?>
+                    <?= $translator->translate('report.options'); ?>
                 </div>
 
                 <div class="panel-body">
-                    <form method="POST" action="<?php echo $urlGenerator->generate($actionName, $actionArguments); ?>"  enctype="multipart/form-data"
-                       <?php echo '1' === $s->getSetting('open_reports_in_new_tab') ? 'target="_blank"' : ''; ?>>
+                    <form method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>"  enctype="multipart/form-data"
+                       <?php echo($s->getSetting('open_reports_in_new_tab') === '1' ? 'target="_blank"' : ''); ?>>
 
-                        <input type="hidden" id="_csrf" name="_csrf" value="<?php echo $csrf; ?>">   
+                        <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
 
                         <div class="mb-3 form-group has-feedback">
-                            <label for="from_date"><?php echo $translator->translate('from.date').' ('.$dateHelper->display().')'; ?></label>
+                            <label for="from_date"><?= $translator->translate('from.date') . ' (' . $dateHelper->display() . ')'; ?></label>
                             <div class="input-group">
-                                <input type="text" name="from_date" id="from_date" placeholder="<?php echo ' ('.$dateHelper->display().')'; ?>"
+                                <input type="text" name="from_date" id="from_date" placeholder="<?= ' (' . $dateHelper->display() . ')';?>"
                                        class="form-control" readonly                   
-                                       value="<?php echo $body['from_date'] = $startTaxYear; ?>" role="presentation" autocomplete="off">
+                                       value="<?= $body['from_date'] = $startTaxYear; ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
                             </span>
@@ -54,18 +54,18 @@ use Yiisoft\Html\Html;
                         </div>  
 
                         <div class="mb-3 form-group has-feedback">
-                            <label for="to_date"><?php echo $translator->translate('to.date').' ('.$dateHelper->display().')'; ?></label>
+                            <label for="to_date"><?= $translator->translate('to.date') . ' (' . $dateHelper->display() . ')'; ?></label>
                             <div class="input-group">
-                                <input type="text" name="to_date" id="to_date" placeholder="<?php echo ' ('.$dateHelper->display().')'; ?>"
+                                <input type="text" name="to_date" id="to_date" placeholder="<?= ' (' . $dateHelper->display() . ')';?>"
                                        class="form-control" readonly                   
-                                       value="<?php echo $body['to_date'] = (new DateTimeImmutable('now'))->format('Y-m-d'); ?>" role="presentation" autocomplete="off">
+                                       value="<?= $body['to_date'] = (new \DateTimeImmutable('now'))->format('Y-m-d'); ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
                             </span>
                             </div>        
                         </div>
                         <input type="submit" class="btn btn-success" name="btn_submit"
-                               value="<?php echo $translator->translate('run.report'); ?>">
+                               value="<?= $translator->translate('run.report'); ?>">
                     </form>
 
                 </div>

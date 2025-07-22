@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
-use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\User\User;
+use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Inv\InvRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
+
 class Inv
 {
     // Users
@@ -41,16 +42,15 @@ class Inv
     private readonly ArrayCollection $items;
 
     /**
-     * Related logic: see Used to determine how many times an email has been sent for this specific invoice to the client.
-     *
+     * Related logic: see Used to determine how many times an email has been sent for this specific invoice to the client
      * @var ArrayCollection<array-key, InvSentLog>
      */
     #[HasMany(target: InvSentLog::class)]
     private ArrayCollection $invsentlogs;
 
+
     /**
      * Related logic: see Used to determine the number of recurring invoices that have been made out for this particular invoice.
-     *
      * @var ArrayCollection<array-key, InvRecurring>
      */
     #[HasMany(target: InvRecurring::class)]
@@ -60,23 +60,23 @@ class Inv
     private ?int $id = null;
 
     #[Column(type: 'datetime')]
-    private \DateTimeImmutable $date_created;
+    private DateTimeImmutable $date_created;
 
     #[Column(type: 'time', nullable: false)]
     private mixed $time_created;
 
     #[Column(type: 'datetime', nullable: false)]
-    private readonly \DateTimeImmutable $date_modified;
+    private readonly DateTimeImmutable $date_modified;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_tax_point;
+    private DateTimeImmutable $date_tax_point;
 
     // Actual Delivery Date
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_supplied;
+    private DateTimeImmutable $date_supplied;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_due;
+    private DateTimeImmutable $date_due;
 
     public function __construct(
         #[Column(type: 'integer(11)', nullable: false)]
@@ -123,21 +123,21 @@ class Inv
         private ?int $postal_address_id = null,
         #[Column(type: 'integer(11)', nullable: true, default: 0)]
         private ?int $contract_id = null,
-        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
+        //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
         #[Column(type: 'string(3)', nullable: false)]
         private string $stand_in_code = '',
     ) {
         $this->items = new ArrayCollection();
         // create also the invoice amount when the invoice is created.
-        $this->invAmount      = new InvAmount();
-        $this->date_created   = new \DateTimeImmutable();
-        $this->date_modified  = new \DateTimeImmutable('now');
-        $this->date_due       = new \DateTimeImmutable('2024/01/01');
-        $this->date_supplied  = new \DateTimeImmutable('2024/01/01');
-        $this->date_tax_point = new \DateTimeImmutable('2024/01/01');
-        $this->time_created   = new \DateTimeImmutable('now');
-        $this->invsentlogs    = new ArrayCollection();
-        $this->invrecurring   = new ArrayCollection();
+        $this->invAmount = new InvAmount();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable('now');
+        $this->date_due = new DateTimeImmutable('2024/01/01');
+        $this->date_supplied = new DateTimeImmutable('2024/01/01');
+        $this->date_tax_point = new DateTimeImmutable('2024/01/01');
+        $this->time_created = new DateTimeImmutable('now');
+        $this->invsentlogs = new ArrayCollection();
+        $this->invrecurring = new ArrayCollection();
     }
 
     public function setUser(User $user): void
@@ -208,9 +208,9 @@ class Inv
     /**
      * @return numeric-string|null
      */
-    public function getId(): ?string
+    public function getId(): string|null
     {
-        return null === $this->id ? null : (string) $this->id;
+        return $this->id === null ? null : (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -298,14 +298,14 @@ class Inv
         $this->contract_id = $contract_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatus_id(): int|null
     {
         return $this->status_id;
     }
 
     public function setStatus_id(int $status_id): void
     {
-        $this->status_id = (!in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
+        $this->status_id = (!in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8 ,9, 10, 11, 12, 13]) ? 1 : $status_id);
     }
 
     public function getIs_read_only(): bool
@@ -329,17 +329,18 @@ class Inv
     }
 
     /**
-     * Same as date issued.
+     * Same as date issued
+     * @return DateTimeImmutable
      */
-    public function getDate_created(): \DateTimeImmutable
+    public function getDate_created(): DateTimeImmutable
     {
-        /* @var DateTimeImmutable $this->date_created */
+        /** @var DateTimeImmutable $this->date_created */
         return $this->date_created;
     }
 
     public function setDate_created(string $date_created): void
     {
-        $this->date_created = (new \DateTimeImmutable())->createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('now');
+        $this->date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('now');
     }
 
     public function setTime_created(string $time_created): void
@@ -347,13 +348,13 @@ class Inv
         $this->time_created = $time_created;
     }
 
-    public function getTime_created(): \DateTimeImmutable
+    public function getTime_created(): DateTimeImmutable
     {
-        /* @var DateTimeImmutable $this->time_created */
+        /** @var DateTimeImmutable $this->time_created */
         return $this->time_created;
     }
 
-    public function getDate_modified(): \DateTimeImmutable
+    public function getDate_modified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
@@ -366,30 +367,30 @@ class Inv
             $days = $sR->getSetting('invoices_due_after');
         }
 
-        $this->date_due = $this->date_created->add(new \DateInterval('P'.(string) $days.'D'));
+        $this->date_due = $this->date_created->add(new \DateInterval('P' . (string) $days . 'D'));
     }
 
-    public function getDate_due(): \DateTimeImmutable
+    public function getDate_due(): DateTimeImmutable
     {
         return $this->date_due;
     }
 
-    public function getDate_supplied(): \DateTimeImmutable
+    public function getDate_supplied(): DateTimeImmutable
     {
         return $this->date_supplied;
     }
 
-    public function setDate_supplied(\DateTimeImmutable $date_supplied): void
+    public function setDate_supplied(DateTimeImmutable $date_supplied): void
     {
         $this->date_supplied = $date_supplied;
     }
 
-    public function getDate_tax_point(): \DateTimeImmutable
+    public function getDate_tax_point(): DateTimeImmutable
     {
         return $this->date_tax_point;
     }
 
-    public function setDate_tax_point(\DateTimeImmutable $date_tax_point): void
+    public function setDate_tax_point(DateTimeImmutable $date_tax_point): void
     {
         $this->date_tax_point = $date_tax_point;
     }
@@ -429,7 +430,7 @@ class Inv
         return $this->terms;
     }
 
-    public function getNote(): ?string
+    public function getNote(): string|null
     {
         return $this->note;
     }
@@ -439,7 +440,7 @@ class Inv
         $this->note = $note;
     }
 
-    public function getDocumentDescription(): ?string
+    public function getDocumentDescription(): string|null
     {
         return $this->document_description;
     }
@@ -464,7 +465,7 @@ class Inv
         $this->url_key = $url_key;
     }
 
-    public function getPayment_method(): ?int
+    public function getPayment_method(): int|null
     {
         return $this->payment_method;
     }
@@ -489,14 +490,14 @@ class Inv
         return (string) $this->creditinvoice_parent_id;
     }
 
-    public function setCreditinvoice_parent_id(?int $creditinvoice_parent_id): void
+    public function setCreditinvoice_parent_id(int|null $creditinvoice_parent_id): void
     {
         $this->creditinvoice_parent_id = $creditinvoice_parent_id;
     }
 
     public function isOverdue(): bool
     {
-        return 5 === $this->getStatus_id();
+        return $this->getStatus_id() === 5;
     }
 
     // https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
@@ -508,7 +509,8 @@ class Inv
      * the VAT rate is, use this code instead of a tax point date.
      * If you have a string value for this, you should not have a value for your tax point date
      * The two are mutually exclusive.
-     * Related logic: see src/resources/views/invoice/info/deutschebahn.php.
+     * Related logic: see src/resources/views/invoice/info/deutschebahn.php
+     * @return string
      */
     public function getStand_in_code(): string
     {
@@ -527,7 +529,9 @@ class Inv
 
     /**
      * NB! Make sure you have the correct sequence of parameters between the brackets
-     * Related logic: see https://github.com/yiisoft/demo/issues/462.
+     * Related logic: see https://github.com/yiisoft/demo/issues/462
+     * @param int $group_id
+     * @param int $client_id
      */
     public function nullifyRelationOnChange(int $group_id, int $client_id): void
     {

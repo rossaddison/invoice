@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\IntlMessageFormatter;
 use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Definitions\DynamicReference;
 
-/*
+/**
  * Related logic: see https://github.com/yiisoft/translator/blob/master/config/di.php
  * @var array $params
  * @var array $params['yiisoft/translator']
@@ -23,7 +23,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 return [
     TranslatorInterface::class => [
-        'class'         => Translator::class,
+        'class' => Translator::class,
         '__construct()' => [
             $params['yiisoft/translator']['locale'],
             $params['yiisoft/translator']['fallbackLocale'],
@@ -49,7 +49,7 @@ return [
             ],
         ],
         'reset' => function () use ($params) {
-            /*
+            /**
              * @var string $params['yiisoft/translator']['locale']
              * @var Translator $this
              */

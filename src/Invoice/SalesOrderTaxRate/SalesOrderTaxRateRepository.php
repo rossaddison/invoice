@@ -6,19 +6,20 @@ namespace App\Invoice\SalesOrderTaxRate;
 
 use App\Invoice\Entity\SalesOrderTaxRate;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of SalesOrderTaxRate
- *
  * @extends Select\Repository<TEntity>
  */
 final class SalesOrderTaxRateRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,16 +27,15 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     }
 
     /**
-     * Get salesordertaxrates  without filter.
+     * Get salesordertaxrates  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-            ->load('salesorder')
-            ->load('tax_rate');
-
+                      ->load('salesorder')
+                      ->load('tax_rate');
         return $this->prepareDataReader($query);
     }
 
@@ -54,9 +54,9 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|SalesOrderTaxRate|null $salesordertaxrate
+     * @throws Throwable
      */
     public function save(array|SalesOrderTaxRate|null $salesordertaxrate): void
     {
@@ -64,9 +64,9 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|SalesOrderTaxRate|null $salesordertaxrate
+     * @throws Throwable
      */
     public function delete(array|SalesOrderTaxRate|null $salesordertaxrate): void
     {
@@ -81,28 +81,32 @@ final class SalesOrderTaxRateRepository extends Select\Repository
         );
     }
 
-    // find all salesorder tax rates assigned to specific salesorder. Normally only one but just in case more than one assigned
-    // used in salesorder/view to determine if a 'one-off'  salesorder tax rate acquired from tax rates is to be applied to the salesorder
-    // salesorder tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
-    public function repoCount(?string $salesorder_id): int
+    //find all salesorder tax rates assigned to specific salesorder. Normally only one but just in case more than one assigned
+    //used in salesorder/view to determine if a 'one-off'  salesorder tax rate acquired from tax rates is to be applied to the salesorder
+    //salesorder tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
+    /**
+     * @param string|null $salesorder_id
+     */
+    public function repoCount(string|null $salesorder_id): int
     {
         return $this->select()
-            ->where(['so_id' => $salesorder_id])
-            ->count();
+                      ->where(['so_id' => $salesorder_id])
+                      ->count();
     }
 
-    // find a specific salesorders tax rate, normally to delete
+    //find a specific salesorders tax rate, normally to delete
     /**
+     * @return SalesOrderTaxRate|null
+     *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderTaxRatequery(string $id): ?SalesOrderTaxRate
+    public function repoSalesOrderTaxRatequery(string $id): SalesOrderTaxRate|null
     {
         $query = $this->select()
-            ->load('salesorder')
-            ->load('tax_rate')
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('salesorder')
+                      ->load('tax_rate')
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
     // find all salesorder tax rates used for a specific salesorder normally to apply include_item_tax
@@ -111,32 +115,35 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     // to access the parent tax rate table's percent name and percentage
     // which we will use in salesorder/view
 
+    /**
+     * @param string $salesorder_id
+     * @return EntityReader
+     */
     public function repoSalesOrderquery(string $salesorder_id): EntityReader
     {
         $query = $this->select()
-            ->load('tax_rate')
-            ->where(['so_id' => $salesorder_id]);
-
+                      ->load('tax_rate')
+                      ->where(['so_id' => $salesorder_id]);
         return $this->prepareDataReader($query);
     }
 
     /**
+     * @return SalesOrderTaxRate|null
+     *
      * @psalm-return TEntity|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): ?SalesOrderTaxRate
+    public function repoTaxRatequery(string $tax_rate_id): SalesOrderTaxRate|null
     {
         $query = $this->select()
-            ->load('tax_rate')
-            ->where(['tax_rate_id' => $tax_rate_id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('tax_rate')
+                      ->where(['tax_rate_id' => $tax_rate_id]);
+        return  $query->fetchOne() ?: null;
     }
 
     public function repoGetSalesOrderTaxRateAmounts(string $salesorder_id): EntityReader
     {
         $query = $this->select()
-            ->where(['so_id' => $salesorder_id]);
-
+                      ->where(['so_id' => $salesorder_id]);
         return $this->prepareDataReader($query);
     }
 }

@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Invoice\Sumex;
 
 use App\Invoice\Entity\Sumex;
+use App\Invoice\Setting\SettingRepository;
 
 final readonly class SumexService
 {
-    public function __construct(private SumexRepository $repository)
-    {
-    }
+    public function __construct(private SumexRepository $repository) {}
 
+    /**
+     * @param Sumex $model
+     * @param array $array
+     * @param SettingRepository $s
+     */
     public function saveSumex(Sumex $model, array $array): void
     {
         // invoice is an id
@@ -40,6 +44,9 @@ final readonly class SumexService
         $this->repository->save($model);
     }
 
+    /**
+     * @param Sumex $model
+     */
     public function deleteSumex(Sumex $model): void
     {
         $this->repository->delete($model);

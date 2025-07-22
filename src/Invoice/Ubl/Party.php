@@ -6,13 +6,12 @@ namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
+use InvalidArgumentException;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class Party implements XmlSerializable
 {
-    public function __construct(private readonly Translator $translator, private readonly ?string $name, private readonly ?string $partyIdentificationId, private readonly ?string $partyIdentificationSchemeId, private readonly ?Address $postalAddress, private readonly ?Address $physicalLocation, private readonly ?Contact $contact, private readonly ?PartyTaxScheme $partyTaxScheme, private readonly ?PartyLegalEntity $partyLegalEntity, private readonly ?string $endpointID, private readonly mixed $endpointID_schemeID)
-    {
-    }
+    public function __construct(private readonly Translator $translator, private readonly ?string $name, private readonly ?string $partyIdentificationId, private readonly ?string $partyIdentificationSchemeId, private readonly ?Address $postalAddress, private readonly ?Address $physicalLocation, private readonly ?Contact $contact, private readonly ?PartyTaxScheme $partyTaxScheme, private readonly ?PartyLegalEntity $partyLegalEntity, private readonly ?string $endpointID, private readonly mixed $endpointID_schemeID) {}
 
     public function getPartyName(): ?string
     {
@@ -20,22 +19,25 @@ class Party implements XmlSerializable
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function validate(): void
     {
         if (null == $this->endpointID) {
-            /*
+            /**
              * Error
              * Location: invoice_8x8vShcxINV111_peppol
              * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
              * XPath test: cbc:EndpointID
              * Error message: Buyer electronic address MUST be provided
              */
-            throw new \InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
+            throw new InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
         }
     }
 
+    /**
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
@@ -43,8 +45,8 @@ class Party implements XmlSerializable
         if (null !== $this->endpointID && null !== $this->endpointID_schemeID) {
             $writer->write([
                 [
-                    'name'       => Schema::CBC.'EndpointID',
-                    'value'      => $this->endpointID,
+                    'name' => Schema::CBC . 'EndpointID',
+                    'value' => $this->endpointID,
                     'attributes' => [
                         'schemeID' => is_numeric($this->endpointID_schemeID) ? sprintf('%04d', +$this->endpointID_schemeID) : $this->endpointID_schemeID,
                     ],
@@ -52,10 +54,10 @@ class Party implements XmlSerializable
             ]);
         }
 
-        if (null !== $this->partyIdentificationId) {
+        if ($this->partyIdentificationId !== null) {
             $partyIdentificationAttributes = [];
 
-            /*
+            /**
              * For Danish Suppliers it is mandatory to use schemeID when PartyIdentification/ID is used for AccountingCustomerParty or AccountingSupplierParty
              * Related logic: see https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
              */
@@ -64,49 +66,49 @@ class Party implements XmlSerializable
             }
 
             $writer->write([
-                Schema::CAC.'PartyIdentification' => [
+                Schema::CAC . 'PartyIdentification' => [
                     [
-                        'name'       => Schema::CBC.'ID',
-                        'value'      => $this->partyIdentificationId,
+                        'name' => Schema::CBC . 'ID',
+                        'value' => $this->partyIdentificationId,
                         'attributes' => $partyIdentificationAttributes,
                     ],
                 ],
             ]);
         }
 
-        if (null !== $this->name) {
+        if ($this->name !== null) {
             $writer->write([
-                Schema::CAC.'PartyName' => [
-                    Schema::CBC.'Name' => $this->name,
+                Schema::CAC . 'PartyName' => [
+                    Schema::CBC . 'Name' => $this->name,
                 ],
             ]);
         }
 
         $writer->write([
-            Schema::CAC.'PostalAddress' => $this->postalAddress,
+            Schema::CAC . 'PostalAddress' => $this->postalAddress,
         ]);
 
-        if (null !== $this->physicalLocation) {
+        if ($this->physicalLocation !== null) {
             $writer->write([
-                Schema::CAC.'PhysicalLocation' => [Schema::CAC.'Address' => $this->physicalLocation],
+                Schema::CAC . 'PhysicalLocation' => [Schema::CAC . 'Address' => $this->physicalLocation],
             ]);
         }
 
-        if (null !== $this->partyTaxScheme) {
+        if ($this->partyTaxScheme !== null) {
             $writer->write([
-                Schema::CAC.'PartyTaxScheme' => $this->partyTaxScheme,
+                Schema::CAC . 'PartyTaxScheme' => $this->partyTaxScheme,
             ]);
         }
 
-        if (null !== $this->partyLegalEntity) {
+        if ($this->partyLegalEntity !== null) {
             $writer->write([
-                Schema::CAC.'PartyLegalEntity' => $this->partyLegalEntity,
+                Schema::CAC . 'PartyLegalEntity' => $this->partyLegalEntity,
             ]);
         }
 
-        if (null !== $this->contact) {
+        if ($this->contact !== null) {
             $writer->write([
-                Schema::CAC.'Contact' => $this->contact,
+                Schema::CAC . 'Contact' => $this->contact,
             ]);
         }
     }

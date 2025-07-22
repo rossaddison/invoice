@@ -9,6 +9,7 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 final class HeaderArrayNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
+     * @return string
      * @psalm-return 'An empty array has been submitted for headers.'
      */
     #[\Override]
@@ -17,6 +18,9 @@ final class HeaderArrayNotFoundException extends \RuntimeException implements Fr
         return 'An empty array has been submitted for headers.';
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

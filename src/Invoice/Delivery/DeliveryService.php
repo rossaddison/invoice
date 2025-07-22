@@ -9,21 +9,19 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class DeliveryService
 {
-    public function __construct(private DeliveryRepository $repository)
-    {
-    }
+    public function __construct(private DeliveryRepository $repository) {}
 
     public function saveDelivery(Delivery $model, array $array, SettingRepository $s): void
     {
         $model->setDate_created(new \DateTimeImmutable());
         $model->setDate_modified(new \DateTimeImmutable());
 
-        $datetime  = new \DateTimeImmutable();
-        $d         = $datetime::createFromFormat('Y-m-d', (string) $array['start_date']);
+        $datetime = new \DateTimeImmutable();
+        $d = $datetime::createFromFormat('Y-m-d', (string) $array['start_date']);
         $datetime2 = new \DateTimeImmutable();
-        $d2        = $datetime2::createFromFormat('Y-m-d', (string) $array['actual_delivery_date']);
+        $d2 = $datetime2::createFromFormat('Y-m-d', (string) $array['actual_delivery_date']);
         $datetime3 = new \DateTimeImmutable();
-        $d3        = $datetime3::createFromFormat('Y-m-d', (string) $array['end_date']);
+        $d3 = $datetime3::createFromFormat('Y-m-d', (string) $array['end_date']);
         $d ? $model->setStart_date($d) : '';
         $d2 ? $model->setActual_delivery_date($d2) : '';
         $d3 ? $model->setEnd_Date($d3) : '';

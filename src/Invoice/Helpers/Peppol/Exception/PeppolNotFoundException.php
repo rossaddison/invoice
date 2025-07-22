@@ -9,6 +9,7 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 final class PeppolNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
+     * @return string
      * @psalm-return 'Client/Customer not found.'
      */
     #[\Override]
@@ -17,6 +18,9 @@ final class PeppolNotFoundException extends \RuntimeException implements Friendl
         return 'Client/Customer not found.';
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

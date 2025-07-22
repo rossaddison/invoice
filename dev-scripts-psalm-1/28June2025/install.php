@@ -30,9 +30,9 @@ echo "🔍 Performing preflight checks...\n";
 $allPassed = true;
 
 // PHP version check
-$phpVersion  = PHP_VERSION;
+$phpVersion = PHP_VERSION;
 $requiredPhp = '8.3';
-$phpOk       = version_compare($phpVersion, $requiredPhp, '>=');
+$phpOk = version_compare($phpVersion, $requiredPhp, '>=');
 echo sprintf("   PHP version (%s): %s\n", $phpVersion, $phpOk ? '✅ OK' : '❌ FAIL');
 if (!$phpOk) {
     $allPassed = false;
@@ -49,9 +49,9 @@ foreach ($requiredExtensions as $ext) {
 }
 
 $composerInstalled = false;
-$composerCmdFound  = null;
-$composerFoundMsg  = '';
-$composerCmds      = [
+$composerCmdFound = null;
+$composerFoundMsg = '';
+$composerCmds = [
     'composer',
     'composer.bat', // for Windows
     'composer.phar',
@@ -59,14 +59,14 @@ $composerCmds      = [
 ];
 
 foreach ($composerCmds as $cmd) {
-    $output     = [];
+    $output = [];
     $returnCode = 0;
-    $nul        = 'WIN' === strtoupper(substr(PHP_OS, 0, 3)) ? 'NUL' : '/dev/null';
+    $nul = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'NUL' : '/dev/null';
     exec("$cmd --version 2>$nul", $output, $returnCode);
-    if (0 === $returnCode && isset($output[0]) && false !== stripos((string) $output[0], 'Composer')) {
+    if ($returnCode === 0 && isset($output[0]) && stripos((string) $output[0], 'Composer') !== false) {
         $composerInstalled = true;
-        $composerCmdFound  = $cmd;
-        $composerFoundMsg  = $cmd;
+        $composerCmdFound = $cmd;
+        $composerFoundMsg = $cmd;
         break;
     }
 }
@@ -86,7 +86,7 @@ echo "\n✅ All preflight checks passed!\n\n";
 // Step 2: Dependencies
 echo "📦 Checking dependencies...\n";
 
-if (is_dir(__DIR__.'/vendor') && file_exists(__DIR__.'/vendor/autoload.php')) {
+if (is_dir(__DIR__ . '/vendor') && file_exists(__DIR__ . '/vendor/autoload.php')) {
     echo "   ✅ Dependencies are already installed.\n";
     echo "   💡 You can update them with: $composerCmdFound update --no-dev\n\n";
 } else {
@@ -94,7 +94,7 @@ if (is_dir(__DIR__.'/vendor') && file_exists(__DIR__.'/vendor/autoload.php')) {
     echo '   ❓ Install dependencies now? [Y/n]: ';
 
     $handle = fopen('php://stdin', 'r');
-    if (false !== $handle) {
+    if ($handle !== false) {
         $line = fgets($handle);
         fclose($handle);
     } else {
@@ -102,17 +102,17 @@ if (is_dir(__DIR__.'/vendor') && file_exists(__DIR__.'/vendor/autoload.php')) {
         exit(1);
     }
 
-    if (false !== $line && 'n' !== trim(strtolower($line))) {
+    if ($line !== false && trim(strtolower($line)) !== 'n') {
         echo "   Running: $composerCmdFound install --no-dev --optimize-autoloader\n";
 
-        $command    = "$composerCmdFound install --no-dev --optimize-autoloader 2>&1";
-        $output     = [];
+        $command = "$composerCmdFound install --no-dev --optimize-autoloader 2>&1";
+        $output = [];
         $returnCode = 0;
 
         // Pass output directly to terminal
         passthru($command, $returnCode);
 
-        if (0 === $returnCode && is_dir('vendor') && file_exists('vendor/autoload.php')) {
+        if ($returnCode === 0 && is_dir('vendor') && file_exists('vendor/autoload.php')) {
             echo "   ✅ Dependencies installed successfully!\n\n";
         } else {
             echo "   ❌ Composer install failed.\n";
@@ -133,23 +133,23 @@ function parseDatabaseConfig(): array
     $paramsFile = 'config/common/params.php';
 
     if (!file_exists($paramsFile)) {
-        throw new Exception('Configuration file not found: '.$paramsFile);
+        throw new Exception('Configuration file not found: ' . $paramsFile);
     }
 
     $content = file_get_contents($paramsFile);
-    if (false === $content) {
-        throw new Exception('Failed to read configuration file: '.$paramsFile);
+    if ($content === false) {
+        throw new Exception('Failed to read configuration file: ' . $paramsFile);
     }
     $env = $_ENV['APP_ENV'] ?? 'local';
 
     // Default values
-    $dbHost     = 'localhost';
-    $dbUser     = 'root';
+    $dbHost = 'localhost';
+    $dbUser = 'root';
     $dbPassword = null;
-    $dbName     = 'yii3_i';
+    $dbName = 'yii3_i';
 
     // Parse switch statement
-    if (preg_match('/case\s+[\'"]'.preg_quote($env).'[\'"]:\s*(.*?)break;/s', $content, $matches)) {
+    if (preg_match('/case\s+[\'"]' . preg_quote($env) . '[\'"]:\s*(.*?)break;/s', $content, $matches)) {
         $caseContent = $matches[1];
 
         if (preg_match('/\$dbHost\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $hostMatch)) {
@@ -169,28 +169,28 @@ function parseDatabaseConfig(): array
     }
 
     return [
-        'host'     => $dbHost,
+        'host' => $dbHost,
         'database' => $dbName,
-        'user'     => $dbUser,
+        'user' => $dbUser,
         'password' => $dbPassword,
     ];
 }
 
 try {
     $dbConfig = parseDatabaseConfig();
-    $host     = (string) $dbConfig['host'];
-    $user     = (string) $dbConfig['user'];
+    $host = (string) $dbConfig['host'];
+    $user = (string) $dbConfig['user'];
     $database = (string) $dbConfig['database'];
     $password = (string) $dbConfig['password'];
     echo "   Database configuration found:\n";
-    echo '   Host: '.$host."\n";
-    echo '   User: '.$user."\n";
-    echo '   Database: '.$database."\n\n";
+    echo '   Host: ' . $host . "\n";
+    echo '   User: ' . $user . "\n";
+    echo '   Database: ' . $database . "\n\n";
 
     echo "   ❓ Create database '{$database}' if it doesn't exist? [Y/n]: ";
 
     $handle = fopen('php://stdin', 'r');
-    if (false !== $handle) {
+    if ($handle !== false) {
         $line = fgets($handle);
         fclose($handle);
     } else {
@@ -198,7 +198,7 @@ try {
         exit(1);
     }
 
-    if (false !== $line && 'n' !== trim(strtolower($line))) {
+    if ($line !== false && trim(strtolower($line)) !== 'n') {
         try {
             $dsn = sprintf('mysql:host=%s', $host);
             $pdo = new PDO($dsn, $user, $password);
@@ -217,14 +217,14 @@ try {
                 echo "   ✅ Database '{$database}' created successfully!\n\n";
             }
         } catch (PDOException $e) {
-            echo '   ❌ Database operation failed: '.$e->getMessage()."\n";
+            echo '   ❌ Database operation failed: ' . $e->getMessage() . "\n";
             echo "   💡 Please ensure MySQL is running and credentials are correct.\n\n";
         }
     } else {
         echo "   ⚠️  Database creation skipped.\n\n";
     }
 } catch (Exception $e) {
-    echo '   ❌ Database setup failed: '.$e->getMessage()."\n\n";
+    echo '   ❌ Database setup failed: ' . $e->getMessage() . "\n\n";
 }
 
 // Step 4: Manual checklist

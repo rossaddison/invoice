@@ -10,8 +10,8 @@ use Yiisoft\Html\Html;
  * CodeFile represents a code file to be generated.
  *
  * @property string $relativePath The code file path relative to the application base path. This property is
- *                                read-only.
- * @property string $type         The code file extension (e.g. php, txt). This property is read-only.
+ * read-only.
+ * @property string $type The code file extension (e.g. php, txt). This property is read-only.
  */
 class GenerateCodeFileHelper
 {
@@ -29,15 +29,15 @@ class GenerateCodeFileHelper
     public const string OP_SKIP = 'skip';
 
     /**
-     * @var string an ID that uniquely identifies this code file
+     * @var string an ID that uniquely identifies this code file.
      */
     public $id;
     /**
-     * @var string the file path that the new code should be saved to
+     * @var string the file path that the new code should be saved to.
      */
     public $basepath;
     /**
-     * @var string the file path that the new code should be saved to
+     * @var string the file path that the new code should be saved to.
      */
     public $path;
     /**
@@ -47,17 +47,16 @@ class GenerateCodeFileHelper
 
     /**
      * Constructor.
-     *
-     * @param string $path    the file path that the new code should be saved to
-     * @param string $content the newly generated code content
+     * @param string $path the file path that the new code should be saved to.
+     * @param string $content the newly generated code content.
      */
     public function __construct($path, public $content)
     {
-        $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR);
+        $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
 
         // $this->basepath used in function relativepath
         $this->basepath = dirname(__DIR__, 3);
-        /*
+        /**
          *  Related logic: see GeneratorController function build_and_save
          *  The MD5 hash algorithm was developed in 1991 and released in 1992.
          *  Only a year later, researchers were already finding flaws!
@@ -78,14 +77,14 @@ class GenerateCodeFileHelper
     /**
      * Saves the code into the file specified by [[path]].
      *
-     * @return string|true the error occurred while saving the code file, or true if no error
+     * @return string|true the error occurred while saving the code file, or true if no error.
      */
     public function save(): bool|string
     {
-        if (self::OP_CREATE === $this->operation) {
+        if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                $mask   = @umask(0);
+                $mask = @umask(0);
                 $result = @mkdir($dir, 0777, true);
                 @umask($mask);
                 if (!$result) {
@@ -93,22 +92,20 @@ class GenerateCodeFileHelper
                 }
             }
         }
-        if (false === @file_put_contents($this->path, $this->content)) {
+        if (@file_put_contents($this->path, $this->content) === false) {
             return "Unable to write the file '{$this->path}'.";
         }
-
         return true;
     }
 
     /**
-     * @return string the code file path relative to the application base path
+     * @return string the code file path relative to the application base path.
      */
     public function getRelativePath()
     {
         if (str_starts_with($this->path, $this->basepath)) {
             return substr($this->path, strlen($this->basepath) + 1);
         }
-
         return $this->path;
     }
 
@@ -125,7 +122,9 @@ class GenerateCodeFileHelper
     }
 
     /**
-     * Returns preview or false if it cannot be rendered.
+     * Returns preview or false if it cannot be rendered
+     *
+     * @return false|string
      */
     public function preview(): string|false
     {
@@ -135,7 +134,7 @@ class GenerateCodeFileHelper
             $type = 'unknown';
         }
 
-        if ('php' === $type) {
+        if ($type === 'php') {
             return highlight_string($this->content, true);
         }
         if (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {

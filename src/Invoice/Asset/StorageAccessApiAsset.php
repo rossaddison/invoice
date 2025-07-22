@@ -20,7 +20,7 @@ final class StorageAccessApiAsset extends AssetBundle
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
-        /*
+        /**
          * Chrome is moving towards a new experience that allows users to
          * choose to browse without third-party non-partitioned cookies.
          *

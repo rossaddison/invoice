@@ -8,6 +8,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
+use DateTimeImmutable;
 
 #[Entity(repository: RecoveryCodeRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -17,7 +18,7 @@ class RecoveryCode
     private ?int $id = null;
 
     #[Column(type: 'datetime', nullable: false)]
-    private readonly \DateTimeImmutable $date_created;
+    private readonly DateTimeImmutable $date_created;
 
     public function __construct(
         #[BelongsTo(target: User::class, nullable: false)]
@@ -27,7 +28,7 @@ class RecoveryCode
         #[Column(type: 'bool', typecast: 'bool', default: false)]
         private bool $used = false,
     ) {
-        $this->date_created = new \DateTimeImmutable('now');
+        $this->date_created = new DateTimeImmutable('now');
     }
 
     public function getId(): ?int
@@ -68,7 +69,7 @@ class RecoveryCode
         $this->used = $used;
     }
 
-    public function getDateCreated(): \DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }

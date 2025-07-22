@@ -11,6 +11,8 @@ final class SettingLogoForm extends FormModel
     private ?array $attachLogoFile = null;
 
     /**
+     * @return string
+     *
      * @psalm-return 'SettingLogoForm'
      */
     #[\Override]

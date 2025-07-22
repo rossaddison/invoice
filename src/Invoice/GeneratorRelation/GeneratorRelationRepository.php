@@ -6,19 +6,20 @@ namespace App\Invoice\GeneratorRelation;
 
 use App\Invoice\Entity\GentorRelation;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of GentorRelation
- *
  * @extends Select\Repository<TEntity>
  */
 final class GeneratorRelationRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,28 +27,26 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     * Get generatorrelations without filter.
+     * Get generatorrelations without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
-
         return $this->prepareDataReader($query);
     }
 
     public function findRelations(string $id): EntityReader
     {
         $query = $this->select()->load('gentor')->where('gentor_id', $id);
-
         return $this->prepareDataReader($query);
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|GentorRelation|null $generatorrelation
+     * @throws Throwable
      */
     public function save(array|GentorRelation|null $generatorrelation): void
     {
@@ -55,9 +54,9 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|GentorRelation|null $generatorrelation
+     * @throws Throwable
      */
     public function delete(array|GentorRelation|null $generatorrelation): void
     {
@@ -67,39 +66,46 @@ final class GeneratorRelationRepository extends Select\Repository
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
-            Sort::only(['lowercasename', 'camelcasename', 'gentor_id'])
+            Sort::only(['lowercasename','camelcasename','gentor_id'])
                 ->withOrder(['gentor_id' => 'asc']),
         );
     }
 
     /**
+     * @return GentorRelation|null
+     *
      * @psalm-return TEntity|null
      */
-    public function repoGeneratorRelationquery(string $id): ?GentorRelation
+    public function repoGeneratorRelationquery(string $id): GentorRelation|null
     {
         $query = $this
             ->select()
             ->load('gentor')
             ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+        return  $query->fetchOne() ?: null;
     }
 
+    /**
+     * @param string $id
+     * @return array
+     */
     public function repoGeneratorquery(string $id): array
     {
         $query = $this
             ->select()
             ->where(['gentor_id' => $id]);
-
-        return $query->fetchAll();
+        return  $query->fetchAll();
     }
 
-    public function withLowercaseName(string $generatorrelation_lowercase_name): ?object
+    /**
+     * @param string $generatorrelation_lowercase_name
+     * @return object|null
+     */
+    public function withLowercaseName(string $generatorrelation_lowercase_name): object|null
     {
         $query = $this
             ->select()
             ->where(['lowercasename' => $generatorrelation_lowercase_name]);
-
-        return $query->fetchOne() ?: null;
+        return  $query->fetchOne() ?: null;
     }
 }

@@ -19,20 +19,22 @@ final class ProjectForm extends FormModel
     public function __construct(Project $project)
     {
         $this->client_id = (int) $project->getClient_id();
-        $this->name      = $project->getName();
+        $this->name = $project->getName();
     }
 
-    public function getClient_id(): ?int
+    public function getClient_id(): int|null
     {
         return $this->client_id;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

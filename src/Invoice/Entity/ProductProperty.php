@@ -20,9 +20,7 @@ class ProductProperty
     public function __construct(#[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_id = null, #[Column(type: 'text', nullable: true)]
         public ?string $name = '', #[Column(type: 'text', nullable: true)]
-        public ?string $value = '')
-    {
-    }
+        public ?string $value = '') {}
 
     public function getProperty_id(): ?int
     {
@@ -39,7 +37,7 @@ class ProductProperty
         $this->product_id = $product_id;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -49,7 +47,7 @@ class ProductProperty
         $this->name = $name;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }

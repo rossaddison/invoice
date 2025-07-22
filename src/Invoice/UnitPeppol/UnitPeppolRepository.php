@@ -6,19 +6,20 @@ namespace App\Invoice\UnitPeppol;
 
 use App\Invoice\Entity\UnitPeppol;
 use Cycle\ORM\Select;
+use Throwable;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
-use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of UnitPeppol
- *
  * @extends Select\Repository<TEntity>
  */
 final class UnitPeppolRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,14 +27,13 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * Get unitpeppols  without filter.
+     * Get unitpeppols  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
-
         return $this->prepareDataReader($query);
     }
 
@@ -46,17 +46,19 @@ final class UnitPeppolRepository extends Select\Repository
             ->withSort($this->getSort());
     }
 
+    /**
+     * @return Sort
+     */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|UnitPeppol|null $unitpeppol
      * @psalm-param TEntity $unitpeppol
-     *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function save(array|UnitPeppol|null $unitpeppol): void
     {
@@ -64,15 +66,20 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|UnitPeppol|null $unitpeppol
+
+     * @throws Throwable
      */
     public function delete(array|UnitPeppol|null $unitpeppol): void
     {
         $this->entityWriter->delete([$unitpeppol]);
     }
 
+    /**
+     * @param Select $query
+     * @return EntityReader
+     */
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -82,38 +89,44 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
+     * @param string $id
      * @psalm-return TEntity|null
+     * @return UnitPeppol|null
      */
-    public function repoUnitPeppolLoadedquery(string $id): ?UnitPeppol
+    public function repoUnitPeppolLoadedquery(string $id): UnitPeppol|null
     {
         $query = $this->select()
-            ->load('unit')
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('unit')
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
+    /**
+     * @param string $unit_id
+     * @return int
+     */
     public function repoUnitCount(string $unit_id): int
     {
         $query = $this->select()
-            ->where(['unit_id' => $unit_id]);
-
+                      ->where(['unit_id' => $unit_id]);
         return $query->count();
     }
 
-    public function repoUnit(string $unit_id): ?UnitPeppol
+    public function repoUnit(string $unit_id): UnitPeppol|null
     {
         $query = $this->select()
-            ->where(['unit_id' => $unit_id]);
-
+                      ->where(['unit_id' => $unit_id]);
         return $query->fetchOne() ?: null;
     }
 
+    /**
+     * @param string $id
+     * @return int
+     */
     public function repoCount(string $id): int
     {
         $query = $this->select()
-            ->where(['id' => $id]);
-
+                      ->where(['id' => $id]);
         return $query->count();
     }
 }

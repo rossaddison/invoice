@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
+use Closure;
 use Yiisoft\Data\Paginator\OffsetPaginator as Paginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
@@ -12,22 +13,22 @@ final class OffsetPagination extends Widget
 {
     private array $options = [];
 
-    private ?\Closure $urlGenerator = null;
-    private ?Paginator $paginator   = null;
-    private int $pagesCount         = 0;
-    private int $currentPage        = 0;
-    private array $pages            = [];
-    private bool $prepared          = false;
+    private ?Closure $urlGenerator = null;
+    private ?Paginator $paginator = null;
+    private int $pagesCount = 0;
+    private int $currentPage = 0;
+    private array $pages = [];
+    private bool $prepared = false;
 
     public function paginator(?Paginator $paginator): self
     {
         $this->paginator = $paginator;
-        $this->prepared  = false;
+        $this->prepared = false;
 
         return $this;
     }
 
-    public function urlGenerator(\Closure $generator): self
+    public function urlGenerator(Closure $generator): self
     {
         $this->urlGenerator = $generator;
 
@@ -36,7 +37,7 @@ final class OffsetPagination extends Widget
 
     public function isPaginationRequired(): bool
     {
-        return null !== $this->paginator && $this->paginator->isPaginationRequired();
+        return $this->paginator !== null && $this->paginator->isPaginationRequired();
     }
 
     /**
@@ -54,7 +55,7 @@ final class OffsetPagination extends Widget
     #[\Override]
     public function render(): string
     {
-        if (null === $this->paginator) {
+        if ($this->paginator === null) {
             return '';
         }
 
@@ -77,7 +78,7 @@ final class OffsetPagination extends Widget
         }
 
         // Psalm Level 3: PossiblyNullReference: Cannot call method getTotalPages on possibly null value
-        $this->pagesCount  = $this->paginator?->getTotalPages()  ?? 0;
+        $this->pagesCount = $this->paginator?->getTotalPages() ?? 0;
         $this->currentPage = $this->paginator?->getCurrentPage() ?? 0;
 
         if ($this->pagesCount > 9) {
@@ -110,16 +111,16 @@ final class OffsetPagination extends Widget
 
         // `Previous` page
         $prevUrl = $this->paginator?->isOnFirstPage() ? null : $this->getPageLink($this->currentPage - 1);
-        $result .= Html::openTag('li', ['class' => null === $prevUrl ? 'page-item disabled' : 'page-item']);
+        $result .= Html::openTag('li', ['class' => $prevUrl === null ? 'page-item disabled' : 'page-item']);
         $result .= (string) Html::a('Previous', $prevUrl, ['class' => 'page-link']);
         $result .= Html::closeTag('li');
 
         // Numeric buttons
         /** @var int|null $page */
         foreach ($this->pages as $page) {
-            $isDisabled = $this->currentPage === $page || null === $page;
+            $isDisabled = $this->currentPage === $page || $page === null;
             $result .= Html::openTag('li', ['class' => $isDisabled ? 'page-item disabled' : 'page-item']);
-            if (null === $page) {
+            if ($page === null) {
                 $result .= (string) Html::span('…', ['class' => 'page-link']);
             } else {
                 $result .= (string) Html::a((string) $page, $this->getPageLink($page), ['class' => 'page-link']);
@@ -129,7 +130,7 @@ final class OffsetPagination extends Widget
 
         // `Next` page
         $nextUrl = $this->paginator?->isOnLastPage() ? null : $this->getPageLink($this->currentPage + 1);
-        $result .= Html::openTag('li', ['class' => null === $nextUrl ? 'page-item disabled' : 'page-item']);
+        $result .= Html::openTag('li', ['class' => $nextUrl === null ? 'page-item disabled' : 'page-item']);
         $result .= (string) Html::a('Next', $nextUrl, ['class' => 'page-link']);
         $result .= Html::closeTag('li');
 
@@ -138,7 +139,7 @@ final class OffsetPagination extends Widget
 
     protected function getPageLink(int $page): ?string
     {
-        return null === $this->urlGenerator ? null : (string) ($this->urlGenerator)($page);
+        return $this->urlGenerator === null ? null : (string) ($this->urlGenerator)($page);
     }
 
     protected function initOptions(): void

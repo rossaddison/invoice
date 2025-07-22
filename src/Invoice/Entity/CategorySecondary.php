@@ -21,10 +21,9 @@ class CategorySecondary
         private ?int $category_primary_id = null,
         #[Column(type: 'text', nullable: true)]
         private ?string $name = '',
-    ) {
-    }
+    ) {}
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
@@ -34,7 +33,7 @@ class CategorySecondary
         $this->id = $id;
     }
 
-    public function getCategory_primary_id(): ?int
+    public function getCategory_primary_id(): int|null
     {
         return $this->category_primary_id;
     }

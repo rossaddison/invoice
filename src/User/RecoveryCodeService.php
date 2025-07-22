@@ -13,6 +13,11 @@ final class RecoveryCodeService
 
     /**
      * Save or update a RecoveryCode model.
+     *
+     * @param RecoveryCode $model
+     * @param User $user
+     * @param string $codeHash
+     * @param bool $used
      */
     public function saveRecoveryCode(RecoveryCode $model, User $user, string $codeHash, bool $used): void
     {
@@ -42,7 +47,6 @@ final class RecoveryCodeService
     public function userHasBackupCodes(User $user): bool
     {
         $count = $this->repository->findByUserCount($user);
-
         return $count > 0;
     }
 
@@ -50,15 +54,14 @@ final class RecoveryCodeService
     {
         $codes = [];
         // Ensure length is at least 2 and even
-        $length  = ($length < 2) ? 2 : ((0 === $length % 2) ? $length : $length + 1);
+        $length = ($length < 2) ? 2 : (($length % 2 === 0) ? $length : $length + 1);
         $lenDiv2 = (int) ($length / 2);
 
-        for ($i = 0; $i < $count; ++$i) {
+        for ($i = 0; $i < $count; $i++) {
             /** @var int<1, max> $lenDiv2 */
-            $code    = bin2hex(random_bytes($lenDiv2));
+            $code = bin2hex(random_bytes($lenDiv2));
             $codes[] = strtoupper($code);
         }
-
         return $codes;
     }
 
@@ -66,7 +69,7 @@ final class RecoveryCodeService
     {
         /** @var string[] $plainCodes */
         foreach ($plainCodes as $code) {
-            $hash         = password_hash($code, PASSWORD_DEFAULT);
+            $hash = password_hash($code, PASSWORD_DEFAULT);
             $recoveryCode = new RecoveryCode($user, $hash, false);
             $this->repository->save($recoveryCode);
         }
@@ -88,12 +91,10 @@ final class RecoveryCodeService
                     // Mark the code as used and persist i.e. save
                     $recoveryCode->setUsed(true);
                     $this->repository->save($recoveryCode);
-
                     return true;
                 }
             }
         }
-
         // No valid code found
         return false;
     }

@@ -11,7 +11,7 @@ use Yiisoft\Validator\Rule\Required;
 final class PaymentPeppolForm extends FormModel
 {
     private ?string $inv_id = '';
-    private ?string $id     = '';
+    private ?string $id = '';
 
     #[Required]
     private ?int $auto_reference = null;
@@ -21,33 +21,34 @@ final class PaymentPeppolForm extends FormModel
 
     public function __construct(PaymentPeppol $paymentPeppol)
     {
-        $this->inv_id         = $paymentPeppol->getInv_id();
-        $this->id             = $paymentPeppol->getId();
+        $this->inv_id = $paymentPeppol->getInv_id();
+        $this->id = $paymentPeppol->getId();
         $this->auto_reference = $paymentPeppol->getAuto_reference();
-        $this->provider       = $paymentPeppol->getProvider();
+        $this->provider = $paymentPeppol->getProvider();
     }
 
-    public function getInv_id(): ?string
+    public function getInv_id(): string|null
     {
         return $this->inv_id;
     }
 
-    public function getId(): ?string
+    public function getId(): string|null
     {
         return $this->id;
     }
 
-    public function getAuto_reference(): ?int
+    public function getAuto_reference(): int|null
     {
         return $this->auto_reference;
     }
 
-    public function getProvider(): ?string
+    public function getProvider(): string|null
     {
         return $this->provider;
     }
 
     /**
+     * @return string
      * @psalm-return ''
      */
     #[\Override]

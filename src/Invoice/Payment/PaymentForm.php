@@ -6,10 +6,10 @@ namespace App\Invoice\Payment;
 
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\Payment;
-use DateTimeImmutable;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\GreaterThan;
+use DateTimeImmutable;
 
 final class PaymentForm extends FormModel
 {
@@ -23,52 +23,54 @@ final class PaymentForm extends FormModel
     private ?string $note = '';
     #[Required]
     private ?int $inv_id = null;
-    private ?Inv $inv    = null;
+    private ?Inv $inv = null;
 
     public function __construct(Payment $payment)
     {
         $this->payment_method_id = (int) $payment->getPayment_method_id();
-        $this->payment_date      = $payment->getPayment_date();
-        $this->amount            = $payment->getAmount();
-        $this->note              = $payment->getNote();
-        $this->inv_id            = (int) $payment->getInv_id();
-        $this->inv               = $payment->getInv();
+        $this->payment_date = $payment->getPayment_date();
+        $this->amount = $payment->getAmount();
+        $this->note = $payment->getNote();
+        $this->inv_id = (int) $payment->getInv_id();
+        $this->inv = $payment->getInv();
     }
 
-    public function getPayment_method_id(): ?int
+    public function getPayment_method_id(): int|null
     {
         return $this->payment_method_id;
     }
 
-    public function getPayment_date(): string|\DateTimeImmutable|null
+    public function getPayment_date(): null|string|DateTimeImmutable
     {
-        /*
+        /**
          * @var DateTimeImmutable|string|null $this->payment_date
          */
         return $this->payment_date;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): float|null
     {
         return $this->amount;
     }
 
-    public function getNote(): ?string
+    public function getNote(): string|null
     {
         return $this->note;
     }
 
-    public function getInv_id(): ?int
+    public function getInv_id(): int|null
     {
         return $this->inv_id;
     }
 
-    public function getInv(): ?Inv
+    public function getInv(): Inv|null
     {
         return $this->inv;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

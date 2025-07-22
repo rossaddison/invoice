@@ -27,9 +27,7 @@ class Gentor
         private bool $updated_include = false, #[Column(type: 'bool', default: false)]
         private bool $modified_include = false, #[Column(type: 'bool', default: false)]
         private bool $deleted_include = false, #[Column(type: 'bool', default: true)]
-        private bool $flash_include = false)
-    {
-    }
+        private bool $flash_include = false) {}
 
     public function getGentor_id(): string
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/*
+/**
  * Related logic: see QuoteController function view $parameters['model_delete_items']
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -16,12 +16,12 @@ use Yiisoft\Html\Html;
     <table class="table table-hover table-bordered table-striped">
         <tr>
             <th>&nbsp;</th>
-            <th><?php echo $translator->translate('item'); ?></th>
-            <th><?php echo $translator->translate('product.sku'); ?></th>            
-            <th><?php echo $translator->translate('product.name'); ?></th>
-            <th><?php echo $translator->translate('product.description'); ?></th>
-            <th class="text-right"><?php echo $translator->translate('product.price'); ?></th>
-            <th class="text-right"><?php echo $translator->translate('quantity'); ?></th>
+            <th><?= $translator->translate('item'); ?></th>
+            <th><?= $translator->translate('product.sku'); ?></th>            
+            <th><?= $translator->translate('product.name'); ?></th>
+            <th><?= $translator->translate('product.description'); ?></th>
+            <th class="text-right"><?= $translator->translate('product.price'); ?></th>
+            <th class="text-right"><?= $translator->translate('quantity'); ?></th>
         </tr>
         <?php
             /**
@@ -30,25 +30,25 @@ use Yiisoft\Html\Html;
             foreach ($quoteItems as $quoteItem) { ?>
             <tr class="product">
                 <td class="text-left">
-                    <input type="checkbox" name="item_ids[]" value="<?php echo $quoteItem->getId(); ?>">
+                    <input type="checkbox" name="item_ids[]" value="<?php echo $quoteItem->getId();?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo Html::encode($quoteItem->getId()); ?></b>
+                    <b><?= Html::encode($quoteItem->getId()); ?></b>
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo Html::encode($quoteItem->getProduct()?->getProduct_sku()); ?></b>
+                    <b><?= Html::encode($quoteItem->getProduct()?->getProduct_sku()); ?></b>
                 </td>
                 <td>
-                    <b><?php echo Html::encode($quoteItem->getProduct()?->getProduct_name()); ?></b>
+                    <b><?= Html::encode($quoteItem->getProduct()?->getProduct_name()); ?></b>
                 </td>
                 <td>
-                    <?php echo nl2br(Html::encode($quoteItem->getProduct()?->getProduct_description())); ?>
+                    <?= nl2br(Html::encode($quoteItem->getProduct()?->getProduct_description())); ?>
                 </td>
                 <td class="text-right">
-                    <?php echo $numberHelper->format_currency($quoteItem->getProduct()?->getProduct_price()); ?>
+                    <?= $numberHelper->format_currency($quoteItem->getProduct()?->getProduct_price()); ?>
                 </td>
                 <td class="text-right">
-                    <?php echo $quoteItem->getQuantity(); ?>
+                    <?= $quoteItem->getQuantity(); ?>
                 </td>
             </tr>
         <?php } ?>

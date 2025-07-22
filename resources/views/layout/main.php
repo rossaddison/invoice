@@ -5,22 +5,22 @@ declare(strict_types=1);
 use App\Asset\AppAsset;
 use App\User\User;
 use App\Widget\PerformanceMetrics;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Button;
+use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\Label;
 use Yiisoft\Bootstrap5\ButtonSize;
-use Yiisoft\Bootstrap5\ButtonVariant;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
+use Yiisoft\Bootstrap5\ButtonVariant;
 use Yiisoft\Bootstrap5\Nav;
 use Yiisoft\Bootstrap5\NavBar;
 use Yiisoft\Bootstrap5\NavBarExpand;
 use Yiisoft\Bootstrap5\NavBarPlacement;
 use Yiisoft\Bootstrap5\NavLink;
 use Yiisoft\Bootstrap5\NavStyle;
-use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Button;
-use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\Label;
 
-/*
+/**
  * Related logic: see Note: This layout is not currently being used. Refer to soletrader/main.php
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -52,18 +52,18 @@ $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 
 $currentRouteName = $currentRoute->getName() ?? '';
-$isGuest          = null === $user || null === $user->getId();
+$isGuest = $user === null || $user->getId() === null;
 $session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();
 ?>
     <!DOCTYPE html>
-    <html class="h-100" lang="<?php echo $currentRoute->getArgument('_language') ?? 'en'; ?>">
+    <html class="h-100" lang="<?= $currentRoute->getArgument('_language') ?? 'en'; ?>">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Yii3-i<?php echo $this->getTitle() ? ' - '.Html::encode($this->getTitle()) : ''; ?></title>
-        <?php $this->head(); ?>
+        <title>Yii3-i<?= $this->getTitle() ? ' - ' . Html::encode($this->getTitle()) : '' ?></title>
+        <?php $this->head() ?>
     </head>
     <body class="cover-container-fluid d-flex w-100 h-100 mx-auto flex-column">
     <header class="mb-auto">
@@ -73,16 +73,16 @@ $this->beginPage();
             ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
             ->brandImage($logoPath)
             ->brandImageAttributes(['margin' => $companyLogoMargin,
-                'width'                      => $companyLogoWidth,
-                'height'                     => $companyLogoHeight])
-            ->brandText(str_repeat('&nbsp;', 7).$brandLabel)
+                'width' => $companyLogoWidth,
+                'height' => $companyLogoHeight])
+            ->brandText(str_repeat('&nbsp;', 7) . $brandLabel)
             ->brandUrl($urlGenerator->generate('site/index'))
             ->class()
             ->container(false)
             ->containerAttributes([])
             ->expand(NavBarExpand::LG)
             ->id('navbar')
-            // ->innerContainerAttributes(['class' => 'container-md'])
+            //->innerContainerAttributes(['class' => 'container-md'])
             ->placement(NavBarPlacement::STICKY_TOP)
             ->begin();
 ?>
@@ -90,39 +90,39 @@ $this->beginPage();
     $currentPath = $currentRoute->getUri()?->getPath();
 ?> 
         
-        <?php echo null !== $currentPath ? Nav::widget()
-            ->items(
-                NavLink::to(
-                    Label::tag()
-                        ->attributes(['class' => 'bi bi-door-open-fill text-success'])
-                        ->content(),
-                    $urlGenerator->generate('auth/login'),
-                    $isGuest  && !$stopLoggingIn,
-                    !$isGuest && $stopLoggingIn,
-                    false,
-                ),
-                NavLink::to(
-                    Label::tag()
-                        ->attributes([
-                            'class'          => 'bi bi-person-plus-fill',
-                            'data-bs-toggle' => 'tooltip',
-                            'title'          => str_repeat(' ', 1).$translator->translate('setup.create.user'),
-                        ])
-                        ->content(),
-                    $urlGenerator->generate('auth/signup'),
-                    $isGuest  && !$stopSigningUp,
-                    !$isGuest && $stopSigningUp,
-                    false,
-                ),
-            )
-            ->styles(NavStyle::NAVBAR) : '';
+        <?= null !== $currentPath ? Nav::widget()
+    ->items(
+        NavLink::to(
+            Label::tag()
+            ->attributes(['class' => 'bi bi-door-open-fill text-success'])
+            ->content(),
+            $urlGenerator->generate('auth/login'),
+            $isGuest && !$stopLoggingIn,
+            !$isGuest && $stopLoggingIn,
+            false,
+        ),
+        NavLink::to(
+            Label::tag()
+            ->attributes([
+                'class' => 'bi bi-person-plus-fill',
+                'data-bs-toggle' => 'tooltip',
+                'title' => str_repeat(' ', 1) . $translator->translate('setup.create.user'),
+            ])
+            ->content(),
+            $urlGenerator->generate('auth/signup'),
+            $isGuest && !$stopSigningUp,
+            !$isGuest && $stopSigningUp,
+            false,
+        ),
+    )
+    ->styles(NavStyle::NAVBAR) : '';
 ?>
-        <?php echo Dropdown::widget()
+        <?= Dropdown::widget()
     ->addClass('bi bi-translate')
     ->addAttributes([
         'style' => 'font-size: 1rem; color: cornflowerblue;',
         'title' => $translator->translate('language'),
-        'url'   => '#',
+        'url' => '#',
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent('')
@@ -147,29 +147,30 @@ $this->beginPage();
         DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Uzbek / o'."'".'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
+        DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
         DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
     )->render();
 ?>
-<?php echo $isGuest ? '' : Form::tag()
-    ->post($urlGenerator->generate('auth/logout'))
-    ->csrf($csrf)
-    ->open()
-                .'<div class="mb-1">'
-                .(string) Button::submit(
+<?=
+    $isGuest ? '' : Form::tag()
+                    ->post($urlGenerator->generate('auth/logout'))
+                    ->csrf($csrf)
+                    ->open()
+                . '<div class="mb-1">'
+                . (string) Button::submit(
                     $translator->translate('logout', ['login' => Html::encode(null !== $user ? preg_replace('/\d+/', '', $user->getLogin()) : '')]),
                 )
                     ->class('btn btn-xs btn-warning')
-                .'</div>'
-                .Form::tag()->close();
+                . '</div>'
+                . Form::tag()->close();
 ?>
         
-        <?php echo NavBar::end(); ?>
+        <?= NavBar::end() ?>
     </header>
 
     <main class="container py-3">
-        <?php echo $content; ?>
+        <?= $content ?>
     </main>
 
     <footer class='mt-auto bg-dark py-3'>
@@ -177,10 +178,10 @@ $this->beginPage();
             <div class = 'd-flex flex-fill float-start'>
                 <i class=''></i>
                 <a class='text-decoration-none' href='https://www.yiiframework.com/' target='_blank' rel='noopener'>
-                    Yii Framework - <?php echo date('Y'); ?> -
+                    Yii Framework - <?= date('Y') ?> -
                 </a>
                 <div class="ms-2 text-white">
-                    <?php echo PerformanceMetrics::widget(); ?>
+                    <?= PerformanceMetrics::widget() ?>
                 </div>
             </div>
 
@@ -204,7 +205,7 @@ $this->beginPage();
         </div>
     </footer>
 
-    <?php $this->endBody(); ?>
+    <?php $this->endBody() ?>
     </body>
     </html>
 <?php

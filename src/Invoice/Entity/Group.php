@@ -21,8 +21,7 @@ class Group
         private ?int $next_id = null,
         #[Column(type: 'integer', nullable: true, default: 0)]
         private ?int $left_pad = null,
-    ) {
-    }
+    ) {}
 
     public function getId(): string
     {
@@ -34,7 +33,7 @@ class Group
         $this->id = $id;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }

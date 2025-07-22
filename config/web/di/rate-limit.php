@@ -9,7 +9,7 @@ use Yiisoft\Yii\RateLimiter\CounterInterface;
 use Yiisoft\Yii\RateLimiter\Storage\SimpleCacheStorage;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 
-/* @var array $params */
+/** @var array $params */
 
 return [
     StorageInterface::class => function (Aliases $aliases) {
@@ -18,9 +18,9 @@ return [
         return new SimpleCacheStorage($cache);
     },
     CounterInterface::class => [
-        'class'         => Counter::class,
+        'class' => Counter::class,
         '__construct()' => [
-            'limit'           => 2,
+            'limit' => 2,
             'periodInSeconds' => 10,
         ],
     ],

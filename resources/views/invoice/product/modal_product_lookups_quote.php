@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Tag\Button;
 
-/*
+/**
  * Related logic: see ...\src\Invoice\Quote\QuoteController function view $parameters['modal_choose_items']
  * Related logic: see ...\resources\views\invoice\product\_partial_product_table_modal.php
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -25,34 +25,34 @@ use Yiisoft\Html\Tag\Button;
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
+                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="filter_family_inv"><?php echo $translator->translate('any.family'); ?></label>
+                            <label for="filter_family_inv"><?= $translator->translate('any.family'); ?></label>
                             <div class="form-group">
                                 <select name="filter_family_quote" id="filter_family_quote" class="form-control">
-                                    <option value="0"><?php echo $translator->translate('any.family'); ?></option>
+                                    <option value="0"><?= $translator->translate('any.family'); ?></option>
                                     <?php
                                         /**
                                          * @var App\Invoice\Entity\Family $family
                                          */
                                         foreach ($families as $family) { ?>
-                                        <option value="<?php echo $family->getFamily_id(); ?>"
+                                        <option value="<?= $family->getFamily_id(); ?>"
                                             <?php if (isset($filter_family) && $family->getFamily_id() == $filter_family) {
                                                 echo ' selected="selected"';
                                             } ?>>
-                                            <?php echo $family->getFamily_name() ?? ''; ?>
+                                            <?= $family->getFamily_name() ?? ''; ?>
                                         </option>
                                     <?php } ?>
                                 </select>
                             </div>
                             <div class="form-group panel panel-primary">
-                                <label for="filter_product_quote"><?php echo $translator->translate('product.name'); ?></label>
+                                <label for="filter_product_quote"><?= $translator->translate('product.name'); ?></label>
                                 <input type="text" class="form-control" name="filter_product_quote" id="filter_product_quote"
-                                       placeholder="<?php echo $translator->translate('product.name'); ?>"
-                                       value="<?php echo $filter_product; ?>">                
-                                <button type="button" id="filter-button-quote" class="btn btn-info"><?php echo $translator->translate('search.product'); ?></button>
-                                <button type="button" id="product-reset-button-quote" class="btn btn-danger"><?php echo $translator->translate('reset'); ?></button>
+                                       placeholder="<?= $translator->translate('product.name'); ?>"
+                                       value="<?= $filter_product ?>">                
+                                <button type="button" id="filter-button-quote" class="btn btn-info"><?= $translator->translate('search.product'); ?></button>
+                                <button type="button" id="product-reset-button-quote" class="btn btn-danger"><?= $translator->translate('reset'); ?></button>
                             </div>
                         </div>
 
@@ -63,27 +63,27 @@ use Yiisoft\Html\Tag\Button;
                                 <!-- Note: The above js will pass selected products to invoice/product/selection_quote function -->
                                 <button class="select-items-confirm-quote btn btn-success alignment:center" type="button" disabled>
                                     <i class="fa fa-check"></i>
-                                    <?php echo $translator->translate('submit'); ?>
+                                    <?= $translator->translate('submit'); ?>
                                 </button>            
                         </div>
                         <div id="product-lookup-table">
                             <?php
-                               echo $partial_product_table_modal;
+                               echo $partial_product_table_modal
 ?>     
                         </div>
                     </div>
                     <div class="modal-footer">
                     <?php
                         echo Button::tag()
-                            ->addClass('btn btn-danger')
-                            ->content($translator->translate('close'))
-                            ->addAttributes(['data-bs-dismiss' => 'modal'])
-                            ->render();
+                        ->addClass('btn btn-danger')
+                        ->content($translator->translate('close'))
+                        ->addAttributes(['data-bs-dismiss' => 'modal'])
+                        ->render();
 ?>    
                     </div>
                 </form>    
             </div>
-            <div id="default_item_tax_rate" value="<?php echo $default_item_tax_rate; ?>"></div>
+            <div id="default_item_tax_rate" value="<?= $default_item_tax_rate; ?>"></div>
         </div>
     </div>
 </div>

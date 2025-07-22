@@ -5,7 +5,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/*
+/**
  * @var App\Invoice\Merchant\MerchantForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
@@ -21,103 +21,103 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?php echo Form::tag()
+<?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('MerchantForm')
-    ->open(); ?>
+    ->open() ?>
 
-<?php echo Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?php echo Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?php echo Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?php echo Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?php echo Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?php echo Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
-    <?php echo Html::encode($title); ?>
-<?php echo Html::closeTag('h1'); ?>
-<?php echo Html::openTag('div', ['id' => 'headerbar']); ?>
-    <?php echo $button::back(); ?>
-    <?php echo Html::openTag('div', ['id' => 'content']); ?>
-        <?php echo Html::openTag('div', ['class' => 'row']); ?>
-            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php echo Field::errorSummary($form)
-        ->errors($errors)
-        ->header($translator->translate('error.summary'))
-        ->onlyCommonErrors();
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+    <?= Html::encode($title) ?>
+<?= Html::closeTag('h1'); ?>
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
+    <?= $button::back(); ?>
+    <?= Html::openTag('div', ['id' => 'content']); ?>
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::errorSummary($form)
+                    ->errors($errors)
+                    ->header($translator->translate('error.summary'))
+                    ->onlyCommonErrors()
 ?>
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php echo Field::text($form, 'inv')
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'inv')
     ->label($translator->translate('number'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
     ->placeholder($translator->translate('successful'))
-    ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('reason.uknown')));
+    ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('reason.uknown')))
 ?>
-                <?php echo Html::closeTag('div'); ?>    
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php echo Field::checkbox($form, 'successful')
-                    ->inputLabelAttributes(['class' => 'form-check-label'])
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled',
-                    ])
-                    ->inputClass('form-check-input')
-                    ->ariaDescribedBy($translator->translate('successful'));
+                <?= Html::closeTag('div'); ?>    
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::checkbox($form, 'successful')
+    ->inputLabelAttributes(['class' => 'form-check-label'])
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled',
+    ])
+    ->inputClass('form-check-input')
+    ->ariaDescribedBy($translator->translate('successful'))
 ?>        
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?php echo Field::date($form, 'date')
-                    ->label($translator->translate('date'))
-                    ->addInputAttributes([
-                        'readonly' => 'readonly',
-                        'disabled' => 'disabled',
-                    ])
-                    ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '');
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= Field::date($form, 'date')
+    ->label($translator->translate('date'))
+    ->addInputAttributes([
+        'readonly' => 'readonly',
+        'disabled' => 'disabled',
+    ])
+    ->value(!is_string($form->getDate()) ? ($form->getDate())->format('Y-m-d') : '')
 ?>
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php echo Field::text($form, 'driver')
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'driver')
     ->label($translator->translate('merchant.driver'))
     ->placeholder($translator->translate('merchant.driver'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getDriver() ?? ''));
+    ->value(Html::encode($form->getDriver() ?? ''))
 ?>
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php echo Field::text($form, 'response')
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'response')
     ->label($translator->translate('merchant.response'))
     ->placeholder($translator->translate('merchant.response'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getResponse() ?? ''));
+    ->value(Html::encode($form->getResponse() ?? ''))
 ?>
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php echo Field::text($form, 'reference')
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'reference')
     ->label($translator->translate('merchant.reference'))
     ->placeholder($translator->translate('merchant.reference'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getReference() ?? ''));
+    ->value(Html::encode($form->getReference() ?? ''))
 ?>
-                <?php echo Html::closeTag('div'); ?>
-            <?php echo Html::closeTag('div'); ?>
-        <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
-<?php echo Form::tag()->close(); ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Form::tag()->close() ?>

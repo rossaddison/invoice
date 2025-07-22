@@ -18,12 +18,14 @@ final class CategoryPrimaryForm extends FormModel
         $this->name = $categoryPrimary->getName();
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

@@ -7,17 +7,17 @@ namespace App\Invoice\ItemLookup;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\ItemLookup;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Service\WebControllerService;
 use App\User\UserService;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ItemLookupController extends BaseController
@@ -38,49 +38,61 @@ final class ItemLookupController extends BaseController
         $this->itemlookupService = $itemlookupService;
     }
 
+    /**
+     * @param ItemLookupRepository $itemlookupRepository
+     */
     public function index(ItemLookupRepository $itemlookupRepository): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit     = $this->rbac();
+        $canEdit = $this->rbac();
         $itemLookups = $this->itemlookups($itemlookupRepository);
-        $paginator   = (new OffsetPaginator($itemLookups));
-        $parameters  = [
+        $paginator = (new OffsetPaginator($itemLookups));
+        $parameters = [
             'paginator' => $paginator,
-            'canEdit'   => $canEdit,
-            'alert'     => $this->alert(),
+            'canEdit' => $canEdit,
+            'alert' => $this->alert(),
         ];
-
         return $this->viewRenderer->render('index', $parameters);
     }
 
+    /**
+     * @param Request $request
+     * @param FormHydrator $formHydrator
+     * @return Response
+     */
     public function add(
         Request $request,
         FormHydrator $formHydrator,
     ): Response {
         $itemLookup = new ItemLookup();
-        $form       = new ItemLookupForm($itemLookup);
+        $form = new ItemLookupForm($itemLookup);
         $parameters = [
-            'title'           => $this->translator->translate('add'),
-            'actionName'      => 'itemlookup/add',
+            'title' => $this->translator->translate('add'),
+            'actionName' => 'itemlookup/add',
             'actionArguments' => [],
-            'errors'          => [],
-            'form'            => $form,
+            'errors' => [],
+            'form' => $form,
         ];
-        if (Method::POST === $request->getMethod()) {
+        if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->itemlookupService->saveItemLookup($itemLookup, $body);
-
                     return $this->webService->getRedirectResponse('itemlookup/index');
                 }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form']   = $form;
+            $parameters['form'] = $form;
         }
-
         return $this->viewRenderer->render('_form', $parameters);
     }
 
+    /**
+     * @param Request $request
+     * @param CurrentRoute $currentRoute
+     * @param FormHydrator $formHydrator
+     * @param ItemLookupRepository $itemlookupRepository
+     * @return Response
+     */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
@@ -89,33 +101,35 @@ final class ItemLookupController extends BaseController
     ): Response {
         $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $lookup) {
-            $form       = new ItemLookupForm($lookup);
+            $form = new ItemLookupForm($lookup);
             $parameters = [
-                'title'           => $this->translator->translate('edit'),
-                'actionName'      => 'itemlookup/edit',
+                'title' => $this->translator->translate('edit'),
+                'actionName' => 'itemlookup/edit',
                 'actionArguments' => ['id' => $lookup->getId()],
-                'errors'          => [],
-                'form'            => $form,
+                'errors' => [],
+                'form' => $form,
             ];
-            if (Method::POST === $request->getMethod()) {
+            if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->itemlookupService->saveItemLookup($lookup, $body);
-
                         return $this->webService->getRedirectResponse('itemlookup/index');
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form']   = $form;
+                $parameters['form'] = $form;
             }
-
             return $this->viewRenderer->render('_form', $parameters);
         }
-
         return $this->webService->getNotFoundResponse();
     }
 
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param ItemLookupRepository $itemlookupRepository
+     * @return Response
+     */
     public function delete(
         CurrentRoute $currentRoute,
         ItemLookupRepository $itemlookupRepository,
@@ -123,30 +137,31 @@ final class ItemLookupController extends BaseController
         $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if ($lookup) {
             $this->itemlookupService->deleteItemLookup($lookup);
-
             return $this->webService->getRedirectResponse('itemlookup/index');
         }
-
         return $this->webService->getNotFoundResponse();
     }
 
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param ItemLookupRepository $itemlookupRepository
+     * @return Response|\Yiisoft\DataResponse\DataResponse
+     */
     public function view(
         CurrentRoute $currentRoute,
         ItemLookupRepository $itemlookupRepository,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $itemLookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $itemLookup) {
-            $form       = new ItemLookupForm($itemLookup);
+            $form = new ItemLookupForm($itemLookup);
             $parameters = [
-                'title'           => $this->translator->translate('view'),
-                'actionName'      => 'itemlookup/view',
+                'title' => $this->translator->translate('view'),
+                'actionName' => 'itemlookup/view',
                 'actionArguments' => ['id' => $itemLookup->getId()],
-                'form'            => $form,
+                'form' => $form,
             ];
-
             return $this->viewRenderer->render('_view', $parameters);
         }
-
         return $this->webService->getNotFoundResponse();
     }
 
@@ -158,25 +173,29 @@ final class ItemLookupController extends BaseController
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
-
             return $this->webService->getRedirectResponse('itemlookup/index');
         }
-
         return $canEdit;
     }
 
-    private function itemlookup(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository): ?ItemLookup
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param ItemLookupRepository $itemlookupRepository
+     * @return ItemLookup|null
+     */
+    private function itemlookup(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository): ItemLookup|null
     {
         $itemlookup = new ItemLookup();
-        $id         = $currentRoute->getArgument('id');
+        $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $itemlookupRepository->repoItemLookupquery($id);
         }
-
         return $itemlookup;
     }
 
     /**
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
+     *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
     private function itemlookups(ItemLookupRepository $itemlookupRepository): \Yiisoft\Data\Cycle\Reader\EntityReader

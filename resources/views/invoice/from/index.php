@@ -13,41 +13,42 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Setting\SettingRepository  $s
- * @var App\Widget\GridComponents              $gridComponents
- * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
- * @var string                                 $alert
- * @var string                                 $csrf
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $alert
+ * @var string $csrf
  */
+
 echo $alert;
 
 ?>
-<h1><?php echo $translator->translate('from.email.address'); ?></h1>
-<?php echo Html::a(Html::tag('i', '', ['class' => 'btn btn-primary fa fa-plus fa-margin']), $urlGenerator->generate('from/add')); ?>
+<h1><?= $translator->translate('from.email.address'); ?></h1>
+<?= Html::a(Html::tag('i', '', ['class' => 'btn btn-primary fa fa-plus fa-margin']), $urlGenerator->generate('from/add')); ?>
 <br>
 <br>
 <?php
     $header = Div::tag()
-        ->addClass('row')
+      ->addClass('row')
+      ->content(
+          H5::tag()
+        ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-            H5::tag()
-                ->addClass('bg-primary text-white p-3 rounded-top')
-                ->content(
-                    I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('from.email.address')),
-                ),
-        )
-        ->render();
+            I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('from.email.address')),
+        ),
+      )
+      ->render();
 
 $toolbarReset = A::tag()
-    ->addAttributes(['type' => 'reset'])
-    ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'from/index'))
-    ->id('btn-reset')
-    ->render();
+  ->addAttributes(['type' => 'reset'])
+  ->addClass('btn btn-danger me-1 ajax-loader')
+  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+  ->href($urlGenerator->generate($currentRoute->getName() ?? 'from/index'))
+  ->id('btn-reset')
+  ->render();
 
 $toolbar = Div::tag();
 
@@ -55,12 +56,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (FromDropDown $model) => $model->getId(),
+        content: static fn(FromDropDown $model) => $model->getId(),
     ),
     new DataColumn(
         'default_email',
         header: $translator->translate('email.default'),
-        content: static fn (FromDropDown $model) => 'true' == $model->getDefault_email() ? $translator->translate('yes') : $translator->translate('no'),
+        content: static fn(FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -82,9 +83,9 @@ $columns = [
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                        'type'    => 'submit',
-                        'class'   => 'dropdown-button',
-                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
                 $urlGenerator->generate('from/delete', ['id' => $model->getId()]),
@@ -93,21 +94,22 @@ $columns = [
         },
     ),
 ];
-$toolbarString = Form::tag()->post($urlGenerator->generate('from/index'))->csrf($csrf)->open().
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString =
+    Form::tag()->post($urlGenerator->generate('from/index'))->csrf($csrf)->open() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
 $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-from'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->header($header)
-    ->id('w3197-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('no.records'))
-    ->toolbar($toolbarString);
+  ->bodyRowAttributes(['class' => 'align-middle'])
+  ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-from'])
+  ->columns(...$columns)
+  ->dataReader($paginator)
+  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+  ->header($header)
+  ->id('w3197-grid')
+  ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+  ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+  ->summaryTemplate($grid_summary)
+  ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+  ->emptyText($translator->translate('no.records'))
+  ->toolbar($toolbarString);

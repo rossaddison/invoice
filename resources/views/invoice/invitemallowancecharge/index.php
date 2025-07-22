@@ -13,17 +13,18 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Helpers\NumberHelper       $numberHelper
- * @var App\Invoice\Setting\SettingRepository  $s
- * @var App\Widget\GridComponents              $gridComponents
- * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var string                                 $alert
- * @var string                                 $csrf
- * @var string                                 $inv_item_id
+ * @var string $alert
+ * @var string $csrf
+ * @var string $inv_item_id
  */
+
 echo $alert;
 ?>
 <?php
@@ -33,7 +34,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('allowance.or.charge.item')),
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge.item')),
             ),
     )
     ->render();
@@ -48,18 +49,18 @@ $toolbarReset = A::tag()
 
 $backButton = A::tag()
     ->addAttributes([
-        'type'    => 'reset',
+        'type' => 'reset',
         'onclick' => 'window.history.back()',
-        'class'   => 'btn btn-primary me-1',
-        'id'      => 'btn-cancel',
+        'class' => 'btn btn-primary me-1',
+        'id' => 'btn-cancel',
     ])
-    ->content('⬅ ️'.$translator->translate('back'))
+    ->content('⬅ ️' . $translator->translate('back'))
     ->render();
 
 $toolbar = Div::tag();
 ?>
 <div>
-    <h5><?php echo $translator->translate('allowance.or.charge.item'); ?></h5>
+    <h5><?= $translator->translate('allowance.or.charge.item'); ?></h5>
     <div class="btn-group">
     </div>
     <br>
@@ -70,11 +71,11 @@ $toolbar = Div::tag();
 </div>
 <?php
     $add = $translator->translate('allowance.or.charge.item.add');
-$url     = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]);
+$url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]);
 ?>
 
-<?php echo Html::i(Html::a('  '.$add, $url, ['class' => 'btn btn-primary',
-    'style'                                          => 'font-family:Arial']), ['class' => 'btn btn-primary fa fa-item']); ?>
+<?= Html::i(Html::a('  ' . $add, $url, ['class' => 'btn btn-primary',
+    'style' => 'font-family:Arial']), ['class' => 'btn btn-primary fa fa-item']); ?>
 <br>
 <br>
 <?php
@@ -82,16 +83,16 @@ $url     = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' 
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getId(),
+            content: static fn(InvItemAllowanceCharge $model) => $model->getId(),
         ),
         new DataColumn(
             header: $translator->translate('allowance.or.charge.reason.code'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
+            content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
         ),
         new DataColumn(
             content: static function (InvItemAllowanceCharge $model) use ($translator): string {
-                if (1 == $model->getAllowanceCharge()?->getIdentifier()) {
-                    return $translator->translate('allowance.or.charge.charge');
+                if ($model->getAllowanceCharge()?->getIdentifier() == 1) {
+                    return  $translator->translate('allowance.or.charge.charge');
                 } else {
                     return $translator->translate('allowance.or.charge.allowance');
                 }
@@ -99,14 +100,14 @@ $url     = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' 
         ),
         new DataColumn(
             header: $translator->translate('allowance.or.charge.reason'),
-            content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
+            content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
         ),
         new DataColumn(
             header: $translator->translate('allowance.or.charge.amount'),
             content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
                 // show the charge in brackets
-                if (0 == $model->getAllowanceCharge()?->getIdentifier()) {
-                    return '('.$numberHelper->format_currency($model->getAmount()).')';
+                if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
+                    return '(' . $numberHelper->format_currency($model->getAmount()) . ')';
                 } else {
                     return $numberHelper->format_currency($model->getAmount());
                 }
@@ -114,7 +115,7 @@ $url     = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' 
         ),
         new DataColumn(
             header: $translator->translate('vat'),
-            content: static fn (InvItemAllowanceCharge $model) => $numberHelper->format_currency($model->getVat()),
+            content: static fn(InvItemAllowanceCharge $model) => $numberHelper->format_currency($model->getVat()),
         ),
         new DataColumn(
             header: $translator->translate('edit'),
@@ -136,9 +137,9 @@ $url     = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' 
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                            'type'    => 'submit',
-                            'class'   => 'dropdown-button',
-                            'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                         ],
                     ),
                     $urlGenerator->generate('invitemallowancecharge/delete', ['id' => $model->getId()]),
@@ -149,20 +150,21 @@ $url     = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' 
     ];
 ?>
 <?php
-$grid_summary = $s->grid_summary(
+$grid_summary =  $s->grid_summary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('allowance.or.charge.item'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open().
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
-        Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render().
+$toolbarString =
+        Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render() .
         Form::tag()->close();
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-invitemallowancecharge'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-invitemallowancecharge'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])

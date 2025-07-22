@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/*
+/**
  * Related logic: see App\Auth\Controller\ChangePasswordController function change
  *
  * @var App\Auth\Form\ChangePasswordForm $formModel
@@ -27,48 +27,48 @@ $this->setTitle($translator->translate('password.change'));
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?php echo Html::encode($this->getTitle()); ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?php echo Form::tag()
+                    <?= Form::tag()
                         // note: the change function actually appears in the ChangePasswordController
                         ->post($urlGenerator->generate('auth/change'))
                         ->csrf($csrf)
                         ->id('changePasswordForm')
-                        ->open(); ?>
-                    <?php echo $changePasswordForAnyUser
+                        ->open() ?>
+                    <?= $changePasswordForAnyUser
                             ? Field::text($formModel, 'login')
                                 ->label($translator->translate('layout.login'))
                                 ->addInputAttributes([
                                     'autocomplete' => 'username',
-                                    'value'        => $login ?? '',
+                                    'value' => $login ?? '',
                                 ])
                             : Field::text($formModel, 'login')
                                 ->label($translator->translate('layout.login'))
                                 ->addInputAttributes([
                                     'autocomplete' => 'username',
-                                    'value'        => $login ?? '',
-                                    'readonly'     => 'readonly',
+                                    'value' => $login ?? '',
+                                    'readonly' => 'readonly',
                                 ]);
 ?>
-                    <?php echo Field::password($formModel, 'password')
+                    <?= Field::password($formModel, 'password')
     ->addInputAttributes(['autocomplete' => 'current-password'])
     ->label($translator->translate('layout.password'));
 ?>
-                    <?php echo Field::password($formModel, 'newPassword')
+                    <?= Field::password($formModel, 'newPassword')
     ->addInputAttributes(['autocomplete' => 'new-password'])
     ->label($translator->translate('layout.password.new'));
 ?>
-                    <?php echo Field::password($formModel, 'newPasswordVerify')
+                    <?= Field::password($formModel, 'newPasswordVerify')
     ->addInputAttributes(['autocomplete' => 'verify-password'])
-    ->label($translator->translate('layout.password-verify.new'));
+    ->label($translator->translate('layout.password-verify.new'))
 ?>
-                    <?php echo Field::submitButton()
+                    <?= Field::submitButton()
     ->buttonId('change-button')
     ->name('change-button')
-    ->content($translator->translate('layout.submit'));
+    ->content($translator->translate('layout.submit'))
 ?>
-                    <?php echo Form::tag()->close(); ?>
+                    <?= Form::tag()->close() ?>
                 </div>
             </div>
         </div>

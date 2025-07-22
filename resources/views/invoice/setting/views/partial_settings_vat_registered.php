@@ -2,44 +2,44 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array                                  $body
+ * @var array $body
  */
 ?>
 <div class = 'row'>
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php echo $translator->translate('vat'); ?>
+                <?= $translator->translate('vat'); ?>
             </div>
             <div class="panel-body">
                 <div class = 'row'>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <div class="checkbox">
-                                <?php $body['settings[enable_vat_registration]'] = $s->getSetting('enable_vat_registration'); ?>
-                                <label <?php echo $s->where('enable_vat_registration'); ?>">
+                                <?php $body['settings[enable_vat_registration]'] = $s->getSetting('enable_vat_registration');?>
+                                <label <?= $s->where('enable_vat_registration'); ?>">
                                     <input type="hidden" name="settings[enable_vat_registration]" value="0">
                                     <input type="checkbox" name="settings[enable_vat_registration]" value="1"
-                                        <?php $s->check_select($body['settings[enable_vat_registration]'], 1, '==', true); ?>>
-                                    <?php echo $translator->translate('enable.vat'); ?>
+                                        <?php $s->check_select($body['settings[enable_vat_registration]'], 1, '==', true) ?>>
+                                    <?= $translator->translate('enable.vat'); ?>
                                 </label>
                             </div>
                             <div class="checkbox">
-                                <?php $body['settings[display_vat_enabled_message]'] = $s->getSetting('display_vat_enabled_message'); ?>
+                                <?php $body['settings[display_vat_enabled_message]'] = $s->getSetting('display_vat_enabled_message');?>
                                 <label>
                                     <input type="hidden" name="settings[display_vat_enabled_message]" id="dvem_hidden" value="0">
                                     <input type="checkbox" name="settings[display_vat_enabled_message]" id="dvem_checkbox" value="1"
-                                        <?php $s->check_select($body['settings[display_vat_enabled_message]'], 1, '==', true); ?>>
-                                    <?php echo $translator->translate('enable.vat.message'); ?>
+                                        <?php $s->check_select($body['settings[display_vat_enabled_message]'], 1, '==', true) ?>>
+                                    <?= $translator->translate('enable.vat.message'); ?>
                                 </label>
                                 <br>
                                 <br>
-                                <p><?php echo $translator->translate('enable.vat.warning.line.1'); ?></p>
-                                <p><?php echo $translator->translate('enable.vat.warning.line.2'); ?></p>
-                                <p><?php echo $translator->translate('enable.vat.warning.line.3'); ?></p>
-                                <p><?php echo $translator->translate('enable.vat.warning.line.4'); ?></p>                                  </p>
+                                <p><?= $translator->translate('enable.vat.warning.line.1'); ?></p>
+                                <p><?= $translator->translate('enable.vat.warning.line.2'); ?></p>
+                                <p><?= $translator->translate('enable.vat.warning.line.3'); ?></p>
+                                <p><?= $translator->translate('enable.vat.warning.line.4'); ?></p>                                  </p>
                             </div>
                         </div>
                     </div>

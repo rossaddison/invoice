@@ -10,30 +10,26 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class ClientHelper
 {
-    public function __construct(private readonly SettingRepository $s)
-    {
-    }
+    public function __construct(private readonly SettingRepository $s) {}
 
     public function format_client(array|object|null $client): string
     {
         if ($client instanceof Client) {
             if (null !== $client->getClient_surname()) {
-                return rtrim($client->getClient_name().' '.($client->getClient_surname() ?? ''));
+                return rtrim($client->getClient_name() . ' ' . ($client->getClient_surname() ?? ''));
             }
-
             return $client->getClient_name();
         }
-
         return '';
     }
 
     public function format_gender(int $gender, Translator $t): string
     {
-        if (0 == $gender) {
+        if ($gender == 0) {
             return $t->translate('gender.male');
         }
 
-        if (1 == $gender) {
+        if ($gender == 1) {
             return $t->translate('gender.female');
         }
 

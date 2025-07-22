@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/*
+/**
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -17,24 +17,24 @@ use Yiisoft\Html\Html;
 
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php echo str_repeat('&nbsp;', 2).Html::encode($title); ?></h1>
+    <h1 class="headerbar-title"><?= str_repeat("&nbsp;", 2) . Html::encode($title) ?></h1>
 </div>
 
 <ul id="product-tabs" class="nav nav-tabs nav-tabs-noborder">
     <li class="active">
-        <a data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?php echo $translator->translate('product.view.tab.details'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-details" style="text-decoration: none"><?= $translator->translate('product.view.tab.details'); ?> </a>
     </li>
     <li>
-        <a data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?php echo $translator->translate('product.view.tab.properties'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-properties" style="text-decoration: none"><?= $translator->translate('product.view.tab.properties'); ?> </a>
     </li>
     <li>
-        <a data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?php echo $translator->translate('product.view.tab.images'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-images" style="text-decoration: none"><?= $translator->translate('product.view.tab.images'); ?> </a>
     </li>
     <li>
-        <a data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?php echo $translator->translate('product.view.tab.gallery'); ?> </a>
+        <a data-bs-toggle="tab" href="#product-gallery" style="text-decoration: none"><?= $translator->translate('product.view.tab.gallery'); ?> </a>
     </li>
     <li>
-        <?php echo $button::back(); ?>
+        <?= $button::back(); ?>
     </li>    
 </ul>
 
@@ -43,19 +43,19 @@ use Yiisoft\Html\Html;
     <div class="tab-content">
 
         <div id="product-details" class="tab-pane active">
-            <?php echo $partial_product_details ?: ''; ?>
+            <?= $partial_product_details ?: ''; ?>
         </div>
 
         <div id="product-properties" class="tab-pane">
-            <?php echo $partial_product_properties ?: ''; ?>
+            <?= $partial_product_properties ?: ''; ?>
         </div>
 
         <div id="product-images" class="tab-pane">
-            <?php echo $partial_product_images ?: ''; ?>
+            <?= $partial_product_images ?: ''; ?>
         </div>
         
         <div id="product-gallery" class="tab-pane">
-            <?php echo $partial_product_gallery ?: ''; ?>
+            <?= $partial_product_gallery ?: ''; ?>
         </div>
 
     </div>

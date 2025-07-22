@@ -8,18 +8,18 @@ use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\TranslatorExtractor\CategorySource;
 use Yiisoft\TranslatorExtractor\Extractor;
 
-/* @var array $params */
+/** @var array $params */
 
 return [
     Extractor::class => [
         '__construct()' => [
             [
                 DynamicReference::to([
-                    'class'         => CategorySource::class,
+                    'class' => CategorySource::class,
                     '__construct()' => [
                         'app',
-                        'messageReader' => DynamicReference::to(static fn (Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
-                        'messageWriter' => DynamicReference::to(static fn (Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
+                        'messageReader' => DynamicReference::to(static fn(Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
+                        'messageWriter' => DynamicReference::to(static fn(Aliases $aliases) => new MessageSource($aliases->get('@messages'))),
                     ],
                 ]),
             ],

@@ -31,63 +31,65 @@ final class EmailTemplateForm extends FormModel
 
     public function __construct(EmailTemplate $emailtemplate)
     {
-        $this->email_template_title        = $emailtemplate->getEmail_template_title();
-        $this->email_template_type         = $emailtemplate->getEmail_template_type();
-        $this->email_template_body         = $emailtemplate->getEmail_template_body();
-        $this->email_template_subject      = $emailtemplate->getEmail_template_subject();
-        $this->email_template_from_name    = $emailtemplate->getEmail_template_from_name();
-        $this->email_template_from_email   = $emailtemplate->getEmail_template_from_email();
-        $this->email_template_cc           = $emailtemplate->getEmail_template_cc();
-        $this->email_template_bcc          = $emailtemplate->getEmail_template_bcc();
+        $this->email_template_title = $emailtemplate->getEmail_template_title();
+        $this->email_template_type = $emailtemplate->getEmail_template_type();
+        $this->email_template_body = $emailtemplate->getEmail_template_body();
+        $this->email_template_subject = $emailtemplate->getEmail_template_subject();
+        $this->email_template_from_name = $emailtemplate->getEmail_template_from_name();
+        $this->email_template_from_email = $emailtemplate->getEmail_template_from_email();
+        $this->email_template_cc = $emailtemplate->getEmail_template_cc();
+        $this->email_template_bcc = $emailtemplate->getEmail_template_bcc();
         $this->email_template_pdf_template = $emailtemplate->getEmail_template_pdf_template();
     }
 
-    public function getEmail_template_title(): ?string
+    public function getEmail_template_title(): string|null
     {
         return $this->email_template_title;
     }
 
-    public function getEmail_template_type(): ?string
+    public function getEmail_template_type(): string|null
     {
         return $this->email_template_type;
     }
 
-    public function getEmail_template_body(): ?string
+    public function getEmail_template_body(): string|null
     {
         return $this->email_template_body;
     }
 
-    public function getEmail_template_subject(): ?string
+    public function getEmail_template_subject(): string|null
     {
         return $this->email_template_subject;
     }
 
-    public function getEmail_template_from_name(): ?string
+    public function getEmail_template_from_name(): string|null
     {
         return $this->email_template_from_name;
     }
 
-    public function getEmail_template_from_email(): ?string
+    public function getEmail_template_from_email(): string|null
     {
         return $this->email_template_from_email;
     }
 
-    public function getEmail_template_cc(): ?string
+    public function getEmail_template_cc(): string|null
     {
         return $this->email_template_cc;
     }
 
-    public function getEmail_template_bcc(): ?string
+    public function getEmail_template_bcc(): string|null
     {
         return $this->email_template_bcc;
     }
 
-    public function getEmail_template_pdf_template(): ?string
+    public function getEmail_template_pdf_template(): string|null
     {
         return $this->email_template_pdf_template;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

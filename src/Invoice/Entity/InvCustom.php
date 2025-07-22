@@ -21,9 +21,7 @@ class InvCustom
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $value = '')
-    {
-    }
+        private ?string $value = '') {}
 
     public function getInv(): ?Inv
     {

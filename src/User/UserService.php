@@ -13,16 +13,17 @@ final readonly class UserService
         private CurrentUser $currentUser,
         private UserRepository $repository,
         private AccessCheckerInterface $accessChecker,
-    ) {
-    }
+    ) {}
 
-    public function getUser(): ?User
+    /**
+     * @return User|null
+     */
+    public function getUser(): User|null
     {
         $userId = $this->currentUser->getId();
         if (null !== $userId) {
             return $this->repository->findById($userId);
         }
-
         return null;
     }
 

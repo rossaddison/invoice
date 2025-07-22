@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 /**
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var string                                 $heading
- * @var string                                 $message
+ * @var string $heading
+ * @var string $message
  */
 ?>
 
@@ -13,8 +13,8 @@ declare(strict_types=1);
 <head>
     <meta charset="utf-8">
     <title>
-        <?php echo $heading; ?>
-        <?php echo $translator->translate('invoice'); ?>
+        <?= $heading; ?>
+        <?= $translator->translate('invoice'); ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -68,7 +68,7 @@ declare(strict_types=1);
 <body>   
 <h1><?php echo $heading; ?></h1>
     <?php echo $message; ?><br>
-<button onclick="window.close()"><i class="fa fa-close"><?php echo $translator->translate('close'); ?></i></button>
+<button onclick="window.close()"><i class="fa fa-close"><?= $translator->translate('close'); ?></i></button>
 </body>
 </html>
 

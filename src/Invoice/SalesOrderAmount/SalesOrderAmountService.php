@@ -10,10 +10,12 @@ use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SOAR;
 
 final readonly class SalesOrderAmountService
 {
-    public function __construct(private SOAR $repository)
-    {
-    }
+    public function __construct(private SOAR $repository) {}
 
+    /**
+     * @param SoAmount $model
+     * @param int $so_id
+     */
     public function initializeSalesOrderAmount(SoAmount $model, int $so_id): void
     {
         $model->setSo_id($so_id);
@@ -25,9 +27,14 @@ final readonly class SalesOrderAmountService
     }
 
     /**
-     * Used in quote/quote_to_so_quote_amount.
+     * Used in quote/quote_to_so_quote_amount
+     * @param SoAmount $model
+     * @param QAR $qaR
+     * @param SOAR $soaR
+     * @param string $basis_quote_id
+     * @param string|null $new_so_id
      */
-    public function initializeCopyQuoteAmount(SoAmount $model, QAR $qaR, SOAR $soaR, string $basis_quote_id, ?string $new_so_id): void
+    public function initializeCopyQuoteAmount(SoAmount $model, QAR $qaR, SOAR $soaR, string $basis_quote_id, string|null $new_so_id): void
     {
         $basis_quote = $qaR->repoQuotequery($basis_quote_id);
         if ($basis_quote) {
@@ -40,9 +47,13 @@ final readonly class SalesOrderAmountService
         }
     }
 
+    /**
+     * @param SoAmount $model
+     * @param array $array
+     */
     public function saveSalesOrderAmountViaCalculations(SoAmount $model, array $array): void
     {
-        /*
+        /**
          * @var int $array['so_id']
          * @var float $array['item_subtotal']
          * @var float $array['item_taxtotal']
@@ -57,7 +68,10 @@ final readonly class SalesOrderAmountService
         $this->repository->save($model);
     }
 
-    public function deleteSalesOrderAmount(?SoAmount $model): void
+    /**
+     * @param SoAmount|null $model
+     */
+    public function deleteSalesOrderAmount(SoAmount|null $model): void
     {
         $this->repository->delete($model);
     }

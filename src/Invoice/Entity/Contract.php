@@ -7,6 +7,7 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Contract\ContractRepository::class)]
 class Contract
@@ -18,10 +19,10 @@ class Contract
     private ?Client $client = null;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $period_start;
+    private DateTimeImmutable $period_start;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $period_end;
+    private DateTimeImmutable $period_end;
 
     public function __construct(
         #[Column(type: 'text', nullable: true)]
@@ -31,8 +32,8 @@ class Contract
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
     ) {
-        $this->period_start = new \DateTimeImmutable();
-        $this->period_end   = new \DateTimeImmutable();
+        $this->period_start = new DateTimeImmutable();
+        $this->period_end = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -50,7 +51,7 @@ class Contract
         $this->client_id = $client_id;
     }
 
-    public function getClient(): ?Client
+    public function getClient(): Client|null
     {
         return $this->client;
     }
@@ -60,7 +61,7 @@ class Contract
         $this->client = $client;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -70,7 +71,7 @@ class Contract
         $this->name = $name;
     }
 
-    public function getReference(): ?string
+    public function getReference(): string|null
     {
         return $this->reference;
     }
@@ -80,22 +81,22 @@ class Contract
         $this->reference = $reference;
     }
 
-    public function getPeriod_start(): \DateTimeImmutable
+    public function getPeriod_start(): DateTimeImmutable
     {
         return $this->period_start;
     }
 
-    public function setPeriod_start(\DateTimeImmutable $period_start): void
+    public function setPeriod_start(DateTimeImmutable $period_start): void
     {
         $this->period_start = $period_start;
     }
 
-    public function getPeriod_end(): \DateTimeImmutable
+    public function getPeriod_end(): DateTimeImmutable
     {
         return $this->period_end;
     }
 
-    public function setPeriod_end(\DateTimeImmutable $period_end): void
+    public function setPeriod_end(DateTimeImmutable $period_end): void
     {
         $this->period_end = $period_end;
     }

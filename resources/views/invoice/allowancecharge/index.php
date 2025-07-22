@@ -12,7 +12,7 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
-/*
+/**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -33,7 +33,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('allowance.or.charge')),
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge')),
             ),
     )
     ->render();
@@ -48,11 +48,11 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 ?>
-<?php echo Html::openTag('div'); ?>
-    <?php echo Html::openTag('h5'); ?>
-        <?php echo $translator->translate('allowance.or.charge'); ?>
-    <?php echo Html::closeTag('h5'); ?>
-    <?php echo Html::openTag('div', ['class' => 'btn-group']); ?>
+<?= Html::openTag('div');?>
+    <?= Html::openTag('h5'); ?>
+        <?= $translator->translate('allowance.or.charge'); ?>
+    <?= Html::closeTag('h5'); ?>
+    <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
         if ($canEdit) {
             echo Html::a(
@@ -66,19 +66,19 @@ $toolbar = Div::tag();
                 ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
             );
         } ?>    
-    <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::Tag('br'); ?>
-    <?php echo Html::Tag('br'); ?>
-<?php echo Html::closeTag('div'); ?>
-<?php echo Html::openTag('div'); ?>
-    <?php echo Html::Tag('br'); ?>    
-<?php echo Html::closeTag('div'); ?>
+    <?= Html::closeTag('div');?>
+    <?= Html::Tag('br'); ?>
+    <?= Html::Tag('br'); ?>
+<?= Html::closeTag('div');?>
+<?= Html::openTag('div');?>
+    <?= Html::Tag('br'); ?>    
+<?= Html::closeTag('div');?>
 <?php
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (AllowanceCharge $model) => $model->getId(),
+        content: static fn(AllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -88,7 +88,7 @@ $columns = [
                 $urlGenerator->generate('allowancecharge/view', ['id' => $model->getId()]),
                 [],
             )
-                ->render();
+                                        ->render();
         },
     ),
     new DataColumn(
@@ -129,9 +129,9 @@ $columns = [
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                        'type'    => 'submit',
-                        'class'   => 'dropdown-button',
-                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
                 $urlGenerator->generate('allowancecharge/delete', ['id' => $model->getId()]),
@@ -139,9 +139,9 @@ $columns = [
             )->render();
         },
     ),
-];
+]
 ?>
-<?php echo $alert; ?>
+<?= $alert; ?>
 <?php
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -150,17 +150,18 @@ $grid_summary = $s->grid_summary(
     $translator->translate('allowance.or.charge'),
     '',
 );
-$toolbarString = Form::tag()
-        ->post($urlGenerator->generate('allowancecharge/index'))
-        ->csrf($csrf)
-        ->open().
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString =
+    Form::tag()
+    ->post($urlGenerator->generate('allowancecharge/index'))
+    ->csrf($csrf)
+    ->open() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
 echo GridView::widget()
     ->columns(...$columns)
     ->dataReader($paginator)
     ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-allowancecharge'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-allowancecharge'])
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->header($header)
     ->id('w3-grid')

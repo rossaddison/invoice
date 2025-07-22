@@ -11,9 +11,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class Peppol_EN16931_R001 extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly string $client_id, private readonly TranslatorInterface $translator, private readonly UrlGenerator $urlGenerator)
-    {
-    }
+    public function __construct(private readonly string $client_id, private readonly TranslatorInterface $translator, private readonly UrlGenerator $urlGenerator) {}
 
     #[\Override]
     public function getName(): string
@@ -25,9 +23,8 @@ final class Peppol_EN16931_R001 extends \RuntimeException implements FriendlyExc
     public function getSolution(): ?string
     {
         $string = (string) Html::a('Please try again', $this->urlGenerator->generate('controller/function', ['client_id' => $this->client_id]));
-        $open   = "<<<'SOLUTION'";
-        $close  = 'SOLUTION;';
-
-        return $open.$string.$close;
+        $open = "<<<'SOLUTION'";
+        $close = 'SOLUTION;';
+        return $open . $string . $close;
     }
 }

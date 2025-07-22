@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
-/*
+/**
  * @var App\Auth\Form\LoginForm                 $formModel
  * @var App\Invoice\Setting\SettingRepository   $s
  * @var Yiisoft\Router\CurrentRoute             $currentRoute
@@ -48,110 +48,111 @@ $this->setTitle($translator->translate('login'));
 ?>
 
 <!-- Fade-out CSS for TFA badge -->
-<?php echo Yiisoft\Html\Tag\Style::tag()->content(
+<?= \Yiisoft\Html\Tag\Style::tag()->content(
     '.fade-out { opacity: 1; transition: opacity 40s ease-in; } .fade-out.hidden { opacity: 0; }',
-); ?>
+) ?>
 
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?php echo Html::encode($this->getTitle()); ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()); ?></h1>
                 </div>
                 <div class="text-center">
                     <?php $button = new Button($currentRoute, $translator, $urlGenerator); ?>
                     <?php if ((strlen($developerSandboxHmrcAuthUrl ?: '') > 0) && !$noDeveloperSandboxHmrcContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->developerSandboxHmrc($developerSandboxHmrcAuthUrl); ?>
+                        <?= $button->developerSandboxHmrc($developerSandboxHmrcAuthUrl); ?>
                     <?php } ?>
                     <?php if ((strlen($facebookAuthUrl ?: '') > 0) && !$noFacebookContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->facebook($facebookAuthUrl); ?>
+                        <?= $button->facebook($facebookAuthUrl); ?>
                     <?php } ?>
                     <?php if ((strlen($githubAuthUrl ?: '') > 0) && !$noGithubContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->github($githubAuthUrl ?: ''); ?>
+                        <?= $button->github($githubAuthUrl ?: ''); ?>
                     <?php } ?>    
                     <?php if ((strlen($googleAuthUrl ?: '') > 0) && !$noGoogleContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->google($googleAuthUrl ?: ''); ?>
+                        <?= $button->google($googleAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($govUkAuthUrl ?: '') > 0) && !$noGovUkContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->govuk($govUkAuthUrl ?: ''); ?>
+                        <?= $button->govuk($govUkAuthUrl ?: ''); ?>
                     <?php } ?>    
                     <?php if ((strlen($linkedInAuthUrl ?: '') > 0) && !$noLinkedInContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->linkedin($linkedInAuthUrl ?: ''); ?>
+                        <?= $button->linkedin($linkedInAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
+                        <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton && null !== $selectedOpenBankingProvider) { ?>
                         <br><br>
-                        <?php echo $button->openbanking($openBankingAuthUrl ?: '', $selectedOpenBankingProvider); ?>
+                        <?= $button->openbanking($openBankingAuthUrl ?: '', $selectedOpenBankingProvider);?>
                     <?php } ?>    
                     <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
+                        <?= $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->x($xAuthUrl ?: ''); ?>
+                        <?= $button->x($xAuthUrl ?: ''); ?>
                     <?php } ?>
                     <?php if ((strlen($yandexAuthUrl ?: '') > 0) && !$noYandexContinueButton) { ?>
                         <br><br>
-                        <?php echo $button->yandex($yandexAuthUrl ?: ''); ?>
+                        <?= $button->yandex($yandexAuthUrl ?: ''); ?>
                     <?php } ?>       
                 </div>
-                <?php if ('1' == $s->getSetting('enable_tfa')) { ?>
+                <?php if (($s->getSetting('enable_tfa') == '1')) { ?>
                 <div id="tfa-badge" class="card-body p-2 text-center fade-out">
-                        <?php echo Html::tag(
-                            'span',
-                            '1' == $s->getSetting('enable_tfa_with_disabling') ?
-                                $translator->translate('two.factor.authentication.enabled.with.disabling') :
-                                $translator->translate('two.factor.authentication.enabled.without.disabling'),
-                            [
-                                'class' => 'badge bg-primary',
-                                'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;',
-                            ],
-                        ); ?>
+                        <?=
+                            Html::tag(
+                                'span',
+                                $s->getSetting('enable_tfa_with_disabling') == '1' ?
+                                    $translator->translate('two.factor.authentication.enabled.with.disabling') :
+                                    $translator->translate('two.factor.authentication.enabled.without.disabling'),
+                                [
+                                    'class' => 'badge bg-primary',
+                                    'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;',
+                                ],
+                            ); ?>
                 </div>
                 <?php } ?>
                 <div class="card-body p-2 text-center">
-                    <?php echo Form::tag()
+                    <?= Form::tag()
                         ->post($urlGenerator->generate('auth/login'))
                         ->class('form-floating')
                         ->csrf($csrf)
                         ->id('loginForm')
-                        ->open(); ?>
-                    <?php echo Field::text($formModel, 'login')
+                        ->open() ?>
+                    <?= Field::text($formModel, 'login')
                         ->addInputAttributes(['autocomplete' => 'username'])
                         ->inputClass('form-control')
                         ->label($translator->translate('layout.login'))
-                        ->autofocus(); ?>
-                    <?php echo Field::password($formModel, 'password')
+                        ->autofocus() ?>
+                    <?= Field::password($formModel, 'password')
                         ->addInputAttributes(['autocomplete' => 'current-password'])
                         ->inputClass('form-control')
-                        ->label($translator->translate('layout.password'));
+                        ->label($translator->translate('layout.password'))
 ?>
-                    <?php echo Field::checkbox($formModel, 'rememberMe')
+                    <?= Field::checkbox($formModel, 'rememberMe')
     ->containerClass('form-check form-switch text-start mt-2')
     ->inputClass('form-check-input form-control')
     ->label($translator->translate('layout.remember'))
-    ->inputLabelClass('form-check-label');
+    ->inputLabelClass('form-check-label')
 ?>
-                    <?php echo Field::submitButton()
+                    <?= Field::submitButton()
     ->buttonId('login-button')
     ->buttonClass('btn btn-primary')
     ->name('login-button')
-    ->content($translator->translate('layout.submit'));
+    ->content($translator->translate('layout.submit'))
 ?>
-                    <?php echo Form::tag()->close(); ?>
-                    <?php echo Html::br(); ?>
-                    <?php echo A::tag()
+                    <?= Form::tag()->close() ?>
+                    <?= Html::br(); ?>
+                    <?= A::tag()
     ->attribute('style', 'color:#999;text-decoration:none')
     ->addClass('my-1 mx-0')
     ->href($urlGenerator->generate('auth/forgotpassword'))
@@ -177,5 +178,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 JS;
 
-echo Html::script($fadeOutScript)->type('text/javascript')->charset('utf-8');
+echo \Yiisoft\Html\Html::script($fadeOutScript)->type('text/javascript')->charset('utf-8');
 ?>

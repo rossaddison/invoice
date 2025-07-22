@@ -12,17 +12,18 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Helpers\DateHelper            $dateHelper
+ * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
- * @var App\Invoice\Setting\SettingRepository     $s
- * @var App\Widget\GridComponents                 $gridComponents
- * @var Yiisoft\Data\Paginator\OffsetPaginator    $paginator
- * @var Yiisoft\Translator\TranslatorInterface    $translator
- * @var Yiisoft\Router\CurrentRoute               $currentRoute
- * @var Yiisoft\Router\UrlGeneratorInterface      $urlGenerator
- * @var string                                    $alert
- * @var string                                    $csrf
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $alert
+ * @var string $csrf
  */
+
 echo $alert;
 
 ?>
@@ -44,7 +45,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Merchant $model) => $model->getId(),
+        content: static fn(Merchant $model) => $model->getId(),
     ),
     new DataColumn(
         field: 'inv_id',
@@ -55,7 +56,6 @@ $columns = [
             if (null !== $model->getInv()) {
                 $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
             }
-
             return $return;
         },
         encodeContent: false,
@@ -71,39 +71,39 @@ $columns = [
     new DataColumn(
         'date',
         header: $translator->translate('payment.date'),
-        content: static fn (Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
+        content: static fn(Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
     ),
     new DataColumn(
         field: 'driver',
         property: 'filterMerchantProvider',
         header: $translator->translate('payment.provider'),
-        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
+        content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
         filter: true,
     ),
     new DataColumn(
         'response',
         header: $translator->translate('provider.response'),
-        content: static fn (Merchant $model): string => Html::encode($model->getResponse()),
+        content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('transaction.reference'),
-        content: static fn (Merchant $model): string => Html::encode($model->getReference()),
+        content: static fn(Merchant $model): string => Html::encode($model->getReference()),
     ),
 ];
 ?>
 <?php
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open().
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-payment-guest-online-log'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->header($gridComponents->header(' '.$translator->translate('payment.logs')))
-    ->id('w78-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->toolbar($toolbarString);
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-payment-guest-online-log'])
+->columns(...$columns)
+->dataReader($paginator)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($gridComponents->header(' ' . $translator->translate('payment.logs')))
+->id('w78-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->toolbar($toolbarString);

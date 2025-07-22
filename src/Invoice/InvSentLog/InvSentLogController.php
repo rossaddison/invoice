@@ -9,14 +9,14 @@ use App\Invoice\Entity\InvSentLog;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
-use App\Service\WebControllerService;
-use App\User\User;
 use App\User\UserService;
+use App\User\User;
+use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Input\Http\Attribute\Parameter\Query;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -40,17 +40,26 @@ final class InvSentLogController extends BaseController
         $this->invsentlogService = $invsentlogService;
     }
 
+    /**
+     * @param ISLR $islR
+     * @param UIR $uiR
+     * @param string $page
+     * @param string $queryPage
+     * @param string $queryFilterInvNumber
+     * @param string $queryFilterClient
+     * @return Response
+     */
     public function guest(
         ISLR $islR,
         UIR $uiR,
         #[RouteArgument('page')]
         string $page = '1',
         #[Query('page')]
-        ?string $queryPage = null,
+        string $queryPage = null,
         #[Query('filterInvNumber')]
-        ?string $queryFilterInvNumber = null,
+        string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        ?string $queryFilterClient = null,
+        string $queryFilterClient = null,
     ): Response {
         $user = $this->userService->getUser();
         if ($user instanceof User && null !== $user->getId()) {
@@ -59,8 +68,8 @@ final class InvSentLogController extends BaseController
             $userinv = ($uiR->repoUserInvUserIdcount((string) $userId) > 0 ? $uiR->repoUserInvUserIdquery((string) $userId) : null);
             if (null !== $userinv && null !== $userId) {
                 $userInvListLimit = $userinv->getListLimit();
-                $invsentlogs      = $islR->withUser($userId);
-                $finalPage        = $queryPage ?? $page;
+                $invsentlogs = $islR->withUser($userId);
+                $finalPage = $queryPage ?? $page;
                 /** @psalm-var positive-int $currentPageNeverZero */
                 $currentPageNeverZero = (int) $finalPage > 0 ? (int) $finalPage : 1;
                 if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
@@ -74,40 +83,46 @@ final class InvSentLogController extends BaseController
                     $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClient);
                 }
                 $paginator = (new OffsetPaginator($invsentlogs))
-                    ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
-                    ->withCurrentPage($currentPageNeverZero)
-                    ->withToken(PageToken::next($finalPage));
+                ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
+                ->withCurrentPage($currentPageNeverZero)
+                ->withToken(PageToken::next($finalPage));
                 $parameters = [
-                    'paginator'                               => $paginator,
-                    'alert'                                   => $this->alert(),
-                    'viewInv'                                 => $this->userService->hasPermission('viewInv'),
-                    'userInv'                                 => $userinv,
-                    'defaultPageSizeOffsetPaginator'          => $userinv->getListLimit() ?? 10,
+                    'paginator' => $paginator,
+                    'alert' => $this->alert(),
+                    'viewInv' => $this->userService->hasPermission('viewInv'),
+                    'userInv' => $userinv,
+                    'defaultPageSizeOffsetPaginator' => $userinv->getListLimit() ?? 10,
                     'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int) $userId),
                     // Get all the clients that have been assigned to this user
                     'optionsDataGuestClientDropDownFilter' => $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
-
                 return $this->viewRenderer->render('guest', $parameters);
             }
         }
-
         return $this->webService->getNotFoundResponse();
     }
 
+    /**
+     * @param ISLR $islR
+     * @param string $page
+     * @param string $queryPage
+     * @param string $queryFilterInvNumber
+     * @param string $queryFilterClientId
+     * @return Response
+     */
     public function index(
         ISLR $islR,
         #[RouteArgument('page')]
         string $page = '1',
         #[Query('page')]
-        ?string $queryPage = null,
+        string $queryPage = null,
         #[Query('filterInvNumber')]
-        ?string $queryFilterInvNumber = null,
+        string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        ?string $queryFilterClientId = null,
+        string $queryFilterClientId = null,
     ): Response {
         $invsentlogs = $islR->findAllPreloaded();
-        $finalPage   = $queryPage ?? $page;
+        $finalPage = $queryPage ?? $page;
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int) $finalPage > 0 ? (int) $finalPage : 1;
         if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
@@ -121,54 +136,61 @@ final class InvSentLogController extends BaseController
             $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClientId);
         }
         $paginator = (new OffsetPaginator($invsentlogs))
-            ->withPageSize($this->sR->positiveListLimit())
-            ->withCurrentPage($currentPageNeverZero)
-            ->withToken(PageToken::next($finalPage));
+        ->withPageSize($this->sR->positiveListLimit())
+        ->withCurrentPage($currentPageNeverZero)
+        ->withToken(PageToken::next($finalPage));
         $parameters = [
-            'paginator'                      => $paginator,
-            'alert'                          => $this->alert(),
+            'paginator' => $paginator,
+            'alert' => $this->alert(),
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($islR),
-            'optionsDataClientsDropDownFilter'   => $this->optionsDataClientsFilter($islR),
+            'optionsDataClientsDropDownFilter' => $this->optionsDataClientsFilter($islR),
         ];
-
         return $this->viewRenderer->render('index', $parameters);
     }
 
-    private function invsentlog(ISLR $islR, int $id): ?InvSentLog
+    /**
+     * @param ISLR $islR
+     * @param int $id
+     * @return InvSentLog|null
+     */
+    private function invsentlog(ISLR $islR, int $id): InvSentLog|null
     {
         if ($id) {
-            /*
+            /**
              * @var InvSentLog $invsentlog
              */
             return $islR->repoInvSentLogLoadedquery((string) $id);
         }
-
         return null;
     }
 
     /**
+     * @param ISLR $islR
      * @param int id
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(ISLR $islR, #[RouteArgument('id')] int $id): \Yiisoft\DataResponse\DataResponse|Response
     {
         $invsentlog = $this->invsentlog($islR, $id);
         if ($invsentlog) {
-            $form       = new InvSentLogForm($invsentlog);
+            $form = new InvSentLogForm($invsentlog);
             $parameters = [
-                'title'           => $this->translator->translate('view'),
-                'actionName'      => 'invsentlog/view',
+                'title' => $this->translator->translate('view'),
+                'actionName' => 'invsentlog/view',
                 'actionArguments' => ['id' => $id],
-                'form'            => $form,
+                'form' => $form,
             ];
-
             return $this->viewRenderer->render('view', $parameters);
         }
-
         return $this->webService->getRedirectResponse('invsentlog/index');
     }
 
+    /**
+     * @param ISLR $islR
+     * @return array
+     */
     public function optionsDataInvNumberFilter(ISLR $islR): array
     {
         $optionsDataInvNumbers = [];
@@ -185,35 +207,37 @@ final class InvSentLogController extends BaseController
                 }
             }
         }
-
         return $optionsDataInvNumbers;
     }
 
     /**
-     * Get all the clients that have been emailed.
+     * Get all the clients that have been emailed
+     * @param ISLR $islR
+     * @return array
      */
     public function optionsDataClientsFilter(ISLR $islR): array
     {
         $optionsDataClients = [];
-        $invsentlogs        = $islR->findAllPreloaded();
+        $invsentlogs = $islR->findAllPreloaded();
         /**
          * @var InvSentLog $invsentlog
          */
         foreach ($invsentlogs as $invsentlog) {
             $clientFullName = $invsentlog->getInv()?->getClient()?->getClient_full_name();
-            $clientId       = $invsentlog->getInv()?->getClient()?->getClient_id();
+            $clientId = $invsentlog->getInv()?->getClient()?->getClient_id();
             if (null !== $clientFullName && null !== $clientId) {
                 if (!in_array($clientFullName, $optionsDataClients)) {
                     $optionsDataClients[$clientId] = $clientFullName;
                 }
             }
         }
-
         return $optionsDataClients;
     }
 
     /**
-     * Retrieve all the invoices sent to this user.
+     * Retrieve all the invoices sent to this user
+     * @param ISLR $islR
+     * @return array
      */
     public function optionsDataGuestInvNumberFilter(ISLR $islR, int $user_id): array
     {
@@ -237,10 +261,14 @@ final class InvSentLogController extends BaseController
                 }
             }
         }
-
         return $optionsDataGuestInvNumbers;
     }
 
+    /**
+     * @param ISLR $islR
+     * @param string $userId
+     * @return array
+     */
     public function optionsDataGuestClientsFilter(ISLR $islR, string $userId): array
     {
         $optionsDataGuestClientsOfUser = [];
@@ -252,8 +280,8 @@ final class InvSentLogController extends BaseController
          */
         foreach ($invsentlogs as $invSentLog) {
             $invClientFullName = $invSentLog->getInv()?->getClient()?->getClient_full_name();
-            $invClientId       = $invSentLog->getInv()?->getClient()?->getClient_id();
-            $invUserId         = $invSentLog->getInv()?->getUser()?->getId();
+            $invClientId = $invSentLog->getInv()?->getClient()?->getClient_id();
+            $invUserId = $invSentLog->getInv()?->getUser()?->getId();
             if (null !== $invUserId && null !== $invClientId) {
                 if ((null !== $invClientFullName) && ($userId == (int) $invUserId)) {
                     if (!in_array($invClientFullName, $optionsDataGuestClientsOfUser)) {
@@ -262,7 +290,6 @@ final class InvSentLogController extends BaseController
                 }
             }
         }
-
         return $optionsDataGuestClientsOfUser;
     }
 }

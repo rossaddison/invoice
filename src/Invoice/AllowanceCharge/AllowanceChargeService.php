@@ -8,9 +8,7 @@ use App\Invoice\Entity\AllowanceCharge;
 
 final readonly class AllowanceChargeService
 {
-    public function __construct(private AllowanceChargeRepository $repository)
-    {
-    }
+    public function __construct(private AllowanceChargeRepository $repository) {}
 
     public function saveAllowanceCharge(AllowanceCharge $model, array $array): void
     {

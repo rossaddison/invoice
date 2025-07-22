@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\SalesOrder\SalesOrderForm  $form
+ * @var App\Invoice\SalesOrder\SalesOrderForm $form
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
- * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array                                  $customFields
- * @var array                                  $customValues
- * @var array                                  $salesOrderCustomValues
+ * @var array $customFields
+ * @var array $customValues
+ * @var array $salesOrderCustomValues
  * */
 ?>
 
-<?php if ($customFields) { ?>
+<?php if ($customFields): ?>
         <div>
             <div class="mb-3 form-group">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <?php echo $translator->translate('custom.fields'); ?>
+                        <?= $translator->translate('custom.fields'); ?>
                     </div>
                     <div>
                         <div class='row'>
@@ -28,15 +28,15 @@ declare(strict_types=1);
                                     /**
                                      * @var App\Invoice\Entity\CustomField
                                      */
-                                    foreach ($customFields as $customField) { ?>
-                                    <?php if (0 != $customField->getLocation()) {
+                                    foreach ($customFields as $customField): ?>
+                                    <?php if ($customField->getLocation() != 0) {
                                         continue;
                                     } ?>
-                                    <?php ++$i; ?>
-                                    <?php if (0 != $i % 2) { ?>
+                                    <?php $i++; ?>
+                                    <?php if ($i % 2 != 0): ?>
                                         <?php $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues, $customValues); ?>
-                                    <?php } ?>
-                                <?php } ?>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             </div>
                             <div class="form-group">
                                 <?php $i = 0; ?>
@@ -44,19 +44,19 @@ declare(strict_types=1);
                                     /**
                                      * @var App\Invoice\Entity\CustomField
                                      */
-                                    foreach ($customFields as $customField) { ?>
-                                    <?php if (0 !== $customField->getLocation()) {
+                                    foreach ($customFields as $customField): ?>
+                                    <?php if ($customField->getLocation() !== 0) {
                                         continue;
                                     } ?>
-                                    <?php ++$i; ?>
-                                    <?php if (0 == $i % 2) { ?>
+                                    <?php $i++; ?>
+                                    <?php if ($i % 2 == 0): ?>
                                         <?php $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues, $customValues); ?>
-                                    <?php } ?>
-                                <?php } ?>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-<?php } ?>
+<?php endif; ?>

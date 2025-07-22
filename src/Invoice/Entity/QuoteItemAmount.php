@@ -20,9 +20,7 @@ class QuoteItemAmount
         private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
-    }
+        private ?float $total = 0.00) {}
 
     public function getQuoteItem(): ?QuoteItem
     {

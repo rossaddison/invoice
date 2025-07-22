@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/*
+/**
  * @var App\Invoice\Family\FamilyForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
@@ -23,67 +23,67 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?php echo Form::tag()
+<?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('FamilyForm')
-    ->open(); ?>
+    ->open() ?>
 
-<?php echo Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-  <?php echo Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-    <?php echo Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-      <?php echo Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-        <?php echo Html::openTag('div', ['class' => 'card-header']); ?>
-          <?php echo Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
-            <?php echo Html::encode($title); ?>
-          <?php echo Html::closeTag('h1'); ?>
-          <?php echo Html::openTag('div', ['id' => 'headerbar']); ?>
-            <?php echo $button::back(); ?>
-            <?php echo Html::openTag('div', ['id' => 'content']); ?>
-              <?php echo Html::openTag('div', ['class' => 'row']); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?php echo Field::select($form, 'category_primary_id')
-                ->label($translator->translate('category.primary'))
-                ->addInputAttributes([
-                    'class' => 'form-control  alert alert-warning',
-                    'id'    => 'family-category-primary-id',
-                ])
-                ->value($form->getCategory_primary_id())
-                ->prompt($translator->translate('none'))
-                ->optionsData($categoryPrimaries);
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+  <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+    <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+      <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+        <?= Html::openTag('div', ['class' => 'card-header']); ?>
+          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+            <?= Html::encode($title) ?>
+          <?= Html::closeTag('h1'); ?>
+          <?= Html::openTag('div', ['id' => 'headerbar']); ?>
+            <?= $button::back(); ?>
+            <?= Html::openTag('div', ['id' => 'content']); ?>
+              <?= Html::openTag('div', ['class' => 'row']); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'category_primary_id')
+                      ->label($translator->translate('category.primary'))
+                      ->addInputAttributes([
+                          'class' => 'form-control  alert alert-warning',
+                          'id' => 'family-category-primary-id',
+                      ])
+                      ->value($form->getCategory_primary_id())
+                      ->prompt($translator->translate('none'))
+                      ->optionsData($categoryPrimaries);
 ?>
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?php echo Field::select($form, 'category_secondary_id')
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'category_secondary_id')
     ->label($translator->translate('category.secondary'))
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
-        'id'    => 'family-category-secondary-id',
+        'id' => 'family-category-secondary-id',
     ])
     ->value($form->getCategory_secondary_id())
     ->optionsData($categorySecondaries);
 ?>
-                <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?php echo Field::select($form, 'family_name')
-    ->label($translator->translate('family.name'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('family.name'),
-        'class'       => 'form-control',
-        'id'          => 'family-name',
-    ])
-    ->value($form->getFamily_name())
-    ->optionsData($familyNames);
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'family_name')
+  ->label($translator->translate('family.name'))
+  ->addInputAttributes([
+      'placeholder' => $translator->translate('family.name'),
+      'class' => 'form-control',
+      'id' => 'family-name',
+  ])
+  ->value($form->getFamily_name())
+  ->optionsData($familyNames);
 ?>
-                <?php echo Html::closeTag('div'); ?>
-              <?php echo Html::closeTag('div'); ?>
-            <?php echo Html::closeTag('div'); ?>
-          <?php echo Html::closeTag('div'); ?>
-        <?php echo Html::closeTag('div'); ?>
-      <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::closeTag('div'); ?>
-  <?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
+                <?= Html::closeTag('div'); ?>
+              <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+          <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+      <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+  <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 
-<?php echo Form::tag()->close(); ?>
+<?= Form::tag()->close() ?>

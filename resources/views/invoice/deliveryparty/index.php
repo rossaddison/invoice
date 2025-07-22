@@ -12,7 +12,7 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
-/*
+/**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -33,7 +33,7 @@ $header = Div::tag()
         H5::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('delivery.party')),
+                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.party')),
             ),
     )
     ->render();
@@ -48,11 +48,11 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 ?>
-<?php echo Html::openTag('div'); ?>
-    <?php echo Html::openTag('h5'); ?>
-        <?php echo $translator->translate('delivery.party'); ?>
-    <?php echo Html::closeTag('h5'); ?>
-    <?php echo Html::openTag('div', ['class' => 'btn-group']); ?>
+<?= Html::openTag('div');?>
+    <?= Html::openTag('h5'); ?>
+        <?= $translator->translate('delivery.party'); ?>
+    <?= Html::closeTag('h5'); ?>
+    <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
         if ($canEdit) {
             echo Html::a(
@@ -61,24 +61,24 @@ $toolbar = Div::tag();
                 ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
             );
         } ?>    
-    <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::Tag('br'); ?>
-    <?php echo Html::Tag('br'); ?>
-<?php echo Html::closeTag('div'); ?>
-<?php echo Html::openTag('div'); ?>
-    <?php echo Html::Tag('br'); ?>    
-<?php echo Html::closeTag('div'); ?>
+    <?= Html::closeTag('div');?>
+    <?= Html::Tag('br'); ?>
+    <?= Html::Tag('br'); ?>
+<?= Html::closeTag('div');?>
+<?= Html::openTag('div');?>
+    <?= Html::Tag('br'); ?>    
+<?= Html::closeTag('div');?>
 <?php
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (DeliveryParty $model) => Html::encode($model->getId()),
+        content: static fn(DeliveryParty $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'party_name',
         header: $translator->translate('name'),
-        content: static fn (DeliveryParty $model) => Html::encode($model->getPartyName()),
+        content: static fn(DeliveryParty $model) => Html::encode($model->getPartyName()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -101,9 +101,9 @@ $columns = [
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                        'type'    => 'submit',
-                        'class'   => 'dropdown-button',
-                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
                 $urlGenerator->generate('deliveryparty/delete', ['id' => $model->getId()]),
@@ -111,12 +111,13 @@ $columns = [
             );
         },
     ),
-];
+]
 ?>
-<?php echo $alert; ?>
+<?= $alert; ?>
 <?php
-$toolbarString = Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open().
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString =
+        Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -127,7 +128,7 @@ $grid_summary = $s->grid_summary(
 );
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-deliveryparty'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-deliveryparty'])
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])

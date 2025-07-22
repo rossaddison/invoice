@@ -9,6 +9,8 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 class GoogleTranslateJsonFileNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
+     * @return string
+     *
      * @psalm-return 'The Json file that you downloaded at https://console.cloud.google.com/iam-admin/serviceaccounts/details/{unique_project_id}/keys?project={your_project_name} cannot be found in .../src/Invoice/Google_translate_unique_folder.'
      */
     #[\Override]
@@ -17,6 +19,9 @@ class GoogleTranslateJsonFileNotFoundException extends \RuntimeException impleme
         return 'The Json file that you downloaded at https://console.cloud.google.com/iam-admin/serviceaccounts/details/{unique_project_id}/keys?project={your_project_name} cannot be found in .../src/Invoice/Google_translate_unique_folder.';
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

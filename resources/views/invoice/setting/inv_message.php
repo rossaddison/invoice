@@ -1,16 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * Related logic: see Test by adding an attachment to an invoice.
- *
+ * Related logic: see Test by adding an attachment to an invoice
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
- * @var string                                 $csrf
- * @var string                                 $heading
- * @var string                                 $id
- * @var string                                 $message
- * @var string                                 $url
- *
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $csrf
+ * @var string $heading
+ * @var string $id
+ * @var string $message
+ * @var string $url
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 ?>
@@ -20,8 +18,8 @@
     <head>
         <meta charset="utf-8">
         <title>
-            <?php echo $heading; ?>
-            <?php echo $translator->translate('invoice'); ?>
+            <?= $heading; ?>
+            <?= $translator->translate('invoice'); ?>
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
@@ -77,8 +75,8 @@
         <?php
             echo $message;
 ?>
-        <form method="POST" class="form-inline" action="<?php echo $urlGenerator->generate($url, $actionName = ['id' => $id, '_language' => 'en']); ?>">
-            <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
+        <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, $actionName = ['id' => $id, '_language' => 'en']); ?>">
+            <input type="hidden" name="_csrf" value="<?= $csrf ?>">
             <button type="submit" class="btn btn-xs btn-link">✅</button>
         </form>
     </body>

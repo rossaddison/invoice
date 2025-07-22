@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\InvRecurring;
 
 use App\Invoice\Entity\InvRecurring;
-use DateTimeImmutable;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use DateTimeImmutable;
 
 final class InvRecurringForm extends FormModel
 {
@@ -23,9 +23,9 @@ final class InvRecurringForm extends FormModel
     public function __construct(InvRecurring $invRecurring, private readonly ?int $inv_id)
     {
         $this->frequency = $invRecurring->getFrequency();
-        $this->start     = $invRecurring->getStart();
-        $this->next      = $invRecurring->getNext();
-        $this->end       = $invRecurring->getEnd();
+        $this->start = $invRecurring->getStart();
+        $this->next = $invRecurring->getNext();
+        $this->end = $invRecurring->getEnd();
     }
 
     public function getInv_id(): ?int
@@ -33,17 +33,17 @@ final class InvRecurringForm extends FormModel
         return $this->inv_id;
     }
 
-    public function getStart(): string|\DateTimeImmutable|null
+    public function getStart(): null|string|DateTimeImmutable
     {
-        /*
+        /**
          * @var DateTimeImmutable|string|null $this->start
          */
         return $this->start;
     }
 
-    public function getEnd(): string|\DateTimeImmutable|null
+    public function getEnd(): null|string|DateTimeImmutable
     {
-        /*
+        /**
          * @var DateTimeImmutable|string|null $this->end
          */
         return $this->end;
@@ -54,15 +54,17 @@ final class InvRecurringForm extends FormModel
         return $this->frequency;
     }
 
-    public function getNext(): string|\DateTimeImmutable|null
+    public function getNext(): null|string|DateTimeImmutable
     {
-        /*
+        /**
          * @var DateTimeImmutable|string|null $this->next
          */
         return $this->next;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

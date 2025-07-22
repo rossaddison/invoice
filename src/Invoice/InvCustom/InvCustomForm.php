@@ -9,33 +9,35 @@ use Yiisoft\FormModel\FormModel;
 
 final class InvCustomForm extends FormModel
 {
-    private ?int $inv_id          = null;
+    private ?int $inv_id = null;
     private ?int $custom_field_id = null;
-    private ?string $value        = '';
+    private ?string $value = '';
 
     public function __construct(InvCustom $invCustom)
     {
-        $this->inv_id          = (int) $invCustom->getInv_id();
+        $this->inv_id = (int) $invCustom->getInv_id();
         $this->custom_field_id = (int) $invCustom->getCustom_field_id();
-        $this->value           = $invCustom->getValue();
+        $this->value = $invCustom->getValue();
     }
 
-    public function getInv_id(): ?int
+    public function getInv_id(): int|null
     {
         return $this->inv_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustom_field_id(): int|null
     {
         return $this->custom_field_id;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string|null
     {
         return $this->value;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

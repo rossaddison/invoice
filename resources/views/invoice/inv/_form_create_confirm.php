@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/*
+/**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvForm $form
  * @var App\Invoice\Setting\SettingRepository $s
@@ -25,222 +25,222 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?php echo Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?php echo Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?php echo Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?php echo Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?php echo Html::openTag('div', ['class' => 'card-header']); ?>
-    <?php echo Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?php echo $translator->translate('create.invoice'); ?><?php echo Html::closeTag('h1'); ?>
-        <?php echo Form::tag()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)->id('InvForm')
-    ->open(); ?>
-            <?php echo Html::openTag('div', ['class' => 'container']); ?>
-                <?php echo Html::openTag('div', ['class' => 'row']); ?>
-                    <?php echo Html::openTag('div', ['class' => 'col card mb-3']); ?>
-                        <?php echo Html::openTag('div', ['class' => 'card-header']); ?>
-                            <?php echo Html::openTag('h5'); ?><?php echo Html::closeTag('h5'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::select($form, 'client_id')
-    ->label($translator->translate('client'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getClient_id()))
-    ->prompt($translator->translate('none'))
-    ->optionsData($clients)
-    ->hint($translator->translate('hint.this.field.is.required'));
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
+    <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?= $translator->translate('create.invoice'); ?><?= Html::closeTag('h1'); ?>
+        <?= Form::tag()
+            ->post($urlGenerator->generate($actionName, $actionArguments))
+            ->enctypeMultipartFormData()
+            ->csrf($csrf)->id('InvForm')
+            ->open()?>
+            <?= Html::openTag('div', ['class' => 'container']); ?>
+                <?= Html::openTag('div', ['class' => 'row']); ?>
+                    <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+                        <?= Html::openTag('div', ['class' => 'card-header']); ?>
+                            <?= Html::openTag('h5'); ?><?= Html::closeTag('h5'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::select($form, 'client_id')
+                                        ->label($translator->translate('client'))
+                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->value(Html::encode($form->getClient_id()))
+                                        ->prompt($translator->translate('none'))
+                                        ->optionsData($clients)
+                                        ->hint($translator->translate('hint.this.field.is.required'));
 
 ?>
-                                <?php echo Html::closeTag('div'); ?>            
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::select($form, 'group_id')
-                                    ->label($translator->translate('group'))
-                                    ->addInputAttributes(['class' => 'form-control'])
-                                    ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : $defaultGroupId))
-                                    ->prompt($translator->translate('none'))
-                                    ->optionsData($groups)
-                                    ->hint($translator->translate('hint.this.field.is.required'));
+                                <?= Html::closeTag('div'); ?>            
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::select($form, 'group_id')
+    ->label($translator->translate('group'))
+    ->addInputAttributes(['class' => 'form-control'])
+    ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : $defaultGroupId))
+    ->prompt($translator->translate('none'))
+    ->optionsData($groups)
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-                                <?php echo Html::closeTag('div'); ?>                                       
-                                 <?php echo Html::openTag('div'); ?>
-                                     <?php echo Field::date($form, 'date_created')
-                                     ->label($translator->translate('date.created'))
-                                     ->addInputAttributes(['class' => 'form-control'])
-                                     ->value(Html::encode(!is_string($form->getDate_created()) && null !== $form->getDate_created() ?
-                                                                     $form->getDate_created()->format('Y-m-d') : ''))
-                                     ->hint($translator->translate('hint.this.field.is.required'));
+                                <?= Html::closeTag('div'); ?>                                       
+                                 <?= Html::openTag('div'); ?>
+                                     <?= Field::date($form, 'date_created')
+    ->label($translator->translate('date.created'))
+    ->addInputAttributes(['class' => 'form-control'])
+    ->value(Html::encode(!is_string($form->getDate_created()) && null !== $form->getDate_created() ?
+                                    $form->getDate_created()->format('Y-m-d') : ''))
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'date_modified')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'date_modified')
     ->hideLabel()
     ->label($translator->translate('date.modified'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode(!is_string($form->getDate_modified()) && null !== $form->getDate_modified() ?
-                                    $form->getDate_modified()->format('Y-m-d') : ''));
+                                    $form->getDate_modified()->format('Y-m-d') : ''))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::password($form, 'password')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::text($form, 'time_created')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::text($form, 'time_created')
     ->label($translator->translate('time.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(date('h:i:s', !is_string($form->getTime_created()) && null !== $form->getTime_created() ?
-                                              $form->getTime_created()->getTimestamp() : null)));
+    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created()) && null !== $form->getTime_created() ?
+                                              $form->getTime_created()->getTimestamp() : null))))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'date_tax_point')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'date_tax_point')
     ->hideLabel(true)
     ->label($translator->translate('tax.point'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode(!is_string($form->getDate_tax_point()) && null !== $form->getDate_tax_point() ?
                                     $form->getDate_tax_point()->format('Y-m-d') : ''));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'stand_in_code')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'stand_in_code')
     ->hideLabel(true)
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getStand_in_code()));
+    ->value(Html::encode($form->getStand_in_code()))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'date_supplied')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'date_supplied')
     ->hideLabel(true)
     ->label($translator->translate('date.supplied'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode(!is_string($form->getDate_supplied()) && null !== $form->getDate_supplied() ?
                                     $form->getDate_supplied()->format('Y-m-d') : ''));
 ?>    
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'date_due')
-                                    ->hideLabel(true)
-                                    ->label($translator->translate('date.due'))
-                                    ->addInputAttributes(['class' => 'form-control'])
-                                    ->value(Html::encode(!is_string($form->getDate_due()) && null !== $form->getDate_due() ?
-                                                                    $form->getDate_due()->format('Y-m-d') : ''));
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'date_due')
+    ->hideLabel(true)
+    ->label($translator->translate('date.due'))
+    ->addInputAttributes(['class' => 'form-control'])
+    ->value(Html::encode(!is_string($form->getDate_due()) && null !== $form->getDate_due() ?
+                                    $form->getDate_due()->format('Y-m-d') : ''));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'number')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'number')
     ->hideLabel(true)
     ->label($translator->translate('number'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getNumber()));
-// ->placeholder($translator->translate('number'));
+    ->value(Html::encode($form->getNumber()))
+    //->placeholder($translator->translate('number'));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'discount_amount')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'discount_amount')
     ->hideLabel(true)
     ->label($translator->translate('discount.amount'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount($form->getDiscount_amount() ?? 0.00)));
+    ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'discount_percent')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'discount_percent')
     ->hideLabel(true)
     ->label($translator->translate('discount.percent'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount($form->getDiscount_percent() ?? 0.00)));
+    ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'terms')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'terms')
     ->hideLabel(true)
     ->label($translator->translate('terms'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('payment.term.general')));
-// ->placeholder($translator->translate('terms'));
+    ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('payment.term.general')))
+    //->placeholder($translator->translate('terms'));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::textarea($form, 'note')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::textarea($form, 'note')
     ->label($translator->translate('note'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getNote()))
     ->placeholder($translator->translate('note'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::text($form, 'document_description')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::text($form, 'document_description')
     ->label($translator->translate('description.document'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value(Html::encode($form->getDocumentDescription()))
     ->placeholder($translator->translate('description.document'))
-    ->hint($translator->translate('hint.this.field.is.not.required'));
+    ->hint($translator->translate('hint.this.field.is.not.required'))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'url_key')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'url_key')
     ->hideLabel(true)
     ->label($translator->translate('url.key'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getUrl_key() ?? $urlKey));
+    ->value(Html::encode($form->getUrl_key() ?? $urlKey))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'payment_method')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'payment_method')
     ->hideLabel(true)
     ->label($translator->translate('payment.method'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPayment_method() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)));
+    ->value(Html::encode($form->getPayment_method() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'contract_id')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'contract_id')
     ->hideLabel(true)
     ->label($translator->translate('contract.id'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getContract_id() ?? 0));
+    ->value(Html::encode($form->getContract_id() ?? 0))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'delivery_id')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'delivery_id')
     ->hideLabel(true)
     ->label($translator->translate('delivery'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getDelivery_id() ?? 0));
+    ->value(Html::encode($form->getDelivery_id() ?? 0))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'delivery_location_id')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'delivery_location_id')
     ->hideLabel(true)
     ->label($translator->translate('delivery.location'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getDelivery_location_id() ?? 0));
+    ->value(Html::encode($form->getDelivery_location_id() ?? 0))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                                <?php echo Html::openTag('div'); ?>
-                                    <?php echo Field::hidden($form, 'postal_address_id')
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::hidden($form, 'postal_address_id')
     ->hideLabel(true)
     ->label($translator->translate('postal.address'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPostal_address_id() ?? 0));
+    ->value(Html::encode($form->getPostal_address_id() ?? 0))
 ?>
-                                <?php echo Html::closeTag('div'); ?>
-                            <?php echo Html::closeTag('div'); ?>
-                        <?php echo Html::closeTag('div'); ?>
-                    <?php echo Html::closeTag('div'); ?>
-                <?php echo Html::closeTag('div'); ?>
-            <?php echo Html::closeTag('div'); ?>
+                                <?= Html::closeTag('div'); ?>
+                            <?= Html::closeTag('div'); ?>
+                        <?= Html::closeTag('div'); ?>
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
 
-            <?php echo $button::backSave(); ?>
+            <?= $button::backSave(); ?>
 
-            <?php echo Html::closeTag('form'); ?>        
+            <?= Html::closeTag('form'); ?>        
         
-        <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

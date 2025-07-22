@@ -6,9 +6,9 @@ namespace App\Invoice\Merchant;
 
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\Merchant;
-use DateTimeImmutable;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
+use DateTimeImmutable;
 
 final class MerchantForm extends FormModel
 {
@@ -27,54 +27,56 @@ final class MerchantForm extends FormModel
 
     public function __construct(Merchant $merchant)
     {
-        $this->inv_id     = (int) $merchant->getInv_id();
+        $this->inv_id = (int) $merchant->getInv_id();
         $this->successful = $merchant->getSuccessful();
-        $this->date       = $merchant->getDate();
-        $this->driver     = $merchant->getDriver();
-        $this->response   = $merchant->getResponse();
-        $this->reference  = $merchant->getReference();
-        $this->inv        = $merchant->getInv();
+        $this->date = $merchant->getDate();
+        $this->driver = $merchant->getDriver();
+        $this->response = $merchant->getResponse();
+        $this->reference = $merchant->getReference();
+        $this->inv = $merchant->getInv();
     }
 
-    public function getInv(): ?Inv
+    public function getInv(): Inv|null
     {
         return $this->inv;
     }
 
-    public function getInv_id(): ?int
+    public function getInv_id(): int|null
     {
         return $this->inv_id;
     }
 
-    public function getSuccessful(): ?bool
+    public function getSuccessful(): bool|null
     {
         return $this->successful;
     }
 
-    public function getDate(): string|\DateTimeImmutable
+    public function getDate(): string|DateTimeImmutable
     {
-        /*
+        /**
          * @var DateTimeImmutable|string $this->date
          */
         return $this->date;
     }
 
-    public function getDriver(): ?string
+    public function getDriver(): string|null
     {
         return $this->driver;
     }
 
-    public function getResponse(): ?string
+    public function getResponse(): string|null
     {
         return $this->response;
     }
 
-    public function getReference(): ?string
+    public function getReference(): string|null
     {
         return $this->reference;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

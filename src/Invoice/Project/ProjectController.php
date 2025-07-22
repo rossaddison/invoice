@@ -12,13 +12,13 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ProjectController extends BaseController
@@ -39,51 +39,68 @@ final class ProjectController extends BaseController
         $this->projectService = $projectService;
     }
 
-    public function index(ProjectRepository $projectRepository, Request $request, ProjectService $service, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
+    /**
+     * @param int $page
+     * @param ProjectRepository $projectRepository
+     * @param Request $request
+     * @param ProjectService $service
+     */
+    public function index(ProjectRepository $projectRepository, Request $request, ProjectService $service, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit    = $this->rbac();
+        $canEdit = $this->rbac();
         $parameters = [
-            'page'     => $page > 0 ? $page : 1,
-            'canEdit'  => $canEdit,
+            'page' => $page > 0 ? $page : 1,
+            'canEdit' => $canEdit,
             'projects' => $this->projects($projectRepository),
-            'alert'    => $this->alert(),
+            'alert' => $this->alert(),
         ];
-
         return $this->viewRenderer->render('index', $parameters);
     }
 
+    /**
+     * @param Request $request
+     * @param FormHydrator $formHydrator
+     * @param ClientRepository $clientRepository
+     * @return Response
+     */
     public function add(
         Request $request,
         FormHydrator $formHydrator,
         ClientRepository $clientRepository,
     ): Response {
-        $project    = new Project();
-        $form       = new ProjectForm($project);
+        $project = new Project();
+        $form = new ProjectForm($project);
         $parameters = [
-            'title'           => $this->translator->translate('add'),
-            'actionName'      => 'project/add',
+            'title' => $this->translator->translate('add'),
+            'actionName' => 'project/add',
             'actionArguments' => [],
-            'errors'          => [],
-            'form'            => $form,
-            'clients'         => $clientRepository->findAllPreloaded(),
+            'errors' => [],
+            'form' => $form,
+            'clients' => $clientRepository->findAllPreloaded(),
         ];
 
-        if (Method::POST === $request->getMethod()) {
+        if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->projectService->saveProject($project, $body);
-
                     return $this->webService->getRedirectResponse('project/index');
                 }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form']   = $form;
+            $parameters['form'] = $form;
         }
-
         return $this->viewRenderer->render('_form', $parameters);
     }
 
+    /**
+     * @param Request $request
+     * @param CurrentRoute $currentRoute
+     * @param FormHydrator $formHydrator
+     * @param ProjectRepository $projectRepository
+     * @param ClientRepository $clientRepository
+     * @return Response
+     */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
@@ -93,34 +110,36 @@ final class ProjectController extends BaseController
     ): Response {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
-            $form       = new ProjectForm($project);
+            $form = new ProjectForm($project);
             $parameters = [
-                'title'           => $this->translator->translate('edit'),
-                'actionName'      => 'project/edit',
+                'title' => $this->translator->translate('edit'),
+                'actionName' => 'project/edit',
                 'actionArguments' => ['id' => $project->getId()],
-                'errors'          => [],
-                'form'            => $form,
-                'clients'         => $clientRepository->findAllPreloaded(),
+                'errors' => [],
+                'form' => $form,
+                'clients' => $clientRepository->findAllPreloaded(),
             ];
-            if (Method::POST === $request->getMethod()) {
+            if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->projectService->saveProject($project, $body);
-
                         return $this->webService->getRedirectResponse('project/index');
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form']   = $form;
+                $parameters['form'] = $form;
             }
-
             return $this->viewRenderer->render('_form', $parameters);
         }
-
         return $this->webService->getRedirectResponse('project/index');
     }
 
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param ProjectRepository $projectRepository
+     * @return Response
+     */
     public function delete(
         CurrentRoute $currentRoute,
         ProjectRepository $projectRepository,
@@ -130,26 +149,28 @@ final class ProjectController extends BaseController
             $this->projectService->deleteProject($project);
             $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
         }
-
         return $this->webService->getRedirectResponse('project/index');
     }
 
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param ProjectRepository $projectRepository
+     * @param ClientRepository $clientRepository
+     */
     public function view(CurrentRoute $currentRoute, ProjectRepository $projectRepository, ClientRepository $clientRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
-            $form       = new ProjectForm($project);
+            $form = new ProjectForm($project);
             $parameters = [
-                'title'           => $this->translator->translate('view'),
-                'actionName'      => 'project/view',
+                'title' => $this->translator->translate('view'),
+                'actionName' => 'project/view',
                 'actionArguments' => ['id' => $project->getId()],
-                'form'            => $form,
-                'clients'         => $clientRepository->findAllPreloaded(),
+                'form' => $form,
+                'clients' => $clientRepository->findAllPreloaded(),
             ];
-
             return $this->viewRenderer->render('_view', $parameters);
         }
-
         return $this->webService->getRedirectResponse('project/index');
     }
 
@@ -161,24 +182,28 @@ final class ProjectController extends BaseController
         $canEdit = $this->userService->hasPermission('editInv');
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
-
             return $this->webService->getRedirectResponse('project/index');
         }
-
         return $canEdit;
     }
 
-    private function project(CurrentRoute $currentRoute, ProjectRepository $projectRepository): ?Project
+    /**
+     * @param CurrentRoute $currentRoute
+     * @param ProjectRepository $projectRepository
+     * @return Project|null
+     */
+    private function project(CurrentRoute $currentRoute, ProjectRepository $projectRepository): Project|null
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $projectRepository->repoProjectquery($id);
         }
-
         return null;
     }
 
     /**
+     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
+     *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
     private function projects(ProjectRepository $projectRepository): \Yiisoft\Data\Cycle\Reader\EntityReader

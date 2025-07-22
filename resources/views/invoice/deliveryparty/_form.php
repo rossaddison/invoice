@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/*
+/**
  * @var App\Invoice\DeliveryParty\DeliveryPartyForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -19,35 +19,35 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?php echo Form::tag()
+<?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryPartyForm')
-    ->open(); ?>
+    ->open() ?>
 
-    <?php echo Html::openTag('div', ['id' => 'headerbar']); ?>    
-        <?php echo Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?php echo Html::encode($title); ?>
-        <?php echo Html::closeTag('h1'); ?>
-    <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::openTag('div'); ?>
-        <?php echo Field::errorSummary($form)
+    <?= Html::openTag('div', ['id' => 'headerbar']); ?>    
+        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
+            <?= Html::encode($title); ?>
+        <?= Html::closeTag('h1'); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div'); ?>
+        <?= Field::errorSummary($form)
             ->errors($errors)
             ->header($translator->translate('error.summary'))
             ->onlyProperties(...['party_name'])
             ->onlyCommonErrors();
 ?>    
-        <?php echo Html::openTag('div', ['class' => 'row']); ?>
-        <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-            <?php echo Field::text($form, 'party_name')
-            ->addInputAttributes([
-                'class' => 'form-control',
-            ])
-            ->label($translator->translate('delivery.party.name'))
-            ->value(Html::encode($form->getParty_name() ?? ''));
+        <?= Html::openTag('div', ['class' => 'row']); ?>
+        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+            <?= Field::text($form, 'party_name')
+        ->addInputAttributes([
+            'class' => 'form-control',
+        ])
+        ->label($translator->translate('delivery.party.name'))
+        ->value(Html::encode($form->getParty_name() ?? ''));
 ?>
-        <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::closeTag('div'); ?>
-<?php echo $button::backSave(); ?>
-<?php echo Form::tag()->close(); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= $button::backSave(); ?>
+<?= Form::tag()->close() ?>

@@ -8,10 +8,12 @@ use App\Invoice\Entity\SalesOrderTaxRate;
 
 final readonly class SalesOrderTaxRateService
 {
-    public function __construct(private SalesOrderTaxRateRepository $repository)
-    {
-    }
+    public function __construct(private SalesOrderTaxRateRepository $repository) {}
 
+    /**
+     * @param SalesOrderTaxRate $model
+     * @param array $array
+     */
     public function saveSoTaxRate(SalesOrderTaxRate $model, array $array): void
     {
         isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
@@ -22,6 +24,9 @@ final readonly class SalesOrderTaxRateService
         $this->repository->save($model);
     }
 
+    /**
+     * @param array|SalesOrderTaxRate|null $model
+     */
     public function deleteSalesOrderTaxRate(array|SalesOrderTaxRate|null $model): void
     {
         $this->repository->delete($model);

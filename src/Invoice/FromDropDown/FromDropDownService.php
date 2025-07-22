@@ -8,15 +8,13 @@ use App\Invoice\Entity\FromDropDown;
 
 final readonly class FromDropDownService
 {
-    public function __construct(private FromDropDownRepository $repository)
-    {
-    }
+    public function __construct(private FromDropDownRepository $repository) {}
 
     public function saveFromDropDown(FromDropDown $model, array $array): void
     {
         isset($array['email']) ? $model->setEmail((string) $array['email']) : '';
-        $model->setInclude('1' === $array['include'] ? true : false);
-        $model->setDefault_email('1' === $array['default_email'] ? true : false);
+        $model->setInclude($array['include'] === '1' ? true : false);
+        $model->setDefault_email($array['default_email'] === '1' ? true : false);
         $this->repository->save($model);
     }
 

@@ -7,43 +7,45 @@ namespace App\Invoice\Ubl;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use InvalidArgumentException;
 
 class AdditionalDocumentReference implements XmlSerializable
 {
-    public function __construct(private readonly Translator $translator, private readonly string $id, private readonly ?string $documentType, private readonly ?string $documentDescription, private readonly array $attachments, private readonly bool $ubl_cr_114 = false)
-    {
-    }
+    public function __construct(private readonly Translator $translator, private readonly string $id, private readonly ?string $documentType, private readonly ?string $documentDescription, private readonly array $attachments, private readonly bool $ubl_cr_114 = false) {}
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function validate(): void
     {
-        if (null === $this->documentDescription) {
-            throw new \InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
+        if ($this->documentDescription === null) {
+            throw new InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
         }
     }
 
+    /**
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
-        $writer->write([Schema::CBC.'ID' => $this->id]);
-        if (null !== $this->documentType && false === $this->ubl_cr_114) {
+        $writer->write([Schema::CBC . 'ID' => $this->id]);
+        if ($this->documentType !== null && $this->ubl_cr_114 === false) {
             $writer->write([
-                Schema::CBC.'DocumentType' => $this->documentType,
+                Schema::CBC . 'DocumentType' => $this->documentType,
             ]);
         }
-        if (null !== $this->documentDescription) {
+        if ($this->documentDescription !== null) {
             $writer->write([
-                Schema::CBC.'DocumentDescription' => $this->documentDescription,
+                Schema::CBC . 'DocumentDescription' => $this->documentDescription,
             ]);
         }
         /**
          * @var Attachment $attachment
          */
         foreach ($this->attachments as $attachment) {
-            $writer->write([Schema::CAC.'Attachment' => $attachment]);
+            $writer->write([Schema::CAC . 'Attachment' => $attachment]);
         }
     }
 }

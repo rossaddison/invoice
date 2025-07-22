@@ -5,34 +5,35 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 
-/*
+/**
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
 
 ?>
-<?php echo Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
-    <?php echo Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
+<?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
+    <?= Html::openTag('div', ['class' => 'headerbar-item pull-right']); ?>
     <?php $buttonsDataArray = [
         [
             $translator->translate('back'),
-            'type'    => 'reset',
+            'type' => 'reset',
             'onclick' => 'window.history.back()',
-            'class'   => 'btn btn-danger',
-            'id'      => 'btn-cancel',
-            'name'    => 'btn_cancel',
-            'value'   => '1',
+            'class' => 'btn btn-danger',
+            'id' => 'btn-cancel',
+            'name' => 'btn_cancel',
+            'value' => '1',
         ],
         [
             $translator->translate('save'),
-            'type'  => 'submit',
+            'type' => 'submit',
             'class' => 'btn btn-success',
-            'id'    => 'btn-submit',
-            'name'  => 'btn_submit',
+            'id' => 'btn-submit',
+            'name' => 'btn_submit',
             'value' => '1',
         ],
-    ];
+    ]
 ?>
-    <?php echo Field::buttongroup()
+    <?=
+    Field::buttongroup()
     ->buttonsData($buttonsDataArray);
 ?>
-<?php echo Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

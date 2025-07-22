@@ -37,13 +37,13 @@ final class HmrcController extends BaseController
         WebControllerService $webService,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->httpClient     = $httpClient;
+        $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
-        $this->session        = $session;
-        $this->sR             = $sR;
-        $this->translator     = $translator;
-        $this->userService    = $userService;
-        $this->viewRenderer   = $viewRenderer->withViewPath('@hmrc');
+        $this->session = $session;
+        $this->sR = $sR;
+        $this->translator = $translator;
+        $this->userService = $userService;
+        $this->viewRenderer = $viewRenderer->withViewPath('@hmrc');
     }
 
     public function index(): \Yiisoft\DataResponse\DataResponse
@@ -51,21 +51,22 @@ final class HmrcController extends BaseController
         $parameters = [
             'text' => 'This is a text',
         ];
-
         return $this->viewRenderer->render('index', $parameters);
     }
 
     /**
      * Not tested yet 23/05/2025
-     * $api e.g. 'self-assessment', 'vat', 'employment', 'customs', 'individuals'.
+     * $api e.g. 'self-assessment', 'vat', 'employment', 'customs', 'individuals'
+     * @param string $api
+     * @return Response
      */
     public function fphFeedback(
         #[RouteArgument('api')]
         string $api,
     ): Response {
-        $logFile      = $this->sR->specificCommonConfigAliase('@hmrc').'/hmrc-requests.log';
+        $logFile = $this->sR->specificCommonConfigAliase('@hmrc') . '/hmrc-requests.log';
         $otpReference = (string) $this->session->get('otpRef');
-        $client       = $this->createLoggedGuzzleClient($logFile);
+        $client = $this->createLoggedGuzzleClient($logFile);
 
         return $client->post($this->getFphValidationFeedbackUrl($api), [
             'headers' => $this->getWebAppViaServerHeaders($otpReference),
@@ -74,8 +75,8 @@ final class HmrcController extends BaseController
 
     public function fphValidate(): Response
     {
-        $headers      = [];
-        $otp          = (int) $this->session->get('otp');
+        $headers = [];
+        $otp = (int) $this->session->get('otp');
         $otpReference = (string) $this->session->get('otpRef');
         if ($otp > 99999 && $otp < 1000000 && strlen($otpReference) > 0) {
             $headers = $this->getWebAppViaServerHeaders($otpReference);
@@ -86,8 +87,8 @@ final class HmrcController extends BaseController
                 $requestPartOne = $this->createRequest('GET', $this->getfphValidateHeadersUrl());
 
                 $acceptAndAuthorizationArray = [
-                    'Accept'        => 'application/vnd.hmrc.1.0+json',
-                    'Authorization' => 'Bearer '.$tokenString,
+                    'Accept' => 'application/vnd.hmrc.1.0+json',
+                    'Authorization' => 'Bearer ' . $tokenString,
                 ];
 
                 $mergedArray = array_merge($acceptAndAuthorizationArray, $headers);
@@ -114,7 +115,7 @@ final class HmrcController extends BaseController
                 $this->sR->getSetting('fph_client_browser_js_user_agent'),
                 $this->sR->getSetting('fph_client_device_id'),
                 $this->sR->fphGenerateMultiFactor('TOTP', $otpReference),
-                $this->sR->getGovClientPublicIp()          ?? '',
+                $this->sR->getGovClientPublicIp() ?? '',
                 $this->sR->getGovClientPublicIpTimestamp() ?? '',
                 $this->sR->getGovClientPublicPort(),
                 $this->sR->getGovClientScreens(),
@@ -136,11 +137,13 @@ final class HmrcController extends BaseController
 
     /**
      * Related logic: see scope
-     * $api = "self-assessment" / "vat" / "employment" / "customs" / "individuals".
+     * $api = "self-assessment" / "vat" / "employment" / "customs" / "individuals"
+     * @param string $api
+     * @return string
      */
     private function getFphValidationFeedbackUrl(string $api): string
     {
-        return 'https://test-api.service.hmrc.gov.uk/test/fraud-prevention-headers/'.$api.'/validation-feedback';
+        return 'https://test-api.service.hmrc.gov.uk/test/fraud-prevention-headers/' . $api . '/validation-feedback';
     }
 
     private function createRequest(string $method, string $uri): Request
@@ -157,7 +160,7 @@ final class HmrcController extends BaseController
     {
         /**
          * Related logic: see src\Auth\Controller\AuthController
-         *      function callbackDeveloperSandboxHmrc.
+         *      function callbackDeveloperSandboxHmrc
          */
         $tokenString = (string) $this->session->get('hmrc_access_token');
 
@@ -172,8 +175,8 @@ final class HmrcController extends BaseController
             $request = RequestUtil::addHeaders(
                 $request,
                 [
-                    'Authorization' => 'Bearer '.$tokenString,
-                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer ' . $tokenString,
+                    'Content-Type' => 'application/json',
                 ],
             );
 
@@ -197,7 +200,24 @@ final class HmrcController extends BaseController
      *       16 headers are required for the WebAppViaServer Method
      *       Insert this array into TestFraudPreventionHeaders function below
      * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/
-     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/.
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
+     * @param string $govClientConnectionMethod
+     * @param string $govClientBrowserJsUserAgent
+     * @param string $govClientDeviceID
+     * @param string $govClientMultiFactor
+     * @param string $govClientPublicIp
+     * @param string $govClientPublicIpTimestamp
+     * @param int $govClientPublicPort
+     * @param string $govClientScreens
+     * @param string $govClientTimezone
+     * @param string $govClientUserIds
+     * @param string $govClientWindowSize
+     * @param string $govVendorForwarded
+     * @param string $govVendorLicenseIDs
+     * @param string $govVendorProductName
+     * @param string $govVendorPublicIP
+     * @param string $govVendorVersion
+     * @return array
      */
     public function WebAppViaServerBuildArrayFromStrings(
         string $govClientConnectionMethod,
@@ -273,22 +293,22 @@ final class HmrcController extends BaseController
     {
         $stack = HandlerStack::create();
         $stack->push($this->getRequestLoggingMiddleware($logFile));
-
         return $stack;
     }
 
     /**
      * Returns a Guzzle middleware that logs request details.
      *
+     * @param string $logFile
      * @return callable(callable): callable
      */
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
-        return fn (callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
+        return fn(callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
             $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
             // Prevent log corruption if encoding fails
-            if (false === $headersJson) {
+            if ($headersJson === false) {
                 $headersJson = 'Error encoding headers';
             }
 
@@ -302,7 +322,7 @@ final class HmrcController extends BaseController
             // Use file_put_contents with LOCK_EX to prevent concurrent writes
             file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
 
-            /*
+            /**
              * Call the next handler in the stack
              * @psalm-suppress MixedReturnStatement
              */
@@ -316,7 +336,6 @@ final class HmrcController extends BaseController
     private function createLoggedGuzzleClient(string $logFile): HttpClient
     {
         $stack = $this->buildHandlerStackWithLogging($logFile);
-
         return new HttpClient([
             'handler' => $stack,
         ]);

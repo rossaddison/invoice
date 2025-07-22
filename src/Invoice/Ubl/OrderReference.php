@@ -9,21 +9,20 @@ use Sabre\Xml\XmlSerializable;
 
 class OrderReference implements XmlSerializable
 {
-    public function __construct(private readonly ?string $id, private readonly ?string $salesOrderId)
-    {
-    }
+    public function __construct(private readonly ?string $id, private readonly ?string $salesOrderId) {}
 
     /**
-     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=SalesOrderId.
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=SalesOrderId
+     * @param Writer $writer
      */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
-        if (null !== $this->id) {
-            $writer->write([Schema::CBC.'ID' => $this->id]);
+        if ($this->id !== null) {
+            $writer->write([ Schema::CBC . 'ID' => $this->id ]);
         }
-        if (null !== $this->salesOrderId) {
-            $writer->write([Schema::CBC.'SalesOrderID' => $this->salesOrderId]);
+        if ($this->salesOrderId !== null) {
+            $writer->write([ Schema::CBC . 'SalesOrderID' => $this->salesOrderId ]);
         }
     }
 }

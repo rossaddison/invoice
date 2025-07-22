@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserClient;
 
-use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\Entity\Client;
 use App\Invoice\Entity\UserClient;
+use App\Invoice\Entity\Client;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\UserClient\UserClientService as UCS;
 use App\Invoice\UserInv\UserInvRepository as UIR;
+use App\Invoice\Client\ClientRepository as CR;
 use Cycle\ORM\Select;
-use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
  * @template TEntity of UserClient
- *
  * @extends Select\Repository<TEntity>
  */
 final class UserClientRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
+     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -32,14 +33,13 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     * Get userclients  without filter.
+     * Get userclients  without filter
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
-
         return $this->prepareDataReader($query);
     }
 
@@ -58,9 +58,9 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param array|UserClient|null $userclient
+     * @throws Throwable
      */
     public function save(array|UserClient|null $userclient): void
     {
@@ -68,9 +68,9 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
-     *
-     * @throws \Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
+     * @param UserClient $userclient
+     * @throws Throwable
      */
     public function delete(UserClient $userclient): void
     {
@@ -86,67 +86,67 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
+     * @return UserClient|null
+     *
      * @psalm-return TEntity|null
      */
-    public function repoUserClientquery(string $id): ?UserClient
+    public function repoUserClientquery(string $id): UserClient|null
     {
         $query = $this->select()
-            ->load('user')
-            ->load('client')
-            ->where(['id' => $id]);
-
-        return $query->fetchOne() ?: null;
+                      ->load('user')
+                      ->load('client')
+                      ->where(['id' => $id]);
+        return  $query->fetchOne() ?: null;
     }
 
-    public function repoUserquery(string $client_id): ?UserClient
+    /**
+     * @param string $client_id
+     * @return UserClient|null
+     */
+    public function repoUserquery(string $client_id): UserClient|null
     {
         $query = $this->select()
-            ->where(['client_id' => $client_id]);
-
+                      ->where(['client_id' => $client_id]);
         return $query->fetchOne() ?: null;
     }
 
     /**
-     * Get clients  with filter user_id.
+     * Get clients  with filter user_id
      *
      * @psalm-return EntityReader
      */
     public function repoClientquery(string $user_id): EntityReader
     {
         $query = $this->select()
-            ->load('client')
-            ->where(['user_id' => $user_id]);
-
+                      ->load('client')
+                      ->where(['user_id' => $user_id]);
         return $this->prepareDataReader($query);
     }
 
     public function repoClientCountquery(string $user_id): int
     {
         $query = $this->select()
-            ->where(['user_id' => $user_id]);
-
+                      ->where(['user_id' => $user_id]);
         return $query->count();
     }
 
     public function repoUserClientqueryCount(string $user_id, string $client_id): int
     {
         $query = $this->select()
-            ->where(['user_id' => $user_id])
-            ->andWhere(['client_id' => $client_id]);
-
+                      ->where(['user_id' => $user_id])
+                      ->andWhere(['client_id' => $client_id]);
         return $query->count();
     }
 
     public function repoUserqueryCount(string $client_id): int
     {
         $query = $this->select()
-            ->where(['client_id' => $client_id]);
-
+                      ->where(['client_id' => $client_id]);
         return $query->count();
     }
 
     /**
-     * Get a list of clients that have user accounts associated with their client_id.
+     * Get a list of clients that have user accounts associated with their client_id
      */
     public function getClients_with_user_accounts(): array
     {
@@ -160,14 +160,17 @@ final class UserClientRepository extends Select\Repository
                 $client_ids[] = $client_id;
             }
         }
-
         return $client_ids;
     }
 
+    /**
+     * @param string $user_id
+     * @return array
+     */
     public function get_assigned_to_user(string $user_id): array
     {
         // Get all clients assigned to this user
-        $count_user_clients  = $this->repoClientCountquery($user_id);
+        $count_user_clients = $this->repoClientCountquery($user_id);
         $assigned_client_ids = [];
         if ($count_user_clients > 0) {
             $user_clients = $this->repoClientquery($user_id);
@@ -177,22 +180,24 @@ final class UserClientRepository extends Select\Repository
                 $assigned_client_ids[] = $user_client->getClient_id();
             }
         }
-
         return $assigned_client_ids;
     }
 
     /**
-     * @return (int|null)[]
-     *
-     * @psalm-return array<int<0, max>, int|null>
-     */
+      * @param string $user_id
+      * @param CR $cR
+      *
+      * @return (int|null)[]
+      *
+      * @psalm-return array<int<0, max>, int|null>
+      */
     public function get_not_assigned_to_user(string $user_id, CR $cR): array
     {
         // Get an array of client ids that have been assigned to this user
         $assigned_client_ids = $this->get_assigned_to_user($user_id);
 
         // Get all existing clients including non-active ones
-        $all_clients      = $cR->findAllPreloaded();
+        $all_clients = $cR->findAllPreloaded();
         $every_client_ids = [];
         /** @var Client $client */
         foreach ($all_clients as $client) {
@@ -210,6 +215,8 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
+     * @param CR $cR
+     *
      * @return (int|null)[]
      *
      * @psalm-return array<int<0, max>, int|null>
@@ -217,7 +224,7 @@ final class UserClientRepository extends Select\Repository
     public function get_not_assigned_to_any_user(CR $cR): array
     {
         // Get all existing clients including non-active ones
-        $all_clients           = $cR->findAllPreloaded();
+        $all_clients = $cR->findAllPreloaded();
         $unassigned_client_ids = [];
         /** @var Client $client */
         foreach ($all_clients as $client) {
@@ -229,10 +236,15 @@ final class UserClientRepository extends Select\Repository
                 $unassigned_client_ids[] = $client_id;
             }
         }
-
         return $unassigned_client_ids;
     }
 
+    /**
+     * @param UIR $uiR
+     * @param CR $cR
+     * @param UCS $ucS
+     * @param FormHydrator $formHydrator
+     */
     public function reset_users_all_clients(UIR $uiR, CR $cR, UCS $ucS, FormHydrator $formHydrator): void
     {
         // Users that have their all_clients setting active
@@ -240,27 +252,36 @@ final class UserClientRepository extends Select\Repository
             $users = $uiR->findAllWithAllClients();
             /** @var UserInv $user */
             foreach ($users as $user) {
-                $user_id              = $user->getUser_id();
+                $user_id = $user->getUser_id();
                 $available_client_ids = $this->get_not_assigned_to_user($user_id, $cR);
                 $this->assign_to_user_client($available_client_ids, $user_id, $formHydrator, $ucS);
             }
         }
     }
 
+    /**
+     * @param array $available_client_ids
+     * @param string $user_id
+     * @param FormHydrator $formHydrator
+     * @param UCS $ucS
+     */
     public function assign_to_user_client(array $available_client_ids, string $user_id, FormHydrator $formHydrator, UCS $ucS): void
     {
         /** @var int $value */
         foreach ($available_client_ids as $_key => $value) {
             $user_client = [
-                'user_id'   => $user_id,
+                'user_id' => $user_id,
                 'client_id' => $value,
             ];
             $model = new UserClient();
-            $form  = new UserClientForm($model);
+            $form = new UserClientForm($model);
             ($formHydrator->populateAndValidate($form, $user_client)) ? $ucS->saveUserClient($model, $user_client) : '';
         }
     }
 
+    /**
+     * @param string $user_id
+     */
     public function unassign_to_user_client(string $user_id): void
     {
         $user_clients = $this->repoClientquery($user_id);

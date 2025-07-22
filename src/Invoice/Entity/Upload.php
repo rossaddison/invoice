@@ -16,7 +16,7 @@ class Upload
     private ?Client $client = null;
 
     #[Column(type: 'datetime)', nullable: false)]
-    private \DateTimeImmutable $uploaded_date;
+    private DateTimeImmutable $uploaded_date;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -32,16 +32,16 @@ class Upload
         #[Column(type: 'longText)', nullable: false)]
         private string $description = '',
     ) {
-        $this->uploaded_date = new \DateTimeImmutable();
+        $this->uploaded_date = new DateTimeImmutable();
     }
 
-    // get relation $client
+    //get relation $client
     public function getClient(): ?Client
     {
         return $this->client;
     }
 
-    // set relation $client
+    //set relation $client
     public function setClient(?Client $client): void
     {
         $this->client = $client;
@@ -107,13 +107,13 @@ class Upload
         $this->file_name_new = $file_name_new;
     }
 
-    public function getUploaded_date(): \DateTimeImmutable
+    public function getUploaded_date(): DateTimeImmutable
     {
-        /* @var DateTimeImmutable $this->uploaded_date */
+        /** @var DateTimeImmutable $this->uploaded_date */
         return $this->uploaded_date;
     }
 
-    public function setUploaded_date(\DateTimeImmutable $uploaded_date): void
+    public function setUploaded_date(DateTimeImmutable $uploaded_date): void
     {
         $this->uploaded_date = $uploaded_date;
     }

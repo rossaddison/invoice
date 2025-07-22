@@ -35,6 +35,7 @@ final class GeneratorTruncateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
 
         $tables = ['gentor_relation', 'gentor'];
@@ -48,17 +49,16 @@ final class GeneratorTruncateCommand extends Command
         }
 
         if (0 === count(is_array($findAll = $this->promise
-            ->getORM()
-            ->getRepository(GentorRelation::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getORM()
+                ->getRepository(GentorRelation::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(Gentor::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {
             $io->success('Done');
-
             return ExitCode::OK;
         }
         $io->error('Unspecified error');
-
         return ExitCode::UNSPECIFIED_ERROR;
     }
 }

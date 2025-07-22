@@ -22,9 +22,7 @@ class InvItemAmount
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $charge = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $allowance = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
-    }
+        private ?float $total = 0.00) {}
 
     public function getInvItem(): ?InvItem
     {

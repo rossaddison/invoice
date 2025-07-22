@@ -86,13 +86,13 @@ goto menu
 
 :code_style_suggest_changes
 echo Suggested changes to the Coding Style 
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff 
 pause
 goto menu
 
 :code_style_make_changes
 echo Make the changes that were suggested to the Coding Style 
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php 
 pause
 goto menu
 

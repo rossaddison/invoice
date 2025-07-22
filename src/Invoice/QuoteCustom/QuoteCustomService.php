@@ -8,10 +8,12 @@ use App\Invoice\Entity\QuoteCustom;
 
 final readonly class QuoteCustomService
 {
-    public function __construct(private QuoteCustomRepository $repository)
-    {
-    }
+    public function __construct(private QuoteCustomRepository $repository) {}
 
+    /**
+     * @param QuoteCustom $model
+     * @param array $array
+     */
     public function saveQuoteCustom(QuoteCustom $model, array $array): void
     {
         isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
@@ -20,6 +22,9 @@ final readonly class QuoteCustomService
         $this->repository->save($model);
     }
 
+    /**
+     * @param array|QuoteCustom|null $model
+     */
     public function deleteQuoteCustom(array|QuoteCustom|null $model): void
     {
         $this->repository->delete($model);

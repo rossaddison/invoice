@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
-use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 use App\Invoice\Entity\InvAllowanceCharge;
+use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 
 final readonly class InvAllowanceChargeService
 {
-    public function __construct(private InvAllowanceChargeRepository $repository, private ACR $acR)
-    {
-    }
+    public function __construct(private InvAllowanceChargeRepository $repository, private ACR $acR) {}
 
+    /**
+     * @param InvAllowanceCharge $model
+     * @param array $array
+     */
     public function saveInvAllowanceCharge(InvAllowanceCharge $model, array $array): void
     {
         $model->nullifyRelationOnChange((int) $array['allowance_charge_id']);
@@ -24,7 +26,7 @@ final readonly class InvAllowanceChargeService
         if (null !== $allowance_charge && null !== $allowance_charge->getTaxRate()) {
             $allowanceChargeTaxRate = $allowance_charge->getTaxRate();
             if (null !== $allowanceChargeTaxRate) {
-                if ('' == $array['amount']) {
+                if ($array['amount'] == '') {
                     $amount = 0.00;
                 } else {
                     $amount = (float) $array['amount'];
@@ -36,6 +38,9 @@ final readonly class InvAllowanceChargeService
         $this->repository->save($model);
     }
 
+    /**
+     * @param InvAllowanceCharge $model
+     */
     public function deleteInvAllowanceCharge(InvAllowanceCharge $model): void
     {
         $this->repository->delete($model);

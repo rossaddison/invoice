@@ -18,28 +18,26 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Client\ClientRepository         $cR
- * @var App\Invoice\Setting\SettingRepository       $s
+ * @var App\Invoice\Client\ClientRepository $cR
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
- * @var App\Widget\GridComponents                   $gridComponents
- * @var App\Widget\PageSizeLimiter                  $pageSizeLimiter
- * @var string                                      $active
- * @var string                                      $alert
- * @var string                                      $csrf
- * @var bool                                        $canEdit
- *
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var string $active
+ * @var string $alert
+ * @var string $csrf
+ * @var bool $canEdit
  * @psalm-var positive-int $page
- *
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $userinvs
- * @var OffsetPaginator                        $paginator
- * @var Yiisoft\Rbac\Manager                   $manager
- * @var Yiisoft\Router\CurrentRoute            $currentRoute
- * @var Yiisoft\Router\FastRoute\UrlGenerator  $urlGenerator
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Rbac\Manager $manager
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- *
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFilterUserInvLoginDropDown
  */
-echo $alert;
+
+echo $alert
 
 ?>
 <?php
@@ -50,7 +48,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-people')
-                    ->content(' '.Html::encode($translator->translate('users'))),
+                        ->content(' ' . Html::encode($translator->translate('users'))),
             ),
     )
     ->render();
@@ -71,10 +69,10 @@ $toolbar = Div::tag();
     echo A::tag()->content(H4::tag()->content($translator->translate('client.has.not.assigned')))->href($urlGenerator->generate('client/index'))->render();
 echo '<table class="table table-responsive">';
 echo '<thead>';
-echo '<tr><th scope="row">'.$translator->translate('client.name').' '.
-                             $translator->translate('client.surname').
-     '</th><th scope="row">'.$translator->translate('phone').'</th>'.
-     '<th scope="row">'.$translator->translate('email.address').'</th></tr>';
+echo '<tr><th scope="row">' . $translator->translate('client.name') . ' ' .
+                             $translator->translate('client.surname') .
+     '</th><th scope="row">' . $translator->translate('phone') . '</th>' .
+     '<th scope="row">' . $translator->translate('email.address') . '</th></tr>';
 echo '</thead>';
 echo '<tbody>';
 ?> 
@@ -84,38 +82,39 @@ foreach ($unAssignedClientIds as $clientId) {
     echo '<tr>';
     $client = $cR->repoClientquery((string) $clientId);
     echo Td::tag()
-        ->content($client->getClient_full_name())
-        ->render();
+    ->content($client->getClient_full_name())
+    ->render();
     echo Td::tag()
-        ->content($client->getClient_phone() ?? '')
-        ->render();
+    ->content($client->getClient_phone() ?? '')
+    ->render();
     echo Td::tag()
-        ->content($client->getClient_email())
-        ->render();
+    ->content($client->getClient_email())
+    ->render();
     echo '</tr>';
 }
 echo '</tbody>';
 echo '</table>';
-echo '<br>';
+echo '<br>'
 ?>    
     
 </div>    
 <div>
-    <h5><?php echo $translator->translate('users'); ?></h5>
+    <h5><?= $translator->translate('users'); ?></h5>
     <div class="btn-group index-options">
-        <a href="<?php echo $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 2]); ?>"
-           class="btn <?php echo 2 == $active ? 'btn-primary' : 'btn-default'; ?>">
-            <?php echo $translator->translate('all'); ?>
+        <a href="<?= $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 2]); ?>"
+           class="btn <?php echo $active == 2 ? 'btn-primary' : 'btn-default' ?>">
+            <?= $translator->translate('all'); ?>
         </a>
-        <a href="<?php echo $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 1]); ?>" style="text-decoration:none"
-           class="btn  <?php echo 1 == $active ? 'btn-primary' : 'btn-default'; ?>">
-            <?php echo $translator->translate('active'); ?>
+        <a href="<?= $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 1]); ?>" style="text-decoration:none"
+           class="btn  <?php echo $active == 1 ? 'btn-primary' : 'btn-default' ?>">
+            <?= $translator->translate('active'); ?>
         </a>
-        <a href="<?php echo $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 0]); ?>" style="text-decoration:none"
-           class="btn  <?php echo 0 == $active ? 'btn-primary' : 'btn-default'; ?>">
-            <?php echo $translator->translate('inactive'); ?>
+        <a href="<?= $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 0]); ?>" style="text-decoration:none"
+           class="btn  <?php echo $active == 0 ? 'btn-primary' : 'btn-default' ?>">
+            <?= $translator->translate('inactive'); ?>
         </a>
-        <?php echo Html::a(
+        <?=
+        Html::a(
             Html::tag('i', '', [
                 'class' => 'fa fa-plus',
             ]),
@@ -132,14 +131,14 @@ echo '<br>';
     $columns = [
         new DataColumn(
             'active',
-            content: static function (UserInv $model): string {
+            content: static function (UserInv $model) use ($translator): string {
                 return $model->getActive() ? '✔️' : '❌';
             },
         ),
         new DataColumn(
             'all_clients',
             header: $translator->translate('user.all.clients'),
-            content: static function (UserInv $model): string {
+            content: static function (UserInv $model) use ($translator): string {
                 return $model->getAll_clients() ? '✔️' : '❌';
             },
         ),
@@ -154,7 +153,6 @@ echo '<br>';
                         return Html::a($user->getLogin(), $urlGenerator->generate('user/profile', ['login' => $user->getLogin()]), []);
                     }
                 }
-
                 return '';
             },
             filter: $optionsDataFilterUserInvLoginDropDown,
@@ -169,12 +167,11 @@ echo '<br>';
         new DataColumn(
             'type',
             header: $translator->translate('user.type'),
-            content: static function (UserInv $model): string {
+            content: static function (UserInv $model) use ($translator): string {
                 $user_types = [
                     0 => '🧑‍⚖️',
                     1 => '🧑',
                 ];
-
                 // default is 'guest' which is an invoiceplane setting as denoted by the use of 'i.' and incorporates all users besides the administrator
                 return $user_types[$model->getType() ?? 1];
             },
@@ -187,14 +184,14 @@ echo '<br>';
                   === $manager->getPermissionsByRoleName('observer')) {
                     return Html::tag('span', $translator->translate('general.yes'), ['class' => 'label active']);
                 } else {
-                    return '1' !== $model->getUser_id() ? Html::a(
+                    return $model->getUser_id() !== '1' ? Html::a(
                         Html::tag(
                             'button',
                             Html::tag('span', $translator->translate('general.no'), ['class' => 'label inactive']),
                             [
-                                'type'    => 'submit',
-                                'class'   => 'dropdown-button',
-                                'onclick' => 'return confirm('."'".$translator->translate('user.inv.role.warning.role')."');",
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.role') . "');",
                             ],
                         ),
                         $urlGenerator->generate('userinv/observer', ['user_id' => $model->getUser_id()], []),
@@ -210,14 +207,14 @@ echo '<br>';
                   === $manager->getPermissionsByRoleName('accountant')) {
                     return Html::tag('span', $translator->translate('general.yes'), ['class' => 'label active'])->render();
                 } else {
-                    return '1' !== $model->getUser_id() ? Html::a(
+                    return $model->getUser_id() !== '1' ? Html::a(
                         Html::tag(
                             'button',
                             Html::tag('span', $translator->translate('general.no'), ['class' => 'label inactive']),
                             [
-                                'type'    => 'submit',
-                                'class'   => 'dropdown-button',
-                                'onclick' => 'return confirm('."'".$translator->translate('user.inv.role.warning.role')."');",
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.role') . "');",
                             ],
                         ),
                         $urlGenerator->generate('userinv/accountant', ['user_id' => $model->getUser_id()], []),
@@ -233,21 +230,20 @@ echo '<br>';
                   === $manager->getPermissionsByRoleName('admin')) {
                     return Html::tag('span', $translator->translate('general.yes'), ['class' => 'label active']);
                 } else {
-                    if ('1' == !$model->getUser_id()) {
+                    if (!$model->getUser_id() == '1') {
                         return Html::a(
                             Html::tag(
                                 'button',
                                 Html::tag('span', $translator->translate('general.no'), ['class' => 'label inactive']),
                                 [
-                                    'type'    => 'submit',
-                                    'class'   => 'dropdown-button',
-                                    'onclick' => 'return confirm('."'".$translator->translate('user.inv.role.warning.role')."');",
+                                    'type' => 'submit',
+                                    'class' => 'dropdown-button',
+                                    'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.role') . "');",
                                 ],
                             ),
                             $urlGenerator->generate('userinv/admin', ['user_id' => $model->getUser_id()], []),
                         );
                     } // not id == 1 => use AssignRole console command to assign the admin role
-
                     return '';
                 } // else
             },
@@ -257,15 +253,15 @@ echo '<br>';
             'user_id',
             header: $translator->translate('user.inv.role.revoke.all'),
             content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): A|string {
-                if (!empty($manager->getPermissionsByUserId($model->getUser_id())) && '1' !== $model->getUser_id()) {
+                if (!empty($manager->getPermissionsByUserId($model->getUser_id())) && $model->getUser_id() !== '1') {
                     return Html::a(
                         Html::tag(
                             'button',
                             Html::tag('span', $translator->translate('user.inv.role.revoke.all'), ['class' => 'label inactive']),
                             [
-                                'type'    => 'submit',
-                                'class'   => 'dropdown-button',
-                                'onclick' => 'return confirm('."'".$translator->translate('user.inv.role.warning.revoke.all')."');",
+                                'type' => 'submit',
+                                'class' => 'dropdown-button',
+                                'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.revoke.all') . "');",
                             ],
                         ),
                         $urlGenerator->generate('userinv/revoke', ['user_id' => $model->getUser_id()], []),
@@ -288,7 +284,7 @@ echo '<br>';
                 return Html::a(
                     Html::tag(
                         'i',
-                        str_repeat(' ', 1).(string) count($ucR->get_assigned_to_user($model->getUser_id())),
+                        str_repeat(' ', 1) . (string) count($ucR->get_assigned_to_user($model->getUser_id())),
                         ['class' => 'fa fa-list fa-margin'],
                     ),
                     $urlGenerator->generate('userinv/client', ['id' => $model->getId()]),
@@ -313,14 +309,14 @@ echo '<br>';
             'type',
             header: '❌',
             content: static function (UserInv $model) use ($translator, $urlGenerator): string|A {
-                return 1 == $model->getType() ? Html::a(
+                return $model->getType() == 1 ? Html::a(
                     Html::tag(
                         'button',
                         '❌',
                         [
-                            'type'    => 'submit',
-                            'class'   => 'dropdown-button',
-                            'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
+                            'type' => 'submit',
+                            'class' => 'dropdown-button',
+                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                         ],
                     ),
                     $urlGenerator->generate('userinv/delete', ['id' => $model->getId()]),
@@ -344,27 +340,27 @@ $grid_summary = $s->grid_summary(
     $translator->translate('user.accounts'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('userinv/index'))->csrf($csrf)->open().
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
+$toolbarString = Form::tag()->post($urlGenerator->generate('userinv/index'))->csrf($csrf)->open() .
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
-/*
+/**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */
 echo GridView::widget()
-    ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-user-inv'])
-    ->columns(...$columns)
-    ->dataReader($paginator)
-    ->urlCreator(new UrlCreator($urlGenerator))
-    ->multiSort(true)
-    ->header($header)
-    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->id('w5-grid')
-    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'userinv').' '.$grid_summary)
-    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->emptyCell($translator->translate('no.records'), ['class' => 'card-header bg-warning text-black'])
-    ->toolbar($toolbarString);
+->bodyRowAttributes(['class' => 'align-middle'])
+->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-user-inv'])
+->columns(...$columns)
+->dataReader($paginator)
+->urlCreator(new UrlCreator($urlGenerator))
+->multiSort(true)
+->header($header)
+->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->id('w5-grid')
+->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'userinv') . ' ' . $grid_summary)
+->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+->emptyCell($translator->translate('no.records'), ['class' => 'card-header bg-warning text-black'])
+->toolbar($toolbarString);
 ?> 
 </div>
 </div>

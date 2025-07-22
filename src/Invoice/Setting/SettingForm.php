@@ -10,26 +10,28 @@ use Yiisoft\Validator\Rule\Required;
 
 final class SettingForm extends FormModel
 {
-    private ?string $setting_key   = null;
+    private ?string $setting_key = null;
     private ?string $setting_value = null;
 
     public function __construct(Setting $setting)
     {
-        $this->setting_key   = $setting->getSetting_key();
+        $this->setting_key = $setting->getSetting_key();
         $this->setting_value = $setting->getSetting_value();
     }
 
-    public function getSetting_key(): ?string
+    public function getSetting_key(): string|null
     {
         return $this->setting_key;
     }
 
-    public function getSetting_value(): ?string
+    public function getSetting_value(): string|null
     {
         return $this->setting_value;
     }
 
     /**
+     * @return string
+     *
      * @psalm-return ''
      */
     #[\Override]

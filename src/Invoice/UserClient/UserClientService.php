@@ -8,10 +8,12 @@ use App\Invoice\Entity\UserClient;
 
 final readonly class UserClientService
 {
-    public function __construct(private UserClientRepository $repository)
-    {
-    }
+    public function __construct(private UserClientRepository $repository) {}
 
+    /**
+     * @param UserClient $model
+     * @param array $array
+     */
     public function saveUserClient(UserClient $model, array $array): void
     {
         isset($array['user_id']) ? $model->setUser_id((int) $array['user_id']) : '';
@@ -19,6 +21,9 @@ final readonly class UserClientService
         $this->repository->save($model);
     }
 
+    /**
+     * @param UserClient $model
+     */
     public function deleteUserClient(UserClient $model): void
     {
         $this->repository->delete($model);

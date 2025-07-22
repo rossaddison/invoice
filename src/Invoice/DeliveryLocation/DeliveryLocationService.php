@@ -8,10 +8,12 @@ use App\Invoice\Entity\DeliveryLocation;
 
 final readonly class DeliveryLocationService
 {
-    public function __construct(private DeliveryLocationRepository $repository)
-    {
-    }
+    public function __construct(private DeliveryLocationRepository $repository) {}
 
+    /**
+     * @param DeliveryLocation $model
+     * @param array $array
+     */
     public function saveDeliveryLocation(DeliveryLocation $model, array $array): void
     {
         isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';

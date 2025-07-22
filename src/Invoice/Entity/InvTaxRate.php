@@ -9,6 +9,7 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\InvTaxRate\InvTaxRateRepository::class)]
+
 class InvTaxRate
 {
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
@@ -22,9 +23,7 @@ class InvTaxRate
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable: false, default: 0)]
         private ?int $include_item_tax = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $inv_tax_rate_amount = 0.00)
-    {
-    }
+        private ?float $inv_tax_rate_amount = 0.00) {}
 
     public function getInv(): ?Inv
     {
@@ -66,7 +65,7 @@ class InvTaxRate
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getInclude_item_tax(): ?int
+    public function getInclude_item_tax(): int|null
     {
         return $this->include_item_tax;
     }

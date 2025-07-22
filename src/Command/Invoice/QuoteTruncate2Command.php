@@ -38,6 +38,7 @@ final class QuoteTruncate2Command extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** Note tables must be truncated in this sequence in order to avoid integrity constraint violations **/
+
         $io = new SymfonyStyle($input, $output);
 
         $tables = ['quote_item_amount', 'quote_amount', 'quote_item', 'quote_tax_rate', 'quote_custom', 'quote'];
@@ -51,23 +52,25 @@ final class QuoteTruncate2Command extends Command
         }
 
         if (0 === count(is_array($findAll = $this->promise
-            ->getORM()
-            ->getRepository(QuoteItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getRepository(QuoteItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getRepository(QuoteAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) + count(is_array($findAll = $this->promise
+                ->getRepository(QuoteItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
+                ->getORM()
+                ->getRepository(QuoteTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
+            count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(Quote::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {
             $io->success('Done');
-
             return ExitCode::OK;
         }
         $io->error('Unspecified error');
-
         return ExitCode::UNSPECIFIED_ERROR;
     }
 }

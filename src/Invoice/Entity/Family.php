@@ -20,15 +20,14 @@ class Family
         private ?int $category_primary_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_secondary_id = null,
-    ) {
-    }
+    ) {}
 
     public function getFamily_id(): ?int
     {
         return $this->id;
     }
 
-    public function getFamily_name(): ?string
+    public function getFamily_name(): string|null
     {
         return $this->family_name;
     }

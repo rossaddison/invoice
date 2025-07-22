@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/*
+/**
  * Related logic: see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
  * @var App\Invoice\Group\GroupRepository $gR
  * @var App\Invoice\Entity\SalesOrder $so
@@ -24,19 +24,19 @@ use Yiisoft\Html\Html;
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
-                    <input type="hidden" name="client_id" id="client_id" value="<?php echo $so->getClient_id(); ?>">
-                    <input type="hidden" name="so_id" id="so_id" value="<?php echo $so->getId(); ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?php echo $so->getUser_id(); ?>">
+                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+                    <input type="hidden" name="client_id" id="client_id" value="<?= $so->getClient_id(); ?>">
+                    <input type="hidden" name="so_id" id="so_id" value="<?= $so->getId(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" value="<?= $so->getUser_id(); ?>">
                     <div class="form-group">
-                        <label for="password"><?php echo $translator->translate('password'); ?></label>
+                        <label for="password"><?= $translator->translate('password'); ?></label>
                         <input type="text" name="password" id="invoice_password" class="form-control"
-                               value="<?php echo '' == $s->getSetting('invoice_pre_password') ? '' : $s->getSetting('invoice_pre_password'); ?>"
+                               value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password') ?>"
                                autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="group_id">
-                            <?php echo $translator->translate('group'); ?>
+                            <?= $translator->translate('group'); ?>
                         </label>
                         <select name="group_id" id="group_id" class="form-control">
                             <?php
@@ -44,9 +44,9 @@ use Yiisoft\Html\Html;
                                  * @var App\Invoice\Entity\Group $group
                                  */
                                 foreach ($gR->findAllPreloaded() as $group) { ?>
-                                <option value="<?php echo $group->getId(); ?>"
+                                <option value="<?= $group->getId(); ?>"
                                     <?php $s->check_select($s->getSetting('default_invoice_group'), $group->getId()); ?>>
-                                    <?php echo Html::encode($group->getName()); ?></option>
+                                    <?= Html::encode($group->getName()); ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -55,10 +55,10 @@ use Yiisoft\Html\Html;
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="so_to_invoice_confirm btn btn-success" id="so_to_invoice_confirm" type="button">
-                        <i class="fa fa-check"></i> <?php echo $translator->translate('submit'); ?>
+                        <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?php echo $translator->translate('cancel'); ?>
+                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

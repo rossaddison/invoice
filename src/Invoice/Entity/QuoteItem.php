@@ -7,6 +7,7 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\QuoteItem\QuoteItemRepository::class)]
@@ -51,38 +52,38 @@ class QuoteItem
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_unit_id = null,
     ) {
-        $this->date_added = new \DateTimeImmutable();
+        $this->date_added = new DateTimeImmutable();
     }
 
-    // relation $tax_rate
+    //relation $tax_rate
     public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
     }
 
-    // set relation $taxrate
+    //set relation $taxrate
     public function setTaxRate(?TaxRate $taxrate): void
     {
         $this->tax_rate = $taxrate;
     }
 
-    public function getProduct(): ?Product
+    public function getProduct(): Product|null
     {
         return $this->product;
     }
 
-    // set relation $product
+    //set relation $product
     public function setProduct(?Product $product): void
     {
         $this->product = $product;
     }
 
-    public function getQuote(): ?Quote
+    public function getQuote(): Quote|null
     {
         return $this->quote;
     }
 
-    // set relation $product
+    //set relation $product
     public function setQuote(?Quote $quote): void
     {
         $this->quote = $quote;
@@ -128,13 +129,13 @@ class QuoteItem
         $this->product_id = $product_id;
     }
 
-    public function getDate_added(): \DateTimeImmutable
+    public function getDate_added(): DateTimeImmutable
     {
-        /* @var DateTimeImmutable $this->date_added */
+        /** @var DateTimeImmutable $this->date_added */
         return $this->date_added;
     }
 
-    public function setDate_added(\DateTime $date_added): void
+    public function setDate_added(DateTime $date_added): void
     {
         $this->date_added = $date_added;
     }
@@ -189,7 +190,7 @@ class QuoteItem
         $this->discount_amount = $discount_amount;
     }
 
-    public function getOrder(): ?int
+    public function getOrder(): int|null
     {
         return $this->order;
     }

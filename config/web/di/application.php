@@ -9,7 +9,7 @@ use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
 use Yiisoft\Yii\Middleware\Locale;
 use Yiisoft\Yii\Middleware\Subfolder;
 
-/*
+/**
  * @var array $params
  * @var array $params['locale']
  * @var array $params['locale']['locales']
@@ -20,7 +20,7 @@ return [
     Yiisoft\Yii\Http\Application::class => [
         '__construct()' => [
             'dispatcher' => DynamicReference::to([
-                'class'             => MiddlewareDispatcher::class,
+                'class' => MiddlewareDispatcher::class,
                 'withMiddlewares()' => [$params['middlewares']],
             ]),
             'fallbackHandler' => Reference::to(NotFoundHandler::class),
@@ -28,7 +28,7 @@ return [
     ],
     Locale::class => [
         '__construct()' => [
-            'supportedLocales'          => $params['locale']['locales'],
+            'supportedLocales' => $params['locale']['locales'],
             'ignoredRequestUrlPatterns' => $params['locale']['ignoredRequests'],
         ],
     ],

@@ -3,24 +3,25 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
- * @var string                                 $csrf
- * @var string                                 $gateway
- * @var string                                 $heading
- * @var string                                 $message
- * @var string                                 $sandbox_url
- * @var string                                 $url
- * @var string                                 $url_key
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var string $csrf
+ * @var string $gateway
+ * @var string $heading
+ * @var string $message
+ * @var string $sandbox_url
+ * @var string $url
+ * @var string $url_key
  */
+
 ?> 
 
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $heading; ?><?php echo $translator->translate('invoice'); ?></title>
+    <title><?php echo $heading; ?><?= $translator->translate('invoice'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
@@ -72,11 +73,11 @@ declare(strict_types=1);
 <body  
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?php echo $urlGenerator->generate($url, ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
-       <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
+<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url, ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
+       <input type="hidden" name="_csrf" value="<?= $csrf ?>">
        <button type="submit" class="btn btn-lg btn-link"><i class="fa fa-arrow-left"></i></button>
-       <?php if ('1' === $s->getSetting('gateway_'.lcfirst($gateway).'_sandbox')) { ?>
-            <a href="<?php echo $sandbox_url; ?>"><?php echo $sandbox_url; ?></a>
+       <?php if ($s->getSetting('gateway_' . lcfirst($gateway) . '_sandbox') === '1') { ?>
+            <a href="<?= $sandbox_url; ?>"><?= $sandbox_url; ?></a>
        <?php } ?>     
 </form>
 

@@ -49,17 +49,21 @@ final class Cryptor
         }
 
         $openBytes = openssl_cipher_iv_length($this->cipher_algo);
-        if (false != $openBytes) {
+        if ($openBytes != false) {
             $this->iv_num_bytes = $openBytes;
         }
     }
 
     /**
+     * @param string $in
+     * @param string $key
+     * @param int|null $fmt
      * @throws \Exception
+     * @return mixed
      */
-    public function encryptString(string $in, string $key, ?int $fmt = null): mixed
+    public function encryptString(string $in, string $key, int|null $fmt = null): mixed
     {
-        if (null === $fmt) {
+        if ($fmt === null) {
             $fmt = $this->format;
         }
 
@@ -72,27 +76,27 @@ final class Cryptor
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
 
-        if (false === $keyhash) {
+        if ($keyhash === false) {
             throw new \Exception('Keyhash is false');
         }
 
         // and encrypt
-        $opts      = OPENSSL_RAW_DATA;
+        $opts = OPENSSL_RAW_DATA;
         $encrypted = openssl_encrypt($in, $this->cipher_algo, $keyhash, $opts, $iv);
 
         $errorString = openssl_error_string();
-        if ((false === $encrypted) && (false != $errorString)) {
-            throw new \Exception('Cryptor::encryptString() - Encryption failed: '.$errorString);
+        if (($encrypted === false) && ($errorString != false)) {
+            throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . $errorString);
         }
 
         // The result comprises the IV and encrypted data
-        if (false != $encrypted) {
-            $res = $iv.$encrypted;
+        if ($encrypted != false) {
+            $res = $iv . $encrypted;
 
             // and format the result if required.
-            if (self::FORMAT_B64 == $fmt) {
+            if ($fmt == self::FORMAT_B64) {
                 $res = base64_encode($res);
-            } elseif (self::FORMAT_HEX == $fmt) {
+            } elseif ($fmt == self::FORMAT_HEX) {
                 $unpacked = unpack('H*', $res);
                 if (is_array($unpacked)) {
                     /** @var array $res */
@@ -108,51 +112,51 @@ final class Cryptor
 
     /**
      * Decrypt a string.
-     *
-     * @param string $in  string to decrypt
-     * @param string $key decryption key
-     * @param int    $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
-     *
+     * @param  string $in  String to decrypt.
+     * @param  string $key Decryption key.
+     * @param  int $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
      * @throws \Exception
+     * @return mixed
      */
     public function decryptString($in, $key, $fmt = null): mixed
     {
-        if (null === $fmt) {
+        if ($fmt === null) {
             $fmt = $this->format;
         }
 
         $raw = $in;
 
         // Restore the encrypted data if encoded
-        if (self::FORMAT_B64 == $fmt) {
+        if ($fmt == self::FORMAT_B64) {
             $raw = base64_decode($in);
-        } elseif (self::FORMAT_HEX == $fmt) {
+        } elseif ($fmt == self::FORMAT_HEX) {
             $raw = pack('H*', $in);
         }
 
         // and do an integrity check on the size.
         if (strlen($raw) < $this->iv_num_bytes) {
-            throw new \Exception('Cryptor::decryptString() - data length '.(string) strlen($raw)." is less than iv length {$this->iv_num_bytes}");
+            throw new \Exception('Cryptor::decryptString() - ' .
+                'data length ' . (string) strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
         }
 
         // Extract the initialisation vector and encrypted data
-        $iv  = substr($raw, 0, $this->iv_num_bytes ?: 0);
+        $iv = substr($raw, 0, $this->iv_num_bytes ?: 0);
         $raw = substr($raw, $this->iv_num_bytes ?: 0);
 
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
 
-        if (false === $keyhash) {
+        if ($keyhash === false) {
             throw new \Exception('Keyhash is false');
         }
 
         // and decrypt.
         $opts = OPENSSL_RAW_DATA;
-        $res  = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
+        $res = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
 
         $errorString = openssl_error_string();
-        if ((false === $res) && (false != $errorString)) {
-            throw new \Exception('Cryptor::decryptString - decryption failed: '.$errorString);
+        if (($res === false) && ($errorString != false)) {
+            throw new \Exception('Cryptor::decryptString - decryption failed: ' . $errorString);
         }
 
         return $res;
@@ -160,29 +164,27 @@ final class Cryptor
 
     /**
      * Static convenience method for encrypting.
-     *
-     * @param string $in  string to encrypt
-     * @param string $key encryption key
-     * @param int    $fmt Optional override for the output encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
+     * @param  string $in  String to encrypt.
+     * @param  string $key Encryption key.
+     * @param  int $fmt Optional override for the output encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
+     * @return mixed
      */
     public static function Encrypt($in, $key, $fmt = null): mixed
     {
         $c = new self();
-
         return $c->encryptString($in, $key, $fmt);
     }
 
     /**
      * Static convenience method for decrypting.
-     *
-     * @param string $in  string to decrypt
-     * @param string $key decryption key
-     * @param int    $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
+     * @param  string $in  String to decrypt.
+     * @param  string $key Decryption key.
+     * @param  int $fmt Optional override for the input encoding. One of FORMAT_RAW, FORMAT_B64 or FORMAT_HEX.
+     * @return mixed
      */
     public static function Decrypt($in, $key, $fmt = null): mixed
     {
         $c = new self();
-
         return $c->decryptString($in, $key, $fmt);
     }
 }

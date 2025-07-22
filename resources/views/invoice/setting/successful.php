@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/*
+/**
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $heading
  * @var string $message
@@ -15,8 +15,8 @@ use Yiisoft\Html\Html;
 <head>
     <meta charset="utf-8">
     <title>
-        <?php echo $heading; ?>
-        <?php echo $translator->translate('invoice'); ?>
+        <?= $heading; ?>
+        <?= $translator->translate('invoice'); ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -69,8 +69,8 @@ use Yiisoft\Html\Html;
 </head>
 <body>
     
-<h1><?php echo $heading.'. '.$message; ?></h1>
-<?php echo Html::button($translator->translate('back'), ['onclick' => 'history.back()']); ?>
+<h1><?php echo $heading . '. ' . $message; ?></h1>
+<?= Html::button($translator->translate('back'), ['onclick' => 'history.back()']); ?>
 </body>
 </html>
 

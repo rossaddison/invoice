@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/*
+/**
  * Related logic: see App\Widget\Bootstrap5ModalPdf $this->layoutParameters['iframeWithPdf']
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $iframeWithPdf
@@ -12,28 +12,28 @@ use Yiisoft\Html\Html;
  */
 
 ?>
-<?php echo Html::openTag('div', [
-    'id'        => 'modal-layout-modal-pdf-'.$type,
-    'class'     => 'modal',
+<?= Html::openTag('div', [
+    'id' => 'modal-layout-modal-pdf-' . $type,
+    'class' => 'modal',
     'tab-index' => '-1']); ?>
-    <?php echo Html::openTag('div', ['class' => 'modal-dialog']); ?>
-        <?php echo Html::openTag('div', ['class' => 'modal-content']); ?>
-            <?php echo Html::openTag('div', ['class' => 'modal-header']); ?>
-                <?php echo Html::openTag('h5', ['class' => 'modal-title']); ?>
-                    <?php echo Html::openTag(
+    <?= Html::openTag('div', ['class' => 'modal-dialog']); ?>
+        <?= Html::openTag('div', ['class' => 'modal-content']); ?>
+            <?= Html::openTag('div', ['class' => 'modal-header']); ?>
+                <?= Html::openTag('h5', ['class' => 'modal-title']); ?>
+                    <?= Html::openTag(
                         'button',
-                        ['class'              => 'btn btn-light',
-                            'type'            => 'button',
+                        ['class' => 'btn btn-light',
+                            'type' => 'button',
                             'data-bs-dismiss' => 'modal',
                         ],
                     ); ?>
-                        <?php echo '❌'; ?>        
-                    <?php echo Html::closeTag('button'); ?>
-                <?php echo Html::closeTag('h5'); ?>
-            <?php echo Html::closeTag('div'); ?>
-            <?php echo Html::openTag('div', ['class' => 'modal-body']); ?>
+                        <?= '❌'; ?>        
+                    <?= Html::closeTag('button'); ?>
+                <?= Html::closeTag('h5'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'modal-body']); ?>
                 <?php echo $iframeWithPdf; ?>    
-            <?php echo Html::closeTag('div'); ?>
-        <?php echo Html::closeTag('div'); ?>
-    <?php echo Html::closeTag('div'); ?>
-<?php echo Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

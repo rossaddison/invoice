@@ -9,6 +9,8 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 final class PeppolBuyerPostalAddressNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
+     * @return string
+     *
      * @psalm-return 'Client/Customer Postal Address, not found. Business Rule 10 (BR-10): An Invoice shall contain the Buyers postal address (BG-8).'
      */
     #[\Override]
@@ -17,6 +19,9 @@ final class PeppolBuyerPostalAddressNotFoundException extends \RuntimeException 
         return 'Client/Customer Postal Address, not found. Business Rule 10 (BR-10): An Invoice shall contain the Buyers postal address (BG-8).';
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

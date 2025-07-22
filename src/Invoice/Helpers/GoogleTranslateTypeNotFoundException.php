@@ -9,6 +9,8 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 class GoogleTranslateTypeNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
+     * @return string
+     *
      * @psalm-return 'There appears to be no language related file selected.'
      */
     #[\Override]
@@ -17,6 +19,9 @@ class GoogleTranslateTypeNotFoundException extends \RuntimeException implements 
         return 'There appears to be no language related file selected.';
     }
 
+    /**
+     * @return string
+     */
     #[\Override]
     public function getSolution(): string
     {

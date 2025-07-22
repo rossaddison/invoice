@@ -16,19 +16,19 @@ use DateTimeImmutable;
 class Delivery
 {
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_created;
+    private DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $date_modified;
+    private DateTimeImmutable $date_modified;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $start_date;
+    private DateTimeImmutable $start_date;
 
     #[Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeImmutable $actual_delivery_date;
+    private ?DateTimeImmutable $actual_delivery_date;
 
     #[Column(type: 'datetime', nullable: false)]
-    private \DateTimeImmutable $end_date;
+    private DateTimeImmutable $end_date;
 
     #[BelongsTo(target: DeliveryLocation::class, nullable: true, fkAction: 'NO ACTION')]
     private ?DeliveryLocation $delivery_location = null;
@@ -46,19 +46,19 @@ class Delivery
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $delivery_party_id = null,
     ) {
-        $this->actual_delivery_date = new \DateTimeImmutable();
-        $this->date_created         = new \DateTimeImmutable();
-        $this->date_modified        = new \DateTimeImmutable();
-        $this->start_date           = new \DateTimeImmutable(date('Y-m-01'));
-        $this->end_date             = new \DateTimeImmutable(date('Y-m-t'));
+        $this->actual_delivery_date = new DateTimeImmutable();
+        $this->date_created = new DateTimeImmutable();
+        $this->date_modified = new DateTimeImmutable();
+        $this->start_date = new DateTimeImmutable(date('Y-m-01'));
+        $this->end_date = new DateTimeImmutable(date('Y-m-t'));
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getDelivery_location(): ?DeliveryLocation
+    public function getDelivery_location(): DeliveryLocation|null
     {
         return $this->delivery_location;
     }
@@ -68,7 +68,7 @@ class Delivery
         $this->id = $id;
     }
 
-    public function getInv_id(): ?int
+    public function getInv_id(): int|null
     {
         return $this->inv_id;
     }
@@ -78,7 +78,7 @@ class Delivery
         $this->inv_id = $inv_id;
     }
 
-    public function getInv_item_id(): ?int
+    public function getInv_item_id(): int|null
     {
         return $this->inv_item_id;
     }
@@ -88,57 +88,57 @@ class Delivery
         $this->inv_item_id = $inv_item_id;
     }
 
-    public function getStart_date(): ?\DateTimeImmutable
+    public function getStart_date(): null|DateTimeImmutable
     {
-        /* @var DateTimeImmutable|null $this->start_date */
+        /** @var DateTimeImmutable|null $this->start_date */
         return $this->start_date;
     }
 
-    public function setStart_date(\DateTimeImmutable $start_date): void
+    public function setStart_date(DateTimeImmutable $start_date): void
     {
         $this->start_date = $start_date;
     }
 
-    public function getActual_delivery_date(): ?\DateTimeImmutable
+    public function getActual_delivery_date(): null|DateTimeImmutable
     {
-        /* @var DateTimeImmutable|null $this->actual_delivey_date */
+        /** @var DateTimeImmutable|null $this->actual_delivey_date */
         return $this->actual_delivery_date;
     }
 
-    public function setActual_delivery_date(?\DateTimeImmutable $actual_delivery_date): void
+    public function setActual_delivery_date(?DateTimeImmutable $actual_delivery_date): void
     {
         $this->actual_delivery_date = $actual_delivery_date;
     }
 
-    public function getEnd_date(): ?\DateTimeImmutable
+    public function getEnd_date(): null|DateTimeImmutable
     {
-        /* @var DateTimeImmutable|null $this->end_date */
+        /** @var DateTimeImmutable|null $this->end_date */
         return $this->end_date;
     }
 
-    public function setEnd_date(\DateTimeImmutable $end_date): void
+    public function setEnd_date(DateTimeImmutable $end_date): void
     {
         $this->end_date = $end_date;
     }
 
-    public function getDate_created(): \DateTimeImmutable
+    public function getDate_created(): DateTimeImmutable
     {
-        /* @var DateTimeImmutable $this->date_created */
+        /** @var DateTimeImmutable $this->date_created */
         return $this->date_created;
     }
 
-    public function setDate_created(\DateTimeImmutable $date_created): void
+    public function setDate_created(DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;
     }
 
-    public function getDate_modified(): \DateTimeImmutable
+    public function getDate_modified(): DateTimeImmutable
     {
-        /* @var DateTimeImmutable $this->date_modified */
+        /** @var DateTimeImmutable $this->date_modified */
         return $this->date_modified;
     }
 
-    public function setDate_modified(\DateTimeImmutable $date_modified): void
+    public function setDate_modified(DateTimeImmutable $date_modified): void
     {
         $this->date_modified = $date_modified;
     }
@@ -165,6 +165,6 @@ class Delivery
 
     public function isNewRecord(): bool
     {
-        return null === $this->getId();
+        return $this->getId() === null;
     }
 }

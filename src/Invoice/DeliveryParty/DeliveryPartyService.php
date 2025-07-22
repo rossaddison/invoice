@@ -8,9 +8,7 @@ use App\Invoice\Entity\DeliveryParty;
 
 final readonly class DeliveryPartyService
 {
-    public function __construct(private DeliveryPartyRepository $repository)
-    {
-    }
+    public function __construct(private DeliveryPartyRepository $repository) {}
 
     public function saveDeliveryParty(DeliveryParty $model, array $array): void
     {

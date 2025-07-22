@@ -14,73 +14,79 @@ use App\Invoice\Entity\QuoteAmount;
 use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\QuoteItemAmount;
 use App\Invoice\Entity\QuoteTaxRate;
-use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\Setting\SettingRepository as SRepo;
+use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
+use App\Invoice\InvItem\InvItemRepository as IIR;
+use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
+use App\Invoice\Quote\QuoteRepository as QR;
+use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
+use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Payment\PaymentRepository as PYMR;
-use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
-use App\Invoice\Setting\SettingRepository as SRepo;
 
 final readonly class NumberHelper
 {
-    public function __construct(private SRepo $s)
-    {
-    }
+    public function __construct(private SRepo $s) {}
 
+    /**
+     * @param mixed|null $amount
+     */
     public function format_currency(mixed $amount = null): string
     {
         $this->s->load_settings();
-        $currency_symbol           = $this->s->getSetting('currency_symbol');
+        $currency_symbol = $this->s->getSetting('currency_symbol');
         $currency_symbol_placement = $this->s->getSetting('currency_symbol_placement');
-        $thousands_separator       = $this->s->getSetting('thousands_separator');
-        $decimal_point             = $this->s->getSetting('decimal_point');
-        if ('before' == $currency_symbol_placement) {
-            return $currency_symbol.number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
+        $thousands_separator = $this->s->getSetting('thousands_separator');
+        $decimal_point = $this->s->getSetting('decimal_point');
+        if ($currency_symbol_placement == 'before') {
+            return $currency_symbol . number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
-        if ('afterspace' == $currency_symbol_placement) {
-            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator).'&nbsp;'.$currency_symbol;
+        if ($currency_symbol_placement == 'afterspace') {
+            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
         }
-
-        return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator).$currency_symbol;
+        return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
     }
 
     /**
-     * Output the amount as a currency amount, e.g. 1.234,56.
+     * Output the amount as a currency amount, e.g. 1.234,56
+     *
+     * @param mixed|null $amount
+     * @return string|null
      */
-    public function format_amount(mixed $amount = null): ?string
+    public function format_amount(mixed $amount = null): null|string
     {
         $this->s->load_settings();
         if (null !== $amount) {
             $thousands_separator = $this->s->getSetting('thousands_separator');
-            $decimal_point       = $this->s->getSetting('decimal_point');
-
+            $decimal_point = $this->s->getSetting('decimal_point');
             return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
         }
-
         return null;
     }
 
     /**
-     * Standardize an amount based on the system settings.
+     * Standardize an amount based on the system settings
+     *
+     * @param mixed $amount
+     * @return mixed
      */
     public function standardize_amount(mixed $amount)
     {
         $this->s->load_settings();
         $thousands_separator = $this->s->getSetting('thousands_separator');
-        $decimal_point       = $this->s->getSetting('decimal_point');
+        $decimal_point = $this->s->getSetting('decimal_point');
         /** @var array<array-key, float|int|string>|string $amount */
         $amt = str_replace($thousands_separator, '', $amount);
-
         return str_replace($decimal_point, '.', $amt);
     }
 
+    /**
+     * @param $quote_id
+     */
     public function calculate_quote(string $quote_id, QIR $qiR, QIAR $qiaR, QTRR $qtrR, QAR $qaR, QR $qR): void
     {
         // Get all items that belong to a specific quote by accessing $qiR
@@ -88,33 +94,33 @@ final readonly class NumberHelper
         // -------------------------
         // Quote Subtotal + Item Tax
         // -------------------------
-        $quote_item_amounts                       = $this->quote_calculateTotalsofItemTotals($quote_id, $qiR, $qiaR);
-        $quote_item_subtotal_discount_inclusive   = (float) $quote_item_amounts['subtotal'] - (float) $quote_item_amounts['discount'];
+        $quote_item_amounts = $this->quote_calculateTotalsofItemTotals($quote_id, $qiR, $qiaR);
+        $quote_item_subtotal_discount_inclusive = (float) $quote_item_amounts['subtotal'] - (float) $quote_item_amounts['discount'];
         $quote_subtotal_discount_and_tax_included = $quote_item_subtotal_discount_inclusive + (float) $quote_item_amounts['tax_total'];
-        // ----------
+        //----------
         // Quote Tax
         // ---------
-        if ('0' === $this->s->getSetting('enable_vat_registration')) {
+        if ($this->s->getSetting('enable_vat_registration') === '0') {
             $quote_tax_rate_total = $this->calculate_quote_taxes($quote_id, $qtrR, $qaR);
         } else {
             // No Quote Taxes are allowed under the VAT regime.
             $quote_tax_rate_total = 0.00;
         }
-        // ----------------------
+        //----------------------
         // Before Cash Discount
         // ---------------------
         $final_discountable_total = $quote_subtotal_discount_and_tax_included + $quote_tax_rate_total;
-        // ------------------------------------------------
+        //------------------------------------------------
         // Final Grand Total after Applying Cash Discount
         // -----------------------------------------------
         $quote_total = $this->quote_include_customer_discount_request($quote_id, $final_discountable_total, $qR);
 
-        // -----------------------------------------------------------------
+        //-----------------------------------------------------------------
         // Give the Quote its summary of amounts at the bottom of the quote
-        // -----------------------------------------------------------------
-        $count              = $qiR->repoCount($quote_id);
+        //-----------------------------------------------------------------
+        $count = $qiR->repoCount($quote_id);
         $count_quote_amount = $qaR->repoQuoteAmountCount($quote_id);
-        // At least one item and a preexisting quote amount record exists => Update the Quote Amount Record
+        //At least one item and a preexisting quote amount record exists => Update the Quote Amount Record
         if (($count > 0) && ($count_quote_amount > 0)) {
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
@@ -127,7 +133,7 @@ final readonly class NumberHelper
             }
         }
         // There are no longer any items on the quote so initialize the Quote Amount Record to zero
-        if ((0 === $count) && ($count_quote_amount > 0)) {
+        if (($count === 0) && ($count_quote_amount > 0)) {
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
                 $quote_amount->setQuote_id((int) $quote_id);
@@ -138,7 +144,7 @@ final readonly class NumberHelper
                 $qaR->save($quote_amount);
             }
         }
-        if ((0 === $count) && (0 === $count_quote_amount)) {
+        if (($count === 0) && ($count_quote_amount === 0)) {
             // Create a Quote Amount Record for this quote if it does not exist even if there are no items
             $quote_amount = new QuoteAmount();
             $quote_amount->setQuote_id((int) $quote_id);
@@ -153,24 +159,26 @@ final readonly class NumberHelper
     public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, ITRR $itrR, IAR $iaR, IR $iR, PYMR $pymR): void
     {
         $inv_allowance_charge_amount_total = 0.00;
-        $inv_allowance_charge_vat_total    = 0.00;
+        $inv_allowance_charge_vat_total = 0.00;
         // Get all items that belong to a specific invoice by accessing $iiR
         // Sum all these item's amounts
         // -------------------------
         // Invoice Subtotal + Item Tax
         // -------------------------
-        $inv_item_amounts           = $this->inv_calculateTotalsofItemTotals($inv_id, $iiR, $iiaR);
-        $inv_item_subtotal_discount = // individual inv_item_amount['subtotal'] already includes charges and allowances
+        $inv_item_amounts = $this->inv_calculateTotalsofItemTotals($inv_id, $iiR, $iiaR);
+        $inv_item_subtotal_discount =
+        // individual inv_item_amount['subtotal'] already includes charges and allowances
         (float) $inv_item_amounts['subtotal']
         - (float) $inv_item_amounts['discount'];
 
-        $inv_subtotal_discount_and_charge_and_tax_included = $inv_item_subtotal_discount
+        $inv_subtotal_discount_and_charge_and_tax_included =
+        $inv_item_subtotal_discount
         + (float) $inv_item_amounts['tax_total'];
 
-        // ----------
+        //----------
         // Invoice Tax
         // ---------
-        if ('0' === $this->s->getSetting('enable_vat_registration')) {
+        if ($this->s->getSetting('enable_vat_registration') === '0') {
             $inv_tax_rate_total = $this->calculate_inv_taxes($inv_id, $itrR, $iaR);
         } else {
             $inv_allowance_charges = $aciR->repoACIquery($inv_id);
@@ -179,19 +187,19 @@ final readonly class NumberHelper
                 $isCharge = $inv_allowance_charge->getAllowanceCharge()?->getIdentifier();
                 if ($isCharge) {
                     $inv_allowance_charge_amount_total += (float) $inv_allowance_charge->getAmount();
-                    $inv_allowance_charge_vat_total    += (float) $inv_allowance_charge->getVat();
+                    $inv_allowance_charge_vat_total += (float) $inv_allowance_charge->getVat();
                 } else {
                     $inv_allowance_charge_amount_total -= (float) $inv_allowance_charge->getAmount();
-                    $inv_allowance_charge_vat_total    -= (float) $inv_allowance_charge->getVat();
+                    $inv_allowance_charge_vat_total -= (float) $inv_allowance_charge->getVat();
                 }
             }
             $inv_tax_rate_total = $inv_allowance_charge_vat_total;
         }
-        // -------------------------------------------------
+        //-------------------------------------------------
         // Before Early Cash Settlement Discount and Charge
         // ------------------------------------------------
         $final_discountable_and_chargeable_total = $inv_subtotal_discount_and_charge_and_tax_included + $inv_tax_rate_total + $inv_allowance_charge_amount_total;
-        // -----------------------------------------------
+        //-----------------------------------------------
         // Note: Not applicable to VAT system: inv...view
         // ...Edit input boxes will be hidden since Early
         //  Settlement discounts already accounted for in the line items
@@ -199,12 +207,12 @@ final readonly class NumberHelper
         // ----------------------------------------------
         $inv_total = $this->inv_include_customer_discount_request($inv_id, $final_discountable_and_chargeable_total, $iR);
 
-        // ---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         // Give the Invoice its summary of amounts at the bottom of the invoice
-        // ---------------------------------------------------------------------
-        $count            = $iiR->repoCount($inv_id);
+        //---------------------------------------------------------------------
+        $count = $iiR->repoCount($inv_id);
         $count_inv_amount = $iaR->repoInvAmountCount((int) $inv_id);
-        // At least one item and a preexisting invoice amount record exists => Update the Invoice Amount Record
+        //At least one item and a preexisting invoice amount record exists => Update the Invoice Amount Record
         if (($count > 0) && ($count_inv_amount > 0)) {
             $inv_amount = $iaR->repoInvquery((int) $inv_id);
             if ($inv_amount) {
@@ -214,11 +222,11 @@ final readonly class NumberHelper
                 $inv_amount->setTax_total($inv_tax_rate_total ?: 0.00);
                 $inv_amount->setTotal($inv_total ?: 0.00);
                 // The balance will be reduced with each payment
-                $payments   = ($pymR->repoCount($inv_id) > 0 ? $pymR->repoInvquery($inv_id) : []);
+                $payments = ($pymR->repoCount($inv_id) > 0 ? $pymR->repoInvquery($inv_id) : []);
                 $total_paid = 0.00;
                 /** @var Payment $payment */
                 foreach ($payments as $payment) {
-                    $paid       = (float) $payment->getAmount();
+                    $paid = (float) $payment->getAmount();
                     $total_paid = $total_paid + $paid;
                 }
                 $inv_amount->setPaid($total_paid);
@@ -232,7 +240,7 @@ final readonly class NumberHelper
             }
         }
         // There are no longer any items on the invoice so initialize the Invoice Amount Record to zero
-        if ((0 === $count) && ($count_inv_amount > 0)) {
+        if (($count === 0) && ($count_inv_amount > 0)) {
             $inv_amount = $iaR->repoInvquery((int) $inv_id);
             if ($inv_amount) {
                 $inv_amount->setInv_id((int) $inv_id);
@@ -243,7 +251,7 @@ final readonly class NumberHelper
                 $iaR->save($inv_amount);
             }
         }
-        if ((0 === $count) && (0 === $count_inv_amount)) {
+        if (($count === 0) && ($count_inv_amount === 0)) {
             // Create an Invoice  Amount Record for this invoice if it does not exist even if there are no items
             $inv_amount = new InvAmount();
             $inv_amount->setInv_id((int) $inv_id);
@@ -256,6 +264,8 @@ final readonly class NumberHelper
     }
 
     /**
+     * @param $quote_id
+     *
      * @return (float|mixed)[]
      *
      * @psalm-return array{subtotal: float|mixed, tax_total: float|mixed, discount: float|mixed, total: float|mixed}
@@ -263,50 +273,48 @@ final readonly class NumberHelper
     private function quote_calculateTotalsofItemTotals(string $quote_id, QIR $qiR, QIAR $qiaR): array
     {
         $get_all_items_in_quote = $qiR->repoQuoteItemIdquery($quote_id);
-        $grand_sub_total        = 0.00;
-        $grand_taxtotal         = 0.00;
-        $grand_discount         = 0.00;
-        $grand_total            = 0.00;
-        $totals                 = [
-            'subtotal'  => $grand_sub_total,
+        $grand_sub_total = 0.00;
+        $grand_taxtotal = 0.00;
+        $grand_discount = 0.00;
+        $grand_total = 0.00;
+        $totals = [
+            'subtotal' => $grand_sub_total,
             'tax_total' => $grand_taxtotal,
-            'discount'  => $grand_discount,
-            'total'     => $grand_total,
+            'discount' => $grand_discount,
+            'total' => $grand_total,
         ];
 
         /** @var QuoteItem $item */
         foreach ($get_all_items_in_quote as $item) {
             /**
              * @psalm-suppress RawObjectIteration $item
-             *
              * @var string $key
              * @var string $value
              */
             foreach ($item as $key => $value) {
-                if ('id' === $key) {
+                if ($key === 'id') {
                     /** @var QuoteItemAmount $quote_item_amount */
                     $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $value);
-                    $grand_sub_total   = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00);
-                    $grand_taxtotal    = $grand_taxtotal  + ($quote_item_amount->getTax_total() ?? 0.00);
-                    $grand_discount    = $grand_discount  + ($quote_item_amount->getDiscount() ?? 0.00);
-                    $grand_total       = $grand_total     + ($quote_item_amount->getTotal() ?? 0.00);
+                    $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
+                    $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?? 0.00);
+                    $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?? 0.00);
+                    $grand_total = $grand_total + ($quote_item_amount->getTotal() ?? 0.00);
                 }
             }
             $totals = [
-                'subtotal'  => $grand_sub_total,
+                'subtotal' => $grand_sub_total,
                 'tax_total' => $grand_taxtotal,
-                'discount'  => $grand_discount,
-                'total'     => $grand_total,
+                'discount' => $grand_discount,
+                'total' => $grand_total,
             ];
         }
-
         return $totals;
     }
 
     /**
      * @psalm-param IR<Inv> $iR
      */
-    private function inv_balance_zero_set_to_read_only_if_fully_paid(IR $iR, SRepo $sR, ?Inv $invoice, float $balance): void
+    private function inv_balance_zero_set_to_read_only_if_fully_paid(IR $iR, SRepo $sR, Inv|null $invoice, float $balance): void
     {
         // draft => 1, sent => 2, viewed => 3, paid => 4
         // As soon as the balance on the invoice is zero and the read-only-toggle is 4 ie. paid,
@@ -314,7 +322,7 @@ final readonly class NumberHelper
         if (($sR->getSetting('read_only_toggle') === (string) 4) && null !== $invoice) {
             // Force the user to set the status to read-only manually i.e. view..edit  if it is a deliberate zero invoice
             // i.e. `paid` and `total` equaling zero .... here by only setting to read only if `paid` and `total` are greater than zero.
-            if (0.00 == $balance && ($invoice->getInvAmount()->getPaid() > 0.00) && ($invoice->getInvAmount()->getTotal() > 0.00)) {
+            if ($balance == 0.00 && ($invoice->getInvAmount()->getPaid() > 0.00) && ($invoice->getInvAmount()->getTotal() > 0.00)) {
                 $invoice->setIs_read_only(true);
                 // Set the status to paid
                 $invoice->setStatus_id(4);
@@ -323,55 +331,66 @@ final readonly class NumberHelper
         }
     }
 
+    /**
+     * @param string $inv_id
+     * @param IIR $iiR
+     * @param IIAR $iiaR
+     * @return array
+     */
     public function inv_calculateTotalsofItemTotals(string $inv_id, IIR $iiR, IIAR $iiaR): array
     {
         $get_all_items_in_inv = $iiR->repoInvItemIdquery($inv_id);
-        $grand_sub_total      = 0.00;
-        $grand_taxtotal       = 0.00;
-        $grand_discount       = 0.00;
-        $grand_charge         = 0.00;
-        $grand_allowance      = 0.00;
-        $grand_total          = 0.00;
-        $totals               = [
-            'subtotal'  => $grand_sub_total,
+        $grand_sub_total = 0.00;
+        $grand_taxtotal = 0.00;
+        $grand_discount = 0.00;
+        $grand_charge = 0.00;
+        $grand_allowance = 0.00;
+        $grand_total = 0.00;
+        $totals = [
+            'subtotal' => $grand_sub_total,
             'tax_total' => $grand_taxtotal,
-            'discount'  => $grand_discount,
-            'charge'    => $grand_charge,
+            'discount' => $grand_discount,
+            'charge' => $grand_charge,
             'allowance' => $grand_allowance,
-            'total'     => $grand_total,
+            'total' => $grand_total,
         ];
         /** @var InvItem $item */
         foreach ($get_all_items_in_inv as $item) {
             $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
             if (null !== $inv_item_amount) {
                 $grand_sub_total = $grand_sub_total + ($inv_item_amount->getSubtotal() ?? 0.00);
-                $grand_taxtotal  = $grand_taxtotal  + ($inv_item_amount->getTax_total() ?? 0.00);
-                $grand_discount  = $grand_discount  + ($inv_item_amount->getDiscount() ?? 0.00);
-                $grand_charge    = $grand_charge    + ($inv_item_amount->getCharge() ?? 0.00);
+                $grand_taxtotal = $grand_taxtotal + ($inv_item_amount->getTax_total() ?? 0.00);
+                $grand_discount = $grand_discount + ($inv_item_amount->getDiscount() ?? 0.00);
+                $grand_charge = $grand_charge + ($inv_item_amount->getCharge() ?? 0.00);
                 $grand_allowance = $grand_allowance + ($inv_item_amount->getAllowance() ?? 0.00);
-                $grand_total     = $grand_total     + ($inv_item_amount->getTotal() ?? 0.00);
-                $totals          = [
-                    'subtotal'  => $grand_sub_total,
+                $grand_total = $grand_total + ($inv_item_amount->getTotal() ?? 0.00);
+                $totals = [
+                    'subtotal' => $grand_sub_total,
                     'tax_total' => $grand_taxtotal,
-                    'discount'  => $grand_discount,
-                    'charge'    => $grand_charge,
+                    'discount' => $grand_discount,
+                    'charge' => $grand_charge,
                     'allowance' => $grand_allowance,
-                    'total'     => $grand_total,
+                    'total' => $grand_total,
                 ];
             }
         }
-
         return $totals;
     }
 
+    /**
+     * @param string $quote_id
+     * @param float $quote_total
+     * @param QR $qR
+     * @return float
+     */
     public function quote_include_customer_discount_request(string $quote_id, float $quote_total, QR $qR): float
     {
-        $quote            = $qR->repoQuoteUnloadedquery($quote_id);
-        $total            = $quote_total;
-        $discount_amount  = 0.00;
+        $quote = $qR->repoQuoteUnloadedquery($quote_id);
+        $total = $quote_total;
+        $discount_amount = 0.00;
         $discount_percent = 0.00;
         if ($quote) {
-            $discount_amount  = (float) $quote->getDiscount_amount();
+            $discount_amount = (float) $quote->getDiscount_amount();
             $discount_percent = (float) $quote->getDiscount_percent();
         }
         // Subtract Quote Table's discount amount from Quote Amount Table's quote_total
@@ -379,18 +398,23 @@ final readonly class NumberHelper
         // Discount amount is the user inputed amount on the quote representing a cash discount
         // Discount percent is the user inputed percentage on the quote representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-
         return $trimmed_total - round($trimmed_total / 100.00 * $discount_percent, 2);
     }
 
+    /**
+     * @param string $inv_id
+     * @param $inv_total
+     * @param IR $iR
+     * @return float
+     */
     public function inv_include_customer_discount_request(string $inv_id, float $inv_total, IR $iR): float
     {
-        $inv              = $iR->repoInvUnloadedquery($inv_id);
-        $discount_amount  = 0.00;
+        $inv = $iR->repoInvUnloadedquery($inv_id);
+        $discount_amount = 0.00;
         $discount_percent = 0.00;
-        $total            = $inv_total;
+        $total = $inv_total;
         if ($inv) {
-            $discount_amount  = (float) $inv->getDiscount_amount();
+            $discount_amount = (float) $inv->getDiscount_amount();
             $discount_percent = (float) $inv->getDiscount_percent();
         }
         // Subtract Invoice Table's discount amount from Invoice Amount Table's inv_total
@@ -398,12 +422,12 @@ final readonly class NumberHelper
         // Discount amount is the user inputed amount on the invoice representing a cash discount
         // Discount percent is the user inputed percentage on the invoice representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-
         return $trimmed_total - round($trimmed_total / 100.00 * $discount_percent, 2);
     }
 
     /**
-     * Related logic: see QuoteController function default_tax_quote.
+     * Related logic: see QuoteController function default_tax_quote
+     * @param string $quote_id
      */
     public function calculate_quote_taxes(string $quote_id, QTRR $qtrR, QAR $qaR): float
     {
@@ -414,9 +438,9 @@ final readonly class NumberHelper
 
         // First check to see if there are any quote taxes applied
         $total_quote_tax_rate_amount = 0.00;
-        $quote_tax_rate_amount       = 0.00;
-        $quote_tax_rates             = $qtrR->repoQuotequery($quote_id);
-        $quote_tax_rates_count       = $qtrR->repoCount($quote_id);
+        $quote_tax_rate_amount = 0.00;
+        $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
+        $quote_tax_rates_count = $qtrR->repoCount($quote_id);
         // At least one quote tax rate has been set and the quote has amounts that quote tax rates can be applied to
         if (($quote_tax_rates_count > 0) && ($qaR->repoQuoteAmountCount($quote_id) > 0)) {
             // There are quote taxes applied
@@ -427,10 +451,10 @@ final readonly class NumberHelper
                 foreach ($quote_tax_rates as $quote_tax_rate) {
                     // If the include item tax has been checked
                     $quote_tax_rate_amount = (
-                        (null !== $quote_tax_rate->getInclude_item_tax() && 1 === $quote_tax_rate->getInclude_item_tax())
+                        (null !== $quote_tax_rate->getInclude_item_tax() && $quote_tax_rate->getInclude_item_tax() === 1)
                         ?
                             // The quote tax rate should include the applied item tax
-                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
+                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00)  / 100.00))
                         :
                             // The quote tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
                             (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
@@ -442,12 +466,12 @@ final readonly class NumberHelper
                 }
             }
         }
-
         return $total_quote_tax_rate_amount;
     }
 
     /**
-     * Related logic: see InvController function default_tax_inv.
+     * Related logic: see InvController function default_tax_inv
+     * @param $inv_id
      */
     public function calculate_inv_taxes(string $inv_id, ITRR $itrR, IAR $iaR): float
     {
@@ -458,20 +482,20 @@ final readonly class NumberHelper
 
         // First check to see if there are any invoice taxes applied
         $total_inv_tax_rate_amount = 0.00;
-        $inv_tax_rate_amount       = 0.00;
-        $inv_tax_rates             = $itrR->repoInvquery($inv_id);
-        $inv_tax_rates_count       = $itrR->repoCount($inv_id);
+        $inv_tax_rate_amount = 0.00;
+        $inv_tax_rates = $itrR->repoInvquery($inv_id);
+        $inv_tax_rates_count = $itrR->repoCount($inv_id);
         // At least one invoice tax rate has been set and the invoice has amounts that invoice tax rates can be applied to
         if (($inv_tax_rates_count > 0) && $iaR->repoInvAmountCount((int) $inv_id) > 0) {
             // There are invoice taxes applied
             $inv_amount = $iaR->repoInvquery((int) $inv_id);
             if ($inv_amount) {
                 // Loop through the invoice taxes and update inv_tax_rate_amount for each of the applied inv taxes
-                /** @var InvTaxRate $inv_tax_rate */
+                /** @var InvTaxRate  $inv_tax_rate */
                 foreach ($inv_tax_rates as $inv_tax_rate) {
                     // If the include item tax has been checked ie. value is 1
                     $inv_tax_rate_amount = (
-                        (null !== $inv_tax_rate->getInclude_item_tax() && 1 === $inv_tax_rate->getInclude_item_tax())
+                        (null !== $inv_tax_rate->getInclude_item_tax() && $inv_tax_rate->getInclude_item_tax() === 1)
                         ?
                             // 'Apply after item tax' => The inv tax rate should include the applied item tax
                             ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00)
@@ -486,41 +510,43 @@ final readonly class NumberHelper
                 }
             }
         }
-
         return $total_inv_tax_rate_amount;
     }
 
+    /**
+     * @return array
+     */
     public function recur_frequencies(): array
     {
         return [
-            '1D'  => 'i.calendar_day_1',
-            '2D'  => 'i.calendar_day_2',
-            '3D'  => 'i.calendar_day_3',
-            '4D'  => 'i.calendar_day_4',
-            '5D'  => 'i.calendar_day_5',
-            '6D'  => 'i.calendar_day_6',
+            '1D' => 'i.calendar_day_1',
+            '2D' => 'i.calendar_day_2',
+            '3D' => 'i.calendar_day_3',
+            '4D' => 'i.calendar_day_4',
+            '5D' => 'i.calendar_day_5',
+            '6D' => 'i.calendar_day_6',
             '15D' => 'i.calendar_day_15',
             '30D' => 'i.calendar_day_30',
-            '7D'  => 'i.calendar_week_1',
+            '7D' => 'i.calendar_week_1',
             '14D' => 'i.calendar_week_2',
             '21D' => 'i.calendar_week_3',
             '28D' => 'i.calendar_week_4',
-            '1M'  => 'i.calendar_month_1',
-            '2M'  => 'i.calendar_month_2',
-            '3M'  => 'i.calendar_month_3',
-            '4M'  => 'i.calendar_month_4',
-            '5M'  => 'i.calendar_month_5',
-            '6M'  => 'i.calendar_month_6',
-            '7M'  => 'i.calendar_month_7',
-            '8M'  => 'i.calendar_month_8',
-            '9M'  => 'i.calendar_month_9',
+            '1M' => 'i.calendar_month_1',
+            '2M' => 'i.calendar_month_2',
+            '3M' => 'i.calendar_month_3',
+            '4M' => 'i.calendar_month_4',
+            '5M' => 'i.calendar_month_5',
+            '6M' => 'i.calendar_month_6',
+            '7M' => 'i.calendar_month_7',
+            '8M' => 'i.calendar_month_8',
+            '9M' => 'i.calendar_month_9',
             '10M' => 'i.calendar_month_10',
             '11M' => 'i.calendar_month_11',
-            '1Y'  => 'i.calendar_year_1',
-            '2Y'  => 'i.calendar_year_2',
-            '3Y'  => 'i.calendar_year_3',
-            '4Y'  => 'i.calendar_year_4',
-            '5Y'  => 'i.calendar_year_5',
+            '1Y' => 'i.calendar_year_1',
+            '2Y' => 'i.calendar_year_2',
+            '3Y' => 'i.calendar_year_3',
+            '4Y' => 'i.calendar_year_4',
+            '5Y' => 'i.calendar_year_5',
         ];
     }
 }

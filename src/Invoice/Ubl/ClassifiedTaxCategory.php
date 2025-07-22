@@ -6,91 +6,94 @@ namespace App\Invoice\Ubl;
 
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
+use InvalidArgumentException;
 
 class ClassifiedTaxCategory implements XmlSerializable
 {
-    public function __construct(private readonly ?string $id, private readonly ?string $name, private readonly ?float $percent, private readonly ?TaxScheme $taxScheme, private readonly string $taxExemptionReason, private readonly ?string $taxExemptionReasonCode, private readonly ?string $schemeID, private readonly ?string $schemeName)
-    {
-    }
+    public function __construct(private readonly ?string $id, private readonly ?string $name, private readonly ?float $percent, private readonly ?TaxScheme $taxScheme, private readonly string $taxExemptionReason, private readonly ?string $taxExemptionReasonCode, private readonly ?string $schemeID, private readonly ?string $schemeName) {}
 
     public const string UNCL5305 = 'UNCL5305';
 
+    /**
+     * @return string|null
+     */
     public function getId(): ?string
     {
         if (null !== $this->id) {
             return $this->id;
         }
 
-        if (null !== $this->percent) {
+        if ($this->percent !== null) {
             if ($this->percent >= 21) {
                 return 'S';
             }
             if ($this->percent <= 21 && $this->percent >= 6) {
                 return 'AA';
             }
-
             return 'Z';
         }
-
         return null;
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function validate(): void
     {
-        if (null === $this->id) {
-            throw new \InvalidArgumentException('Missing taxcategory id');
+        if ($this->id === null) {
+            throw new InvalidArgumentException('Missing taxcategory id');
         }
 
-        if (null === $this->percent) {
-            throw new \InvalidArgumentException('Missing taxcategory percent');
+        if ($this->percent === null) {
+            throw new InvalidArgumentException('Missing taxcategory percent');
         }
     }
 
+    /**
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
         $this->validate();
 
         $schemeAttributes = [];
-        if (null !== $this->schemeID) {
+        if ($this->schemeID !== null) {
             $schemeAttributes['schemeID'] = $this->schemeID;
         }
-        if (null !== $this->schemeName) {
+        if ($this->schemeName !== null) {
             $schemeAttributes['schemeName'] = $this->schemeName;
         }
 
         $writer->write([
-            'name'       => Schema::CBC.'ID',
-            'value'      => $this->id,
+            'name' => Schema::CBC . 'ID',
+            'value' => $this->id,
             'attributes' => $schemeAttributes,
         ]);
 
-        if (null !== $this->name) {
+        if ($this->name !== null) {
             $writer->write([
-                Schema::CBC.'Name' => $this->name,
+                Schema::CBC . 'Name' => $this->name,
             ]);
         }
 
         // Exempt Tax category => 0% => 0 tax charged.
         $writer->write([
-            Schema::CBC.'Percent' => number_format($this->percent ?? 0.00, 2, '.', ''),
+            Schema::CBC . 'Percent' => number_format($this->percent ?? 0.00, 2, '.', ''),
         ]);
 
-        if (null !== $this->taxExemptionReasonCode) {
+        if ($this->taxExemptionReasonCode !== null) {
             $writer->write([
-                Schema::CBC.'TaxExemptionReasonCode' => $this->taxExemptionReasonCode,
-                Schema::CBC.'TaxExemptionReason'     => $this->taxExemptionReason,
+                Schema::CBC . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode,
+                Schema::CBC . 'TaxExemptionReason' => $this->taxExemptionReason,
             ]);
         }
 
-        if (null !== $this->taxScheme) {
-            $writer->write([Schema::CAC.'TaxScheme' => $this->taxScheme]);
+        if ($this->taxScheme !== null) {
+            $writer->write([Schema::CAC . 'TaxScheme' => $this->taxScheme]);
         } else {
             $writer->write([
-                Schema::CAC.'TaxScheme' => null,
+                Schema::CAC . 'TaxScheme' => null,
             ]);
         }
     }
