@@ -14416,12 +14416,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "6f0ad98d9bcd1f5ef2ddb7b4b6a7cf04b54d5fa6"
+                "reference": "9f54f4bad7846f9f6a18e8fa9a99f5c265182b18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/6f0ad98d9bcd1f5ef2ddb7b4b6a7cf04b54d5fa6",
-                "reference": "6f0ad98d9bcd1f5ef2ddb7b4b6a7cf04b54d5fa6",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/9f54f4bad7846f9f6a18e8fa9a99f5c265182b18",
+                "reference": "9f54f4bad7846f9f6a18e8fa9a99f5c265182b18",
                 "shasum": ""
             },
             "require": {
@@ -14493,7 +14493,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-21T10:54:30+00:00"
+            "time": "2025-07-22T17:57:03+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14501,12 +14501,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "dc5f0e08c75aab48bb44eff65b863729defc94f3"
+                "reference": "bc01d25e6ed538bc19220ce772bac3e81061a558"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/dc5f0e08c75aab48bb44eff65b863729defc94f3",
-                "reference": "dc5f0e08c75aab48bb44eff65b863729defc94f3",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/bc01d25e6ed538bc19220ce772bac3e81061a558",
+                "reference": "bc01d25e6ed538bc19220ce772bac3e81061a558",
                 "shasum": ""
             },
             "require": {
@@ -14571,7 +14571,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-21T10:54:36+00:00"
+            "time": "2025-07-22T17:57:10+00:00"
         },
         {
             "name": "yiisoft/definitions",
