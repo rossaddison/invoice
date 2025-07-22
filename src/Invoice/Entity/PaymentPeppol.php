@@ -28,7 +28,7 @@ class PaymentPeppol
         private string $provider = '',
     ) {
         // convert the current DateTimeImmutable to a timestamp
-        $this->auto_reference = (new DateTimeImmutable())->getTimestamp();
+        $this->auto_reference = (new \DateTimeImmutable())->getTimestamp();
     }
 
     public function getInv(): ?Inv

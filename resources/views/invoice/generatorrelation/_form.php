@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\GeneratorRelation\GeneratorRelationForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -20,18 +20,17 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?php echo Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?php echo Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?php echo Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?php echo Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?php echo Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= $title; ?>
-<?= Html::closeTag('h1'); ?>
+<?php echo Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+    <?php echo $title; ?>
+<?php echo Html::closeTag('h1'); ?>
 
-<?=
-    Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -39,15 +38,15 @@ use Yiisoft\Html\Tag\Form;
     ->open();
 ?>
 
-<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
-<?= Field::errorSummary($form)
+<?php echo Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php echo Field::errorSummary($form)
     ->errors($errors)
     ->header($translator->translate('error.summary'))
-    ->onlyCommonErrors()
+    ->onlyCommonErrors();
 ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
 
-<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php echo Html::openTag('div', ['class' => 'col mb-3']); ?>
 <?php
 $optionsDataGenerators = [];
 /**
@@ -58,65 +57,65 @@ foreach ($generators as $generator) {
 }
 
 echo Field::select($form, 'gentor_id')
-->label($translator->translate('generator.relation.form.entity.generator'))
-->addInputAttributes([
-    'class' => 'form-control',
-    'id' => 'gentor_id',
-])
-->prompt($translator->translate('none'))
-->optionsData($optionsDataGenerators)
-->required(true)
-->hint($translator->translate('hint.this.field.is.required'));
+    ->label($translator->translate('generator.relation.form.entity.generator'))
+    ->addInputAttributes([
+        'class' => 'form-control',
+        'id'    => 'gentor_id',
+    ])
+    ->prompt($translator->translate('none'))
+    ->optionsData($optionsDataGenerators)
+    ->required(true)
+    ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
 
-<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
-<?= Field::text($form, 'lowercasename')
+<?php echo Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php echo Field::text($form, 'lowercasename')
     ->label($translator->translate('generator.relation.form.lowercase.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.lowercase.name'),
-        'class' => 'form-control',
-        'id' => 'lowercasename',
+        'class'       => 'form-control',
+        'id'          => 'lowercasename',
     ])
     ->value(Html::encode($form->getLowercase_name()))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
 
-<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
-<?= Field::text($form, 'camelcasename')
+<?php echo Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php echo Field::text($form, 'camelcasename')
     ->label($translator->translate('generator.relation.form.camelcase.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.camelcase.name'),
-        'class' => 'form-control',
-        'id' => 'camelcasename',
+        'class'       => 'form-control',
+        'id'          => 'camelcasename',
     ])
     ->value(Html::encode($form->getCamelcase_name()))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
 
-<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
-<?= Field::text($form, 'view_field_name')
+<?php echo Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?php echo Field::text($form, 'view_field_name')
     ->label($translator->translate('generator.relation.form.view.field.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.view.field.name'),
-        'class' => 'form-control',
-        'id' => 'view_field_name',
+        'class'       => 'form-control',
+        'id'          => 'view_field_name',
     ])
     ->value(Html::encode($form->getView_field_name()))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
 
-<?= $button::backSave(); ?>    
-<?= Form::tag()->close(); ?>
+<?php echo $button::backSave(); ?>    
+<?php echo Form::tag()->close(); ?>
 
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>

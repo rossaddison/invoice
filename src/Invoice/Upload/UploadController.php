@@ -9,23 +9,22 @@ use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Upload;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\User\UserService;
 use App\Service\WebControllerService;
+use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Exception;
 
 final class UploadController extends BaseController
 {
@@ -43,26 +42,19 @@ final class UploadController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->factory = $factory;
+        $this->factory       = $factory;
         $this->uploadService = $uploadService;
     }
 
-    /** Note: An Upload can only be viewed with editInv permission
+    /** Note: An Upload can only be viewed with editInv permission.
      *
      * Refer to: config/common/routes/routes.php ... specifically AccessChecker
      *
      * Route::methods([Method::GET, Method::POST], '/upload/view/{id}')
-      ->name('upload/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
-      ->middleware(Authentication::class)
-      ->action([UploadController::class, 'view']),
-     */
-
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param UploadRepository $uploadRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * ->name('upload/view')
+     * ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+     * ->middleware(Authentication::class)
+     * ->action([UploadController::class, 'view']),
      */
     public function index(Request $request, CurrentRoute $currentRoute, UploadRepository $uploadRepository): \Yiisoft\DataResponse\DataResponse
     {
@@ -78,62 +70,54 @@ final class UploadController extends BaseController
                 // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest uploads first => -id
-                ->withOrderString($query_params['sort'] ?? '-id');
-        $uploads = $this->uploads_with_sort($uploadRepository, $sort);
+            ->withOrderString($query_params['sort'] ?? '-id');
+        $uploads   = $this->uploads_with_sort($uploadRepository, $sort);
         $paginator = (new OffsetPaginator($uploads))
-                ->withPageSize($this->sR->positiveListLimit())
-                ->withCurrentPage($currentPageNeverZero)
-                ->withToken(PageToken::next((string) $page));
+            ->withPageSize($this->sR->positiveListLimit())
+            ->withCurrentPage($currentPageNeverZero)
+            ->withToken(PageToken::next((string) $page));
 
         $parameters = [
             'paginator' => $paginator,
-            'uploads' => $this->uploads($uploadRepository),
-            'alert' => $this->alert(),
+            'uploads'   => $this->uploads($uploadRepository),
+            'alert'     => $this->alert(),
         ];
+
         return $this->viewRenderer->render('index', $parameters);
     }
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ClientRepository $clientRepository
-     * @return Response
-     */
     public function add(
         Request $request,
         FormHydrator $formHydrator,
         ClientRepository $clientRepository,
     ): Response {
-        $upload = new Upload();
-        $form = new UploadForm($upload);
+        $upload     = new Upload();
+        $form       = new UploadForm($upload);
         $parameters = [
-            'title' => $this->translator->translate('add'),
-            'actionName' => 'upload/add',
-            'actionArguments' => [],
-            'form' => $form,
-            'errors' => [],
+            'title'              => $this->translator->translate('add'),
+            'actionName'         => 'upload/add',
+            'actionArguments'    => [],
+            'form'               => $form,
+            'errors'             => [],
             'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
         ];
 
-        if ($request->getMethod() === Method::POST) {
+        if (Method::POST === $request->getMethod()) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->uploadService->saveUpload($upload, $body);
+
                     return $this->webService->getRedirectResponse('upload/index');
                 }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form'] = $form;
+            $parameters['form']   = $form;
         }
+
         return $this->viewRenderer->render('_form', $parameters);
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param UploadRepository $uploadRepository
-     * @return Response
-     */
     public function delete(
         CurrentRoute $currentRoute,
         UploadRepository $uploadRepository,
@@ -144,26 +128,21 @@ final class UploadController extends BaseController
                 $this->uploadService->deleteUpload($upload, $this->sR);
                 $inv_id = (string) $this->session->get('inv_id');
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     ['heading' => '', 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
                 ));
             }
+
             return $this->webService->getRedirectResponse('upload/index');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
+
             return $this->webService->getRedirectResponse('upload/index');
         }
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @param UploadRepository $uploadRepository
-     * @param ClientRepository $clientRepository
-     * @return Response
-     */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,
@@ -173,74 +152,65 @@ final class UploadController extends BaseController
     ): Response {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {
-            $form = new UploadForm($upload);
+            $form       = new UploadForm($upload);
             $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'upload/edit',
-                'actionArguments' => ['id' => $upload->getId()],
-                'errors' => [],
-                'form' => $form,
+                'title'              => $this->translator->translate('edit'),
+                'actionName'         => 'upload/edit',
+                'actionArguments'    => ['id' => $upload->getId()],
+                'errors'             => [],
+                'form'               => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
             ];
-            if ($request->getMethod() === Method::POST) {
+            if (Method::POST === $request->getMethod()) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->uploadService->saveUpload($upload, $body);
+
                         return $this->webService->getRedirectResponse('upload/index');
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
+                $parameters['form']   = $form;
             }
+
             return $this->viewRenderer->render('_form', $parameters);
         }
+
         return $this->webService->getRedirectResponse('upload/index');
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param ClientRepository $clientRepository
-     * @param UploadRepository $uploadRepository
-     */
     public function view(CurrentRoute $currentRoute, ClientRepository $clientRepository, UploadRepository $uploadRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {
-            $form = new UploadForm($upload);
+            $form       = new UploadForm($upload);
             $parameters = [
-                'title' => $this->translator->translate('view'),
-                'actionName' => 'upload/view',
-                'actionArguments' => ['id' => $upload->getId()],
-                'form' => $form,
+                'title'              => $this->translator->translate('view'),
+                'actionName'         => 'upload/view',
+                'actionArguments'    => ['id' => $upload->getId()],
+                'form'               => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
             ];
+
             return $this->viewRenderer->render('_view', $parameters);
         }
+
         return $this->webService->getRedirectResponse('upload/index');
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param UploadRepository $uploadRepository
-     * @return Upload|null
-     */
-    public function upload(CurrentRoute $currentRoute, UploadRepository $uploadRepository): Upload|null
+    public function upload(CurrentRoute $currentRoute, UploadRepository $uploadRepository): ?Upload
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $uploadRepository->repoUploadquery($id);
         }
+
         return null;
     }
 
     /**
-     * @param UploadRepository $uploadRepository
-     *
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
+     * @psalm-return EntityReader
      */
     private function uploads(UploadRepository $uploadRepository): EntityReader
     {
@@ -248,9 +218,6 @@ final class UploadController extends BaseController
     }
 
     /**
-     * @param UploadRepository $uploadRepository
-     * @param Sort $sort
-     *
      * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Upload>
@@ -258,13 +225,9 @@ final class UploadController extends BaseController
     private function uploads_with_sort(UploadRepository $uploadRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $uploadRepository->findAllPreloaded()
-                ->withSort($sort);
+            ->withSort($sort);
     }
 
-    /**
-     * @param EntityReader $clients
-     * @return array
-     */
     private function optionsDataClients(EntityReader $clients): array
     {
         $optionsDataClients = [];
@@ -272,9 +235,10 @@ final class UploadController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $key = $client->getClient_id();
+            $key                                      = $client->getClient_id();
             null !== $key ? $optionsDataClients[$key] = $client->getClient_full_name() : '';
         }
+
         return $optionsDataClients;
     }
 }

@@ -6,34 +6,34 @@ namespace App\Invoice\InvCustom;
 
 use App\Invoice\Entity\InvCustom;
 use Cycle\ORM\Select;
-use Throwable;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of InvCustom
+ *
  * @extends Select\Repository<TEntity>
  */
 final class InvCustomRepository extends Select\Repository
 {
     /**
-    * @param Select<TEntity> $select
-    * @param EntityWriter $entityWriter
-    */
+     * @param Select<TEntity> $select
+     */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
 
     /**
-     * Get invcustoms  without filter
+     * Get invcustoms  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()->load('custom_field')->load('inv');
+
         return $this->prepareDataReader($query);
     }
 
@@ -52,9 +52,9 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|InvCustom|null $invcustom
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function save(array|InvCustom|null $invcustom): void
     {
@@ -62,9 +62,9 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|InvCustom|null $invcustom
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function delete(array|InvCustom|null $invcustom): void
     {
@@ -80,51 +80,52 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * @return InvCustom|null
-     *
      * @psalm-return TEntity|null
      */
-    public function repoInvCustomquery(string $id): InvCustom|null
+    public function repoInvCustomquery(string $id): ?InvCustom
     {
         $query = $this->select()->load('custom_field')
-                                ->load('inv')
-                                ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;
+            ->load('inv')
+            ->where(['id' => $id]);
+
+        return $query->fetchOne() ?: null;
     }
 
     /**
-     * @return InvCustom|null
-     *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $inv_id, string $custom_field_id): InvCustom|null
+    public function repoFormValuequery(string $inv_id, string $custom_field_id): ?InvCustom
     {
         $query = $this->select()->where(['inv_id' => $inv_id])
-                                ->andWhere(['custom_field_id' => $custom_field_id]);
-        return  $query->fetchOne();
+            ->andWhere(['custom_field_id' => $custom_field_id]);
+
+        return $query->fetchOne();
     }
 
     public function repoInvCustomCount(string $inv_id, string $custom_field_id): int
     {
         $query = $this->select()->where(['inv_id' => $inv_id])
-                                ->andWhere(['custom_field_id' => $custom_field_id]);
+            ->andWhere(['custom_field_id' => $custom_field_id]);
+
         return $query->count();
     }
 
     public function repoInvCount(string $inv_id): int
     {
         $query = $this->select()->where(['inv_id' => $inv_id]);
+
         return $query->count();
     }
 
     /**
-     * Get all fields that have been setup for a particular inv
+     * Get all fields that have been setup for a particular inv.
      *
      * @psalm-return EntityReader
      */
     public function repoFields(string $inv_id): EntityReader
     {
         $query = $this->select()->where(['inv_id' => $inv_id]);
+
         return $this->prepareDataReader($query);
     }
 }

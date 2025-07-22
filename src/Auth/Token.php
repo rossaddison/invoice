@@ -11,7 +11,6 @@ use DateTimeImmutable;
 use Yiisoft\Security\Random;
 
 #[Entity(repository: TokenRepository::class)]
-
 class Token
 {
     #[Column(type: 'primary')]
@@ -24,7 +23,7 @@ class Token
     private ?string $token = null;
 
     #[Column(type: 'datetime)', nullable: false)]
-    private DateTimeImmutable $created_at;
+    private \DateTimeImmutable $created_at;
 
     public function __construct(
         #[Column(type: 'integer(11)', nullable: false)]
@@ -32,8 +31,8 @@ class Token
         #[Column(type: 'string(50)', nullable: false)]
         private ?string $type = '',
     ) {
-        $this->token = Random::string(32);
-        $this->created_at = new DateTimeImmutable();
+        $this->token      = Random::string(32);
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getIdentity(): ?Identity
@@ -81,14 +80,14 @@ class Token
         $this->type = $type;
     }
 
-    public function getCreated_at(): DateTimeImmutable
+    public function getCreated_at(): \DateTimeImmutable
     {
-        /** @var DateTimeImmutable $this->created_at */
+        /* @var DateTimeImmutable $this->created_at */
         return $this->created_at;
     }
 
     public function setCreated_at(string $created_at): void
     {
-        $this->created_at = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
+        $this->created_at = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $created_at) ?: new \DateTimeImmutable('now');
     }
 }

@@ -8,12 +8,10 @@ use App\Invoice\Entity\Payment;
 
 final readonly class PaymentService
 {
-    public function __construct(private PaymentRepository $repository) {}
+    public function __construct(private PaymentRepository $repository)
+    {
+    }
 
-    /**
-     * @param Payment $model
-     * @param array $array
-     */
     public function savePayment(Payment $model, array $array): void
     {
         isset($array['payment_method_id']) ? $model->setPayment_method_id((int) $array['payment_method_id']) : '';
@@ -31,26 +29,19 @@ final readonly class PaymentService
         $this->repository->save($model);
     }
 
-    /**
-     * @param Payment $model
-     * @param array $array
-     */
     public function addPayment_via_payment_handler(Payment $model, array $array): void
     {
         $model->setPayment_method_id((int) $array['payment_method_id']);
-        /** @var \DateTime $array['payment_date'] */
+        /* @var \DateTime $array['payment_date'] */
         $model->setPayment_date($array['payment_date']);
-        /** @var float $array['amount'] */
+        /* @var float $array['amount'] */
         $model->setAmount($array['amount']);
-        /** @var string $array['note'] */
+        /* @var string $array['note'] */
         $model->setNote($array['note']);
         $model->setInv_id((int) $array['inv_id']);
         $this->repository->save($model);
     }
 
-    /**
-     * @param Payment $model
-     */
     public function deletePayment(Payment $model): void
     {
         $this->repository->delete($model);

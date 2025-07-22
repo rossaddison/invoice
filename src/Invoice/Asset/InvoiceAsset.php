@@ -23,7 +23,7 @@ class InvoiceAsset extends AssetBundle
         '//cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.min.css',
         '//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
 
-        //'//cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css'
+        // '//cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css'
         'rebuild/css/select2.min.css',
 
         // Automatic asterisk * for required form fields
@@ -32,7 +32,7 @@ class InvoiceAsset extends AssetBundle
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
-        /**
+        /*
          * As of 9th March 2025:
          *
          * The .js files are jquery based i.e Basic syntax is: $(selector).action()
@@ -49,7 +49,7 @@ class InvoiceAsset extends AssetBundle
         // https:\\code.jquery.com/{latest file} which is below:
         'rebuild/js/jquery-4.0.0-beta.2.min.js',
 
-        //'//cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js',
+        // '//cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js',
         'rebuild/js/select2.min.js',
         'rebuild/js/quote.js',
         'rebuild/js/inv.js',

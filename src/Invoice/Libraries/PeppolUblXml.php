@@ -6,8 +6,8 @@ namespace App\Invoice\Libraries;
 
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
-use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
+use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Ubl\AdditionalDocumentReference;
 use App\Invoice\Ubl\Address;
 use App\Invoice\Ubl\Contact;
@@ -22,12 +22,11 @@ use App\Invoice\Ubl\Party;
 use App\Invoice\Ubl\PartyLegalEntity;
 use App\Invoice\Ubl\PartyTaxScheme;
 use App\Invoice\Ubl\PayeeFinancialAccount;
-use App\Invoice\Ubl\PaymentTerms;
 use App\Invoice\Ubl\PaymentMeans;
+use App\Invoice\Ubl\PaymentTerms;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sabre\Xml\Writer;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use DateTime;
 
 final readonly class PeppolUblXml
 {
@@ -35,26 +34,20 @@ final readonly class PeppolUblXml
     private string $currencyCode_to;
     private array $company;
 
-    /**
-     * @param sR $sR
-     * @param Inv $invoice
-     * @param iiaR $iiaR
-     * @param InvAmount $inv_amount
-     */
     public function __construct(private sR $sR, private Translator $t, private Inv $invoice, private iiaR $iiaR, private InvAmount $inv_amount)
     {
-        $this->items = $this->invoice->getItems();
+        $this->items           = $this->invoice->getItems();
         $this->currencyCode_to = $this->sR->getSetting('currency_to');
-        $this->company = $this->sR->get_config_company_details();
+        $this->company         = $this->sR->get_config_company_details();
     }
 
     public function xml(
         ?string $profileID,
         ?string $id,
-        DateTime $issueDate,
-        DateTime $dueDate,
+        \DateTime $issueDate,
+        \DateTime $dueDate,
         ?string $note,
-        DateTime $taxPointDate,
+        \DateTime $taxPointDate,
         ?string $accountingCostCode,
         ?string $buyerReference,
 
@@ -95,7 +88,7 @@ final readonly class PeppolUblXml
         string $customer_endpointID_schemeID,
 
         // D
-        ?DateTime $actualDeliveryDate,
+        ?\DateTime $actualDeliveryDate,
         array $deliveryLocationID_scheme,
         ?Address $deliveryLocation,
         ?Party $deliveryParty,
@@ -148,7 +141,7 @@ final readonly class PeppolUblXml
                 $supplier_partyIdentificationId,
                 $supplier_partyIdentificationSchemeId,
                 $supplier_postalAddress,
-                /**
+                /*
                  * Supplier Physical Location must not be supplied => null
                  * Location: invoice_sqKOvgahINV107_peppol
                  * Element/context: /:Invoice[1]
@@ -169,7 +162,7 @@ final readonly class PeppolUblXml
                 $customer_partyIdentificationId,
                 $customer_partyIdentificationSchemeId,
                 $customer_postalAddress,
-                /**
+                /*
                  * Customer Physical Location must not be included => null
                  * Warning
                  * Location: invoice_sqKOvgahINV107_peppol
@@ -181,7 +174,7 @@ final readonly class PeppolUblXml
                 $customer_contact,
                 $customer_partyTaxScheme,
                 $customer_partyLegalEntity,
-                /**
+                /*
                  * Error
                  * Location: invoice_8x8vShcxINV111_peppol
                  * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
@@ -220,18 +213,15 @@ final readonly class PeppolUblXml
         );
     }
 
-    /**
-     * @param Invoice $ubl_invoice
-     * @return string
-     */
     public function output(Invoice $ubl_invoice): string
     {
         $writer = new Writer();
         $writer->openMemory();
         $writer->setIndent(true);
-        //$writer->startDocument('1.0', 'UTF-8');
+        // $writer->startDocument('1.0', 'UTF-8');
         $writer->text(Generator::invoice($ubl_invoice, $this->currencyCode_to));
         $writer->endDocument();
+
         return $writer->outputMemory();
     }
 }

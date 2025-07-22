@@ -9,28 +9,26 @@ use Yiisoft\Validator\Rule\Required;
 
 final class UserCustomForm extends FormModel
 {
-    private ?int $user_id = null;
-    private ?int $fieldid = null;
+    private ?int $user_id       = null;
+    private ?int $fieldid       = null;
     private ?string $fieldvalue = '';
 
-    public function getUser_id(): int|null
+    public function getUser_id(): ?int
     {
         return $this->user_id;
     }
 
-    public function getFieldid(): int|null
+    public function getFieldid(): ?int
     {
         return $this->fieldid;
     }
 
-    public function getFieldvalue(): string|null
+    public function getFieldvalue(): ?string
     {
         return $this->fieldvalue ?? '';
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]
@@ -41,7 +39,6 @@ final class UserCustomForm extends FormModel
 
     /**
      * @psalm-suppress ImplementedReturnTypeMismatch
-     * @return array
      */
     public function getRules(): array
     {

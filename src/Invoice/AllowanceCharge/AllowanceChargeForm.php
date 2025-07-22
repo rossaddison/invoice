@@ -6,8 +6,8 @@ namespace App\Invoice\AllowanceCharge;
 
 use App\Invoice\Entity\AllowanceCharge;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Integer;
+use Yiisoft\Validator\Rule\Required;
 
 final class AllowanceChargeForm extends FormModel
 {
@@ -17,7 +17,7 @@ final class AllowanceChargeForm extends FormModel
     private ?bool $identifier = false;
 
     /**
-     * Related logic: see Not required because determined from value 'reason' in array using AllowanceChargeContoller
+     * Related logic: see Not required because determined from value 'reason' in array using AllowanceChargeContoller.
      */
     private ?string $reason_code = '';
 
@@ -38,47 +38,47 @@ final class AllowanceChargeForm extends FormModel
 
     public function __construct(AllowanceCharge $allowanceCharge)
     {
-        $this->id = $allowanceCharge->getId();
-        $this->identifier = $allowanceCharge->getIdentifier();
-        $this->reason_code = $allowanceCharge->getReasonCode();
-        $this->reason = $allowanceCharge->getReason();
+        $this->id                        = $allowanceCharge->getId();
+        $this->identifier                = $allowanceCharge->getIdentifier();
+        $this->reason_code               = $allowanceCharge->getReasonCode();
+        $this->reason                    = $allowanceCharge->getReason();
         $this->multiplier_factor_numeric = $allowanceCharge->getMultiplierFactorNumeric();
-        $this->amount = $allowanceCharge->getAmount();
-        $this->base_amount = $allowanceCharge->getBaseAmount();
-        $this->tax_rate_id = (int) $allowanceCharge->getTaxRateId();
+        $this->amount                    = $allowanceCharge->getAmount();
+        $this->base_amount               = $allowanceCharge->getBaseAmount();
+        $this->tax_rate_id               = (int) $allowanceCharge->getTaxRateId();
     }
 
-    public function getIdentifier(): bool|null
+    public function getIdentifier(): ?bool
     {
         return $this->identifier;
     }
 
-    public function getReasonCode(): string|null
+    public function getReasonCode(): ?string
     {
         return $this->reason_code;
     }
 
-    public function getReason(): string|null
+    public function getReason(): ?string
     {
         return $this->reason;
     }
 
-    public function getMultiplierFactorNumeric(): int|null
+    public function getMultiplierFactorNumeric(): ?int
     {
         return $this->multiplier_factor_numeric;
     }
 
-    public function getAmount(): int|null
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function getBaseAmount(): int|null
+    public function getBaseAmount(): ?int
     {
         return $this->base_amount;
     }
 
-    public function getTaxRateId(): int|null
+    public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
     }
@@ -89,7 +89,6 @@ final class AllowanceChargeForm extends FormModel
     }
 
     /**
-     * @return string
      * @psalm-return ''
      */
     #[\Override]

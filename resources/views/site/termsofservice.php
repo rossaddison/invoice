@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @link  Acknowledgement to chatgpt.com
- * @link  Acknowledgement to https://text-html.com/ convert chatgpt text to html
+ * @see  Acknowledgement to chatgpt.com
+ * @see  Acknowledgement to https://text-html.com/ convert chatgpt text to html
  *
  * Existing url's for a 'terms of service' page, and a 'privacy policy' page,
  * are necessary to develop many of the Oauth2.0 clients
@@ -27,12 +27,12 @@ declare(strict_types=1);
  */
 ?>
 <p><strong>Terms of Service</strong></p>
-<p><strong>Effective Date:</strong> <?= $companyStartDate; ?></p>
-<p>Welcome to <?= $companyName; ?>, a Yii3 PHP framework development company. By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+<p><strong>Effective Date:</strong> <?php echo $companyStartDate; ?></p>
+<p>Welcome to <?php echo $companyName; ?>, a Yii3 PHP framework development company. By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
 <hr />
 <h3>1. <strong>Definitions</strong></h3>
 <ul>
-<li><strong>"Company"</strong> refers to <?= $companyName ?>, the provider of Yii3 PHP framework development services.</li>
+<li><strong>"Company"</strong> refers to <?php echo $companyName; ?>, the provider of Yii3 PHP framework development services.</li>
 <li><strong>"Client"</strong> refers to any individual, company, or entity that engages our services.</li>
 <li><strong>"Services"</strong> refer to Yii3 PHP framework development, support, consultation, and related services provided by the Company.</li>
 <li><strong>"Agreement"</strong> refers to these Terms of Service, as well as any contracts or agreements entered into between the Client and the Company.</li>
@@ -93,17 +93,17 @@ declare(strict_types=1);
 <h3>9. <strong>Dispute Resolution</strong></h3>
 <ul>
 <li>Any disputes arising under this Agreement shall be resolved through good-faith negotiation.</li>
-<li>If unresolved, disputes shall be submitted to binding arbitration under the rules of <?= $arbitrationBody ?> in <?= $arbitrationJurisdiction ?>.</li>
+<li>If unresolved, disputes shall be submitted to binding arbitration under the rules of <?php echo $arbitrationBody; ?> in <?php echo $arbitrationJurisdiction; ?>.</li>
 </ul>
 <hr />
 <h3>10. <strong>Governing Law</strong></h3>
-<p>This Agreement shall be governed by and construed in accordance with the laws of <?= $arbitrationJurisdiction ?>.</p>
+<p>This Agreement shall be governed by and construed in accordance with the laws of <?php echo $arbitrationJurisdiction; ?>.</p>
 <hr />
 <h3>11. <strong>Amendments</strong></h3>
 <p>The Company reserves the right to modify these Terms of Service at any time. Clients will be notified of significant changes via email or a notice on our website.</p>
 <hr />
 <h3>12. <strong>Contact Information</strong></h3>
 <p>For any questions about these Terms of Service, please contact us at:</p>
-<p><b><?= $companyName ?></b><br /><?= $companyAddress1 ?><br /><?= $companyAddress2 ?><br /><?= $companyCity ?><br /><?= $companyState ?><br /><?= $companyZip ?><br /><?= $companyCountry ?>
-<br /><?= $companyEmail ?><br /> <?= $companyPhone ?></p>
+<p><b><?php echo $companyName; ?></b><br /><?php echo $companyAddress1; ?><br /><?php echo $companyAddress2; ?><br /><?php echo $companyCity; ?><br /><?php echo $companyState; ?><br /><?php echo $companyZip; ?><br /><?php echo $companyCountry; ?>
+<br /><?php echo $companyEmail; ?><br /> <?php echo $companyPhone; ?></p>
 <hr/>

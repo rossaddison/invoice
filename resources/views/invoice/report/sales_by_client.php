@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Invoice\Asset\ReportAsset;
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -25,24 +25,24 @@ $assetManager->register(ReportAsset::class);
 $this->beginPage();
 ?>
 <!DOCTYPE html>
-<html lang="<?= $translator->translate('cldr'); ?>">
+<html lang="<?php echo $translator->translate('cldr'); ?>">
 <head>
-    <title><?= $translator->translate('sales.by.client'); ?></title>
+    <title><?php echo $translator->translate('sales.by.client'); ?></title>
 </head>
 <body>
-<?php $this->beginBody() ?>
+<?php $this->beginBody(); ?>
 <h3 class="report_title">
-    <?= $translator->translate('sales.by.client'); ?><br/>
-    <small><?= $from_date . ' - ' . $to_date ?></small>
+    <?php echo $translator->translate('sales.by.client'); ?><br/>
+    <small><?php echo $from_date.' - '.$to_date; ?></small>
 </h3>
 <table>
     <tr>
-        <th><?= $translator->translate('client'); ?></th>
-        <th class="amount"><?= $translator->translate('count'); ?></th>
-        <th class="amount"><?= $translator->translate('sales'); ?></th>
-        <th class="amount"><?= $translator->translate('item.tax'); ?></th>
-        <th class="amount"><?= $translator->translate('tax'); ?></th>
-        <th class="amount"><?= $translator->translate('sales.with.tax'); ?></th>
+        <th><?php echo $translator->translate('client'); ?></th>
+        <th class="amount"><?php echo $translator->translate('count'); ?></th>
+        <th class="amount"><?php echo $translator->translate('sales'); ?></th>
+        <th class="amount"><?php echo $translator->translate('item.tax'); ?></th>
+        <th class="amount"><?php echo $translator->translate('tax'); ?></th>
+        <th class="amount"><?php echo $translator->translate('sales.with.tax'); ?></th>
     </tr>
     <?php
         /**
@@ -50,16 +50,16 @@ $this->beginPage();
          */
         foreach ($results as $result) { ?>
         <tr>
-            <td><?= Html::encode(($result['client_name_surname'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($result['inv_count']); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->format_currency($result['sales_no_tax'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->format_currency($result['item_tax_total'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->format_currency($result['tax_total'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->format_currency($result['sales_with_tax'])); ?></td>
+            <td><?php echo Html::encode($result['client_name_surname']); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?php echo Html::encode($result['inv_count']); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?php echo Html::encode($numberHelper->format_currency($result['sales_no_tax'])); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?php echo Html::encode($numberHelper->format_currency($result['item_tax_total'])); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?php echo Html::encode($numberHelper->format_currency($result['tax_total'])); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?php echo Html::encode($numberHelper->format_currency($result['sales_with_tax'])); ?></td>
         </tr>
     <?php } ?>
 </table>
-<?php $this->endBody() ?>
+<?php $this->endBody(); ?>
 </body>
 </html>
 <?php $this->endPage(true); ?> 

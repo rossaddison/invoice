@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * Related logic: see views/quote/view.php line 67: id="add-quote-tax" triggered by
  *      <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -18,15 +18,15 @@ use Yiisoft\Html\Html;
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('add.quote.tax'); ?></h5>
+               <h5 class="modal-title"><?php echo $translator->translate('add.quote.tax'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+                    <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
                     <div class="mb3 form-group">
                         <label for="tax_rate_id">
-                            <?= $translator->translate('tax.rate'); ?>
+                            <?php echo $translator->translate('tax.rate'); ?>
                         </label>
                         <div>
                             <select name="tax_rate_id" id="tax_rate_id" class="form-control" required>
@@ -35,13 +35,12 @@ use Yiisoft\Html\Html;
                                      * @var App\Invoice\Entity\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
-                                    <option value="<?= $taxRate->getTaxRateId(); ?>">
-                                        <?= $percent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
-                                        $name = Html::encode($taxRate->getTaxRateName());
+                                    <option value="<?php echo $taxRate->getTaxRateId(); ?>">
+                                        <?php echo $percent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                        $name               = Html::encode($taxRate->getTaxRateName());
                                         if ($percent >= 0.00 && null !== $percent && strlen($name) > 0) {
-                                            $percent . '% - ' . $name;
+                                            $percent.'% - '.$name;
                                         } else {
-                                            '#%';
                                         } ?>
                                     </option>
                                 <?php } ?>
@@ -51,12 +50,12 @@ use Yiisoft\Html\Html;
 
                     <div class="mb3 form-group">
                         <label for="include_item_tax">
-                            <?= $translator->translate('tax.rate.placement'); ?>
+                            <?php echo $translator->translate('tax.rate.placement'); ?>
                         </label>
 
                         <div>
                             <select name="include_item_tax" id="include_item_tax" class="form-control">
-                                <?php if ($s->getSetting('enable_vat_registration') === '0') { ?>
+                                <?php if ('0' === $s->getSetting('enable_vat_registration')) { ?>
                                 <option value="0">
                                     <?php echo $translator->translate('apply.before.item.tax'); ?>
                                 </option>
@@ -72,10 +71,10 @@ use Yiisoft\Html\Html;
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="quote_tax_submit btn btn-success" id="quote_tax_submit" type="button">
-                        <i class="fa fa-check"></i><?= $translator->translate('submit'); ?>
+                        <i class="fa fa-check"></i><?php echo $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="fa fa-times"></i> <?php echo $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

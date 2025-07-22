@@ -34,59 +34,57 @@ final class InvAmountForm extends FormModel
 
     public function __construct(InvAmount $invAmount)
     {
-        $this->inv_id = (int) $invAmount->getInv_id();
-        $this->sign = $invAmount->getSign();
-        $this->item_subtotal = $invAmount->getItem_subtotal();
+        $this->inv_id         = (int) $invAmount->getInv_id();
+        $this->sign           = $invAmount->getSign();
+        $this->item_subtotal  = $invAmount->getItem_subtotal();
         $this->item_tax_total = $invAmount->getItem_tax_total();
-        $this->tax_total = $invAmount->getTax_total();
-        $this->total = $invAmount->getTotal();
-        $this->paid = $invAmount->getPaid();
-        $this->balance = $invAmount->getBalance();
+        $this->tax_total      = $invAmount->getTax_total();
+        $this->total          = $invAmount->getTotal();
+        $this->paid           = $invAmount->getPaid();
+        $this->balance        = $invAmount->getBalance();
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getSign(): int|null
+    public function getSign(): ?int
     {
         return $this->sign;
     }
 
-    public function getItem_subtotal(): float|null
+    public function getItem_subtotal(): ?float
     {
         return $this->item_subtotal;
     }
 
-    public function getItem_tax_total(): float|null
+    public function getItem_tax_total(): ?float
     {
         return $this->item_tax_total;
     }
 
-    public function getTax_total(): float|null
+    public function getTax_total(): ?float
     {
         return $this->tax_total;
     }
 
-    public function getTotal(): float|null
+    public function getTotal(): ?float
     {
         return $this->total;
     }
 
-    public function getPaid(): float|null
+    public function getPaid(): ?float
     {
         return $this->paid;
     }
 
-    public function getBalance(): float|null
+    public function getBalance(): ?float
     {
         return $this->balance;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]
@@ -103,11 +101,11 @@ final class InvAmountForm extends FormModel
     public function getRules(): array
     {
         return [
-            'item_subtotal' => [new Required()],
+            'item_subtotal'  => [new Required()],
             'item_tax_total' => [new Required()],
-            'tax_total' => [new Required()],
-            'total' => [new Required()],
-            'inv_id' => [new Required()],
+            'tax_total'      => [new Required()],
+            'total'          => [new Required()],
+            'inv_id'         => [new Required()],
         ];
     }
 }

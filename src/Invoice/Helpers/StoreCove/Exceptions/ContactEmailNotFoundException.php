@@ -9,7 +9,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class ContactEmailNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     #[\Override]
     public function getName(): string
@@ -17,9 +19,6 @@ final class ContactEmailNotFoundException extends \RuntimeException implements F
         return $this->translator->translate('storecove.supplier.contact.email.not.found');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

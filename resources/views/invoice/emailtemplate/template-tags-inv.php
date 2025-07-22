@@ -4,61 +4,61 @@ declare(strict_types=1);
 
 /**
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array $custom_fields_inv_custom
+ * @var array                                  $custom_fields_inv_custom
  */
 ?>
 
         <div class="form-group">
-            <label for="tags_invoice"><?= $translator->translate('invoices'); ?></label>
+            <label for="tags_invoice"><?php echo $translator->translate('invoices'); ?></label>
             <select id="tags_invoice" class="taginv-select form-control">
                 <option value="{{{invoice_number}}}">
-                    <?= $translator->translate('id'); ?>
+                    <?php echo $translator->translate('id'); ?>
                 </option>
                 <option value="{{{invoice_status}}}">
-                    <?= $translator->translate('status'); ?>
+                    <?php echo $translator->translate('status'); ?>
                 </option>
-                <optgroup label="<?= $translator->translate('dates'); ?>">
+                <optgroup label="<?php echo $translator->translate('dates'); ?>">
                     <option value="{{{invoice_date_due}}}">
-                        <?= $translator->translate('due.date'); ?>
+                        <?php echo $translator->translate('due.date'); ?>
                     </option>
                     <option value="{{{invoice_date_created}}}">
-                        <?= $translator->translate('date'); ?>
+                        <?php echo $translator->translate('date'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $translator->translate('amounts'); ?>">
+                <optgroup label="<?php echo $translator->translate('amounts'); ?>">
                     <option value="{{{invoice_item_subtotal}}}">
-                        <?= $translator->translate('subtotal'); ?>
+                        <?php echo $translator->translate('subtotal'); ?>
                     </option>
                     <option value="{{{invoice_item_tax_total}}}">
-                        <?= $translator->translate('tax'); ?>
+                        <?php echo $translator->translate('tax'); ?>
                     </option>
                     <option value="{{{invoice_total}}}">
-                        <?= $translator->translate('total'); ?>
+                        <?php echo $translator->translate('total'); ?>
                     </option>
                     <option value="{{{invoice_paid}}}">
-                        <?= $translator->translate('total.paid'); ?>
+                        <?php echo $translator->translate('total.paid'); ?>
                     </option>
                     <option value="{{{invoice_balance}}}">
-                        <?= $translator->translate('balance'); ?>
+                        <?php echo $translator->translate('balance'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $translator->translate('extra.information'); ?>">
+                <optgroup label="<?php echo $translator->translate('extra.information'); ?>">
                     <option value="{{{invoice_terms}}}">
-                        <?= $translator->translate('terms'); ?>
+                        <?php echo $translator->translate('terms'); ?>
                     </option>
                 <option value="{{{invoice_guest_url}}}">
-                        <?= $translator->translate('guest.url'); ?>
+                        <?php echo $translator->translate('guest.url'); ?>
                 </option>
-                        <?= $translator->translate('payment.method'); ?>
+                        <?php echo $translator->translate('payment.method'); ?>
                 </optgroup>
-                <optgroup label="<?= $translator->translate('custom.fields'); ?>">
+                <optgroup label="<?php echo $translator->translate('custom.fields'); ?>">
                     <?php
                        /**
-                        * @var App\Invoice\Entity\CustomField $custom
+                         * @var App\Invoice\Entity\CustomField $custom
                         */
                        foreach ($custom_fields_inv_custom as $custom) { ?>
-                        <option value="{{{<?= 'cf_' . $custom->getId(); ?>}}}">
-                            <?= ($custom->getLabel() ?? '#') . ' (ID ' . $custom->getId() . ')'; ?>
+                        <option value="{{{<?php echo 'cf_'.$custom->getId(); ?>}}}">
+                            <?php echo ($custom->getLabel() ?? '#').' (ID '.$custom->getId().')'; ?>
                         </option>
                     <?php } ?>
                 </optgroup>

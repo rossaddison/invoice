@@ -6,75 +6,74 @@ namespace App\Invoice\Inv;
 
 // Entities
 use App\Invoice\Entity\Inv;
+use App\Invoice\Entity\InvAllowanceCharge;
+use App\Invoice\Entity\InvCustom;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\Entity\InvTaxRate;
-use App\Invoice\Entity\InvCustom;
-use App\User\User;
-// Repositories
 use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvCustom\InvCustomRepository as ICR;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
-use App\Invoice\Setting\SettingRepository as SR;
-// Helpers
+// Repositories
 use App\Invoice\Helpers\DateHelper;
-// Services
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\InvAmount\InvAmountService as IAS;
+use App\Invoice\InvCustom\InvCustomRepository as ICR;
 use App\Invoice\InvCustom\InvCustomService as ICS;
+use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvItem\InvItemService as IIS;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
+// Helpers
+use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
+// Services
+use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\InvTaxRate\InvTaxRateService as ITRS;
+use App\Invoice\Setting\SettingRepository as SR;
+use App\User\User;
 // Ancillary
-use Yiisoft\Session\SessionInterface;
 use Yiisoft\Security\Random;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use DateTimeImmutable;
 
 final readonly class InvService
 {
-    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator) {}
+    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator)
+    {
+    }
 
     public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
     {
-        /**
+        /*
          * Give a legitimate invoice number to an invoice that currently:
          * 1. Exists
          * 2. Has no invoice number
          * 3. Has a status of 'sent'
          */
-        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)  && ($array['status_id'] == 2)) {
+        if ((!$model->isNewRecord()) && (0 == strlen($model->getNumber() ?? '')) && (2 == $array['status_id'])) {
             $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
         }
 
         /**
-         * The following fields are not set on the form but are calculated automatically
+         * The following fields are not set on the form but are calculated automatically.
          */
-
-        $datetime_created = new DateTimeImmutable();
+        $datetime_created = new \DateTimeImmutable();
 
         /**
          * @var string $array['date_created']
          */
-        $date_created = $array['date_created'] ?? (new DateTimeImmutable('now'))->format('Y-m-d');
+        $date_created = $array['date_created'] ?? (new \DateTimeImmutable('now'))->format('Y-m-d');
         $model->setDate_created($date_created);
 
-        $datetime_supplied = new DateTimeImmutable();
+        $datetime_supplied = new \DateTimeImmutable();
         /**
          * @var string $array['date_supplied']
          */
-        $date_supplied = $array['date_supplied'] ?? (new DateTimeImmutable('now'))->format('Y-m-d');
-        $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'));
-
+        $date_supplied = $array['date_supplied'] ?? (new \DateTimeImmutable('now'))->format('Y-m-d');
+        $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new \DateTimeImmutable('1901/01/01'));
 
         $datetimeimmutable_tax_point = $this->set_tax_point(
             $model,
-            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'),
-            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('1901/01/01'),
+            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new \DateTimeImmutable('1901/01/01'),
+            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('1901/01/01'),
         );
         null !== $datetimeimmutable_tax_point ? $model->setDate_tax_point($datetimeimmutable_tax_point) : '';
 
@@ -83,12 +82,12 @@ final readonly class InvService
         $model->setUrl_key(Random::string(32));
         $model->setStand_in_code($s->getSetting('stand_in_code'));
 
-        /**
+        /*
          * The following fields can be edited and set on the form with a value that is not null.
          */
         isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
         isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : '';
-        /** user_id set on adding */
+        /* user_id set on adding */
 
         isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
         isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
@@ -108,7 +107,7 @@ final readonly class InvService
         isset($array['contract_id']) ? $model->setContract_id((int) $array['contract_id']) : '';
 
         if ($model->isNewRecord()) {
-            if ($s->getSetting('mark_invoices_sent_copy') === '1') {
+            if ('1' === $s->getSetting('mark_invoices_sent_copy')) {
                 // mark the copy as sent and make it read-only
                 $model->setStatus_id(2);
                 $model->setIs_read_only(true);
@@ -118,23 +117,24 @@ final readonly class InvService
                 $model->setIs_read_only(false);
             }
             // if draft invoices must get invoice numbers
-            if ($s->getSetting('generate_invoice_number_for_draft') === '1') {
+            if ('1' === $s->getSetting('generate_invoice_number_for_draft')) {
                 $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
             } else {
                 $model->setNumber('');
             }
             $model->setUser_id((int) $user->getId());
-            $model->setTime_created((new DateTimeImmutable('now'))->format('H:i:s'));
+            $model->setTime_created((new \DateTimeImmutable('now'))->format('H:i:s'));
             $model->setPayment_method((int) $s->getSetting('invoice_default_payment_method') ?: 4);
             $model->setDiscount_amount(0.00);
         }
         $this->repository->save($model);
+
         return $model;
     }
 
     public function copyInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
     {
-        /**
+        /*
          * Follows Inv construct sequence to make sure no fields are missing.
          */
         $model->setClient_id((int) $array['client_id']);
@@ -146,8 +146,8 @@ final readonly class InvService
         $model->setIs_read_only((bool) $array['is_read_only']);
         $model->setPassword((string) $array['password']);
         $model->setDate_due($s);
-        $model->setDate_supplied($array['date_supplied'] instanceof DateTimeImmutable ? $array['date_supplied'] : new DateTimeImmutable('now'));
-        $model->setDate_tax_point($array['date_tax_point'] instanceof DateTimeImmutable ? $array['date_tax_point'] : new DateTimeImmutable('now'));
+        $model->setDate_supplied($array['date_supplied'] instanceof \DateTimeImmutable ? $array['date_supplied'] : new \DateTimeImmutable('now'));
+        $model->setDate_tax_point($array['date_tax_point'] instanceof \DateTimeImmutable ? $array['date_tax_point'] : new \DateTimeImmutable('now'));
         $model->setTime_created((string) $array['time_created']);
         $model->setStand_in_code((string) $array['stand_in_code']);
         $model->setNumber((string) $array['number']);
@@ -164,17 +164,14 @@ final readonly class InvService
         $model->setPostal_address_id((int) $array['postal_address_id']);
         $model->setContract_id((int) $array['contract_id']);
         $this->repository->save($model);
+
         return $model;
     }
 
     /**
-     * Related logic: see https://www.gov.uk/hmrc-internal-manuals/vat-time-of-supply/vattos3600
-     * @param Inv $inv
-     * @param DateTimeImmutable|null $date_supplied
-     * @param DateTimeImmutable|null $date_created
-     * @return DateTimeImmutable|null
+     * Related logic: see https://www.gov.uk/hmrc-internal-manuals/vat-time-of-supply/vattos3600.
      */
-    public function set_tax_point(Inv $inv, ?DateTimeImmutable $date_supplied, ?DateTimeImmutable $date_created): ?DateTimeImmutable
+    public function set_tax_point(Inv $inv, ?\DateTimeImmutable $date_supplied, ?\DateTimeImmutable $date_created): ?\DateTimeImmutable
     {
         // Terminoligy: 'Date created' is used interchangeably with 'Date issued'
         if (null !== $inv->getClient()?->getClient_vat_id()) {
@@ -184,6 +181,7 @@ final readonly class InvService
                     // date supplied more than 14 days before invoice date
                     return $date_supplied;
                 }
+
                 // if the issue date (created) is within 14 days after the supply (basic) date then use the issue/created date.
                 return $date_created;
             }
@@ -203,23 +201,10 @@ final readonly class InvService
         if (null == $date_supplied || null == $date_created) {
             return null;
         }
+
         return null;
     }
 
-    /**
-     * @param Inv $model
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param ICR $icR
-     * @param ICS $icS
-     * @param IIR $iiR
-     * @param IIS $iiS
-     * @param ITRR $itrR
-     * @param ITRS $itrS
-     * @param IAR $iaR
-     * @param IAS $iaS
-     */
     public function deleteInv(
         Inv $model,
         ACIR $aciR,
@@ -263,15 +248,15 @@ final readonly class InvService
                 $inv_amount = $iaR->repoInvquery((int) $inv_id);
                 null !== $inv_amount ? $iaS->deleteInvAmount($inv_amount) : '';
             }
-            /** @var InvTaxRate */
+            /* @var InvTaxRate */
             foreach ($itrR->repoInvquery($inv_id) as $inv_tax_rate) {
                 $itrS->deleteInvTaxRate($inv_tax_rate);
             }
-            /** @var InvCustom */
+            /* @var InvCustom */
             foreach ($icR->repoFields($inv_id) as $inv_custom) {
                 $icS->deleteInvCustom($inv_custom);
             }
-            /** @var InvAllowanceCharge */
+            /* @var InvAllowanceCharge */
             foreach ($aciR->repoACIquery($inv_id) as $inv_allowance_charge) {
                 $aciR->delete($inv_allowance_charge);
             }
@@ -280,29 +265,23 @@ final readonly class InvService
         $this->repository->delete($model);
     }
 
-    /**
-     * @param User $user
-     * @param Inv $model
-     * @param array $details
-     * @param SR $s
-     */
     public function saveInv_from_recurring(User $user, Inv $model, array $details, SR $s): void
     {
-        $datehelper = new DateHelper($s);
-        $datetime = $datehelper->get_or_set_with_style($details['date_created'] ?? new \DateTime());
-        $datetimeimmutable = new DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format('Y-m-d H:i:s') : 'now');
+        $datehelper        = new DateHelper($s);
+        $datetime          = $datehelper->get_or_set_with_style($details['date_created'] ?? new \DateTime());
+        $datetimeimmutable = new \DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format('Y-m-d H:i:s') : 'now');
         $model->setDate_created($datetimeimmutable->format('Y-m-d'));
 
-        $datetime_supplied = $datehelper->get_or_set_with_style($details['date_supplied'] ?? new \DateTime());
-        $datetimeimmutable_supplied = new DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
+        $datetime_supplied          = $datehelper->get_or_set_with_style($details['date_supplied'] ?? new \DateTime());
+        $datetimeimmutable_supplied = new \DateTimeImmutable($datetime_supplied instanceof \DateTime ? $datetime_supplied->format('Y-m-d H:i:s') : 'now');
         $model->setDate_supplied($datetimeimmutable_supplied);
 
-        $datetime_tax_point = $datehelper->get_or_set_with_style($details['date_tax_point'] ?? new \DateTime());
-        $datetimeimmutable_tax_point = new DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format('Y-m-d H:i:s') : 'now');
+        $datetime_tax_point          = $datehelper->get_or_set_with_style($details['date_tax_point'] ?? new \DateTime());
+        $datetimeimmutable_tax_point = new \DateTimeImmutable($datetime_tax_point instanceof \DateTime ? $datetime_tax_point->format('Y-m-d H:i:s') : 'now');
         $model->setDate_tax_point($datetimeimmutable_tax_point);
 
         $model->setDate_due($s);
-        //$model->setDate_created($form->getDate_created());
+        // $model->setDate_created($form->getDate_created());
         $model->setClient_id((int) $details['client_id']);
         $model->setGroup_id((int) $details['group_id']);
         $model->setStatus_id((int) $details['status_id']);
@@ -323,11 +302,11 @@ final readonly class InvService
             $random = new Random();
             $model->setUser($user);
             $model->setUrl_key($random::string(32));
-            $model->setDate_created((new DateTimeImmutable('now'))->format('Y-m-d'));
+            $model->setDate_created((new \DateTimeImmutable('now'))->format('Y-m-d'));
             // VAT or cash basis tax system fields: ignore
-            $model->setDate_supplied(new DateTimeImmutable('now'));
-            $model->setDate_tax_point(new DateTimeImmutable('now'));
-            $model->setTime_created((new DateTimeImmutable('now'))->format('H:i:s'));
+            $model->setDate_supplied(new \DateTimeImmutable('now'));
+            $model->setDate_tax_point(new \DateTimeImmutable('now'));
+            $model->setTime_created((new \DateTimeImmutable('now'))->format('H:i:s'));
             $model->setPayment_method(0);
             $model->setDate_due($s);
             $model->setDiscount_amount(0.00);

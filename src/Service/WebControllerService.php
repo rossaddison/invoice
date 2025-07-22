@@ -15,11 +15,12 @@ final readonly class WebControllerService
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private UrlGeneratorInterface $urlGenerator,
-    ) {}
+    ) {
+    }
 
     /** Bug: Trailing # at end of browser url if ... string $hash = '';
      *  Fix: ?string $hash = null
-     *  Related logic: see
+     *  Related logic: see.
      */
     /** @psalm-suppress MixedArgumentTypeCoercion $arguments **/
     public function getRedirectResponse(string $url, array $arguments = [], array $queryParameters = [], ?string $hash = null): ResponseInterface

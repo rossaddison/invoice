@@ -5,9 +5,8 @@ declare(strict_types=1);
 use App\Invoice\Entity\DeliveryLocation;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -16,61 +15,63 @@ use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function index
- * @var App\Invoice\Client\ClientRepository $cR
- * @var App\Invoice\Helpers\DateHelper $dateHelper
- * @var App\Invoice\Inv\InvRepository $iR
- * @var App\Invoice\Quote\QuoteRepository $qR
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
- * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function index.
+ *
+ * @var App\Invoice\Client\ClientRepository    $cR
+ * @var App\Invoice\Helpers\DateHelper         $dateHelper
+ * @var App\Invoice\Inv\InvRepository          $iR
+ * @var App\Invoice\Quote\QuoteRepository      $qR
+ * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Widget\GridComponents              $gridComponents
+ * @var App\Widget\PageSizeLimiter             $pageSizeLimiter
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $dels
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var OffsetPaginator                        $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
- * @var string $alert
- * @var string $csrf
- * @var string $sortString
- * @var string $title
+ * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var Yiisoft\Router\FastRoute\UrlGenerator  $urlGenerator
+ * @var string                                 $alert
+ * @var string                                 $csrf
+ * @var string                                 $sortString
+ * @var string                                 $title
+ *
  * @psalm-var positive-int $page
  */
-
 echo $alert;
 
 ?>
 
 <?php
 $header = Div::tag()
-  ->addClass('row')
-  ->content(
-      H5::tag()
-    ->addClass('bg-primary text-white p-3 rounded-top')
+    ->addClass('row')
     ->content(
-        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.location')),
-    ),
-  )
-  ->render();
+        H5::tag()
+            ->addClass('bg-primary text-white p-3 rounded-top')
+            ->content(
+                I::tag()->addClass('bi bi-receipt')->content(' '.$translator->translate('delivery.location')),
+            ),
+    )
+    ->render();
 
 $toolbarReset = A::tag()
-  ->addAttributes(['type' => 'reset'])
-  ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-  ->href($urlGenerator->generate($currentRoute->getName() ?? 'deliverylocation/index'))
-  ->id('btn-reset')
-  ->render();
+    ->addAttributes(['type' => 'reset'])
+    ->addClass('btn btn-danger me-1 ajax-loader')
+    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'deliverylocation/index'))
+    ->id('btn-reset')
+    ->render();
 
 $toolbar = Div::tag();
 ?>
-<h1><?= $translator->translate('delivery.location'); ?></h1>
+<h1><?php echo $translator->translate('delivery.location'); ?></h1>
 <?php
     $columns = [
         new DataColumn(
             'id',
             header: 'id',
-            content: static fn(DeliveryLocation $model) => (string) $model->getId(),
+            content: static fn (DeliveryLocation $model) => (string) $model->getId(),
             withSorting: true,
         ),
         new DataColumn(
@@ -80,18 +81,19 @@ $toolbar = Div::tag();
                 if ($cR->repoClientCount($model->getClient_id()) > 0) {
                     return $cR->repoClientquery($model->getClient_id())->getClient_name();
                 }
+
                 return '#';
             },
         ),
         new DataColumn(
             'id',
             header: $translator->translate('quote.delivery.location.index.button.list'),
-            content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
+            content: static function (DeliveryLocation $model) use ($urlGenerator, $qR): string {
                 $deliveryLocationId = $model->getId();
                 if (null !== $deliveryLocationId) {
-                    $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
+                    $quotes  = $qR->findAllWithDeliveryLocation($deliveryLocationId);
                     $buttons = '';
-                    $button = '';
+                    $button  = '';
                     /**
                      * @var App\Invoice\Entity\Quote $quote
                      */
@@ -99,20 +101,22 @@ $toolbar = Div::tag();
                         $quoteId = $quote->getId();
                         if (null !== $quoteId) {
                             $button = (string) Html::a(
-                                ($quote->getNumber() ?? '#') .
-                                       ' ' .
-                                       ($quote->getDate_created())->format('Y-m-d'),
+                                ($quote->getNumber() ?? '#').
+                                       ' '.
+                                       $quote->getDate_created()->format('Y-m-d'),
                                 $urlGenerator->generate('quote/view', ['id' => $quoteId]),
-                                ['class' => 'btn btn-primary btn-sm',
+                                ['class'             => 'btn btn-primary btn-sm',
                                     'data-bs-toggle' => 'tooltip',
-                                    'title' => $quoteId,
+                                    'title'          => $quoteId,
                                 ],
                             );
-                            $buttons .= $button . str_repeat("&nbsp;", 1);
+                            $buttons .= $button.str_repeat('&nbsp;', 1);
                         }
                     }
+
                     return $buttons;
                 }
+
                 return '';
             },
             withSorting: true,
@@ -121,12 +125,12 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('delivery.location.index.button.list'),
-            content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
+            content: static function (DeliveryLocation $model) use ($urlGenerator, $iR): string {
                 $deliveryLocationId = $model->getId();
                 if (null !== $deliveryLocationId) {
                     $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
-                    $buttons = '';
-                    $button = '';
+                    $buttons  = '';
+                    $button   = '';
                     /**
                      * @var App\Invoice\Entity\Inv $invoice
                      */
@@ -134,25 +138,27 @@ $toolbar = Div::tag();
                         $invoiceId = $invoice->getId();
                         if (null !== $invoiceId) {
                             $button = (string) Html::a(
-                                ($invoice->getNumber() ?? '#') .
-                                    ' ' .
-                                    ($invoice->getDate_created())->format(
+                                ($invoice->getNumber() ?? '#').
+                                    ' '.
+                                    $invoice->getDate_created()->format(
                                         'Y-m-d',
                                     ),
                                 $urlGenerator->generate(
                                     'inv/view',
                                     ['id' => $invoiceId],
                                 ),
-                                ['class' => 'btn btn-primary btn-sm',
+                                ['class'             => 'btn btn-primary btn-sm',
                                     'data-bs-toggle' => 'tooltip',
-                                    'title' => $invoiceId,
+                                    'title'          => $invoiceId,
                                 ],
                             );
-                            $buttons .= $button . str_repeat("&nbsp;", 1);
+                            $buttons .= $button.str_repeat('&nbsp;', 1);
                         }
                     }
+
                     return $buttons;
                 }
+
                 return '';
             },
             withSorting: true,
@@ -169,7 +175,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'date_created',
             header: $translator->translate('date.created'),
-            content: static fn(DeliveryLocation $model): string => ($model->getDate_created())->format(
+            content: static fn (DeliveryLocation $model): string => $model->getDate_created()->format(
                 'Y-m-d',
             ),
         ),
@@ -191,7 +197,7 @@ $toolbar = Div::tag();
                     Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
                     $urlGenerator->generate(
                         'del/edit',
-                        ['id' => $model->getId()],
+                        ['id'     => $model->getId()],
                         ['origin' => 'del', 'origin_id' => '', 'action' => 'index'],
                     ),
                     [],
@@ -206,9 +212,9 @@ $toolbar = Div::tag();
                         'button',
                         Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                         [
-                            'type' => 'submit',
-                            'class' => 'dropdown-button',
-                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                            'type'    => 'submit',
+                            'class'   => 'dropdown-button',
+                            'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
                         ],
                     ),
                     $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
@@ -241,29 +247,28 @@ $grid_summary = $s->grid_summary(
     $translator->translate('delivery.location.plural'),
     '',
 );
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('del/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('del/index'))->csrf($csrf)->open().
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
     Form::tag()->close();
 
 echo GridView::widget()
-->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
-->columns(...$columns)
-->dataReader($sortedAndPagedPaginator)
-->urlCreator($urlCreator)
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
+    ->columns(...$columns)
+    ->dataReader($sortedAndPagedPaginator)
+    ->urlCreator($urlCreator)
 // the up and down symbol will appear at first indicating that the column can be sorted
 // Ir also appears in this state if another column has been sorted
-->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+    ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
 // the up arrow will appear if column values are ascending
-->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
 // the down arrow will appear if column values are descending
-->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
-->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
-->id('w341-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
-->toolbar($toolbarString);
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w341-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del').' '.$grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);

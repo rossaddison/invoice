@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 // Entities
-use App\User\User;
 use App\Invoice\Entity\SalesOrder;
 use App\Invoice\Entity\SalesOrderCustom;
 use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderTaxRate;
-// Repositories
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SoCR;
-use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SoIR;
-use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
-// Services
+// Repositories
 use App\Invoice\SalesOrderAmount\SalesOrderAmountService as SoAS;
+use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SoCR;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomService as SoCS;
+use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SoIR;
+// Services
 use App\Invoice\SalesOrderItem\SalesOrderItemService as SoIS;
+use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS;
+use App\User\User;
 // Ancillary
 use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
@@ -27,13 +27,10 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class SalesOrderService
 {
-    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session) {}
+    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session)
+    {
+    }
 
-    /**
-     * @param User $user
-     * @param SalesOrder $model
-     * @param array $array
-     */
     public function addSo(User $user, SalesOrder $model, array $array): void
     {
         isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
@@ -59,11 +56,6 @@ final readonly class SalesOrderService
         $this->repository->save($model);
     }
 
-    /**
-     * @param SalesOrder $model
-     * @param array $array
-     * @return SalesOrder
-     */
     public function saveSo(SalesOrder $model, array $array): SalesOrder
     {
         $model->setQuote_id((int) $array['quote_id']);
@@ -80,20 +72,10 @@ final readonly class SalesOrderService
         isset($array['notes']) ? $model->setNotes((string) $array['notes']) : '';
         isset($array['payment_term']) ? $model->setPaymentTerm((string) $array['payment_term']) : '';
         $this->repository->save($model);
+
         return $model;
     }
 
-    /**
-     * @param SalesOrder $model
-     * @param SoCR $socR
-     * @param SoCS $socS
-     * @param SoIR $soiR
-     * @param SoIS $soiS
-     * @param SoTRR $sotrR
-     * @param SoTRS $sotrS
-     * @param SoAR $soaR
-     * @param SoAS $soaS
-     */
     public function deleteSo(SalesOrder $model, SoCR $socR, SoCS $socS, SoIR $soiR, SoIS $soiS, SoTRR $sotrR, SoTRS $sotrS, SoAR $soaR, SoAS $soaS): void
     {
         $so_id = $model->getId();
@@ -126,15 +108,11 @@ final readonly class SalesOrderService
         }
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash
-     */
     private function flash(string $level, string $message): Flash
     {
         $flash = new Flash($this->session);
         $flash->set($level, $message);
+
         return $flash;
     }
 }

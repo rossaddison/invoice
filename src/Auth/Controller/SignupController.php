@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
-use App\Auth\Token;
-use App\Auth\TokenRepository as tR;
-use App\User\User;
-use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\SignupForm;
+use App\Auth\Token;
+use App\Auth\TokenRepository as tR;
 use App\Auth\Trait\Oauth2;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Service\WebControllerService;
+use App\User\User;
+use App\User\UserRepository as uR;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -24,7 +24,7 @@ use Yiisoft\Html\Tag\Body;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Rbac\AssignmentsStorageInterface as Assignment;
 use Yiisoft\Rbac\ItemsStorageInterface as ItemStorage;
-use Yiisoft\Rbac\Manager as Manager;
+use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\RuleFactoryInterface as Rule;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -84,24 +84,24 @@ final class SignupController
         private LoggerInterface $logger,
     ) {
         // Related logic: see yiisoft/rbac-php
-        $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
-        $this->rule = $rule;
-        $this->session = $session;
-        $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('signup');
-        $this->mailer = $mailer;
-        $this->sR = $sR;
+        $this->manager              = new Manager($this->itemstorage, $this->assignment, $rule);
+        $this->rule                 = $rule;
+        $this->session              = $session;
+        $this->flash                = new Flash($this->session);
+        $this->viewRenderer         = $viewRenderer->withControllerName('signup');
+        $this->mailer               = $mailer;
+        $this->sR                   = $sR;
         $this->developerSandboxHmrc = $developerSandboxHmrc;
-        $this->facebook = $facebook;
-        $this->github = $github;
-        $this->google = $google;
-        $this->govUk = $govUk;
-        $this->linkedIn = $linkedIn;
-        $this->microsoftOnline = $microsoftOnline;
-        $this->openBanking = $openBanking;
-        $this->vkontakte = $vkontakte;
-        $this->x = $x;
-        $this->yandex = $yandex;
+        $this->facebook             = $facebook;
+        $this->github               = $github;
+        $this->google               = $google;
+        $this->govUk                = $govUk;
+        $this->linkedIn             = $linkedIn;
+        $this->microsoftOnline      = $microsoftOnline;
+        $this->openBanking          = $openBanking;
+        $this->vkontakte            = $vkontakte;
+        $this->x                    = $x;
+        $this->yandex               = $yandex;
         $this->initializeOauth2IdentityProviderCredentials(
             $developerSandboxHmrc,
             $facebook,
@@ -116,26 +116,16 @@ final class SignupController
             $yandex,
         );
         $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
-        $this->translator = $translator;
-        $this->urlGenerator = $urlGenerator;
-        $this->currentRoute = $currentRoute;
-        $this->logger = $logger;
+        $this->translator    = $translator;
+        $this->urlGenerator  = $urlGenerator;
+        $this->currentRoute  = $currentRoute;
+        $this->logger        = $logger;
         $this->telegramToken = $sR->getSetting('telegram_token');
     }
 
     /**
      * Related logic: see src\ViewInjection\CommonViewInjection.php
-     * Related logic: see resources\views\site\signupfailed.php and signupsuccess.php
-     *
-     * @param AuthService $authService
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @param ServerRequestInterface $request
-     * @param SignupForm $signupForm
-     * @param tR $tR
-     * @param uiR $uiR
-     * @param uR $uR
-     * @return ResponseInterface
+     * Related logic: see resources\views\site\signupfailed.php and signupsuccess.php.
      */
     public function signup(
         AuthService $authService,
@@ -151,46 +141,46 @@ final class SignupController
             return $this->webService->getRedirectResponse('site/index');
         }
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
-            $user = $signupForm->signup();
+            $user   = $signupForm->signup();
             $userId = $user->getId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id of 1 ... and assign the first signed-up user ... admin rights
-                if ($uR->repoCount() == 1) {
+                if (1 == $uR->repoCount()) {
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('admin', $userId);
                 } else {
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $to = $user->getEmail();
+                $to    = $user->getEmail();
                 $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
                 $languageArray = $this->sR->locale_language_array();
-                $_language = $currentRoute->getArgument('_language');
+                $_language     = $currentRoute->getArgument('_language');
                 /**
                  * @var string $_language
-                 * @var array $languageArray
+                 * @var array  $languageArray
                  * @var string $language
                  */
-                $language = $languageArray[$_language];
+                $language           = $languageArray[$_language];
                 $randomAndTimeToken = $this->getEmailVerificationToken($user, $tR);
                 /**
                  * Related logic: see A new UserInv (extension table of user) for the user is created.
                  * For additional headers to strengthen security refer to:
                  * Related logic: see https://en.wikipedia.org/wiki/Email#Message_format
-                 * Related logic: see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
+                 * Related logic: see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217.
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
-                if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true)) {
+                if (('symfony' == $this->sR->getSetting('email_send_method')) || (true == $this->sR->mailerEnabled())) {
                     $email = new \Yiisoft\Mailer\Message(
                         charset: 'utf-8',
                         headers: [
                             'X-Origin' => ['0', '1'],
-                            'X-Pass' => 'pass',
+                            'X-Pass'   => 'pass',
                         ],
-                        subject: $login . ': <' . $to . '>',
+                        subject: $login.': <'.$to.'>',
                         date: new \DateTimeImmutable('now'),
                         from: [$this->sR->getConfigAdminEmail() => $this->translator->translate('administrator')],
                         to: $to,
@@ -202,71 +192,74 @@ final class SignupController
                         $this->mailer->send($email);
                     } catch (\Exception $e) {
                         $this->logger->error($e->getMessage());
+
                         return $this->webService->getRedirectResponse('site/signupfailed');
                     }
                 }
             }
+
             return $this->webService->getRedirectResponse('site/signupsuccess');
         }
-        $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
-        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
-        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
-        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
-        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
-        $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
-        $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
-        $noOpenBankingContinueButton = $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false;
-        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
+        $noDeveloperSandboxHmrcContinueButton = '1' == $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') ? true : false;
+        $noGithubContinueButton               = '1' == $this->sR->getSetting('no_github_continue_button') ? true : false;
+        $noGoogleContinueButton               = '1' == $this->sR->getSetting('no_google_continue_button') ? true : false;
+        $noGovUkContinueButton                = '1' == $this->sR->getSetting('no_govuk_continue_button') ? true : false;
+        $noFacebookContinueButton             = '1' == $this->sR->getSetting('no_facebook_continue_button') ? true : false;
+        $noLinkedInContinueButton             = '1' == $this->sR->getSetting('no_linkedin_continue_button') ? true : false;
+        $noMicrosoftOnlineContinueButton      = '1' == $this->sR->getSetting('no_microsoftonline_continue_button') ? true : false;
+        $noOpenBankingContinueButton          = '1' == $this->sR->getSetting('no_openbanking_continue_button') ? true : false;
+        $noVKontakteContinueButton            = '1' == $this->sR->getSetting('no_vkontakte_continue_button') ? true : false;
 
         $codeVerifier = Random::string(128);
 
         $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
 
-        $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
-        $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
+        $noXContinueButton      = '1' == $this->sR->getSetting('no_x_continue_button') ? true : false;
+        $noYandexContinueButton = '1' == $this->sR->getSetting('no_yandex_continue_button') ? true : false;
 
         $this->session->set('code_verifier', $codeVerifier);
+
         return $this->viewRenderer->render('signup', [
-            'formModel' => $signupForm,
+            'formModel'                   => $signupForm,
             'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ?
                 $this->developerSandboxHmrc
-                     ->buildAuthUrl(
-                         $request,
-                         $params = [
-                             'response_type' => 'code',
-                         ],
-                     ) : '',
-            'sessionOtp' => $this->session->get('otp'),
-            'telegramToken' => $this->telegramToken,
+                    ->buildAuthUrl(
+                        $request,
+                        $params = [
+                            'response_type' => 'code',
+                        ],
+                    ) : '',
+            'sessionOtp'      => $this->session->get('otp'),
+            'telegramToken'   => $this->telegramToken,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
-            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
-            'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
-            'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
+            'githubAuthUrl'   => strlen($this->github->getClientId())   > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
+            'googleAuthUrl'   => strlen($this->google->getClientId())   > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
+            'govUkAuthUrl'    => strlen($this->govUk->getClientId())    > 0 ? $this->govUk->buildAuthUrl(
                 $request,
                 $params = [
-                    'return_type' => 'id_token',
-                    'code_challenge' => $codeChallenge,
+                    'return_type'           => 'id_token',
+                    'code_challenge'        => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
             ) : '',
-            'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
+            'linkedInAuthUrl'        => strlen($this->linkedIn->getClientId())        > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
-            'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
+            'openBankingAuthUrl'     => strlen($this->openBanking->getClientId())     > 0 ? $this->openBanking->buildAuthUrl(
                 $request,
                 $params = [
-                    'return_type' => 'id_token',
-                    'code_challenge' => $codeChallenge,
+                    'return_type'           => 'id_token',
+                    'code_challenge'        => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
             ) : '',
             'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
                 $request,
                 $params = [
-                    'code_challenge' => $codeChallenge,
+                    'code_challenge'        => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
             ) : '',
-            /**
+            /*
              * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
              * to perform the OAuth exchange from public clients securely using two parameters code_challenge and
              * code_challenge_method.
@@ -275,47 +268,39 @@ final class SignupController
             'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl(
                 $request,
                 $params = [
-                    'code_challenge' => $codeChallenge,
+                    'code_challenge'        => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
             ) : '',
             'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl(
                 $request,
                 $params = [
-                    'code_challenge' => $codeChallenge,
+                    'code_challenge'        => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
             ) : '',
             'noDeveloperSandboxHmrcContinueButton' => $noDeveloperSandboxHmrcContinueButton,
-            'noFacebookContinueButton' => $noFacebookContinueButton,
-            'noGithubContinueButton' => $noGithubContinueButton,
-            'noGoogleContinueButton' => $noGoogleContinueButton,
-            'noGovUkContinueButton' => $noGovUkContinueButton,
-            'noLinkedInContinueButton' => $noLinkedInContinueButton,
-            'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
-            'noOpenBankingContinueButton' => $noOpenBankingContinueButton,
-            'noVKontakteContinueButton' => $noVKontakteContinueButton,
-            'noXContinueButton' => $noXContinueButton,
-            'noYandexContinueButton' => $noYandexContinueButton,
+            'noFacebookContinueButton'             => $noFacebookContinueButton,
+            'noGithubContinueButton'               => $noGithubContinueButton,
+            'noGoogleContinueButton'               => $noGoogleContinueButton,
+            'noGovUkContinueButton'                => $noGovUkContinueButton,
+            'noLinkedInContinueButton'             => $noLinkedInContinueButton,
+            'noMicrosoftOnlineContinueButton'      => $noMicrosoftOnlineContinueButton,
+            'noOpenBankingContinueButton'          => $noOpenBankingContinueButton,
+            'noVKontakteContinueButton'            => $noVKontakteContinueButton,
+            'noXContinueButton'                    => $noXContinueButton,
+            'noYandexContinueButton'               => $noYandexContinueButton,
         ]);
     }
 
-    /**
-     * @param User $user
-     * @param uiR $uiR
-     * @param string $language
-     * @param string $_language
-     * @param string $randomAndTimeToken
-     * @return string
-     */
     private function htmlBodyWithMaskedRandomAndTimeTokenLink(User $user, uiR $uiR, string $language, string $_language, string $randomAndTimeToken): string
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $userInv = new UserInv();
+        $userInv       = new UserInv();
         if (null !== ($userId = $user->getId())) {
             $userInv->setUser_id((int) $userId);
             // if the user is administrator assign 0 => 'Administrator', 1 => Not Administrator
-            $userInv->setType($user->getId() == 1 ? 0 : 1);
+            $userInv->setType(1 == $user->getId() ? 0 : 1);
             // when the user clicks on the link click confirm url, make the user active in the userinv extension table. Initially keep the user inactive.
             $userInv->setActive(false);
             $userInv->setLanguage($language);
@@ -324,33 +309,31 @@ final class SignupController
                        // When the url is clicked by the user, return to userinv/signup to activate the user and assign a client to the user
                        // depending on whether 'Assign a client to user on signup' has been chosen under View ... Settings...General. The user will be able to
                        // edit their userinv details on the client side as well as the client record.
-                       ->href($this->urlGenerator->generateAbsolute(
-                           'userinv/signup',
-                           ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification'],
-                       ))
-                       ->content($this->translator->translate('email.link.click.confirm'));
+                ->href($this->urlGenerator->generateAbsolute(
+                    'userinv/signup',
+                    ['_language' => $_language, 'language' => $language, 'token' => $tokenWithMask, 'tokenType' => 'email-verification'],
+                ))
+                ->content($this->translator->translate('email.link.click.confirm'));
+
             return Body::tag()
-                       ->content($content)
-                       ->render();
+                ->content($content)
+                ->render();
         }
+
         return '';
     }
 
-    /**
-     * @param User $user
-     * @param tR $tR
-     * @return string
-     */
     private function getEmailVerificationToken(User $user, tR $tR): string
     {
-        $identity = $user->getIdentity();
+        $identity   = $user->getIdentity();
         $identityId = (int) $identity->getId();
-        $token = new Token($identityId, self::EMAIL_VERIFICATION_TOKEN);
+        $token      = new Token($identityId, self::EMAIL_VERIFICATION_TOKEN);
         // store the token amongst all the other types of tokens e.g. password_reset_token, email_verification_token etc
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string) $token->getCreated_at()->getTimestamp();
+        $timeString  = (string) $token->getCreated_at()->getTimestamp();
+
         // build the token
-        return $emailVerificationToken = null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
+        return $emailVerificationToken = null !== $tokenString ? ($tokenString.'_'.$timeString) : '';
     }
 }

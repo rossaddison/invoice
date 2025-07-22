@@ -9,8 +9,6 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 class GoogleTranslateLocaleSettingNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
-     * @return string
-     *
      * @psalm-return 'Settings...View...Google Translate...Locale has not been chosen.'
      */
     #[\Override]
@@ -19,9 +17,6 @@ class GoogleTranslateLocaleSettingNotFoundException extends \RuntimeException im
         return 'Settings...View...Google Translate...Locale has not been chosen.';
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Tag\I;
 
-/**
+/*
  * Related logic: see src\Auth\controller\AuthController
  * Related logic: see src\Auth\Trait\Oauth2
  * Related logic: see src\Auth\Controller\SignupController
@@ -24,82 +24,82 @@ use Yiisoft\Html\Tag\I;
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <label <?= $s->where('oauth2'); ?>><i class="bi bi-info-circle"></i>
-                    <?= $translator->translate('oauth2') . ' ' . '⛔'; ?>
+                <label <?php echo $s->where('oauth2'); ?>><i class="bi bi-info-circle"></i>
+                    <?php echo $translator->translate('oauth2').' ⛔'; ?>
                 </label>    
             </div>
             <div class="panel-body">
                 <div class="form-group">
                     <div class="checkbox">
-                        <?php $body['settings[no_developer_sandbox_hmrc_continue_button]'] = $s->getSetting('no_developer_sandbox_hmrc_continue_button');?>
+                        <?php $body['settings[no_developer_sandbox_hmrc_continue_button]'] = $s->getSetting('no_developer_sandbox_hmrc_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_developer_sandbox_hmrc_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_developer_sandbox_hmrc_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_developer_sandbox_hmrc_continue_button]'], 1, '==', true) ?>>
-                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?= chr(32) . $translator->translate('gov.developer.sandbox') . chr(32) . $translator->translate('gov.developer.sandbox.uk'); ?>
+                                <?php $s->check_select($body['settings[no_developer_sandbox_hmrc_continue_button]'], 1, '==', true); ?>>
+                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?php echo chr(32).$translator->translate('gov.developer.sandbox').chr(32).$translator->translate('gov.developer.sandbox.uk'); ?>
                         </label>
                     </div>    
                     <div class="checkbox">
-                        <?php $body['settings[no_github_continue_button]'] = $s->getSetting('no_github_continue_button');?>
+                        <?php $body['settings[no_github_continue_button]'] = $s->getSetting('no_github_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_github_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_github_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_github_continue_button]'], 1, '==', true) ?>>
-                            <?= I::tag()->addClass('bi bi-github')->render() . ' Github'; ?>
+                                <?php $s->check_select($body['settings[no_github_continue_button]'], 1, '==', true); ?>>
+                            <?php echo I::tag()->addClass('bi bi-github')->render().' Github'; ?>
                         </label>
                     </div>                
                     <div class="checkbox">
-                        <?php $body['settings[no_google_continue_button]'] = $s->getSetting('no_google_continue_button');?>
+                        <?php $body['settings[no_google_continue_button]'] = $s->getSetting('no_google_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_google_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_google_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_google_continue_button]'], 1, '==', true) ?>>
-                            <?= I::tag()->addClass('bi bi-google')->render() . ' Google'; ?>
+                                <?php $s->check_select($body['settings[no_google_continue_button]'], 1, '==', true); ?>>
+                            <?php echo I::tag()->addClass('bi bi-google')->render().' Google'; ?>
                         </label>
                     </div>
                     <div class="checkbox">
-                        <?php $body['settings[no_facebook_continue_button]'] = $s->getSetting('no_facebook_continue_button');?>
+                        <?php $body['settings[no_facebook_continue_button]'] = $s->getSetting('no_facebook_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_facebook_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_facebook_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_facebook_continue_button]'], 1, '==', true) ?>>
-                            <?= I::tag()->addClass('bi bi-facebook')->render() . ' Facebook'; ?>
+                                <?php $s->check_select($body['settings[no_facebook_continue_button]'], 1, '==', true); ?>>
+                            <?php echo I::tag()->addClass('bi bi-facebook')->render().' Facebook'; ?>
                         </label>
                     </div>
                     <div class="checkbox">
-                        <?php $body['settings[no_govuk_continue_button]'] = $s->getSetting('no_govuk_continue_button');?>
+                        <?php $body['settings[no_govuk_continue_button]'] = $s->getSetting('no_govuk_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_govuk_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_govuk_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_govuk_continue_button]'], 1, '==', true) ?>>
-                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?= ' Gov Uk'; ?>
+                                <?php $s->check_select($body['settings[no_govuk_continue_button]'], 1, '==', true); ?>>
+                            <img src="/img/govuk-opengraph-image.png" width="12" height="12"><?php echo ' Gov Uk'; ?>
                         </label>
                     </div>
                     <div class="checkbox">
-                        <?php $body['settings[no_linkedin_continue_button]'] = $s->getSetting('no_linkedin_continue_button');?>
+                        <?php $body['settings[no_linkedin_continue_button]'] = $s->getSetting('no_linkedin_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_linkedin_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_linkedin_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_linkedin_continue_button]'], 1, '==', true) ?>>
-                            <?= I::tag()->addClass('bi bi-linkedin')->render() . ' LinkedIn'; ?>
+                                <?php $s->check_select($body['settings[no_linkedin_continue_button]'], 1, '==', true); ?>>
+                            <?php echo I::tag()->addClass('bi bi-linkedin')->render().' LinkedIn'; ?>
                         </label>
                     </div>
                     <div class="checkbox">
-                        <?php $body['settings[no_microsoftonline_continue_button]'] = $s->getSetting('no_microsoftonline_continue_button');?>
+                        <?php $body['settings[no_microsoftonline_continue_button]'] = $s->getSetting('no_microsoftonline_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_microsoftonline_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_microsoftonline_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_microsoftonline_continue_button]'], 1, '==', true) ?>>
-                            <?= I::tag()->addClass('bi bi-microsoft')->render() . ' Microsoft Online'; ?>
+                                <?php $s->check_select($body['settings[no_microsoftonline_continue_button]'], 1, '==', true); ?>>
+                            <?php echo I::tag()->addClass('bi bi-microsoft')->render().' Microsoft Online'; ?>
                         </label>
                     </div>
                     <div>
                         <div class="checkbox">
-                            <?php $body['settings[no_openbanking_continue_button]'] = $s->getSetting('no_openbanking_continue_button');?>
+                            <?php $body['settings[no_openbanking_continue_button]'] = $s->getSetting('no_openbanking_continue_button'); ?>
                             <label>
                                 <input type="hidden" name="settings[no_openbanking_continue_button]" value="0">
                                 <input type="checkbox" name="settings[no_openbanking_continue_button]" value="1"
-                                    <?php $s->check_select($body['settings[no_openbanking_continue_button]'], 1, '==', true) ?>>
+                                    <?php $s->check_select($body['settings[no_openbanking_continue_button]'], 1, '==', true); ?>>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
                                         <circle cx="6" cy="6" r="5" stroke="#000" stroke-width="1.5" fill="#fff"/>
                                         <g>
@@ -112,11 +112,11 @@ use Yiisoft\Html\Tag\I;
                                         <g>
                                           <path d="M2 5.3L6 2.5L10 5.3" stroke="#000" stroke-width="0.6" fill="none"/>
                                         </g>
-                                    </svg><?= ' Open Banking'; ?>
+                                    </svg><?php echo ' Open Banking'; ?>
                             </label>
                         </div>
                         <div>
-                            <?php $body['settings[open_banking_provider]'] = $s->getSetting('open_banking_provider');?>
+                            <?php $body['settings[open_banking_provider]'] = $s->getSetting('open_banking_provider'); ?>
                             <select name="settings[open_banking_provider]" id="settings[open_banking_provider]"
                                 class="form-control">
                                 <?php
@@ -125,39 +125,39 @@ use Yiisoft\Html\Tag\I;
                                      * @var string $value
                                      */
                                     foreach ($openBankingProviders as $key => $value) { ?>
-                                    <option value="<?= $value; ?>"
+                                    <option value="<?php echo $value; ?>"
                                         <?php $s->check_select($body['settings[open_banking_provider]'], $value); ?>>
-                                        <?= ucfirst($value); ?>
+                                        <?php echo ucfirst($value); ?>
                                     </option>
                                     <?php } ?>
                             </select>
                         </div>
                     </div>    
                     <div class="checkbox">
-                        <?php $body['settings[no_vkontakte_continue_button]'] = $s->getSetting('no_vkontakte_continue_button');?>
+                        <?php $body['settings[no_vkontakte_continue_button]'] = $s->getSetting('no_vkontakte_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_vkontakte_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_vkontakte_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_vkontakte_continue_button]'], 1, '==', true) ?>>
-                            <img src="/img/vkontakte.jpg" width="12" height="12"><?= ' VKontakte'; ?>
+                                <?php $s->check_select($body['settings[no_vkontakte_continue_button]'], 1, '==', true); ?>>
+                            <img src="/img/vkontakte.jpg" width="12" height="12"><?php echo ' VKontakte'; ?>
                         </label>
                     </div>
                     <div class="checkbox">
-                        <?php $body['settings[no_x_continue_button]'] = $s->getSetting('no_x_continue_button');?>
+                        <?php $body['settings[no_x_continue_button]'] = $s->getSetting('no_x_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_x_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_x_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_x_continue_button]'], 1, '==', true) ?>>
-                            <?= I::tag()->addClass('bi bi-twitter')->render() . ' X i.e Twitter'; ?>
+                                <?php $s->check_select($body['settings[no_x_continue_button]'], 1, '==', true); ?>>
+                            <?php echo I::tag()->addClass('bi bi-twitter')->render().' X i.e Twitter'; ?>
                         </label>
                     </div>
                     <div class="checkbox">
-                        <?php $body['settings[no_yandex_continue_button]'] = $s->getSetting('no_yandex_continue_button');?>
+                        <?php $body['settings[no_yandex_continue_button]'] = $s->getSetting('no_yandex_continue_button'); ?>
                         <label>
                             <input type="hidden" name="settings[no_yandex_continue_button]" value="0">
                             <input type="checkbox" name="settings[no_yandex_continue_button]" value="1"
-                                <?php $s->check_select($body['settings[no_yandex_continue_button]'], 1, '==', true) ?>>
-                            <img src="/img/yandex.jpg" width="12" height="12"><?= ' Yandex'; ?>
+                                <?php $s->check_select($body['settings[no_yandex_continue_button]'], 1, '==', true); ?>>
+                            <img src="/img/yandex.jpg" width="12" height="12"><?php echo ' Yandex'; ?>
                         </label>
                     </div>
                 </div>

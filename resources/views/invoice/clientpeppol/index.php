@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 /**
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var string $alert
+ * @var string                                 $alert
  */
-
 echo $alert;
 
 ?>
 
-<h1><?= $translator->translate('client.peppol'); ?></h1>
+<h1><?php echo $translator->translate('client.peppol'); ?></h1>

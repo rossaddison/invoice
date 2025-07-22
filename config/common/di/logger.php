@@ -7,11 +7,11 @@ use Yiisoft\Definitions\ReferencesArray;
 use Yiisoft\Log\Logger;
 use Yiisoft\Log\Target\File\FileTarget;
 
-/** @var array $params */
+/* @var array $params */
 
 return [
     LoggerInterface::class => [
-        'class' => Logger::class,
+        'class'         => Logger::class,
         '__construct()' => [
             'targets' => ReferencesArray::from([
                 FileTarget::class,

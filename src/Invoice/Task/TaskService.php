@@ -8,12 +8,10 @@ use App\Invoice\Entity\Task;
 
 final readonly class TaskService
 {
-    public function __construct(private TaskRepository $repository) {}
+    public function __construct(private TaskRepository $repository)
+    {
+    }
 
-    /**
-     * @param Task $model
-     * @param array $array
-     */
     public function saveTask(Task $model, array $array): void
     {
         isset($array['project_id']) ? $model->setProject_id((int) $array['project_id']) : '';
@@ -33,9 +31,6 @@ final readonly class TaskService
         $this->repository->save($model);
     }
 
-    /**
-     * @param Task $model
-     */
     public function deleteTask(Task $model): void
     {
         $this->repository->delete($model);

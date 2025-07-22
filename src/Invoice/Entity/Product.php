@@ -44,39 +44,41 @@ class Product
         private ?int $tax_rate_id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $unit_id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $unit_peppol_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $family_id = null) {}
+        private ?int $family_id = null)
+    {
+    }
 
-    //get relation $family
+    // get relation $family
     public function getFamily(): ?Family
     {
         return $this->family;
     }
 
-    //set relation $family
+    // set relation $family
     public function setFamily(?Family $family): void
     {
         $this->family = $family;
     }
 
-    //relation $tax_rate
+    // relation $tax_rate
     public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
     }
 
-    //set relation $taxrate
+    // set relation $taxrate
     public function setTaxrate(?TaxRate $taxrate): void
     {
         $this->tax_rate = $taxrate;
     }
 
-    //relation $unit
+    // relation $unit
     public function getUnit(): ?Unit
     {
         return $this->unit;
     }
 
-    //set relation $unit
+    // set relation $unit
     public function setUnit(?Unit $unit): void
     {
         $this->unit = $unit;
@@ -97,7 +99,7 @@ class Product
         $this->family_id = $family_id;
     }
 
-    public function getProduct_sku(): string|null
+    public function getProduct_sku(): ?string
     {
         return $this->product_sku;
     }
@@ -111,18 +113,16 @@ class Product
     // Standard Item Identification Code Default '0160'
 
     /**
-     * Used with PeppolArrays getIso_6523_icd function
-     * @return string|null
+     * Used with PeppolArrays getIso_6523_icd function.
      */
-    public function getProduct_sii_schemeid(): string|null
+    public function getProduct_sii_schemeid(): ?string
     {
         return $this->product_sii_schemeid;
     }
 
     /**
      * Mandatory (M) eg. 0160 from PeppolArrays getIso6523_icd()
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
-     * @param string $product_sii_schemeid
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/.
      */
     public function setProduct_sii_schemeid(string $product_sii_schemeid): void
     {
@@ -130,10 +130,9 @@ class Product
     }
 
     /**
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
-     * @return string|null
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/.
      */
-    public function getProduct_sii_id(): string|null
+    public function getProduct_sii_id(): ?string
     {
         return $this->product_sii_id;
     }
@@ -145,10 +144,9 @@ class Product
 
     /**
      * Used with src/Invoice/Helpers/Peppol/PeppolArrays function getUncl7143 eg. SRV
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/listID/
-     * @return string|null
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/listID/.
      */
-    public function getProduct_icc_listid(): string|null
+    public function getProduct_icc_listid(): ?string
     {
         return $this->product_icc_listid;
     }
@@ -158,7 +156,7 @@ class Product
         $this->product_icc_listid = $product_icc_listid;
     }
 
-    public function getProduct_icc_listversionid(): string|null
+    public function getProduct_icc_listversionid(): ?string
     {
         return $this->product_icc_listversionid;
     }
@@ -168,7 +166,7 @@ class Product
         $this->product_icc_listversionid = $product_icc_listversionid;
     }
 
-    public function getProduct_icc_id(): string|null
+    public function getProduct_icc_id(): ?string
     {
         return $this->product_icc_id;
     }
@@ -183,12 +181,12 @@ class Product
         $this->product_country_of_origin_code = $product_country_of_origin_code;
     }
 
-    public function getProduct_country_of_origin_code(): string|null
+    public function getProduct_country_of_origin_code(): ?string
     {
         return $this->product_country_of_origin_code;
     }
 
-    public function getProduct_name(): string|null
+    public function getProduct_name(): ?string
     {
         return $this->product_name;
     }
@@ -198,7 +196,7 @@ class Product
         $this->product_name = $product_name;
     }
 
-    public function getProduct_description(): string|null
+    public function getProduct_description(): ?string
     {
         return $this->product_description;
     }
@@ -208,7 +206,7 @@ class Product
         $this->product_description = $product_description;
     }
 
-    public function getProduct_price(): float|null
+    public function getProduct_price(): ?float
     {
         return $this->product_price;
     }
@@ -218,7 +216,7 @@ class Product
         $this->product_price = $product_price;
     }
 
-    public function getPurchase_price(): float|null
+    public function getPurchase_price(): ?float
     {
         return $this->purchase_price;
     }
@@ -238,7 +236,7 @@ class Product
         $this->purchase_price = $purchase_price;
     }
 
-    public function getProvider_name(): string|null
+    public function getProvider_name(): ?string
     {
         return $this->provider_name;
     }
@@ -250,10 +248,9 @@ class Product
 
     /**
      * eg. Colour
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
-     * @return string|null
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/.
      */
-    public function getProduct_additional_item_property_name(): string|null
+    public function getProduct_additional_item_property_name(): ?string
     {
         return $this->product_additional_item_property_name;
     }
@@ -265,10 +262,9 @@ class Product
 
     /**
      * eg. Black
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
-     * @return string|null
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/.
      */
-    public function getProduct_additional_item_property_value(): string|null
+    public function getProduct_additional_item_property_value(): ?string
     {
         return $this->product_additional_item_property_value;
     }
@@ -308,7 +304,7 @@ class Product
         return (string) $this->unit_peppol_id;
     }
 
-    public function getProduct_tariff(): float|null
+    public function getProduct_tariff(): ?float
     {
         return $this->product_tariff;
     }
@@ -320,10 +316,7 @@ class Product
 
     /**
      * Make sure the sequence of parameters is correct
-     * Related logic: see https://github.com/yiisoft/demo/issues/462
-     * @param int $tax_rate_id
-     * @param int $unit_id
-     * @param int $family_id
+     * Related logic: see https://github.com/yiisoft/demo/issues/462.
      */
     public function nullifyRelationOnChange(int $tax_rate_id, int $unit_id, int $family_id): void
     {

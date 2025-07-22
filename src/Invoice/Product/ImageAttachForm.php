@@ -11,8 +11,6 @@ final class ImageAttachForm extends FormModel
     private ?array $attachFile = null;
 
     /**
-     * @return string
-     *
      * @psalm-return 'ImageAttachForm'
      */
     #[\Override]

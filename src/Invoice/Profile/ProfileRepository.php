@@ -6,34 +6,34 @@ namespace App\Invoice\Profile;
 
 use App\Invoice\Entity\Profile;
 use Cycle\ORM\Select;
-use Throwable;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of Profile
+ *
  * @extends Select\Repository<TEntity>
  */
 final class ProfileRepository extends Select\Repository
 {
     /**
-    * @param Select<TEntity> $select
-    * @param EntityWriter $entityWriter
-    */
+     * @param Select<TEntity> $select
+     */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
 
     /**
-     * Get profiles  without filter
+     * Get profiles  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()->load('company');
+
         return $this->prepareDataReader($query);
     }
 
@@ -52,9 +52,9 @@ final class ProfileRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|Profile|null $profile
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function save(array|Profile|null $profile): void
     {
@@ -62,9 +62,9 @@ final class ProfileRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|Profile|null $profile
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function delete(array|Profile|null $profile): void
     {
@@ -80,13 +80,12 @@ final class ProfileRepository extends Select\Repository
     }
 
     /**
-     * @return Profile|null
-     *
      * @psalm-return TEntity|null
      */
-    public function repoProfilequery(string $id): Profile|null
+    public function repoProfilequery(string $id): ?Profile
     {
         $query = $this->select()->load('company')->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;
+
+        return $query->fetchOne() ?: null;
     }
 }

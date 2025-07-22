@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\SalesOrderItem\SalesOrderItemRepository::class)]
@@ -59,33 +58,33 @@ class SalesOrderItem
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_unit_id = null,
     ) {
-        $this->date_added = new DateTimeImmutable();
+        $this->date_added = new \DateTimeImmutable();
     }
 
-    //relation $tax_rate
+    // relation $tax_rate
     public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
     }
 
-    //set relation $taxrate
+    // set relation $taxrate
     public function setTaxRate(?TaxRate $taxrate): void
     {
         $this->tax_rate = $taxrate;
     }
 
-    public function getProduct(): Product|null
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
 
-    //set relation $product
+    // set relation $product
     public function setProduct(?Product $product): void
     {
         $this->product = $product;
     }
 
-    public function getSalesOrder(): SalesOrder|null
+    public function getSalesOrder(): ?SalesOrder
     {
         return $this->sales_order;
     }
@@ -155,13 +154,13 @@ class SalesOrderItem
         $this->product_id = $product_id;
     }
 
-    public function getDate_added(): DateTimeImmutable
+    public function getDate_added(): \DateTimeImmutable
     {
-        /** @var DateTimeImmutable $this->date_added */
+        /* @var DateTimeImmutable $this->date_added */
         return $this->date_added;
     }
 
-    public function setDate_added(DateTime $date_added): void
+    public function setDate_added(\DateTime $date_added): void
     {
         $this->date_added = $date_added;
     }
@@ -226,7 +225,7 @@ class SalesOrderItem
         $this->charge_amount = $charge_amount;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }

@@ -7,14 +7,14 @@ namespace App\Invoice\Helpers;
 class CurrencyHelper
 {
     /**
-     * Create a new Currency object
+     * Create a new Currency object.
      */
-    private function __construct(private readonly mixed $code, private readonly mixed $numeric, private readonly mixed $decimals) {}
+    private function __construct(private readonly mixed $code, private readonly mixed $numeric, private readonly mixed $decimals)
+    {
+    }
 
     /**
-     * Get the three letter code for the currency
-     *
-     * @return mixed
+     * Get the three letter code for the currency.
      */
     public function getCode(): mixed
     {
@@ -22,9 +22,7 @@ class CurrencyHelper
     }
 
     /**
-     * Get the numeric code for this currency
-     *
-     * @return mixed
+     * Get the numeric code for this currency.
      */
     public function getNumeric(): mixed
     {
@@ -32,9 +30,7 @@ class CurrencyHelper
     }
 
     /**
-     * Get the number of decimal places for this currency
-     *
-     * @return int
+     * Get the number of decimal places for this currency.
      */
     public function getDecimals(): int
     {
@@ -42,28 +38,30 @@ class CurrencyHelper
     }
 
     /**
-     * Find a specific currency
+     * Find a specific currency.
      *
-     * @param  string $currency_code The three letter currency code
-     * @return mixed  A Currency object, or null if no currency was found
+     * @param string $currency_code The three letter currency code
+     *
+     * @return mixed A Currency object, or null if no currency was found
      */
     public function find(string $currency_code): mixed
     {
-        $code = strtoupper($currency_code);
+        $code       = strtoupper($currency_code);
         $currencies = static::all();
         if (isset($currencies[$code])) {
-            /**
+            /*
              * @var string $currencies[$code]['numeric']
              * @var string $currencies[$code]['decimals']
              */
             return new self($code, $currencies[$code]['numeric'], $currencies[$code]['decimals']);
         }
+
         return null;
     }
 
     /**
      * Related logic: see ISO 4217 alpha-3 ie. 3 letter currency codes
-     * Get an array of all supported currencies
+     * Get an array of all supported currencies.
      *
      * @return (int|string)[][]
      *

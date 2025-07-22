@@ -6,19 +6,19 @@ namespace App\Invoice\InvTaxRate;
 
 use App\Invoice\Entity\InvTaxRate;
 use Cycle\ORM\Select;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of InvTaxRate
+ *
  * @extends Select\Repository<TEntity>
  */
 final class InvTaxRateRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,15 +26,16 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     * Get invtaxrates  without filter
+     * Get invtaxrates  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load('inv')
-                      ->load('tax_rate');
+            ->load('inv')
+            ->load('tax_rate');
+
         return $this->prepareDataReader($query);
     }
 
@@ -47,17 +48,14 @@ final class InvTaxRateRepository extends Select\Repository
             ->withSort($this->getSort());
     }
 
-    /**
-     * @return Sort
-     */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|InvTaxRate|null $invtaxrate
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
      * @throwable
      */
     public function save(array|InvTaxRate|null $invtaxrate): void
@@ -66,8 +64,8 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|InvTaxRate|null $invtaxrate
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
      * @throwable
      */
     public function delete(array|InvTaxRate|null $invtaxrate): void
@@ -75,10 +73,6 @@ final class InvTaxRateRepository extends Select\Repository
         $this->entityWriter->delete([$invtaxrate]);
     }
 
-    /**
-     * @param Select $query
-     * @return EntityReader
-     */
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -87,31 +81,28 @@ final class InvTaxRateRepository extends Select\Repository
         );
     }
 
-    //find all inv tax rates assigned to specific inv. Normally only one but just in case more than one assigned
-    //used in inv/view to determine if a 'one-off'  inv tax rate acquired from tax rates is to be applied to the inv
-    //inv tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
+    // find all inv tax rates assigned to specific inv. Normally only one but just in case more than one assigned
+    // used in inv/view to determine if a 'one-off'  inv tax rate acquired from tax rates is to be applied to the inv
+    // inv tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
 
-    /**
-     * @param string|null $inv_id
-     */
-    public function repoCount(string|null $inv_id): int
+    public function repoCount(?string $inv_id): int
     {
         return $this->select()
-                      ->where(['inv_id' => $inv_id])
-                      ->count();
+            ->where(['inv_id' => $inv_id])
+            ->count();
     }
 
     /**
-     * @param string $id
      * @return TEntity|null
      */
     public function repoInvTaxRatequery(string $id): ?InvTaxRate
     {
         $query = $this->select()
-                      ->load('inv')
-                      ->load('tax_rate')
-                      ->where(['id' => $id]);
-        return  $query->fetchOne();
+            ->load('inv')
+            ->load('tax_rate')
+            ->where(['id' => $id]);
+
+        return $query->fetchOne();
     }
 
     // find all inv tax rates used for a specific inv normally to apply include_item_tax
@@ -122,50 +113,45 @@ final class InvTaxRateRepository extends Select\Repository
     public function repoInvquery(string $inv_id): EntityReader
     {
         $query = $this->select()->load('tax_rate')->where(['inv_id' => $inv_id]);
+
         return $this->prepareDataReader($query);
     }
 
     /**
-     * @param string $tax_rate_id
      * @return TEntity|null
      */
     public function repoTaxRatequery(string $tax_rate_id): ?InvTaxRate
     {
         $query = $this->select()->load('tax_rate')->where(['tax_rate_id' => $tax_rate_id]);
-        return  $query->fetchOne();
+
+        return $query->fetchOne();
     }
 
-    /**
-     * @param string $inv_id
-     * @return EntityReader
-     */
     public function repoGetInvTaxRateAmounts(string $inv_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['inv_id' => $inv_id]);
+            ->where(['inv_id' => $inv_id]);
+
         return $this->prepareDataReader($query);
     }
 
-    /**
-     * @param string $inv_id
-     * @return float
-     */
     public function repoUpdateInvTaxTotal(string $inv_id): float
     {
         $getTaxRateAmounts = $this->repoGetInvTaxRateAmounts($inv_id);
-        $total = 0.00;
+        $total             = 0.00;
         /** @var array $item */
         foreach ($getTaxRateAmounts as $item) {
             /**
              * @var string $key
-             * @var float $value
+             * @var float  $value
              */
             foreach ($item as $key => $value) {
-                if ($key === 'inv_tax_rate_amount') {
+                if ('inv_tax_rate_amount' === $key) {
                     $total += $value;
                 }
             }
         }
+
         return $total;
     }
 }

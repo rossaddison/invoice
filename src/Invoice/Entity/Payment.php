@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Payment\PaymentRepository::class)]
@@ -27,7 +26,9 @@ class Payment
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $payment_method_id = null, #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
         private ?float $amount = 0.00, #[Column(type: 'longText', nullable: false)]
-        private string $note = '') {}
+        private string $note = '')
+    {
+    }
 
     public function getInv(): ?Inv
     {
@@ -44,7 +45,7 @@ class Payment
         return $this->payment_method;
     }
 
-    //set relation $payment_method
+    // set relation $payment_method
     public function setPaymentMethod(?PaymentMethod $payment_method): void
     {
         $this->payment_method = $payment_method;
@@ -70,13 +71,13 @@ class Payment
         $this->payment_method_id = $payment_method_id;
     }
 
-    public function getPayment_date(): string|DateTimeImmutable
+    public function getPayment_date(): string|\DateTimeImmutable
     {
-        /** @var DateTimeImmutable|string $this->payment_date */
+        /* @var DateTimeImmutable|string $this->payment_date */
         return $this->payment_date;
     }
 
-    public function setPayment_date(?DateTime $payment_date): void
+    public function setPayment_date(?\DateTime $payment_date): void
     {
         $this->payment_date = $payment_date;
     }

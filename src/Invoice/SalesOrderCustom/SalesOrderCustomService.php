@@ -8,12 +8,10 @@ use App\Invoice\Entity\SalesOrderCustom;
 
 final readonly class SalesOrderCustomService
 {
-    public function __construct(private SalesOrderCustomRepository $repository) {}
+    public function __construct(private SalesOrderCustomRepository $repository)
+    {
+    }
 
-    /**
-     * @param SalesOrderCustom $model
-     * @param array $array
-     */
     public function saveSoCustom(SalesOrderCustom $model, array $array): void
     {
         isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
@@ -22,9 +20,6 @@ final readonly class SalesOrderCustomService
         $this->repository->save($model);
     }
 
-    /**
-     * @param array|SalesOrderCustom|null $model
-     */
     public function deleteSalesOrderCustom(array|SalesOrderCustom|null $model): void
     {
         $this->repository->delete($model);

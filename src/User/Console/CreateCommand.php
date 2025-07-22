@@ -6,13 +6,11 @@ namespace App\User\Console;
 
 use App\Auth\Form\SignupForm;
 use App\User\User;
-use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Throwable;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Yii\Console\ExitCode;
@@ -41,12 +39,7 @@ final class CreateCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string $error
-     * @param string $attribute
-     * @throws LogicException
-     * @return int
+     * @throws \LogicException
      */
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -62,17 +55,17 @@ final class CreateCommand extends Command
          * @psalm-suppress MixedAssignment
          */
         $password = $input->getArgument('password');
-        $isAdmin = (bool) $input->getArgument('isAdmin');
+        $isAdmin  = (bool) $input->getArgument('isAdmin');
 
         try {
             $this->formHydrator->populate(model: $this->signupForm, data: [
-                'login' => $login,
-                'password' => $password,
+                'login'          => $login,
+                'password'       => $password,
                 'passwordVerify' => $password,
             ], scope: '');
             $user = $this->signupForm->signup();
-        } catch (Throwable $t) {
-            /**
+        } catch (\Throwable $t) {
+            /*
              * Avoid Information Exposure
              * Related logic: see https://cwe.mitre.org/data/definitions/200.html
              * Previously: $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());             *
@@ -82,14 +75,15 @@ final class CreateCommand extends Command
 
         if (!$user instanceof User) {
             $errors = $this->signupForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-            array_walk($errors, fn(string $error, string $attribute): mixed => $io->error("$attribute: $error"));
+            array_walk($errors, fn (string $error, string $attribute): mixed => $io->error("$attribute: $error"));
+
             return ExitCode::DATAERR;
         }
 
         if ($isAdmin) {
             $userId = $user->getId();
-            if ($userId === null) {
-                throw new LogicException('User Id is NULL');
+            if (null === $userId) {
+                throw new \LogicException('User Id is NULL');
             }
             $this->manager->assign('admin', $userId);
         }

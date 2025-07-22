@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\CompanyPrivate\CompanyPrivateForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Widget\Button $button
@@ -24,36 +24,36 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('setting.company.private'); ?>
-<?= Html::closeTag('h1'); ?>
+<?php echo Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?php echo Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?php echo Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?php echo Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?php echo Html::openTag('div', ['class' => 'card-header']); ?>
+<?php echo Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+<?php echo $translator->translate('setting.company.private'); ?>
+<?php echo Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CompanyPrivateForm')
-    ->open() ?>
+    ->open(); ?>
 
-    <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $title; ?>
-        <?= Html::closeTag('h1'); ?>
-        <?= Html::openTag('div', ['id' => 'content']); ?>
-            <?= Html::openTag('div', ['class' => 'row']); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::errorSummary($form)
-                        ->errors($errors)
-                        ->header($translator->translate('error.summary'))
-                        ->onlyCommonErrors()
+    <?php echo Html::openTag('div', ['id' => 'headerbar']); ?>
+        <?php echo Html::openTag('h1', ['class' => 'headerbar-title']); ?>
+            <?php echo $title; ?>
+        <?php echo Html::closeTag('h1'); ?>
+        <?php echo Html::openTag('div', ['id' => 'content']); ?>
+            <?php echo Html::openTag('div', ['class' => 'row']); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::errorSummary($form)
+        ->errors($errors)
+        ->header($translator->translate('error.summary'))
+        ->onlyCommonErrors();
 ?>
-                <?= Html::closeTag('div'); ?>    
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                <?php echo Html::closeTag('div'); ?>    
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?php
     $optionsDataCompany = [];
 /**
@@ -65,111 +65,110 @@ foreach ($companies as $company) {
     }
 }
 ?>
-                    <?=
-    Field::select($form, 'company_id')
+                    <?php echo Field::select($form, 'company_id')
     ->label($company_public)
     ->addInputAttributes([
         'class' => 'form-control',
-        'id' => 'company_id',
+        'id'    => 'company_id',
     ])
     ->optionsData($optionsDataCompany)
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::hidden($form, 'id')
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::hidden($form, 'id')
     ->addInputAttributes(['class' => 'form-control'])
     ->hideLabel()
-    ->value(Html::encode($form->getId() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'tax_code')
+    ->value(Html::encode($form->getId() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'tax_code')
     ->addInputAttributes(['class' => 'form-control'])
     ->label($translator->translate('tax.code'))
-    ->value(Html::encode($form->getTax_code() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'iban')
+    ->value(Html::encode($form->getTax_code() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'iban')
     ->addInputAttributes(['class' => 'form-control'])
     ->label($translator->translate('user.iban'))
-    ->value(Html::encode($form->getIban() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'gln')
+    ->value(Html::encode($form->getIban() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'gln')
     ->addInputAttributes(['class' => 'form-control'])
     ->label($translator->translate('gln'))
-    ->value(Html::encode($form->getGln() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'rcc')
+    ->value(Html::encode($form->getGln() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'rcc')
     ->addInputAttributes(['class' => 'form-control'])
     ->label($translator->translate('sumex.rcc'))
-    ->value(Html::encode($form->getRcc() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
-                    <?= Html::openTag('label'); ?>
-                        <?= Html::encode($form->getLogo_filename()); ?>
-                    <?= Html::closeTag('label'); ?>
-                    <?= Field::file($form, 'logo_filename')
-    ->accept('image/*')
-    ->value(Html::encode($form->getLogo_filename())); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'logo_width')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('company.private.logo.width'))
-    ->value(Html::encode($form->getLogo_width() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'logo_height')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('company.private.logo.height'))
-    ->value(Html::encode($form->getLogo_height() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'logo_margin')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('company.private.logo.margin'))
-    ->value(Html::encode($form->getLogo_margin() ??  '')); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::date($form, 'start_date')
-        ->addInputAttributes(
-            [
-                'class' => 'form-control',
-                'placeholder' => ' (' . $dateHelper->display() . ')',
-            ],
-        )
-        ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
-                            ? $startdate->format('Y-m-d')
-                            : (new \DateTimeImmutable('now'))->format('Y-m-d')));
+    ->value(Html::encode($form->getRcc() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
+                    <?php echo Html::openTag('label'); ?>
+                        <?php echo Html::encode($form->getLogo_filename()); ?>
+                    <?php echo Html::closeTag('label'); ?>
+                    <?php echo Field::file($form, 'logo_filename')
+                        ->accept('image/*')
+                        ->value(Html::encode($form->getLogo_filename())); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'logo_width')
+                        ->addInputAttributes(['class' => 'form-control'])
+                        ->label($translator->translate('company.private.logo.width'))
+                        ->value(Html::encode($form->getLogo_width() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'logo_height')
+                        ->addInputAttributes(['class' => 'form-control'])
+                        ->label($translator->translate('company.private.logo.height'))
+                        ->value(Html::encode($form->getLogo_height() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Field::text($form, 'logo_margin')
+                        ->addInputAttributes(['class' => 'form-control'])
+                        ->label($translator->translate('company.private.logo.margin'))
+                        ->value(Html::encode($form->getLogo_margin() ?? '')); ?>
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Html::openTag('div', ['class' => 'input-group']); ?>               
+                        <?php echo Field::date($form, 'start_date')
+                            ->addInputAttributes(
+                                [
+                                    'class'       => 'form-control',
+                                    'placeholder' => ' ('.$dateHelper->display().')',
+                                ],
+                            )
+                            ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
+                                                ? $startdate->format('Y-m-d')
+                                                : (new DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>                                
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::date($form, 'end_date')
-    ->addInputAttributes(
-        [
-            'class' => 'form-control',
-            'placeholder' => ' (' . $dateHelper->display() . ')',
-        ],
-    )
-    ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
-                        ? $enddate->format('Y-m-d')
-                        : (new \DateTimeImmutable('now'))->format('Y-m-d')));
+                    <?php echo Html::closeTag('div'); ?>                                
+                <?php echo Html::closeTag('div'); ?>
+                <?php echo Html::openTag('div', ['class' => 'mb3 form-group']); ?>
+                    <?php echo Html::openTag('div', ['class' => 'input-group']); ?>               
+                        <?php echo Field::date($form, 'end_date')
+                            ->addInputAttributes(
+                                [
+                                    'class'       => 'form-control',
+                                    'placeholder' => ' ('.$dateHelper->display().')',
+                                ],
+                            )
+                            ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
+                                                ? $enddate->format('Y-m-d')
+                                                : (new DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>                                
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
-    <?= Html::closeTag('div'); ?>
-<?= $button::backSave(); ?>
-<?= Form::tag()->close() ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+                    <?php echo Html::closeTag('div'); ?>                                
+                <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>    
+    <?php echo Html::closeTag('div'); ?>
+<?php echo $button::backSave(); ?>
+<?php echo Form::tag()->close(); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>

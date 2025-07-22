@@ -1,14 +1,14 @@
 <!doctype html>
 <?php
- /**
- * @var \Yiisoft\View\WebView $this
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $body
- * @var string $csrf
- * @var string $heading
- * @var string $message
- * @var string $url
- * @var string $title
+/**
+ * @var Yiisoft\View\WebView                 $this
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array                                $body
+ * @var string                               $csrf
+ * @var string                               $heading
+ * @var string                               $message
+ * @var string                               $url
+ * @var string                               $title
  */
 ?>
 <html lang="en">
@@ -67,8 +67,8 @@
 <body>       
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
-<form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url); ?>">
-       <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+<form method="POST" class="form-inline" action="<?php echo $urlGenerator->generate($url); ?>">
+       <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
        <button type="submit" class="btn btn-xs btn-link">✅</button>
 </form>
 </body>

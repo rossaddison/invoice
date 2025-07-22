@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $products
@@ -15,11 +15,11 @@ use Yiisoft\Html\Html;
     <table class="table table-hover table-bordered table-striped">
         <tr>
             <th>&nbsp;</th>
-            <th><?= $translator->translate('product.sku'); ?></th>
-            <th><?= $translator->translate('family.name'); ?></th>
-            <th><?= $translator->translate('product.name'); ?></th>
-            <th><?= $translator->translate('product.description'); ?></th>
-            <th class="text-right"><?= $translator->translate('product.price'); ?></th>
+            <th><?php echo $translator->translate('product.sku'); ?></th>
+            <th><?php echo $translator->translate('family.name'); ?></th>
+            <th><?php echo $translator->translate('product.name'); ?></th>
+            <th><?php echo $translator->translate('product.description'); ?></th>
+            <th class="text-right"><?php echo $translator->translate('product.price'); ?></th>
         </tr>
         <?php
             /**
@@ -32,19 +32,19 @@ use Yiisoft\Html\Html;
                            value="<?php echo (int) $product->getProduct_id(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($product->getProduct_sku()); ?></b>
+                    <b><?php echo Html::encode($product->getProduct_sku()); ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($product->getFamily()?->getFamily_name()); ?></b>
+                    <b><?php echo Html::encode($product->getFamily()?->getFamily_name()); ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($product->getProduct_name()); ?></b>
+                    <b><?php echo Html::encode($product->getProduct_name()); ?></b>
                 </td>
                 <td>
-                    <?= nl2br(Html::encode($product->getProduct_description())); ?>
+                    <?php echo nl2br(Html::encode($product->getProduct_description())); ?>
                 </td>
                 <td class="text-right">
-                    <?= $numberHelper->format_currency($product->getProduct_price()); ?>
+                    <?php echo $numberHelper->format_currency($product->getProduct_price()); ?>
                 </td>
             </tr>
         <?php } ?>

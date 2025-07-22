@@ -6,20 +6,19 @@ namespace App\Invoice\Delivery;
 
 use App\Invoice\Entity\Delivery;
 use Cycle\ORM\Select;
-use Throwable;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of Delivery
+ *
  * @extends Select\Repository<TEntity>
  */
 final class DeliveryRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -27,13 +26,14 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * Get deliverys  without filter
+     * Get deliverys  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
+
         return $this->prepareDataReader($query);
     }
 
@@ -46,19 +46,17 @@ final class DeliveryRepository extends Select\Repository
             ->withSort($this->getSort());
     }
 
-    /**
-     * @return Sort
-     */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|Delivery|null $delivery
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
      * @psalm-param TEntity $delivery
-     * @throws Throwable
+     *
+     * @throws \Throwable
      */
     public function save(array|Delivery|null $delivery): void
     {
@@ -66,20 +64,15 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|Delivery|null $delivery
-
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function delete(array|Delivery|null $delivery): void
     {
         $this->entityWriter->delete([$delivery]);
     }
 
-    /**
-     * @param Select $query
-     * @return EntityReader
-     */
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -89,58 +82,45 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
      * @psalm-return TEntity|null
-     * @return Delivery|null
      */
-    public function repoDeliveryquery(string $id): Delivery|null
+    public function repoDeliveryquery(string $id): ?Delivery
     {
         $query = $this->select()
-                      ->where(['id' => $id]);
-        return  $query->fetchOne() ?: null;
+            ->where(['id' => $id]);
+
+        return $query->fetchOne() ?: null;
     }
 
-    /**
-     * @param string $inv_id
-     * @return Delivery|null
-     */
-    public function repoPartyquery(string $inv_id): Delivery|null
+    public function repoPartyquery(string $inv_id): ?Delivery
     {
         $query = $this->select()
-                      ->where(['inv_id' => $inv_id]);
-        return  $query->fetchOne() ?: null;
+            ->where(['inv_id' => $inv_id]);
+
+        return $query->fetchOne() ?: null;
     }
 
-    /**
-     * @param string $inv_id
-     * @return Delivery|null
-     */
-    public function repoInvoicequery(string $inv_id): Delivery|null
+    public function repoInvoicequery(string $inv_id): ?Delivery
     {
         $query = $this->select()
-                      ->where(['inv_id' => $inv_id]);
-        return  $query->fetchOne() ?: null;
+            ->where(['inv_id' => $inv_id]);
+
+        return $query->fetchOne() ?: null;
     }
 
-    /**
-     * @param string $inv_id
-     * @return int
-     */
     public function repoCountInvoice(string $inv_id): int
     {
         $query = $this->select()
-                      ->where(['inv_id' => $inv_id]);
+            ->where(['inv_id' => $inv_id]);
+
         return $query->count();
     }
 
-    /**
-     * @param string $id
-     * @return int
-     */
     public function repoCount(string $id): int
     {
         $query = $this->select()
-                      ->where(['id' => $id]);
+            ->where(['id' => $id]);
+
         return $query->count();
     }
 }

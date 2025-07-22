@@ -5,30 +5,29 @@ declare(strict_types=1);
 use App\Invoice\Entity\Unit;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
-use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Entity\Unit $unit
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
- * @var string $alert
- * @var string $csrf
- * @var OffsetPaginator $paginator
- * @var \Yiisoft\Router\CurrentRoute $currentRoute
- * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var \Yiisoft\Translator\TranslatorInterface $translator
- * @var WebView $this
+ * @var Unit                                   $unit
+ * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Widget\GridComponents              $gridComponents
+ * @var string                                 $alert
+ * @var string                                 $csrf
+ * @var OffsetPaginator                        $paginator
+ * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var WebView                                $this
  */
-
 echo $alert;
 ?>
 <?php
@@ -39,7 +38,7 @@ $header = Div::tag()
             ->addClass('bg-primary text-white p-3 rounded-top')
             ->content(
                 I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('unit'))),
+                    ->content(' '.Html::encode($translator->translate('unit'))),
             ),
     )
     ->render();
@@ -53,21 +52,21 @@ $toolbarReset = A::tag()
     ->render();
 $toolbar = Div::tag();
 ?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('unit'); ?>
-    <?= Html::closeTag('h5'); ?>    
-<?= Html::closeTag('div'); ?>
+<?php echo Html::openTag('div'); ?>
+    <?php echo Html::openTag('h5'); ?>
+        <?php echo $translator->translate('unit'); ?>
+    <?php echo Html::closeTag('h5'); ?>    
+<?php echo Html::closeTag('div'); ?>
 
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'btn-group']); ?>
-        <?= A::tag()
-            ->addClass('btn btn-success')
-            ->content(I::tag()
-                      ->addClass('fa fa-plus'))
-            ->href($urlGenerator->generate('unit/add')); ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+<?php echo Html::openTag('div'); ?>
+    <?php echo Html::openTag('div', ['class' => 'btn-group']); ?>
+        <?php echo A::tag()
+    ->addClass('btn btn-success')
+    ->content(I::tag()
+        ->addClass('fa fa-plus'))
+    ->href($urlGenerator->generate('unit/add')); ?>
+    <?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
 
 <br>
     <?php
@@ -75,17 +74,17 @@ $toolbar = Div::tag();
             new DataColumn(
                 'unit_id',
                 header: $translator->translate('id'),
-                content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
+                content: static fn (Unit $model) => Html::encode($model->getUnit_id()),
             ),
             new DataColumn(
                 'unit_name',
                 header: $translator->translate('unit.name'),
-                content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
+                content: static fn (Unit $model) => Html::encode($model->getUnit_name()),
             ),
             new DataColumn(
                 'unit_name_plrl',
                 header: $translator->translate('unit.name.plrl'),
-                content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
+                content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl()),
             ),
 
             new ActionColumn(buttons: [
@@ -96,7 +95,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('view'),
+                        'title'          => $translator->translate('view'),
                     ],
                 ),
                 new ActionButton(
@@ -106,7 +105,7 @@ $toolbar = Div::tag();
                     },
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('edit'),
+                        'title'          => $translator->translate('edit'),
                     ],
                 ),
                 new ActionButton(
@@ -115,8 +114,8 @@ $toolbar = Div::tag();
                         return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
                     },
                     attributes: [
-                        'title' => $translator->translate('delete'),
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'title'   => $translator->translate('delete'),
+                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
                     ],
                 ),
             ]),
@@ -130,21 +129,21 @@ $toolbar = Div::tag();
         $translator->translate('units'),
         '',
     );
-$toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open().
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
     Form::tag()->close();
 echo GridView::widget()
-->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-unit'])
-->columns(...$columns)
-->dataReader($paginator)
-->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
-->id('w175-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
-->toolbar($toolbarString);
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-unit'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w175-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);
 ?>

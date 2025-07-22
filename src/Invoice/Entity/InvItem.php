@@ -6,11 +6,10 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use Doctrine\Common\Collections\ArrayCollection;
-use DateTime;
+use Cycle\Annotated\Annotation\Relation\HasMany;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[Entity(repository: \App\Invoice\InvItem\InvItemRepository::class)]
 class InvItem
@@ -19,7 +18,7 @@ class InvItem
     private mixed $date_added;
 
     #[Column(type: 'datetime', nullable: false)]
-    private DateTimeImmutable $date;
+    private \DateTimeImmutable $date;
 
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
@@ -77,12 +76,12 @@ class InvItem
         #[Column(type: 'longText', nullable: true)]
         private ?string $note = null,
     ) {
-        $this->date_added = new DateTimeImmutable();
-        $this->date = new DateTimeImmutable();
+        $this->date_added              = new \DateTimeImmutable();
+        $this->date                    = new \DateTimeImmutable();
         $this->invitemallowancecharges = new ArrayCollection();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -107,12 +106,12 @@ class InvItem
         $this->invitemallowancecharges[] = $invItemAllowanceCharge;
     }
 
-    public function getTaxRate(): TaxRate|null
+    public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
     }
 
-    //set relation $taxrate
+    // set relation $taxrate
     public function setTaxRate(?TaxRate $taxrate): void
     {
         $this->tax_rate = $taxrate;
@@ -123,7 +122,7 @@ class InvItem
         return $this->product;
     }
 
-    //set relation $product
+    // set relation $product
     public function setProduct(?Product $product): void
     {
         $this->product = $product;
@@ -134,13 +133,13 @@ class InvItem
         return $this->task;
     }
 
-    //set relation $task
+    // set relation $task
     public function setTask(?Task $task): void
     {
         $this->task = $task;
     }
 
-    public function getInv(): Inv|null
+    public function getInv(): ?Inv
     {
         return $this->inv;
     }
@@ -180,18 +179,18 @@ class InvItem
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getDate_added(): DateTimeImmutable
+    public function getDate_added(): \DateTimeImmutable
     {
-        /** @var DateTimeImmutable $this->date_added */
+        /* @var DateTimeImmutable $this->date_added */
         return $this->date_added;
     }
 
-    public function setDate_added(DateTime $date_added): void
+    public function setDate_added(\DateTime $date_added): void
     {
         $this->date_added = $date_added;
     }
 
-    public function getProduct_id(): string|null
+    public function getProduct_id(): ?string
     {
         return null !== $this->product_id ? (string) $this->product_id : null;
     }
@@ -201,7 +200,7 @@ class InvItem
         $this->product_id = $product_id;
     }
 
-    public function getTask_id(): string|null
+    public function getTask_id(): ?string
     {
         return null !== $this->task_id ? (string) $this->task_id : null;
     }
@@ -231,7 +230,7 @@ class InvItem
         $this->description = $description;
     }
 
-    public function getQuantity(): float|null
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
@@ -264,7 +263,7 @@ class InvItem
     // For Charges and Allowances see the extension table InvItemAllowanceCharges
     // which extends this entity by means of inv_item_id
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }
@@ -284,12 +283,12 @@ class InvItem
         $this->is_recurring = $is_recurring;
     }
 
-    public function getDate(): DateTimeImmutable
+    public function getDate(): \DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(DateTimeImmutable $date): void
+    public function setDate(\DateTimeImmutable $date): void
     {
         $this->date = $date;
     }
@@ -346,6 +345,6 @@ class InvItem
 
     public function isNewRecord(): bool
     {
-        return $this->getId() === null;
+        return null === $this->getId();
     }
 }

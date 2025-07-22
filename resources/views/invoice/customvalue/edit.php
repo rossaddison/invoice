@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\Entity\CustomField $custom_field
  * @var App\Invoice\CustomValue\CustomValueForm $form
  * @var App\Widget\Button $button
@@ -21,96 +21,95 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CustomValueForm')
-    ->open()
+    ->open();
 ?> 
     
-    <?= Html::openTag('div', ['id' => 'headerbar']); ?>
-        <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $translator->translate('custom.values.new'); ?>
-        <?= Html::closeTag('h1'); ?>
-    <?= Html::closeTag('div'); ?>
+    <?php echo Html::openTag('div', ['id' => 'headerbar']); ?>
+        <?php echo Html::openTag('h1', ['class' => 'headerbar-title']); ?>
+            <?php echo $translator->translate('custom.values.new'); ?>
+        <?php echo Html::closeTag('h1'); ?>
+    <?php echo Html::closeTag('div'); ?>
 
-    <?= Html::openTag('div', ['id' => 'content']); ?>
+    <?php echo Html::openTag('div', ['id' => 'content']); ?>
 
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
-                <?=
-                    Field::errorSummary($form)
-                    ->errors($errors)
-                    ->header($translator->translate('custom.value.error.summary'))
+        <?php echo Html::openTag('div', ['class' => 'row']); ?>
+            <?php echo Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
+                <?php echo Field::errorSummary($form)
+            ->errors($errors)
+            ->header($translator->translate('custom.value.error.summary'))
                     // if the value is left blank the 'Value cannot be blank' message will appear
-                    ->onlyProperties(...['value'])
-                    ->onlyCommonErrors()
+            ->onlyProperties(...['value'])
+            ->onlyCommonErrors();
 ?>
 
-                <?php $alpha = str_replace("-", "_", strtolower($custom_field->getType())); ?>
-                <?php  // Type eg. Boolean, Single Choice, Multiple Choice and Label eg. My new Field,
-       //belong to the Field Entity?> 
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
-                    <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $translator->translate('field'); ?>
-                    <?= Html::closeTag('label'); ?>
-                    <?= Html::openTag('input', [
-                        'class' => 'form-control',
+                <?php $alpha = str_replace('-', '_', strtolower($custom_field->getType())); ?>
+                <?php // Type eg. Boolean, Single Choice, Multiple Choice and Label eg. My new Field,
+       // belong to the Field Entity?> 
+                <?php echo Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?php echo Html::openTag('label', ['for' => 'label']); ?>
+                        <?php echo $translator->translate('field'); ?>
+                    <?php echo Html::closeTag('label'); ?>
+                    <?php echo Html::openTag('input', [
+                        'class'    => 'form-control',
                         'disabled' => 'disabled',
-                        'id' => 'label',
-                        'value' => Html::encode($custom_field->getLabel() ?? ''),
+                        'id'       => 'label',
+                        'value'    => Html::encode($custom_field->getLabel() ?? ''),
                     ]);
 ?>
-                <?= Html::closeTag('div'); ?>
+                <?php echo Html::closeTag('div'); ?>
     
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
-                    <?= Html::openTag('label', ['for' => 'label']); ?>
-                        <?= $translator->translate('type'); ?>
-                    <?= Html::closeTag('label'); ?>
-                    <?= Html::openTag('input', [
-                        'class' => 'form-control',
+                <?php echo Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?php echo Html::openTag('label', ['for' => 'label']); ?>
+                        <?php echo $translator->translate('type'); ?>
+                    <?php echo Html::closeTag('label'); ?>
+                    <?php echo Html::openTag('input', [
+                        'class'    => 'form-control',
                         'disabled' => 'disabled',
-                        'id' => 'type',
-                        'value' => Html::encode($translator->translate('' . $alpha . '')),
+                        'id'       => 'type',
+                        'value'    => Html::encode($translator->translate(''.$alpha.'')),
                     ]);
 ?>
-                <?= Html::closeTag('div'); ?>
+                <?php echo Html::closeTag('div'); ?>
     
                 <?php // Custom Value Form: (1) The two hidden fields
   //                    (2) The value field where new data will be entered?>
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
-                    <?= Field::hidden($form, 'custom_field_id')
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'custom_field_id'])
-    ->value(Html::encode($custom_field->getId()))
-    ->hideLabel();
+                <?php echo Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?php echo Field::hidden($form, 'custom_field_id')
+      ->addInputAttributes([
+          'class' => 'form-control',
+          'id'    => 'custom_field_id'])
+      ->value(Html::encode($custom_field->getId()))
+      ->hideLabel();
 ?>  
-                <?= Html::closeTag('div'); ?>
+                <?php echo Html::closeTag('div'); ?>
     
-                <?php   // The id here is generated by the new CustomValueForm(new CustomValue); function
+                <?php // The id here is generated by the new CustomValueForm(new CustomValue); function
     // the id from the new CustomValue entity that is generated?>
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
-                    <?= Field::hidden($form, 'id')
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'id'])
-    ->value(Html::encode($form->getId() ??  ''))
-    ->hideLabel();
+                <?php echo Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?php echo Field::hidden($form, 'id')
+        ->addInputAttributes([
+            'class' => 'form-control',
+            'id'    => 'id'])
+        ->value(Html::encode($form->getId() ?? ''))
+        ->hideLabel();
 ?>    
-                <?= Html::closeTag('div'); ?>
+                <?php echo Html::closeTag('div'); ?>
 
-                <?= Html::openTag('div', ['class' => 'form-group']); ?>
-                    <?= Field::text($form, 'value')
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'value'])
-    ->value(Html::encode($form->getValue() ??  ''));
+                <?php echo Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?php echo Field::text($form, 'value')
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id'    => 'value'])
+                    ->value(Html::encode($form->getValue() ?? ''));
 ?>
-                <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
-<?= $button::backSave(); ?>
-<?= Form::tag()->close(); ?>
+                <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>
+    <?php echo Html::closeTag('div'); ?>
+<?php echo $button::backSave(); ?>
+<?php echo Form::tag()->close(); ?>

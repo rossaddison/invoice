@@ -6,19 +6,19 @@ namespace App\Invoice\ItemLookup;
 
 use App\Invoice\Entity\ItemLookup;
 use Cycle\ORM\Select;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of ItemLookup
+ *
  * @extends Select\Repository<TEntity>
  */
 final class ItemLookupRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -26,13 +26,14 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     * Get itemlookups  without filter
+     * Get itemlookups  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select();
+
         return $this->prepareDataReader($query);
     }
 
@@ -51,17 +52,13 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|ItemLookup|null $itemlookup
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
      */
     public function save(array|ItemLookup|null $itemlookup): void
     {
         $this->entityWriter->write([$itemlookup]);
     }
 
-    /**
-     * @param array|ItemLookup|null $itemlookup
-     */
     public function delete(array|ItemLookup|null $itemlookup): void
     {
         $this->entityWriter->delete([$itemlookup]);
@@ -76,12 +73,12 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
      * @return TEntity|null
      */
     public function repoItemLookupquery(string $id): ?ItemLookup
     {
         $query = $this->select()->where(['id' => $id]);
-        return  $query->fetchOne();
+
+        return $query->fetchOne();
     }
 }

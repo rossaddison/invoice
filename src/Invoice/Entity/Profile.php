@@ -8,7 +8,6 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
-use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Profile\ProfileRepository::class)]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
@@ -18,10 +17,10 @@ class Profile
     private ?Company $company = null;
 
     #[Column(type: 'datetime')]
-    private readonly DateTimeImmutable $date_created;
+    private readonly \DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime')]
-    private readonly DateTimeImmutable $date_modified;
+    private readonly \DateTimeImmutable $date_modified;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -37,8 +36,8 @@ class Profile
         #[Column(type: 'text', nullable: true)]
         private ?string $description = '',
     ) {
-        $this->date_created = new DateTimeImmutable();
-        $this->date_modified = new DateTimeImmutable();
+        $this->date_created  = new \DateTimeImmutable();
+        $this->date_modified = new \DateTimeImmutable();
     }
 
     public function getCompany(): ?Company
@@ -46,7 +45,7 @@ class Profile
         return $this->company;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -66,7 +65,7 @@ class Profile
         $this->company_id = $company_id;
     }
 
-    public function getCurrent(): int|null
+    public function getCurrent(): ?int
     {
         return $this->current;
     }
@@ -76,7 +75,7 @@ class Profile
         $this->current = $current;
     }
 
-    public function getMobile(): string|null
+    public function getMobile(): ?string
     {
         return $this->mobile;
     }
@@ -86,7 +85,7 @@ class Profile
         $this->mobile = $mobile;
     }
 
-    public function getEmail(): string|null
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -96,7 +95,7 @@ class Profile
         $this->email = $email;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -106,18 +105,18 @@ class Profile
         $this->description = $description;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDate_created(): \DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDate_modified(): \DateTimeImmutable
     {
         return $this->date_modified;
     }
 
     public function isNewRecord(): bool
     {
-        return $this->getId() === null;
+        return null === $this->getId();
     }
 }

@@ -6,20 +6,19 @@ namespace App\Invoice\InvItemAmount;
 
 use App\Invoice\Entity\InvItemAmount;
 use Cycle\ORM\Select;
-use Throwable;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of InvItemAmount
+ *
  * @extends Select\Repository<TEntity>
  */
 final class InvItemAmountRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -27,14 +26,15 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * Get invitemamounts  without filter
+     * Get invitemamounts  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load('inv_item');
+            ->load('inv_item');
+
         return $this->prepareDataReader($query);
     }
 
@@ -53,9 +53,9 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|InvItemAmount|null $invitemamount
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function save(array|InvItemAmount|null $invitemamount): void
     {
@@ -63,9 +63,9 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|InvItemAmount|null $invitemamount
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function delete(array|InvItemAmount|null $invitemamount): void
     {
@@ -81,26 +81,22 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @return InvItemAmount|null
-     *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemAmountquery(string $inv_item_id): InvItemAmount|null
+    public function repoInvItemAmountquery(string $inv_item_id): ?InvItemAmount
     {
         $query = $this->select()
-                      ->load(['inv_item'])
-                      ->where(['inv_item_id' => $inv_item_id]);
-        return  $query->fetchOne() ?: null;
+            ->load(['inv_item'])
+            ->where(['inv_item_id' => $inv_item_id]);
+
+        return $query->fetchOne() ?: null;
     }
 
-    /**
-     * @param string $inv_item_id
-     * @return int
-     */
     public function repoCount(string $inv_item_id): int
     {
         $query = $this->select()
-                      ->where(['inv_item_id' => $inv_item_id]);
+            ->where(['inv_item_id' => $inv_item_id]);
+
         return $query->count();
     }
 }

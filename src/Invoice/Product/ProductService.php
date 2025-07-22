@@ -8,13 +8,10 @@ use App\Invoice\Entity\Product;
 
 final readonly class ProductService
 {
-    public function __construct(private ProductRepository $repository) {}
+    public function __construct(private ProductRepository $repository)
+    {
+    }
 
-    /**
-     * @param Product $model
-     * @param array $array
-     * @return string
-     */
     public function saveProduct(Product $model, array $array): string
     {
         /**
@@ -43,12 +40,10 @@ final readonly class ProductService
         isset($apf['unit_peppol_id']) ? $model->setUnit_peppol_id((int) $apf['unit_peppol_id']) : '';
         isset($apf['family_id']) ? $model->setFamily_id((int) $apf['family_id']) : '';
         $this->repository->save($model);
+
         return $model->getProduct_id();
     }
 
-    /**
-     * @param Product $model
-     */
     public function deleteProduct(Product $model): void
     {
         $this->repository->delete($model);

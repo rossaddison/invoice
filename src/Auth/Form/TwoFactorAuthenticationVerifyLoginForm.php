@@ -13,7 +13,8 @@ final class TwoFactorAuthenticationVerifyLoginForm extends FormModel
 
     public function __construct(
         private readonly TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]
@@ -28,8 +29,6 @@ final class TwoFactorAuthenticationVerifyLoginForm extends FormModel
     }
 
     /**
-     * @return string
-     *
      * @psalm-return 'TwoFactorAuthenticationVerifyLogin'
      */
     #[\Override]

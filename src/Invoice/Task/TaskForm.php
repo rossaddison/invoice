@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
-use DateTimeImmutable;
 use App\Invoice\Entity\Task;
+use DateTimeImmutable;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -33,56 +33,54 @@ final class TaskForm extends FormModel
 
     public function __construct(Task $task)
     {
-        $this->project_id = (int) $task->getProject_id();
-        $this->name = $task->getName();
+        $this->project_id  = (int) $task->getProject_id();
+        $this->name        = $task->getName();
         $this->description = $task->getDescription();
-        $this->price = $task->getPrice();
+        $this->price       = $task->getPrice();
         $this->finish_date = $task->getFinish_date();
-        $this->status = $task->getStatus();
+        $this->status      = $task->getStatus();
         $this->tax_rate_id = (int) $task->getTax_rate_id();
     }
 
-    public function getProject_id(): int|null
+    public function getProject_id(): ?int
     {
         return $this->project_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function getFinish_date(): null|string|DateTimeImmutable
+    public function getFinish_date(): string|\DateTimeImmutable|null
     {
-        /**
+        /*
          * @var DateTimeImmutable|string|null $this->finish_date
          */
         return $this->finish_date;
     }
 
-    public function getStatus(): int|null
+    public function getStatus(): ?int
     {
         return $this->status;
     }
 
-    public function getTax_rate_id(): int|null
+    public function getTax_rate_id(): ?int
     {
         return $this->tax_rate_id;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

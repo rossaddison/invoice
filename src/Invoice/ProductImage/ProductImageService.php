@@ -10,12 +10,10 @@ use Yiisoft\Files\FileHelper;
 
 final readonly class ProductImageService
 {
-    public function __construct(private ProductImageRepository $repository, private SettingRepository $s) {}
+    public function __construct(private ProductImageRepository $repository, private SettingRepository $s)
+    {
+    }
 
-    /**
-     * @param ProductImage $model
-     * @param array $array
-     */
     public function saveProductImage(ProductImage $model, array $array): void
     {
         $model->nullifyRelationOnChange((int) $array['product_id']);
@@ -34,19 +32,15 @@ final readonly class ProductImageService
         $this->repository->save($model);
     }
 
-    /**
-     * @param ProductImage $model
-     * @param SettingRepository $sR
-     */
     public function deleteProductImage(ProductImage $model, SettingRepository $sR): void
     {
-        $aliases = $sR->get_productimages_files_folder_aliases();
+        $aliases    = $sR->get_productimages_files_folder_aliases();
         $targetPath = $aliases->get('@public_product_images');
-        $file_path = $targetPath . '/' . $model->getFile_name_new();
+        $file_path  = $targetPath.'/'.$model->getFile_name_new();
         // see vendor/yiisoft/files/src/FileHelper::unlink will delete the file
         $realTargetPath = realpath($targetPath);
-        $realFilePath = realpath($file_path);
-        if (($realTargetPath != false) && ($realFilePath != false)) {
+        $realFilePath   = realpath($file_path);
+        if ((false != $realTargetPath) && (false != $realFilePath)) {
             str_starts_with($realTargetPath, $realFilePath) ? FileHelper::unlink($file_path) : '';
             $this->repository->delete($model);
         }

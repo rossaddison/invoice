@@ -13,13 +13,10 @@ use App\Invoice\Setting\SettingRepository as SR;
 
 final readonly class InvItemAllowanceChargeService
 {
-    public function __construct(private ACIIR $repository) {}
+    public function __construct(private ACIIR $repository)
+    {
+    }
 
-    /**
-     * @param InvItemAllowanceCharge $model
-     * @param array $array
-     * @param float $vat
-     */
     public function saveInvItemAllowanceCharge(InvItemAllowanceCharge $model, array $array, float $vat): void
     {
         isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
@@ -39,36 +36,36 @@ final readonly class InvItemAllowanceChargeService
         $inv_item_amount = $iiaR->repoInvItemAmountquery($inv_item_id);
         // rebuild the accumulative totals for the inv_item_amount
         if (null !== $inv_item_amount) {
-            $all_charges = 0.00;
-            $all_charges_vat = 0.00;
-            $all_allowances = 0.00;
+            $all_charges        = 0.00;
+            $all_charges_vat    = 0.00;
+            $all_allowances     = 0.00;
             $all_allowances_vat = 0.00;
-            $aciis = $aciiR->repoInvItemquery($inv_item_id);
+            $aciis              = $aciiR->repoInvItemquery($inv_item_id);
             /** @var InvItemAllowanceCharge $acii */
             foreach ($aciis as $acii) {
                 // charge add
-                if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
-                    $all_charges += (float) $acii->getAmount();
+                if ('1' == $acii->getAllowanceCharge()?->getIdentifier()) {
+                    $all_charges     += (float) $acii->getAmount();
                     $all_charges_vat += (float) $acii->getVat();
                 } else {
                     // allowance subtract
-                    $all_allowances += (float) $acii->getAmount();
+                    $all_allowances     += (float) $acii->getAmount();
                     $all_allowances_vat += (float) $acii->getVat();
                 }
             }
             // Record the rebuilt accumulative charges and allowances totals in the InvItemAmount Entity
             $inv_item_amount->setCharge($all_charges);
             $inv_item_amount->setAllowance($all_allowances);
-            $all_vat = $all_charges_vat - $all_allowances_vat;
-            $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
-            $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
-            $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
-            $quantity_price = $current_item_quantity * $current_item_price;
+            $all_vat                     = $all_charges_vat - $all_allowances_vat;
+            $current_item_quantity       = $inv_item_amount->getInvItem()?->getQuantity()        ?? 0.00;
+            $current_item_price          = $inv_item_amount->getInvItem()?->getPrice()           ?? 0.00;
+            $discount_per_item           = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
+            $quantity_price              = $current_item_quantity * $current_item_price;
             $current_discount_item_total = $current_item_quantity * $discount_per_item;
-            $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
-            $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-            $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
-            $new_tax_total = $current_tax_total + ($sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+            $tax_percent                 = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
+            $qpIncAc                     = $quantity_price + $all_charges - $all_allowances;
+            $current_tax_total           = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
+            $new_tax_total               = $current_tax_total + ('0' == $sR->getSetting('enable_vat_registration') ? 0.00 : $all_vat);
             // include all item allowance charges in the subtotal
             $inv_item_amount->setSubtotal($qpIncAc);
             $inv_item_amount->setDiscount($current_discount_item_total);

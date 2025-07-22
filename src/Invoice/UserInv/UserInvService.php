@@ -8,19 +8,17 @@ use App\Invoice\Entity\UserInv;
 
 final readonly class UserInvService
 {
-    public function __construct(private UserInvRepository $repository) {}
+    public function __construct(private UserInvRepository $repository)
+    {
+    }
 
-    /**
-     * @param UserInv $model
-     * @param array $array
-     */
     public function saveUserInv(UserInv $model, array $array): void
     {
         $model->setUser_id((int) $array['user_id']);
         isset($array['type']) ? $model->setType((int) $array['type']) : '';
-        $model->setActive($array['active'] === '1') ? true : false;
+        $model->setActive('1' === $array['active']) ? true : false;
         isset($array['language']) ? $model->setLanguage((string) $array['language']) : '';
-        $model->setAll_clients($array['all_clients'] === '1') ? true : false;
+        $model->setAll_clients('1' === $array['all_clients']) ? true : false;
         isset($array['name']) ? $model->setName((string) $array['name']) : '';
         isset($array['company']) ? $model->setCompany((string) $array['company']) : '';
         isset($array['address_1']) ? $model->setAddress_1((string) $array['address_1']) : '';
@@ -43,9 +41,6 @@ final readonly class UserInvService
         $this->repository->save($model);
     }
 
-    /**
-     * @param UserInv $model
-     */
     public function deleteUserInv(UserInv $model): void
     {
         $this->repository->delete($model);

@@ -6,8 +6,8 @@ namespace App\Auth\Trait;
 
 use App\Auth\Token;
 use App\Auth\TokenRepository;
-use App\User\User;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\User\User;
 use Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc;
 use Yiisoft\Yii\AuthClient\Client\Facebook;
 use Yiisoft\Yii\AuthClient\Client\GitHub;
@@ -57,7 +57,7 @@ trait Oauth2
         X $x,
         Yandex $yandex,
     ): void {
-        /**
+        /*
          * Related logic: see config/common/params.php
          */
         $developerSandboxHmrc->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('developersandboxhmrc'));
@@ -96,7 +96,7 @@ trait Oauth2
         $x->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('x'));
         $yandex->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('yandex'));
 
-        /**
+        /*
          * Related logic: see https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView
          * Rebuild the authUrl and tokenUrl to include the tenant (default: 'common') which can be
          * 'common', 'organisation', 'consumers', or ID. ID is used here.
@@ -113,40 +113,32 @@ trait Oauth2
     }
 
     /**
-     * Initialize development or production urls
-     *
-     * @param sR $sR
-     * @param DeveloperSandboxHmrc $developerSandboxHmrc
+     * Initialize development or production urls.
      */
     private function initializeOauth2IdentityProviderDualUrls(
         sR $sR,
         DeveloperSandboxHmrc $developerSandboxHmrc,
     ): void {
-        if ($sR->getEnv() == 'dev') {
+        if ('dev' == $sR->getEnv()) {
             $developerSandboxHmrc->setEnvironment('dev');
         } else {
             $developerSandboxHmrc->setEnvironment('prod');
         }
     }
 
-    /**
-     * @param User $user
-     * @param TokenRepository $tR
-     * @param string $self
-     * @return string
-     */
     private function getAccessToken(User $user, TokenRepository $tR, string $self): string
     {
-        $identity = $user->getIdentity();
+        $identity   = $user->getIdentity();
         $identityId = (int) $identity->getId();
         // This records the fact that the user has signed up with e.g. a Github 'access-token'
         $token = new Token($identityId, $self);
         // store the token amongst all the other types of tokens e.g. password-rest, email-verification, github-access
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string) $token->getCreated_at()->getTimestamp();
+        $timeString  = (string) $token->getCreated_at()->getTimestamp();
+
         // build the token with a timestamp built into it for comparison later
-        return null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
+        return null !== $tokenString ? ($tokenString.'_'.$timeString) : '';
     }
 
     private function getDeveloperSandboxHmrcAccessToken(User $user, TokenRepository $tR): string

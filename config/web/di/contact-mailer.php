@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Contact\ContactMailer;
 
-/**
+/*
  * @var array $params
  * @var array $params['mailer']
  * @var string $params['mailer']['senderEmail']
@@ -13,10 +13,10 @@ use App\Contact\ContactMailer;
 
 return [
     ContactMailer::class => [
-        'class' => ContactMailer::class,
+        'class'         => ContactMailer::class,
         '__construct()' => [
             'sender' => $params['mailer']['senderEmail'],
-            'to' => $params['mailer']['adminEmail'],
+            'to'     => $params['mailer']['adminEmail'],
         ],
     ],
 ];

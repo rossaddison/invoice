@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
+use App\Invoice\Client\ClientRepository as CR;
+use App\Invoice\ClientCustom\ClientCustomRepository as ccR;
+use App\Invoice\CustomField\CustomFieldRepository as cfR;
+use App\Invoice\CustomValue\CustomValueRepository as cvR;
 use App\Invoice\Entity\ClientCustom;
 use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\CustomValue;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\UserInv;
-use App\Invoice\Setting\SettingRepository as SRepo;
-use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\ClientCustom\ClientCustomRepository as ccR;
-use App\Invoice\CustomField\CustomFieldRepository as cfR;
-use App\Invoice\CustomValue\CustomValueRepository as cvR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteCustom\QuoteCustomRepository as qcR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvCustom\InvCustomRepository as icR;
-use App\Invoice\PaymentCustom\PaymentCustomRepository as pcR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as socR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
-use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Invoice\Helpers\DateHelper as DHelp;
 use App\Invoice\Helpers\NumberHelper as NHelp;
+use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\InvCustom\InvCustomRepository as icR;
+use App\Invoice\PaymentCustom\PaymentCustomRepository as pcR;
+use App\Invoice\Quote\QuoteRepository as QR;
+use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
+use App\Invoice\QuoteCustom\QuoteCustomRepository as qcR;
+use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
+use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as socR;
+use App\Invoice\Setting\SettingRepository as SRepo;
+use App\Invoice\UserInv\UserInvRepository as uiR;
 
 final readonly class TemplateHelper
 {
@@ -39,23 +39,15 @@ final readonly class TemplateHelper
     }
 
     /**
-     * @param string $pk
-     * @param bool $isInvoice
-     * @param string $body
      * @param CR $cR
-     * &param CVR $cvR
-     * @param IR $iR
-     * @param IAR $iaR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param SOR $soR
-     * @param uiR $uiR
+     *               &param CVR $cvR
+     *
      * @return string
      */
     public function parse_template(string $pk, bool $isInvoice, string $body, CR $cR, cvR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
     {
         $template_vars = [];
-        $var = '';
+        $var           = '';
         if (preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {
                 $userinv = new UserInv();
@@ -364,7 +356,7 @@ final readonly class TemplateHelper
                     case 'quote_guest_url':
                         $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
                         if ($quote) {
-                            $replace = 'quote/url_key/' . $quote->getUrl_key();
+                            $replace = 'quote/url_key/'.$quote->getUrl_key();
                         }
                         break;
                     case 'quote_number':
@@ -385,7 +377,7 @@ final readonly class TemplateHelper
                     case 'invoice_guest_url':
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
                         if ($invoice) {
-                            $replace = 'inv/url_key/' . $invoice->getUrl_key();
+                            $replace = 'inv/url_key/'.$invoice->getUrl_key();
                         }
                         break;
                     case 'invoice_date_due':
@@ -439,7 +431,7 @@ final readonly class TemplateHelper
                     default:
                         // Derive the custom_field_id from $var eg. 'cf_1' implies custom_field_id is 1.
                         //  $cf_id = [];
-                        //$cf = '';
+                        // $cf = '';
                         $replace_custom = null;
                         if (preg_match('/cf_([0-9].*)/', $var, $cf_id)) {
                             // Get the custom field
@@ -447,7 +439,7 @@ final readonly class TemplateHelper
                             $cf = $this->cfR->repoCustomFieldquery($cf_id[1]);
                             // Get the table from the custom field table
                             $table = $cf->getTable();
-                            //$custom_fields = $this->cfR->repoTablequery($table) ?: null;
+                            // $custom_fields = $this->cfR->repoTablequery($table) ?: null;
 
                             // If the table is eg. 'quote_custom' search the table with the custom_field_id
                             // and retrieve the value for this particularly designed field
@@ -477,7 +469,7 @@ final readonly class TemplateHelper
                                     // Client custom fields can be included on either an invoice or a quote
                                     $entity = $isInvoice ? ($iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null)
                                                          : ($qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null);
-                                    /** @var ClientCustom $replace_custom */
+                                    /* @var ClientCustom $replace_custom */
                                     if ($entity) {
                                         $replace_custom = $this->ccR->repoFormValuequery($entity->getClient_id(), $cf_id[1]);
                                     }
@@ -494,40 +486,34 @@ final readonly class TemplateHelper
                             }
                             /**
                              * @var array<array-key, float|int|string>|string $replace
-                             * @var CustomValue|null $custom_value
+                             * @var CustomValue|null                          $custom_value
                              */
                             $replace = null !== $custom_value ? $custom_value->getValue() : '';
                         } // if preg_match
                 } //  switch ($var)
                 /** @var array<array-key, float|int|string>|string $replace */
-                $body = str_replace('{{{' . $var . '}}}', $replace, $body);
+                $body = str_replace('{{{'.$var.'}}}', $replace, $body);
             } // foreach ($template_vars[1] as $var)
         } // if ((preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars)))
+
         return $body;
     }
 
-    /**
-     * @param Inv $invoice
-     * @return string
-     */
     public function select_pdf_invoice_template(Inv $invoice): string
     {
         if ($invoice->isOverdue()) {
             // Use the overdue template
             return $this->s->getSetting('pdf_invoice_template_overdue');
         }
-        if ($invoice->getStatus_id() === 4) {
+        if (4 === $invoice->getStatus_id()) {
             // Use the paid template
             return $this->s->getSetting('pdf_invoice_template_paid');
         }
+
         // Use the default template
         return $this->s->getSetting('pdf_invoice_template');
     }
 
-    /**
-     * @param Inv $invoice
-     * @return string
-     */
     public function select_email_invoice_template(Inv $invoice): string
     {
         // If Setting..View...Invoice...Invoice Templates have been set, use these to determine
@@ -540,26 +526,21 @@ final readonly class TemplateHelper
             // Use the overdue template
             return $this->s->getSetting('email_invoice_template_overdue');
         }
-        if ($invoice->getStatus_id() === 4) {
+        if (4 === $invoice->getStatus_id()) {
             // Use the paid template
             return $this->s->getSetting('email_invoice_template_paid');
         }
+
         // Use the default template
         return $this->s->getSetting('email_invoice_template');
     }
 
-    /**
-     * @return string
-     */
     public function select_pdf_quote_template(): string
     {
         // Use the default template
         return $this->s->getSetting('pdf_quote_template');
     }
 
-    /**
-     * @return string
-     */
     public function select_email_quote_template(): string
     {
         return $this->s->getSetting('email_quote_template');

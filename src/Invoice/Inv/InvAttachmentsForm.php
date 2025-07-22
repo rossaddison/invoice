@@ -11,8 +11,6 @@ final class InvAttachmentsForm extends FormModel
     private ?array $attachFile = null;
 
     /**
-     * @return string
-     *
      * @psalm-return 'InvAttachmentsForm'
      */
     #[\Override]

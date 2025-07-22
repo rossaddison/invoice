@@ -10,7 +10,6 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\Annotated\Annotation\Table\Index;
 use Cycle\ORM\Entity\Behavior;
-use DateTimeImmutable;
 use Yiisoft\Security\PasswordHasher;
 
 #[Entity(repository: UserRepository::class)]
@@ -26,10 +25,10 @@ class User
     private string $passwordHash = '';
 
     #[Column(type: 'datetime')]
-    private readonly DateTimeImmutable $created_at;
+    private readonly \DateTimeImmutable $created_at;
 
     #[Column(type: 'datetime')]
-    private readonly DateTimeImmutable $updated_at;
+    private readonly \DateTimeImmutable $updated_at;
 
     #[HasOne(target: Identity::class)]
     private readonly Identity $identity;
@@ -47,8 +46,8 @@ class User
         private readonly string $email,
         string $password,
     ) {
-        $this->created_at = new DateTimeImmutable();
-        $this->updated_at = new DateTimeImmutable();
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
         $this->setPassword($password);
         // Generate a new auth key on signup
         $this->identity = new Identity();
@@ -57,9 +56,9 @@ class User
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
-        return $this->id === null ? null : (string) $this->id;
+        return null === $this->id ? null : (string) $this->id;
     }
 
     public function getLogin(): string
@@ -87,12 +86,12 @@ class User
         $this->passwordHash = (new PasswordHasher())->hash($password);
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
+    public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updated_at;
     }
@@ -114,7 +113,7 @@ class User
 
     public function is2FAEnabled(): bool
     {
-        return $this->tfa_enabled ;
+        return $this->tfa_enabled;
     }
 
     public function set2FAEnabled(bool $enabled): void

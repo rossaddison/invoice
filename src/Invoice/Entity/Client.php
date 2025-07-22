@@ -8,9 +8,8 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\ORM\Entity\Behavior;
-use Doctrine\Common\Collections\ArrayCollection;
-use DateTime;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[Entity(repository: \App\Invoice\Client\ClientRepository::class)]
 #[Behavior\CreatedAt(field: 'client_date_created', column: 'client_date_created')]
@@ -21,10 +20,10 @@ class Client
     public ?int $id = null;
 
     #[Column(type: 'datetime')]
-    private DateTimeImmutable $client_date_created;
+    private \DateTimeImmutable $client_date_created;
 
     #[Column(type: 'datetime')]
-    private DateTimeImmutable $client_date_modified;
+    private \DateTimeImmutable $client_date_modified;
 
     #[Column(type: 'string(151)', nullable: true)]
     private ?string $client_full_name = '';
@@ -102,11 +101,11 @@ class Client
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $postaladdress_id = null,
     ) {
-        $this->client_full_name = ltrim(rtrim($this->client_name . ' ' . ($this->client_surname ?? 'surname_unknown')));
-        $this->client_date_created = new DateTimeImmutable();
-        $this->client_date_modified = new DateTimeImmutable();
-        $this->delivery_locations = new ArrayCollection();
-        $this->invs = new ArrayCollection();
+        $this->client_full_name     = ltrim(rtrim($this->client_name.' '.($this->client_surname ?? 'surname_unknown')));
+        $this->client_date_created  = new \DateTimeImmutable();
+        $this->client_date_modified = new \DateTimeImmutable();
+        $this->delivery_locations   = new ArrayCollection();
+        $this->invs                 = new ArrayCollection();
     }
 
     public function getClient_id(): ?int
@@ -136,28 +135,28 @@ class Client
 
     public function setClient_date_created(string $client_date_created): void
     {
-        /**
+        /*
          * Related logic: see ImportController insertClients function
          */
-        $this->client_date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new DateTimeImmutable('now');
+        $this->client_date_created = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new \DateTimeImmutable('now');
     }
 
-    public function getClient_date_created(): DateTimeImmutable
+    public function getClient_date_created(): \DateTimeImmutable
     {
-        /** @var DateTimeImmutable $this->client_date_created */
+        /* @var DateTimeImmutable $this->client_date_created */
         return $this->client_date_created;
     }
 
-    public function getClient_date_modified(): DateTimeImmutable
+    public function getClient_date_modified(): \DateTimeImmutable
     {
-        /** @var DateTimeImmutable $this->client_date_created */
+        /* @var DateTimeImmutable $this->client_date_created */
         return $this->client_date_modified;
     }
 
     // Used in ImportController to import Invoiceplane $client_date_modified
     public function setClient_date_modified(string $client_date_modified): void
     {
-        $this->client_date_modified = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new DateTimeImmutable('now');
+        $this->client_date_modified = (new \DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new \DateTimeImmutable('now');
     }
 
     public function getClient_title(): ?string
@@ -179,10 +178,12 @@ class Client
     {
         if (null == $this->client_full_name) {
             if (null !== $this->client_surname) {
-                return ltrim(rtrim($this->client_name . ' ' . $this->client_surname));
+                return ltrim(rtrim($this->client_name.' '.$this->client_surname));
             }
+
             return ltrim(rtrim($this->client_name));
         }
+
         return $this->client_full_name;
     }
 
@@ -396,14 +397,14 @@ class Client
         $this->client_veka = $client_veka;
     }
 
-    //cycle
-    public function getClient_birthdate(): DateTimeImmutable|string|null
+    // cycle
+    public function getClient_birthdate(): \DateTimeImmutable|string|null
     {
-        /** @var DateTimeImmutable|string|null $this->client_birthdate */
+        /* @var DateTimeImmutable|string|null $this->client_birthdate */
         return $this->client_birthdate;
     }
 
-    public function setClient_birthdate(?DateTime $client_birthdate): void
+    public function setClient_birthdate(?\DateTime $client_birthdate): void
     {
         $this->client_birthdate = $client_birthdate;
     }
@@ -428,7 +429,7 @@ class Client
         $this->client_number = $client_number;
     }
 
-    public function getClient_gender(): int|null
+    public function getClient_gender(): ?int
     {
         return $this->client_gender;
     }
@@ -443,7 +444,7 @@ class Client
         $this->postaladdress_id = $postaladdress_id;
     }
 
-    public function getPostaladdress_id(): int|null
+    public function getPostaladdress_id(): ?int
     {
         return $this->postaladdress_id;
     }

@@ -6,20 +6,19 @@ namespace App\Invoice\QuoteItemAmount;
 
 use App\Invoice\Entity\QuoteItemAmount;
 use Cycle\ORM\Select;
-use Throwable;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TEntity of QuoteItemAmount
+ *
  * @extends Select\Repository<TEntity>
  */
 final class QuoteItemAmountRepository extends Select\Repository
 {
     /**
      * @param Select<TEntity> $select
-     * @param EntityWriter $entityWriter
      */
     public function __construct(Select $select, private readonly EntityWriter $entityWriter)
     {
@@ -27,13 +26,14 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * Get quoteitemamounts  without filter
+     * Get quoteitemamounts  without filter.
      *
      * @psalm-return EntityReader
      */
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()->load('quote_item');
+
         return $this->prepareDataReader($query);
     }
 
@@ -52,9 +52,9 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|QuoteItemAmount|null $quoteitemamount
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function save(array|QuoteItemAmount|null $quoteitemamount): void
     {
@@ -62,9 +62,9 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|QuoteItemAmount|null $quoteitemamount
-     * @throws Throwable
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException.
+     *
+     * @throws \Throwable
      */
     public function delete(array|QuoteItemAmount|null $quoteitemamount): void
     {
@@ -80,26 +80,22 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @return QuoteItemAmount|null
-     *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemAmountquery(int $quote_item_id): QuoteItemAmount|null
+    public function repoQuoteItemAmountquery(int $quote_item_id): ?QuoteItemAmount
     {
         $query = $this->select()
-                      ->load(['quote_item'])
-                      ->where(['quote_item_id' => $quote_item_id]);
-        return  $query->fetchOne() ?: null;
+            ->load(['quote_item'])
+            ->where(['quote_item_id' => $quote_item_id]);
+
+        return $query->fetchOne() ?: null;
     }
 
-    /**
-     * @param string $quote_item_id
-     * @return int
-     */
     public function repoCount(string $quote_item_id): int
     {
         $query = $this->select()
-                      ->where(['quote_item_id' => $quote_item_id]);
+            ->where(['quote_item_id' => $quote_item_id]);
+
         return $query->count();
     }
 }

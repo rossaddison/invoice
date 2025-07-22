@@ -12,20 +12,19 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
+ * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Widget\GridComponents              $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var string $alert
- * @var string $csrf
+ * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var Yiisoft\Router\CurrentRoute            $currentRoute
+ * @var string                                 $alert
+ * @var string                                 $csrf
  */
-
 echo $alert;
 
 ?>
-<h1><?= $translator->translate('productimage.index'); ?></h1>
+<h1><?php echo $translator->translate('productimage.index'); ?></h1>
 <div>
 </div>
 <?php
@@ -36,7 +35,7 @@ echo $alert;
                 ->addClass('bg-primary text-white p-3 rounded-top')
                 ->content(
                     I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('product'))),
+                        ->content(' '.Html::encode($translator->translate('product'))),
                 ),
         )
         ->render();
@@ -55,27 +54,27 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(ProductImage $model) => Html::encode($model->getId()),
+        content: static fn (ProductImage $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'product_id',
         header: $translator->translate('product'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? ''),
+        content: static fn (ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
         header: $translator->translate('upload.filename.original'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_original()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original()),
     ),
     new DataColumn(
         'file_name_new',
         header: $translator->translate('upload.filename.new'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_new()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_new()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('upload.filename.description'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getDescription()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -97,9 +96,9 @@ $columns = [
                     'button',
                     Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'type'    => 'submit',
+                        'class'   => 'dropdown-button',
+                        'onclick' => 'return confirm('."'".$translator->translate('delete.record.warning')."');",
                     ],
                 ),
                 $urlGenerator->generate('productimage/delete', ['id' => $model->getId()]),
@@ -117,20 +116,20 @@ $grid_summary = $s->grid_summary(
     $translator->translate('product.image.plural'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open().
+        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
         Form::tag()->close();
 echo GridView::widget()
-->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-125','id' => 'table-upload'])
-->columns(...$columns)
-->dataReader($paginator)
-->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->id('w44-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
-->toolbar($toolbarString);
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-125', 'id' => 'table-upload'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->id('w44-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);
 ?>
