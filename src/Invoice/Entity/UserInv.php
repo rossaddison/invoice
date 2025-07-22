@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
-use DateTimeImmutable;
-use App\User\User;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 #[Entity(repository: \App\Invoice\UserInv\UserInvRepository::class)]
@@ -21,10 +20,10 @@ class UserInv
     private ?User $user = null;
 
     #[Column(type: 'datetime', nullable: false)]
-    private readonly DateTimeImmutable $date_created;
+    private readonly \DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime', nullable: false)]
-    private readonly DateTimeImmutable $date_modified;
+    private readonly \DateTimeImmutable $date_modified;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -81,11 +80,11 @@ class UserInv
         #[Column(type: 'integer(3)', nullable: true, default: 10)]
         private ?int $listLimit = 10,
     ) {
-        $this->date_created = new DateTimeImmutable();
-        $this->date_modified = new DateTimeImmutable();
+        $this->date_created  = new \DateTimeImmutable();
+        $this->date_modified = new \DateTimeImmutable();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -101,8 +100,7 @@ class UserInv
     }
 
     /**
-     * Use the getUser relation to retrieve the User Table email field
-     * @return User|null
+     * Use the getUser relation to retrieve the User Table email field.
      */
     public function getUser(): ?User
     {
@@ -124,7 +122,7 @@ class UserInv
         return $this->web;
     }
 
-    public function getType(): int|null
+    public function getType(): ?int
     {
         return $this->type;
     }
@@ -134,14 +132,14 @@ class UserInv
         $this->type = $type;
     }
 
-    public function getActive(): bool|null
+    public function getActive(): ?bool
     {
         return $this->active;
     }
 
     public function getActiveLabel(Translator $translator): string
     {
-        return $this->active ? '<span class="label active">' . $translator->translate('yes') . '</span>' : '<span class="label inactive">' . $translator->translate('no') . '</span>';
+        return $this->active ? '<span class="label active">'.$translator->translate('yes').'</span>' : '<span class="label inactive">'.$translator->translate('no').'</span>';
     }
 
     public function setActive(bool $active): void
@@ -149,12 +147,12 @@ class UserInv
         $this->active = $active;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDate_created(): \DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDate_modified(): \DateTimeImmutable
     {
         return $this->date_modified;
     }
@@ -304,7 +302,7 @@ class UserInv
         $this->tax_code = $tax_code;
     }
 
-    public function getAll_clients(): bool|null
+    public function getAll_clients(): ?bool
     {
         return $this->all_clients;
     }
@@ -366,6 +364,6 @@ class UserInv
 
     public function isNewRecord(): bool
     {
-        return $this->getId() === null;
+        return null === $this->getId();
     }
 }

@@ -9,8 +9,6 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 class GoogleTranslateNetworkException extends \RuntimeException implements FriendlyExceptionInterface
 {
     /**
-     * @return string
-     *
      * @psalm-return 'There appears to be a Network error.'
      */
     #[\Override]
@@ -19,9 +17,6 @@ class GoogleTranslateNetworkException extends \RuntimeException implements Frien
         return 'There appears to be a Network error.';
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

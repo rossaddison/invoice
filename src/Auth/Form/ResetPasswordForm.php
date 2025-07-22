@@ -13,27 +13,28 @@ use Yiisoft\Validator\RulesProviderInterface;
 
 final class ResetPasswordForm extends FormModel implements RulesProviderInterface
 {
-    private string $newPassword = '';
+    private string $newPassword       = '';
     private string $newPasswordVerify = '';
 
     public function __construct(
         private readonly TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]
+     *
      * @psalm-return array{newPassword: string, newPasswordVerify: string}
      */
     public function getAttributeLabels(): array
     {
         return [
-            'newPassword' => $this->translator->translate('layout.password.new'),
+            'newPassword'       => $this->translator->translate('layout.password.new'),
             'newPasswordVerify' => $this->translator->translate('layout.password-verify.new'),
         ];
     }
 
     /**
-     * @return string
      * @psalm-return 'ResetPassword'
      */
     #[\Override]
@@ -53,14 +54,13 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
     }
 
     /**
-     * {@inheritDoc}
      * @return iterable<int|string, callable|iterable<int, callable|\Yiisoft\Validator\RuleInterface>|\Yiisoft\Validator\RuleInterface>
      */
     #[\Override]
     public function getRules(): iterable
     {
         return [
-            'newPassword' => [new Required()],
+            'newPassword'       => [new Required()],
             'newPasswordVerify' => $this->newPasswordVerifyRules(),
         ];
     }
@@ -78,6 +78,7 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
                     if ($this->newPassword !== $this->newPasswordVerify) {
                         $result->addError($this->translator->translate('validator.password.not.match.new'));
                     }
+
                     return $result;
                 },
                 skipOnEmpty: true,

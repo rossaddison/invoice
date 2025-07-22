@@ -7,16 +7,13 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\InvRecurring\InvRecurringRepository::class)]
-
 class InvRecurring
 {
     /**
-     * Every Recurring Invoice record belongs to one related Invoice
-     * @var Inv $inv
+     * Every Recurring Invoice record belongs to one related Invoice.
      */
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
@@ -27,7 +24,9 @@ class InvRecurring
         private mixed $start = '', #[Column(type: 'date', nullable: true)]
         private mixed $end = '', #[Column(type: 'string(191)', nullable: false)]
         private string $frequency = '', #[Column(type: 'date', nullable: true)]
-        private mixed $next = '') {}
+        private mixed $next = '')
+    {
+    }
 
     public function getId(): string
     {
@@ -54,35 +53,35 @@ class InvRecurring
         $this->inv_id = $inv_id;
     }
 
-    public function getStart(): string|DateTimeImmutable
+    public function getStart(): string|\DateTimeImmutable
     {
-        /** @var DateTimeImmutable|string $this->start */
+        /* @var DateTimeImmutable|string $this->start */
         return $this->start;
     }
 
-    public function setStart(string|DateTime $start): void
+    public function setStart(string|\DateTime $start): void
     {
         $this->start = $start;
     }
 
-    public function getEnd(): string|null|DateTimeImmutable
+    public function getEnd(): string|\DateTimeImmutable|null
     {
-        /** @var DateTimeImmutable|string|null $this->end */
+        /* @var DateTimeImmutable|string|null $this->end */
         return $this->end;
     }
 
-    public function setEnd(?DateTime $end): void
+    public function setEnd(?\DateTime $end): void
     {
         $this->end = $end;
     }
 
-    public function getNext(): string|null|DateTimeImmutable
+    public function getNext(): string|\DateTimeImmutable|null
     {
-        /** @var DateTimeImmutable|string|null $this->next */
+        /* @var DateTimeImmutable|string|null $this->next */
         return $this->next;
     }
 
-    public function setNext(?DateTime $next): void
+    public function setNext(?\DateTime $next): void
     {
         $this->next = $next;
     }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Auth;
 
 use App\User\UserRepository;
-use Throwable;
 use Yiisoft\Auth\IdentityInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -15,15 +14,16 @@ final readonly class AuthService
         private CurrentUser $currentUser,
         private UserRepository $userRepository,
         private IdentityRepository $identityRepository,
-    ) {}
+    ) {
+    }
 
     public function login(string $login, string $password): bool
     {
         $user = $this->userRepository->findByLoginWithAuthIdentity($login);
-        /**
+        /*
          * Use Password Hashing to validate the password
          */
-        if ($user === null || !$user->validatePassword($password)) {
+        if (null === $user || !$user->validatePassword($password)) {
             return false;
         }
 
@@ -34,7 +34,7 @@ final readonly class AuthService
     {
         $user = $this->userRepository->findByLoginWithAuthIdentity($login);
 
-        if ($user === null) {
+        if (null === $user) {
             return false;
         }
 
@@ -42,7 +42,7 @@ final readonly class AuthService
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function logout(): bool
     {

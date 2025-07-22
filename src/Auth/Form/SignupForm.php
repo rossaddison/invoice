@@ -12,23 +12,24 @@ use Yiisoft\Validator\PropertyTranslator\ArrayPropertyTranslator;
 use Yiisoft\Validator\PropertyTranslatorInterface;
 use Yiisoft\Validator\PropertyTranslatorProviderInterface;
 use Yiisoft\Validator\Result;
-use Yiisoft\Validator\Rule\Equal;
 use Yiisoft\Validator\Rule\Email;
+use Yiisoft\Validator\Rule\Equal;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RulesProviderInterface;
 
 final class SignupForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
 {
-    private string $login = '';
-    private string $email = '';
-    private string $password = '';
+    private string $login          = '';
+    private string $email          = '';
+    private string $password       = '';
     private string $passwordVerify = '';
 
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]
@@ -38,16 +39,14 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function getAttributeLabels(): array
     {
         return [
-            'login' => $this->translator->translate('layout.login'),
-            'email' => $this->translator->translate('email'),
-            'password' => $this->translator->translate('layout.password'),
+            'login'          => $this->translator->translate('layout.login'),
+            'email'          => $this->translator->translate('email'),
+            'password'       => $this->translator->translate('layout.password'),
             'passwordVerify' => $this->translator->translate('layout.password-verify'),
         ];
     }
 
     /**
-     * @return string
-     *
      * @psalm-return 'Signup'
      */
     #[\Override]
@@ -56,9 +55,6 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
         return 'Signup';
     }
 
-    /**
-     * @return PropertyTranslatorInterface|null
-     */
     #[\Override]
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
@@ -91,6 +87,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
         // In the contruct of the new Identity, a new auth key is created.
         $user = new User($this->getLogin(), $this->getEmail(), $this->getPassword());
         $this->userRepository->save($user);
+
         return $user;
     }
 
@@ -113,9 +110,10 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                 new Length(min: 1, max: 48, skipOnError: true),
                 function (mixed $value): Result {
                     $result = new Result();
-                    if ($this->userRepository->findByLogin((string) $value) !== null) {
+                    if (null !== $this->userRepository->findByLogin((string) $value)) {
                         $result->addError($this->translator->translate('validator.user.exist'));
                     }
+
                     return $result;
                 },
             ],
@@ -124,9 +122,10 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                 new Email(),
                 function (mixed $value): Result {
                     $result = new Result();
-                    if ($this->userRepository->findByEmail((string) $value) !== null) {
+                    if (null !== $this->userRepository->findByEmail((string) $value)) {
                         $result->addError($this->translator->translate('validator.user.exist'));
                     }
+
                     return $result;
                 },
             ],
@@ -140,6 +139,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
                     if ($this->password !== $value) {
                         $result->addError($this->translator->translate('validator.password.not.match'));
                     }
+
                     return $result;
                 },
             ],

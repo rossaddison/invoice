@@ -12,12 +12,11 @@ use Yiisoft\Translator\TranslatorInterface;
 
 /**
  * e.g  yii translator/translate i.active af-ZA
- * Result: aktief
+ * Result: aktief.
  */
-
 final class TranslateCommand extends Command
 {
-    protected static string $defaultName = 'translator/translate';
+    protected static string $defaultName        = 'translator/translate';
     protected static string $defaultDescription = 'Translates a message';
 
     public function __construct(private readonly TranslatorInterface $translator)
@@ -36,12 +35,10 @@ final class TranslateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /**
-         * @var mixed $input->getArgument('message')
          * @var string $message
          */
         $message = $input->getArgument('message');
         /**
-         * @var mixed $input->getArgument('locale')
          * @var string $locale
          */
         $locale = $input->getArgument('locale');

@@ -7,15 +7,16 @@ namespace App\Invoice\Helpers\Telegram;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Vjik\TelegramBot\Api\FailResult;
-use Vjik\TelegramBot\Api\Transport\CurlTransport;
 use Vjik\TelegramBot\Api\LogType;
 use Vjik\TelegramBot\Api\TelegramBotApi;
+use Vjik\TelegramBot\Api\Transport\CurlTransport;
 use Vjik\TelegramBot\Api\Type\Update\Update;
 use Vjik\TelegramBot\Api\Type\Update\WebhookInfo;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**
  * Using the following functions currently:
+ *
  * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendInvoice
  * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendLocation
  * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendMessage
@@ -25,7 +26,6 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
  * @see https://core.telegram.org/bots/api#sendMessage
  * @see https://core.telegram.org/bots/api#getupdates
  */
-
 final class TelegramHelper
 {
     private readonly TelegramBotApi $botApi;
@@ -77,10 +77,8 @@ final class TelegramHelper
     }
 
     /**
-     * @param int|null $offset
-     * @param int|null $limit
-     * @param int|null $timeout
      * @param string[]|null $allowedUpdates
+     *
      * @return FailResult|Update[]
      */
     public function getUpdates(

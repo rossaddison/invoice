@@ -41,6 +41,7 @@ final class AutoIncrementSetToOneAfterTruncate6Command extends Command
         }
 
         $io->success('Done');
+
         return ExitCode::OK;
     }
 }

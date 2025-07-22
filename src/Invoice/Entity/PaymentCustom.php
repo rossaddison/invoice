@@ -21,7 +21,9 @@ class PaymentCustom
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $payment_id = null, #[Column(type: 'integer(11)', nullable: true)]
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
-        private string $value = '') {}
+        private string $value = '')
+    {
+    }
 
     public function getPayment(): ?Payment
     {

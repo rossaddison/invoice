@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\CustomField\CustomFieldForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
@@ -21,77 +21,76 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?=
-    Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CustomFieldForm')
-    ->open()
+    ->open();
 ?>
 
-<?= Html::openTag('h1'); ?>
-    <?= Html::encode($title) ?>
-<?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
+<?php echo Html::openTag('h1'); ?>
+    <?php echo Html::encode($title); ?>
+<?php echo Html::closeTag('h1'); ?>
+<?php echo Html::openTag('div'); ?>
+    <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?php echo Html::openTag('div', ['class' => 'row']); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'id')
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'id')
                 ->addInputAttributes(['style' => 'background:lightblue'])
                 ->label($translator->translate('id'))
                 ->value(Html::encode($form->getId() ?? ''))
                 ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'table')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('table'))
-    ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string) $custom_tables[$table])) : ''))
-    ->readonly(true);
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'table')
+                ->addInputAttributes(['style' => 'background:lightblue'])
+                ->label($translator->translate('table'))
+                ->value(Html::encode(strlen($table = $form->getTable() ?? '') > 0 ? ucfirst($s->lang((string) $custom_tables[$table])) : ''))
+                ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'label')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('label'))
-    ->value(Html::encode($form->getLabel() ?? ''))
-    ->readonly(true);
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'label')
+                ->addInputAttributes(['style' => 'background:lightblue'])
+                ->label($translator->translate('label'))
+                ->value(Html::encode($form->getLabel() ?? ''))
+                ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'type')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('type'))
-    ->value(Html::encode($translator->translate('' . str_replace("-", "_", strtolower($form->getType() ?? '')) . '')))
-    ->readonly(true);
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'type')
+                ->addInputAttributes(['style' => 'background:lightblue'])
+                ->label($translator->translate('type'))
+                ->value(Html::encode($translator->translate(''.str_replace('-', '_', strtolower($form->getType() ?? '')).'')))
+                ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'location')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('custom.field.location'))
-    ->value(Html::encode($form->getLocation() ?? ''))
-    ->readonly(true);
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'location')
+                ->addInputAttributes(['style' => 'background:lightblue'])
+                ->label($translator->translate('custom.field.location'))
+                ->value(Html::encode($form->getLocation() ?? ''))
+                ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
 
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'order')
-    ->addInputAttributes(['style' => 'background:lightblue'])
-    ->label($translator->translate('order'))
-    ->value(Html::encode($form->getOrder() ?? ''))
-    ->readonly(true);
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'order')
+                ->addInputAttributes(['style' => 'background:lightblue'])
+                ->label($translator->translate('order'))
+                ->value(Html::encode($form->getOrder() ?? ''))
+                ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>    
-<?= Html::closeTag('div'); ?>
-<?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>
+    <?php echo Html::closeTag('div'); ?>    
+<?php echo Html::closeTag('div'); ?>
+<?php echo $button::back(); ?>
+<?php echo Form::tag()->close(); ?>

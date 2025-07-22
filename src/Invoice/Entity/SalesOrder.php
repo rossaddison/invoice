@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\ORM\Entity\Behavior;
-use DateTimeImmutable;
-use App\User\User;
 
 #[Entity(repository: \App\Invoice\SalesOrder\SalesOrderRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
-
 class SalesOrder
 {
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
@@ -30,13 +28,13 @@ class SalesOrder
     private ?int $id = null;
 
     #[Column(type: 'datetime', nullable: false)]
-    private DateTimeImmutable $date_created;
+    private \DateTimeImmutable $date_created;
 
     #[Column(type: 'datetime', nullable: false)]
-    private readonly DateTimeImmutable $date_modified;
+    private readonly \DateTimeImmutable $date_modified;
 
     #[Column(type: 'datetime', nullable: false)]
-    private DateTimeImmutable $date_expires;
+    private \DateTimeImmutable $date_expires;
 
     public function __construct(
         // The purchase order is derived from the quote =>quote_id
@@ -74,9 +72,9 @@ class SalesOrder
         #[Column(type: 'longText', nullable: true)]
         private ?string $payment_term = '',
     ) {
-        $this->date_modified = new DateTimeImmutable();
-        $this->date_created = new DateTimeImmutable();
-        $this->date_expires = new DateTimeImmutable();
+        $this->date_modified = new \DateTimeImmutable();
+        $this->date_created  = new \DateTimeImmutable();
+        $this->date_expires  = new \DateTimeImmutable();
     }
 
     public function getClient(): ?Client
@@ -122,9 +120,9 @@ class SalesOrder
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
-        return $this->id === null ? null : (string) $this->id;
+        return null === $this->id ? null : (string) $this->id;
     }
 
     public function setId(int $id): void
@@ -142,12 +140,9 @@ class SalesOrder
         $this->user_id = $user_id;
     }
 
-    /**
-     * @param int|string|null $quote_id
-     */
     public function setQuote_id(string|int|null $quote_id): void
     {
-        $quote_id === null ? $this->quote_id = null : $this->quote_id = (int) $quote_id ;
+        null === $quote_id ? $this->quote_id = null : $this->quote_id = (int) $quote_id;
     }
 
     public function getQuote_id(): string
@@ -155,17 +150,14 @@ class SalesOrder
         return (string) $this->quote_id;
     }
 
-    public function getInv_id(): string|null
+    public function getInv_id(): ?string
     {
         return (string) $this->inv_id;
     }
 
-    /**
-     * @param int|string|null $inv_id
-     */
     public function setInv_id(string|int|null $inv_id): void
     {
-        $inv_id === null ? $this->inv_id = null : $this->inv_id = (int) $inv_id ;
+        null === $inv_id ? $this->inv_id = null : $this->inv_id = (int) $inv_id;
     }
 
     public function getClient_id(): string
@@ -188,7 +180,7 @@ class SalesOrder
         $this->group_id = $group_id;
     }
 
-    public function getStatus_id(): int|null
+    public function getStatus_id(): ?int
     {
         return $this->status_id;
     }
@@ -196,44 +188,45 @@ class SalesOrder
     public function getStatus(int $status_id): string
     {
         $status = '';
+
         return match ($status_id) {
-            1 => 'draft',
-            2 => 'sent',
-            3 => 'viewed',
-            4 => 'approved',
-            5 => 'rejected',
-            6 => 'cancelled',
+            1       => 'draft',
+            2       => 'sent',
+            3       => 'viewed',
+            4       => 'approved',
+            5       => 'rejected',
+            6       => 'cancelled',
             default => $status,
         };
     }
 
     public function setStatus_id(int $status_id): void
     {
-        !in_array($status_id, [1,2,3,4,5,6,7,8,9]) ? $this->status_id = 1 : $this->status_id = $status_id ;
+        !in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8, 9]) ? $this->status_id = 1 : $this->status_id = $status_id;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDate_created(): \DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function setDate_created(DateTimeImmutable $date_created): void
+    public function setDate_created(\DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDate_modified(): \DateTimeImmutable
     {
         return $this->date_modified;
     }
 
     public function setDate_expires(): void
     {
-        $days = (string) 1;
-        $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
+        $days               = (string) 1;
+        $this->date_expires = (new \DateTimeImmutable('now'))->add(new \DateInterval('P'.$days.'D'));
     }
 
-    public function getDate_expires(): DateTimeImmutable
+    public function getDate_expires(): \DateTimeImmutable
     {
         return $this->date_expires;
     }

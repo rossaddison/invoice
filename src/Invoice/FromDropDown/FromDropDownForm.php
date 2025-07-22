@@ -19,28 +19,27 @@ final class FromDropDownForm extends FormModel
 
     public function __construct(FromDropDown $from)
     {
-        $this->email = $from->getEmail();
-        $this->include = $from->getInclude();
+        $this->email         = $from->getEmail();
+        $this->include       = $from->getInclude();
         $this->default_email = $from->getDefault_email();
     }
 
-    public function getEmail(): string|null
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function getInclude(): bool|null
+    public function getInclude(): ?bool
     {
         return $this->include;
     }
 
-    public function getDefault_email(): bool|null
+    public function getDefault_email(): ?bool
     {
         return $this->default_email;
     }
 
     /**
-     * @return string
      * @psalm-return ''
      */
     #[\Override]

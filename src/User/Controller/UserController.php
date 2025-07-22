@@ -33,24 +33,24 @@ final class UserController
         #[RouteArgument('page')]
         int $page = 1,
         #[RouteArgument('pagesize')]
-        int $pageSize = null,
+        ?int $pageSize = null,
     ): Response {
         $order = null !== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
-        $sort = Sort::only(['id', 'login'])->withOrder($order);
+        $sort  = Sort::only(['id', 'login'])->withOrder($order);
         /**
          * @var \Yiisoft\Data\Cycle\Reader\EntityReader $dataReader
          */
         $dataReader = $userRepository->findAllPreloaded();
 
-        if ($pageSize === null) {
+        if (null === $pageSize) {
             $pageSize = (int) ($body['pageSize'] ?? OffsetPaginator::DEFAULT_PAGE_SIZE);
         }
 
         $offsetPaginator = (new OffsetPaginator($dataReader));
-        $paginator = $offsetPaginator
-                      ->withPageSize($pageSize > 0 ? $pageSize : 1)
-                      ->withSort($sort)
-                      ->withToken(PageToken::next((string) $page));
+        $paginator       = $offsetPaginator
+            ->withPageSize($pageSize > 0 ? $pageSize : 1)
+            ->withSort($sort)
+            ->withToken(PageToken::next((string) $page));
 
         return $this->viewRenderer->render('index', ['paginator' => $paginator]);
     }
@@ -63,7 +63,7 @@ final class UserController
     ): Response {
         $item = $userRepository->findByLogin($login);
 
-        if ($item === null) {
+        if (null === $item) {
             return $responseFactory->createResponse(404);
         }
 

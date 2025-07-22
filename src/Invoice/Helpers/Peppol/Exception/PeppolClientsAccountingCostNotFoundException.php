@@ -9,20 +9,16 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolClientsAccountingCostNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('client.peppol.not.found.accounting.cost');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Invoice\AllowanceCharge\AllowanceChargeForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -18,63 +18,63 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Html::openTag('h1'); ?>
-    <?= Html::encode($title) ?>
-<?= Html::closeTag('h1'); ?>
+<?php echo Html::openTag('h1'); ?>
+    <?php echo Html::encode($title); ?>
+<?php echo Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('AllowanceChargeForm')
     ->open(); ?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'identifier')
-                    ->addInputAttributes(['style' => 'background:lightblue'])
-                    ->label($translator->translate('allowance.or.charge'))
-                    ->value(Html::encode($form->getIdentifier() == true
-                    ? $translator->translate('allowance.or.charge.charge')
-                    : $translator->translate('allowance.or.charge.allowance')))
-                    ->readonly(true);
+<?php echo Html::openTag('div'); ?>
+    <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?php echo Html::openTag('div', ['class' => 'row']); ?>
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'identifier')
+    ->addInputAttributes(['style' => 'background:lightblue'])
+    ->label($translator->translate('allowance.or.charge'))
+    ->value(Html::encode(true == $form->getIdentifier()
+    ? $translator->translate('allowance.or.charge.charge')
+    : $translator->translate('allowance.or.charge.allowance')))
+    ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'reason_code')
+            <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'reason_code')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('allowance.or.charge.reason.code'))
     ->value(Html::encode($form->getReasonCode() ?? ''))
     ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'reason')
+            <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'reason')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('allowance.or.charge.reason'))
     ->value(Html::encode($form->getReason() ?? ''))
     ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'multiplier_factor_numeric')
+            <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'multiplier_factor_numeric')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('allowance.or.charge.multiplier.factor.numeric'))
     ->value(Html::encode($form->getMultiplierFactorNumeric() ?? ''))
     ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'base_amount')
+            <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'base_amount')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('allowance.or.charge.amount'))
     ->value(Html::encode($form->getBaseAmount() ?? ''))
     ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>    
+    <?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo $button::back(); ?>
+<?php echo Form::tag()->close(); ?>

@@ -15,15 +15,9 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
         private readonly ViewRenderer $viewRenderer,
     ) {
         $this->layoutParameters = [];
-        $this->formParameters = [];
+        $this->formParameters   = [];
     }
 
-    /**
-     * @param string $translatedHeading
-     * @param string $translatedMessage
-     * @param string $origin
-     * @return string
-     */
     public function renderPartialLayoutWithTranslatorMessageAsString(
         string $translatedHeading,
         string $translatedMessage,
@@ -39,6 +33,7 @@ final class Bootstrap5ModalTranslatorMessageWithoutAction
                 ],
             ),
         ];
+
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_message_layout', $this->layoutParameters);
     }
 }

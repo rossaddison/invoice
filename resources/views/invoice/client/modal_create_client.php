@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @see id="create-client" triggered by <a href="#create-client" class="btn btn-success" data-bs-toggle="modal"  style="text-decoration:none"> on
  * @see views/client/index.php
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -22,22 +22,22 @@ use Yiisoft\Html\Html;
             <br>
         </div>
         <div class="mb-3 form-group">
-            <label for="client_name" class="form-label"><?= $translator->translate('client.name'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_name" id="client_name" placeholder="<?= $translator->translate('client.name'); ?>" value="<?= Html::encode($body['client_name'] ?? '') ?>" required>
+            <label for="client_name" class="form-label"><?php echo $translator->translate('client.name'); ?><span style="color:red">*</span></label>
+            <input type="text" class="form-control" name="client_name" id="client_name" placeholder="<?php echo $translator->translate('client.name'); ?>" value="<?php echo Html::encode($body['client_name'] ?? ''); ?>" required>
         </div>
         <div class="mb-3 form-group">
-            <label for="client_surname" class="form-label"><?= $translator->translate('client.surname'); ?></label>
-            <input type="text" class="form-control" name="client_surname" id="client_surname" placeholder="<?= $translator->translate('client.surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
+            <label for="client_surname" class="form-label"><?php echo $translator->translate('client.surname'); ?></label>
+            <input type="text" class="form-control" name="client_surname" id="client_surname" placeholder="<?php echo $translator->translate('client.surname'); ?>" value="<?php echo Html::encode($body['client_surname'] ?? ''); ?>">
         </div>
         <div class="mb-3 form-group">
-            <label for="client_email" class="form-label"><?= $translator->translate('email'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_email" id="client_email" placeholder="<?= $translator->translate('email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
+            <label for="client_email" class="form-label"><?php echo $translator->translate('email'); ?><span style="color:red">*</span></label>
+            <input type="text" class="form-control" name="client_email" id="client_email" placeholder="<?php echo $translator->translate('email'); ?>" value="<?php echo Html::encode($body['client_email'] ?? ''); ?>" required>
         </div>
         <div class="modal-header">
             <div class="btn-group">
                 <button class="client_create_confirm btn btn-success" id="client_create_confirm" type="button">
                     <i class="fa fa-check"></i>
-                    <?= $translator->translate('submit'); ?>
+                    <?php echo $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

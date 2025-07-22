@@ -4,8 +4,19 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
-use App\Invoice\BaseController;
+use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 // Entity's
+use App\Invoice\BaseController;
+use App\Invoice\Client\ClientRepository as CR;
+use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
+use App\Invoice\ClientPeppol\ClientPeppolRepository as cpR;
+use App\Invoice\Contract\ContractRepository as ContractRepo;
+use App\Invoice\CustomField\CustomFieldRepository as CFR;
+use App\Invoice\CustomValue\CustomValueRepository as CVR;
+use App\Invoice\Delivery\DeliveryRepository as DelRepo;
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\DeliveryParty\DeliveryPartyRepository as DelPartyRepo;
+use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Contract;
 use App\Invoice\Entity\Delivery;
@@ -13,12 +24,14 @@ use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Entity\EmailTemplate;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvCustom;
+use App\Invoice\Entity\InvItem;
+use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Invoice\Entity\InvItemAmount;
+// Services
+// Inv
 use App\Invoice\Entity\InvRecurring;
 use App\Invoice\Entity\InvSentLog;
 use App\Invoice\Entity\InvTaxRate;
@@ -28,97 +41,87 @@ use App\Invoice\Entity\PaymentMethod;
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Entity\Setting;
 use App\Invoice\Entity\Sumex;
+// Forms Inv
 use App\Invoice\Entity\TaxRate;
 use App\Invoice\Entity\Upload;
-// Services
-// Inv
-use App\User\UserService;
-use App\User\User;
-use App\Invoice\InvItem\InvItemService;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
-use App\Invoice\InvAmount\InvAmountService;
-use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
-use App\Invoice\InvTaxRate\InvTaxRateService;
-use App\Invoice\InvCustom\InvCustomService;
-use App\Invoice\PostalAddress\PostalAddressService as PAS;
-// Forms Inv
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm;
-use App\Invoice\InvCustom\InvCustomForm;
-use App\Invoice\InvItem\InvItemForm;
-use App\Invoice\InvTaxRate\InvTaxRateForm;
-// Repositories
-use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
-use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
-use App\Invoice\ClientPeppol\ClientPeppolRepository as cpR;
-use App\Invoice\Contract\ContractRepository as ContractRepo;
-use App\Invoice\CustomValue\CustomValueRepository as CVR;
-use App\Invoice\CustomField\CustomFieldRepository as CFR;
-use App\Invoice\Delivery\DeliveryRepository as DelRepo;
-use App\Invoice\DeliveryParty\DeliveryPartyRepository as DelPartyRepo;
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
-use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
-use App\Invoice\InvCustom\InvCustomRepository as ICR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
-use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
-use App\Invoice\Payment\PaymentRepository as PYMR;
-use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
-use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
-use App\Invoice\PostalAddress\PostalAddressRepository as paR;
-use App\Invoice\ProductImage\ProductImageRepository as PIR;
-use App\Invoice\ProductProperty\ProductPropertyRepository as ppR;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\Project\ProjectRepository as PRJCTR;
-use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
-use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
-use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\Sumex\SumexRepository as SumexR;
-use App\Invoice\Task\TaskRepository as TASKR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Unit\UnitRepository as UNR;
-use App\Invoice\UnitPeppol\UnitPeppolRepository as unpR;
-use App\Invoice\Upload\UploadRepository as UPR;
-use App\Invoice\UserClient\UserClientRepository as UCR;
-use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
-use App\Invoice\UserInv\UserInvRepository as UIR;
-use App\User\UserRepository as UR;
-use App\Service\WebControllerService;
-// App Helpers
+// Repositories
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\MailerHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\PdfHelper;
-use App\Invoice\Helpers\Peppol\PeppolHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
+use App\Invoice\Helpers\Peppol\PeppolHelper;
 use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
 use App\Invoice\Helpers\TemplateHelper;
+use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\InvAmount\InvAmountService;
+use App\Invoice\InvCustom\InvCustomForm;
+use App\Invoice\InvCustom\InvCustomRepository as ICR;
+use App\Invoice\InvCustom\InvCustomService;
+use App\Invoice\InvItem\InvItemForm;
+use App\Invoice\InvItem\InvItemRepository as IIR;
+use App\Invoice\InvItem\InvItemService;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
+use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
+use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
+use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
+use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
+use App\Invoice\InvTaxRate\InvTaxRateForm;
+use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
+use App\Invoice\InvTaxRate\InvTaxRateService;
+use App\Invoice\Libraries\Crypt;
+use App\Invoice\Payment\PaymentRepository as PYMR;
+use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
+use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
+use App\Invoice\PostalAddress\PostalAddressRepository as paR;
+use App\Invoice\PostalAddress\PostalAddressService as PAS;
+use App\Invoice\Product\ProductRepository as PR;
+use App\Invoice\ProductImage\ProductImageRepository as PIR;
+use App\Invoice\ProductProperty\ProductPropertyRepository as ppR;
+use App\Invoice\Project\ProjectRepository as PRJCTR;
+use App\Invoice\Quote\QuoteRepository as QR;
+use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
+use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
+use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
+use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
+use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
+use App\Invoice\Setting\SettingRepository as SR;
+use App\Invoice\Sumex\SumexRepository as SumexR;
+use App\Invoice\Task\TaskRepository as TASKR;
+use App\Invoice\TaxRate\TaxRateRepository as TRR;
+// App Helpers
+use App\Invoice\Unit\UnitRepository as UNR;
+use App\Invoice\UnitPeppol\UnitPeppolRepository as unpR;
+use App\Invoice\Upload\UploadRepository as UPR;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserInv\UserInvRepository as UIR;
+use App\Service\WebControllerService;
+use App\User\User;
+use App\User\UserRepository as UR;
 // Widgets
+use App\User\UserService;
 use App\Widget\Bootstrap5ModalInv;
 use App\Widget\Bootstrap5ModalPdf;
-use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Libraries
-use App\Invoice\Libraries\Crypt;
+use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
 // Yii
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Http\Method;
 use Yiisoft\Html\Html;
+use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Mailer\MailerInterface;
@@ -127,13 +130,10 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
+// Psr\Http
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-// Psr\Http
-use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class InvController extends BaseController
 {
@@ -143,26 +143,6 @@ final class InvController extends BaseController
     private readonly NumberHelper $number_helper;
     private readonly PdfHelper $pdf_helper;
 
-    /**
-     * @param Crypt $crypt
-     * @param DataResponseFactoryInterface $factory
-     * @param DelRepo $delRepo
-     * @param InvAmountService $inv_amount_service
-     * @param InvService $inv_service
-     * @param InvCustomService $inv_custom_service
-     * @param InvItemService $inv_item_service
-     * @param InvItemAllowanceChargeService $aciis
-     * @param InvTaxRateService $inv_tax_rate_service
-     * @param LoggerInterface $logger
-     * @param MailerInterface $mailer
-     * @param SessionInterface $session
-     * @param SR $sR
-     * @param TranslatorInterface $translator
-     * @param UserService $userService
-     * @param UrlGenerator $url_generator
-     * @param ViewRenderer $viewRenderer
-     * @param WebControllerService $webService
-     */
     public function __construct(
         private readonly Crypt $crypt,
         private readonly DataResponseFactoryInterface $factory,
@@ -185,26 +165,19 @@ final class InvController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->date_helper = new DateHelper($sR);
+        $this->date_helper   = new DateHelper($sR);
         $this->number_helper = new NumberHelper($sR);
-        $this->pdf_helper = new PdfHelper($sR, $session);
+        $this->pdf_helper    = new PdfHelper($sR, $session);
     }
 
-    /**
-     * @param string $client_id
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return User|null
-     */
-    private function active_user(string $client_id, UR $uR, UCR $ucR, UIR $uiR): User|null
+    private function active_user(string $client_id, UR $uR, UCR $ucR, UIR $uiR): ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
             $user_client_count = $ucR->repoUserquerycount($client_id);
-            if ($user_client_count == 1) {
+            if (1 == $user_client_count) {
                 $user_id = $user_client->getUser_id();
-                $user = $uR->findById($user_id);
+                $user    = $uR->findById($user_id);
                 if (null !== $user) {
                     $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                     if (null !== $user_inv && $user_inv->getActive()) {
@@ -213,34 +186,31 @@ final class InvController extends BaseController
                 }
             }
         }
+
         return null;
     }
 
-    /**
-     * @param Request $request
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
     public function archive(Request $request): \Yiisoft\DataResponse\DataResponse
     {
         // TODO filter system: Currently the filter is disabled on the archive view.
         $invoice_archive = [];
-        $flash_message = '';
-        if ($request->getMethod() === Method::POST) {
+        $flash_message   = '';
+        if (Method::POST === $request->getMethod()) {
             $body = $request->getParsedBody();
             if (is_array($body)) {
                 /**
                  * @var string $value
                  */
                 foreach ($body as $key => $value) {
-                    if ((string) $key === 'invoice_number') {
+                    if ('invoice_number' === (string) $key) {
                         $invoice_archive = $this->sR->get_invoice_archived_files_with_filter($value);
-                        $flash_message = $value;
+                        $flash_message   = $value;
                     }
                 }
             }
         } else {
             $invoice_archive = $this->sR->get_invoice_archived_files_with_filter('');
-            $flash_message = '';
+            $flash_message   = '';
         }
         $parameters = [
             'partial_inv_archive' => $this->viewRenderer->renderPartialAsString(
@@ -250,20 +220,12 @@ final class InvController extends BaseController
                 ],
             ),
             'alert' => $this->alert(),
-            'body' => $request->getParsedBody(),
+            'body'  => $request->getParsedBody(),
         ];
+
         return $this->viewRenderer->render('archive', $parameters);
     }
 
-    /**
-     * @param string $tmp
-     * @param string $target
-     * @param int $client_id
-     * @param string $url_key
-     * @param string $fileName
-     * @param UPR $uPR
-     * @return bool
-     */
     private function attachment_move_to(
         string $tmp,
         string $target,
@@ -290,39 +252,34 @@ final class InvController extends BaseController
                 $track_file->setClient_id($client_id);
                 $track_file->setUrl_key($url_key);
                 $track_file->setFile_name_original($fileName);
-                $track_file->setFile_name_new($url_key . '_' . $fileName);
+                $track_file->setFile_name_new($url_key.'_'.$fileName);
                 $track_file->setUploaded_date(new \DateTimeImmutable());
                 $uPR->save($track_file);
+
                 return true;
             }
-            $this->flashMessage('warning', $this->translator->translate('possible.file.upload.attack') . $tmp);
+            $this->flashMessage('warning', $this->translator->translate('possible.file.upload.attack').$tmp);
+
             return false;
         }
         $this->flashMessage('warning', $this->translator->translate('error.duplicate.file'));
+
         return false;
     }
 
-    /**
-     * @param int $inv_id
-     * @return string
-     */
     private function attachment_not_writable(int $inv_id): string
     {
         return $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => $this->translator->translate('errors'),
-                'message' => $this->translator->translate('path') .
+                'message' => $this->translator->translate('path').
                              $this->translator->translate('is.not.writable'),
                 'url' => 'inv/view', 'id' => $inv_id,
             ],
         );
     }
 
-    /**
-     * @param int $inv_id
-     * @return string
-     */
     private function attachment_successfully_created(int $inv_id): string
     {
         return $this->viewRenderer->renderPartialAsString(
@@ -330,14 +287,10 @@ final class InvController extends BaseController
             [
                 'heading' => '',
                 'message' => $this->translator->translate('record.successfully.created'),
-                'url' => 'inv/view', 'id' => $inv_id],
+                'url'     => 'inv/view', 'id' => $inv_id],
         );
     }
 
-    /**
-     * @param int $inv_id
-     * @return string
-     */
     private function attachment_no_file_uploaded(int $inv_id): string
     {
         return $this->viewRenderer->renderPartialAsString(
@@ -345,20 +298,14 @@ final class InvController extends BaseController
             [
                 'heading' => $this->translator->translate('errors'),
                 'message' => $this->translator->translate('no.file.uploaded'),
-                'url' => 'inv/view', 'id' => $inv_id,
+                'url'     => 'inv/view', 'id' => $inv_id,
             ],
         );
     }
 
-    /**
-     * @param int $inv_id
-     * @param IR $iR
-     * @param UPR $uPR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
     public function attachment(#[RouteArgument('id')] int $inv_id, IR $iR, UPR $uPR): \Yiisoft\DataResponse\DataResponse|Response
     {
-        $aliases = $this->sR->get_customer_files_folder_aliases();
+        $aliases    = $this->sR->get_customer_files_folder_aliases();
         $targetPath = $aliases->get('@customer_files');
         if ($inv_id) {
             if (!is_writable($targetPath)) {
@@ -377,11 +324,12 @@ final class InvController extends BaseController
                         $temporary_file = $_FILES['InvAttachmentsForm']['tmp_name']['attachFile'];
                         /** @var string $_FILES['InvAttachmentsForm']['name']['attachFile'] */
                         $original_file_name = preg_replace('/\s+/', '_', $_FILES['InvAttachmentsForm']['name']['attachFile']);
-                        if (($original_file_name != false) && (strlen($temporary_file) > 0)) {
-                            $target_path_with_filename = $targetPath . '/' . $url_key . '_' . $original_file_name;
+                        if ((false != $original_file_name) && (strlen($temporary_file) > 0)) {
+                            $target_path_with_filename = $targetPath.'/'.$url_key.'_'.$original_file_name;
                             if ($this->attachment_move_to($temporary_file, $target_path_with_filename, $client_id, $url_key, $original_file_name, $uPR)) {
                                 return $this->factory->createResponse($this->attachment_successfully_created($inv_id));
                             }
+
                             return $this->factory->createResponse($this->attachment_no_file_uploaded($inv_id));
                         }
                     } else {
@@ -389,65 +337,52 @@ final class InvController extends BaseController
                     }
                 } // $client_id
             } // $invoice
+
             return $this->webService->getRedirectResponse('inv/index');
-        } //null!==$inv_id
+        } // null!==$inv_id
+
         return $this->webService->getRedirectResponse('inv/index');
     }
 
     /**
-     * Used to display values in the view function
-     * @param Inv $inv
-     * @return array
+     * Used to display values in the view function.
      */
     private function body(Inv $inv): array
     {
         return [
             'number' => $inv->getNumber(),
-            'id' => $inv->getId(),
-            //relations
-            'user_id' => $inv->getUser()?->getId(),
-            'group_id' => $inv->getGroup()?->getId(),
+            'id'     => $inv->getId(),
+            // relations
+            'user_id'   => $inv->getUser()?->getId(),
+            'group_id'  => $inv->getGroup()?->getId(),
             'client_id' => $inv->getClient()?->getClient_id(),
-            //nullable
-            'quote_id' => $inv->getQuote_id(),
-            'so_id' => $inv->getSo_id(),
-            'contract_id' => $inv->getContract_id(),
-            'date_created' => $inv->getDate_created(),
-            'date_supplied' => $inv->getDate_supplied(),
+            // nullable
+            'quote_id'       => $inv->getQuote_id(),
+            'so_id'          => $inv->getSo_id(),
+            'contract_id'    => $inv->getContract_id(),
+            'date_created'   => $inv->getDate_created(),
+            'date_supplied'  => $inv->getDate_supplied(),
             'date_tax_point' => $inv->getDate_tax_point(),
-            'date_modified' => $inv->getDate_modified(),
-            'date_due' => $inv->getDate_due(),
+            'date_modified'  => $inv->getDate_modified(),
+            'date_due'       => $inv->getDate_due(),
             // where to deliver
             'delivery_location_id' => $inv->getDelivery_location_id(),
             // has been delivered to delivery location
-            'delivery_id' => $inv->getDelivery_id(),
-            'status_id' => $inv->getStatus_id(),
-            'is_read_only' => $inv->getIs_read_only(),
+            'delivery_id'             => $inv->getDelivery_id(),
+            'status_id'               => $inv->getStatus_id(),
+            'is_read_only'            => $inv->getIs_read_only(),
             'creditinvoice_parent_id' => $inv->getCreditinvoice_parent_id(),
-            'discount_amount' => $inv->getDiscount_amount(),
-            'discount_percent' => $inv->getDiscount_percent(),
-            'url_key' => $inv->getUrl_key(),
-            'password' => $inv->getPassword(),
-            'payment_method' => $inv->getPayment_method(),
-            'terms' => $inv->getTerms(),
-            'note' => $inv->getNote(),
-            'document_description' => $inv->getDocumentDescription(),
+            'discount_amount'         => $inv->getDiscount_amount(),
+            'discount_percent'        => $inv->getDiscount_percent(),
+            'url_key'                 => $inv->getUrl_key(),
+            'password'                => $inv->getPassword(),
+            'payment_method'          => $inv->getPayment_method(),
+            'terms'                   => $inv->getTerms(),
+            'note'                    => $inv->getNote(),
+            'document_description'    => $inv->getDocumentDescription(),
         ];
     }
 
-    /**
-     * @param Request $request
-     * @param string $origin
-     * @param FormHydrator $formHydrator
-     * @param CR $clientRepository
-     * @param GR $gR
-     * @param SumexR $sumexR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
     public function add(
         Request $request,
         #[RouteArgument('origin')]
@@ -461,9 +396,9 @@ final class InvController extends BaseController
         UCR $ucR,
         UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        $inv = new Inv();
-        $errors = [];
-        $form = new InvForm($inv);
+        $inv                = new Inv();
+        $errors             = [];
+        $form               = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator,
             $this->viewRenderer,
@@ -474,31 +409,31 @@ final class InvController extends BaseController
             $form,
         );
 
-        $layoutWithForm = $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors);
-        $layoutParameters = [];
+        $layoutWithForm         = $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors);
+        $layoutParameters       = [];
         $parametersNonModalForm = [];
         // do not use a modal from main menu selection and dashboard selection
-        if (($origin == 'main') || ($origin == 'dashboard')) {
+        if (('main' == $origin) || ('dashboard' == $origin)) {
             $parametersNonModalForm = [
-                'form' => $bootstrap5ModalInv->getFormParameters(),
+                'form'              => $bootstrap5ModalInv->getFormParameters(),
                 'return_url_action' => 'add',
             ];
         }
         // use a modal from the invoice view
-        if ($origin == 'inv') {
+        if ('inv' == $origin) {
             $layoutParameters = [
                 // use type to id the quote\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
-                'type' => 'inv',
-                'form' => $layoutWithForm,
+                'type'              => 'inv',
+                'form'              => $layoutWithForm,
                 'return_url_action' => 'add',
             ];
         }
         // otherwise it will be a client number
         // use a modal from the client view
-        if (($origin != 'main') && ($origin != 'inv') && ($origin != 'dashboard')) {
+        if (('main' != $origin) && ('inv' != $origin) && ('dashboard' != $origin)) {
             $layoutParameters = [
-                'type' => 'client',
-                'form' => $layoutWithForm,
+                'type'              => 'client',
+                'form'              => $layoutWithForm,
                 'return_url_action' => 'add',
             ];
         }
@@ -509,7 +444,7 @@ final class InvController extends BaseController
         // 4. Dashboard e.g. /invoice/dashboard
         // Use the RouteArgument's origin argument to return to correct origin
 
-        if ($request->getMethod() === Method::POST) {
+        if (Method::POST === $request->getMethod()) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -518,16 +453,16 @@ final class InvController extends BaseController
                     /**
                      * @var string $body['client_id']
                      */
-                    $client_id = $body['client_id'];
+                    $client_id   = $body['client_id'];
                     $user_client = $ucR->repoUserquery($client_id);
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
-                        $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = ($client_first_name ?? '') .
-                                         ' ' .
+                        $client_surname    = $user_client->getClient()?->getClient_surname();
+                        $client_fullname   = ($client_first_name ?? '').
+                                         ' '.
                                          ($client_surname ?? '');
                     } else {
-                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
+                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name().': '.$this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
                     // @see UserClientRepository function get_not_assigned_to_user which ensures that only
@@ -538,7 +473,8 @@ final class InvController extends BaseController
                     if (null !== $user) {
                         $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
                         /**
-                         * The InvAmount entity is created automatically during the above saveInv
+                         * The InvAmount entity is created automatically during the above saveInv.
+                         *
                          * @see src\Invoice\Entity\Inv ... New InvAmount();
                          */
                         $model_id = $saved_model->getId();
@@ -548,20 +484,21 @@ final class InvController extends BaseController
                             // This table can be filled in via Invoice...View...Options...Edit...Sumex
                             $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for draft setting
-                            $this->flashMessage('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
-                            ? $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('yes')
-                            : $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('no'));
-                            $this->sR->getSetting('mark_invoices_sent_copy') === '1'
+                            $this->flashMessage('info', '1' === $this->sR->getSetting('generate_invoice_number_for_draft')
+                            ? $this->translator->translate('generate.invoice.number.for.draft').'=>'.$this->translator->translate('yes')
+                            : $this->translator->translate('generate.invoice.number.for.draft').'=>'.$this->translator->translate('no'));
+                            '1' === $this->sR->getSetting('mark_invoices_sent_copy')
                             ? $this->flashMessage('danger', $this->translator->translate('mark.sent.copy.on'))
                             : '';
-                        } //$model_id
+                        } // $model_id
                         $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
-                        if (($origin == 'main') || ($origin == 'inv')) {
+                        if (('main' == $origin) || ('inv' == $origin)) {
                             return $this->webService->getRedirectResponse('inv/index');
                         }
-                        if ($origin == 'dashboard') {
+                        if ('dashboard' == $origin) {
                             return $this->webService->getRedirectResponse('invoice/dashboard');
                         }
+
                         // otherwise return to client
                         return $this->webService->getRedirectResponse('client/view', ['id' => $origin]);
                     }
@@ -572,39 +509,38 @@ final class InvController extends BaseController
             $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu
-        if (($origin == 'main') || ($origin == 'dashboard')) {
+        if (('main' == $origin) || ('dashboard' == $origin)) {
             // update the errors array with latest errors
             $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors);
             // do not use the layout just get the formParameters
             $parameters = $bootstrap5ModalInv->getFormParameters();
-            /**
+
+            /*
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
             return $this->viewRenderer->render('modal_add_inv_form', $parameters);
         }
         // show the form inside a modal when engaging with a view
-        if ($origin == 'inv') {
+        if ('inv' == $origin) {
             return $this->viewRenderer->render('modal_layout', [
                 // use type to id the inv\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
-                'type' => 'inv',
-                'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),
+                'type'              => 'inv',
+                'form'              => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),
                 'return_url_action' => 'add',
             ]);
         }
         // Otherwise return to client
-        if (($origin != 'main') && ($origin != 'inv') && ($origin != 'dashboard')) {
+        if (('main' != $origin) && ('inv' != $origin) && ('dashboard' != $origin)) {
             return $this->viewRenderer->render('modal_layout', [
-                'type' => 'client',
-                'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),
+                'type'              => 'client',
+                'form'              => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString($origin, $errors),
                 'return_url_action' => 'add',
             ]);
         }
+
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @return string
-     */
     private function view_modal_pdf(): string
     {
         $bootstrap5ModalPdf = new Bootstrap5ModalPdf(
@@ -612,24 +548,13 @@ final class InvController extends BaseController
             $this->viewRenderer,
             'inv',
         );
+
         // show the pdf inside a modal when engaging with a view
         return $bootstrap5ModalPdf->renderPartialLayoutWithPdfAsString();
     }
 
     // Reverse an invoice with a credit invoice /debtor/client/customer credit note
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param CR $clientRepository
-     * @param GR $gR
-     * @param SumexR $sumexR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function credit(
         Request $request,
         FormHydrator $formHydrator,
@@ -641,31 +566,31 @@ final class InvController extends BaseController
         UCR $ucR,
         UIR $uiR,
     ): Response {
-        $inv = new Inv();
-        $form = new InvForm($inv);
-        $invAmount = new InvAmount();
-        $defaultGroupId = $this->sR->getSetting('default_invoice_group');
+        $inv              = new Inv();
+        $form             = new InvForm($inv);
+        $invAmount        = new InvAmount();
+        $defaultGroupId   = $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
-        $groups = $gR->findAllPreloaded();
-        /**
+        $groups           = $gR->findAllPreloaded();
+        /*
          * @var \App\Invoice\Entity\Group
          */
         foreach ($groups as $group) {
             $optionsGroupData[$group->getId()] = $group->getName();
         }
         $parameters = [
-            'title' => $this->translator->translate('add'),
-            'actionName' => 'inv/credit',
+            'title'           => $this->translator->translate('add'),
+            'actionName'      => 'inv/credit',
             'actionArguments' => [],
-            'errors' => [],
-            'form' => $form,
-            'clients' => $clientRepository->optionsData($ucR),
-            'groups' => $optionsGroupData,
-            'defaultGroupId' => $defaultGroupId,
-            'urlKey' => Random::string(32),
+            'errors'          => [],
+            'form'            => $form,
+            'clients'         => $clientRepository->optionsData($ucR),
+            'groups'          => $optionsGroupData,
+            'defaultGroupId'  => $defaultGroupId,
+            'urlKey'          => Random::string(32),
         ];
 
-        if ($request->getMethod() === Method::POST) {
+        if (Method::POST === $request->getMethod()) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -674,13 +599,13 @@ final class InvController extends BaseController
                     /**
                      * @var string $body['client_id']
                      */
-                    $client_id = $body['client_id'];
+                    $client_id   = $body['client_id'];
                     $user_client = $ucR->repoUserquery($client_id);
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
-                        $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = ($client_first_name ?? '') .
-                                         ' ' .
+                        $client_surname    = $user_client->getClient()?->getClient_surname();
+                        $client_fullname   = ($client_first_name ?? '').
+                                         ' '.
                                          ($client_surname ?? '');
                     } else {
                         $this->flashMessage('warning', $this->translator->translate('user.client.no.account'));
@@ -693,7 +618,7 @@ final class InvController extends BaseController
                     $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
                         $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
-                        $model_id = $saved_model->getId();
+                        $model_id    = $saved_model->getId();
                         if (null !== $model_id) {
                             $this->inv_amount_service->initializeInvAmount($invAmount, $model_id);
                             $this->default_taxes($inv, $trR, $formHydrator);
@@ -701,44 +626,37 @@ final class InvController extends BaseController
                             // This table can be filled in via Invoice...View...Options...Edit...Sumex
                             $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for draft setting
-                            $this->flashMessage('info', $this->sR->getSetting('generate_invoice_number_for_draft') === '1'
-                            ? $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('yes')
-                            : $this->translator->translate('generate.invoice.number.for.draft') . '=>' . $this->translator->translate('no'));
-                        } //$model_id
+                            $this->flashMessage('info', '1' === $this->sR->getSetting('generate_invoice_number_for_draft')
+                            ? $this->translator->translate('generate.invoice.number.for.draft').'=>'.$this->translator->translate('yes')
+                            : $this->translator->translate('generate.invoice.number.for.draft').'=>'.$this->translator->translate('no'));
+                        } // $model_id
+
                         return $this->webService->getRedirectResponse('inv/index');
-                    } //null!==$user
+                    } // null!==$user
                     // In the event of the database being manually edited (highly unlikely) present this warning anyway
                     $message = '';
                     if (!empty($client_fullname)) {
-                        $message = $this->translator->translate('user.inv.more.than.one.assigned') . ' ' . (string) $client_fullname;
+                        $message = $this->translator->translate('user.inv.more.than.one.assigned').' '.(string) $client_fullname;
                         $this->flashMessage('warning', $message);
                     }
+
                     return $this->webService->getRedirectResponse('inv/index');
                 }
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $parameters['form'] = $form;
+            $parameters['form']   = $form;
         }
+
         return $this->viewRenderer->render('_form_create_confirm', $parameters);
     }
 
     /**
      * @see src/Invoice/Asset/rebuild1.13/js/inv.js function $(document).on('click', '#create-credit-confirm', function ()
      * @see resources/views/invoice/inv/modal_create_credit
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param IR $iR
-     * @param GR $gR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UR $uR
-     * @return \Yiisoft\DataResponse\DataResponse
      */
     public function create_credit_confirm(Request $request, FormHydrator $formHydrator, IR $iR, GR $gR, IIR $iiR, IIAR $iiaR, UCR $ucR, UIR $uiR, UR $uR): \Yiisoft\DataResponse\DataResponse
     {
-        $body = $request->getQueryParams();
+        $body      = $request->getQueryParams();
         $basis_inv = $iR->repoInvLoadedquery((string) $body['inv_id']);
         if (null !== $basis_inv) {
             $basis_inv_id = (string) $body['inv_id'];
@@ -746,112 +664,86 @@ final class InvController extends BaseController
             $basis_inv->setIs_read_only(true);
             // Credit Note's details
             $ajax_body = [
-                'client_id' => $body['client_id'],
-                'group_id' => 4,
-                'user_id' => $body['user_id'],
-                'status_id' => $basis_inv->getStatus_id(),
-                'is_read_only' => true,
-                'number' => $gR->generate_number(4, true),
-                'discount_amount' => $basis_inv->getDiscount_amount(),
-                'discount_percent' => $basis_inv->getDiscount_percent(),
-                'url_key' => '',
-                'password' => $body['password'],
-                'payment_method' => 0,
-                'terms' => '',
+                'client_id'            => $body['client_id'],
+                'group_id'             => 4,
+                'user_id'              => $body['user_id'],
+                'status_id'            => $basis_inv->getStatus_id(),
+                'is_read_only'         => true,
+                'number'               => $gR->generate_number(4, true),
+                'discount_amount'      => $basis_inv->getDiscount_amount(),
+                'discount_percent'     => $basis_inv->getDiscount_percent(),
+                'url_key'              => '',
+                'password'             => $body['password'],
+                'payment_method'       => 0,
+                'terms'                => '',
                 'delivery_location_id' => $basis_inv->getDelivery_location_id(),
             ];
             // Save the basis invoice as soon as we have the new credit note's id
             $new_inv = new Inv();
-            $form = new InvForm($new_inv);
+            $form    = new InvForm($new_inv);
             if ($formHydrator->populateAndValidate($form, $ajax_body)) {
                 /**
                  * @var string $ajax_body['client_id']
                  */
                 $client_id = $ajax_body['client_id'];
-                $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                $user      = $this->active_user($client_id, $uR, $ucR, $uiR);
                 if (null !== $user) {
-                    $saved_inv = $this->inv_service->saveInv($user, $new_inv, $ajax_body, $this->sR, $gR);
+                    $saved_inv    = $this->inv_service->saveInv($user, $new_inv, $ajax_body, $this->sR, $gR);
                     $saved_inv_id = $saved_inv->getId();
                     if (null !== $saved_inv_id) {
                         $this->inv_item_service->initializeCreditInvItems((int) $basis_inv_id, $saved_inv_id, $iiR, $iiaR, $this->sR);
                         $this->inv_amount_service->initializeCreditInvAmount(new InvAmount(), (int) $basis_inv_id, $saved_inv_id);
                         $this->inv_tax_rate_service->initializeCreditInvTaxRate((int) $basis_inv_id, $saved_inv_id);
                         $parameters = [
-                            'success' => 1,
+                            'success'       => 1,
                             'flash_message' => $this->translator->translate('credit.note.creation.successful'),
                         ];
                         // Record the new Credit Note's $saved_inv_id in the basis invoice
                         $basis_inv->setCreditinvoice_parent_id((int) $saved_inv_id);
                         $iR->save($basis_inv);
-                        //return response to inv.js to reload page at location
+
+                        // return response to inv.js to reload page at location
                         return $this->factory->createResponse(Json::encode($parameters));
-                    } //null!== $saved_inv
-                } //null!==$user
+                    } // null!== $saved_inv
+                } // null!==$user
             } // ajax
-        } //null!==$basis_inv
+        } // null!==$basis_inv
+
         return $this->factory->createResponse(Json::encode([
             'success' => 0,
             'message' => $this->translator->translate('credit.note.creation.unsuccessful'),
         ]));
     }
 
-    /**
-     * @param Inv $inv
-     * @param TRR $trR
-     * @param FormHydrator $formHydrator
-     */
     public function default_taxes(Inv $inv, TRR $trR, FormHydrator $formHydrator): void
     {
         if ($trR->repoCountAll() > 0) {
             $taxrates = $trR->findAllPreloaded();
             /** @var TaxRate $taxrate */
             foreach ($taxrates as $taxrate) {
-                $taxrate->getTaxRateDefault() == 1 ? $this->default_tax_inv($taxrate, $inv, $formHydrator) : '';
+                1 == $taxrate->getTaxRateDefault() ? $this->default_tax_inv($taxrate, $inv, $formHydrator) : '';
             }
         }
     }
 
-    /**
-     * @param TaxRate $taxrate
-     * @param Inv $inv
-     * @param FormHydrator $formHydrator
-     */
     public function default_tax_inv(TaxRate $taxrate, Inv $inv, FormHydrator $formHydrator): void
     {
-        $invTaxRate = new InvTaxRate();
-        $invTaxRateForm = new InvTaxRateForm($invTaxRate);
-        $inv_tax_rate = [];
-        $inv_tax_rate['inv_id'] = $inv->getId();
+        $invTaxRate                  = new InvTaxRate();
+        $invTaxRateForm              = new InvTaxRateForm($invTaxRate);
+        $inv_tax_rate                = [];
+        $inv_tax_rate['inv_id']      = $inv->getId();
         $inv_tax_rate['tax_rate_id'] = $taxrate->getTaxRateId();
-        /**
-        * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
-        * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php
-        */
-        $inv_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
+        /*
+         * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
+         * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php
+         */
+        $inv_tax_rate['include_item_tax'] = ('1' == $this->sR->getSetting('default_include_item_tax') ? 1 : 0);
 
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
         ($formHydrator->populateAndValidate($invTaxRateForm, $inv_tax_rate)) ?
                         $this->inv_tax_rate_service->saveInvTaxRate(new InvTaxRate(), $inv_tax_rate) : '';
     }
 
-    /**
-     * @param int $id
-     * @param InvRepository $invRepo
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param ICR $icR
-     * @param InvCustomService $icS
-     * @param IIR $iiR
-     * @param InvItemService $iiS
-     * @param ITRR $itrR
-     * @param InvTaxRateService $itrS
-     * @param IAR $iaR
-     * @param InvAmountService $iaS
-     * @param PAR $paR
-     * @param PAS $paS
-     * @return Response
-     */
     public function delete(
         #[RouteArgument('id')]
         int $id,
@@ -875,26 +767,19 @@ final class InvController extends BaseController
             if ($inv) {
                 $this->inv_service->deleteInv($inv, $aciR, $aciiR, $iiaR, $icR, $icS, $iiR, $iiS, $itrR, $itrS, $iaR, $iaS);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+
                 return $this->webService->getRedirectResponse('inv/index');
             }
+
             return $this->webService->getRedirectResponse('inv/index');
         } catch (\Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             unset($e);
+
             return $this->webService->getRedirectResponse('inv/index');
         }
     }
 
-    /**
-     * @param int $id
-     * @param IAR $iaR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param ITRR $itrR
-     * @param SR $sR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
     public function delete_inv_item(#[RouteArgument('id')] int $id, IAR $iaR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, ITRR $itrR, SR $sR): \Yiisoft\DataResponse\DataResponse|Response
     {
         try {
@@ -902,7 +787,7 @@ final class InvController extends BaseController
             if ($invItem) {
                 // Do not allow the item to be deleted if the invoice
                 // status is sent ie. 2
-                if ($invItem->getInv()?->getStatus_id() !== 2) {
+                if (2 !== $invItem->getInv()?->getStatus_id()) {
                     $aciis = $aciiR->repoInvItemquery((string) $invItem->getId());
                     /** @var InvItemAllowanceCharge $acii */
                     foreach ($aciis as $acii) {
@@ -910,9 +795,11 @@ final class InvController extends BaseController
                     }
                     $this->inv_item_service->deleteInvItem($invItem);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $invItem->getInv_id()]);
                 }
                 $this->flashMessage('warning', $this->translator->translate('delete.sent'));
+
                 return $this->webService->getRedirectResponse('inv/view', ['id' => $invItem->getInv_id()]);
             }
         } catch (\Exception $e) {
@@ -920,16 +807,13 @@ final class InvController extends BaseController
             unset($e);
         }
         $inv_id = (string) $this->session->get('inv_id');
+
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => $this->translator->translate('items'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
         ));
     }
 
-    /**
-     * @param int $id
-     * @param ITRR $invtaxrateRepository
-     */
     public function delete_inv_tax_rate(#[RouteArgument('id')] int $id, ITRR $invtaxrateRepository): \Yiisoft\DataResponse\DataResponse|Response
     {
         try {
@@ -940,6 +824,7 @@ final class InvController extends BaseController
             unset($e);
         }
         $inv_id = (string) $this->session->get('inv_id');
+
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => $this->translator->translate('tax.rate'), 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
@@ -948,18 +833,16 @@ final class InvController extends BaseController
 
     private function disable_read_only_status_message(): void
     {
-        if ($this->sR->getSetting('disable_read_only') == '') {
+        if ('' == $this->sR->getSetting('disable_read_only')) {
             $this->flashMessage('warning', $this->translator->translate('security.disable.read.only.empty'));
         }
-        if ($this->sR->getSetting('disable_read_only') == '1') {
+        if ('1' == $this->sR->getSetting('disable_read_only')) {
             $this->flashMessage('warning', $this->translator->translate('security.disable.read.only.warning'));
         }
     }
 
     /**
-     * Use: Download an attached, and currently uploaded file
-     * @param int $upload_id
-     * @param UPR $upR
+     * Use: Download an attached, and currently uploaded file.
      *
      * @return never
      */
@@ -968,16 +851,16 @@ final class InvController extends BaseController
         if ($upload_id) {
             $upload = $upR->repoUploadquery((string) $upload_id);
             if (null !== $upload) {
-                $aliases = $this->sR->get_customer_files_folder_aliases();
-                $targetPath = $aliases->get('@customer_files');
-                $original_file_name = $upload->getFile_name_original();
-                $url_key = $upload->getUrl_key();
-                $target_path_with_filename = $targetPath . '/' . $url_key . '_' . $original_file_name;
-                $path_parts = pathinfo($target_path_with_filename);
-                $file_ext = $path_parts['extension'] ?? '';
+                $aliases                   = $this->sR->get_customer_files_folder_aliases();
+                $targetPath                = $aliases->get('@customer_files');
+                $original_file_name        = $upload->getFile_name_original();
+                $url_key                   = $upload->getUrl_key();
+                $target_path_with_filename = $targetPath.'/'.$url_key.'_'.$original_file_name;
+                $path_parts                = pathinfo($target_path_with_filename);
+                $file_ext                  = $path_parts['extension'] ?? '';
                 if (file_exists($target_path_with_filename)) {
                     $file_size = filesize($target_path_with_filename);
-                    if ($file_size != false) {
+                    if (false != $file_size) {
                         $allowed_content_type_array = $upR->getContentTypes();
                         // Check extension against allowed content file types @see UploadRepository getContentTypes
                         $save_ctype = isset($allowed_content_type_array[$file_ext]);
@@ -989,58 +872,52 @@ final class InvController extends BaseController
                         header('Expires: -1');
                         header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                         header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                        header('Content-Type: ' . $ctype);
-                        header('Content-Length: ' . (string) $file_size);
+                        header('Content-Type: '.$ctype);
+                        header('Content-Length: '.(string) $file_size);
                         echo file_get_contents($target_path_with_filename, true);
                     } // file size <> false
                     exit;
-                } //if file_exists
+                } // if file_exists
                 exit;
-            } //null!==upload
+            } // null!==upload
             exit;
-        } //null!==$upload_id
+        } // null!==$upload_id
         exit;
     }
 
-    /**
-     * @param string $invoice
-     */
     public function download(#[RouteArgument('invoice')] string $invoice): void
     {
         $aliases = $this->sR->get_invoice_archived_folder_aliases();
         if ($invoice) {
             header('Content-type: application/pdf');
-            header('Content-Disposition: attachment; filename="' . urldecode($invoice) . '"');
-            readfile($aliases->get('@archive_invoice') . DIRECTORY_SEPARATOR . urldecode($invoice));
+            header('Content-Disposition: attachment; filename="'.urldecode($invoice).'"');
+            readfile($aliases->get('@archive_invoice').DIRECTORY_SEPARATOR.urldecode($invoice));
         }
     }
 
     private function editInputAttributesUrlKey(InvForm $form): array
     {
         $inputAttributesUrlKey = [
-            'class' => 'form-control',
+            'class'    => 'form-control',
             'readonly' => 'readonly',
-            'value' => Html::encode($form->getUrl_key()),
+            'value'    => Html::encode($form->getUrl_key()),
         ];
         // do not display the url key if it is a draft invoice otherwise display the url key
-        if ($form->getStatus_id() == 1) {
+        if (1 == $form->getStatus_id()) {
             $inputAttributesUrlKey['hidden'] = 'hidden';
         } else {
             $inputAttributesUrlKey['placeholder'] = $this->translator->translate('url.key');
         }
+
         return $inputAttributesUrlKey;
     }
 
-    /**
-     * @param InvForm $form
-     * @return array
-     */
     private function editInputAttributesPaymentMethod(InvForm $form): array
     {
         $inputAttributesPaymentMethod = [];
-        if ($form->getIsReadOnly() == true && $form->getStatus_id() == 4) {
+        if (true == $form->getIsReadOnly() && 4 == $form->getStatus_id()) {
             $inputAttributesPaymentMethod = [
-                'class' => 'form-control',
+                'class'    => 'form-control',
                 'disabled' => 'disabled',
             ];
         } else {
@@ -1049,24 +926,10 @@ final class InvController extends BaseController
                 'value' => Html::encode($form->getPayment_method() ?? ($this->sR->getSetting('invoice_default_payment_method') ?: 1)),
             ];
         }
+
         return $inputAttributesPaymentMethod;
     }
 
-    /**
-     * @param PeppolArrays $peppol_array
-     * @param Inv $inv
-     * @param int $client_id
-     * @param CR $clientRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $deliveryRepo
-     * @param DLR $delRepo
-     * @param GR $groupRepo
-     * @param IR $invRepo
-     * @param paR $paR
-     * @param PMR $pmRepo
-     * @param UCR $ucR
-     * @return array
-     */
     private function editOptionsData(
         PeppolArrays $peppol_array,
         Inv $inv,
@@ -1081,7 +944,7 @@ final class InvController extends BaseController
         PMR $pmRepo,
         UCR $ucR,
     ): array {
-        $contracts = $contractRepo->repoClient($inv->getClient_id());
+        $contracts           = $contractRepo->repoClient($inv->getClient_id());
         $optionsDataContract = [];
         /**
          * @var Contract $contract
@@ -1089,10 +952,10 @@ final class InvController extends BaseController
         foreach ($contracts as $contract) {
             $id = $contract->getId();
             if (null !== $id) {
-                $optionsDataContract[$id] = ($contract->getName() ?? '') . ' ' . ($contract->getReference() ?? '');
+                $optionsDataContract[$id] = ($contract->getName() ?? '').' '.($contract->getReference() ?? '');
             }
         }
-        $deliverys = $deliveryRepo->findAllPreloaded();
+        $deliverys           = $deliveryRepo->findAllPreloaded();
         $optionsDataDelivery = [];
         /**
          * @var Delivery $delivery
@@ -1108,18 +971,17 @@ final class InvController extends BaseController
              */
             $endDate = $delivery->getEnd_date();
             if (null != $delivery_id) {
-                $optionsDataDelivery[$delivery_id] =
-                $startDate->format($this->date_helper->style())
-                . ' ----- '
-                . $endDate->format($this->date_helper->style())
-                . ' ---- '
-                . $this->sR->getSetting('stand_in_code')
-                . ' ---- '
-                . $peppol_array->getCurrent_stand_in_code_value($this->sR);
+                $optionsDataDelivery[$delivery_id] = $startDate->format($this->date_helper->style())
+                .' ----- '
+                .$endDate->format($this->date_helper->style())
+                .' ---- '
+                .$this->sR->getSetting('stand_in_code')
+                .' ---- '
+                .$peppol_array->getCurrent_stand_in_code_value($this->sR);
             }
         }
 
-        $dLocs = $delRepo->repoClientquery((string) $client_id);
+        $dLocs                        = $delRepo->repoClientquery((string) $client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc
@@ -1127,7 +989,7 @@ final class InvController extends BaseController
         foreach ($dLocs as $dLoc) {
             $dLocId = $dLoc->getId();
             if (null !== $dLocId) {
-                $optionsDataDeliveryLocations[$dLocId] = ($dLoc->getAddress_1() ?? '') . ', ' . ($dLoc->getAddress_2() ?? '') . ', ' . ($dLoc->getCity() ?? '') . ', ' . ($dLoc->getZip() ?? '');
+                $optionsDataDeliveryLocations[$dLocId] = ($dLoc->getAddress_1() ?? '').', '.($dLoc->getAddress_2() ?? '').', '.($dLoc->getCity() ?? '').', '.($dLoc->getZip() ?? '');
             }
         }
         $optionsDataGroup = [];
@@ -1160,49 +1022,31 @@ final class InvController extends BaseController
          * @var PostalAddress $postalAddress
          */
         foreach ($paR->repoClientAll((string) $client_id) as $postalAddress) {
-            $optionsDataPostalAddress[$postalAddress->getId()] = $postalAddress->getStreet_name() . ', ' . $postalAddress->getAdditional_street_name() . ', ' . $postalAddress->getBuilding_number() . ', ' . $postalAddress->getCity_name();
+            $optionsDataPostalAddress[$postalAddress->getId()] = $postalAddress->getStreet_name().', '.$postalAddress->getAdditional_street_name().', '.$postalAddress->getBuilding_number().', '.$postalAddress->getCity_name();
         }
 
         $optionsDataInvoiceStatus = [];
         /**
          * @var string $key
-         * @var array $status
+         * @var array  $status
          */
         foreach ($invRepo->getStatuses($this->translator) as $key => $status) {
             $optionsDataInvoiceStatus[$key] = (string) $status['label'];
         }
+
         return $optionsData = [
-            'client' => $clientRepo->optionsData($ucR),
-            'contract' => $optionsDataContract,
-            'delivery' => $optionsDataDelivery,
+            'client'           => $clientRepo->optionsData($ucR),
+            'contract'         => $optionsDataContract,
+            'delivery'         => $optionsDataDelivery,
             'deliveryLocation' => $optionsDataDeliveryLocations,
-            'group' => $optionsDataGroup,
-            'invoiceStatus' => $optionsDataInvoiceStatus,
-            'paymentMethod' => $optionsDataPaymentMethod,
-            'paymentTerm' => $optionsDataPaymentTerm,
-            'postalAddress' => $optionsDataPostalAddress,
+            'group'            => $optionsDataGroup,
+            'invoiceStatus'    => $optionsDataInvoiceStatus,
+            'paymentMethod'    => $optionsDataPaymentMethod,
+            'paymentTerm'      => $optionsDataPaymentTerm,
+            'postalAddress'    => $optionsDataPostalAddress,
         ];
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @param FormHydrator $formHydrator
-     * @param IR $invRepo
-     * @param CR $clientRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $deliveryRepo
-     * @param DLR $delRepo
-     * @param GR $groupRepo
-     * @param PMR $pmRepo
-     * @param UR $userRepo
-     * @param IAR $iaR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param ICR $icR
-     * @param paR $paR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
     public function edit(
         Request $request,
         #[RouteArgument('id')]
@@ -1226,39 +1070,39 @@ final class InvController extends BaseController
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
-            $form = new InvForm($inv);
-            $invCustom = new InvCustom();
-            $invCustomForm = new InvCustomForm($invCustom);
-            $inv_id = $inv->getId();
-            $client_id = $inv->getClient_id();
-            $peppol_array = new PeppolArrays();
+            $form              = new InvForm($inv);
+            $invCustom         = new InvCustom();
+            $invCustomForm     = new InvCustomForm($invCustom);
+            $inv_id            = $inv->getId();
+            $client_id         = $inv->getClient_id();
+            $peppol_array      = new PeppolArrays();
             $note_on_tax_point = '';
-            $defaultGroupId = $this->sR->getSetting('default_invoice_group');
-            if (($this->sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
+            $defaultGroupId    = $this->sR->getSetting('default_invoice_group');
+            if (('1' == $this->sR->getSetting('debug_mode')) && $this->userService->hasPermission('editInv')) {
                 $note_on_tax_point = $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint');
             }
             $parameters = [
-                'actionName' => 'inv/edit',
+                'actionName'      => 'inv/edit',
                 'actionArguments' => ['id' => $inv_id],
-                'contractCount' => $contractRepo->repoClientCount($inv->getClient_id()),
-                'customFields' => $cfR->repoTablequery('inv_custom'),
-                'cvH' => new CVH($this->sR),
+                'contractCount'   => $contractRepo->repoClientCount($inv->getClient_id()),
+                'customFields'    => $cfR->repoTablequery('inv_custom'),
+                'cvH'             => new CVH($this->sR),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
                 'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
                 // There will initially be no custom_values attached to this invoice until they are filled in the field on the form
-                'defaultGroupId' => $defaultGroupId,
-                'delCount' => $delRepo->repoClientCount($inv->getClient_id()),
-                'deliveryCount' => (null !== $inv_id ? $deliveryRepo->repoCountInvoice($inv_id) : 0),
+                'defaultGroupId'                   => $defaultGroupId,
+                'delCount'                         => $delRepo->repoClientCount($inv->getClient_id()),
+                'deliveryCount'                    => (null !== $inv_id ? $deliveryRepo->repoCountInvoice($inv_id) : 0),
                 'editInputAttributesPaymentMethod' => $this->editInputAttributesPaymentMethod($form),
-                'editInputAttributesUrlKey' => $this->editInputAttributesUrlKey($form),
-                'errors' => [],
-                'form' => $form,
-                'inv' => $inv,
-                'invs' => $invRepo->findAllPreloaded(),
-                'invCustomValues' => $this->inv_custom_values($inv_id, $icR),
-                'invCustomForm' => $invCustomForm,
-                'noteOnTaxPoint' => $note_on_tax_point ?: '',
-                'optionsData' => $this->editOptionsData(
+                'editInputAttributesUrlKey'        => $this->editInputAttributesUrlKey($form),
+                'errors'                           => [],
+                'form'                             => $form,
+                'inv'                              => $inv,
+                'invs'                             => $invRepo->findAllPreloaded(),
+                'invCustomValues'                  => $this->inv_custom_values($inv_id, $icR),
+                'invCustomForm'                    => $invCustomForm,
+                'noteOnTaxPoint'                   => $note_on_tax_point ?: '',
+                'optionsData'                      => $this->editOptionsData(
                     $peppol_array,
                     $inv,
                     (int) $client_id,
@@ -1272,78 +1116,67 @@ final class InvController extends BaseController
                     $pmRepo,
                     $ucR,
                 ),
-                'paR' => $paR,
+                'paR'                => $paR,
                 'postalAddressCount' => $paR->repoClientCount($inv->getClient_id()),
             ];
-            if ($request->getMethod() === Method::POST) {
+            if (Method::POST === $request->getMethod()) {
                 $body = $request->getParsedBody();
                 /**
-                 * PossiblyInvalidArgument $body
+                 * PossiblyInvalidArgument $body.
                  */
                 if (is_array($body)) {
                     // If the status has changed to 'paid', check that the balance on the invoice is zero
-                    if (!$this->edit_check_status_reconciling_with_balance($iaR, (int) $inv_id) && $body['status_id'] === 4) {
+                    if (!$this->edit_check_status_reconciling_with_balance($iaR, (int) $inv_id) && 4 === $body['status_id']) {
                         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                             '//invoice/setting/inv_message',
                             [
                                 'heading' => $this->translator->translate('errors'),
-                                'message' => $this->translator->translate('error') . $this->translator->translate('balance.does.not.equal.zero'),
-                                'url' => 'inv/view', 'id' => $inv_id],
+                                'message' => $this->translator->translate('error').$this->translator->translate('balance.does.not.equal.zero'),
+                                'url'     => 'inv/view', 'id' => $inv_id],
                         ));
                     }
-                    $returned_form = $this->edit_save_form_fields($body, $id, $formHydrator, $invRepo, $groupRepo, $userRepo, $ucR, $uiR);
+                    $returned_form      = $this->edit_save_form_fields($body, $id, $formHydrator, $invRepo, $groupRepo, $userRepo, $ucR, $uiR);
                     $parameters['form'] = $returned_form;
                     if ($returned_form instanceof InvForm) {
                         if (!$returned_form->isValid()) {
-                            $parameters['form'] = $returned_form;
+                            $parameters['form']   = $returned_form;
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
+
                             return $this->viewRenderer->render('_form_edit', $parameters);
                         }
                         $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
                         $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
+
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }
-                } //$body
+                } // $body
+
                 return $this->webService->getRedirectResponse('inv/index');
             }
+
             return $this->viewRenderer->render('_form_edit', $parameters);
         } // if $inv_id
+
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    /**
-     * @param IAR $iaR
-     * @param int $inv_id
-     * @return bool
-     */
     public function edit_check_status_reconciling_with_balance(IAR $iaR, int $inv_id): bool
     {
         $invoice_amount = $iaR->repoInvquery($inv_id);
         if (null !== $invoice_amount) {
             // If the invoice is fully paid up allow the status to change to 'paid'
-            return $invoice_amount->getBalance() == 0.00;
+            return 0.00 == $invoice_amount->getBalance();
         }
+
         return false;
     }
 
-    /**
-     * @param array|object|null $body
-     * @param int $id
-     * @param FormHydrator $formHydrator
-     * @param IR $invRepo
-     * @param GR $groupRepo
-     * @param IAR $iaR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return InvForm|null
-     */
-    public function edit_save_form_fields(array|object|null $body, int $id, FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR, UCR $ucR, UIR $uiR): InvForm|null
+    public function edit_save_form_fields(array|object|null $body, int $id, FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR, UCR $ucR, UIR $uiR): ?InvForm
     {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
             $client_id = $inv->getClient_id();
-            $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+            $user      = $this->active_user($client_id, $uR, $ucR, $uiR);
             if (null !== $user) {
                 $form = new InvForm($inv);
                 if (null !== $body && is_array($body)) {
@@ -1351,19 +1184,15 @@ final class InvController extends BaseController
                         $this->inv_service->saveInv($user, $inv, $body, $this->sR, $groupRepo);
                     }
                 }
+
                 return $form;
             } // null !== $user
         }  // $inv
+
         return null;
     }
 
-    /**
-     * @param array|object|null $parse
-     * @param FormHydrator $formHydrator
-     * @param ICR $icR
-     * @param string|null $inv_id
-     */
-    public function edit_save_custom_fields(array|object|null $parse, FormHydrator $formHydrator, ICR $icR, string|null $inv_id): void
+    public function edit_save_custom_fields(array|object|null $parse, FormHydrator $formHydrator, ICR $icR, ?string $inv_id): void
     {
         /**
          * @var array $parse['custom']
@@ -1371,12 +1200,12 @@ final class InvController extends BaseController
         $custom = $parse['custom'] ?? [];
         /** @var array|string $value */
         foreach ($custom as $custom_field_id => $value) {
-            if ($icR->repoInvCustomCount((string) $inv_id, (string) $custom_field_id) == 0) {
-                $inv_custom = new InvCustom();
+            if (0 == $icR->repoInvCustomCount((string) $inv_id, (string) $custom_field_id)) {
+                $inv_custom       = new InvCustom();
                 $inv_custom_input = [
-                    'inv_id' => (int) $inv_id,
+                    'inv_id'          => (int) $inv_id,
                     'custom_field_id' => (int) $custom_field_id,
-                    'value' => is_array($value) ? serialize($value) : $value,
+                    'value'           => is_array($value) ? serialize($value) : $value,
                 ];
                 $form = new InvCustomForm($inv_custom);
                 if ($formHydrator->populateAndValidate($form, $inv_custom_input)) {
@@ -1386,9 +1215,9 @@ final class InvController extends BaseController
                 $inv_custom = $icR->repoFormValuequery((string) $inv_id, (string) $custom_field_id);
                 if ($inv_custom) {
                     $inv_custom_input = [
-                        'inv_id' => (int) $inv_id,
+                        'inv_id'          => (int) $inv_id,
                         'custom_field_id' => (int) $custom_field_id,
-                        'value' => is_array($value) ? serialize($value) : $value,
+                        'value'           => is_array($value) ? serialize($value) : $value,
                     ];
                     $form = new InvCustomForm($inv_custom);
                     if ($formHydrator->populateAndValidate($form, $inv_custom_input)) {
@@ -1399,30 +1228,11 @@ final class InvController extends BaseController
         } // custom
     }
 
-    /**
-     * @param string $type
-     * @return array
-     */
     public function email_get_invoice_templates(string $type = 'pdf'): array
     {
         return $this->sR->get_invoice_templates($type);
     }
 
-    /**
-     * @param ViewRenderer $head
-     * @param int $id
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param ETR $etR
-     * @param ICR $icR
-     * @param IR $iR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QCR $qcR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function email_stage_0(
         ViewRenderer $head,
         #[RouteArgument('id')]
@@ -1438,99 +1248,98 @@ final class InvController extends BaseController
         QCR $qcR,
         UIR $uiR,
     ): Response {
-        $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $mailer_helper   = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailer_configured()) {
             $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
+
             return $this->webService->getRedirectResponse('inv/index');
         }
         $inv = $this->inv($id, $iR, true);
         if ($inv instanceof Inv) {
-            $inv_id = $inv->getId();
+            $inv_id  = $inv->getId();
             $invoice = $iR->repoInvUnLoadedquery((string) $inv_id);
             if ($invoice instanceof Inv) {
                 // Get all custom fields
                 $custom_fields = [];
                 $custom_tables = [
-                    'client_custom' => 'client',
-                    'inv_custom' => 'invoice',
-                    'payment_custom' => 'payment',
-                    'quote_custom' => 'quote',
+                    'client_custom'     => 'client',
+                    'inv_custom'        => 'invoice',
+                    'payment_custom'    => 'payment',
+                    'quote_custom'      => 'quote',
                     'salesorder_custom' => 'salesorder',
                 ];
                 foreach (array_keys($custom_tables) as $table) {
                     $custom_fields[$table] = $cfR->repoTablequery($table);
                 }
-                if ($template_helper->select_email_invoice_template($invoice) == '') {
+                if ('' == $template_helper->select_email_invoice_template($invoice)) {
                     $this->flashMessage('warning', $this->translator->translate('email.template.not.configured'));
+
                     return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'invoices'], 'settings[email_invoice_template]');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_invoice_template($invoice)) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('default.email.template') . '=>' .
+                    $this->translator->translate('default.email.template').'=>'.
                                         $this->translator->translate('not.set'),
                 ) : '';
                 empty($template_helper->select_pdf_invoice_template($invoice)) ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('default.pdf.template') . '=>' .
+                    $this->translator->translate('default.pdf.template').'=>'.
                                         $this->translator->translate('not.set'),
                 ) : '';
                 $parameters = [
-                    'head' => $head,
-                    'actionName' => 'inv/email_stage_2',
+                    'head'            => $head,
+                    'actionName'      => 'inv/email_stage_2',
                     'actionArguments' => ['id' => $inv_id],
-                    'alert' => $this->alert(),
+                    'alert'           => $this->alert(),
                     // If email templates have been built under Setting...Email Template for Normal, Overdue, and Paid
                     // and Setting...View...Invoice...Invoice Templates have been linked to these built email templates
                     // then an email template should automatically appear on the mailer_invoice form by passing the
                     // status related email template to the get_inject_email_template_array function
                     'autoTemplate' => null !== $setting_status_email_template ? $this->get_inject_email_template_array($setting_status_email_template) : [],
-                    //eg. If the invoice is overdue ie. status is 5, automatically select the 'overdue' pdf template
-                    //which has 'overdue' text on it as a watermark
-                    'settingStatusPdfTemplate' => $template_helper->select_pdf_invoice_template($invoice),
-                    'emailTemplates' => $etR->repoEmailTemplateType('invoice'),
+                    // eg. If the invoice is overdue ie. status is 5, automatically select the 'overdue' pdf template
+                    // which has 'overdue' text on it as a watermark
+                    'settingStatusPdfTemplate'       => $template_helper->select_pdf_invoice_template($invoice),
+                    'emailTemplates'                 => $etR->repoEmailTemplateType('invoice'),
                     'dropdownTitlesOfEmailTemplates' => $this->email_templates($etR),
-                    'userInv' => $uiR->repoUserInvUserIdcount($invoice->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->getUser_id()) : null,
-                    'invoice' => $invoice,
+                    'userInv'                        => $uiR->repoUserInvUserIdcount($invoice->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($invoice->getUser_id()) : null,
+                    'invoice'                        => $invoice,
                     // All templates ie. overdue, paid, invoice
                     'pdfTemplates' => $this->email_get_invoice_templates('pdf'),
                     'templateTags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
-                        'custom_fields' => $custom_fields,
+                        'custom_fields'       => $custom_fields,
                         'template_tags_quote' => '',
-                        'template_tags_inv' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
+                        'template_tags_inv'   => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
                             'custom_fields_inv_custom' => $custom_fields['inv_custom'],
                         ]),
                     ]),
                     'form' => new MailerInvForm(),
                 ];
+
                 return $this->viewRenderer->render('mailer_invoice', $parameters);
             }// if invoice
+
             return $this->webService->getRedirectResponse('inv/index');
         } // if $inv
+
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    /**
-     * @param EmailTemplate $email_template
-     * @return array
-     */
     public function get_inject_email_template_array(EmailTemplate $email_template): array
     {
         return [
-            'body' => Json::htmlEncode($email_template->getEmail_template_body()),
-            'subject' => $email_template->getEmail_template_subject() ?? '',
-            'from_name' => $email_template->getEmail_template_from_name() ?? '',
-            'from_email' => $email_template->getEmail_template_from_email() ?? '',
-            'cc' => $email_template->getEmail_template_cc() ?? '',
-            'bcc' => $email_template->getEmail_template_bcc() ?? '',
+            'body'         => Json::htmlEncode($email_template->getEmail_template_body()),
+            'subject'      => $email_template->getEmail_template_subject()      ?? '',
+            'from_name'    => $email_template->getEmail_template_from_name()    ?? '',
+            'from_email'   => $email_template->getEmail_template_from_email()   ?? '',
+            'cc'           => $email_template->getEmail_template_cc()           ?? '',
+            'bcc'          => $email_template->getEmail_template_bcc()          ?? '',
             'pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
         ];
     }
 
     /**
-     * @param ETR $etR
-     *
      * @return (string|null)[]
      *
      * @psalm-return array<''|int, null|string>
@@ -1538,47 +1347,19 @@ final class InvController extends BaseController
     public function email_templates(ETR $etR): array
     {
         $email_templates = $etR->repoEmailTemplateType('invoice');
-        $data = [];
+        $data            = [];
         /** @var EmailTemplate $email_template */
         foreach ($email_templates as $email_template) {
             if (null !== $email_template->getEmail_template_id()) {
                 $data[] = $email_template->getEmail_template_title();
             }
         }
+
         return $data;
     }
 
-    /**
-     * @param string|null $inv_id
-     * @param array $from
-     * @param string $to
-     * @param string $subject
-     * @param string $email_body
-     * @param string $cc
-     * @param string $bcc
-     * @param array $attachFiles
-     * @param CR $cR
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param SOR $soR
-     * @param UIR $uiR
-     * @param ViewRenderer $viewrenderer
-     * @return bool
-     */
     public function email_stage_1(
-        string|null $inv_id,
+        ?string $inv_id,
         array $from,
         // $to can only have one email address
         string $to,
@@ -1608,7 +1389,7 @@ final class InvController extends BaseController
         ViewRenderer $viewrenderer,
     ): bool {
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $mailer_helper = new MailerHelper(
+        $mailer_helper   = new MailerHelper(
             $this->sR,
             $this->session,
             $this->translator,
@@ -1623,31 +1404,32 @@ final class InvController extends BaseController
             $cvR,
         );
         if (null !== $inv_id) {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+            $inv_amount        = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
             $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
-            $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvUnLoadedquery($inv_id) : null;
+            $inv               = $iR->repoCount($inv_id) > 0 ? $iR->repoInvUnLoadedquery($inv_id) : null;
             if ($inv) {
                 // The Google sign under Invoices ... Pdf Settings
                 // The initial recommendation for testing email sending is that this be set to off ie. 1
                 // so that a plain successful message can be output without interferance from a pdf
-                $stream = ($this->sR->getSetting('pdf_stream_inv') == '1' ? true : false);
-                $so = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
+                $stream = ('1' == $this->sR->getSetting('pdf_stream_inv') ? true : false);
+                $so     = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                 // true => invoice ie. not quote
                 // If $stream is false => pdfhelper->generate_inv_pdf => mpdfhelper->pdf_Create => filename returned
                 $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $viewrenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template($inv_id, true, $email_body, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     $mail_subject = $template_helper->parse_template($inv_id, true, $subject, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
-                    $mail_cc = $template_helper->parse_template($inv_id, true, $cc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
-                    $mail_bcc = $template_helper->parse_template($inv_id, true, $bcc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
+                    $mail_cc      = $template_helper->parse_template($inv_id, true, $cc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
+                    $mail_bcc     = $template_helper->parse_template($inv_id, true, $bcc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     // from[0] is the from_email and from[1] is the from_name
                     /**
                      * @var string $from[0]
                      * @var string $from[1]
                      */
                     $mail_from = [$template_helper->parse_template($inv_id, true, $from[0], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR), $template_helper->parse_template($inv_id, true, $from[1], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR)];
-                    //$message = (empty($mail_message) ? 'this is a message ' : $mail_message);
+                    // $message = (empty($mail_message) ? 'this is a message ' : $mail_message);
                     $message = $mail_message;
+
                     // mail_from[0] is the from_email and mail_from[1] is the from_name
                     return $mailer_helper->yii_mailer_send(
                         $mail_from[0],
@@ -1661,40 +1443,17 @@ final class InvController extends BaseController
                         $pdf_template_target_path,
                         $uiR,
                     );
-                } //is_string
-            } //inv
+                } // is_string
+            } // inv
+
             return false;
         } // inv_id
+
         return false;
     }
 
     // The views/invoice/inv/mailer_inv form is submitted
 
-    /**
-     * @param Request $request
-     * @param int $inv_id
-     * @param CR $cR
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param SOR $soR
-     * @param UIR $uiR
-     * @param SumexR $sumexR
-     * @param ISLR $islR
-     * @return Response
-     */
     public function email_stage_2(
         Request $request,
         #[RouteArgument('id')]
@@ -1722,11 +1481,12 @@ final class InvController extends BaseController
     ): Response {
         if ($inv_id) {
             $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-            $body = $request->getParsedBody() ?? [];
+            $body          = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
                 if (!$mailer_helper->mailer_configured()) {
                     $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
+
                     return $this->webService->getRedirectResponse('inv/index');
                 }
                 /**
@@ -1744,7 +1504,7 @@ final class InvController extends BaseController
                  */
                 $from = [
                     $body['MailerInvForm']['from_email'] ?? '',
-                    $body['MailerInvForm']['from_name'] ?? '',
+                    $body['MailerInvForm']['from_name']  ?? '',
                 ];
 
                 if (empty($from[0])) {
@@ -1755,12 +1515,12 @@ final class InvController extends BaseController
                 }
                 /** @var array $body['MailerInvForm'] */
                 $subject = (string) $body['MailerInvForm']['subject'] ?: '';
-                /**  @var string $email_body */
+                /** @var string $email_body */
                 $email_body = $body['MailerInvForm']['body'] ?? '';
 
-                /**  @var string $cc */
+                /** @var string $cc */
                 $cc = $body['MailerInvForm']['cc'] ?? '';
-                /**  @var string $bcc */
+                /** @var string $bcc */
                 $bcc = $body['MailerInvForm']['bcc'] ?? '';
 
                 $attachFiles = $request->getUploadedFiles();
@@ -1799,53 +1559,53 @@ final class InvController extends BaseController
                 )) {
                     $invoice = $iR->repoInvUnloadedquery((string) $inv_id);
                     if ($invoice) {
-                        //draft->sent->view->paid
-                        //set the invoice to sent ie. 2
+                        // draft->sent->view->paid
+                        // set the invoice to sent ie. 2
                         $invoice->setStatus_id(2);
                         // Make read_only if status is sent i.e. 2 and read-only ability exists
-                        if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '0')) {
+                        if (('2' == $this->sR->getSetting('read_only_toggle')) && ('0' == $this->sR->getSetting('disable_read_only'))) {
                             $invoice->setIs_read_only(true);
                         }
-                        //keep a record of all the times this invoice is sent
+                        // keep a record of all the times this invoice is sent
                         $this->emailedThereforeAddLog($invoice, $islR);
                         $iR->save($invoice);
                     }
+
                     return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
                         // EMAIL SENT
-                        ['heading' => '',
+                        ['heading'    => '',
                             'message' => $this->translator->translate('email.successfully.sent'),
-                            'url' => 'inv/view',
-                            'id' => $inv_id],
+                            'url'     => 'inv/view',
+                            'id'      => $inv_id],
                     ));
                 }
+
                 return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     // EMAIL ... NOT ... SENT
-                    ['heading' => '',
+                    ['heading'    => '',
                         'message' => $this->translator->translate('email.not.sent.successfully'),
-                        'url' => 'inv/view',
-                        'id' => $inv_id],
+                        'url'     => 'inv/view',
+                        'id'      => $inv_id],
                 ));
-                //$this->email_stage_1
-            } //is_array(body)
+                // $this->email_stage_1
+            } // is_array(body)
+
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/inv_message',
                 ['heading' => '', 'message' => $this->translator->translate('email.not.sent.successfully'),
-                    'url' => 'inv/view', 'id' => $inv_id],
+                    'url'  => 'inv/view', 'id' => $inv_id],
             ));
         }
+
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => '', 'message' => $this->translator->translate('email.not.sent'),
-                'url' => 'inv/view', 'id' => $inv_id],
+                'url'  => 'inv/view', 'id' => $inv_id],
         ));
     }
 
-    /**
-     * @param Inv $invoice
-     * @param ISLR $islR
-     */
     private function emailedThereforeAddLog(Inv $invoice, ISLR $islR): void
     {
         $invSentLog = new InvSentLog();
@@ -1857,19 +1617,8 @@ final class InvController extends BaseController
 
     /**
      * @see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]') status and page are digits
-     * @param IAR $iaR
-     * @param IRR $irR
-     * @param IR $iR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param string $page
-     * @param string $status
-     * @param string $queryPage
-     * @param string $querySort
-     * @param string $queryFilterInvNumber
-     * @param string $queryFilterInvAmountTotal
+     *
      * @throws NoClientsAssignedToUserException
-     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function guest(
         IAR $iaR,
@@ -1882,15 +1631,15 @@ final class InvController extends BaseController
         #[RouteArgument('status')]
         string $status = '0',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterInvAmountTotal')]
-        string $queryFilterInvAmountTotal = null,
+        ?string $queryFilterInvAmountTotal = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        $page = $queryPage ?? $page;
+        $page       = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
         // Get the current user and determine from (@see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
@@ -1912,7 +1661,7 @@ final class InvController extends BaseController
                 // they can view their invoices and make payment
                 $user_clients = $ucR->get_assigned_to_user($user_id);
                 if (!empty($user_clients)) {
-                    $invs = $this->invs_status_guest($iR, $status, $user_clients);
+                    $invs          = $this->invs_status_guest($iR, $status, $user_clients);
                     $preFilterInvs = $invs;
                     if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                         $invs = $iR->filterInvNumber($queryFilterInvNumber);
@@ -1920,71 +1669,58 @@ final class InvController extends BaseController
                     if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
                         $invs = $iR->filterInvAmountTotal($queryFilterInvAmountTotal);
                     }
-                    if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
-                       (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
+                    if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
+                       && (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                         $invs = $iR->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);
                     }
                     $inv_statuses = $iR->getStatuses($this->translator);
-                    $label = $iR->getSpecificStatusArrayLabel($status);
-                    $parameters = [
-                        'alert' => $this->alert(),
-                        'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
+                    $label        = $iR->getSpecificStatusArrayLabel($status);
+                    $parameters   = [
+                        'alert'                              => $this->alert(),
+                        'decimalPlaces'                      => (int) $this->sR->getSetting('tax_rate_decimal_places'),
                         'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberGuestFilter($preFilterInvs),
-                        'iaR' => $iaR,
-                        'iR' => $iR,
-                        'irR' => $irR,
-                        'invs' => $invs,
-                        'label' => $label,
+                        'iaR'                                => $iaR,
+                        'iR'                                 => $iR,
+                        'irR'                                => $irR,
+                        'invs'                               => $invs,
+                        'label'                              => $label,
                         // the guest will not have access to the pageSizeLimiter
                         'viewInv' => $this->userService->hasPermission('viewInv'),
                         // update userinv with the user's listlimit preference
-                        'userInv' => $userInv,
-                        'userInvListLimit' => $userInvListLimit,
+                        'userInv'                        => $userInv,
+                        'userInvListLimit'               => $userInvListLimit,
                         'defaultPageSizeOffsetPaginator' => $userInv->getListLimit() ?? 10,
                         // numbered tiles between the arrrows
                         'maxNavLinkCount' => 10,
-                        'invStatuses' => $inv_statuses,
-                        'page' => (int) $page > 0 ? (int) $page : 1,
+                        'invStatuses'     => $inv_statuses,
+                        'page'            => (int) $page > 0 ? (int) $page : 1,
                         // Clicking on a grid column sort hyperlink will generate a url query_param eg. ?sort=
-                        'sortOrder' => $querySort ?? '',
+                        'sortOrder'  => $querySort ?? '',
                         'sortString' => $sortString,
-                        'status' => $status,
+                        'status'     => $status,
                     ];
+
                     return $this->viewRenderer->render('guest', $parameters);
                 } // no clients assigned to this user
                 throw new NoClientsAssignedToUserException($this->translator);
             } // $user_inv
+
             return $this->webService->getNotFoundResponse();
         } // $user
+
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param int $include
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param SumexR $sumexR
-     * @param UIR $uiR
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
     public function html(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse
     {
-        $inv_id = (string) $this->session->get('inv_id');
+        $inv_id     = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
         if ($inv_amount) {
-            $custom = (($include === 1) ? true : false);
+            $custom            = ((1 === $include) ? true : false);
             $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
-            $inv = $iR->repoInvUnloadedquery($inv_id);
+            $inv               = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
-                $so = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
+                $so   = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                 $html = $this->pdf_helper->generate_inv_html(
                     $inv_id,
                     $inv->getUser_id(),
@@ -2003,36 +1739,16 @@ final class InvController extends BaseController
                     $sumexR,
                     $this->viewRenderer,
                 );
-                return $this->factory->createResponse('<pre>' . Html::encode($html) . '</pre>');
+
+                return $this->factory->createResponse('<pre>'.Html::encode($html).'</pre>');
             } // $inv
+
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         } // $inv_amount
+
         return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
-    /**
-     * @param IR $invRepo
-     * @param IRR $irR
-     * @param ISLR $islR
-     * @param CR $clientRepo
-     * @param GR $groupRepo
-     * @param QR $qR
-     * @param PMR $pmR
-     * @param SOR $soR
-     * @param DLR $dlR
-     * @param UCR $ucR
-     * @param string $_language
-     * @param string $page
-     * @param string $status
-     * @param string $queryPage
-     * @param string $querySort
-     * @param string $queryFilterInvNumber
-     * @param string $queryFilterClient
-     * @param string $queryFilterInvAmountTotal
-     * @param string $queryFilterClientGroup
-     * @param string $queryFilterDateCreatedYearMonth
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
     public function index(
         IR $invRepo,
         IRR $irR,
@@ -2051,26 +1767,26 @@ final class InvController extends BaseController
         #[RouteArgument('status')]
         string $status = '0',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        string $queryFilterClient = null,
+        ?string $queryFilterClient = null,
         #[Query('filterInvAmountTotal')]
-        string $queryFilterInvAmountTotal = null,
+        ?string $queryFilterInvAmountTotal = null,
         #[Query('filterClientGroup')]
-        string $queryFilterClientGroup = null,
+        ?string $queryFilterClientGroup = null,
         #[Query('filterDateCreatedYearMonth')]
-        string $queryFilterDateCreatedYearMonth = null,
+        ?string $queryFilterDateCreatedYearMonth = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
-        $visible = $this->sR->getSetting('columns_all_visible');
+        $visible                       = $this->sR->getSetting('columns_all_visible');
         $visibleToggleInvSentLogColumn = $this->sR->getSetting('column_inv_sent_log_visible');
-        $inv = new Inv();
-        $invForm = new InvForm($inv);
-        $bootstrap5ModalInv = new Bootstrap5ModalInv(
+        $inv                           = new Inv();
+        $invForm                       = new InvForm($inv);
+        $bootstrap5ModalInv            = new Bootstrap5ModalInv(
             $this->translator,
             $this->viewRenderer,
             $clientRepo,
@@ -2087,17 +1803,17 @@ final class InvController extends BaseController
         if ($active_clients) {
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc
             $page = $queryPage ?? $page;
-            //status 0 => 'all';
+            // status 0 => 'all';
             $status = (int) $status;
-            $invs = $this->invs_status($invRepo, $status);
+            $invs   = $this->invs_status($invRepo, $status);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
             }
             if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
                 $invs = $invRepo->filterInvAmountTotal($queryFilterInvAmountTotal);
             }
-            if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
-               (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
+            if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
+               && (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);
             }
             if (isset($queryFilterClient) && !empty($queryFilterClient)) {
@@ -2111,13 +1827,13 @@ final class InvController extends BaseController
                 $invs = $invRepo->filterDateCreatedLike('Y-m', $queryFilterDateCreatedYearMonth);
             }
             $inv_statuses = $invRepo->getStatuses($this->translator);
-            $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
+            $label        = $invRepo->getSpecificStatusArrayLabel((string) $status);
             $this->draft_flash($_language);
             $this->mark_sent_flash($_language);
             $parameters = [
-                'alert' => $this->alert(),
-                'clientCount' => $clientRepo->count(),
-                'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
+                'alert'                          => $this->alert(),
+                'clientCount'                    => $clientRepo->count(),
+                'decimalPlaces'                  => (int) $this->sR->getSetting('tax_rate_decimal_places'),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
                 'defaultInvoiceGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_invoice_group')))
@@ -2130,45 +1846,41 @@ final class InvController extends BaseController
                                             : $this->sR->getSetting('i.not_set'),
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
-                'invs' => $invs,
-                'inv_statuses' => $inv_statuses,
-                'max' => (int) $this->sR->getSetting('default_list_limit'),
-                'page' => (int) $page > 0 ? (int) $page : 1,
-                'status' => $status,
-                'qR' => $qR,
-                'dlR' => $dlR,
-                'soR' => $soR,
+                'invs'            => $invs,
+                'inv_statuses'    => $inv_statuses,
+                'max'             => (int) $this->sR->getSetting('default_list_limit'),
+                'page'            => (int) $page > 0 ? (int) $page : 1,
+                'status'          => $status,
+                'qR'              => $qR,
+                'dlR'             => $dlR,
+                'soR'             => $soR,
                 // Use the invRepo to retrieve the Invoice Number of the invoice
                 // that a credit note has been generated from
-                'iR' => $invRepo,
-                'irR' => $irR,
-                'islR' => $islR,
-                'label' => $label,
-                'optionsDataClientsDropdownFilter' => $this->optionsDataClientsFilter($invRepo),
+                'iR'                                   => $invRepo,
+                'irR'                                  => $irR,
+                'islR'                                 => $islR,
+                'label'                                => $label,
+                'optionsDataClientsDropdownFilter'     => $this->optionsDataClientsFilter($invRepo),
                 'optionsDataClientGroupDropDownFilter' => $this->optionsDataClientGroupFilter($clientRepo),
-                'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($invRepo),
-                'optionsDataYearMonthDropDownFilter' => $this->optionsDataYearMonthFilter(),
-                'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', []),
-                'modal_create_recurring_multiple' => $this->index_modal_create_recurring_multiple($irR),
-                'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
-                'sortString' => $querySort ?? '-id',
-                'viewRenderer' => $this->viewRenderer,
-                'visible' => $visible == '0' ? false : true,
-                'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true,
+                'optionsDataInvNumberDropDownFilter'   => $this->optionsDataInvNumberFilter($invRepo),
+                'optionsDataYearMonthDropDownFilter'   => $this->optionsDataYearMonthFilter(),
+                'modal_add_inv'                        => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', []),
+                'modal_create_recurring_multiple'      => $this->index_modal_create_recurring_multiple($irR),
+                'modal_copy_inv_multiple'              => $this->index_modal_copy_inv_multiple(),
+                'sortString'                           => $querySort ?? '-id',
+                'viewRenderer'                         => $this->viewRenderer,
+                'visible'                              => '0' == $visible ? false : true,
+                'visibleToggleInvSentLogColumn'        => '0' == $visibleToggleInvSentLogColumn ? false : true,
             ];
+
             return $this->viewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info', $this->translator->translate('user.client.active.no'));
+
         return $this->webService->getRedirectResponse('client/index');
     }
 
     /**
-     * @param IR $iR
-     * @param int $status
-     * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\DataReaderInterface
-     *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader<array-key, array<array-key, mixed>|object>
      */
     private function invs_status(IR $iR, int $status): \Yiisoft\Data\Reader\DataReaderInterface
@@ -2177,11 +1889,6 @@ final class InvController extends BaseController
     }
 
     /**
-     * @param IR $iR
-     * @param mixed $status
-     * @param array $user_clients
-     * @param Sort $sort
-     *
      * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
@@ -2193,38 +1900,21 @@ final class InvController extends BaseController
 
     // Called from ..src\Invoice\Asset\rebuild\js\inv.js inv_to_pdf_confirm_with_custom_fields
 
-    /**
-     * @param int $include
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param SOR $soR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param SumexR $sumexR
-     * @param UIR $uiR
-     * @param Request $request
-     */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
     {
         // include is a value of 0 or 1 passed from inv.js function inv_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the inv or not.
-        $inv_id = (string) $this->session->get('inv_id');
+        $inv_id     = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
         if ($inv_amount) {
-            $custom = (($include === 1) ? true : false);
+            $custom            = ((1 === $include) ? true : false);
             $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
             $pdfhelper = new PdfHelper($this->sR, $this->session);
             // The invoice will be streamed if set under Settings...View...Invoices...Pdf Settings
-            $stream = ($this->sR->getSetting('pdf_stream_inv') == '0') ? false : true;
+            $stream = ('0' == $this->sR->getSetting('pdf_stream_inv')) ? false : true;
             // If we are required to mark invoices as 'sent' when sent.
-            if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
+            if (1 == $this->sR->getSetting('mark_invoices_sent_pdf')) {
                 $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
                 $this->sR->invoice_mark_sent($inv_id, $iR);
             }
@@ -2232,46 +1922,31 @@ final class InvController extends BaseController
             if ($inv) {
                 $so = !empty($inv->getSo_id()) ? $soR->repoSalesOrderUnloadedquery($inv->getSo_id()) : null;
                 $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+
                 return $this->pdf_archive_message();
             } // $inv
+
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         } // $inv_amount
+
         return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
-    /**
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
     public function pdf_archive_message(): \Yiisoft\DataResponse\DataResponse
     {
-        if ($this->sR->getSetting('pdf_archive_inv') == '1') {
+        if ('1' == $this->sR->getSetting('pdf_archive_inv')) {
             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/pdf_close',
                 ['heading' => '', 'message' => $this->translator->translate('pdf.archived.yes')],
             ));
         }
+
         return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
             '//invoice/setting/pdf_close',
             ['heading' => '', 'message' => $this->translator->translate('pdf.archived.no')],
         ));
     }
 
-    /**
-     * @param int $inv_id
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UIR $uiR
-     * @param SOR $soR
-     * @param SumexR $sumexR
-     */
     public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
     {
         if ($inv_id) {
@@ -2283,7 +1958,7 @@ final class InvController extends BaseController
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
-                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
+                if (1 == $this->sR->getSetting('mark_invoices_sent_pdf')) {
                     $this->generate_inv_number_if_applicable((string) $inv_id, $iR, $this->sR, $gR);
                     $this->sR->invoice_mark_sent((string) $inv_id, $iR);
                 }
@@ -2291,27 +1966,11 @@ final class InvController extends BaseController
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                     $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
-                } //inv
-            } //$inv_amount
-        } //$inv_id
+                } // inv
+            } // $inv_amount
+        } // $inv_id
     }
 
-    /**
-     * @param int $inv_id
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UIR $uiR
-     * @param SOR $soR
-     * @param SumexR $sumexR
-     */
     public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
     {
         if ($inv_id) {
@@ -2323,7 +1982,7 @@ final class InvController extends BaseController
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
-                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
+                if (1 == $this->sR->getSetting('mark_invoices_sent_pdf')) {
                     $this->generate_inv_number_if_applicable((string) $inv_id, $iR, $this->sR, $gR);
                     $this->sR->invoice_mark_sent((string) $inv_id, $iR);
                 }
@@ -2331,28 +1990,11 @@ final class InvController extends BaseController
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                     $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
-                } //inv
-            } //inv_amount
+                } // inv
+            } // inv_amount
         } // inv_id
     }
 
-    /**
-     * @param string $url_key
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param SumexR $sumexR
-     * @param UIR $uiR
-     * @param UPR $upR
-     * @return mixed
-     */
     public function pdf_download_include_cf(#[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
     {
         if ($url_key) {
@@ -2363,7 +2005,7 @@ final class InvController extends BaseController
             // Retrieve the inv_id
             $inv_guest = $iR->repoUrl_key_guest_count($url_key) ? $iR->repoUrl_key_guest_loaded($url_key) : null;
             if ($inv_guest) {
-                $inv_id = $inv_guest->getId();
+                $inv_id     = $inv_guest->getId();
                 $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
                 if ($inv_amount) {
                     $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
@@ -2371,9 +2013,9 @@ final class InvController extends BaseController
                     $pdfhelper = new PdfHelper($this->sR, $this->session);
                     // The invoice will be not be streamed ie. shown (in a separate tab see setting), but will be downloaded
                     $stream = false;
-                    $c_f = true;
+                    $c_f    = true;
                     // If we are required to mark invoices as 'sent' when sent.
-                    if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
+                    if (1 == $this->sR->getSetting('mark_invoices_sent_pdf')) {
                         $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
                         $this->sR->invoice_mark_sent($inv_id, $iR);
                     }
@@ -2388,11 +2030,11 @@ final class InvController extends BaseController
                             /**
                              * @var string $path_parts['extension']
                              */
-                            $file_ext = $path_parts['extension'];
+                            $file_ext           = $path_parts['extension'];
                             $original_file_name = $path_parts['basename'];
                             if (file_exists($temp_aliase)) {
                                 $file_size = filesize($temp_aliase);
-                                if ($file_size != false) {
+                                if (false != $file_size) {
                                     $allowed_content_type_array = $upR->getContentTypes();
                                     // Check extension against allowed content file types @see UploadRepository getContentTypes
                                     $save_ctype = isset($allowed_content_type_array[$file_ext]);
@@ -2406,37 +2048,20 @@ final class InvController extends BaseController
                                     header('Expires: -1');
                                     header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                                     header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                                    header('Content-Type: ' . $ctype);
-                                    header('Content-Length: ' . (string) $file_size);
+                                    header('Content-Type: '.$ctype);
+                                    header('Content-Length: '.(string) $file_size);
                                     echo file_get_contents($temp_aliase, true);
                                 }
                                 exit;
                             } // file_exists
                         } // is_string
-                    } //inv
+                    } // inv
                 } // inv_amount
             } // inv_guest
-        } //url_key
+        } // url_key
         exit;
     }
 
-    /**
-     * @param string $urlKey
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param SumexR $sumexR
-     * @param UIR $uiR
-     * @param UPR $upR
-     * @return mixed
-     */
     public function pdf_download_exclude_cf(#[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
     {
         if ($urlKey) {
@@ -2447,7 +2072,7 @@ final class InvController extends BaseController
             // Retrieve the inv_id
             $inv_guest = $iR->repoUrl_key_guest_count($urlKey) ? $iR->repoUrl_key_guest_loaded($urlKey) : null;
             if ($inv_guest) {
-                $inv_id = $inv_guest->getId();
+                $inv_id     = $inv_guest->getId();
                 $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
                 if ($inv_amount) {
                     $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
@@ -2455,9 +2080,9 @@ final class InvController extends BaseController
                     $pdfhelper = new PdfHelper($this->sR, $this->session);
                     // The invoice will be not be streamed ie. shown (in a separate tab see setting), but will be downloaded
                     $stream = false;
-                    $c_f = false;
+                    $c_f    = false;
                     // If we are required to mark invoices as 'sent' when sent.
-                    if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
+                    if (1 == $this->sR->getSetting('mark_invoices_sent_pdf')) {
                         $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
                         $this->sR->invoice_mark_sent($inv_id, $iR);
                     }
@@ -2477,7 +2102,7 @@ final class InvController extends BaseController
                             $original_file_name = $path_parts['filename'];
                             if (file_exists($temp_aliase)) {
                                 $file_size = filesize($temp_aliase);
-                                if ($file_size != false) {
+                                if (false != $file_size) {
                                     $allowed_content_type_array = $upR->getContentTypes();
                                     // Check extension against allowed content file types @see UploadRepository getContentTypes
                                     $save_ctype = isset($allowed_content_type_array[$file_ext]);
@@ -2489,8 +2114,8 @@ final class InvController extends BaseController
                                     header('Expires: -1');
                                     header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                                     header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                                    header('Content-Type: ' . $ctype);
-                                    header('Content-Length: ' . (string) $file_size);
+                                    header('Content-Type: '.$ctype);
+                                    header('Content-Length: '.(string) $file_size);
                                     echo file_get_contents($temp_aliase, true);
                                 }
                                 exit;
@@ -2503,21 +2128,6 @@ final class InvController extends BaseController
         exit;
     }
 
-    /**
-     * @param ISLR $islR
-     * @param IRR $irR
-     * @param IIAR $iiaR
-     * @param IAR $iaR
-     * @param ITRR $itrR
-     * @param IIR $iiR
-     * @param ICR $icR
-     * @param ACIIR $aciiR
-     * @param ACIR $aciR
-     * @param PCR $pcR
-     * @param PYMR $pymR
-     * @param IR $iR
-     * @return Response
-     */
     public function flush(
         ISLR $islR,
         IRR $irR,
@@ -2547,7 +2157,7 @@ final class InvController extends BaseController
         /** @var InvTaxRate $itr */ foreach ($itrR->findAllPreloaded() as $itr) {
             $itrR->delete($itr);
         }
-        /** @var InvItemAllowanceCharge $iiac */foreach ($aciiR->findAllPreloaded() as $iiac) {
+        /** @var InvItemAllowanceCharge $iiac */ foreach ($aciiR->findAllPreloaded() as $iiac) {
             $aciiR->delete($iiac);
         }
         /** @var InvItem $ii */ foreach ($iiR->findAllPreloaded() as $ii) {
@@ -2569,10 +2179,11 @@ final class InvController extends BaseController
             $iR->delete($i);
         }
         $this->flashMessage('danger', $this->translator->translate('caution.deleted.invoices'));
+
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    ///**
+    // /**
     // * This function has not been tested
     // * @param IR $iR
     // * @param IAR $iaR
@@ -2581,30 +2192,24 @@ final class InvController extends BaseController
     // * @param int $inv_id
     // * @return void
     // */
-    //public function generate_sumex_pdf(IR $iR, IAR $iaR, SumexR $sumexR, UIR $uiR, int $inv_id) : void {
+    // public function generate_sumex_pdf(IR $iR, IAR $iaR, SumexR $sumexR, UIR $uiR, int $inv_id) : void {
     //    $this->pdf_helper->generate_inv_sumex($iR, $iaR, $sumexR, $uiR,
     //        $inv_id,
     //        $stream = true,
     //        // client
     //        false
     //    );
-    //}
+    // }
     // If the setting 'generate_inv_number_for_draft' has not been set, give the quote a basic number according to id, and not according to identifier format
 
-    /**
-     * @param string|null $inv_id
-     * @param IR $iR
-     * @param SR $sR
-     * @param GR $gR
-     */
-    public function generate_inv_number_if_applicable(string|null $inv_id, IR $iR, SR $sR, GR $gR): void
+    public function generate_inv_number_if_applicable(?string $inv_id, IR $iR, SR $sR, GR $gR): void
     {
         if (null !== $inv_id) {
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
                 $group_id = $inv->getGroup_id();
                 if ($iR->repoCount($inv_id) > 0) {
-                    if ($inv->getStatus_id() === 1 && $inv->getNumber() === '') {
+                    if (1 === $inv->getStatus_id() && '' === $inv->getNumber()) {
                         // Generate new inv number if applicable
                         $inv->setNumber((string) $this->generate_inv_get_number($group_id, $sR, $iR, $gR));
                         $iR->save($inv);
@@ -2615,43 +2220,33 @@ final class InvController extends BaseController
     }
 
     /**
-     * @param string $group_id
-     * @param SR $sR
-     * @param IR $iR
-     * @param GR $gR
      * @return mixed $inv_number
      */
     public function generate_inv_get_number(string $group_id, SR $sR, IR $iR, GR $gR): mixed
     {
         $inv_number = '';
-        if ($sR->getSetting('generate_invoice_number_for_draft') == '0') {
-            /** @var mixed $inv_number */
+        if ('0' == $sR->getSetting('generate_invoice_number_for_draft')) {
             $inv_number = $iR->get_inv_number($group_id, $gR);
         }
+
         return $inv_number;
     }
 
-    /**
-     * @param int $id
-     * @param InvRepository $invRepo
-     * @param bool $unloaded
-     * @return Inv|null
-     */
-    private function inv(int $id, IR $invRepo, bool $unloaded = false): Inv|null
+    private function inv(int $id, IR $invRepo, bool $unloaded = false): ?Inv
     {
         if ($id) {
             $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string) $id) : $invRepo->repoInvLoadedquery((string) $id));
             if (null !== $inv) {
                 return $inv;
             }
+
             return null;
         }
+
         return null;
     }
 
     /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
     private function invs(IR $invRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
@@ -2659,12 +2254,7 @@ final class InvController extends BaseController
         return $invRepo->findAllWithStatus($status);
     }
 
-    /**
-     * @param string|null $inv_id
-     * @param icR $icR
-     * @return array
-     */
-    public function inv_custom_values(string|null $inv_id, ICR $icR): array
+    public function inv_custom_values(?string $inv_id, ICR $icR): array
     {
         // Get all the custom fields that have been registered with this inv on creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
@@ -2673,77 +2263,53 @@ final class InvController extends BaseController
             if ($icR->repoInvCount($inv_id) > 0) {
                 $inv_custom_fields = $icR->repoFields($inv_id);
                 /**
-                 * @var int $key
+                 * @var int    $key
                  * @var string $val
                  */
                 foreach ($inv_custom_fields as $key => $val) {
-                    $custom_field_form_values['custom[' . (string) $key . ']'] = $val;
+                    $custom_field_form_values['custom['.(string) $key.']'] = $val;
                 }
             }
+
             return $custom_field_form_values;
         }
+
         return [];
     }
 
-    /**
-     * @param int $id
-     * @param IIR $invitemRepository
-     * @return InvItem|null
-     */
-    private function inv_item(int $id, IIR $invitemRepository): InvItem|null
+    private function inv_item(int $id, IIR $invitemRepository): ?InvItem
     {
         if ($id) {
             $invitem = $invitemRepository->repoInvItemquery((string) $id) ?: null;
-            if ($invitem === null) {
+            if (null === $invitem) {
                 return null;
             }
+
             return $invitem;
         }
+
         return null;
     }
 
-    /**
-     * @param int $invId
-     * @param int $copiedId
-     * @param IAR $iaR
-     */
     private function inv_to_inv_inv_amount(int $invId, int $copiedId, IAR $iaR): void
     {
         $original = $iaR->repoInvquery($invId);
         if (null !== $original) {
-            $array = [];
-            $array['inv_id'] = $original->getInv_id();
+            $array                  = [];
+            $array['inv_id']        = $original->getInv_id();
             $array['item_subtotal'] = $original->getItem_subtotal();
             $array['item_taxtotal'] = $original->getItem_tax_total();
-            $array['tax_total'] = $original->getTax_total();
-            $array['total'] = $original->getTotal();
-            $array['paid'] = 0;
-            $array['balance'] = $original->getBalance();
-            $copied = $iaR->repoInvquery($copiedId);
+            $array['tax_total']     = $original->getTax_total();
+            $array['total']         = $original->getTotal();
+            $array['paid']          = 0;
+            $array['balance']       = $original->getBalance();
+            $copied                 = $iaR->repoInvquery($copiedId);
             null !== $copied ? $this->inv_amount_service->saveInvAmountViaCalculations($copied, $array) : '';
         }
     }
 
     /**
      * @see Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ACIIR $aciiR
-     * @param GR $gR
-     * @param IIAS $iiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UNR $unR
      */
     public function inv_to_inv_confirm(
         Request $request,
@@ -2766,23 +2332,23 @@ final class InvController extends BaseController
         UNR $unR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $data_inv_js = $request->getQueryParams();
-        $inv_id = (string) $data_inv_js['inv_id'];
-        $original = $iR->repoInvUnloadedquery($inv_id);
+        $inv_id      = (string) $data_inv_js['inv_id'];
+        $original    = $iR->repoInvUnloadedquery($inv_id);
         if ($original) {
-            $group_id = $original->getGroup_id();
+            $group_id  = $original->getGroup_id();
             $ajax_body = [
-                'quote_id' => null,
-                'client_id' => $data_inv_js['client_id'],
-                'group_id' => $group_id,
-                'status_id' => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? 2 : 1,
-                'number' => $gR->generate_number((int) $group_id),
+                'quote_id'                => null,
+                'client_id'               => $data_inv_js['client_id'],
+                'group_id'                => $group_id,
+                'status_id'               => '1' === $this->sR->getSetting('mark_invoices_sent_copy') ? 2 : 1,
+                'number'                  => $gR->generate_number((int) $group_id),
                 'creditinvoice_parent_id' => null,
-                'discount_amount' => (float) $original->getDiscount_amount(),
-                'discount_percent' => (float) $original->getDiscount_percent(),
-                'url_key' => '',
-                'password' => '',
-                'payment_method' => 6,
-                'terms' => '',
+                'discount_amount'         => (float) $original->getDiscount_amount(),
+                'discount_percent'        => (float) $original->getDiscount_percent(),
+                'url_key'                 => '',
+                'password'                => '',
+                'payment_method'          => 6,
+                'terms'                   => '',
             ];
             $copy = new Inv();
             $form = new InvForm($copy);
@@ -2791,7 +2357,7 @@ final class InvController extends BaseController
                  * @var string $ajax_body['client_id']
                  */
                 $client_id = $ajax_body['client_id'];
-                $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                $user      = $this->active_user($client_id, $uR, $ucR, $uiR);
                 if (null !== $user) {
                     $this->inv_service->saveInv($user, $copy, $ajax_body, $this->sR, $gR);
                     // Transfer each inv_item to inv_item and the corresponding inv_item_amount to inv_item_amount for each item
@@ -2803,8 +2369,9 @@ final class InvController extends BaseController
                         $this->inv_to_inv_inv_amount((int) $inv_id, (int) $copy_id, $iaR);
                         $iR->save($copy);
                         $parameters = ['success' => 1];
-                        //return response to inv.js to reload page at location
+                        // return response to inv.js to reload page at location
                         $this->flashMessage('info', $this->translator->translate('draft.guest'));
+
                         return $this->factory->createResponse(Json::encode($parameters));
                     }
                 }
@@ -2812,16 +2379,15 @@ final class InvController extends BaseController
             $parameters = [
                 'success' => 0,
             ];
-            //return response to inv.js to reload page at location
+
+            // return response to inv.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
         }
+
         // if original
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param string $copy_id
-     */
     private function inv_to_inv_inv_custom(string $inv_id, string $copy_id, ICR $icR, FormHydrator $formHydrator): void
     {
         $inv_customs = $icR->repoFields($inv_id);
@@ -2830,12 +2396,12 @@ final class InvController extends BaseController
          */
         foreach ($inv_customs as $inv_custom) {
             $copyCustom = [
-                'inv_id' => $copy_id,
+                'inv_id'          => $copy_id,
                 'custom_field_id' => $inv_custom->getCustom_field_id(),
-                'value' => $inv_custom->getValue(),
+                'value'           => $inv_custom->getValue(),
             ];
             $invCustom = new InvCustom();
-            $form = new InvCustomForm($invCustom);
+            $form      = new InvCustomForm($invCustom);
             if ($formHydrator->populateAndValidate($form, $copyCustom)) {
                 $this->inv_custom_service->saveInvCustom($invCustom, $copyCustom);
             }
@@ -2844,8 +2410,7 @@ final class InvController extends BaseController
 
     /**
      * This procedure is used solely for making identical copies of invoices
-     * and is used in inv_to_inv_confirm
-     * @param string $copy_id
+     * and is used in inv_to_inv_confirm.
      */
     private function inv_to_inv_inv_items(
         string $inv_id,
@@ -2869,42 +2434,42 @@ final class InvController extends BaseController
             $copy_item = [];
             $copy_item = [
                 // Follow sequence of InvItem construct
-                //id
-                'date added' => new \DateTimeImmutable(),
-                'task_id' => $inv_item->getTask_id(),
-                'name' => $inv_item->getName(),
+                // id
+                'date added'  => new \DateTimeImmutable(),
+                'task_id'     => $inv_item->getTask_id(),
+                'name'        => $inv_item->getName(),
                 'description' => $inv_item->getDescription(),
-                /**
+                /*
                  * @see quantity #[GreaterThan(0.00)]. See InvItemForm
                  */
-                'quantity' => $inv_item->getQuantity(),
-                'price' => $inv_item->getPrice(),
+                'quantity'        => $inv_item->getQuantity(),
+                'price'           => $inv_item->getPrice(),
                 'discount_amount' => $inv_item->getDiscount_amount(),
-                'order' => $inv_item->getOrder(),
-                'is_recurring' => $inv_item->getIs_recurring(),
-                /**
+                'order'           => $inv_item->getOrder(),
+                'is_recurring'    => $inv_item->getIs_recurring(),
+                /*
                  * @see Not required since will conflict with task which does not require a product_unit i.e. service/product
                  */
                 'product_unit' => $inv_item->getProduct_unit(),
-                'inv_id' => $copy_id,
-                'so_item_id' => $inv_item->getSo_item_id(),
-                /**
+                'inv_id'       => $copy_id,
+                'so_item_id'   => $inv_item->getSo_item_id(),
+                /*
                  * @see tax_rate_id #[Required]. See InvItemForm
                  */
-                'tax_rate_id' => $inv_item->getTax_rate_id(),
-                'product_id' => $inv_item->getProduct_id(),
+                'tax_rate_id'     => $inv_item->getTax_rate_id(),
+                'product_id'      => $inv_item->getProduct_id(),
                 'product_unit_id' => $inv_item->getProduct_unit_id(),
                 // recurring date
-                'date' => $inv_item->getDate(),
+                'date'                   => $inv_item->getDate(),
                 'belongs_to_vat_invoice' => $inv_item->getBelongs_to_vat_invoice(),
-                'delivery_id' => $inv_item->getDelivery_id(),
-                'note' => $inv_item->getNote(),
+                'delivery_id'            => $inv_item->getDelivery_id(),
+                'note'                   => $inv_item->getNote(),
             ];
             $originalInvItemId = $inv_item->getId();
             if (null !== $originalInvItemId) {
                 // Create an equivalent invoice item for the invoice item
                 $invItem = new InvItem();
-                $form = new InvItemForm($invItem, (int) $inv_id);
+                $form    = new InvItemForm($invItem, (int) $inv_id);
                 if ($formHydrator->populateAndValidate($form, $copy_item)) {
                     $productId = (int) $inv_item->getProduct_id();
                     if ($productId > 0) {
@@ -2912,16 +2477,16 @@ final class InvController extends BaseController
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItem_allowance_charges($copy_id, $originalInvItemId, $newInvItemId, $aciiR);
                             // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
-                            $accumulativeChargeTotal = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
+                            $accumulativeChargeTotal    = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
                             $accumulativeAllowanceTotal = $this->inv_item_service->accumulativeAllowanceTotal($newInvItemId, $aciiR);
-                            if (($invItem->getQuantity() >=  0.00) &&
-                                ($invItem->getPrice() >= 0.00) &&
-                                ($invItem->getDiscount_amount() >= 0.00) &&
-                                ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
+                            if (($invItem->getQuantity() >= 0.00)
+                                && ($invItem->getPrice() >= 0.00)
+                                && ($invItem->getDiscount_amount() >= 0.00)
+                                && ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
                                 $this->inv_item_service->saveInvItemAmount(
                                     $newInvItemId,
-                                    $invItem->getQuantity() ?? 0.00,
-                                    $invItem->getPrice() ?? 0.00,
+                                    $invItem->getQuantity()        ?? 0.00,
+                                    $invItem->getPrice()           ?? 0.00,
                                     $invItem->getDiscount_amount() ?? 0.00,
                                     $accumulativeChargeTotal,
                                     $accumulativeAllowanceTotal,
@@ -2939,16 +2504,16 @@ final class InvController extends BaseController
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItem_allowance_charges($copy_id, $originalInvItemId, $newInvItemId, $aciiR);
                             // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
-                            $accumulativeChargeTotal = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
+                            $accumulativeChargeTotal    = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
                             $accumulativeAllowanceTotal = $this->inv_item_service->accumulativeAllowanceTotal($newInvItemId, $aciiR);
-                            if (($invItem->getQuantity() >=  0.00) &&
-                                ($invItem->getPrice() >= 0.00) &&
-                                ($invItem->getDiscount_amount() >= 0.00) &&
-                                ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
+                            if (($invItem->getQuantity() >= 0.00)
+                                && ($invItem->getPrice() >= 0.00)
+                                && ($invItem->getDiscount_amount() >= 0.00)
+                                && ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
                                 $this->inv_item_service->saveInvItemAmount(
                                     $newInvItemId,
-                                    $invItem->getQuantity() ?? 0.00,
-                                    $invItem->getPrice() ?? 0.00,
+                                    $invItem->getQuantity()        ?? 0.00,
+                                    $invItem->getPrice()           ?? 0.00,
                                     $invItem->getDiscount_amount() ?? 0.00,
                                     $accumulativeChargeTotal,
                                     $accumulativeAllowanceTotal,
@@ -2962,16 +2527,13 @@ final class InvController extends BaseController
                     }
                 } else {
                     if (!empty($errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
-                        $this->flashMessage('danger', 'You have validation errors on ' . (string) $inv_item->getId());
+                        $this->flashMessage('danger', 'You have validation errors on '.(string) $inv_item->getId());
                     }
                 }
             } // null!==originalItemId
         } // foreach
     }
 
-    /**
-     * @param string $copy_id
-     */
     private function inv_to_inv_inv_tax_rates(string $inv_id, string $copy_id, ITRR $itrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the invoice
@@ -2981,25 +2543,20 @@ final class InvController extends BaseController
          */
         foreach ($inv_tax_rates as $inv_tax_rate) {
             $copy_tax_rate = [
-                'inv_id' => $copy_id,
-                'tax_rate_id' => $inv_tax_rate->getTax_rate_id(),
+                'inv_id'           => $copy_id,
+                'tax_rate_id'      => $inv_tax_rate->getTax_rate_id(),
                 'include_item_tax' => $inv_tax_rate->getInclude_item_tax(),
-                'amount' => $inv_tax_rate->getInv_tax_rate_amount(),
+                'amount'           => $inv_tax_rate->getInv_tax_rate_amount(),
             ];
             $invTaxRate = new InvTaxRate();
-            $form = new InvTaxRateForm($invTaxRate);
+            $form       = new InvTaxRateForm($invTaxRate);
             if ($formHydrator->populateAndValidate($form, $copy_tax_rate)) {
                 $this->inv_tax_rate_service->saveInvTaxRate($invTaxRate, $copy_tax_rate);
             }
         }
     }
 
-    /**
-     * @param int $id
-     * @param ITRR $invtaxrateRepository
-     * @return InvTaxRate|null
-     */
-    private function invtaxrate(int $id, ITRR $invtaxrateRepository): InvTaxRate|null
+    private function invtaxrate(int $id, ITRR $invtaxrateRepository): ?InvTaxRate
     {
         if ($id) {
             $invtaxrate = $invtaxrateRepository->repoInvTaxRatequery((string) $id);
@@ -3007,18 +2564,13 @@ final class InvController extends BaseController
                 return $invtaxrate;
             }
         }
+
         return null;
     }
 
-    /**
-     * @param Request $request
-     * @param IR $iR
-     * @param GR $gR
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
     public function mark_as_sent(Request $request, IR $iR, GR $gR): \Yiisoft\DataResponse\DataResponse
     {
-        $data = $request->getQueryParams();
+        $data       = $request->getQueryParams();
         $parameters = ['success' => 0];
         /**
          * @var array $data['keylist']
@@ -3031,15 +2583,15 @@ final class InvController extends BaseController
              */
             foreach ($keyList as $key => $value) {
                 /**
-                 * @var \App\Invoice\Entity\Inv $inv
+                 * @var Inv $inv
                  */
                 $inv = $iR->repoInvUnLoadedquery($value);
                 if (null !== $inv->getInvAmount()->getTotal() && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatus_id(2);
-                    if (strlen($inv->getNumber() ?? '') == 0) {
+                    if (0 == strlen($inv->getNumber() ?? '')) {
                         $inv->setNumber((string) $gR->generate_number((int) $inv->getGroup_id(), true));
                     }
-                    /**
+                    /*
                      * If the invoice has been sent either by 1. checkbox and the 'sent' button in the index or by 2. 'email' then
                      * it must be made readonly so that it cannot be edited depending on what the 'read_only_toggle' status is
                      * and whether read only effects i.e. disable_read_only, are being used.
@@ -3047,7 +2599,7 @@ final class InvController extends BaseController
                      *
                      * @see 'read_only_toggle' Settings .... Invoices ... Other Settings ... Disable the read only button on ... {status}
                      */
-                    if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '0')) {
+                    if (('2' == $this->sR->getSetting('read_only_toggle')) && ('0' == $this->sR->getSetting('disable_read_only'))) {
                         $inv->setIs_read_only(true);
                     }
                     $iR->save($inv);
@@ -3058,18 +2610,13 @@ final class InvController extends BaseController
             }
             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
         }
+
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-    * @param Request $request
-    * @param IR $iR
-    * @param GR $gR
-    * @return \Yiisoft\DataResponse\DataResponse
-    */
     public function mark_sent_as_draft(Request $request, IR $iR, GR $gR): \Yiisoft\DataResponse\DataResponse
     {
-        $data = $request->getQueryParams();
+        $data       = $request->getQueryParams();
         $parameters = ['success' => 0];
         /**
          * @var array $data['keylist']
@@ -3082,21 +2629,21 @@ final class InvController extends BaseController
              */
             foreach ($keyList as $key => $value) {
                 /**
-                 * @var \App\Invoice\Entity\Inv $inv
+                 * @var Inv $inv
                  */
                 $inv = $iR->repoInvUnLoadedquery($value);
                 if ($inv->getInvAmount()->getTotal() >= 0) {
-                    /**
+                    /*
                      * Only invoices with a 'sent' status are targeted to be set to draft
                      */
-                    if ($inv->getStatus_id() == 2) {
+                    if (2 == $inv->getStatus_id()) {
                         $inv->setStatus_id(1);
                     }
-                    /**
+                    /*
                      * Invoices are set to 'read only' if the status is 'sent' and the ability to mark invoices as 'read only' has now been disabled
                      */
-                    if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '1')) {
-                        /**
+                    if (('2' == $this->sR->getSetting('read_only_toggle')) && ('1' == $this->sR->getSetting('disable_read_only'))) {
+                        /*
                          * The invoice is now a draft and so now must be editable i.e. not 'read-only'
                          */
                         $inv->setIs_read_only(false);
@@ -3110,13 +2657,10 @@ final class InvController extends BaseController
             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
             $this->flashMessage('success', $this->translator->translate('security.disable.read.only.success'));
         }
+
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     */
     public function multiplecopy(
         Request $request,
         FormHydrator $formHydrator,
@@ -3139,10 +2683,11 @@ final class InvController extends BaseController
     ): \Yiisoft\DataResponse\DataResponse {
         $data = $request->getQueryParams();
         /**
-         * Purpose: Provide a list of ids from inv/index checkbox column as an array
+         * Purpose: Provide a list of ids from inv/index checkbox column as an array.
+         *
          * @var array $data['keylist']
          */
-        $keyList = $data['keylist'] ?? [];
+        $keyList         = $data['keylist'] ?? [];
         $datetimeCreated = new \DateTimeImmutable();
         if (!empty($keyList)) {
             /**
@@ -3150,40 +2695,40 @@ final class InvController extends BaseController
              * @var string $value
              */
             foreach ($keyList as $key => $value) {
-                $invId = $value;
+                $invId    = $value;
                 $original = $iR->repoInvUnloadedquery($invId);
                 if ($original) {
-                    $group_id = $original->getGroup_id();
+                    $group_id     = $original->getGroup_id();
                     $invoice_body = [
                         'client_id' => $original->getClient_id(),
-                        'group_id' => $original->getGroup_id(),
-                        'so_id' => $original->getSo_id(),
-                        'quote_id' => $original->getQuote_id(),
+                        'group_id'  => $original->getGroup_id(),
+                        'so_id'     => $original->getSo_id(),
+                        'quote_id'  => $original->getQuote_id(),
                         // user_id below
-                        'status_id' => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? 2 : 1,
-                        'is_read_only' => $this->sR->getSetting('mark_invoices_sent_copy') === '1' ? true : false,
-                        'password' => '',
+                        'status_id'    => '1' === $this->sR->getSetting('mark_invoices_sent_copy') ? 2 : 1,
+                        'is_read_only' => '1' === $this->sR->getSetting('mark_invoices_sent_copy') ? true : false,
+                        'password'     => '',
                         // date_supplied and date_tax_point will change as soon as goods are supplied and a supplied/service date is recorded
-                        'date_supplied' => new \DateTimeImmutable('now'),
+                        'date_supplied'  => new \DateTimeImmutable('now'),
                         'date_tax_point' => new \DateTimeImmutable('now'),
-                        'time_created' => (new \DateTimeImmutable('now'))->format('H:i:s'),
+                        'time_created'   => (new \DateTimeImmutable('now'))->format('H:i:s'),
                         // the company will be registered for their own personal peppol stand-in-code
                         'stand_in_code' => $this->sR->getSetting('stand_in_code'),
                         // if draft invoices must get invoice numbers
-                        'number' => $this->sR->getSetting('generate_invoice_number_for_draft') === '1' ? (string) $gR->generate_number((int) $original->getGroup_id(), true) : '',
-                        'discount_amount' => (float) $original->getDiscount_amount(),
-                        'discount_percent' => (float) $original->getDiscount_percent(),
-                        'terms' => $original->getTerms(),
-                        'note' => $original->getNote(),
+                        'number'               => '1' === $this->sR->getSetting('generate_invoice_number_for_draft') ? (string) $gR->generate_number((int) $original->getGroup_id(), true) : '',
+                        'discount_amount'      => (float) $original->getDiscount_amount(),
+                        'discount_percent'     => (float) $original->getDiscount_percent(),
+                        'terms'                => $original->getTerms(),
+                        'note'                 => $original->getNote(),
                         'document_description' => $original->getDocumentDescription(),
-                        'url_key' => Random::string(32),
-                        'payment_method' => $original->getPayment_method(),
+                        'url_key'              => Random::string(32),
+                        'payment_method'       => $original->getPayment_method(),
                         // a copied invoice will not have a credit note
                         'creditinvoice_parent_id' => null,
-                        'delivery_id' => $original->getDelivery_id(),
-                        'delivery_location_id' => $original->getDelivery_location_id(),
-                        'postal_address_id' => $original->getPostal_address_id(),
-                        'contract_id' => $original->getContract_id(),
+                        'delivery_id'             => $original->getDelivery_id(),
+                        'delivery_location_id'    => $original->getDelivery_location_id(),
+                        'postal_address_id'       => $original->getPostal_address_id(),
+                        'contract_id'             => $original->getContract_id(),
                     ];
                     $copy = new Inv();
                     $form = new InvForm($copy);
@@ -3192,10 +2737,10 @@ final class InvController extends BaseController
                          * @var string $invoice_body['client_id']
                          */
                         $client_id = $invoice_body['client_id'];
-                        $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                        $user      = $this->active_user($client_id, $uR, $ucR, $uiR);
                         if (null !== $user) {
                             $copied = $this->inv_service->copyInv($user, $copy, $invoice_body, $this->sR, $gR);
-                            /**
+                            /*
                              * Note: Reset the immutable date_created outside the inv_service
                              */
                             $copied->setDate_created((string) $data['modal_created_date']);
@@ -3214,15 +2759,13 @@ final class InvController extends BaseController
                     }
                 } // original
             } // foreach $keyList
+
             return $this->factory->createResponse(Json::encode(['success' => 1]));
         } // !empty($keyList)
+
         return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
-    /**
-     * @param array $files
-     * @return mixed
-     */
     private function remove_extension(array $files): mixed
     {
         /**
@@ -3231,55 +2774,46 @@ final class InvController extends BaseController
         foreach ($files as $key => $file) {
             $files[$key] = str_replace('.php', '', $file);
         }
+
         return $files;
     }
 
     // inv/view => '#btn_save_inv_custom_fields' => inv_custom_field.js => /invoice/inv/save_custom";
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param Request $request
-     * @param ICR $icR
-     */
     public function save_custom(FormHydrator $formHydrator, Request $request, ICR $icR): \Yiisoft\DataResponse\DataResponse
     {
         $parameters = [
             'success' => 0,
         ];
-        $js_data = $request->getQueryParams();
-        $inv_id = (string) $js_data['inv_id'];
-        $js_data_custom = (string) $js_data['custom'];
+        $js_data           = $request->getQueryParams();
+        $inv_id            = (string) $js_data['inv_id'];
+        $js_data_custom    = (string) $js_data['custom'];
         $custom_field_body = [
             'custom' => $js_data_custom,
         ];
         $this->save_custom_fields($formHydrator, $custom_field_body, $inv_id, $icR);
         $parameters['success'] = 1;
+
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param array $array
-     * @param string $inv_id
-     * @param ICR $icR
-     */
     public function save_custom_fields(FormHydrator $formHydrator, array $array, string $inv_id, ICR $icR): void
     {
         if (!empty($array['custom'])) {
             $db_array = [];
-            $values = [];
+            $values   = [];
             /**
-             * @var array $custom
+             * @var array  $custom
              * @var string $custom['name']
              */
             foreach ($array['custom'] as $custom) {
                 if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
-                    /**
+                    /*
                      * @var string $custom['value']
                      */
                     $values[$matches[1]][] = $custom['value'];
                 } else {
-                    /**
+                    /*
                      * @var string $custom['value']
                      */
                     $values[$custom['name']] = $custom['value'];
@@ -3291,66 +2825,62 @@ final class InvController extends BaseController
             foreach ($values as $key => $value) {
                 preg_match("/^custom\[(.*?)\](?:\[\]|)$/", $key, $matches);
                 if ($matches) {
-                    $key_value = preg_match('/\d+/', $key, $m) ? $m[0] : '';
+                    $key_value            = preg_match('/\d+/', $key, $m) ? $m[0] : '';
                     $db_array[$key_value] = $value;
                 }
             }
             foreach ($db_array as $key => $value) {
-                if ($value !== '') {
-                    $invCustom = new InvCustom();
-                    $invCustomForm = new InvCustomForm($invCustom);
-                    $inv_custom = [];
-                    $inv_custom['inv_id'] = $inv_id;
+                if ('' !== $value) {
+                    $invCustom                     = new InvCustom();
+                    $invCustomForm                 = new InvCustomForm($invCustom);
+                    $inv_custom                    = [];
+                    $inv_custom['inv_id']          = $inv_id;
                     $inv_custom['custom_field_id'] = $key;
-                    $inv_custom['value'] = $value;
-                    $model = ($icR->repoInvCustomCount($inv_id, $key) == 1 ? $icR->repoFormValuequery($inv_id, $key) : $invCustom);
+                    $inv_custom['value']           = $value;
+                    $model                         = (1 == $icR->repoInvCustomCount($inv_id, $key) ? $icR->repoFormValuequery($inv_id, $key) : $invCustom);
                     if ($model && $formHydrator->populate($invCustomForm, $inv_custom) && $invCustomForm->isValid()) {
                         $this->inv_custom_service->saveInvCustom($model, $inv_custom);
                     }
                 }
             } // foreach
-        } //!empty array custom
+        } // !empty array custom
     }
 
     /**
      * @see src/Invoice/Asset/rebuild-1.13/js/inv.js
-     * @param Request $request
-     * @param FormHydrator $formHydrator
      */
     public function save_inv_tax_rate(Request $request, FormHydrator $formHydrator): \Yiisoft\DataResponse\DataResponse
     {
-        $body = $request->getQueryParams();
+        $body      = $request->getQueryParams();
         $ajax_body = [
-            'inv_id' => $body['inv_id'],
-            'tax_rate_id' => $body['inv_tax_rate_id'],
-            'include_item_tax' => $body['include_inv_item_tax'],
+            'inv_id'              => $body['inv_id'],
+            'tax_rate_id'         => $body['inv_tax_rate_id'],
+            'include_item_tax'    => $body['include_inv_item_tax'],
             'inv_tax_rate_amount' => 0.00,
         ];
         $invTaxRate = new InvTaxRate();
-        $form = new InvTaxRateForm($invTaxRate);
+        $form       = new InvTaxRateForm($invTaxRate);
         if ($formHydrator->populateAndValidate($form, $ajax_body)) {
             $this->inv_tax_rate_service->saveInvTaxRate($invTaxRate, $ajax_body);
             $parameters = [
                 'success' => 1,
             ];
-            //return response to inv.js to reload page at location
+
+            // return response to inv.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
         }
         $parameters = [
             'success' => 0,
         ];
-        //return response to inv.js to reload page at location
+
+        // return response to inv.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param SumexR $sumexR
-     * @param int $inv_id
-     */
     public function sumex_add_record(SumexR $sumexR, int $inv_id): void
     {
         $sumex_setting = $this->sR->getSetting('sumex');
-        if ((int) $sumex_setting === 1) {
+        if (1 === (int) $sumex_setting) {
             $sumex = new Sumex();
             $sumex->setInvoice($inv_id);
             $sumex->setReason(0);
@@ -3363,25 +2893,6 @@ final class InvController extends BaseController
         }
     }
 
-    /**
-     * @param string $urlKey
-     * @param string $clientChosenGateway
-     * @param string $_language
-     * @param CurrentUser $currentUser
-     * @param CFR $cfR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param PMR $pmR
-     * @param SumexR $sumexR
-     * @param UPR $upR
-     * @return Response
-     */
     public function url_key(
         #[RouteArgument('url_key')]
         string $urlKey,
@@ -3404,11 +2915,11 @@ final class InvController extends BaseController
         UPR $upR,
     ): Response {
         // if the current user is a guest it will return a null value
-        if ($urlKey === '' || $currentUser->isGuest()) {
+        if ('' === $urlKey || $currentUser->isGuest()) {
             return $this->webService->getNotFoundResponse();
         }
 
-        if ($clientChosenGateway === '') {
+        if ('' === $clientChosenGateway) {
             return $this->webService->getNotFoundResponse();
         }
 
@@ -3419,86 +2930,84 @@ final class InvController extends BaseController
 
         $inv = $iR->repoUrl_key_guest_loaded($urlKey);
         if ($inv instanceof Inv) {
-            $inv_id = $inv->getId();
+            $inv_id    = $inv->getId();
             $client_id = $inv->getClient_id();
-            $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+            $user      = $this->active_user($client_id, $uR, $ucR, $uiR);
             if ($user) {
                 $user_id = $user->getId();
                 if (null !== $user_id) {
                     $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                     // If the user is not an administrator and the status is sent 2, now mark it as viewed
                     if (null !== $user_inv) {
-                        if ($uiR->repoUserInvUserIdcount($user_id) === 1 && $user_inv->getType() !== 1 && $inv->getStatus_id() === 2) {
+                        if (1 === $uiR->repoUserInvUserIdcount($user_id) && 1 !== $user_inv->getType() && 2 === $inv->getStatus_id()) {
                             // Mark the invoice as viewed and check whether it should be marked as read only
                             // according to the read only toggle setting.
                             $this->sR->invoice_mark_viewed((string) $inv_id, $iR);
                         }
                         $iR->save($inv);
-                        $payment_method = $inv->getPayment_method() !== 0 ? $pmR->repoPaymentMethodquery((string) $inv->getPayment_method()) : null;
-                        $custom_fields = [
+                        $payment_method = 0 !== $inv->getPayment_method() ? $pmR->repoPaymentMethodquery((string) $inv->getPayment_method()) : null;
+                        $custom_fields  = [
                             'invoice' => $cfR->repoTablequery('inv_custom'),
-                            'client' => $cfR->repoTablequery('client_custom'),
+                            'client'  => $cfR->repoTablequery('client_custom'),
                             // TODO 'user' => $cfR->repoTablequery('user_custom'),
                         ];
 
                         $attachments = $this->view_partial_inv_attachments($_language, $urlKey, (int) $client_id, $upR);
-                        $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+                        $inv_amount  = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
                         if ($inv_amount) {
                             $is_overdue = ($inv_amount->getBalance() > 0 && $inv->getDate_due() < (new \DateTimeImmutable('now')) ? true : false);
                             $parameters = [
-                                'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/invoice/public/' . ($this->sR->getSetting('public_invoice_template') ?: 'Invoice_Web'), [
-                                    'alert' => $this->alert(),
-                                    'aliases' => $this->sR->get_img(),
+                                'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/invoice/public/'.($this->sR->getSetting('public_invoice_template') ?: 'Invoice_Web'), [
+                                    'alert'       => $this->alert(),
+                                    'aliases'     => $this->sR->get_img(),
                                     'attachments' => $attachments,
-                                    'balance' => ($inv_amount->getTotal() ?? 0.00) - ($inv_amount->getPaid() ?? 0.00),
+                                    'balance'     => ($inv_amount->getTotal() ?? 0.00) - ($inv_amount->getPaid() ?? 0.00),
                                     // Gateway that the paying user has selected
                                     'client_chosen_gateway' => $clientChosenGateway,
-                                    'client' => $inv->getClient(),
-                                    'custom_fields' => $custom_fields,
-                                    'inv' => $inv,
-                                    'inv_amount' => $inv_amount,
-                                    'inv_tax_rates' => ($inv_id > 0) && $itrR->repoCount($inv_id) > 0 ? $itrR->repoInvquery($inv_id) : null,
-                                    'inv_url_key' => $urlKey,
-                                    'iiaR' => $iiaR,
-                                    'is_overdue' => $is_overdue,
-                                    'items' => ($inv_id > 0) ? $iiR->repoInvquery($inv_id) : new InvItem(),
-                                    '_language' => $_language,
-                                    'payment_method' => $payment_method,
-                                    'paymentTermsArray' => $this->sR->get_payment_term_array($this->translator),
-                                    'sumex' => ($inv_id > 0) ? $sumexR->repoSumexInvoicequery($inv_id) : null,
-                                    'userInv' => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,
+                                    'client'                => $inv->getClient(),
+                                    'custom_fields'         => $custom_fields,
+                                    'inv'                   => $inv,
+                                    'inv_amount'            => $inv_amount,
+                                    'inv_tax_rates'         => ($inv_id > 0) && $itrR->repoCount($inv_id) > 0 ? $itrR->repoInvquery($inv_id) : null,
+                                    'inv_url_key'           => $urlKey,
+                                    'iiaR'                  => $iiaR,
+                                    'is_overdue'            => $is_overdue,
+                                    'items'                 => ($inv_id > 0) ? $iiR->repoInvquery($inv_id) : new InvItem(),
+                                    '_language'             => $_language,
+                                    'payment_method'        => $payment_method,
+                                    'paymentTermsArray'     => $this->sR->get_payment_term_array($this->translator),
+                                    'sumex'                 => ($inv_id > 0) ? $sumexR->repoSumexInvoicequery($inv_id) : null,
+                                    'userInv'               => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,
                                 ]),
                             ];
+
                             return $this->viewRenderer->render('url_key', $parameters);
                         } // if inv_amount
                         $this->flashMessage('warning', $this->translator->translate('amount.no'));
+
                         return $this->webService->getNotFoundResponse();
                     } // null!== $user_inv
                 } // null!== $user_id
             } // if user_inv
             $this->flashMessage('danger', $this->translator->translate('client.not.allocated.to.user'));
+
             return $this->webService->getNotFoundResponse();
         } // if inv
         $this->flashMessage('danger', $this->translator->translate('not.found'));
+
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param bool $read_only
-     * @return bool
-     */
     private function display_edit_delete_buttons(bool $read_only): bool
     {
-        if (($read_only === false) && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
+        if ((false === $read_only) && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
             return true;
         }
+
         // Override the invoice's readonly
         return $this->sR->getSetting('disable_read_only') === (string) 1;
     }
 
-    /**
-     * @param array $enabled_gateways
-     */
     private function flash_no_enabled_gateways(array $enabled_gateways, string $message): void
     {
         if (empty(array_filter($enabled_gateways))) {
@@ -3507,53 +3016,51 @@ final class InvController extends BaseController
     }
 
     /**
-     * Check to make sure that the invoice's client has full peppol details setup before engaging peppol
-     * @param string $client_id
-     * @return bool
+     * Check to make sure that the invoice's client has full peppol details setup before engaging peppol.
      */
     private function peppol_client_fully_setup(string $client_id, cpR $cpR): bool
     {
         $passed = false;
-        if ($cpR->repoClientCount($client_id) == 1) {
+        if (1 == $cpR->repoClientCount($client_id)) {
             $cp = $cpR->repoClientPeppolLoadedquery($client_id);
             // check that each individual field has been completed otherwise raise a flash message
             if (null !== $cp) {
                 if (empty($cp->getEndpointid())) {
-                    $this->flashMessage('warning', '$cp->getEndpointid() ' . $cp->getEndpointid());
+                    $this->flashMessage('warning', '$cp->getEndpointid() '.$cp->getEndpointid());
                 }
                 if (empty($cp->getEndpointid_schemeid())) {
-                    $this->flashMessage('warning', '$cp->getEndpointid_schemeid() ' . $cp->getEndpointid_schemeid());
+                    $this->flashMessage('warning', '$cp->getEndpointid_schemeid() '.$cp->getEndpointid_schemeid());
                 }
                 if (empty($cp->getIdentificationid())) {
-                    $this->flashMessage('warning', '$cp->getIdentificationid() ' . $cp->getIdentificationid());
+                    $this->flashMessage('warning', '$cp->getIdentificationid() '.$cp->getIdentificationid());
                 }
                 if (empty($cp->getTaxschemecompanyid())) {
-                    $this->flashMessage('warning', '$cp->getTaxschemecompanyid() ' . $cp->getTaxschemecompanyid());
+                    $this->flashMessage('warning', '$cp->getTaxschemecompanyid() '.$cp->getTaxschemecompanyid());
                 }
                 if (empty($cp->getTaxschemeid())) {
-                    $this->flashMessage('warning', '$cp->getTaxschemeid() ' . $cp->getTaxschemeid());
+                    $this->flashMessage('warning', '$cp->getTaxschemeid() '.$cp->getTaxschemeid());
                 }
                 if (empty($cp->getLegal_entity_registration_name())) {
-                    $this->flashMessage('warning', '$cp->getLegal_entity_registration_name() ' . $cp->getLegal_entity_registration_name());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_registration_name() '.$cp->getLegal_entity_registration_name());
                 }
                 if (empty($cp->getLegal_entity_companyid())) {
-                    $this->flashMessage('warning', '$cp->getLegal_entity_companyid() ' . $cp->getLegal_entity_companyid());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_companyid() '.$cp->getLegal_entity_companyid());
                 }
                 if (empty($cp->getLegal_entity_companyid_schemeid())) {
-                    $this->flashMessage('warning', '$cp->getLegal_entity_companyid_schemeid() ' . $cp->getLegal_entity_companyid_schemeid());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_companyid_schemeid() '.$cp->getLegal_entity_companyid_schemeid());
                 }
                 if (empty($cp->getLegal_entity_company_legal_form())) {
-                    $this->flashMessage('warning', '$cp->getLegal_entity_company_legal_form() ' . $cp->getLegal_entity_company_legal_form());
+                    $this->flashMessage('warning', '$cp->getLegal_entity_company_legal_form() '.$cp->getLegal_entity_company_legal_form());
                 }
                 if (empty($cp->getFinancial_institution_branchid())) {
-                    $this->flashMessage('warning', '$cp->getFinancial_institution_branchid() ' . $cp->getFinancial_institution_branchid());
+                    $this->flashMessage('warning', '$cp->getFinancial_institution_branchid() '.$cp->getFinancial_institution_branchid());
                 }
                 if (empty($cp->getAccountingCost())) {
-                    $this->flashMessage('warning', '$cp->getAccountingCost() ' . $cp->getAccountingCost());
+                    $this->flashMessage('warning', '$cp->getAccountingCost() '.$cp->getAccountingCost());
                 }
 
                 if (empty($cp->getSupplierAssignedAccountId())) {
-                    $this->flashMessage('warning', '$cp->getSupplierAssignedAccountId() ' . $cp->getSupplierAssignedAccountId());
+                    $this->flashMessage('warning', '$cp->getSupplierAssignedAccountId() '.$cp->getSupplierAssignedAccountId());
                 }
 
                 if ($cp->getEndpointid()
@@ -3576,31 +3083,12 @@ final class InvController extends BaseController
                 }
             } // null!==$cp
         } // $cpR->repoClientCount($client_id) == 1
+
         return $passed;
     }
 
     /**
-     * Purpose: Generate OpenPeppol Ubl Invoice 3.0.15 XML file to 1. screen or 2. file
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @param cpR $cpR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $invRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $delRepo
-     * @param DelPartyRepo $delPartyRepo
-     * @param DLR $dlR
-     * @param paR $paR
-     * @param SOR $soR
-     * @param unpR $unpR
-     * @param upR $upR
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param SOIR $soiR
-     * @param TRR $trR
-     * @return Response
+     * Purpose: Generate OpenPeppol Ubl Invoice 3.0.15 XML file to 1. screen or 2. file.
      */
     public function peppol(
         #[RouteArgument('id')]
@@ -3636,7 +3124,7 @@ final class InvController extends BaseController
                     if ($this->peppol_client_fully_setup((string) $client_id, $cpR)) {
                         $delivery_location = $dlR->repoDeliveryLocationquery((string) $client_id);
                         if (null !== $delivery_location) {
-                            $inv_amount = $invoice->getInvAmount();
+                            $inv_amount   = $invoice->getInvAmount();
                             $peppolhelper = new PeppolHelper(
                                 $this->sR,
                                 $delRepo,
@@ -3669,11 +3157,12 @@ final class InvController extends BaseController
                                 $soiR,
                                 $trR,
                             );
-                            if ($this->sR->getSetting('peppol_xml_stream') == '1') {
+                            if ('1' == $this->sR->getSetting('peppol_xml_stream')) {
                                 $xml = $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
-                                return $this->factory->createResponse('<pre>' . Html::encode($xml) . '</pre>');
+
+                                return $this->factory->createResponse('<pre>'.Html::encode($xml).'</pre>');
                             }
-                            /**
+                            /*
                              * Previously: echo $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
                              * @see https://cwe.mitre.org/data/definitions/79.html
                              *
@@ -3694,12 +3183,9 @@ final class InvController extends BaseController
 
     /**
      * Purpose: Use the toggle button to
-     * stream Ubl invoice to screen or alternatively output to file
+     * stream Ubl invoice to screen or alternatively output to file.
      *
      * View: resources/views/invoice/inv/view.php
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @return Response
      */
     public function peppol_stream_toggle(
         #[RouteArgument('id')]
@@ -3711,7 +3197,7 @@ final class InvController extends BaseController
         }
         if ($this->sR->repoCount('peppol_xml_stream') > 0) {
             $record = $this->sR->withKey('peppol_xml_stream');
-            if ($this->sR->getSetting('peppol_xml_stream') === '1') {
+            if ('1' === $this->sR->getSetting('peppol_xml_stream')) {
                 if ($record instanceof Setting) {
                     $record->setSetting_value('0');
                     $this->sR->save($record);
@@ -3724,31 +3210,13 @@ final class InvController extends BaseController
             } // else
         } // $this->sR->repoCount
         $this->flashMessage('info', $this->translator->translate('peppol.stream.toggle'));
+
         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
     } // peppol stream toggle
 
     /**
      * @see https://www.storecove.com/docs#_json_object
      * @see StoreCove API key stored under Online Payment keys under Settings...View...Online Payment
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @param cpR $cpR
-     * @param IIAR $iiaR
-     * @param IR $invRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $delRepo
-     * @param DelPartyRepo $delPartyRepo
-     * @param DLR $dlR
-     * @param paR $paR
-     * @param ppR $ppR
-     * @param unpR $unpR
-     * @param SOR $soR
-     * @param UPR $upR
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param SOIR $soiR
-     * @param TRR $trR
-     * @return Response
      */
     public function storecove(
         #[RouteArgument('id')]
@@ -3782,7 +3250,7 @@ final class InvController extends BaseController
                 if (null !== $client_id) {
                     $delivery_location = $dlR->repoDeliveryLocationquery((string) $client_id);
                     if (null !== $delivery_location) {
-                        $inv_amount = $invoice->getInvAmount();
+                        $inv_amount      = $invoice->getInvAmount();
                         $storecovehelper = new StoreCoveHelper(
                             $this->sR,
                             $this->delRepo,
@@ -3802,7 +3270,7 @@ final class InvController extends BaseController
                             $soR,
                             $invoice,
                             $iiaR,
-                            //$iiR,
+                            // $iiR,
                             $contractRepo,
                             $delRepo,
                             $delPartyRepo,
@@ -3828,22 +3296,17 @@ final class InvController extends BaseController
         exit;
     }
 
-    /**
-     * @param upR $upR
-     * @param string $uploads_temp_peppol_absolute_path_dot_xml
-     * @return false|string
-     */
     private function peppol_output(UPR $upR, string $uploads_temp_peppol_absolute_path_dot_xml): false|string
     {
         $path_parts = pathinfo($uploads_temp_peppol_absolute_path_dot_xml);
         /**
          * @psalm-suppress PossiblyUndefinedArrayOffset
          */
-        $file_ext = $path_parts['extension'];
+        $file_ext           = $path_parts['extension'];
         $original_file_name = $path_parts['filename'];
         if (file_exists($uploads_temp_peppol_absolute_path_dot_xml)) {
             $file_size = filesize($uploads_temp_peppol_absolute_path_dot_xml);
-            if ($file_size != false) {
+            if (false != $file_size) {
                 // xml is included in the getContentTypes allowed array
                 $allowed_content_type_array = $upR->getContentTypes();
                 // Check current extension against allowed content file types @see UploadRepository getContentTypes
@@ -3856,49 +3319,18 @@ final class InvController extends BaseController
                 header('Expires: -1');
                 header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
                 header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-                header('Content-Type: ' . $ctype);
-                header('Content-Length: ' . (string) $file_size);
+                header('Content-Type: '.$ctype);
+                header('Content-Length: '.(string) $file_size);
+
                 return file_get_contents($uploads_temp_peppol_absolute_path_dot_xml, true);
             }
         }
+
         return '';
     }
 
     // The accesschecker in config/routes ensures that only users with viewInv permission can reach this
 
-    /**
-     * @param ViewRenderer $head
-     * @param int $id
-     * @param string $_language
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param PR $pR
-     * @param PIR $piR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param IRR $irR
-     * @param ITRR $itrR
-     * @param PMR $pmR
-     * @param TRR $trR
-     * @param FR $fR
-     * @param UNR $uR
-     * @param ACR $acR
-     * @param ACIR $aciR
-     * @param CR $cR
-     * @param GR $gR
-     * @param ICR $icR
-     * @param PYMR $pymR
-     * @param TASKR $taskR
-     * @param PRJCTR $prjctR
-     * @param UIR $uiR
-     * @param UCR $ucR
-     * @param UPR $upR
-     * @param SumexR $sumexR
-     * @param DLR $dlR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
-     */
     public function view(
         ViewRenderer $head,
         #[RouteArgument('id')]
@@ -3935,7 +3367,7 @@ final class InvController extends BaseController
         SumexR $sumexR,
         DLR $dlR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        $inv = $this->inv($id, $iR, false);
+        $inv              = $this->inv($id, $iR, false);
         $enabled_gateways = $this->sR->payment_gateways_enabled_DriverList();
         $this->flash_no_enabled_gateways($enabled_gateways, $this->translator->translate('payment.gateway.no'));
         if ($inv) {
@@ -3946,82 +3378,82 @@ final class InvController extends BaseController
                     $sales_order_number = $so->getNumber();
                 }
             }
-            $invoice = $inv->getId();
-            $invAllowanceCharge = new InvAllowanceCharge();
+            $invoice                = $inv->getId();
+            $invAllowanceCharge     = new InvAllowanceCharge();
             $invAllowanceChargeForm = new InvAllowanceChargeForm($invAllowanceCharge, (int) $invoice);
-            $sumex = $sumexR->repoSumexInvoicequery((string) $invoice);
-            $is_recurring = false;
-            $read_only = $inv->getIs_read_only();
+            $sumex                  = $sumexR->repoSumexInvoicequery((string) $invoice);
+            $is_recurring           = false;
+            $read_only              = $inv->getIs_read_only();
             $this->session->set('inv_id', $inv->getId());
             $this->number_helper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
             $inv_amount = (($iaR->repoInvAmountCount((int) $inv->getId()) > 0) ? $iaR->repoInvquery((int) $this->session->get('inv_id')) : null);
             if ($inv_amount) {
                 $inv_custom_values = $this->inv_custom_values((string) $this->session->get('inv_id'), $icR);
-                $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
-                $show_buttons = $this->display_edit_delete_buttons($read_only);
+                $is_recurring      = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
+                $show_buttons      = $this->display_edit_delete_buttons($read_only);
                 // Each file attachment is recorded in Upload table with invoice's url_key, and client_id
-                $url_key = $inv->getUrl_key();
-                $client_id = $inv->getClient_id();
-                $delivery_location_id = $inv->getDelivery_location_id();
+                $url_key                                       = $inv->getUrl_key();
+                $client_id                                     = $inv->getClient_id();
+                $delivery_location_id                          = $inv->getDelivery_location_id();
                 $bootstrap5ModalTranslatorMessageWithoutAction = new Bootstrap5ModalTranslatorMessageWithoutAction(
                     $this->viewRenderer,
                 );
                 $parameters = [
-                    'aciR' => $aciR,
+                    'aciR'  => $aciR,
                     'alert' => $this->alert(),
                     // Get the standard extra custom fields built for EVERY invoice.
-                    'custom_fields' => $cfR->repoTablequery('inv_custom'),
-                    'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
-                    'cvH' => new CVH($this->sR),
+                    'custom_fields'    => $cfR->repoTablequery('inv_custom'),
+                    'custom_values'    => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
+                    'cvH'              => new CVH($this->sR),
                     'enabled_gateways' => $enabled_gateways,
                     // Get all the fields that have been setup for this SPECIFIC invoice in inv_custom.
                     'fields' => $icR->repoFields((string) $this->session->get('inv_id')),
-                    'form' => new InvForm($inv),
-                    'iaR' => $iaR,
-                    'inv' => $inv,
+                    'form'   => new InvForm($inv),
+                    'iaR'    => $iaR,
+                    'inv'    => $inv,
                     // Determine if a 'viewInv' user has 'editInv' permission
-                    'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
+                    'invEdit'           => $this->userService->hasPermission('editInv') ? true : false,
                     'inv_custom_values' => $inv_custom_values,
-                    'isRecurring' => $is_recurring,
-                    'inv_statuses' => $iR->getStatuses($this->translator),
+                    'isRecurring'       => $is_recurring,
+                    'inv_statuses'      => $iR->getStatuses($this->translator),
                     // Determine if a 'viewInv' user has 'viewPayment' permission
                     // This permission is necessary for a guest viewing a read-only view to go to the Pay now section
                     // If a custom field exists for payments, use it/them on the payment form.
-                    'paymentCfExist' => $cfR->repoTableCountquery('payment_custom') > 0 ? true : false,
-                    'paymentView' => $this->userService->hasPermission('viewPayment') ? true : false,
-                    'payment_methods' => $pmR->findAllWithActive(1),
-                    'payments' => $pymR->repoCount((string) $this->session->get('inv_id')) > 0 ? $pymR->repoInvquery((string) $this->session->get('inv_id')) : null,
+                    'paymentCfExist'       => $cfR->repoTableCountquery('payment_custom') > 0 ? true : false,
+                    'paymentView'          => $this->userService->hasPermission('viewPayment') ? true : false,
+                    'payment_methods'      => $pmR->findAllWithActive(1),
+                    'payments'             => $pymR->repoCount((string) $this->session->get('inv_id')) > 0 ? $pymR->repoInvquery((string) $this->session->get('inv_id')) : null,
                     'peppol_stream_toggle' => $this->sR->getSetting('peppol_xml_stream'),
-                    'readOnly' => $read_only,
-                    'sales_order_number' => $sales_order_number,
-                    'showButtons' => $show_buttons,
-                    'sumex' => $sumex,
-                    'title' => $this->translator->translate('view'),
+                    'readOnly'             => $read_only,
+                    'sales_order_number'   => $sales_order_number,
+                    'showButtons'          => $show_buttons,
+                    'sumex'                => $sumex,
+                    'title'                => $this->translator->translate('view'),
                     // Sits above options section of invoice allowing the adding of a new row to the invoice
                     'add_inv_item_product' => $this->viewRenderer->renderPartialAsString('//invoice/invitem/_item_form_product', [
-                        'actionName' => 'invitem/add_product',
-                        'actionArguments' => ['_language' => $_language],
-                        'errors' => [],
-                        'form' => new InvItemForm(new InvItem(), (int) $this->session->get('inv_id')),
-                        'inv' => $iR->repoInvLoadedquery((string) $invoice),
-                        'isRecurring' => ($irR->repoCount((string) $invoice) > 0) ? true : false,
-                        'inv_id' => $this->session->get('inv_id'),
-                        'invItemAllowancesCharges' => $aciiR->repoACIquery((string) $this->session->get('inv_id')),
+                        'actionName'                    => 'invitem/add_product',
+                        'actionArguments'               => ['_language' => $_language],
+                        'errors'                        => [],
+                        'form'                          => new InvItemForm(new InvItem(), (int) $this->session->get('inv_id')),
+                        'inv'                           => $iR->repoInvLoadedquery((string) $invoice),
+                        'isRecurring'                   => ($irR->repoCount((string) $invoice) > 0) ? true : false,
+                        'inv_id'                        => $this->session->get('inv_id'),
+                        'invItemAllowancesCharges'      => $aciiR->repoACIquery((string) $this->session->get('inv_id')),
                         'invItemAllowancesChargesCount' => $aciiR->repoInvcount((string) $this->session->get('inv_id')),
-                        'taxRates' => $trR->findAllPreloaded(),
+                        'taxRates'                      => $trR->findAllPreloaded(),
                         // Tasks are excluded
                         'products' => $pR->findAllPreloaded(),
-                        'units' => $uR->findAllPreloaded(),
+                        'units'    => $uR->findAllPreloaded(),
                     ]),
                     'add_inv_item_task' => $this->viewRenderer->renderPartialAsString('//invoice/invitem/_item_form_task', [
-                        'actionName' => 'invitem/add_task',
+                        'actionName'      => 'invitem/add_task',
                         'actionArguments' => ['_language' => $_language],
-                        'errors' => [],
-                        'form' => new InvItemForm(new InvItem(), (int) $this->session->get('inv_id')),
-                        'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
-                        'isRecurring' => $is_recurring,
-                        'inv_id' => (string) $this->session->get('inv_id'),
-                        'taxRates' => $trR->findAllPreloaded(),
+                        'errors'          => [],
+                        'form'            => new InvItemForm(new InvItem(), (int) $this->session->get('inv_id')),
+                        'inv'             => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
+                        'isRecurring'     => $is_recurring,
+                        'inv_id'          => (string) $this->session->get('inv_id'),
+                        'taxRates'        => $trR->findAllPreloaded(),
                         // Only tasks with complete or status of 3 are made available for selection
                         'tasks' => $taskR->repoTaskStatusquery(3),
                         // Products are excluded
@@ -4030,12 +3462,12 @@ final class InvController extends BaseController
                     'modal_choose_items' => $this->viewRenderer->renderPartialAsString(
                         '//invoice/product/modal_product_lookups_inv',
                         [
-                            'families' => $fR->findAllPreloaded(),
-                            'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
-                            'filter_product' => '',
-                            'filter_family' => '',
-                            'reset_table' => '',
-                            'products' => $pR->findAllPreloaded(),
+                            'families'                    => $fR->findAllPreloaded(),
+                            'default_item_tax_rate'       => '' !== $this->sR->getSetting('default_item_tax_rate') ?: 0,
+                            'filter_product'              => '',
+                            'filter_family'               => '',
+                            'reset_table'                 => '',
+                            'products'                    => $pR->findAllPreloaded(),
                             'partial_product_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/product/_partial_product_table_modal', [
                                 'products' => $pR->findAllPreloaded(),
                             ]),
@@ -4046,14 +3478,14 @@ final class InvController extends BaseController
                         [
                             'partial_task_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/task/partial_task_table_modal', [
                                 // Only tasks with complete or status of 3 are made available for selection
-                                'taskR' => $taskR,
-                                'prjctR' => $prjctR,
-                                'dateHelper' => $this->date_helper,
+                                'taskR'        => $taskR,
+                                'prjctR'       => $prjctR,
+                                'dateHelper'   => $this->date_helper,
                                 'numberHelper' => $this->number_helper,
                             ]),
-                            'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
-                            'tasks' => $pR->findAllPreloaded(),
-                            'head' => $head,
+                            'default_item_tax_rate' => '' !== $this->sR->getSetting('default_item_tax_rate') ?: 0,
+                            'tasks'                 => $pR->findAllPreloaded(),
+                            'head'                  => $head,
                         ],
                     ),
                     'modal_add_inv_tax' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_add_inv_tax', [
@@ -4066,19 +3498,19 @@ final class InvController extends BaseController
                                 '//invoice/inv/modal_add_allowance_charge_form',
                                 [
                                     'optionsDataAllowanceCharges' => $acR->optionsDataAllowanceCharges(),
-                                    'actionName' => 'invallowancecharge/add',
-                                    'actionArguments' => ['inv_id' => (string) $this->session->get('inv_id')],
-                                    'errors' => [],
-                                    'title' => $this->translator->translate('allowance.or.charge.add'),
-                                    'form' => $invAllowanceChargeForm,
+                                    'actionName'                  => 'invallowancecharge/add',
+                                    'actionArguments'             => ['inv_id' => (string) $this->session->get('inv_id')],
+                                    'errors'                      => [],
+                                    'title'                       => $this->translator->translate('allowance.or.charge.add'),
+                                    'form'                        => $invAllowanceChargeForm,
                                 ],
                             ),
                         ],
                     ),
                     'modal_copy_inv' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_copy_inv', [
-                        'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
+                        'inv'     => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
                         'clients' => $cR->repoUserClient($ucR->getClients_with_user_accounts()),
-                        'groups' => $gR->findAllPreloaded(),
+                        'groups'  => $gR->findAllPreloaded(),
                     ]),
                     // Partial item table: Used to build items either products/tasks that make up the invoice
                     // Partial item table: Items and Grand Totals
@@ -4098,17 +3530,17 @@ final class InvController extends BaseController
                         $itrR,
                         $inv_amount,
                     ),
-                    'modal_delete_inv' => $this->view_modal_delete_inv($_language),
-                    'modal_delete_items' => $this->view_modal_delete_items($iiR),
-                    'modal_change_client' => $this->view_modal_change_client($id, $cR, $iR),
-                    'modal_inv_to_pdf' => $this->view_modal_inv_to_pdf($id, $iR),
-                    'modal_inv_to_modal_pdf' => $this->view_modal_inv_to_modal_pdf($id, $iR),
-                    'modal_pdf' => $this->view_modal_pdf(),
-                    'modal_inv_to_html' => $this->view_modal_inv_to_html($id, $iR),
-                    'modal_create_credit' => $this->view_modal_create_credit($id, $gR, $iR),
-                    'view_custom_fields' => $this->view_custom_fields($cfR, $cvR, $inv_custom_values),
-                    'partial_inv_attachments' => $this->view_partial_inv_attachments($_language, $url_key, (int) $client_id, $upR),
-                    'partial_inv_delivery_location' => $this->view_partial_delivery_location($_language, $dlR, $delivery_location_id),
+                    'modal_delete_inv'                => $this->view_modal_delete_inv($_language),
+                    'modal_delete_items'              => $this->view_modal_delete_items($iiR),
+                    'modal_change_client'             => $this->view_modal_change_client($id, $cR, $iR),
+                    'modal_inv_to_pdf'                => $this->view_modal_inv_to_pdf($id, $iR),
+                    'modal_inv_to_modal_pdf'          => $this->view_modal_inv_to_modal_pdf($id, $iR),
+                    'modal_pdf'                       => $this->view_modal_pdf(),
+                    'modal_inv_to_html'               => $this->view_modal_inv_to_html($id, $iR),
+                    'modal_create_credit'             => $this->view_modal_create_credit($id, $gR, $iR),
+                    'view_custom_fields'              => $this->view_custom_fields($cfR, $cvR, $inv_custom_values),
+                    'partial_inv_attachments'         => $this->view_partial_inv_attachments($_language, $url_key, (int) $client_id, $upR),
+                    'partial_inv_delivery_location'   => $this->view_partial_delivery_location($_language, $dlR, $delivery_location_id),
                     'modal_message_no_payment_method' => $bootstrap5ModalTranslatorMessageWithoutAction
                         ->renderPartialLayoutWithTranslatorMessageAsString(
                             $this->translator->translate('payment.method'),
@@ -4116,17 +3548,16 @@ final class InvController extends BaseController
                             'inv',
                         ),
                 ];
+
                 return $this->viewRenderer->render('view', $parameters);
             } // if $inv_amount
+
             return $this->webService->getNotFoundResponse();
         } // if $inv
+
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param IRR $irR
-     * @return string
-     */
     private function index_modal_create_recurring_multiple(IRR $irR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_create_recurring_multiple', [
@@ -4134,75 +3565,46 @@ final class InvController extends BaseController
         ]);
     }
 
-    /**
-     * @return string
-     */
     private function index_modal_copy_inv_multiple(): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_copy_inv_multiple');
     }
 
-    /**
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param array $inv_custom_values
-     * @return string
-     */
     private function view_custom_fields(CFR $cfR, CVR $cvR, array $inv_custom_values): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/view_custom_fields', [
-            'custom_fields' => $cfR->repoTablequery('inv_custom'),
-            'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
+            'custom_fields'     => $cfR->repoTablequery('inv_custom'),
+            'custom_values'     => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
             'inv_custom_values' => $inv_custom_values,
-            'cvH' => new CVH($this->sR),
-            'invCustomForm' => new InvCustomForm(new InvCustom()),
+            'cvH'               => new CVH($this->sR),
+            'invCustomForm'     => new InvCustomForm(new InvCustom()),
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param CR $cR
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_change_client(int $id, CR $cR, IR $iR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_change_client', [
-            'inv' => $this->inv($id, $iR, true),
+            'inv'     => $this->inv($id, $iR, true),
             'clients' => $cR->findAllPreloaded(),
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param GR $gR
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_create_credit(int $id, GR $gR, IR $iR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_create_credit', [
             'invoice_groups' => $gR->repoCountAll() > 0 ? $gR->findAllPreloaded() : null,
-            'inv' => $this->inv($id, $iR, false),
+            'inv'            => $this->inv($id, $iR, false),
         ]);
     }
 
-    /**
-     * @param string $_language
-     * @return string
-     */
     private function view_modal_delete_inv(string $_language): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_delete_inv', [
-            'actionName' => 'inv/delete',
+            'actionName'      => 'inv/delete',
             'actionArguments' => ['id' => $this->session->get('inv_id'), '_language' => $_language],
         ]);
     }
 
-    /**
-     * @param IIR $iiR
-     * @return string
-     */
     private function view_modal_delete_items(IIR $iiR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_delete_item', [
@@ -4212,11 +3614,6 @@ final class InvController extends BaseController
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_inv_to_pdf(int $id, IR $iR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_inv_to_pdf', [
@@ -4224,11 +3621,6 @@ final class InvController extends BaseController
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_inv_to_modal_pdf(int $id, IR $iR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_inv_to_modal_pdf', [
@@ -4236,11 +3628,6 @@ final class InvController extends BaseController
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_inv_to_html(int $id, IR $iR): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_inv_to_html', [
@@ -4248,184 +3635,151 @@ final class InvController extends BaseController
         ]);
     }
 
-    /**
-     * @param string $_language
-     * @param string $url_key
-     * @param int $client_id
-     * @param UPR $upR
-     * @return string
-     */
     private function view_partial_inv_attachments(string $_language, string $url_key, int $client_id, UPR $upR): string
     {
-        $uploads = $upR->repoUploadUrlClientquery($url_key, $client_id);
+        $uploads   = $upR->repoUploadUrlClientquery($url_key, $client_id);
         $paginator = new OffsetPaginator($uploads);
-        $invEdit = $this->userService->hasPermission('editPayment');
-        $invView = $this->userService->hasPermission('viewPayment');
+        $invEdit   = $this->userService->hasPermission('editPayment');
+        $invView   = $this->userService->hasPermission('viewPayment');
+
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_attachments', [
-            'form' => new InvAttachmentsForm(),
-            'invEdit' => $invEdit,
-            'invView' => $invView,
+            'form'                         => new InvAttachmentsForm(),
+            'invEdit'                      => $invEdit,
+            'invView'                      => $invView,
             'partial_inv_attachments_list' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_attachments_list', [
                 'paginator' => $paginator,
-                'invEdit' => $invEdit,
+                'invEdit'   => $invEdit,
             ]),
-            'actionName' => 'inv/attachment',
+            'actionName'      => 'inv/attachment',
             'actionArguments' => ['id' => $this->session->get('inv_id'), '_language' => $_language],
         ]);
     }
 
-    /**
-     * @param string $_language
-     * @param DLR $dlr
-     * @param string $delivery_location_id
-     * @return string
-     */
     private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id): string
     {
         if (!empty($delivery_location_id)) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
                 return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
-                    'actionName' => 'del/view',
-                    'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
-                    'title' => $this->translator->translate('delivery.location'),
-                    'building_number' => $del->getBuildingNumber(),
-                    'address_1' => $del->getAddress_1(),
-                    'address_2' => $del->getAddress_2(),
-                    'city' => $del->getCity(),
-                    'state' => $del->getZip(),
-                    'country' => $del->getCountry(),
+                    'actionName'             => 'del/view',
+                    'actionArguments'        => ['_language' => $_language, 'id' => $delivery_location_id],
+                    'title'                  => $this->translator->translate('delivery.location'),
+                    'building_number'        => $del->getBuildingNumber(),
+                    'address_1'              => $del->getAddress_1(),
+                    'address_2'              => $del->getAddress_2(),
+                    'city'                   => $del->getCity(),
+                    'state'                  => $del->getZip(),
+                    'country'                => $del->getCountry(),
                     'global_location_number' => $del->getGlobal_location_number(),
                 ]);
-            } //null!==$del
+            } // null!==$del
         } else {
             return '';
         }
+
         return '';
     }
 
-    /**
-     * @param bool $show_buttons
-     * @param int $id
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param PR $pR
-     * @param PIR $piR
-     * @param TaskR $taskR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param TRR $trR
-     * @param UNR $uR
-     * @param ITRR $itrR
-     * @param InvAmount|null $invAmount
-     * @param bool $so_exists
-     * @return string
-     */
-    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, InvAmount|null $invAmount): string
+    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, ?InvAmount $invAmount): string
     {
         $inv = $this->inv($id, $iR, false);
         if ($inv) {
-            $draft = ($inv->getStatus_id() == '1' ? true : false);
+            $draft         = ('1' == $inv->getStatus_id() ? true : false);
             $inv_tax_rates = (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : null);
             // Allowances or Charges: DOCUMENT Level using $aciR
             $acis = $aciR->repoACIquery((string) $inv->getId());
+
             // Allowances or Charges: ITEM Level using $aciiR
-            ////$inv_item_allowances_charges=$aciiR->repoACIquery((string)$inv->getId());
-            ////$inv_item_allowances_charges_count=$aciiR->repoCount((string)$inv->getId());
+            // //$inv_item_allowances_charges=$aciiR->repoACIquery((string)$inv->getId());
+            // //$inv_item_allowances_charges_count=$aciiR->repoCount((string)$inv->getId());
             return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_item_table', [
                 'dlAcis' => $acis,
-                'aciiR' => $aciiR,
+                'aciiR'  => $aciiR,
                 // Only make buttons available if status is draft
-                'draft' => $draft,
-                'piR' => $piR,
+                'draft'       => $draft,
+                'piR'         => $piR,
                 'showButtons' => $show_buttons,
-                'included' => $this->translator->translate('item.tax.included'),
-                'excluded' => $this->translator->translate('item.tax.excluded'),
-                'products' => $pR->findAllPreloaded(),
+                'included'    => $this->translator->translate('item.tax.included'),
+                'excluded'    => $this->translator->translate('item.tax.excluded'),
+                'products'    => $pR->findAllPreloaded(),
                 // Only tasks with complete or status of 3 are made available for selection
-                'tasks' => $taskR->repoTaskStatusquery(3),
-                'userCanEdit' => $this->userService->hasPermission('editInv') ? true : false,
-                'invItems' => $iiR->repoInvquery((string) $this->session->get('inv_id')),
+                'tasks'          => $taskR->repoTaskStatusquery(3),
+                'userCanEdit'    => $this->userService->hasPermission('editInv') ? true : false,
+                'invItems'       => $iiR->repoInvquery((string) $this->session->get('inv_id')),
                 'invItemAmountR' => $iiaR,
-                'invTaxRates' => $inv_tax_rates,
-                'invAmount' => $invAmount,
-                'inv' => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
-                'taxRates' => $trR->findAllPreloaded(),
-                'units' => $uR->findAllPreloaded(),
+                'invTaxRates'    => $inv_tax_rates,
+                'invAmount'      => $invAmount,
+                'inv'            => $iR->repoInvLoadedquery((string) $this->session->get('inv_id')),
+                'taxRates'       => $trR->findAllPreloaded(),
+                'units'          => $uR->findAllPreloaded(),
             ]);
         } // inv
+
         return '';
     }
 
     /**
-     * Use: Toggle Button on Flash message reminder
-     * @param string $_language
+     * Use: Toggle Button on Flash message reminder.
      */
     private function draft_flash(string $_language): void
     {
         // Get the current draft setting
         $draft = $this->sR->getSetting('generate_invoice_number_for_draft');
         // Get the setting_id to allow for editing
-        $setting = $this->sR->withKey('generate_invoice_number_for_draft');
+        $setting     = $this->sR->withKey('generate_invoice_number_for_draft');
         $setting_url = '';
-        $setting_id = '';
+        $setting_id  = '';
         if (null !== $setting) {
             $setting_id = $setting->getSetting_id();
             // The route name has been simplified and differs from the action 'setting/inv_draft_has_number_switch'
             $setting_url = $this->url_generator->generate('setting/draft', ['_language' => $_language, 'setting_id' => $setting_id]);
         }
-        $level = $draft == '0' ? 'warning' : 'info';
-        $on_off = $draft == '0' ? 'off' : 'on';
+        $level   = '0' == $draft ? 'warning' : 'info';
+        $on_off  = '0' == $draft ? 'off' : 'on';
         $message = $this->translator->translate('draft.number.'
-          . $on_off) . str_repeat('&nbsp;', 2)
-          . (!empty($setting_url) ? (string) Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil']), $setting_url, ['class' => 'btn btn-primary'])
+          .$on_off).str_repeat('&nbsp;', 2)
+          .(!empty($setting_url) ? (string) Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil']), $setting_url, ['class' => 'btn btn-primary'])
           : '');
         $this->flashMessage($level, $message);
     }
 
     /**
      * Purpose: Warning: Setting 'Mark invoices as sent when copy' should only be ON during development
-     * Use: Toggle Button on Flash message reminder
-     * @param string $_language
+     * Use: Toggle Button on Flash message reminder.
      */
     private function mark_sent_flash(string $_language): void
     {
         // Get the current mark_invoice_sent_copy setting
         $mark_sent = $this->sR->getSetting('mark_invoices_sent_copy');
         // Get the setting_id to allow for editing
-        $setting = $this->sR->withKey('mark_invoices_sent_copy');
+        $setting     = $this->sR->withKey('mark_invoices_sent_copy');
         $setting_url = '';
-        $setting_id = '';
+        $setting_id  = '';
         if (null !== $setting) {
-            $setting_id = $setting->getSetting_id();
+            $setting_id  = $setting->getSetting_id();
             $setting_url = $this->url_generator->generate('setting/mark_sent', ['_language' => $_language, 'setting_id' => $setting_id]);
         }
-        $level = $mark_sent == '0' ? 'success' : 'danger';
-        $on_off = $mark_sent == '0' ? 'off' : 'on';
+        $level  = '0' == $mark_sent ? 'success' : 'danger';
+        $on_off = '0' == $mark_sent ? 'off' : 'on';
         /**
-         * @link https://emojipedia.or/check-mark
-         * @link https://emojipedia.org/cross-mark  ️
+         * @see https://emojipedia.or/check-mark
+         * @see https://emojipedia.org/cross-mark  ️
          */
-        $message = ($mark_sent == '0' ? '✔' : '❌') . $this->translator->translate('mark.sent.'
-          . $on_off) . str_repeat('&nbsp;', 2)
-          . (!empty($setting_url) ? (string) Html::a(
+        $message = ('0' == $mark_sent ? '✔' : '❌').$this->translator->translate('mark.sent.'
+          .$on_off).str_repeat('&nbsp;', 2)
+          .(!empty($setting_url) ? (string) Html::a(
               Html::tag(
                   'i',
                   '',
                   ['class' => 'fa fa-pencil'],
               ),
               $setting_url,
-              ['class' => $mark_sent == '0' ? 'btn btn-success' : 'btn btn-danger'],
+              ['class' => '0' == $mark_sent ? 'btn btn-success' : 'btn btn-danger'],
           )
           : '');
         $this->flashMessage($level, $message);
     }
 
-    /**
-     * @param IR $iR
-     * @return array
-     */
     public function optionsDataClientsFilter(IR $iR): array
     {
         $optionsDataClients = [];
@@ -4438,11 +3792,12 @@ final class InvController extends BaseController
             $client = $inv->getClient();
             if (null !== $client) {
                 if (strlen($client->getClient_full_name()) > 0) {
-                    $fullName = $client->getClient_full_name();
+                    $fullName                                           = $client->getClient_full_name();
                     $optionsDataClients[$client->getClient_full_name()] = !empty($fullName) ? $fullName : '';
                 }
             }
         }
+
         return $optionsDataClients;
     }
 
@@ -4450,19 +3805,20 @@ final class InvController extends BaseController
     {
         $ym = [];
         for ($y = 2024, $now = (int) date('Y') + 10; $y <= $now; ++$y) {
-            $months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+            $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
             foreach ($months as $month) {
-                $yearMonth = (string) $y . '-' . $month;
+                $yearMonth      = (string) $y.'-'.$month;
                 $ym[$yearMonth] = $yearMonth;
             }
         }
+
         return $ym;
     }
 
     public function optionsDataClientGroupFilter(CR $cR): array
     {
         $clientGroup = [];
-        $allClients = $cR->findAllPreloaded();
+        $allClients  = $cR->findAllPreloaded();
         /**
          * @var Client $client
          */
@@ -4477,13 +3833,10 @@ final class InvController extends BaseController
                 }
             }
         }
+
         return $clientGroup;
     }
 
-    /**
-     * @param IR $iR
-     * @return array
-     */
     public function optionsDataInvNumberFilter(IR $iR): array
     {
         $optionsDataInvNumbers = [];
@@ -4500,13 +3853,12 @@ final class InvController extends BaseController
                 }
             }
         }
+
         return $optionsDataInvNumbers;
     }
 
     /**
-     * Note function invs_status_with_sort_guest($iR, $status, $user_clients, $sort) has been used to generate $invs
-     * @param \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface $invs
-     * @return array
+     * Note function invs_status_with_sort_guest($iR, $status, $user_clients, $sort) has been used to generate $invs.
      */
     public function optionsDataInvNumberGuestFilter(\Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface $invs): array
     {
@@ -4522,6 +3874,7 @@ final class InvController extends BaseController
                 }
             }
         }
+
         return $optionsDataInvNumbers;
     }
 }

@@ -7,7 +7,6 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
 #[Entity(repository: \App\Invoice\Task\TaskRepository::class)]
@@ -27,7 +26,9 @@ class Task
         private ?float $price = null, #[Column(type: 'date', nullable: true)]
         private mixed $finish_date = '', #[Column(type: 'int', nullable: false)]
         private ?int $status = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null) {}
+        private ?int $tax_rate_id = null)
+    {
+    }
 
     public function getTaxRate(): ?TaxRate
     {
@@ -89,13 +90,13 @@ class Task
         $this->price = $price;
     }
 
-    public function getFinish_date(): string|DateTimeImmutable
+    public function getFinish_date(): string|\DateTimeImmutable
     {
-        /** @var DateTimeImmutable|string $this->finish_date */
+        /* @var DateTimeImmutable|string $this->finish_date */
         return $this->finish_date;
     }
 
-    public function setFinish_date(?DateTime $finish_date): void
+    public function setFinish_date(?\DateTime $finish_date): void
     {
         $this->finish_date = $finish_date;
     }
@@ -122,6 +123,6 @@ class Task
 
     public function Is_overdue(): bool
     {
-        return $this->finish_date < new DateTime(date('Y-m-d')) ? false : true;
+        return $this->finish_date < new \DateTime(date('Y-m-d')) ? false : true;
     }
 }

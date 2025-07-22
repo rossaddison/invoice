@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Invoice\Import;
 
 use App\Invoice\BaseController;
-use App\Service\WebControllerService;
-use App\User\UserService;
-// Exceptions
-use App\Invoice\Helpers\InvoicePlane\Exception\NoConnectionException;
-//Entities
-use App\Invoice\Entity\TaxRate;
-// Repositories
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\Entity\TaxRate;
+// Exceptions
 use App\Invoice\Family\FamilyRepository;
+// Entities
+use App\Invoice\Helpers\InvoicePlane\Exception\NoConnectionException;
+// Repositories
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
+use App\Service\WebControllerService;
+use App\User\UserService;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
-/**
+/*
  * @link https://github.com/yiisoft/db-mysql
  */
 use Yiisoft\Cache\ArrayCache;
@@ -53,16 +53,16 @@ final class ImportController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->cR = $cR;
-        $this->uR = $uR;
-        $this->fR = $fR;
-        $this->pR = $pR;
+        $this->cR  = $cR;
+        $this->uR  = $uR;
+        $this->fR  = $fR;
+        $this->pR  = $pR;
         $this->trR = $trR;
     }
 
-    private function invoiceplaneConnected(): Connection|null
+    private function invoiceplaneConnected(): ?Connection
     {
-        $settingInvoiceplaneName = $this->sR->getSetting('invoiceplane_database_name');
+        $settingInvoiceplaneName     = $this->sR->getSetting('invoiceplane_database_name');
         $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');
         $settingInvoiceplanePassword = $this->sR->getSetting('invoiceplane_database_password') ?: '';
         if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0) {
@@ -76,9 +76,10 @@ final class ImportController extends BaseController
                 ],
             )
             )->asString();
-            $arrayCache = new ArrayCache();
+            $arrayCache  = new ArrayCache();
             $schemaCache = new SchemaCache($arrayCache);
-            $pdoDriver = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword);
+            $pdoDriver   = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword);
+
             return new Connection($pdoDriver, $schemaCache);
         }
         $this->flashMessage('warning', $this->translator->translate('invoiceplane.no.username.or.password'));
@@ -90,21 +91,22 @@ final class ImportController extends BaseController
     {
         $parameters = [
             'action' => ['import/index'],
-            'alert' => $this->alert(),
+            'alert'  => $this->alert(),
         ];
+
         return $this->viewRenderer->render('index', $parameters);
     }
 
     public function invoiceplane(): Response
     {
-        if (strlen($this->sR->getSetting('invoiceplane_database_name')) > 0
+        if (strlen($this->sR->getSetting('invoiceplane_database_name'))        > 0
             && strlen($this->sR->getSetting('invoiceplane_database_username')) > 0) {
             $db = $this->invoiceplaneConnected();
-            if (count($this->uR->findAllPreloaded()) == 0
-             && count($this->fR->findAllPreloaded()) == 0
-             && count($this->pR->findAllPreloaded()) == 0
-             && count($this->cR->findAllPreloaded()) == 0
-             && count($this->trR->findAllPreloaded()) == 0) {
+            if (0 == count($this->uR->findAllPreloaded())
+             && 0 == count($this->fR->findAllPreloaded())
+             && 0 == count($this->pR->findAllPreloaded())
+             && 0 == count($this->cR->findAllPreloaded())
+             && 0 == count($this->trR->findAllPreloaded())) {
                 if (null !== $db) {
                     $units = $this->inputUnit($db);
                     $this->InsertUnits($units);
@@ -130,6 +132,7 @@ final class ImportController extends BaseController
         } else {
             $this->flashMessage('warning', $this->translator->translate('invoiceplane.no.username.or.password'));
         }
+
         return $this->webService->getRedirectResponse('import/index');
     }
 
@@ -143,6 +146,7 @@ final class ImportController extends BaseController
         } else {
             $this->flashMessage('info', $this->translator->translate('invoiceplane.no.connection'));
         }
+
         return $this->webService->getRedirectResponse('setting/tab_index');
     }
 
@@ -150,9 +154,9 @@ final class ImportController extends BaseController
     {
         try {
             return (new Query($db))
-            ->select(['unit_name', 'unit_name_plrl'])
-            ->from('{{%ip_units}}')
-            ->all();
+                ->select(['unit_name', 'unit_name_plrl'])
+                ->from('{{%ip_units}}')
+                ->all();
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -162,9 +166,9 @@ final class ImportController extends BaseController
     {
         try {
             return (new Query($db))
-            ->select(['family_name'])
-            ->from('{{%ip_families}}')
-            ->all();
+                ->select(['family_name'])
+                ->from('{{%ip_families}}')
+                ->all();
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -195,9 +199,9 @@ final class ImportController extends BaseController
         $this->ensureMandatoryTaxRatesInstalled();
         try {
             return (new Query($db))
-            ->select(['tax_rate_name', 'tax_rate_percent'])
-            ->from('{{%ip_tax_rates}}')
-            ->all();
+                ->select(['tax_rate_name', 'tax_rate_percent'])
+                ->from('{{%ip_tax_rates}}')
+                ->all();
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -207,34 +211,34 @@ final class ImportController extends BaseController
     {
         try {
             return (new Query($db))
-            ->select([
-                'client_date_created',
-                'client_date_modified',
-                'client_name',
-                'client_surname',
-                'client_address_1',
-                'client_address_2',
-                'client_city',
-                'client_state',
-                'client_zip',
-                'client_country',
-                'client_phone',
-                'client_fax',
-                'client_mobile',
-                'client_email',
-                'client_web',
-                'client_vat_id',
-                'client_tax_code',
-                'client_language',
-                'client_active',
-                'client_avs',
-                'client_insurednumber',
-                'client_veka',
-                'client_birthdate',
-                'client_gender',
-            ])
-            ->from('{{%ip_clients}}')
-            ->all();
+                ->select([
+                    'client_date_created',
+                    'client_date_modified',
+                    'client_name',
+                    'client_surname',
+                    'client_address_1',
+                    'client_address_2',
+                    'client_city',
+                    'client_state',
+                    'client_zip',
+                    'client_country',
+                    'client_phone',
+                    'client_fax',
+                    'client_mobile',
+                    'client_email',
+                    'client_web',
+                    'client_vat_id',
+                    'client_tax_code',
+                    'client_language',
+                    'client_active',
+                    'client_avs',
+                    'client_insurednumber',
+                    'client_veka',
+                    'client_birthdate',
+                    'client_gender',
+                ])
+                ->from('{{%ip_clients}}')
+                ->all();
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -244,19 +248,19 @@ final class ImportController extends BaseController
     {
         try {
             return (new Query($db))
-            ->select([
-                'family_id',
-                'product_sku',
-                'product_name',
-                'product_description',
-                'product_price',
-                'purchase_price',
-                'provider_name',
-                'tax_rate_id',
-                'unit_id',
-                'product_tariff'])
-            ->from('{{%ip_products}}')
-            ->all();
+                ->select([
+                    'family_id',
+                    'product_sku',
+                    'product_name',
+                    'product_description',
+                    'product_price',
+                    'purchase_price',
+                    'provider_name',
+                    'tax_rate_id',
+                    'unit_id',
+                    'product_tariff'])
+                ->from('{{%ip_products}}')
+                ->all();
         } catch (\Yiisoft\Db\Exception\Exception $e) {
             throw new NoConnectionException($this->translator, $e);
         }
@@ -328,7 +332,7 @@ final class ImportController extends BaseController
             $newClient->setClient_vat_id((string) $client['client_vat_id']);
             $newClient->setClient_tax_code((string) $client['client_tax_code']);
             $newClient->setClient_language((string) $client['client_language']);
-            $newClient->setClient_active($client['client_active'] === '1' ? true : false);
+            $newClient->setClient_active('1' === $client['client_active'] ? true : false);
             $newClient->setClient_avs((string) $client['client_avs']);
             $newClient->setClient_insurednumber((string) $client['client_insurednumber']);
             $newClient->setClient_veka((string) $client['client_veka']);

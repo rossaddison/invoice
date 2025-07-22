@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation\Service;
 
-use Yiisoft\Yii\AuthClient\Client\OpenBanking;
-use Yiisoft\Session\SessionInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\Random;
-use Psr\Http\Message\ServerRequestInterface;
+use Yiisoft\Session\SessionInterface;
+use Yiisoft\Yii\AuthClient\Client\OpenBanking;
 
 final class OpenBankingPaymentService
 {
@@ -21,8 +21,8 @@ final class OpenBankingPaymentService
         SessionInterface $session,
         UrlGenerator $urlGenerator,
     ) {
-        $this->openBanking = $openBanking;
-        $this->session = $session;
+        $this->openBanking  = $openBanking;
+        $this->session      = $session;
         $this->urlGenerator = $urlGenerator;
     }
 
@@ -32,7 +32,7 @@ final class OpenBankingPaymentService
      */
     public function getAuthUrlForProvider(?array $providerConfig, string $url_key): string
     {
-        if ($providerConfig === null) {
+        if (null === $providerConfig) {
             return '';
         }
 
@@ -40,7 +40,7 @@ final class OpenBankingPaymentService
         $this->openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
         $this->openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
 
-        $codeVerifier = Random::string(128);
+        $codeVerifier  = Random::string(128);
         $codeChallenge = strtr(
             rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='),
             '+/',
@@ -48,10 +48,10 @@ final class OpenBankingPaymentService
         );
         $this->session->set('code_verifier', $codeVerifier);
 
-        return $this->openBanking->getAuthUrl() . '?' . http_build_query([
-            'response_type' => 'code',
-            'scope' => $this->openBanking->getScope(),
-            'code_challenge' => $codeChallenge,
+        return $this->openBanking->getAuthUrl().'?'.http_build_query([
+            'response_type'         => 'code',
+            'scope'                 => $this->openBanking->getScope(),
+            'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
             // 'redirect_uri' => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
         ]);
@@ -60,12 +60,11 @@ final class OpenBankingPaymentService
     /**
      * Exchange the authorization code for an access token.
      *
-     * @param ServerRequestInterface $request
-     * @param non-empty-string $code
+     * @param non-empty-string                                                             $code
      * @param array{authUrl:non-empty-string,tokenUrl:non-empty-string,scope?:string}|null $providerConfig
-     * @param non-empty-string $url_key
+     * @param non-empty-string                                                             $url_key
+     *
      * @throws \RuntimeException
-     * @return \Yiisoft\Yii\AuthClient\OAuthToken
      */
     public function fetchToken(
         ServerRequestInterface $request,
@@ -73,7 +72,7 @@ final class OpenBankingPaymentService
         ?array $providerConfig,
         string $url_key,
     ): \Yiisoft\Yii\AuthClient\OAuthToken {
-        if ($providerConfig === null) {
+        if (null === $providerConfig) {
             throw new \RuntimeException('Open Banking provider is not configured.');
         }
         $this->openBanking->setAuthUrl($providerConfig['authUrl']);
@@ -81,14 +80,15 @@ final class OpenBankingPaymentService
         $this->openBanking->setScope($providerConfig['scope'] ?? null);
 
         $codeVerifier = $this->session->get('code_verifier');
-        if (!is_string($codeVerifier) || $codeVerifier === '') {
+        if (!is_string($codeVerifier) || '' === $codeVerifier) {
             throw new \RuntimeException('Missing code verifier in session.');
         }
+
         return $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier(
             $request,
             $code,
             [
-                'redirect_uri' => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
+                'redirect_uri'  => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_complete', ['url_key' => $url_key]),
                 'code_verifier' => $codeVerifier,
             ],
         );

@@ -9,7 +9,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     #[\Override]
     public function getName(): string
@@ -17,9 +19,6 @@ final class PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException extends
         return $this->translator->translate('client.peppol.not.found.purchase.order.item.number');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

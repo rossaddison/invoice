@@ -8,7 +8,6 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(repository: \App\Invoice\PostalAddress\PostalAddressRepository::class)]
-
 class PostalAddress
 {
     public function __construct(#[Column(type: 'primary')]
@@ -20,7 +19,9 @@ class PostalAddress
         private string $city_name = '', #[Column(type: 'string(7)', nullable: false)]
         private string $postalzone = '', #[Column(type: 'string(50)', nullable: false)]
         private string $countrysubentity = '', #[Column(type: 'string(50)', nullable: false)]
-        private string $country = '') {}
+        private string $country = '')
+    {
+    }
 
     public function getId(): string
     {
@@ -114,6 +115,6 @@ class PostalAddress
 
     public function getFullAddress(): string
     {
-        return $this->street_name . ' ' . $this->building_number . ', ' . $this->additional_street_name . ', ' . $this->postalzone;
+        return $this->street_name.' '.$this->building_number.', '.$this->additional_street_name.', '.$this->postalzone;
     }
 }

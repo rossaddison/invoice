@@ -10,21 +10,17 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class ClientService
 {
-    public function __construct(private ClientRepository $repository) {}
+    public function __construct(private ClientRepository $repository)
+    {
+    }
 
-    /**
-     * @param Client $model
-     * @param array $body
-     * @param SettingRepository $s
-     * @return int|null
-     */
-    public function saveClient(Client $model, array $body, SettingRepository $s): int|null
+    public function saveClient(Client $model, array $body, SettingRepository $s): ?int
     {
         $datehelper = new DateHelper($s);
         isset($body['client_title']) ? $model->setClient_title((string) $body['client_title']) : '';
         isset($body['client_name']) ? $model->setClient_name((string) $body['client_name']) : '';
         isset($body['client_surname']) ? $model->setClient_surname((string) $body['client_surname']) : '';
-        $model->setClient_full_name((string) $body['client_name'] . ' ' . (string) $body['client_surname']);
+        $model->setClient_full_name((string) $body['client_name'].' '.(string) $body['client_surname']);
         isset($body['client_frequency']) ? $model->setClient_frequency((string) $body['client_frequency']) : '';
         isset($body['client_group']) ? $model->setClient_group((string) $body['client_group']) : '';
         isset($body['client_number']) ? $model->setClient_number((string) $body['client_number']) : '';
@@ -43,7 +39,7 @@ final readonly class ClientService
         isset($body['client_vat_id']) ? $model->setClient_vat_id((string) $body['client_vat_id']) : '';
         isset($body['client_tax_code']) ? $model->setClient_tax_code((string) $body['client_tax_code']) : '';
         isset($body['client_language']) ? $model->setClient_language((string) $body['client_language']) : '';
-        $model->setClient_active($body['client_active'] === '1' ? true : false);
+        $model->setClient_active('1' === $body['client_active'] ? true : false);
         isset($body['client_avs']) ? $model->setClient_avs((string) $body['client_avs']) : '';
         isset($body['client_insurednumber']) ? $model->setClient_insurednumber((string) $body['client_insurednumber']) : '';
         isset($body['client_veka']) ? $model->setClient_veka((string) $body['client_veka']) : '';
@@ -59,12 +55,10 @@ final readonly class ClientService
             $model->setPostaladdress_id(0);
         }
         $this->repository->save($model);
+
         return $model->getClient_id();
     }
 
-    /**
-     * @param array|Client|null $model
-     */
     public function deleteClient(array|Client|null $model): void
     {
         $this->repository->delete($model);

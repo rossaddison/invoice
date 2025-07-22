@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Tag\Button;
 
-/**
+/*
  * @var string $partial_task_table_modal
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
@@ -20,29 +20,29 @@ use Yiisoft\Html\Tag\Button;
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
+                    <input type="hidden" name="_csrf" value="<?php echo $csrf; ?>">
                     <div class="modal-body">                       
                         <div id="task-lookup-table">
                             <?php
-                               echo $partial_task_table_modal
+                               echo $partial_task_table_modal;
 ?>     
                         </div>
                     </div>
                     <div class="modal-footer">
                         <?php
 echo Button::tag()
-->id('task-modal-submit')
-->addClass('select-items-confirm-task btn-success')
-->content($translator->translate('submit'))
-->disabled(true)
-->render();
+                            ->id('task-modal-submit')
+                            ->addClass('select-items-confirm-task btn-success')
+                            ->content($translator->translate('submit'))
+                            ->disabled(true)
+                            ->render();
 ?>        
                         <?php
     echo Button::tag()
-    ->addClass('btn btn-danger')
-    ->content($translator->translate('close'))
-    ->addAttributes(['data-bs-dismiss' => 'modal'])
-    ->render();
+        ->addClass('btn btn-danger')
+        ->content($translator->translate('close'))
+        ->addAttributes(['data-bs-dismiss' => 'modal'])
+        ->render();
 ?>    
                     </div>
                 </form>    

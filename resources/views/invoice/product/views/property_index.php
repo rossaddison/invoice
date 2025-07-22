@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @see ...$parameters['partial_product_properties' => ['productpropertys']]
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -17,8 +17,8 @@ use Yiisoft\Html\Html;
 <table class="table">
 <thead>
 <tr>
-<th><?= $translator->translate('product.property.name'); ?></th>
-<th><?= $translator->translate('product.property.value'); ?></th>
+<th><?php echo $translator->translate('product.property.name'); ?></th>
+<th><?php echo $translator->translate('product.property.value'); ?></th>
 </tr>
 </thead>
 <tbody>

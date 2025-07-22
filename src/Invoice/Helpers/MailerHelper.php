@@ -5,30 +5,30 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 // Entities
-use App\Invoice\Entity\UserInv;
-// Repositories
 use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
+// Repositories
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\CustomValue\CustomValueRepository as CVR;
+use App\Invoice\Entity\UserInv;
 use App\Invoice\InvCustom\InvCustomRepository as ICR;
 use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
-use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
 use App\Invoice\Quote\QuoteRepository as QR;
+use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
+use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\UserInv\UserInvRepository as UIR;
-//psr
+// psr
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-//yiisoft
+// yiisoft
 use Yiisoft\Files\FileHelper;
-use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\Translator\TranslatorInterface ;
-// Mailer
 use Yiisoft\Mailer\File;
 use Yiisoft\Mailer\MailerInterface;
+use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
+use Yiisoft\Session\Flash\Flash;
+// Mailer
+use Yiisoft\Session\SessionInterface as Session;
+use Yiisoft\Translator\TranslatorInterface;
 
 class MailerHelper
 {
@@ -51,31 +51,23 @@ class MailerHelper
         CFR $cfR,
         CVR $cvR,
     ) {
-        $this->pdfhelper = new PdfHelper($this->s, $this->session);
+        $this->pdfhelper      = new PdfHelper($this->s, $this->session);
         $this->templatehelper = new TemplateHelper($this->s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $this->invoicehelper = new InvoiceHelper($this->s, $this->session);
-        $this->logger = $logger;
-        $this->mailer = $mailer;
-        $this->flash = new Flash($this->session);
+        $this->invoicehelper  = new InvoiceHelper($this->s, $this->session);
+        $this->logger         = $logger;
+        $this->mailer         = $mailer;
+        $this->flash          = new Flash($this->session);
     }
 
     public function mailer_configured(): bool
     {
         return
-            $this->s->getSetting('email_send_method') == 'symfony'
+            'symfony' == $this->s->getSetting('email_send_method')
         ;
     }
 
     // This function will be used with cron at a later stage
 
-    /**
-     * @param string $quote_id
-     * @param QR $qR
-     * @param UIR $uiR
-     * @param UrlGenerator $urlGenerator
-     * @param ServerRequestInterface $request
-     * @return bool
-     */
     private function email_quote_status(string $quote_id, QR $qR, UIR $uiR, UrlGenerator $urlGenerator, ServerRequestInterface $request): bool
     {
         if (!$this->mailer_configured()) {
@@ -83,17 +75,17 @@ class MailerHelper
         }
         $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
         if ($quote) {
-            $url = $urlGenerator->generate('quote/view', ['id' => $quote_id]);
-            $user_id = $quote->getUser()?->getId() ?? null;
+            $url      = $urlGenerator->generate('quote/view', ['id' => $quote_id]);
+            $user_id  = $quote->getUser()?->getId() ?? null;
             $user_inv = null !== $user_id ? $uiR->repoUserInvUserIdquery($user_id) : null;
             if (null !== $user_inv) {
                 if (null !== $quote->getClient()?->getClient_name()) {
                     $from_email = $user_inv->getUser()?->getEmail() ?? '';
-                    $from_name = $user_inv->getName() ?? '';
-                    $subject = sprintf(
+                    $from_name  = $user_inv->getName()              ?? '';
+                    $subject    = sprintf(
                         $this->translator->translate('quote.status.email.subject'),
                         $quote->getClient()?->getClient_name() ?? '',
-                        $quote->getNumber() ?? '',
+                        $quote->getNumber()                    ?? '',
                     );
                     $body = sprintf(
                         nl2br($this->translator->translate('quote.status.email.body')),
@@ -103,28 +95,16 @@ class MailerHelper
                         $url,
                     );
 
-                    if ($this->s->getSetting('email_send_method') == 'yiimail') {
+                    if ('yiimail' == $this->s->getSetting('email_send_method')) {
                         return $this->yii_mailer_send($from_email, $from_name, $from_email, $subject, $body, null, null, [], '', $uiR);
                     }
                 }
             }
         }
+
         return false;
     }
 
-    /**
-     * @param string $from_email
-     * @param string $from_name
-     * @param string $to
-     * @param string $subject
-     * @param string $html_body
-     * @param array|string|null $cc
-     * @param array|string|null $bcc
-     * @param array $attachFiles
-     * @param string|null $pdf_template_target_path
-     * @param UIR|null $uiR
-     * @return bool
-     */
     public function yii_mailer_send(
         string $from_email,
         string $from_name,
@@ -135,8 +115,8 @@ class MailerHelper
         array|string|null $bcc,
         array $attachFiles,
         // $target_path of pdfs generated
-        string|null $pdf_template_target_path,
-        UIR|null $uiR,
+        ?string $pdf_template_target_path,
+        ?UIR $uiR,
     ): bool {
         if (null !== $cc && is_string($cc) && (strlen($cc) > 4) && !is_array($cc)) {
             // Allow multiple CC's delimited by comma or semicolon
@@ -150,11 +130,11 @@ class MailerHelper
 
         // Bcc mails to admin && the admin email account has been setup under userinv which is an extension table of user
         if (null !== $uiR) {
-            if (($this->s->getSetting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string) 1) > 0)) {
+            if ((1 == $this->s->getSetting('bcc_mails_to_admin')) && ($uiR->repoUserInvUserIdcount((string) 1) > 0)) {
                 $user_inv = $uiR->repoUserInvUserIdquery((string) 1) ?: null;
-                $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
+                $email    = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
                 // $bcc should be an array after the explode
-                is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
+                is_array($bcc) && '' !== $email ? array_unshift($bcc, $email) : '';
             }
         }
 
@@ -167,19 +147,20 @@ class MailerHelper
             htmlBody: $html_body,
         );
 
-        /** @var array<array-key, string>|string $cc */
+        /* @var array<array-key, string>|string $cc */
         is_array($cc) && !empty($cc) ? $email->withCC($cc) : '';
-        /** @var array<array-key, string>|string $bcc */
+        /* @var array<array-key, string>|string $bcc */
         is_array($bcc) && !empty($bcc) ? $email->withBcc($bcc) : '';
 
         /** @var array $attachFile */
         foreach ($attachFiles as $attachFile) {
             /**
              * @var array $file
+             *
              * @psalm-suppress MixedMethodCall
              */
             foreach ($attachFile as $file) {
-                if ($file[0]?->getError() === UPLOAD_ERR_OK && (null !== $file[0]?->getStream())) {
+                if (UPLOAD_ERR_OK === $file[0]?->getError() && (null !== $file[0]?->getStream())) {
                     /** @psalm-suppress MixedAssignment $email */
                     $email = $email->withAttachments(
                         File::fromContent(
@@ -195,8 +176,8 @@ class MailerHelper
         // If Setting...View...Email...Attach Invoice/Quote on email is 'yes' => attach archived pdf
         // generated by PdfHelper->generate_inv_pdf
         if (null !== $pdf_template_target_path) {
-            $path_info = pathinfo($pdf_template_target_path);
-            $path_info_file_name = $path_info['filename'];
+            $path_info                           = pathinfo($pdf_template_target_path);
+            $path_info_file_name                 = $path_info['filename'];
             $email_attachments_with_pdf_template = $email->withAttachments(
                 File::fromPath(
                     FileHelper::normalizePath($pdf_template_target_path),
@@ -209,7 +190,7 @@ class MailerHelper
         }
         // Ensure that the administrator exists in the userinv extension table. If the email is blank generate a flash
         if (null !== $uiR) {
-            if ($uiR->repoUserInvUserIdcount((string) 1) == 0) {
+            if (0 == $uiR->repoUserInvUserIdcount((string) 1)) {
                 $admin = new UserInv();
                 $admin->setUser_id(1);
                 // Administrator's are given a type of 0, Guests eg. Accountant 1
@@ -221,28 +202,27 @@ class MailerHelper
         try {
             $this->mailer->send($email_attachments_with_pdf_template);
             $this->flash_message('info', $this->translator->translate('email.successfully.sent'));
+
             return true;
         } catch (\Exception $e) {
-            $this->flash_message('warning', $this->translator->translate('email.not.sent.successfully') .
-                                            "\n" .
-                                            $this->translator->translate('email.exception') .
+            $this->flash_message('warning', $this->translator->translate('email.not.sent.successfully').
+                                            "\n".
+                                            $this->translator->translate('email.exception').
                                             "\n");
             $this->logger->error($e->getMessage());
         }
+
         return false;
     }
 
-    /**
-    * @param string $level
-    * @param string $message
-    * @return Flash|null
-    */
-    private function flash_message(string $level, string $message): Flash|null
+    private function flash_message(string $level, string $message): ?Flash
     {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);
+
             return $this->flash;
         }
+
         return null;
     }
 }

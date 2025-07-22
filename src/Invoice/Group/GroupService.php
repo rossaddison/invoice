@@ -8,15 +8,10 @@ use App\Invoice\Entity\Group;
 
 final readonly class GroupService
 {
-    /**
-     * @param GroupRepository $repository
-     */
-    public function __construct(private GroupRepository $repository) {}
+    public function __construct(private GroupRepository $repository)
+    {
+    }
 
-    /**
-     * @param Group $model
-     * @param array $array
-     */
     public function saveGroup(Group $model, array $array): void
     {
         isset($array['name']) ? $model->setName((string) $array['name']) : 'Name';
@@ -26,15 +21,12 @@ final readonly class GroupService
         $this->repository->save($model);
     }
 
-    /**
-     * @param Group $model
-     */
     public function deleteGroup(Group $model): void
     {
         // The first three default groups i.e. quote, salesorder, and invoice cannot be deleted
-        if (($model->getName() != 'Quote Group')
-                && ($model->getName() != 'Invoice Group')
-                    && ($model->getName() != 'Sales Order Group')) {
+        if (('Quote Group' != $model->getName())
+                    && ('Invoice Group' != $model->getName())
+                    && ('Sales Order Group' != $model->getName())) {
             $this->repository->delete($model);
         }
     }

@@ -13,12 +13,10 @@ use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 
 final readonly class InvAmountService
 {
-    public function __construct(private IAR $repository) {}
+    public function __construct(private IAR $repository)
+    {
+    }
 
-    /**
-     * @param InvAmount $model
-     * @param string $inv_id
-     */
     public function initializeInvAmount(InvAmount $model, string $inv_id): void
     {
         $inv_id ? $model->setInv_id((int) $inv_id) : '';
@@ -32,11 +30,6 @@ final readonly class InvAmountService
         $this->repository->save($model);
     }
 
-    /**
-     * @param InvAmount $model
-     * @param int $basis_inv_id
-     * @param string $new_inv_id
-     */
     public function initializeCreditInvAmount(InvAmount $model, int $basis_inv_id, string $new_inv_id): void
     {
         $basis_invoice = $this->repository->repoInvquery($basis_inv_id);
@@ -51,17 +44,12 @@ final readonly class InvAmountService
         $this->repository->save($model);
     }
 
-    /**
-     * @param InvAmount $model
-     * @param int $basis_inv_id
-     * @param string $new_inv_id
-     */
     public function initializeCopyInvAmount(InvAmount $model, int $basis_inv_id, string $new_inv_id): void
     {
         $basis_invoice = $this->repository->repoInvquery($basis_inv_id);
         $new_inv_id ? $model->setInv_id((int) $new_inv_id) : '';
         $model->setSign(1);
-        /** @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
+        /* @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
         $model->setItem_subtotal($basis_invoice->getItem_subtotal());
         $model->setItem_tax_total($basis_invoice->getItem_tax_total() ?: 0.00);
         $model->setTax_total($basis_invoice->getTax_total() ?? 0.00);
@@ -71,11 +59,6 @@ final readonly class InvAmountService
         $this->repository->save($model);
     }
 
-    /**
-     * @param InvAmount $model
-     * @param array $array
-     * @param InvAmountForm $form
-     */
     public function saveInvAmount(InvAmount $model, array $array): void
     {
         isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
@@ -89,10 +72,6 @@ final readonly class InvAmountService
         $this->repository->save($model);
     }
 
-    /**
-     * @param InvAmount $model
-     * @param array $array
-     */
     public function saveInvAmountViaCalculations(InvAmount $model, array $array): void
     {
         $model->setInv_id((int) $array['inv_id']);
@@ -107,13 +86,9 @@ final readonly class InvAmountService
 
     /**
      * Update the Invoice Amounts when an inv item allowance or charge is added to an invoice item.
-     * Also update the Invoice totals using Numberhelper calculate inv_taxes function
+     * Also update the Invoice totals using Numberhelper calculate inv_taxes function.
+     *
      * @see InvItemAllowanceChargeController functions add and edit
-     * @param int $inv_id
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param ITRR $itrR
-     * @param NumberHelper $numberHelper
      */
     public function updateInvAmount(int $inv_id, IAR $iaR, IIAR $iiaR, ITRR $itrR, NumberHelper $numberHelper): void
     {
@@ -123,13 +98,12 @@ final readonly class InvAmountService
             if (null !== $inv) {
                 /**
                  * @see Entity\Inv #[HasMany(target: InvItem::class)] private ArrayCollection $items;
-                 * @var
                  */
-                $items = $inv->getItems();
-                $subtotal = 0.00;
-                $taxTotal = 0.00;
-                $discount = 0.00;
-                $charge = 0.00;
+                $items     = $inv->getItems();
+                $subtotal  = 0.00;
+                $taxTotal  = 0.00;
+                $discount  = 0.00;
+                $charge    = 0.00;
                 $allowance = 0.00;
                 /**
                  * @var InvItem $item
@@ -139,10 +113,10 @@ final readonly class InvAmountService
                     if (null !== $invItemId) {
                         $invItemAmount = $iiaR->repoInvItemAmountquery((string) $invItemId);
                         if ($invItemAmount) {
-                            $subtotal += $invItemAmount->getSubtotal() ?? 0.00;
-                            $taxTotal += $invItemAmount->getTax_total() ?? 0.00;
-                            $discount += $invItemAmount->getDiscount() ?? 0.00;
-                            $charge += $invItemAmount->getCharge() ?? 0.00;
+                            $subtotal  += $invItemAmount->getSubtotal()   ?? 0.00;
+                            $taxTotal  += $invItemAmount->getTax_total()  ?? 0.00;
+                            $discount  += $invItemAmount->getDiscount()   ?? 0.00;
+                            $charge    += $invItemAmount->getCharge()       ?? 0.00;
                             $allowance += $invItemAmount->getAllowance() ?? 0.00;
                         }
                     }
@@ -158,9 +132,6 @@ final readonly class InvAmountService
         }
     }
 
-    /**
-     * @param InvAmount $model
-     */
     public function deleteInvAmount(InvAmount $model): void
     {
         $this->repository->delete($model);

@@ -17,9 +17,8 @@ final class ApiDataWrapper implements MiddlewareInterface
     {
         $response = $handler->handle($request);
         if ($response instanceof DataResponse) {
-            /** @var mixed $data */
             $data = $response->getData();
-            if ($response->getStatusCode() !== 200) {
+            if (200 !== $response->getStatusCode()) {
                 if (is_string($data) && !empty($data)) {
                     $message = $data;
                 } else {
@@ -28,7 +27,7 @@ final class ApiDataWrapper implements MiddlewareInterface
 
                 return $response->withData([
                     'status' => 'failed',
-                    'error' => ['message' => $message, 'status' => $response->getStatusCode()],
+                    'error'  => ['message' => $message, 'status' => $response->getStatusCode()],
                 ]);
             }
 

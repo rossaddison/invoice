@@ -9,20 +9,16 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class PeppolDeliveryLocationIDNotFoundException extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getName(): string
     {
         return $this->translator->translate('delivery.location.id.not.found');
     }
 
-    /**
-     * @return string
-     */
     #[\Override]
     public function getSolution(): string
     {

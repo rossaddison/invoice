@@ -8,12 +8,10 @@ use App\Invoice\Entity\UserCustom;
 
 final readonly class UserCustomService
 {
-    public function __construct(private UserCustomRepository $repository) {}
+    public function __construct(private UserCustomRepository $repository)
+    {
+    }
 
-    /**
-     * @param UserCustom $model
-     * @param UserCustomForm $form
-     */
     public function saveUserCustom(UserCustom $model, UserCustomForm $form): void
     {
         if (null !== $form->getUser_id() && null !== $form->getFieldid()) {
@@ -24,9 +22,6 @@ final readonly class UserCustomService
         }
     }
 
-    /**
-     * @param UserCustom $model
-     */
     public function deleteUserCustom(UserCustom $model): void
     {
         $this->repository->delete($model);

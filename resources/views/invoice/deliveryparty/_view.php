@@ -6,7 +6,7 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
-/**
+/*
  * @var App\Widget\Button $button
  * @var App\Invoice\DeliveryParty\DeliveryPartyForm $form
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -18,29 +18,29 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Form::tag()
+<?php echo Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryPartyForm')
-    ->open() ?>
+    ->open(); ?>
 
-<?= Html::openTag('h1'); ?>
-    <?= Html::encode($title) ?>
-<?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>            
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?= Field::text($form, 'party_name')
-                    ->addInputAttributes(['style' => 'background:lightblue'])
-                    ->label($translator->translate('delivery.party.name'))
-                    ->value(Html::encode($form->getParty_name() ?? ''))
-                    ->readonly(true);
+<?php echo Html::openTag('h1'); ?>
+    <?php echo Html::encode($title); ?>
+<?php echo Html::closeTag('h1'); ?>
+<?php echo Html::openTag('div'); ?>
+    <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+        <?php echo Html::openTag('div', ['class' => 'row']); ?>            
+            <?php echo Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php echo Field::text($form, 'party_name')
+                ->addInputAttributes(['style' => 'background:lightblue'])
+                ->label($translator->translate('delivery.party.name'))
+                ->value(Html::encode($form->getParty_name() ?? ''))
+                ->readonly(true);
 ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= $button::backSave(); ?>
-<?= Form::tag()->close() ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>    
+    <?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>
+<?php echo $button::backSave(); ?>
+<?php echo Form::tag()->close(); ?>

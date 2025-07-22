@@ -13,42 +13,41 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @var App\Invoice\Helpers\DateHelper $dateHelper
- * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\GridComponents $gridComponents
+ * @var App\Invoice\Helpers\DateHelper         $dateHelper
+ * @var App\Invoice\Setting\SettingRepository  $s
+ * @var App\Widget\GridComponents              $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\CurrentRoute            $currentRoute
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
- * @var int $max
- * @var string $alert
- * @var string $csrf
- * @var string $label
+ * @var Yiisoft\Router\FastRoute\UrlGenerator  $urlGenerator
+ * @var int                                    $max
+ * @var string                                 $alert
+ * @var string                                 $csrf
+ * @var string                                 $label
  */
-
 echo $alert;
 ?>
 
 <?php
 $header = Div::tag()
-  ->addClass('row')
-  ->content(
-      H5::tag()
-    ->addClass('bg-primary text-white p-3 rounded-top')
+    ->addClass('row')
     ->content(
-        I::tag()->addClass('bi bi-receipt')
-      ->content(' ' . Html::encode($translator->translate('delivery'))),
-    ),
-  )
-  ->render();
+        H5::tag()
+            ->addClass('bg-primary text-white p-3 rounded-top')
+            ->content(
+                I::tag()->addClass('bi bi-receipt')
+                    ->content(' '.Html::encode($translator->translate('delivery'))),
+            ),
+    )
+    ->render();
 
 $toolbarReset = A::tag()
-  ->addAttributes(['type' => 'reset'])
-  ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-  ->href($urlGenerator->generate($currentRoute->getName() ?? 'delivery/index'))
-  ->id('btn-reset')
-  ->render();
+    ->addAttributes(['type' => 'reset'])
+    ->addClass('btn btn-danger me-1 ajax-loader')
+    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'delivery/index'))
+    ->id('btn-reset')
+    ->render();
 
 $toolbar = Div::tag();
 ?>
@@ -58,22 +57,22 @@ $toolbar = Div::tag();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn(Delivery $model) => Html::encode($model->getId()),
+            content: static fn (Delivery $model) => Html::encode($model->getId()),
         ),
         new DataColumn(
             'start_date',
             header: $translator->translate('start.date'),
-            content: static fn(Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? ''),
+            content: static fn (Delivery $model) => Html::encode($model->getStart_date()?->format('Y-m-d') ?? ''),
         ),
         new DataColumn(
             'actual_delivery_date',
             header: $translator->translate('delivery.actual.delivery.date'),
-            content: static fn(Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
+            content: static fn (Delivery $model) => Html::encode($model->getActual_delivery_date()?->format('Y-m-d') ?? ''),
         ),
         new DataColumn(
             'end_date',
             header: $translator->translate('end.date'),
-            content: static fn(Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? ''),
+            content: static fn (Delivery $model) => Html::encode($model->getEnd_date()?->format('Y-m-d') ?? ''),
         ),
         new DataColumn(
             content: static function (Delivery $model) use ($urlGenerator, $translator): string {
@@ -83,7 +82,7 @@ $toolbar = Div::tag();
         new DataColumn(
             'delivery_location_id',
             header: $translator->translate('delivery.location.global.location.number'),
-            content: static fn(Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
+            content: static fn (Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
         ),
     ];
 ?>
@@ -95,29 +94,28 @@ $grid_summary = $s->grid_summary(
     $translator->translate('deliveries'),
     '',
 );
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open().
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render().
     Form::tag()->close();
 echo GridView::widget()
-->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
-->columns(...$columns)
-->dataReader($paginator)
-->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
-->id('w14-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
-->toolbar($toolbarString);
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
+    ->columns(...$columns)
+    ->dataReader($paginator)
+    ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+    ->header($header)
+    ->id('w14-grid')
+    ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+    ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+    ->summaryTemplate($grid_summary)
+    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
+    ->emptyText($translator->translate('no.records'))
+    ->toolbar($toolbarString);
 
 $pageSize = $paginator->getCurrentPageSize();
 if ($pageSize > 0) {
     echo Html::p(
-        sprintf($translator->translate('index.footer.showing') . ' deliveries: Max ' . (string) $max . ' deliveries per page: Total Deliveries ' . (string) $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()),
+        sprintf($translator->translate('index.footer.showing').' deliveries: Max '.(string) $max.' deliveries per page: Total Deliveries '.(string) $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()),
         ['class' => 'text-muted'],
     );
 } else {

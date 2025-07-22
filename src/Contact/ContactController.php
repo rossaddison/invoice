@@ -23,14 +23,9 @@ final class ContactController
     ) {
         $this->viewRenderer = $viewRenderer
             ->withControllerName('contact')
-            ->withViewPath(__DIR__ . '/views');
+            ->withViewPath(__DIR__.'/views');
     }
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function interest(
         FormHydrator $formHydrator,
         ServerRequestInterface $request,

@@ -8,12 +8,10 @@ use App\Invoice\Entity\PostalAddress;
 
 final readonly class PostalAddressService
 {
-    public function __construct(private PostalAddressRepository $repository) {}
+    public function __construct(private PostalAddressRepository $repository)
+    {
+    }
 
-    /**
-     * @param PostalAddress $model
-     * @param array $array
-     */
     public function savePostalAddress(PostalAddress $model, array $array): void
     {
         isset($array['id']) ? $model->setId((int) $array['id']) : '';

@@ -9,7 +9,6 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\UnitPeppol\UnitPeppolRepository::class)]
-
 class UnitPeppol
 {
     #[BelongsTo(target: Unit::class, nullable: false, fkAction: 'NO ACTION')]
@@ -20,7 +19,9 @@ class UnitPeppol
         private ?int $unit_id = null, #[Column(type: 'string(3)', nullable: false)]
         private string $code = '', #[Column(type: 'string(120)', nullable: false)]
         private string $name = '', #[Column(type: 'longText', nullable: false)]
-        private string $description = '') {}
+        private string $description = '')
+    {
+    }
 
     public function getUnit(): ?Unit
     {

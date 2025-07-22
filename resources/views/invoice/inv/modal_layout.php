@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 
-/**
+/*
  * @see App\Widget\Bootstrap5ModalInv $this->layoutParameters['form']
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $form
@@ -12,28 +12,28 @@ use Yiisoft\Html\Html;
  */
 
 ?>
-<?= Html::openTag('div', [
-    'id' => 'modal-add-' . $type,
-    'class' => 'modal',
+<?php echo Html::openTag('div', [
+    'id'        => 'modal-add-'.$type,
+    'class'     => 'modal',
     'tab-index' => '-1']); ?>
-    <?= Html::openTag('div', ['class' => 'modal-dialog']); ?>
-        <?= Html::openTag('div', ['class' => 'modal-content']); ?>
-            <?= Html::openTag('div', ['class' => 'modal-header']); ?>
-                <?= Html::openTag('h5', ['class' => 'modal-title']); ?>
-                    <?= Html::openTag(
+    <?php echo Html::openTag('div', ['class' => 'modal-dialog']); ?>
+        <?php echo Html::openTag('div', ['class' => 'modal-content']); ?>
+            <?php echo Html::openTag('div', ['class' => 'modal-header']); ?>
+                <?php echo Html::openTag('h5', ['class' => 'modal-title']); ?>
+                    <?php echo Html::openTag(
                         'button',
-                        ['class' => 'btn btn-light',
-                            'type' => 'button',
+                        ['class'              => 'btn btn-light',
+                            'type'            => 'button',
                             'data-bs-dismiss' => 'modal',
                         ],
                     ); ?>
-                        <?= '❌'; ?>        
-                    <?= Html::closeTag('button'); ?>
-                <?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'modal-body']); ?>
+                        <?php echo '❌'; ?>        
+                    <?php echo Html::closeTag('button'); ?>
+                <?php echo Html::closeTag('h5'); ?>
+            <?php echo Html::closeTag('div'); ?>
+            <?php echo Html::openTag('div', ['class' => 'modal-body']); ?>
                 <?php echo $form; ?>    
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+            <?php echo Html::closeTag('div'); ?>
+        <?php echo Html::closeTag('div'); ?>
+    <?php echo Html::closeTag('div'); ?>
+<?php echo Html::closeTag('div'); ?>

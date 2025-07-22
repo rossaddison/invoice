@@ -19,29 +19,27 @@ final class UnitForm extends FormModel
 
     public function __construct(Unit $unit)
     {
-        $this->unit_id = $unit->getUnit_id();
-        $this->unit_name = $unit->getUnit_name();
+        $this->unit_id        = $unit->getUnit_id();
+        $this->unit_name      = $unit->getUnit_name();
         $this->unit_name_plrl = $unit->getUnit_name_plrl();
     }
 
-    public function getUnit_id(): int|null
+    public function getUnit_id(): ?int
     {
         return $this->unit_id;
     }
 
-    public function getUnit_name(): string|null
+    public function getUnit_name(): ?string
     {
         return $this->unit_name;
     }
 
-    public function getUnit_name_plrl(): string|null
+    public function getUnit_name_plrl(): ?string
     {
         return $this->unit_name_plrl;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

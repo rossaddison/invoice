@@ -5,21 +5,22 @@ use Yiisoft\Html\Html;
 
 /**
  * @see App\Invoice\Product\ProductController function view $parameters['partial_product_properties']
- * @var App\Invoice\Entity\Product $product
+ *
+ * @var App\Invoice\Entity\Product             $product
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var string $language
- * @var string $productpropertys
+ * @var Yiisoft\Router\UrlGeneratorInterface   $urlGenerator
+ * @var string                                 $language
+ * @var string                                 $productpropertys
+ *
  * @psalm-var array<string, Stringable|null|scalar> $languageArgument
  * @psalm-var array<array-key, array<array-key, string>|string> $productPropertyArguments
  */
-
-$languageArgument = ['_language' => $language];
+$languageArgument         = ['_language' => $language];
 $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_language' => $language];
 ?>
 <div>
 <label class="btn btn-info">
-    <?= Html::a(
+    <?php echo Html::a(
         $translator->translate('product.property.table'),
         $urlGenerator->generate(
             'productproperty/index',
@@ -28,7 +29,7 @@ $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_langua
         ['style' => 'text-decoration:none'],
     ); ?>
 </label>
-    <?= Html::a(
+    <?php echo Html::a(
         $translator->translate('product.property'),
         $urlGenerator->generate(
             'productproperty/add',
@@ -39,5 +40,5 @@ $productPropertyArguments = ['product_id' => $product->getProduct_id(), '_langua
 </div>
 <br>
 <div class="table-responsive btn btn-info">
-     <?= $productpropertys; ?>
+     <?php echo $productpropertys; ?>
 </div>    

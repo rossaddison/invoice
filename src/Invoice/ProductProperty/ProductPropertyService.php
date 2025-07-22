@@ -8,12 +8,10 @@ use App\Invoice\Entity\ProductProperty;
 
 final readonly class ProductPropertyService
 {
-    public function __construct(private ProductPropertyRepository $repository) {}
+    public function __construct(private ProductPropertyRepository $repository)
+    {
+    }
 
-    /**
-     * @param ProductProperty $model
-     * @param array $array
-     */
     public function saveProductProperty(ProductProperty $model, array $array): void
     {
         $model->nullifyRelationOnChange((int) $array['product_id']);
@@ -23,9 +21,6 @@ final readonly class ProductPropertyService
         $this->repository->save($model);
     }
 
-    /**
-     * @param ProductProperty $model
-     */
     public function deleteProductProperty(ProductProperty $model): void
     {
         $this->repository->delete($model);

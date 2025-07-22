@@ -9,7 +9,6 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\ClientPeppol\ClientPeppolRepository::class)]
-
 class ClientPeppol
 {
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
@@ -31,7 +30,9 @@ class ClientPeppol
         private string $financial_institution_branchid = '', #[Column(type: 'string(30)', nullable: false)]
         private string $accounting_cost = '', #[Column(type: 'string(20)', nullable: false)]
         private string $supplier_assigned_accountid = '', #[Column(type: 'string(20)', nullable: false)]
-        private string $buyer_reference = '') {}
+        private string $buyer_reference = '')
+    {
+    }
 
     public function getClient(): ?Client
     {

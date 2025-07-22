@@ -26,35 +26,33 @@ final class GeneratorRelationForm extends FormModel
 
     public function __construct(GentorRelation $gentorRelation)
     {
-        $this->lowercasename = $gentorRelation->getLowercase_name();
-        $this->camelcasename = $gentorRelation->getCamelcase_name();
+        $this->lowercasename   = $gentorRelation->getLowercase_name();
+        $this->camelcasename   = $gentorRelation->getCamelcase_name();
         $this->view_field_name = $gentorRelation->getView_field_name();
-        $this->gentor_id = $gentorRelation->getGentor_id();
+        $this->gentor_id       = $gentorRelation->getGentor_id();
     }
 
-    public function getLowercase_name(): string|null
+    public function getLowercase_name(): ?string
     {
         return $this->lowercasename;
     }
 
-    public function getCamelcase_name(): string|null
+    public function getCamelcase_name(): ?string
     {
         return $this->camelcasename;
     }
 
-    public function getView_field_name(): string|null
+    public function getView_field_name(): ?string
     {
         return $this->view_field_name;
     }
 
-    public function getGentor_id(): int|null
+    public function getGentor_id(): ?int
     {
         return $this->gentor_id;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

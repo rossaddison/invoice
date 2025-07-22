@@ -7,11 +7,11 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Table;
-use Yiisoft\Html\Tag\Tr;
-use Yiisoft\Html\Tag\Thead;
 use Yiisoft\Html\Tag\Td;
+use Yiisoft\Html\Tag\Thead;
+use Yiisoft\Html\Tag\Tr;
 
-/**
+/*
  * @var array $codes
  * @var string $csrf
  * @var string|null $error
@@ -30,10 +30,10 @@ use Yiisoft\Html\Tag\Td;
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card border border-dark shadow-2-strong rounded-3">                
                 <div class="card-header bg-dark text-white">
-                    <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication'); ?></h5>
+                    <h5 class="fw-normal h3 text-center"><?php echo $translator->translate('two.factor.authentication'); ?></h5>
                 </div>
                 <div class="card-body p-2 text-center">
-                    <h6><?= $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
+                    <h6><?php echo $translator->translate('two.factor.authentication.new.six.digit.code'); ?></h6>
                 </div>
                 <div class="card-body p-2 text-center">
                     <?php
@@ -97,47 +97,47 @@ if (!empty($codes)) {
 }
 ?>
                     <?php
-    $button = new Button($currentRoute, $translator, $urlGenerator);
+    $button         = new Button($currentRoute, $translator, $urlGenerator);
 $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
 echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
 ?>
                 </div>    
                 <div class="card-body p-2 text-center">    
-                    <?= Form::tag()
-    ->post($urlGenerator->generate('auth/verifyLogin'))
-    ->class('form-floating')
-    ->csrf($csrf)
-    ->id('twoFactorAuthenticationVerfiyForm')
-    ->open(); ?>
-                    <?= Field::text($formModel, 'code')
-    ->addInputAttributes(
-        [
-            'autocomplete' => 'current-code',
-            'id' => 'code',
-            'name' => 'code',
-            'minlength' => 6,
-            // otp = 6 digits, backup recovery code = 8 digits
-            'maxlength' => 8,
-            'type' => 'tel',
-        ],
-    )
-    ->error($error ?? '')
-    ->required(true)
-    ->inputClass('form-control')
-    ->label($translator->translate('layout.password.otp.6.8'))
-    ->autofocus();
+                    <?php echo Form::tag()
+                        ->post($urlGenerator->generate('auth/verifyLogin'))
+                        ->class('form-floating')
+                        ->csrf($csrf)
+                        ->id('twoFactorAuthenticationVerfiyForm')
+                        ->open(); ?>
+                    <?php echo Field::text($formModel, 'code')
+                        ->addInputAttributes(
+                            [
+                                'autocomplete' => 'current-code',
+                                'id'           => 'code',
+                                'name'         => 'code',
+                                'minlength'    => 6,
+                                // otp = 6 digits, backup recovery code = 8 digits
+                                'maxlength' => 8,
+                                'type'      => 'tel',
+                            ],
+                        )
+                        ->error($error ?? '')
+                        ->required(true)
+                        ->inputClass('form-control')
+                        ->label($translator->translate('layout.password.otp.6.8'))
+                        ->autofocus();
 ?>
-                    <?= Field::submitButton()
+                    <?php echo Field::submitButton()
     ->buttonId('code-button')
     ->buttonClass('btn btn-primary')
     ->name('code-button')
-    ->content($translator->translate('layout.submit')) ?>
-                    <?= Form::tag()->close() ?>
+    ->content($translator->translate('layout.submit')); ?>
+                    <?php echo Form::tag()->close(); ?>
                 </div>
                 <div class="card-body p-1 text-center">
-                    <?php for ($i = 1; $i <= 9; $i++): ?>
-                        <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="<?= $i ?>"><?= $i ?></button>
-                    <?php endfor; ?>
+                    <?php for ($i = 1; $i <= 9; ++$i) { ?>
+                        <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="<?php echo $i; ?>"><?php echo $i; ?></button>
+                    <?php } ?>
                     <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="0">0</button>
                     <button type="button" class="btn btn-info btn-sm btn-clear-otp">Clear</button>
                 </div>

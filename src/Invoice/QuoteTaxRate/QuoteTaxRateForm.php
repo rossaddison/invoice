@@ -12,29 +12,29 @@ final class QuoteTaxRateForm extends FormModel
 {
     private ?int $quote_id = null;
     #[Required]
-    private ?int $tax_rate_id = null;
-    private ?int $include_item_tax = null;
+    private ?int $tax_rate_id             = null;
+    private ?int $include_item_tax        = null;
     private ?float $quote_tax_rate_amount = null;
 
     public function __construct(QuoteTaxRate $quoteTaxRate)
     {
-        $this->quote_id = (int) $quoteTaxRate->getQuote_id();
-        $this->tax_rate_id = (int) $quoteTaxRate->getTax_rate_id();
-        $this->include_item_tax = $quoteTaxRate->getInclude_item_tax();
+        $this->quote_id              = (int) $quoteTaxRate->getQuote_id();
+        $this->tax_rate_id           = (int) $quoteTaxRate->getTax_rate_id();
+        $this->include_item_tax      = $quoteTaxRate->getInclude_item_tax();
         $this->quote_tax_rate_amount = $quoteTaxRate->getQuote_tax_rate_amount();
     }
 
-    public function getQuote_id(): int|null
+    public function getQuote_id(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getTax_rate_id(): int|null
+    public function getTax_rate_id(): ?int
     {
         return $this->tax_rate_id;
     }
 
-    public function getInclude_item_tax(): int|null
+    public function getInclude_item_tax(): ?int
     {
         return $this->include_item_tax;
     }
@@ -45,8 +45,6 @@ final class QuoteTaxRateForm extends FormModel
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]

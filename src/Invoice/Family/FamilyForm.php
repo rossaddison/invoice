@@ -19,8 +19,8 @@ final class FamilyForm extends FormModel
 
     public function __construct(Family $family)
     {
-        $this->family_name = $family->getFamily_name();
-        $this->category_primary_id = $family->getCategory_primary_id();
+        $this->family_name           = $family->getFamily_name();
+        $this->category_primary_id   = $family->getCategory_primary_id();
         $this->category_secondary_id = $family->getCategory_secondary_id();
     }
 
@@ -40,8 +40,6 @@ final class FamilyForm extends FormModel
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     #[\Override]
