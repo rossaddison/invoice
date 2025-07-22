@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @see QuoteController function view $parameters['add_quote_item']['actionName' => 'quoteitem/add']
- * @see QuoteItemController function add
+ * Related logic: see QuoteController function view $parameters['add_quote_item']['actionName' => 'quoteitem/add']
+ * Related logic: see QuoteItemController function add
  * @var App\Invoice\QuoteItem\QuoteItemForm $form
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s

@@ -97,10 +97,10 @@ return [
     ],
 
     /**
-   * @see src/Invoice/Setting/SettingRepository function getOauth2IdentityProviderConfigParamsClientsArray()
-   * @see App\Widgets\Button function facebook, github, google
-   * @see App\Auth\Controller\AuthController function login
-   * @see resources\views\auth\login.php
+   * Related logic: see src/Invoice/Setting/SettingRepository function getOauth2IdentityProviderConfigParamsClientsArray()
+   * Related logic: see App\Widgets\Button function facebook, github, google
+   * Related logic: see App\Auth\Controller\AuthController function login
+   * Related logic: see resources\views\auth\login.php
    */
     'yiisoft/yii-auth-client' => [
         'enabled' => true,
@@ -148,7 +148,7 @@ return [
                 'returnUrl' => $_ENV['MICROSOFTONLINE_API_CLIENT_RETURN_URL'] ?? '',
                 /**
                * tenant can be one of 'common', 'organisations', 'consumers', or a tenant ID
-               * @see https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
+               * Related logic: see https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
                */
                 'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common',
             ],
@@ -213,7 +213,7 @@ return [
                 'labelClass' => 'floatingInput h6',
                 'errorClass' => 'fw-bold fst-italic badge bg-danger text-wrap',
                 /**
-                * @see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
+                * Related logic: see resources/views/invoice/product/_form.php and adjust the h6 below to h1 and see the effect
                 */
                 'hintClass' => 'text-danger h4',
                 'fieldConfigs' => [
@@ -332,7 +332,7 @@ return [
         'secretKey' => '53136271c432a1af377c3806c3112ddf',
     ],
     // works in association with yiisoft/yii-debug-viewer which is not installed
-    // @see blog/common/config/di/router.php  which relies on Yiisoft\Yii\Debug\Viewer\Middleware\ToolbarMiddleware
+    // Related logic: see blog/common/config/di/router.php  which relies on Yiisoft\Yii\Debug\Viewer\Middleware\ToolbarMiddleware
     'yiisoft/yii-debug' => [
         'enabled' => false,
     ],
@@ -385,8 +385,8 @@ return [
             'safe' => false,
         ],
         /**
-         * SchemaProvider list for {@see \Yiisoft\Yii\Cycle\Schema\Provider\Support\SchemaProviderPipeline}
-         * Array of classname and {@see SchemaProviderInterface} object.
+         * SchemaProvider list for {Related logic: see \Yiisoft\Yii\Cycle\Schema\Provider\Support\SchemaProviderPipeline}
+         * Array of classname and {Related logic: see SchemaProviderInterface} object.
          * You can configure providers if you pass classname as key and parameters as array:
          * [
          *     SimpleCacheSchemaProvider::class => [
@@ -428,9 +428,9 @@ return [
             ],
         ],
         /**
-     * Config for {@see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
+     * Config for {Related logic: see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
      * Annotated entity directories list.
-     * {@see \Yiisoft\Aliases\Aliases} are also supported.
+     * {Related logic: see \Yiisoft\Aliases\Aliases} are also supported.
      */
         'entity-paths' => [
             '@src',
@@ -462,7 +462,7 @@ return [
         'esmtpTransport' => [
             /**
        * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/config/params.php
-       * @see SettingRepository function config_params()
+       * Related logic: see SettingRepository function config_params()
        */
             'enabled' => true,
             'useSendMail' => false,
@@ -472,9 +472,9 @@ return [
             'username' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '',
             /**
        * Avoid the use of hard-coded credentials
-       * @see https://cwe.mitre.org/data/definitions/798.html
-       * @see The .env file in the root folder
-       * @see https://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
+       * Related logic: see https://cwe.mitre.org/data/definitions/798.html
+       * Related logic: see The .env file in the root folder
+       * Related logic: see https://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
        */
             'password' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_PASSWORD') ?? '',
             'options' => [], // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
@@ -536,7 +536,7 @@ return [
     // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/
     // Note: Invoices in the UK can be made out in a foreign currency eg. EUR => $documentCurrencyCode with a foreign language of choice;
     //       However it is mandatory/must according to the UK, and according to Peppol to provide
-    //       an equivalent/equal VAT amount with the local currency code ie. GBP, namely @see TaxCurrencyCode on the invoice
+    //       an equivalent/equal VAT amount with the local currency code ie. GBP, namely Related logic: see TaxCurrencyCode on the invoice
     'peppol' => [
         'invoice' => [
             'CustomizationID' => 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
@@ -544,11 +544,11 @@ return [
             'InvoiceTypeCode' => '380',
             'Note' => 'Please use our latest telephone number',
             /**
-       * @see $settingRepository->getSetting('currency_code_to')
+       * Related logic: see $settingRepository->getSetting('currency_code_to')
        */
             //'DocumentCurrencyCode' => 'EUR',
             /**
-       * @see $settingRepository->getSetting('currency_code_from')
+       * Related logic: see $settingRepository->getSetting('currency_code_from')
        */
             'TaxCurrencyCode' => 'GBP',
             'AccountingSupplierParty' => [
@@ -618,9 +618,9 @@ return [
                         'RegistrationName' => 'Full Formal Seller Name LTD.',
                         'CompanyID' => '987654321',
                         /**
-             * @see src/Invoice/Ubl/PartyLegalEntity
-             * @see src/Invoice/Setting/SettingRepository function get_config_peppol
-             * @see src/Invoice/Helpers/PeppolHelper function SupplierPartyLegalEntity()
+             * Related logic: see src/Invoice/Ubl/PartyLegalEntity
+             * Related logic: see src/Invoice/Setting/SettingRepository function get_config_peppol
+             * Related logic: see src/Invoice/Helpers/PeppolHelper function SupplierPartyLegalEntity()
              */
                         'Attributes' => [
                             'schemeID' => '0002',

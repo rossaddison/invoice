@@ -83,7 +83,7 @@ final class SignupController
         private CurrentRoute $currentRoute,
         private LoggerInterface $logger,
     ) {
-        // @see yiisoft/rbac-php
+        // Related logic: see yiisoft/rbac-php
         $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
         $this->session = $session;
@@ -124,8 +124,8 @@ final class SignupController
     }
 
     /**
-     * @see src\ViewInjection\CommonViewInjection.php
-     * @see resources\views\site\signupfailed.php and signupsuccess.php
+     * Related logic: see src\ViewInjection\CommonViewInjection.php
+     * Related logic: see resources\views\site\signupfailed.php and signupsuccess.php
      *
      * @param AuthService $authService
      * @param CurrentRoute $currentRoute
@@ -177,10 +177,10 @@ final class SignupController
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getEmailVerificationToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  * For additional headers to strengthen security refer to:
-                 * @see https://en.wikipedia.org/wiki/Email#Message_format
-                 * @see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
+                 * Related logic: see https://en.wikipedia.org/wiki/Email#Message_format
+                 * Related logic: see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
                  */
                 $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $uiR, $language, $_language, $randomAndTimeToken);
                 if (($this->sR->getSetting('email_send_method') == 'symfony') || ($this->sR->mailerEnabled() == true)) {

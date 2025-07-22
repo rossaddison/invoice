@@ -135,7 +135,7 @@ final class SettingController extends BaseController
             /**
              * Make the 'general' tab active by default unless through an outside urlGenerator query Parameter e.g.
              * http://invoice.myhost/invoice/setting/tab_index?active=mpdf
-             * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]')
+             * Related logic: see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/setting/tab_index[/{active:\d+}]')
              */
             'active' => $active ?? 'front-page',
             'alert' => $this->alert(),
@@ -289,8 +289,8 @@ final class SettingController extends BaseController
     }
 
     /**
-     * @see src\Invoice\Asset\rebuild\js\setting.js
-     * @see resources\views\invoice\setting\views\partial_settings_making_tax_digital.php btn_fph_generate
+     * Related logic: see src\Invoice\Asset\rebuild\js\setting.js
+     * Related logic: see resources\views\invoice\setting\views\partial_settings_making_tax_digital.php btn_fph_generate
      * @param Request $request
      * @return \Yiisoft\DataResponse\DataResponse
      */
@@ -422,7 +422,7 @@ final class SettingController extends BaseController
     /**
      * Use: Toggle between draft invoice has 1. invoice number generated or 2. no Invoice number generated
      * Route name: setting/draft route action setting/inv_draft_has_number_switch
-     * @see /config/common/routes.php
+     * Related logic: see /config/common/routes.php
      * @param CurrentRoute $currentRoute
      * @return Response
      */
@@ -449,7 +449,7 @@ final class SettingController extends BaseController
      * Use: Toggle between 1. On (Development) or 2. Off (Production) on the flash message under invoice/index
      * Location: Settings ... View ... Invoices ... Other Settings ... Mark invoices as sent when copying an invoice
      * Route name: setting/mark_sent route action setting/mark_sent
-     * @see /config/common/routes.php
+     * Related logic: see /config/common/routes.php
      * @param CurrentRoute $currentRoute
      * @return Response
      */
@@ -473,8 +473,8 @@ final class SettingController extends BaseController
 
     /**
      * Purpose: Save the users toggle button choice on flash message: 'Assign a client to a user automatically after signup'
-     * @see App\Widget\Button static function setOrUnsetAssignClientToUserAutomatically
-     * @see src\Invoice\UserInv\UserInvController function signup
+     * Related logic: see App\Widget\Button static function setOrUnsetAssignClientToUserAutomatically
+     * Related logic: see src\Invoice\UserInv\UserInvController function signup
      * @return Response
      */
     public function auto_client(): Response

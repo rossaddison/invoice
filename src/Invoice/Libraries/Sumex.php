@@ -188,7 +188,7 @@ final class Sumex
         $this->_company['rcc'] = $this->user_details->getRcc();
 
         /**
-         * @see App\Invoice\Entity\Sumex public function getCasedate(): DateTimeImmutable|string|null
+         * Related logic: see App\Invoice\Entity\Sumex public function getCasedate(): DateTimeImmutable|string|null
          */
 
         $datetimeimmutable = $this->sumex_treatment->getCasedate() ?? new DateTimeImmutable('now');

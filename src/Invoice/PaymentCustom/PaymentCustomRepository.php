@@ -53,7 +53,7 @@ final class PaymentCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentCustom|null $paymentcustom
      * @throws Throwable
      */
@@ -63,7 +63,7 @@ final class PaymentCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PaymentCustom|null $paymentcustom
      * @throws Throwable
      */

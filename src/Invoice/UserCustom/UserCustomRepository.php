@@ -52,7 +52,7 @@ final class UserCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserCustom|null $usercustom
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class UserCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserCustom|null $usercustom
      * @throws Throwable
      */

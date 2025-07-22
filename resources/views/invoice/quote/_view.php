@@ -14,7 +14,7 @@ use App\Widget\LabelSwitch;
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  *
- * @see $quoteForm is necessary for customValuesHelper viewing custom fields and is not used for input
+ * Related logic: see $quoteForm is necessary for customValuesHelper viewing custom fields and is not used for input
  * @var App\Invoice\Quote\QuoteForm $quoteForm
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator

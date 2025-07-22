@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see id="modal-change-client" triggered by <a href="#modal-change-client"> inv\view
+ * Related logic: see id="modal-change-client" triggered by <a href="#modal-change-client"> inv\view
  * @var App\Invoice\Entity\Inv $inv
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator

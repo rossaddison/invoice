@@ -8,7 +8,7 @@ use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
- * @see https://github.com/yiisoft/yii-dataview/blob/master/tests/DetailView/Bootstrap5Test.php
+ * Related logic: see https://github.com/yiisoft/yii-dataview/blob/master/tests/DetailView/Bootstrap5Test.php
  * @var App\User\User $item
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this

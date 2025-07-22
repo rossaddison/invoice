@@ -52,7 +52,7 @@ final class ClientNoteRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientNote|null $clientnote
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class ClientNoteRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientNote|null $clientnote
      * @throws Throwable
      */

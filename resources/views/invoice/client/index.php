@@ -128,7 +128,7 @@ $columns = [
         content: static function (Client $model) use ($dateHelper): string {
             $clientBirthDate = $model->getClient_birthdate();
             /**
-             * @see App\Invoice\Entity\Client function getClient_birthdate()
+             * Related logic: see App\Invoice\Entity\Client function getClient_birthdate()
              */
             if (null !== $clientBirthDate && !is_string($clientBirthDate)) {
                 return Html::encode($clientBirthDate->format('Y-m-d'));
@@ -152,8 +152,8 @@ $columns = [
                 $invoices = $iR->findAllWithClient($clientId);
                 /**
                  *  Initialize the ArrayCollection
-                 *  @see Doctrine\Common\Collections\ArrayCollection
-                 *  @see src\Invoice\Entity\Client function setInvs()
+                 *  Related logic: see Doctrine\Common\Collections\ArrayCollection
+                 *  Related logic: see src\Invoice\Entity\Client function setInvs()
                  */
                 $model->setInvs();
                 /**
@@ -168,7 +168,7 @@ $columns = [
                 }
                 /**
                  * Use the ArrayCollection count method to determine how many invoices there are for this client
-                 * @see \vendor\doctrine\Common\Collections\ArrayCollection count method;
+                 * Related logic: see \vendor\doctrine\Common\Collections\ArrayCollection count method;
                  */
                 return $model->getInvs()->count();
             }

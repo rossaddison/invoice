@@ -9,7 +9,7 @@ declare(strict_types=1);
  * Existing url's for a 'terms of service' page, and a 'privacy policy' page,
  * are necessary to develop many of the Oauth2.0 clients
  *
- * @see ViewInjection\CommonViewInjection
+ * Related logic: see ViewInjection\CommonViewInjection
  *
  * @var string $arbitrationBody
  * @var string $arbitrationJurisdiction

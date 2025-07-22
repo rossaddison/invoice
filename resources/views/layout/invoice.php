@@ -27,7 +27,7 @@ use Yiisoft\Bootstrap5\Offcanvas;
 use Yiisoft\Bootstrap5\OffcanvasPlacement;
 
 /**
- * @see ...src\ViewInjection\LayoutViewInjection
+ * Related logic: see ...src\ViewInjection\LayoutViewInjection
  * @var Psr\Http\Message\ServerRequestInterface $request
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\SubMenu $subMenu
@@ -56,7 +56,7 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
  * @var string $read_write
  * @var string $scrutinizerRepository
  *
- * @see ...src\ViewInjection\LayoutViewInjection.php
+ * Related logic: see ...src\ViewInjection\LayoutViewInjection.php
  * @var string $userLogin
  *
  * @var string $xdebug
@@ -113,7 +113,7 @@ $this->addJsVars($assetManager->getJsVars());
 
 // Platform, Performance, and Clear Assets Cache, and links Menu will disappear if set to false;
 /**
- * @see src\ViewInjection\LayoutViewInjection.php $debugMode
+ * Related logic: see src\ViewInjection\LayoutViewInjection.php $debugMode
  */
 $this->beginPage();
 ?>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
-* @see GeneratorController function entity
+* Related logic: see GeneratorController function entity
 * @var App\Invoice\Entity\Gentor $generator
 * @var Cycle\Database\Table $orm_schema
 * @var array $relations
@@ -20,7 +20,7 @@ namespace <?= $generator->getNamespace_path() . '\Entity'; ?>;
 <?php
 
 /**
- * @see The namespace path normally begins with 'App' so alphabetically first
+ * Related logic: see The namespace path normally begins with 'App' so alphabetically first
  * @var App\Invoice\Entity\GentorRelation $relation
  */
 foreach ($relations as $relation) {
@@ -304,7 +304,7 @@ foreach ($orm_schema->getColumns() as $column) {
         echo '    return (string)$this->' . $column->getName() . ';' . "\n";
     } else {
         /**
-         * @see Entity/Client
+         * Related logic: see Entity/Client
          * mySql 'date' interpreted as DateTimeImmutable or string or null i.e. mixed with Cycle
          * Preferable to specifically use 'DateTimeImmutable|string|null' instead of 'mixed'
          * so as to define what variables make up the 'mixed'
@@ -342,8 +342,8 @@ foreach ($orm_schema->getColumns() as $column) {
     
     /**
      * Make sure the sequence of parameters is correct
-     * @see https://github.com/yiisoft/demo/issues/462 
-     * @see e.g. Entity\Product.php which has 3 relations tax_rate, unit, and family
+     * Related logic: see https://github.com/yiisoft/demo/issues/462 
+     * Related logic: see e.g. Entity\Product.php which has 3 relations tax_rate, unit, and family
      */
     public function nullifyRelationOnChange(<?= $final_string; ?>) : void 
     {

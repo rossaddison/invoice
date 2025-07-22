@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @see Test by adding an attachment to an invoice
+ * Related logic: see Test by adding an attachment to an invoice
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf

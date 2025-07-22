@@ -54,7 +54,7 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Task|null $task
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Task|null $task
      * @throws Throwable
      */

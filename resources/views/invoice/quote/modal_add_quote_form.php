@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @see src\Widget\Bootstrap5ModalQuote renderPartialLayoutWithFormAsString $this->formParameters
- * @see quote\modal_layout which accepts this form via 'quote\add' controller action
+ * Related logic: see src\Widget\Bootstrap5ModalQuote renderPartialLayoutWithFormAsString $this->formParameters
+ * Related logic: see quote\modal_layout which accepts this form via 'quote\add' controller action
  */
 
 use Yiisoft\FormModel\Field;

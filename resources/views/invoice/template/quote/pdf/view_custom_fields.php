@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @see This will appear at the bottom of pdf\quote.php
- * @see App\Invoice\Helpers\PdfHelper function generate_quote_html
+ * Related logic: see This will appear at the bottom of pdf\quote.php
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generate_quote_html
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator

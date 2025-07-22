@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @see This will appear at the bottom of pdf\salesorder.php
- * @see App\Invoice\Helpers\PdfHelper function generate_salesorder_pdf
+ * Related logic: see This will appear at the bottom of pdf\salesorder.php
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generate_salesorder_pdf
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator

@@ -52,7 +52,7 @@ final class SumexRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Sumex|null $sumex
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class SumexRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Sumex|null $sumex
      * @throws Throwable
      */

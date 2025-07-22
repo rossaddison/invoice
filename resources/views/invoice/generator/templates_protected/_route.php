@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see GeneratorController function _route
+ * Related logic: see GeneratorController function _route
  * @var App\Invoice\Entity\Gentor $generator
  *
  */

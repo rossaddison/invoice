@@ -406,7 +406,7 @@ final class PaymentController extends BaseController
     }
 
     /**
-     * @see Only return the form if there are errors otherwise return null
+     * Related logic: see Only return the form if there are errors otherwise return null
      * @param array $body
      * @return PaymentForm|null
      */
@@ -504,7 +504,7 @@ final class PaymentController extends BaseController
             $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
-            // Determine what clients have been allocated to this user (@see Settings...User Account)
+            // Determine what clients have been allocated to this user (Related logic: see Settings...User Account)
             // by looking at UserClient table
             // eg. If the user is a guest-accountant, they will have been allocated certain clients
             // A user-quest-accountant will be allocated a series of clients
@@ -591,7 +591,7 @@ final class PaymentController extends BaseController
              ->withCurrentPage($currentPageNeverZero)
              ->withToken(PageToken::next((string) $page));
             // No need for rbac here since the route accessChecker for payment/online_log
-            // includes 'viewPayment' @see config/routes.php
+            // includes 'viewPayment' Related logic: see config/routes.php
             $parameters = [
                 'alert' => $this->alert(),
                 'page' => $page,
@@ -748,7 +748,7 @@ final class PaymentController extends BaseController
          ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log
-        // includes 'viewPayment' @see config/routes.php
+        // includes 'viewPayment' Related logic: see config/routes.php
         $parameters = [
             'alert' => $this->alert(),
             'page' => $page,

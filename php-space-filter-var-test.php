@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
-     * @see https://www.php.net/manual/en/function.filter-var.php divinity76 at gmail dot com
+     * Related logic: see https://www.php.net/manual/en/function.filter-var.php divinity76 at gmail dot com
      * Testing various values that may be input as an environment variable in a .env file using 'filter_var'
      * To test run on the command line e.g. C:\wamp64\www\invoice>php php-space-filter-var-test.php
      */

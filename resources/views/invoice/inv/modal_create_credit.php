@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see InvController function view_modal_create_credit
+ * Related logic: see InvController function view_modal_create_credit
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s

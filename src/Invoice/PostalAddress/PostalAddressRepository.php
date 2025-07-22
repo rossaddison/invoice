@@ -55,7 +55,7 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PostalAddress|null $postaladdress
      * @psalm-param TEntity $postaladdress
      * @throws Throwable
@@ -66,7 +66,7 @@ final class PostalAddressRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|PostalAddress|null $postaladdress
 
      * @throws Throwable

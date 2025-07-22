@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see ...src\Invoice\Product\ProductController function view_partial_product_image
+ * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image
  * @var App\Invoice\Product\ImageAttachForm $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see GeneratorController function controller
+ * Related logic: see GeneratorController function controller
  * @var App\Invoice\Entity\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations

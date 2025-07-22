@@ -55,7 +55,7 @@ final class FromDropDownRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|FromDropDown|null $from
      * @psalm-param TEntity $from
      * @throws Throwable
@@ -66,7 +66,7 @@ final class FromDropDownRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|FromDropDown|null $from
 
      * @throws Throwable

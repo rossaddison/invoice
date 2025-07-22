@@ -17,7 +17,7 @@ final class AllowanceChargeForm extends FormModel
     private ?bool $identifier = false;
 
     /**
-     * @see Not required because determined from value 'reason' in array using AllowanceChargeContoller
+     * Related logic: see Not required because determined from value 'reason' in array using AllowanceChargeContoller
      */
     private ?string $reason_code = '';
 

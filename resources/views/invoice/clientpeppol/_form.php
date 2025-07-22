@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 use App\Widget\LabelSwitch;
 
 /**
- * @see App\Invoice\ClientPeppol\ClientPeppolController.php function add and function edit
+ * Related logic: see App\Invoice\ClientPeppol\ClientPeppolController.php function add and function edit
  *
  * @var App\Invoice\ClientPeppol\ClientPeppolForm $form
  * @var App\Invoice\Setting\SettingRepository $s
@@ -79,8 +79,8 @@ use App\Widget\LabelSwitch;
                         <?php
                 /**
                  * Search $customer_endpointID_schemeID = $party['EndPointID']['schemeID'] ?? ''; in PeppolHelper.php
-                 * @see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
-                 * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/cac-Party/cbc-EndpointID/schemeID/
+                 * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
+                 * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AccountingCustomerParty/cac-Party/cbc-EndpointID/schemeID/
                  * @var int $key
                  * @var array $value
                  * @var string $value['code']

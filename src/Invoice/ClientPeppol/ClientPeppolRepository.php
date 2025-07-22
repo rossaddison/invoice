@@ -56,7 +56,7 @@ final class ClientPeppolRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientPeppol|null $clientpeppol
      * @psalm-param TEntity $clientpeppol
      * @throws Throwable
@@ -67,7 +67,7 @@ final class ClientPeppolRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientPeppol|null $clientpeppol
 
      * @throws Throwable

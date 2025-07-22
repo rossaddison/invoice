@@ -364,7 +364,7 @@ final class InvItemController extends BaseController
         // VAT
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
-            // @see https://informi.co.uk/finance/how-vat-affected-discounts
+            // Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
             $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100.00));
         }
         $iias_array['discount'] = $discount_total;

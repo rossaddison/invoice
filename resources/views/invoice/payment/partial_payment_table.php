@@ -5,12 +5,12 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Invoice\Client\ClientController function view 'payment_table'
+ * Related logic: see App\Invoice\Client\ClientController function view 'payment_table'
  *
  * @var App\Invoice\Entity\Client $client
  *
- * @see There is no need to declare ClientHelper in the ClientController because it is declared in:
- * @see config\common\params 'yiisoft/view' => ['parameters' => 'clientHelper' Reference::to(ClientHelper::class),
+ * Related logic: see There is no need to declare ClientHelper in the ClientController because it is declared in:
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => 'clientHelper' Reference::to(ClientHelper::class),
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  *
  * @var App\Invoice\Helpers\DateHelper $dateHelper

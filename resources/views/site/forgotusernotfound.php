@@ -6,10 +6,10 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var array $forgotusernotfound
  *
- * @see 'i.loginalert_user_not_found' .....
+ * Related logic: see 'i.loginalert_user_not_found' .....
  * 'There is no account registered with this Email address.'
  */
 

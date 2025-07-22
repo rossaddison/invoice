@@ -55,7 +55,7 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UnitPeppol|null $unitpeppol
      * @psalm-param TEntity $unitpeppol
      * @throws Throwable
@@ -66,7 +66,7 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UnitPeppol|null $unitpeppol
 
      * @throws Throwable

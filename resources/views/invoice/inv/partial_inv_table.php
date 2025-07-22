@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Invoice\Client\ClientController view function
+ * Related logic: see App\Invoice\Client\ClientController view function
  *      $parameters['invoice_draft_table']
  *      $parameters['invoice_sent_table']
  *      $parameters['invoice_viewed_table']

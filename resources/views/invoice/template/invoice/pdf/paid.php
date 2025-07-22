@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Invoice\Helpers\PdfHelper function generate_inv_html
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generate_inv_html
  * @var App\Invoice\Entity\InvAmount $inv_amount
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate

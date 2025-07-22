@@ -70,7 +70,7 @@ class CountryHelper
     }
 
     /**
-     * @see PeppolHelper ubl_delivery_location function
+     * Related logic: see PeppolHelper ubl_delivery_location function
      * @param string $name
      * @return string
      */

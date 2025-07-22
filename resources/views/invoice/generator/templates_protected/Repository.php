@@ -79,7 +79,7 @@ private EntityWriter $entityWriter;
     }    
     
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|<?= $generator->getCamelcase_capital_name() ?>|null $<?php echo $generator->getSmall_singular_name() . "\n" ?>
      * @psalm-param TEntity $<?php echo $generator->getSmall_singular_name() . "\n" ?>
      * @throws Throwable 
@@ -91,7 +91,7 @@ private EntityWriter $entityWriter;
     }
     
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|<?= $generator->getCamelcase_capital_name(); ?>|null $<?= $generator->getSmall_singular_name() . "\n" ?>  
      * @throws Throwable 
      * @return void

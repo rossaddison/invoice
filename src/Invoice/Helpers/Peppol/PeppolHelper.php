@@ -127,7 +127,7 @@ class PeppolHelper
     }
 
     /**
-     * @see \config\common\params.php and src\Invoice\Setting\SettingRepository
+     * Related logic: see \config\common\params.php and src\Invoice\Setting\SettingRepository
      * @param SOR $soR
      * @param Inv $invoice
      * @param IAR $iaR
@@ -277,7 +277,7 @@ class PeppolHelper
             // return the $paymentId (ie. a payment reference id)
             $paymentId = 'peppol' . ($invoice->getNumber() ?? 'Number unavailable') . (new DateTime())->format('Y-m-d');
             $payment_terms = $invoice->getTerms();
-            // @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
+            // Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
             // When the tax currency code is different and therefore provided,
             // two instances of the tax total must be present,
             // but only one with tax subtotal ie. the elected doc currency code's tax subtotal
@@ -402,7 +402,7 @@ class PeppolHelper
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AdditionalDocumentReference/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AdditionalDocumentReference/
      * @param Inv $invoice
      * @param UPR $upR
      * @return AdditionalDocumentReference
@@ -680,7 +680,7 @@ class PeppolHelper
         $countrySubEntity = $this->delivery_location->getState();
         $country_name = $this->delivery_location->getCountry();
         /**
-         * @see App\Invoice\Entity\DeliveryLocation
+         * Related logic: see App\Invoice\Entity\DeliveryLocation
          */
         if (null !== $country_name) {
             return $this->ubl_delivery_location(
@@ -732,8 +732,8 @@ class PeppolHelper
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
-     * @see \resources\views\invoice\setting\views\partial_settings_peppol
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
+     * Related logic: see \resources\views\invoice\setting\views\partial_settings_peppol
      * @param Inv $invoice
      * @param DelRepo $delRepo
      * @throws PeppolInvoicePeriodDetailsIncompleteException
@@ -1231,8 +1231,8 @@ class PeppolHelper
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-BuyerReference/
-     * @see https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-BuyerReference/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
      * @param Inv $invoice
      * @param cpR $cpR
      * @return string
@@ -1716,15 +1716,15 @@ class PeppolHelper
      * Delivered/paid already => tax/point can be calculated => no need for a description code => 'Invoice Period'
      * Not delivered/paid yet => tax point cannot be calculated yet => need a description code => 'Delivery Period'
      *
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-TaxPointDate/
-     * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-TaxPointDate/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
      * @param Inv $invoice
      * @param SRepo $s
      * @return InvoicePeriod
      */
     public function ubl_invoice_period(Inv $invoice, SRepo $s): InvoicePeriod
     {
-        // @see InvService set_tax_point
+        // Related logic: see InvService set_tax_point
 
         $datehelper = new DateHelper($s);
         $date_tax_point = $invoice->getDate_tax_point();
@@ -1768,7 +1768,7 @@ class PeppolHelper
 
     /**
      * Return a number represented as a string indicating how the tax point was determined: according to date supplied or date created/issued
-     * @see src\Invoice\Inv\InvService set_tax_point function
+     * Related logic: see src\Invoice\Inv\InvService set_tax_point function
      * @param Inv $inv
      * @param DateTimeImmutable $date_supplied
      * @param DateTimeImmutable $date_created
@@ -1813,7 +1813,7 @@ class PeppolHelper
 
     /**
      * TODO phase 2: insert translator here
-     * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
      */
     private function get_peppol_charges_subset_array(): array
@@ -1843,7 +1843,7 @@ class PeppolHelper
 
     /**
      * TODO phase 2: insert translator here
-     * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
      */
     private function get_peppol_allowances_array(): array
@@ -2207,7 +2207,7 @@ class PeppolHelper
 
     /**
      * Used with product/edit
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/icd.xml
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/icd.xml
      * @return array
      */
     private function getIso_6523_icd(): array
@@ -3361,7 +3361,7 @@ class PeppolHelper
     }
 
     /**
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/UNCL7143.xml
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/UNCL7143.xml
      * @return array
      */
     public function getUnc7143(): array

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @see src\Widget\Bootstrap5ModalPdf
- * @see inv\modal_layout_modal_pdf.php
- * @see 'src' property below, currently empty, fills with var url = $(location).attr('origin') + "/invoice/inv/pdf/1"; in inv.js'
+ * Related logic: see src\Widget\Bootstrap5ModalPdf
+ * Related logic: see inv\modal_layout_modal_pdf.php
+ * Related logic: see 'src' property below, currently empty, fills with var url = $(location).attr('origin') + "/invoice/inv/pdf/1"; in inv.js'
  *      e.g. function $(document).on('click', '#inv_to_modal_pdf_confirm_with_custom_fields'
  */
 

@@ -52,7 +52,7 @@ final class CustomFieldRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomField|null $customfield
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class CustomFieldRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomField|null $customfield
      * @throws Throwable
      */

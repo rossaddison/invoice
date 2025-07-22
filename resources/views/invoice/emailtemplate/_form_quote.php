@@ -301,7 +301,7 @@ use Yiisoft\Html\Tag\Span;
     <?php
         /**
          * Templates can be viewed from the Email Template index i.e. preview
-         * @see https://github.com/rossaddison/invoice/issues/12
+         * Related logic: see https://github.com/rossaddison/invoice/issues/12
          */
 ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see client\view.php and PaymentInformationController function inform search partial_client_address
+ * Related logic: see client\view.php and PaymentInformationController function inform search partial_client_address
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator

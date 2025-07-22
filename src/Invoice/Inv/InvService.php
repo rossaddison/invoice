@@ -168,7 +168,7 @@ final readonly class InvService
     }
 
     /**
-     * @see https://www.gov.uk/hmrc-internal-manuals/vat-time-of-supply/vattos3600
+     * Related logic: see https://www.gov.uk/hmrc-internal-manuals/vat-time-of-supply/vattos3600
      * @param Inv $inv
      * @param DateTimeImmutable|null $date_supplied
      * @param DateTimeImmutable|null $date_created

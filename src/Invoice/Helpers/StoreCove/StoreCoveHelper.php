@@ -127,7 +127,7 @@ final readonly class StoreCoveHelper
     }
 
     /**
-     * @see InvController and download_file function
+     * Related logic: see InvController and download_file function
      * @param Inv $invoice
      * @param upR $upR
      * @return array
@@ -159,7 +159,7 @@ final readonly class StoreCoveHelper
                     $documentId = '';
                 }
                 $allowed_content_type_array = $upR->getContentTypes();
-                // Check extension against allowed content file types @see UploadRepository getContentTypes
+                // Check extension against allowed content file types Related logic: see UploadRepository getContentTypes
                 $save_ctype = isset($allowed_content_type_array[$file_ext]);
                 /** @var string $ctype */
                 $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
@@ -196,7 +196,7 @@ final readonly class StoreCoveHelper
 
     /**
    * Return a number represented as a string indicating how the tax point was determined: according to date supplied or date created/issued
-   * @see src\Invoice\Inv\InvService set_tax_point function
+   * Related logic: see src\Invoice\Inv\InvService set_tax_point function
    * @param Inv $inv
    * @param DateTimeImmutable $date_supplied
    * @param DateTimeImmutable $date_created
@@ -241,15 +241,15 @@ final readonly class StoreCoveHelper
 
     /**
      * Use the invoice's delivery period in preference to the month that
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/
-     * @see https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/BR-CO-03/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/BR-CO-03/
      * @param Inv $invoice
      * @param SRepo $s
      * @return string
      */
     public function invoice_period(Inv $invoice, SRepo $s): string
     {
-        // @see InvService set_tax_point
+        // Related logic: see InvService set_tax_point
         $datehelper = new DateHelper($s);
         $date_tax_point = $invoice->getDate_tax_point();
         $date_created_or_issued = $invoice->getDate_created();
@@ -1003,7 +1003,7 @@ final readonly class StoreCoveHelper
         $countrySubEntity = $this->delivery_location->getState();
         $country_name = $this->delivery_location->getCountry();
         /**
-         * @see App\Invoice\Entity\DeliveryLocation
+         * Related logic: see App\Invoice\Entity\DeliveryLocation
          */
         if (null !== $country_name) {
             return $this->ubl_delivery_location(
@@ -1154,8 +1154,8 @@ final readonly class StoreCoveHelper
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-BuyerReference/
-     * @see https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-BuyerReference/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
      * @param Inv $invoice
      * @param cpR $cpR
      * @return string
@@ -1259,15 +1259,15 @@ final readonly class StoreCoveHelper
        * Delivered/paid already => tax/point can be calculated => no need for a description code => 'Invoice Period'
        * Not delivered/paid yet => tax point cannot be calculated yet => need a description code => 'Delivery Period'
        *
-       * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-TaxPointDate/
-       * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
+       * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cbc-TaxPointDate/
+       * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
        * @param Inv $invoice
        * @param SRepo $s
        * @return InvoicePeriod
        */
     public function ubl_invoice_period(Inv $invoice, SRepo $s): InvoicePeriod
     {
-        // @see InvService set_tax_point
+        // Related logic: see InvService set_tax_point
 
         $datehelper = new DateHelper($s);
         $date_tax_point = $invoice->getDate_tax_point();
@@ -1355,8 +1355,8 @@ final readonly class StoreCoveHelper
     /**
      * The above dependent functions are identical/modified PeppolHelper functions.
      * Note: The integer values in the array must be kept to ensure json array encoding later
-     * @see https://wtools.io/convert-json-to-php-array
-     * @see https://www.storecove.com/docs/#_json_object 3.3.3. JSON Object
+     * Related logic: see https://wtools.io/convert-json-to-php-array
+     * Related logic: see https://www.storecove.com/docs/#_json_object 3.3.3. JSON Object
      */
     public function maximum_pre_json_php_object_for_an_invoice(
         SOR $soR,
@@ -1414,13 +1414,13 @@ final readonly class StoreCoveHelper
             }
             // Currently a key number as an integer
             /**
-             * @see http://yii3-i-4.myhost/invoice/setting/tab_index 6.2 Sender identifier
+             * Related logic: see http://yii3-i-4.myhost/invoice/setting/tab_index 6.2 Sender identifier
              */
             $identifier = (int) $this->s->getSetting('storecove_sender_identifier');
             // Get the complete array
             $store_cove_sender_array = StoreCoveArrays::store_cove_sender_identifier_array();
             /**
-             * @see http://yii3-i/invoice/setting/tab_index 6.2 sender identifier basis
+             * Related logic: see http://yii3-i/invoice/setting/tab_index 6.2 sender identifier basis
              */
             $identifier_basis = $this->s->getSetting('storecove_sender_identifier_basis');
             $routing_scheme_identifier = '';
@@ -1503,7 +1503,7 @@ final readonly class StoreCoveHelper
                     'eIdentifiers' => [
                         0 => [
                             /**
-                             * @see https://www.storecove.com/docs/#_sender_identifiers_list
+                             * Related logic: see https://www.storecove.com/docs/#_sender_identifiers_list
                              */
                             'scheme' => $routing_scheme_identifier,
                             'id' => $routing_scheme_identifier === $this->t->translate('storecove.legal') ? $legal_entity_id : $tax_scheme_id,

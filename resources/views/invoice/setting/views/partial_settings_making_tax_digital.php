@@ -6,8 +6,8 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button;
 
 /**
- * @see https://github.com/MicrosoftDocs/dynamics365smb-docs/blob/main/business-central/LocalFunctionality/UnitedKingdom/fraud-prevention-data.md
- * @see ...src\Invoice\Asset\rebuild\js\setting.js btn-fph-generate
+ * Related logic: see https://github.com/MicrosoftDocs/dynamics365smb-docs/blob/main/business-central/LocalFunctionality/UnitedKingdom/fraud-prevention-data.md
+ * Related logic: see ...src\Invoice\Asset\rebuild\js\setting.js btn-fph-generate
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $body

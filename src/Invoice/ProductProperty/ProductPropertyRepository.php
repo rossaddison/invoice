@@ -67,7 +67,7 @@ final class ProductPropertyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductProperty|null $productproperty
      * @psalm-param TEntity $productproperty
      * @throws Throwable
@@ -78,7 +78,7 @@ final class ProductPropertyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductProperty|null $productproperty
 
      * @throws Throwable

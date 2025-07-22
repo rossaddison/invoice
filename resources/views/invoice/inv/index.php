@@ -28,7 +28,7 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
+ * Related logic: see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
  */
 
 /**
@@ -179,7 +179,7 @@ $copyInvoiceMultiple = A::tag()
         ->addClass('btn btn-success')
         /**
          * Purpose: Trigger modal_copy_inv_multiple.php to pop up
-         * @see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
+         * Related logic: see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
          */
         ->href('#modal-copy-inv-multiple')
         ->content('☑️' . $translator->translate('copy.invoice'))
@@ -189,7 +189,7 @@ $copyInvoiceMultiple = A::tag()
 /**
  * Use with the checkbox column to mark invoices as sent. Note an email is not sent. The invoices appear on the client's guest index
  * NB: Only invoices marked as sent can appear on the client's side. i.e no 'draft' invoices can appear on the client guest index
- * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
+ * Related logic: see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
  */
 $markAsSent = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('sent'))])
@@ -200,7 +200,7 @@ $markAsSent = A::tag()
 
 /**
  * Use with the checkbox column to mark invoices as draft. The customer will no longer be able to view the invoice on their side.
- * @see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-draft', function () {
+ * Related logic: see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-draft', function () {
  */
 $disabledMarkSentAsDraft = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('security.disable.read.only.info'))])
@@ -225,14 +225,14 @@ $enabledMarkSentAsDraft = A::tag()
 
 /**
  * Used with the checkbox column to use resources/views/invoice/inv/modal_create_recurring_multiple.php
- * @see https://emojipedia.org/recycling-symbol
+ * Related logic: see https://emojipedia.org/recycling-symbol
  */
 $markAsRecurringMultiple = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
         ->addClass('btn btn-info')
         /**
          * Purpose: Trigger modal_create_recurring_modal.php to pop up
-         * @see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
+         * Related logic: see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
          */
         ->href('#create-recurring-multiple')
         ->content('☑️' . $translator->translate('recurring') . '♻️')
@@ -360,7 +360,7 @@ $toolbar = Div::tag();
     $columns = [
         new CheckboxColumn(
             /**
-             * @see header checkbox: name: 'checkbox-selection-all'
+             * Related logic: see header checkbox: name: 'checkbox-selection-all'
              */
             content: static function (Checkbox $input, DataContext $context) use ($translator): string {
                 $inv = $context->data;
@@ -649,7 +649,7 @@ $toolbar = Div::tag();
                 if (null !== $modelId) {
                     $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
                     /**
-                     * @see Initialize an ArrayCollection
+                     * Related logic: see Initialize an ArrayCollection
                      */
                     $model->setInvSentLogs();
                     /**
@@ -685,7 +685,7 @@ $toolbar = Div::tag();
             withSorting: true,
         ),
         /**
-         * @see https://github.com/rossaddison/yii-dataview/commit/9e908d87cddd0661b440cb989429e1652e00a9fe
+         * Related logic: see https://github.com/rossaddison/yii-dataview/commit/9e908d87cddd0661b440cb989429e1652e00a9fe
          */
         new DataColumn(
             property: 'filterClient',
@@ -795,8 +795,8 @@ $toolbar = Div::tag();
                     [
                         /**
                      *
-                     * @see DeliveryLocation add function getRedirectResponse
-                     * @see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+                     * Related logic: see DeliveryLocation add function getRedirectResponse
+                     * Related logic: see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
                      */
                         'client_id' => $model->getClient_id(),
                     ],
@@ -915,7 +915,7 @@ $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
 $sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
-                // (@see vendor\yiisoft\data\src\Reader\Sort
+                // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
                 ->withOrderString($sortString);
 

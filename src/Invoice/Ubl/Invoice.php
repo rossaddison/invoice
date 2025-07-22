@@ -30,7 +30,7 @@ class Invoice implements XmlSerializable
     }
 
     /**
-     * @see http://www.schemacentral.com Business Document Standards
+     * Related logic: see http://www.schemacentral.com Business Document Standards
      * @param string|null $UBLVersionID
      * eg. '2.0', '2.1', '2.2', '2.3'
      * @return Invoice
@@ -121,8 +121,8 @@ class Invoice implements XmlSerializable
         /**
          * Rule set: OpenPeppol UBL Invoice (3.15.0) (a.k.a BIS Billing 3.0.14)
          *
-         * @see https://ecosio.com/en/peppol-and-xml-document-validator-button/
-         * @see https://docs.peppol.eu/poacc/billing/3.0/rules/UBL-CR-004/
+         * Related logic: see https://ecosio.com/en/peppol-and-xml-document-validator-button/
+         * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/rules/UBL-CR-004/
          * Warning
          * Location: src/Invoice/Helpers/Peppol/EcosioTestFiles/invoice_CtuZ7QoIINV107_peppol
          * Element/context: /:Invoice[1]
@@ -205,7 +205,7 @@ class Invoice implements XmlSerializable
         }
 
         /**
-         * @see src/Invoice/Helpers/Peppol/PeppolHelper
+         * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper
          * Warning
          * Location: src/Invoice/Helpers/Peppol/EcosioTestFiles/invoice_a0Vc8Tz6INV107_peppol
          * Element/context: /:Invoice[1]
@@ -345,7 +345,7 @@ class Invoice implements XmlSerializable
         ]);
 
         /**
-         * @see src/Invoice/Helpers/Peppol/PeppolHelper function build_invoice_lines_array
+         * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper function build_invoice_lines_array
          * @var array $this->invoiceLines
          * @var array $invoiceLine
          */
@@ -355,7 +355,7 @@ class Invoice implements XmlSerializable
     }
 
     /*
-     * @see PeppolHelper function build_TaxSubtotal_array
+     * Related logic: see PeppolHelper function build_TaxSubtotal_array
      * Take each Tax Category and build a tax sub total
      * @return array
      */

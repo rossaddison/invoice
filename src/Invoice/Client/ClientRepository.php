@@ -78,7 +78,7 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Client|null $client
      * @psalm-param TEntity $client
      * @throws Throwable
@@ -89,7 +89,7 @@ final class ClientRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Client|null $client
      * @throws Throwable
      */

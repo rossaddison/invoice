@@ -57,14 +57,14 @@ class GenerateCodeFileHelper
         // $this->basepath used in function relativepath
         $this->basepath = dirname(__DIR__, 3);
         /**
-         *  @see GeneratorController function build_and_save
+         *  Related logic: see GeneratorController function build_and_save
          *  The MD5 hash algorithm was developed in 1991 and released in 1992.
          *  Only a year later, researchers were already finding flaws!
          *  However, it continued to be used and adopted by developers around the world.
          *  In 2005, it was officially deemed unsuitable, yet, in 2019, it was estimated
          *  that 25% of content management systems still use MD5!
          *  Recommendation: use password_hash instead ... Courtesy of Snyk
-         * @see https://www.php.net/manual/en/function.md5.php
+         * Related logic: see https://www.php.net/manual/en/function.md5.php
          */
         $this->id = password_hash($this->path, PASSWORD_DEFAULT);
         if (is_file($path)) {

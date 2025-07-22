@@ -54,7 +54,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderTaxRate|null $salesordertaxrate
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderTaxRate|null $salesordertaxrate
      * @throws Throwable
      */

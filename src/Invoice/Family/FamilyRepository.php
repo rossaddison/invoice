@@ -38,7 +38,7 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Family|null $family
      * @throws Throwable
      */
@@ -48,7 +48,7 @@ final class FamilyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Family|null $family
      * @throws Throwable
      */

@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see id="quote-to-so" triggered by <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
- * @see views/quote/view.php
+ * Related logic: see id="quote-to-so" triggered by <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
+ * Related logic: see views/quote/view.php
  * @var App\Invoice\Entity\Quote $quote
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator

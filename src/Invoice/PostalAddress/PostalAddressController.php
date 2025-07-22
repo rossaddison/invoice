@@ -179,7 +179,7 @@ final class PostalAddressController extends BaseController
         if ($postalAddress) {
             $queryParams = $request->getQueryParams();
             /**
-             * @see config/common/routes/routes.php '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
+             * Related logic: see config/common/routes/routes.php '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
              * @var array $queryParams
              */
             $origin = (string) $queryParams['origin'];
@@ -208,7 +208,7 @@ final class PostalAddressController extends BaseController
                         // Route::methods([Method::GET, Method::POST], '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {
                             /**
-                             * @see http://invoice.myhost/invoice/postaladdress/edit/1?origin=inv&origin_id=1&action=edit
+                             * Related logic: see http://invoice.myhost/invoice/postaladdress/edit/1?origin=inv&origin_id=1&action=edit
                              * @psalm-suppress MixedArgumentTypeCoercion
                              */
                             return $this->webService->getRedirectResponse($url, [

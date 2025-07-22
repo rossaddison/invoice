@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see src/Invoice/InvoiceController function phpinfo e.g.
+ * Related logic: see src/Invoice/InvoiceController function phpinfo e.g.
  *
  * public function phpinfo(#[RouteArgument('selection')] string $selection = '-1') : Response
     {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see InvController function view_custom_fields
+ * Related logic: see InvController function view_custom_fields
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\InvCustom\InvCustomForm $invCustomForm
  * @var App\Invoice\Setting\SettingRepository $s

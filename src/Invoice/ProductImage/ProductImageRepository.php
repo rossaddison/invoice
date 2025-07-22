@@ -83,7 +83,7 @@ final class ProductImageRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductImage|null $productimage
      * @throws Throwable
      */
@@ -93,7 +93,7 @@ final class ProductImageRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductImage|null $productimage
      * @throws Throwable
      */

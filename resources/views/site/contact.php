@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\P;
 
 /**
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var App\Invoice\Setting\SettingRepository $s
  * @var array $contact
  * @var string $companyAddress1

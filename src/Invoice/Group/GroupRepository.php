@@ -52,7 +52,7 @@ final class GroupRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Group|null $group
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class GroupRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Group|null $group
      * @throws Throwable
      */

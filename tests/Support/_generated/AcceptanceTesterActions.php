@@ -20,7 +20,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Alias to `haveHttpHeader`
-     * @see \Codeception\Module\PhpBrowser::setHeader()
+     * Related logic: see \Codeception\Module\PhpBrowser::setHeader()
      */
     public function setHeader(string $name, string $value): void
     {
@@ -32,7 +32,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Alias to `haveHttpHeader`
-     * @see \Codeception\Module\PhpBrowser::setHeader()
+     * Related logic: see \Codeception\Module\PhpBrowser::setHeader()
      */
     public function tryToSetHeader(string $name, string $value): bool
     {
@@ -46,7 +46,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Module\PhpBrowser::setHeader()
+     * Related logic: see \Codeception\Module\PhpBrowser::setHeader()
      */
     public function retrySetHeader(string $name, string $value)
     {
@@ -59,7 +59,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Authenticates user for HTTP_AUTH
-     * @see \Codeception\Module\PhpBrowser::amHttpAuthenticated()
+     * Related logic: see \Codeception\Module\PhpBrowser::amHttpAuthenticated()
      */
     public function amHttpAuthenticated($username, $password): void
     {
@@ -76,7 +76,7 @@ trait AcceptanceTesterActions
      * $I->amOnUrl('https://codeception.com');
      * $I->amOnPage('/quickstart'); // moves to https://codeception.com/quickstart
      * ```
-     * @see \Codeception\Module\PhpBrowser::amOnUrl()
+     * Related logic: see \Codeception\Module\PhpBrowser::amOnUrl()
      */
     public function amOnUrl($url): void
     {
@@ -100,7 +100,7 @@ trait AcceptanceTesterActions
      * // moves to https://user.mysite.com/
      * ```
      *
-     * @see \Codeception\Module\PhpBrowser::amOnSubdomain()
+     * Related logic: see \Codeception\Module\PhpBrowser::amOnSubdomain()
      */
     public function amOnSubdomain($subdomain): void
     {
@@ -126,7 +126,7 @@ trait AcceptanceTesterActions
      * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
      *
      * @return mixed
-     * @see \Codeception\Module\PhpBrowser::executeInGuzzle()
+     * Related logic: see \Codeception\Module\PhpBrowser::executeInGuzzle()
      */
     public function executeInGuzzle(\Closure $function)
     {
@@ -153,7 +153,7 @@ trait AcceptanceTesterActions
      * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
      *
      * @return mixed
-     * @see \Codeception\Module\PhpBrowser::executeInGuzzle()
+     * Related logic: see \Codeception\Module\PhpBrowser::executeInGuzzle()
      */
     public function tryToExecuteInGuzzle(\Closure $function): bool
     {
@@ -167,7 +167,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Module\PhpBrowser::executeInGuzzle()
+     * Related logic: see \Codeception\Module\PhpBrowser::executeInGuzzle()
      */
     public function retryExecuteInGuzzle(\Closure $function)
     {
@@ -202,7 +202,7 @@ trait AcceptanceTesterActions
      * @param string $name the name of the request header
      * @param string $value the value to set it to for subsequent
      *        requests
-     * @see \Codeception\Lib\InnerBrowser::haveHttpHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::haveHttpHeader()
      */
     public function haveHttpHeader(string $name, string $value): void
     {
@@ -226,7 +226,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param string $name the name of the header to unset.
-     * @see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
      */
     public function unsetHttpHeader(string $name): void
     {
@@ -251,7 +251,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param string $name the name of the header to unset.
-     * @see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
      */
     public function tryToUnsetHttpHeader(string $name): bool
     {
@@ -265,7 +265,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
      */
     public function retryUnsetHttpHeader(string $name)
     {
@@ -278,7 +278,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * @deprecated Use [unsetHttpHeader](#unsetHttpHeader) instead
-     * @see \Codeception\Lib\InnerBrowser::deleteHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::deleteHeader()
      */
     public function deleteHeader(string $name): void
     {
@@ -290,7 +290,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * @deprecated Use [unsetHttpHeader](#unsetHttpHeader) instead
-     * @see \Codeception\Lib\InnerBrowser::deleteHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::deleteHeader()
      */
     public function tryToDeleteHeader(string $name): bool
     {
@@ -304,7 +304,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::deleteHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::deleteHeader()
      */
     public function retryDeleteHeader(string $name)
     {
@@ -325,7 +325,7 @@ trait AcceptanceTesterActions
      * // opens /register page
      * $I->amOnPage('/register');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::amOnPage()
+     * Related logic: see \Codeception\Lib\InnerBrowser::amOnPage()
      */
     public function amOnPage(string $page): void
     {
@@ -361,7 +361,7 @@ trait AcceptanceTesterActions
      * $I->click(['link' => 'Login']);
      * ```
      * @param array|string $link
-     * @see \Codeception\Lib\InnerBrowser::click()
+     * Related logic: see \Codeception\Lib\InnerBrowser::click()
      */
     public function click($link, $context = null): void
     {
@@ -398,7 +398,7 @@ trait AcceptanceTesterActions
      * $I->click(['link' => 'Login']);
      * ```
      * @param array|string $link
-     * @see \Codeception\Lib\InnerBrowser::click()
+     * Related logic: see \Codeception\Lib\InnerBrowser::click()
      */
     public function tryToClick($link, $context = null): bool
     {
@@ -412,7 +412,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::click()
+     * Related logic: see \Codeception\Lib\InnerBrowser::click()
      */
     public function retryClick($link, $context = null)
     {
@@ -452,7 +452,7 @@ trait AcceptanceTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::see()
+     * Related logic: see \Codeception\Lib\InnerBrowser::see()
      */
     public function see(string $text, $selector = null): void
     {
@@ -491,7 +491,7 @@ trait AcceptanceTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::see()
+     * Related logic: see \Codeception\Lib\InnerBrowser::see()
      */
     public function canSee(string $text, $selector = null): void
     {
@@ -530,7 +530,7 @@ trait AcceptanceTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::see()
+     * Related logic: see \Codeception\Lib\InnerBrowser::see()
      */
     public function tryToSee(string $text, $selector = null): bool
     {
@@ -544,7 +544,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::see()
+     * Related logic: see \Codeception\Lib\InnerBrowser::see()
      */
     public function retrySee(string $text, $selector = null)
     {
@@ -582,7 +582,7 @@ trait AcceptanceTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::dontSee()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function dontSee(string $text, $selector = null): void
     {
@@ -619,7 +619,7 @@ trait AcceptanceTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::dontSee()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function cantSee(string $text, $selector = null): void
     {
@@ -656,7 +656,7 @@ trait AcceptanceTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::dontSee()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function tryToDontSee(string $text, $selector = null): bool
     {
@@ -670,7 +670,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSee()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function retryDontSee(string $text, $selector = null)
     {
@@ -689,7 +689,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInSource()
      */
     public function seeInSource(string $raw): void
     {
@@ -707,7 +707,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInSource()
      */
     public function canSeeInSource(string $raw): void
     {
@@ -725,7 +725,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInSource()
      */
     public function tryToSeeInSource(string $raw): bool
     {
@@ -739,7 +739,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInSource()
      */
     public function retrySeeInSource(string $raw)
     {
@@ -758,7 +758,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInSource()
      */
     public function dontSeeInSource(string $raw): void
     {
@@ -776,7 +776,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInSource()
      */
     public function cantSeeInSource(string $raw): void
     {
@@ -794,7 +794,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInSource()
      */
     public function tryToDontSeeInSource(string $raw): bool
     {
@@ -808,7 +808,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInSource()
      */
     public function retryDontSeeInSource(string $raw)
     {
@@ -828,7 +828,7 @@ trait AcceptanceTesterActions
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function seeLink(string $text, ?string $url = null): void
     {
@@ -847,7 +847,7 @@ trait AcceptanceTesterActions
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function canSeeLink(string $text, ?string $url = null): void
     {
@@ -866,7 +866,7 @@ trait AcceptanceTesterActions
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function tryToSeeLink(string $text, ?string $url = null): bool
     {
@@ -880,7 +880,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function retrySeeLink(string $text, ?string $url = null)
     {
@@ -900,7 +900,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function dontSeeLink(string $text, string $url = ''): void
     {
@@ -919,7 +919,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function cantSeeLink(string $text, string $url = ''): void
     {
@@ -938,7 +938,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function tryToDontSeeLink(string $text, string $url = ''): bool
     {
@@ -952,7 +952,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function retryDontSeeLink(string $text, string $url = '')
     {
@@ -973,7 +973,7 @@ trait AcceptanceTesterActions
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function seeInCurrentUrl(string $uri): void
     {
@@ -993,7 +993,7 @@ trait AcceptanceTesterActions
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function canSeeInCurrentUrl(string $uri): void
     {
@@ -1013,7 +1013,7 @@ trait AcceptanceTesterActions
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function tryToSeeInCurrentUrl(string $uri): bool
     {
@@ -1027,7 +1027,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function retrySeeInCurrentUrl(string $uri)
     {
@@ -1045,7 +1045,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function dontSeeInCurrentUrl(string $uri): void
     {
@@ -1062,7 +1062,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function cantSeeInCurrentUrl(string $uri): void
     {
@@ -1079,7 +1079,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function tryToDontSeeInCurrentUrl(string $uri): bool
     {
@@ -1093,7 +1093,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function retryDontSeeInCurrentUrl(string $uri)
     {
@@ -1113,7 +1113,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function seeCurrentUrlEquals(string $uri): void
     {
@@ -1132,7 +1132,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function canSeeCurrentUrlEquals(string $uri): void
     {
@@ -1151,7 +1151,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function tryToSeeCurrentUrlEquals(string $uri): bool
     {
@@ -1165,7 +1165,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function retrySeeCurrentUrlEquals(string $uri)
     {
@@ -1185,7 +1185,7 @@ trait AcceptanceTesterActions
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function dontSeeCurrentUrlEquals(string $uri): void
     {
@@ -1204,7 +1204,7 @@ trait AcceptanceTesterActions
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function cantSeeCurrentUrlEquals(string $uri): void
     {
@@ -1223,7 +1223,7 @@ trait AcceptanceTesterActions
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function tryToDontSeeCurrentUrlEquals(string $uri): bool
     {
@@ -1237,7 +1237,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function retryDontSeeCurrentUrlEquals(string $uri)
     {
@@ -1256,7 +1256,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function seeCurrentUrlMatches(string $uri): void
     {
@@ -1274,7 +1274,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function canSeeCurrentUrlMatches(string $uri): void
     {
@@ -1292,7 +1292,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function tryToSeeCurrentUrlMatches(string $uri): bool
     {
@@ -1306,7 +1306,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function retrySeeCurrentUrlMatches(string $uri)
     {
@@ -1325,7 +1325,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function dontSeeCurrentUrlMatches(string $uri): void
     {
@@ -1343,7 +1343,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function cantSeeCurrentUrlMatches(string $uri): void
     {
@@ -1361,7 +1361,7 @@ trait AcceptanceTesterActions
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function tryToDontSeeCurrentUrlMatches(string $uri): bool
     {
@@ -1375,7 +1375,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function retryDontSeeCurrentUrlMatches(string $uri)
     {
@@ -1395,7 +1395,7 @@ trait AcceptanceTesterActions
      * $user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
      */
     public function grabFromCurrentUrl(?string $uri = null): mixed
     {
@@ -1409,7 +1409,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
      */
     public function retryGrabFromCurrentUrl(?string $uri = null)
     {
@@ -1429,7 +1429,7 @@ trait AcceptanceTesterActions
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@var=checkbox and @name=agree]');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function seeCheckboxIsChecked($checkbox): void
     {
@@ -1448,7 +1448,7 @@ trait AcceptanceTesterActions
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@var=checkbox and @name=agree]');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function canSeeCheckboxIsChecked($checkbox): void
     {
@@ -1467,7 +1467,7 @@ trait AcceptanceTesterActions
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@var=checkbox and @name=agree]');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function tryToSeeCheckboxIsChecked($checkbox): bool
     {
@@ -1481,7 +1481,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function retrySeeCheckboxIsChecked($checkbox)
     {
@@ -1500,7 +1500,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function dontSeeCheckboxIsChecked($checkbox): void
     {
@@ -1518,7 +1518,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function cantSeeCheckboxIsChecked($checkbox): void
     {
@@ -1536,7 +1536,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function tryToDontSeeCheckboxIsChecked($checkbox): bool
     {
@@ -1550,7 +1550,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function retryDontSeeCheckboxIsChecked($checkbox)
     {
@@ -1576,7 +1576,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::seeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function seeInField($field, $value): void
     {
@@ -1601,7 +1601,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::seeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function canSeeInField($field, $value): void
     {
@@ -1626,7 +1626,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::seeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function tryToSeeInField($field, $value): bool
     {
@@ -1640,7 +1640,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function retrySeeInField($field, $value)
     {
@@ -1665,7 +1665,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function dontSeeInField($field, $value): void
     {
@@ -1689,7 +1689,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function cantSeeInField($field, $value): void
     {
@@ -1713,7 +1713,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function tryToDontSeeInField($field, $value): bool
     {
@@ -1727,7 +1727,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function retryDontSeeInField($field, $value)
     {
@@ -1791,7 +1791,7 @@ trait AcceptanceTesterActions
      * // $I->amOnPage('/path/to/form-page') may be needed
      * $I->seeInFormFields('//form[@id=my-form]', string $form);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInFormFields()
      */
     public function seeInFormFields($formSelector, array $params): void
     {
@@ -1854,7 +1854,7 @@ trait AcceptanceTesterActions
      * // $I->amOnPage('/path/to/form-page') may be needed
      * $I->seeInFormFields('//form[@id=my-form]', string $form);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInFormFields()
      */
     public function canSeeInFormFields($formSelector, array $params): void
     {
@@ -1917,7 +1917,7 @@ trait AcceptanceTesterActions
      * // $I->amOnPage('/path/to/form-page') may be needed
      * $I->seeInFormFields('//form[@id=my-form]', string $form);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInFormFields()
      */
     public function tryToSeeInFormFields($formSelector, array $params): bool
     {
@@ -1931,7 +1931,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInFormFields()
      */
     public function retrySeeInFormFields($formSelector, array $params)
     {
@@ -1976,7 +1976,7 @@ trait AcceptanceTesterActions
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
      */
     public function dontSeeInFormFields($formSelector, array $params): void
     {
@@ -2020,7 +2020,7 @@ trait AcceptanceTesterActions
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
      */
     public function cantSeeInFormFields($formSelector, array $params): void
     {
@@ -2064,7 +2064,7 @@ trait AcceptanceTesterActions
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
      */
     public function tryToDontSeeInFormFields($formSelector, array $params): bool
     {
@@ -2078,7 +2078,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
      */
     public function retryDontSeeInFormFields($formSelector, array $params)
     {
@@ -2260,7 +2260,7 @@ trait AcceptanceTesterActions
      *     ]
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::submitForm()
+     * Related logic: see \Codeception\Lib\InnerBrowser::submitForm()
      */
     public function submitForm($selector, array $params, ?string $button = null): void
     {
@@ -2441,7 +2441,7 @@ trait AcceptanceTesterActions
      *     ]
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::submitForm()
+     * Related logic: see \Codeception\Lib\InnerBrowser::submitForm()
      */
     public function tryToSubmitForm($selector, array $params, ?string $button = null): bool
     {
@@ -2455,7 +2455,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::submitForm()
+     * Related logic: see \Codeception\Lib\InnerBrowser::submitForm()
      */
     public function retrySubmitForm($selector, array $params, ?string $button = null)
     {
@@ -2474,7 +2474,7 @@ trait AcceptanceTesterActions
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@example.com');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::fillField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::fillField()
      */
     public function fillField($field, $value): void
     {
@@ -2492,7 +2492,7 @@ trait AcceptanceTesterActions
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@example.com');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::fillField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::fillField()
      */
     public function tryToFillField($field, $value): bool
     {
@@ -2506,7 +2506,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::fillField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::fillField()
      */
     public function retryFillField($field, $value)
     {
@@ -2541,7 +2541,7 @@ trait AcceptanceTesterActions
      * $I->selectOption('Which OS do you use?', ['text' => 'Windows']); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', ['value' => 'windows']); // Only search by value 'windows'
      * ```
-     * @see \Codeception\Lib\InnerBrowser::selectOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::selectOption()
      */
     public function selectOption($select, $option): void
     {
@@ -2575,7 +2575,7 @@ trait AcceptanceTesterActions
      * $I->selectOption('Which OS do you use?', ['text' => 'Windows']); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', ['value' => 'windows']); // Only search by value 'windows'
      * ```
-     * @see \Codeception\Lib\InnerBrowser::selectOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::selectOption()
      */
     public function tryToSelectOption($select, $option): bool
     {
@@ -2589,7 +2589,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::selectOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::selectOption()
      */
     public function retrySelectOption($select, $option)
     {
@@ -2607,7 +2607,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->checkOption('#agree');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::checkOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::checkOption()
      */
     public function checkOption($option): void
     {
@@ -2624,7 +2624,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->checkOption('#agree');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::checkOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::checkOption()
      */
     public function tryToCheckOption($option): bool
     {
@@ -2638,7 +2638,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::checkOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::checkOption()
      */
     public function retryCheckOption($option)
     {
@@ -2656,7 +2656,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->uncheckOption('#notify');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::uncheckOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::uncheckOption()
      */
     public function uncheckOption($option): void
     {
@@ -2673,7 +2673,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->uncheckOption('#notify');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::uncheckOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::uncheckOption()
      */
     public function tryToUncheckOption($option): bool
     {
@@ -2687,7 +2687,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::uncheckOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::uncheckOption()
      */
     public function retryUncheckOption($option)
     {
@@ -2706,7 +2706,7 @@ trait AcceptanceTesterActions
      * // file is stored in 'tests/_data/prices.xls'
      * $I->attachFile('input[@var="file"]', 'prices.xls');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::attachFile()
+     * Related logic: see \Codeception\Lib\InnerBrowser::attachFile()
      */
     public function attachFile($field, string $filename): void
     {
@@ -2724,7 +2724,7 @@ trait AcceptanceTesterActions
      * // file is stored in 'tests/_data/prices.xls'
      * $I->attachFile('input[@var="file"]', 'prices.xls');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::attachFile()
+     * Related logic: see \Codeception\Lib\InnerBrowser::attachFile()
      */
     public function tryToAttachFile($field, string $filename): bool
     {
@@ -2738,7 +2738,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::attachFile()
+     * Related logic: see \Codeception\Lib\InnerBrowser::attachFile()
      */
     public function retryAttachFile($field, string $filename)
     {
@@ -2752,7 +2752,7 @@ trait AcceptanceTesterActions
      *
      * Sends an ajax GET request with the passed parameters.
      * See `sendAjaxPostRequest()`
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
      */
     public function sendAjaxGetRequest(string $uri, array $params = []): void
     {
@@ -2765,7 +2765,7 @@ trait AcceptanceTesterActions
      * [!] Test won't be stopped on fail. Error won't be logged
      * Sends an ajax GET request with the passed parameters.
      * See `sendAjaxPostRequest()`
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
      */
     public function tryToSendAjaxGetRequest(string $uri, array $params = []): bool
     {
@@ -2779,7 +2779,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
      */
     public function retrySendAjaxGetRequest(string $uri, array $params = [])
     {
@@ -2809,7 +2809,7 @@ trait AcceptanceTesterActions
      *     'category' => 'miscellaneous',
      * ]]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
      */
     public function sendAjaxPostRequest(string $uri, array $params = []): void
     {
@@ -2838,7 +2838,7 @@ trait AcceptanceTesterActions
      *     'category' => 'miscellaneous',
      * ]]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
      */
     public function tryToSendAjaxPostRequest(string $uri, array $params = []): bool
     {
@@ -2852,7 +2852,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
      */
     public function retrySendAjaxPostRequest(string $uri, array $params = [])
     {
@@ -2871,7 +2871,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->sendAjaxRequest('PUT', '/posts/7', ['title' => 'new title']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
      */
     public function sendAjaxRequest(string $method, string $uri, array $params = []): void
     {
@@ -2889,7 +2889,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->sendAjaxRequest('PUT', '/posts/7', ['title' => 'new title']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
      */
     public function tryToSendAjaxRequest(string $method, string $uri, array $params = []): bool
     {
@@ -2903,7 +2903,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
      */
     public function retrySendAjaxRequest(string $method, string $uri, array $params = [])
     {
@@ -2924,7 +2924,7 @@ trait AcceptanceTesterActions
      * $I->makeHtmlSnapshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
      * ```
-     * @see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
+     * Related logic: see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
      */
     public function makeHtmlSnapshot(?string $name = null): void
     {
@@ -2944,7 +2944,7 @@ trait AcceptanceTesterActions
      * $I->makeHtmlSnapshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
      * ```
-     * @see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
+     * Related logic: see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
      */
     public function tryToMakeHtmlSnapshot(?string $name = null): bool
     {
@@ -2958,7 +2958,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
+     * Related logic: see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
      */
     public function retryMakeHtmlSnapshot(?string $name = null)
     {
@@ -2980,7 +2980,7 @@ trait AcceptanceTesterActions
      * $heading = $I->grabTextFrom('descendant-or-self::h1');
      * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabTextFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabTextFrom()
      */
     public function grabTextFrom($cssOrXPathOrRegex): mixed
     {
@@ -2994,7 +2994,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabTextFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabTextFrom()
      */
     public function retryGrabTextFrom($cssOrXPathOrRegex)
     {
@@ -3013,7 +3013,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->grabAttributeFrom('#tooltip', 'title');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
      */
     public function grabAttributeFrom($cssOrXpath, string $attribute): mixed
     {
@@ -3027,7 +3027,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
      */
     public function retryGrabAttributeFrom($cssOrXpath, string $attribute)
     {
@@ -3058,7 +3058,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return string[]
-     * @see \Codeception\Lib\InnerBrowser::grabMultiple()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabMultiple()
      */
     public function grabMultiple($cssOrXpath, ?string $attribute = null): array
     {
@@ -3072,7 +3072,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabMultiple()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabMultiple()
      */
     public function retryGrabMultiple($cssOrXpath, ?string $attribute = null)
     {
@@ -3094,7 +3094,7 @@ trait AcceptanceTesterActions
      * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
      * $name = $I->grabValueFrom(['name' => 'username']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabValueFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabValueFrom()
      */
     public function grabValueFrom($field): mixed
     {
@@ -3108,7 +3108,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabValueFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabValueFrom()
      */
     public function retryGrabValueFrom($field)
     {
@@ -3129,7 +3129,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::setCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setCookie()
      */
     public function setCookie($name, $val, $params = [])
     {
@@ -3149,7 +3149,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::setCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setCookie()
      */
     public function tryToSetCookie($name, $val, $params = []): bool
     {
@@ -3163,7 +3163,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::setCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setCookie()
      */
     public function retrySetCookie($name, $val, $params = [])
     {
@@ -3178,7 +3178,7 @@ trait AcceptanceTesterActions
      * Grabs a cookie value.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay caused by the browser, so try `$I->wait(0.1)`.
-     * @see \Codeception\Lib\InnerBrowser::grabCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabCookie()
      */
     public function grabCookie(string $cookie, array $params = []): mixed
     {
@@ -3192,7 +3192,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabCookie()
      */
     public function retryGrabCookie(string $cookie, array $params = [])
     {
@@ -3208,7 +3208,7 @@ trait AcceptanceTesterActions
      *
      * @throws \Codeception\Exception\ModuleException if no page was opened.
      * @return string Current page source code.
-     * @see \Codeception\Lib\InnerBrowser::grabPageSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabPageSource()
      */
     public function grabPageSource(): string
     {
@@ -3222,7 +3222,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::grabPageSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabPageSource()
      */
     public function retryGrabPageSource()
     {
@@ -3243,7 +3243,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function seeCookie($cookie, $params = [])
     {
@@ -3263,7 +3263,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function canSeeCookie($cookie, $params = [])
     {
@@ -3283,7 +3283,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function tryToSeeCookie($cookie, $params = []): bool
     {
@@ -3297,7 +3297,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function retrySeeCookie($cookie, $params = [])
     {
@@ -3313,7 +3313,7 @@ trait AcceptanceTesterActions
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function dontSeeCookie($cookie, $params = [])
     {
@@ -3328,7 +3328,7 @@ trait AcceptanceTesterActions
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function cantSeeCookie($cookie, $params = [])
     {
@@ -3343,7 +3343,7 @@ trait AcceptanceTesterActions
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function tryToDontSeeCookie($cookie, $params = []): bool
     {
@@ -3357,7 +3357,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function retryDontSeeCookie($cookie, $params = [])
     {
@@ -3373,7 +3373,7 @@ trait AcceptanceTesterActions
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::resetCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::resetCookie()
      */
     public function resetCookie($cookie, $params = [])
     {
@@ -3388,7 +3388,7 @@ trait AcceptanceTesterActions
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::resetCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::resetCookie()
      */
     public function tryToResetCookie($cookie, $params = []): bool
     {
@@ -3402,7 +3402,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::resetCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::resetCookie()
      */
     public function retryResetCookie($cookie, $params = [])
     {
@@ -3428,7 +3428,7 @@ trait AcceptanceTesterActions
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function seeElement($selector, array $attributes = []): void
     {
@@ -3453,7 +3453,7 @@ trait AcceptanceTesterActions
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function canSeeElement($selector, array $attributes = []): void
     {
@@ -3478,7 +3478,7 @@ trait AcceptanceTesterActions
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function tryToSeeElement($selector, array $attributes = []): bool
     {
@@ -3492,7 +3492,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function retrySeeElement($selector, array $attributes = [])
     {
@@ -3514,7 +3514,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function dontSeeElement($selector, array $attributes = []): void
     {
@@ -3535,7 +3535,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function cantSeeElement($selector, array $attributes = []): void
     {
@@ -3556,7 +3556,7 @@ trait AcceptanceTesterActions
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function tryToDontSeeElement($selector, array $attributes = []): bool
     {
@@ -3570,7 +3570,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function retryDontSeeElement($selector, array $attributes = [])
     {
@@ -3591,7 +3591,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param int|int[] $expected
-     * @see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
      */
     public function seeNumberOfElements($selector, $expected): void
     {
@@ -3611,7 +3611,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param int|int[] $expected
-     * @see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
      */
     public function canSeeNumberOfElements($selector, $expected): void
     {
@@ -3631,7 +3631,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @param int|int[] $expected
-     * @see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
      */
     public function tryToSeeNumberOfElements($selector, $expected): bool
     {
@@ -3645,7 +3645,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
      */
     public function retrySeeNumberOfElements($selector, $expected)
     {
@@ -3665,7 +3665,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function seeOptionIsSelected($selector, $optionText)
     {
@@ -3684,7 +3684,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function canSeeOptionIsSelected($selector, $optionText)
     {
@@ -3703,7 +3703,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function tryToSeeOptionIsSelected($selector, $optionText): bool
     {
@@ -3717,7 +3717,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function retrySeeOptionIsSelected($selector, $optionText)
     {
@@ -3737,7 +3737,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function dontSeeOptionIsSelected($selector, $optionText)
     {
@@ -3756,7 +3756,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function cantSeeOptionIsSelected($selector, $optionText)
     {
@@ -3775,7 +3775,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function tryToDontSeeOptionIsSelected($selector, $optionText): bool
     {
@@ -3789,7 +3789,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function retryDontSeeOptionIsSelected($selector, $optionText)
     {
@@ -3802,7 +3802,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that current page has 404 response status code.
-     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function seePageNotFound(): void
     {
@@ -3814,7 +3814,7 @@ trait AcceptanceTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Asserts that current page has 404 response status code.
-     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function canSeePageNotFound(): void
     {
@@ -3826,7 +3826,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Asserts that current page has 404 response status code.
-     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function tryToSeePageNotFound(): bool
     {
@@ -3840,7 +3840,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function retrySeePageNotFound()
     {
@@ -3861,7 +3861,7 @@ trait AcceptanceTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function seeResponseCodeIs(int $code): void
     {
@@ -3881,7 +3881,7 @@ trait AcceptanceTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function canSeeResponseCodeIs(int $code): void
     {
@@ -3901,7 +3901,7 @@ trait AcceptanceTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function tryToSeeResponseCodeIs(int $code): bool
     {
@@ -3915,7 +3915,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function retrySeeResponseCodeIs(int $code)
     {
@@ -3928,7 +3928,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that response code is between a certain range. Between actually means [from <= CODE <= to]
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
      */
     public function seeResponseCodeIsBetween(int $from, int $to): void
     {
@@ -3940,7 +3940,7 @@ trait AcceptanceTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that response code is between a certain range. Between actually means [from <= CODE <= to]
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
      */
     public function canSeeResponseCodeIsBetween(int $from, int $to): void
     {
@@ -3952,7 +3952,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Checks that response code is between a certain range. Between actually means [from <= CODE <= to]
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
      */
     public function tryToSeeResponseCodeIsBetween(int $from, int $to): bool
     {
@@ -3966,7 +3966,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
      */
     public function retrySeeResponseCodeIsBetween(int $from, int $to)
     {
@@ -3987,7 +3987,7 @@ trait AcceptanceTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
      */
     public function dontSeeResponseCodeIs(int $code): void
     {
@@ -4007,7 +4007,7 @@ trait AcceptanceTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
      */
     public function cantSeeResponseCodeIs(int $code): void
     {
@@ -4027,7 +4027,7 @@ trait AcceptanceTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
      */
     public function tryToDontSeeResponseCodeIs(int $code): bool
     {
@@ -4041,7 +4041,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
      */
     public function retryDontSeeResponseCodeIs(int $code)
     {
@@ -4054,7 +4054,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code 2xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
      */
     public function seeResponseCodeIsSuccessful(): void
     {
@@ -4066,7 +4066,7 @@ trait AcceptanceTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code 2xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
      */
     public function canSeeResponseCodeIsSuccessful(): void
     {
@@ -4078,7 +4078,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Checks that the response code 2xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
      */
     public function tryToSeeResponseCodeIsSuccessful(): bool
     {
@@ -4092,7 +4092,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
      */
     public function retrySeeResponseCodeIsSuccessful()
     {
@@ -4105,7 +4105,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code 3xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
      */
     public function seeResponseCodeIsRedirection(): void
     {
@@ -4117,7 +4117,7 @@ trait AcceptanceTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code 3xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
      */
     public function canSeeResponseCodeIsRedirection(): void
     {
@@ -4129,7 +4129,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Checks that the response code 3xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
      */
     public function tryToSeeResponseCodeIsRedirection(): bool
     {
@@ -4143,7 +4143,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
      */
     public function retrySeeResponseCodeIsRedirection()
     {
@@ -4156,7 +4156,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code is 4xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
      */
     public function seeResponseCodeIsClientError(): void
     {
@@ -4168,7 +4168,7 @@ trait AcceptanceTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code is 4xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
      */
     public function canSeeResponseCodeIsClientError(): void
     {
@@ -4180,7 +4180,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Checks that the response code is 4xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
      */
     public function tryToSeeResponseCodeIsClientError(): bool
     {
@@ -4194,7 +4194,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
      */
     public function retrySeeResponseCodeIsClientError()
     {
@@ -4207,7 +4207,7 @@ trait AcceptanceTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code is 5xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
      */
     public function seeResponseCodeIsServerError(): void
     {
@@ -4219,7 +4219,7 @@ trait AcceptanceTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code is 5xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
      */
     public function canSeeResponseCodeIsServerError(): void
     {
@@ -4231,7 +4231,7 @@ trait AcceptanceTesterActions
      *
      * [!] Test won't be stopped on fail. Error won't be logged
      * Checks that the response code is 5xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
      */
     public function tryToSeeResponseCodeIsServerError(): bool
     {
@@ -4245,7 +4245,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
      */
     public function retrySeeResponseCodeIsServerError()
     {
@@ -4265,7 +4265,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function seeInTitle($title)
     {
@@ -4284,7 +4284,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function canSeeInTitle($title)
     {
@@ -4303,7 +4303,7 @@ trait AcceptanceTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function tryToSeeInTitle($title): bool
     {
@@ -4317,7 +4317,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function retrySeeInTitle($title)
     {
@@ -4332,7 +4332,7 @@ trait AcceptanceTesterActions
      * Checks that the page title does not contain the given string.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function dontSeeInTitle($title)
     {
@@ -4346,7 +4346,7 @@ trait AcceptanceTesterActions
      * Checks that the page title does not contain the given string.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function cantSeeInTitle($title)
     {
@@ -4360,7 +4360,7 @@ trait AcceptanceTesterActions
      * Checks that the page title does not contain the given string.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function tryToDontSeeInTitle($title): bool
     {
@@ -4374,7 +4374,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function retryDontSeeInTitle($title)
     {
@@ -4398,7 +4398,7 @@ trait AcceptanceTesterActions
      * # switch to iframe
      * $I->switchToIframe("another_frame");
      * ```
-     * @see \Codeception\Lib\InnerBrowser::switchToIframe()
+     * Related logic: see \Codeception\Lib\InnerBrowser::switchToIframe()
      */
     public function switchToIframe(string $name): void
     {
@@ -4421,7 +4421,7 @@ trait AcceptanceTesterActions
      * # switch to iframe
      * $I->switchToIframe("another_frame");
      * ```
-     * @see \Codeception\Lib\InnerBrowser::switchToIframe()
+     * Related logic: see \Codeception\Lib\InnerBrowser::switchToIframe()
      */
     public function tryToSwitchToIframe(string $name): bool
     {
@@ -4435,7 +4435,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::switchToIframe()
+     * Related logic: see \Codeception\Lib\InnerBrowser::switchToIframe()
      */
     public function retrySwitchToIframe(string $name)
     {
@@ -4450,7 +4450,7 @@ trait AcceptanceTesterActions
      * Moves back in history.
      *
      * @param int $numberOfSteps (default value 1)
-     * @see \Codeception\Lib\InnerBrowser::moveBack()
+     * Related logic: see \Codeception\Lib\InnerBrowser::moveBack()
      */
     public function moveBack(int $numberOfSteps = 1): void
     {
@@ -4464,7 +4464,7 @@ trait AcceptanceTesterActions
      * Moves back in history.
      *
      * @param int $numberOfSteps (default value 1)
-     * @see \Codeception\Lib\InnerBrowser::moveBack()
+     * Related logic: see \Codeception\Lib\InnerBrowser::moveBack()
      */
     public function tryToMoveBack(int $numberOfSteps = 1): bool
     {
@@ -4478,7 +4478,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::moveBack()
+     * Related logic: see \Codeception\Lib\InnerBrowser::moveBack()
      */
     public function retryMoveBack(int $numberOfSteps = 1)
     {
@@ -4496,7 +4496,7 @@ trait AcceptanceTesterActions
      * ```php
      * $I->setServerParameters([]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::setServerParameters()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setServerParameters()
      */
     public function setServerParameters(array $params): void
     {
@@ -4513,7 +4513,7 @@ trait AcceptanceTesterActions
      * ```php
      * $I->setServerParameters([]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::setServerParameters()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setServerParameters()
      */
     public function tryToSetServerParameters(array $params): bool
     {
@@ -4527,7 +4527,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::setServerParameters()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setServerParameters()
      */
     public function retrySetServerParameters(array $params)
     {
@@ -4544,7 +4544,7 @@ trait AcceptanceTesterActions
      * ```php
      * $I->haveServerParameter('name', 'value');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::haveServerParameter()
+     * Related logic: see \Codeception\Lib\InnerBrowser::haveServerParameter()
      */
     public function haveServerParameter(string $name, string $value): void
     {
@@ -4560,7 +4560,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->stopFollowingRedirects();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
      */
     public function stopFollowingRedirects(): void
     {
@@ -4577,7 +4577,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->stopFollowingRedirects();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
      */
     public function tryToStopFollowingRedirects(): bool
     {
@@ -4591,7 +4591,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
      */
     public function retryStopFollowingRedirects()
     {
@@ -4609,7 +4609,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->startFollowingRedirects();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
      */
     public function startFollowingRedirects(): void
     {
@@ -4626,7 +4626,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->startFollowingRedirects();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
      */
     public function tryToStartFollowingRedirects(): bool
     {
@@ -4640,7 +4640,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
      */
     public function retryStartFollowingRedirects()
     {
@@ -4658,7 +4658,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->followRedirect();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::followRedirect()
+     * Related logic: see \Codeception\Lib\InnerBrowser::followRedirect()
      */
     public function followRedirect(): void
     {
@@ -4675,7 +4675,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->followRedirect();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::followRedirect()
+     * Related logic: see \Codeception\Lib\InnerBrowser::followRedirect()
      */
     public function tryToFollowRedirect(): bool
     {
@@ -4689,7 +4689,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::followRedirect()
+     * Related logic: see \Codeception\Lib\InnerBrowser::followRedirect()
      */
     public function retryFollowRedirect()
     {
@@ -4707,7 +4707,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->setMaxRedirects(2);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::setMaxRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setMaxRedirects()
      */
     public function setMaxRedirects(int $maxRedirects): void
     {
@@ -4724,7 +4724,7 @@ trait AcceptanceTesterActions
      * <?php
      * $I->setMaxRedirects(2);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::setMaxRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setMaxRedirects()
      */
     public function tryToSetMaxRedirects(int $maxRedirects): bool
     {
@@ -4738,7 +4738,7 @@ trait AcceptanceTesterActions
      *
      * Retry number and interval set by $I->retry();
      *
-     * @see \Codeception\Lib\InnerBrowser::setMaxRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setMaxRedirects()
      */
     public function retrySetMaxRedirects(int $maxRedirects)
     {

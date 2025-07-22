@@ -11,7 +11,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\ClientCustom\ClientCustomForm $clientCustomForm
  * @var App\Invoice\Entity\Client $client
  *
- * @see config\common\params.php 'cvH'
+ * Related logic: see config\common\params.php 'cvH'
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  *
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -429,7 +429,7 @@ echo Field::date($form, 'client_birthdate')
         'id' => 'client_age',
     ])
     ->required(true)
-    //->min(16) not necessary @see ClientForm
+    //->min(16) not necessary Related logic: see ClientForm
     // #[Integer(min: 16)]
     // #[Required]
     // private ?int $client_age = null;

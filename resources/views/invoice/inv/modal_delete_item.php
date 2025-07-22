@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @see id = "delete-items" triggered by #delete-items on inv\view.php
- * @see InvController function view search modal_delete_items
- * @see invitem\_partial_item_table_modal.php
+ * Related logic: see id = "delete-items" triggered by #delete-items on inv\view.php
+ * Related logic: see InvController function view search modal_delete_items
+ * Related logic: see invitem\_partial_item_table_modal.php
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $partial_item_table_modal

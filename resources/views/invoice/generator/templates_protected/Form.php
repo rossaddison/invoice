@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @see interal type e.g. appearing in mysql
- * @see abstract type e.g. doctrine/cycle appearing IN annotation
- * @see type e.g. doctrine/cycle appearing BELOW annotation
+ * Related logic: see interal type e.g. appearing in mysql
+ * Related logic: see abstract type e.g. doctrine/cycle appearing IN annotation
+ * Related logic: see type e.g. doctrine/cycle appearing BELOW annotation
  *
  * @var App\Invoice\Entity\Gentor $generator
  * @var Cycle\Database\Table $orm_schema

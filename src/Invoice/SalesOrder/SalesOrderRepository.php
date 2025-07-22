@@ -77,7 +77,7 @@ final class SalesOrderRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrder|null $salesorder
      * @throws Throwable
      */
@@ -87,7 +87,7 @@ final class SalesOrderRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrder|null $salesorder
      * @throws Throwable
      */
@@ -216,7 +216,7 @@ final class SalesOrderRepository extends Select\Repository
     }
 
     /**
-     * @see Invoice\Entity\SalesOrder getStatus_id in_array
+     * Related logic: see Invoice\Entity\SalesOrder getStatus_id in_array
      * @param Translator $translator
      * @return array
      */
@@ -260,19 +260,19 @@ final class SalesOrderRepository extends Select\Repository
             '6' => [
                 // Customer Confirmed Delivery
                 'label' => $translator->translate('salesorder.goods.services.confirmed'),
-                // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
+                // 'Related logic: see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'confirmed',
                 'href' => 6,
             ],
             '7' => [
                 'label' => $translator->translate('salesorder.invoice.generate'),
-                // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
+                // 'Related logic: see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'generate',
                 'href' => 7,
             ],
             '8' => [
                 'label' => $translator->translate('salesorder.invoice.generated'),
-                // '@see App(src)/Invoice/Asset/invoice/css/yii3i.css
+                // 'Related logic: see App(src)/Invoice/Asset/invoice/css/yii3i.css
                 'class' => 'generated',
                 'href' => 8,
             ],

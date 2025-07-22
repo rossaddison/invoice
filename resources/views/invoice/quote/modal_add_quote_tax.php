@@ -4,7 +4,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see views/quote/view.php line 67: id="add-quote-tax" triggered by
+ * Related logic: see views/quote/view.php line 67: id="add-quote-tax" triggered by
  *      <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s

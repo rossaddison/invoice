@@ -213,7 +213,7 @@ $toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf(
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
 /**
- * @see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
+ * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

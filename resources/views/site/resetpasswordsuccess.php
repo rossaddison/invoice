@@ -7,10 +7,10 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
  *
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var array $resetpasswordsuccess
  *
- * @see 'i.password_reset'
+ * Related logic: see 'i.password_reset'
  * 'Password reset:'
  */
 

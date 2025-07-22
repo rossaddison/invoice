@@ -121,7 +121,7 @@ class Product
 
     /**
      * Mandatory (M) eg. 0160 from PeppolArrays getIso6523_icd()
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
      * @param string $product_sii_schemeid
      */
     public function setProduct_sii_schemeid(string $product_sii_schemeid): void
@@ -130,7 +130,7 @@ class Product
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
      * @return string|null
      */
     public function getProduct_sii_id(): string|null
@@ -145,7 +145,7 @@ class Product
 
     /**
      * Used with src/Invoice/Helpers/Peppol/PeppolArrays function getUncl7143 eg. SRV
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/listID/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/listID/
      * @return string|null
      */
     public function getProduct_icc_listid(): string|null
@@ -250,7 +250,7 @@ class Product
 
     /**
      * eg. Colour
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
      * @return string|null
      */
     public function getProduct_additional_item_property_name(): string|null
@@ -265,7 +265,7 @@ class Product
 
     /**
      * eg. Black
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
      * @return string|null
      */
     public function getProduct_additional_item_property_value(): string|null
@@ -320,7 +320,7 @@ class Product
 
     /**
      * Make sure the sequence of parameters is correct
-     * @see https://github.com/yiisoft/demo/issues/462
+     * Related logic: see https://github.com/yiisoft/demo/issues/462
      * @param int $tax_rate_id
      * @param int $unit_id
      * @param int $family_id

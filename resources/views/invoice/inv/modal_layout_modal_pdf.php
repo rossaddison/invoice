@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Widget\Bootstrap5ModalPdf $this->layoutParameters['iframeWithPdf']
+ * Related logic: see App\Widget\Bootstrap5ModalPdf $this->layoutParameters['iframeWithPdf']
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $iframeWithPdf
  * @var string $type

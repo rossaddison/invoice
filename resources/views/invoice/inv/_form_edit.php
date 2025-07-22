@@ -155,7 +155,7 @@ if ($vat) {
                                                  * Query parameters used to build a return url back to this form
                                                  * in DeliveryController edit function
                                                  * once the delivery location has been edited
-                                                 * @see vendor\yiisoft\router\UrlGeneratorInterface;
+                                                 * Related logic: see vendor\yiisoft\router\UrlGeneratorInterface;
                                                  */
                                             'origin' => 'inv',
                                             'origin_id' => $form->getId(),
@@ -229,7 +229,7 @@ if ($vat) {
                                                  * Query parameters used to build a return url back to this form
                                                  * in PostalAddressController edit function
                                                  * once the postal address location has been edited
-                                                 * @see vendor\yiisoft\router\UrlGeneratorInterface;
+                                                 * Related logic: see vendor\yiisoft\router\UrlGeneratorInterface;
                                                  */
                                             'origin' => 'inv',
                                             'origin_id' => $form->getId(),

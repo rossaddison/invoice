@@ -6,8 +6,8 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
 
 /**
- * @see App\Invoice\Helpers\PdfHelper generate_inv_html
- * @see InvController function url_key
+ * Related logic: see App\Invoice\Helpers\PdfHelper generate_inv_html
+ * Related logic: see InvController function url_key
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Entity\InvAmount $inv_amount
@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Img;
  * @var bool $is_overdue
  * @var float $balance
  *
- * @see src\ViewInjection\LayoutViewInjection
+ * Related logic: see src\ViewInjection\LayoutViewInjection
  * @var string $companyLogoFileName
  * @var string $logoPath
  * @var int $companyLogoWidth
@@ -109,7 +109,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <div class="invoice">
                 <?php
                                             /**
-                                             * @see src\ViewInjection\LayoutViewInjection.php
+                                             * Related logic: see src\ViewInjection\LayoutViewInjection.php
                                              */
                                             echo Img::tag()
                                                  ->width($companyLogoWidth)

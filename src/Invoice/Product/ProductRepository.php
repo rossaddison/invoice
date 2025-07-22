@@ -75,7 +75,7 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
      * @throws Throwable
      */
@@ -85,7 +85,7 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
      * @throws Throwable
      */

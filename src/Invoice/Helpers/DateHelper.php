@@ -363,7 +363,7 @@ class DateHelper
 
     /**
      * If a delivery period has been setup for the invoice, use it instead of the month's beginning and end date
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/
      * @param Inv $invoice
      * @param DateTime $datetime
      * @param delRepo $delRepo

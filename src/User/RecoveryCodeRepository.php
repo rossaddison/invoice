@@ -78,7 +78,7 @@ final class RecoveryCodeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|RecoveryCode|null $backup
      * @psalm-param TEntity $backup
      * @throws Throwable
@@ -89,7 +89,7 @@ final class RecoveryCodeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|RecoveryCode|null $backup
 
      * @throws Throwable

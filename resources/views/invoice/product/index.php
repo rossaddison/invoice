@@ -111,7 +111,7 @@ $toolbar = Div::tag();
         new DataColumn(
             /**
              * Use: Full parameter input example of DataColumn
-             * @see Yiisoft\Yii\DataView\Column\DataColumn bool|array|FilterWidget|DropdownFilter|TextInputFilter
+             * Related logic: see Yiisoft\Yii\DataView\Column\DataColumn bool|array|FilterWidget|DropdownFilter|TextInputFilter
              */
             field: 'product_sku',
             property: 'filter_product_sku',

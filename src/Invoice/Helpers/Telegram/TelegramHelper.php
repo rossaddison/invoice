@@ -16,14 +16,14 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**
  * Using the following functions currently:
- * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendInvoice
- * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendLocation
- * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendMessage
- * @see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  getUpdates
- * @see https://core.telegram.org/bots/api#sendInvoice
- * @see https://core.telegram.org/bots/api#sendLocation
- * @see https://core.telegram.org/bots/api#sendMessage
- * @see https://core.telegram.org/bots/api#getupdates
+ * Related logic: see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendInvoice
+ * Related logic: see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendLocation
+ * Related logic: see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  sendMessage
+ * Related logic: see ..\vendor\vjik\telegram-bot-api\src\TelegramBotApi.php  getUpdates
+ * Related logic: see https://core.telegram.org/bots/api#sendInvoice
+ * Related logic: see https://core.telegram.org/bots/api#sendLocation
+ * Related logic: see https://core.telegram.org/bots/api#sendMessage
+ * Related logic: see https://core.telegram.org/bots/api#getupdates
  */
 
 final class TelegramHelper

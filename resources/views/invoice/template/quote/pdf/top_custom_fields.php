@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see App\Invoice\Helpers\PdfHelper function generate_quote_pdf
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generate_quote_pdf
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator

@@ -30,7 +30,7 @@ final class TelegramController extends BaseController
 {
     /**
      * Note: Yiisoft\Di\NotFoundException can occur if $factory is placed after $telegramBotApi i.e. in the wrong order
-     * @see https://github.com/rossaddison/invoice/issues/41
+     * Related logic: see https://github.com/rossaddison/invoice/issues/41
      */
     public function __construct(
         SessionInterface $session,

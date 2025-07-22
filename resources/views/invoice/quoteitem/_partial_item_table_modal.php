@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see QuoteController function view $parameters['model_delete_items']
+ * Related logic: see QuoteController function view $parameters['model_delete_items']
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $quoteItems

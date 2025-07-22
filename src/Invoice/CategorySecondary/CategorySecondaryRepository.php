@@ -55,7 +55,7 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CategorySecondary|null $categorysecondary
      * @psalm-param TEntity $categorysecondary
      * @throws Throwable
@@ -66,7 +66,7 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CategorySecondary|null $categorysecondary
 
      * @throws Throwable

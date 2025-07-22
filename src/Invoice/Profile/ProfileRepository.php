@@ -52,7 +52,7 @@ final class ProfileRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Profile|null $profile
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class ProfileRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Profile|null $profile
      * @throws Throwable
      */

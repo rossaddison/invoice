@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see Invoice...View...{select invoice}...Options dropdown button
- * @see InvController function view and function view_modal_delete_items
+ * Related logic: see Invoice...View...{select invoice}...Options dropdown button
+ * Related logic: see InvController function view and function view_modal_delete_items
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $invItems

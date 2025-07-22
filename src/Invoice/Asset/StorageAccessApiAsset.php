@@ -24,7 +24,7 @@ final class StorageAccessApiAsset extends AssetBundle
          * Chrome is moving towards a new experience that allows users to
          * choose to browse without third-party non-partitioned cookies.
          *
-         * @see https://developers.google.com/privacy-sandbox/cookies/storage-access-api
+         * Related logic: see https://developers.google.com/privacy-sandbox/cookies/storage-access-api
          */
         'storageAccessApiAsset/chrome/chrome.js',
     ];

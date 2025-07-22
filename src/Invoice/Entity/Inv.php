@@ -42,7 +42,7 @@ class Inv
     private readonly ArrayCollection $items;
 
     /**
-     * @see Used to determine how many times an email has been sent for this specific invoice to the client
+     * Related logic: see Used to determine how many times an email has been sent for this specific invoice to the client
      * @var ArrayCollection<array-key, InvSentLog>
      */
     #[HasMany(target: InvSentLog::class)]
@@ -50,7 +50,7 @@ class Inv
 
 
     /**
-     * @see Used to determine the number of recurring invoices that have been made out for this particular invoice.
+     * Related logic: see Used to determine the number of recurring invoices that have been made out for this particular invoice.
      * @var ArrayCollection<array-key, InvRecurring>
      */
     #[HasMany(target: InvRecurring::class)]
@@ -509,7 +509,7 @@ class Inv
      * the VAT rate is, use this code instead of a tax point date.
      * If you have a string value for this, you should not have a value for your tax point date
      * The two are mutually exclusive.
-     * @see src/resources/views/invoice/info/deutschebahn.php
+     * Related logic: see src/resources/views/invoice/info/deutschebahn.php
      * @return string
      */
     public function getStand_in_code(): string
@@ -529,7 +529,7 @@ class Inv
 
     /**
      * NB! Make sure you have the correct sequence of parameters between the brackets
-     * @see https://github.com/yiisoft/demo/issues/462
+     * Related logic: see https://github.com/yiisoft/demo/issues/462
      * @param int $group_id
      * @param int $client_id
      */

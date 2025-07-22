@@ -12,7 +12,7 @@ class PaymentTerms implements XmlSerializable
     public function __construct(private readonly ?string $note) {}
 
     /**
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentTerms
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentTerms
      * @param Writer $writer
      */
     #[\Override]

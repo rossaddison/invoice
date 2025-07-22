@@ -74,7 +74,7 @@ class PartyLegalEntity implements XmlSerializable
                 [
                     'name' => Schema::CBC . 'CompanyID',
                     'value' => $this->companyId,
-                    /** @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=CompanyId */
+                    /** Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=CompanyId */
                     'attributes' => $this->companyIdAttributes,
                 ],
             ]);

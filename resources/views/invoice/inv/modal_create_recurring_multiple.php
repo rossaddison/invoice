@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see search resources/views/invoice/inv/index #create-recurring-multiple which triggers this modal and corresponds to the id on this div
+ * Related logic: see search resources/views/invoice/inv/index #create-recurring-multiple which triggers this modal and corresponds to the id on this div
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

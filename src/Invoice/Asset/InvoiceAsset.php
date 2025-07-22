@@ -38,9 +38,9 @@ class InvoiceAsset extends AssetBundle
          * The .js files are jquery based i.e Basic syntax is: $(selector).action()
          *
          * Modals use the following file which is available in unminified form
-         * @see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
+         * Related logic: see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
          * Modals use the following file which is available in minified form
-         * @see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
+         * Related logic: see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
          */
 
         // e.g. the settings tabs with general, invoice, quote etc depend on this file and also

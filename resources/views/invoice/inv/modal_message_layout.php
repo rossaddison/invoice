@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 
 /**
  * This is a layout which will hold the form passed to it
- * @see App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction
+ * Related logic: see App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction
  * @var string $form
  * @var string $type
  */

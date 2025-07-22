@@ -75,7 +75,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param Setting|null $setting
      * @throws Throwable
      */
@@ -87,7 +87,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param Setting|null $setting
      * @throws Throwable
      */
@@ -151,8 +151,8 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#errors
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-multi-factor
+     * Related logic: see https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#errors
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-multi-factor
      * @param string $mfaType e.g. TOTP (Timed One Time Password)
      * @param string $uniqueReference
      * @return string
@@ -236,7 +236,7 @@ final class SettingRepository extends Select\Repository
 
     /**
      * Note: You will need to adapt this code if you have more than one screen
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-screens
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-screens
      * e.g. width=1920&height=1080&scaling-factor=1&colour-depth=16,width=3000&height=2000&scaling-factor=1.25&colour-depth=16
      * Width and height must be positive whole numbers
      * @return string
@@ -257,7 +257,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-user-ids
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-user-ids
      * e.g. my-application=alice123
      */
     public function getGovClientUserIDs(): string
@@ -267,7 +267,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-timezone
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-client-timezone
      * e.g. UTC+01:00
      */
     public function getGovClientTimezone(): string
@@ -278,7 +278,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-vendor-forwarded
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-vendor-forwarded
      * The by field must be the public IP address that the server received the request on.
      * For the first hop, this is the public IP address of the server and value of Gov-Vendor-Public-IP.
      * The for field must be the public IP address of the request sender.
@@ -296,7 +296,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-vendor-license-ids
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-vendor-license-ids
      * e.g. my-licensed-software=8D7963490527D33716835EE7C195516D5E562E03B224E9B359836466EE40CDE1
      */
     public function getGovVendorLicenseIDs(): string
@@ -306,7 +306,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-vendor-product-name
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/#gov-vendor-product-name
      * e.g.
      */
     public function getGovVendorProductName(): string
@@ -549,7 +549,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see C:\wamp64\www\invoice\src\Invoice\Helpers\PdfHelper.php generate_inv_html
+     * Related logic: see C:\wamp64\www\invoice\src\Invoice\Helpers\PdfHelper.php generate_inv_html
      * @return array
      */
     public function get_private_company_details(): array
@@ -772,7 +772,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see config/params.php
+     * Related logic: see config/params.php
      * @return int
      */
     public function getSchemaProvidersMode(): int
@@ -1605,8 +1605,8 @@ final class SettingRepository extends Select\Repository
                     'label' => 'Token',
                 ],
                 /**
-                 * @see settings/views/partial_settings_online_payment.php line 115 $key
-                 * @see resources/messages/en/app.php online.payment.thirdPartyProvider
+                 * Related logic: see settings/views/partial_settings_online_payment.php line 115 $key
+                 * Related logic: see resources/messages/en/app.php online.payment.thirdPartyProvider
                  */
                 'thirdPartyProvider' => [
                     'type' => 'text',
@@ -1624,13 +1624,13 @@ final class SettingRepository extends Select\Repository
                     'type' => 'password',
                     'label' => 'Api Key',
                 ],
-                // @see src/Invoice/Language/English/gateway_lang
+                // Related logic: see src/Invoice/Language/English/gateway_lang
                 // Not server-side ie. client-side
                 'publishableKey' => [
                     'type' => 'password',
                     'label' => 'Publishable Key',
                 ],
-                // server-side @see https://dashboard.stripe.com/test/dashboard
+                // server-side Related logic: see https://dashboard.stripe.com/test/dashboard
                 'secretKey' => [
                     'type' => 'password',
                     'label' => 'Secret Key',
@@ -2230,7 +2230,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see ..\src\ViewInjection\LayoutViewInjection
+     * Related logic: see ..\src\ViewInjection\LayoutViewInjection
      * @param bool $debugMode
      */
     public function debugMode(bool $debugMode): void
@@ -2268,7 +2268,7 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @see ..\src\ViewInjection\LayoutViewInjection
+     * Related logic: see ..\src\ViewInjection\LayoutViewInjection
      * @param bool $signupAutomaticallyAssignClient
      */
     public function signupAutomaticallyAssignClient(bool $signupAutomaticallyAssignClient): void

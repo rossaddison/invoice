@@ -38,7 +38,7 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Unit|null $unit
      * @throws Throwable
      */
@@ -48,7 +48,7 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Unit|null $unit
      * @throws Throwable
      */

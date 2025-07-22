@@ -13,11 +13,11 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Definitions\DynamicReference;
 
 /**
- * @see https://github.com/yiisoft/translator/blob/master/config/di.php
+ * Related logic: see https://github.com/yiisoft/translator/blob/master/config/di.php
  * @var array $params
  * @var array $params['yiisoft/translator']
  * @var string $params['yiisoft/translator']['defaultCategory']
- * @see yiisoft/validator/messages e.g. '{Property} cannot be blank.' => '{Property} darf nicht leer sein.',
+ * Related logic: see yiisoft/validator/messages e.g. '{Property} cannot be blank.' => '{Property} darf nicht leer sein.',
  * @var string $params['yiisoft/translator']['validatorCategory']
  */
 

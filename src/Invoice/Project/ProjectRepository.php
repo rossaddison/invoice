@@ -52,7 +52,7 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Project|null $project
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class ProjectRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Project|null $project
      * @throws Throwable
      */

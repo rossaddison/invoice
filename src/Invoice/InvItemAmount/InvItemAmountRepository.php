@@ -53,7 +53,7 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAmount|null $invitemamount
      * @throws Throwable
      */
@@ -63,7 +63,7 @@ final class InvItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAmount|null $invitemamount
      * @throws Throwable
      */

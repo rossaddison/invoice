@@ -11,7 +11,7 @@ final readonly class InvTaxRateService
     public function __construct(private InvTaxRateRepository $repository) {}
 
     /**
-     * @see resources/views/invoice/inv/modal_add_inv_tax.php
+     * Related logic: see resources/views/invoice/inv/modal_add_inv_tax.php
      * @param InvTaxRate $model
      * @param array $array
      */

@@ -18,7 +18,7 @@ return [
         'locales' => [
             /**
              * Note: key affects RouteArgument _language, value matches locale
-             * @see key => value
+             * Related logic: see key => value
              */
             'af-ZA' => 'af-ZA',
             'ar-BH' => 'ar-BH',

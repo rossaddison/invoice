@@ -103,8 +103,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'url' => $this->url,
 
             /**
-             * @see \invoice\resources\messages\en\app.php
-             * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
+             * Related logic: see \invoice\resources\messages\en\app.php
+             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
              */
             'about' => [
                 'we' => $this->translator->translate('site.soletrader.about.we'),

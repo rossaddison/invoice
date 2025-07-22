@@ -58,7 +58,7 @@ final class UserInvController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        // @see yiisoft/rbac-php
+        // Related logic: see yiisoft/rbac-php
         $this->itemstorage = $itemstorage;
         $this->assignment = $assignment;
         $this->rule = $rule;
@@ -68,7 +68,7 @@ final class UserInvController extends BaseController
     }
 
     /**
-     * @see Purpose: Transfer i.e add, newly signed up users, sitting in user Table, into userInv Table
+     * Related logic: see Purpose: Transfer i.e add, newly signed up users, sitting in user Table, into userInv Table
      * @param Request $request
      * @param string $_language
      * @param FormHydrator $formHydrator
@@ -270,9 +270,9 @@ final class UserInvController extends BaseController
     }
 
     /**
-     * @see src\Widget\PageSizeLimiter buttonsGuest function
-     * @see ..\resources\views\invoice\inv\guest.php
-     * @see InvController\guest
+     * Related logic: see src\Widget\PageSizeLimiter buttonsGuest function
+     * Related logic: see ..\resources\views\invoice\inv\guest.php
+     * Related logic: see InvController\guest
      * @param string $userInvId
      * @param string $origin
      * @param string $limit
@@ -297,7 +297,7 @@ final class UserInvController extends BaseController
             }
         }
         /**
-         * @see config/common/routes.php Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
+         * Related logic: see config/common/routes.php Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
          */
         return $this->webService->getRedirectResponse(strlen($origin) > 0 ? $origin . '/guest' : 'client/guest');
     }
@@ -529,7 +529,7 @@ final class UserInvController extends BaseController
                             $tokenEntity = $tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
                             if (null !== $tokenEntity) {
                                 /**
-                                 * @see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
+                                 * Related logic: see https://github.com/search?q=repo%3Ayiisoft%2Fyii2-app-advanced%20already_&type=code
                                  */
                                 $tokenEntity->setToken('already_used_token_' . (string) time());
                                 $tR->save($tokenEntity);
@@ -538,7 +538,7 @@ final class UserInvController extends BaseController
                                 if (null !== $email) {
                                     /**
                                      * The client will have to be assigned to the user by the admin manually if this is not set
-                                     * @see InvoiceController 'signup_automatically_assign_client' => 0
+                                     * Related logic: see InvoiceController 'signup_automatically_assign_client' => 0
                                      */
                                     if ($sR->getSetting('signup_automatically_assign_client') == '1') {
                                         $client = new Client();
