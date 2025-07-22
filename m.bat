@@ -17,6 +17,7 @@ echo [2a] Run PHP Psalm on a Specific Directory
 echo [2b] Clear Psalm's cache (in the event of stubborn errors)
 echo [3] Check Composer Outdated
 echo [3a] Composer why-not {repository eg. yiisoft/yii-demo} {patch/minor version e.g. 1.1.1}
+echo [3b] Clear Composer Cache and Resolve Lock File Conflicts without updating actual packages
 echo [4] Run Composer Update
 echo [4a] Run Node Modules Update
 echo [4b] Run Install or update nvm-windows to the latest version
@@ -52,6 +53,7 @@ if "%choice%"=="2a" goto psalm_directory
 if "%choice%"=="2b" goto psalm_clear_cache
 if "%choice%"=="3" goto outdated
 if "%choice%"=="3a" goto composerwhynot
+if "%choice%"=="3b" goto composer_clear_cache_and_resolve_lock_conflicts
 if "%choice%"=="4" goto composer_update
 if "%choice%"=="4a" goto node_modules_update
 if "%choice%"=="4b" goto nvm_install_or_update
@@ -226,6 +228,13 @@ goto menu
 set /p repo="Enter the package name (e.g. vendor/package): "
 set /p version="Enter the version (e.g. 1.0.0): "
 composer why-not %repo% %version%
+pause
+goto menu
+
+:composer_clear_cache_and_resolve_lock_conflicts
+echo Clearing composer cache and resolving lock file conflicts without updating any packages
+composer clear-cache
+composer update --lock
 pause
 goto menu
 
