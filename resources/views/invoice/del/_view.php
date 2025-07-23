@@ -149,12 +149,12 @@ use Yiisoft\Html\Tag\Form;
                     ['style' => 'text-decoration:none'],
                 ); ?>
                 <?= Field::text($form, 'global_location_number')
-                                                                                                                                                    ->label($translator->translate('delivery.location.global.location.number'))
-                                                                                                                                                    ->addInputAttributes([
-                                                                                                                                                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
-                                                                                                                                                        'disabled' => 'disabled',
-                                                                                                                                                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
-                                                                                                                                                    ]);
+                                                                                                                                                                    ->label($translator->translate('delivery.location.global.location.number'))
+                                                                                                                                                                    ->addInputAttributes([
+                                                                                                                                                                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
+                                                                                                                                                                        'disabled' => 'disabled',
+                                                                                                                                                                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
+                                                                                                                                                                    ]);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
