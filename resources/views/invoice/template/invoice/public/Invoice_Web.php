@@ -108,13 +108,13 @@ $vat = $s->getSetting('enable_vat_registration');
 
             <div class="invoice">
                 <?php
-                                            /**
-                                             * Related logic: see src\ViewInjection\LayoutViewInjection.php
-                                             */
-                                            echo Img::tag()
-                                                 ->width($companyLogoWidth)
-                                                 ->height($companyLogoHeight)
-                                                 ->src($logoPath);
+                    /**
+                     * Related logic: see src\ViewInjection\LayoutViewInjection.php
+                     */
+                    echo Img::tag()
+                         ->width($companyLogoWidth)
+                         ->height($companyLogoHeight)
+                         ->src($logoPath);
 ?>
                 
                 <br>

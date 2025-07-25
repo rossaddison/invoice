@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d5550737b639d4b2f9392be6c09b5de",
+    "content-hash": "82287252eecbddca8d22a2b3c374388d",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3723,16 +3723,16 @@
         },
         {
             "name": "grpc/grpc",
-            "version": "1.57.0",
+            "version": "1.74.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/grpc/grpc-php.git",
-                "reference": "b610c42022ed3a22f831439cb93802f2a4502fdf"
+                "reference": "32bf4dba256d60d395582fb6e4e8d3936bcdb713"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/b610c42022ed3a22f831439cb93802f2a4502fdf",
-                "reference": "b610c42022ed3a22f831439cb93802f2a4502fdf",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/32bf4dba256d60d395582fb6e4e8d3936bcdb713",
+                "reference": "32bf4dba256d60d395582fb6e4e8d3936bcdb713",
                 "shasum": ""
             },
             "require": {
@@ -3761,9 +3761,9 @@
                 "rpc"
             ],
             "support": {
-                "source": "https://github.com/grpc/grpc-php/tree/v1.57.0"
+                "source": "https://github.com/grpc/grpc-php/tree/v1.74.0"
             },
-            "time": "2023-08-14T23:57:54+00:00"
+            "time": "2025-07-24T20:02:16+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -5187,16 +5187,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.1.5",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "a51234aaaf76e2418891e1f3c3944e75b5d6f41e"
+                "reference": "fa01e95b079d09f6088c36d14f3c0c5be45eefea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/a51234aaaf76e2418891e1f3c3944e75b5d6f41e",
-                "reference": "a51234aaaf76e2418891e1f3c3944e75b5d6f41e",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/fa01e95b079d09f6088c36d14f3c0c5be45eefea",
+                "reference": "fa01e95b079d09f6088c36d14f3c0c5be45eefea",
                 "shasum": ""
             },
             "require": {
@@ -5277,9 +5277,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.1.5"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.3.2"
             },
-            "time": "2025-07-10T14:15:52+00:00"
+            "time": "2025-07-25T09:43:59+00:00"
         },
         {
             "name": "moneyphp/money",
@@ -13341,12 +13341,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "de8fb61c5c2d039c75bb2f4e6b6723a84f66597e"
+                "reference": "dd31cc514ce5a62e038e3a4db7e8ef090152c3cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/de8fb61c5c2d039c75bb2f4e6b6723a84f66597e",
-                "reference": "de8fb61c5c2d039c75bb2f4e6b6723a84f66597e",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/dd31cc514ce5a62e038e3a4db7e8ef090152c3cf",
+                "reference": "dd31cc514ce5a62e038e3a4db7e8ef090152c3cf",
                 "shasum": ""
             },
             "require": {
@@ -13418,7 +13418,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-21T10:54:53+00:00"
+            "time": "2025-07-23T08:10:45+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14197,12 +14197,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data.git",
-                "reference": "17ec31e9339c6b5149ae7f2cfd55d3476d035b3f"
+                "reference": "8490a4706733716e298da3705dd68e583f4276a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data/zipball/17ec31e9339c6b5149ae7f2cfd55d3476d035b3f",
-                "reference": "17ec31e9339c6b5149ae7f2cfd55d3476d035b3f",
+                "url": "https://api.github.com/repos/yiisoft/data/zipball/8490a4706733716e298da3705dd68e583f4276a8",
+                "reference": "8490a4706733716e298da3705dd68e583f4276a8",
                 "shasum": ""
             },
             "require": {
@@ -14212,8 +14212,8 @@
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.7.1",
-                "phpunit/phpunit": "^10.5.46",
-                "rector/rector": "^2.0.18",
+                "phpunit/phpunit": "^10.5.48",
+                "rector/rector": "^2.1.2",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.10.3"
@@ -14257,7 +14257,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-30T12:43:29+00:00"
+            "time": "2025-07-25T12:38:36+00:00"
         },
         {
             "name": "yiisoft/data-cycle",
@@ -14416,12 +14416,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "9f54f4bad7846f9f6a18e8fa9a99f5c265182b18"
+                "reference": "333f44d386caf976b88a24a1070c14b6112a1632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/9f54f4bad7846f9f6a18e8fa9a99f5c265182b18",
-                "reference": "9f54f4bad7846f9f6a18e8fa9a99f5c265182b18",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/333f44d386caf976b88a24a1070c14b6112a1632",
+                "reference": "333f44d386caf976b88a24a1070c14b6112a1632",
                 "shasum": ""
             },
             "require": {
@@ -14493,7 +14493,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-22T17:57:03+00:00"
+            "time": "2025-07-23T19:12:52+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14501,12 +14501,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "bc01d25e6ed538bc19220ce772bac3e81061a558"
+                "reference": "02c3bcadfdbcfe79e5405e2dcb2b6e8652cea00f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/bc01d25e6ed538bc19220ce772bac3e81061a558",
-                "reference": "bc01d25e6ed538bc19220ce772bac3e81061a558",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/02c3bcadfdbcfe79e5405e2dcb2b6e8652cea00f",
+                "reference": "02c3bcadfdbcfe79e5405e2dcb2b6e8652cea00f",
                 "shasum": ""
             },
             "require": {
@@ -14571,7 +14571,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-22T17:57:10+00:00"
+            "time": "2025-07-23T19:12:57+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -17866,12 +17866,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "63caeeb633d6b4a1cacbed809f58b0927b2d4100"
+                "reference": "ef8173bb9f5da30f4c8fd7c46b0445c24e5294bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/63caeeb633d6b4a1cacbed809f58b0927b2d4100",
-                "reference": "63caeeb633d6b4a1cacbed809f58b0927b2d4100",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/ef8173bb9f5da30f4c8fd7c46b0445c24e5294bc",
+                "reference": "ef8173bb9f5da30f4c8fd7c46b0445c24e5294bc",
                 "shasum": ""
             },
             "require": {
@@ -17954,7 +17954,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-09T18:56:03+00:00"
+            "time": "2025-07-25T12:38:55+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -20423,16 +20423,16 @@
         },
         {
             "name": "masterminds/html5",
-            "version": "2.9.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "f5ac2c0b0a2eefca70b2ce32a5809992227e75a6"
+                "reference": "fcf91eb64359852f00d921887b219479b4f21251"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/f5ac2c0b0a2eefca70b2ce32a5809992227e75a6",
-                "reference": "f5ac2c0b0a2eefca70b2ce32a5809992227e75a6",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/fcf91eb64359852f00d921887b219479b4f21251",
+                "reference": "fcf91eb64359852f00d921887b219479b4f21251",
                 "shasum": ""
             },
             "require": {
@@ -20484,9 +20484,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Masterminds/html5-php/issues",
-                "source": "https://github.com/Masterminds/html5-php/tree/2.9.0"
+                "source": "https://github.com/Masterminds/html5-php/tree/2.10.0"
             },
-            "time": "2024-03-31T07:05:07+00:00"
+            "time": "2025-07-25T09:04:22+00:00"
         },
         {
             "name": "ondram/ci-detector",
@@ -22879,16 +22879,16 @@
         },
         {
             "name": "sanmai/pipeline",
-            "version": "6.21",
+            "version": "6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sanmai/pipeline.git",
-                "reference": "6d729c0b0c662010d84cdea9b99f90a65ae4cf5e"
+                "reference": "fb8d0c23b4ef085315a36d397fafa052203020ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/6d729c0b0c662010d84cdea9b99f90a65ae4cf5e",
-                "reference": "6d729c0b0c662010d84cdea9b99f90a65ae4cf5e",
+                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/fb8d0c23b4ef085315a36d397fafa052203020ce",
+                "reference": "fb8d0c23b4ef085315a36d397fafa052203020ce",
                 "shasum": ""
             },
             "require": {
@@ -22896,6 +22896,7 @@
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.8",
+                "esi/phpunit-coverage-check": ">2",
                 "friendsofphp/php-cs-fixer": "^3.17",
                 "infection/infection": ">=0.30.3",
                 "league/pipeline": "^0.3 || ^1.0",
@@ -22904,6 +22905,7 @@
                 "phpstan/phpstan": "^2",
                 "phpunit/phpunit": ">=9.4 <12",
                 "sanmai/phpstan-rules": "^0.3.0",
+                "sanmai/phpunit-double-colon-syntax": "^0.1.1",
                 "vimeo/psalm": ">=2"
             },
             "type": "library",
@@ -22933,7 +22935,7 @@
             "description": "General-purpose collections pipeline",
             "support": {
                 "issues": "https://github.com/sanmai/pipeline/issues",
-                "source": "https://github.com/sanmai/pipeline/tree/6.21"
+                "source": "https://github.com/sanmai/pipeline/tree/6.22"
             },
             "funding": [
                 {
@@ -22941,7 +22943,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-16T04:06:56+00:00"
+            "time": "2025-07-22T09:07:07+00:00"
         },
         {
             "name": "sebastian/cli-parser",

@@ -17,7 +17,7 @@ final class PerformanceMetrics extends Widget
         $time = round($this->timer->get('overall'), 4);
         $memory = round(memory_get_peak_usage() / (1024 * 1024), 4);
 
-        return 'Time: $time s. Memory: $memory mb.';
+        return 'Time: ' . $time . ' s. Memory: ' . $memory . ' mb.';
     }
 
     public static function opCacheHealthCheck(): string

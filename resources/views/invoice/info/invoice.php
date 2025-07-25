@@ -52,6 +52,15 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>25th July 2025</b></p>
+<p>Installation Testing</p>
+<p><b>Step 1:</b> Create a database in phpMyAdmin using default settings - yii3_i</p>
+<p><b>Step 2:</b> Adjust .env file's BUILD_DATABASE=true</p>
+<p><b>Step 3:</b> Select your public/index.php url link .. let it run until see main screen</p>
+<p><b>Step 4:</b> Adjust .env file's BUILD_DATABASE=</p>
+<p><b>Step 5:</b> Signup admin</p>
+<p><b>Step 6:</b> Signup observer</p>
+<p><b>Step 7:</b> Login as admin and assign a client to observer ... Invoice User Accounts</p>
 <p><b>19th July 2025</b></p>
 <p>Replace styleci.yml with cs.yml</p>
 <p>Purpose: The cs.yml has been restructured to complete a dry-run, then create a pull request if changes are needed ... similar to styleci.yml</p>
