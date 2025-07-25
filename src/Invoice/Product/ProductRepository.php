@@ -8,7 +8,7 @@ use App\Invoice\Entity\Product;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\AndX;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -67,15 +67,15 @@ final class ProductRepository extends Select\Repository
         return $this->prepareDataReader($this->select());
     }
 
-    private function getFilter(string $product_sku): All
+    private function getFilter(string $product_sku): AndX
     {
-        return new All(
+        return new AndX(
             new Like('product_sku', $product_sku),
         );
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
      * @throws Throwable
      */
@@ -85,7 +85,7 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Product|null $product
      * @throws Throwable
      */

@@ -21,7 +21,7 @@ final readonly class ClientNoteService
          */
         $date = $array['date_note'] ?? '';
         /**
-         * @see https://www.php.net/manual/en/datetime.createfromformat
+         * Related logic: see https://www.php.net/manual/en/datetime.createfromformat
          * @var bool|DateTime $result
          */
         $result = $datetime::createFromFormat('Y-m-d', $date);
@@ -49,7 +49,7 @@ final readonly class ClientNoteService
          */
         $date = $array['date_note'] ?? '';
         /**
-         * @see https://www.php.net/manual/en/datetime.createfromformat
+         * Related logic: see https://www.php.net/manual/en/datetime.createfromformat
          * @var bool|DateTime $result
          */
         $result = $datetime::createFromFormat('Y-m-d', $date);

@@ -52,6 +52,15 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>25th July 2025</b></p>
+<p>Installation Testing</p>
+<p><b>Step 1:</b> Create a database in phpMyAdmin using default settings - yii3_i</p>
+<p><b>Step 2:</b> Adjust .env file's BUILD_DATABASE=true</p>
+<p><b>Step 3:</b> Select your public/index.php url link .. let it run until see main screen</p>
+<p><b>Step 4:</b> Adjust .env file's BUILD_DATABASE=</p>
+<p><b>Step 5:</b> Signup admin</p>
+<p><b>Step 6:</b> Signup observer</p>
+<p><b>Step 7:</b> Login as admin and assign a client to observer ... Invoice User Accounts</p>
 <p><b>19th July 2025</b></p>
 <p>Replace styleci.yml with cs.yml</p>
 <p>Purpose: The cs.yml has been restructured to complete a dry-run, then create a pull request if changes are needed ... similar to styleci.yml</p>
@@ -1322,7 +1331,7 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
 <img src="/site/amazon_pay_v_2_40.png" height="300" width="450"/>
 <p>15. The PaymentController and MerchantController guest related functions adopt the same approach as the InvController:</p>
 <p><code>
-        // Get the current user and determine from (@see Settings...User Account) whether they have been given <br>
+        // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given <br>
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second <br>
         // 'line of defense' to support role based admin control. <br>
         <br> 
@@ -1334,7 +1343,7 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
                  ? $uiR->repoUserInvUserIdquery((string)$user->getId()) <br>
                  : null); <br>
         <br>        
-        // Determine what clients have been allocated to this user (@see Settings...User Account) <br>
+        // Determine what clients have been allocated to this user (Related logic: see Settings...User Account) <br>
         // by looking at UserClient table <br>       
         <br>                
         // eg. If the user is a guest-accountant, they will have been allocated certain clients <br>
@@ -1417,7 +1426,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Invoice, Quote, Product, UserInv GridView adjusted for latest Gridview code adjustments. Product table can now be sorted.</p>
 <p>All tables sort with descending ie. minus sign attached to Sort:: array's id ie. -id</p>
 <code>$sort = Sort::only(['status_id','number','date_created','date_due','id','client_id'])
-                // (@see vendor\yiisoft\data\src\Reader\Sort
+                // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest quotes first => -id
                 ->withOrderString($query_params['sort'] ?? '-id'); </code>

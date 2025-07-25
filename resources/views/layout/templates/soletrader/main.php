@@ -28,7 +28,7 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView  $this
  *
- * @see ..\config\common\params.php
+ * Related logic: see ..\config\common\params.php
  *         'yiisoft/yii-view' => [
  *             'viewPath' => '@views',
  *              //'layout' => '@views/layout/main.php',
@@ -78,7 +78,7 @@ $isGuest = $user === null || $user->getId() === null;
 $session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();
 /**
- * @see ./src/ViewInjection/LayoutViewInjection getLayoutParameters
+ * Related logic: see ./src/ViewInjection/LayoutViewInjection getLayoutParameters
  *  e.g. $title, $brandLabel, $companyWeb
  */
 $this->setTitle($title);
@@ -308,7 +308,7 @@ $this->setTitle($title);
     <main class="container py-3">
         <?=
     /**
-     * @see ./resources/views/site/index.php
+     * Related logic: see ./resources/views/site/index.php
      */
     $content
 ?>

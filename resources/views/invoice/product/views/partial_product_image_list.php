@@ -8,8 +8,8 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 
 /**
- * @see ...src\Invoice\Product\ProductController function view_partial_product_image
- * @see ...resources\views\invoice\product\views\partial_product_image.php
+ * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image
+ * Related logic: see ...resources\views\invoice\product\views\partial_product_image.php
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator

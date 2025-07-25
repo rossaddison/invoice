@@ -43,7 +43,7 @@ final class OffsetPagination extends Widget
     /**
      * The HTML attributes for the widget container tag. The following special options are recognized.
      *
-     * {@see \Yiisoft\Html\Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * {Related logic: see \Yiisoft\Html\Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
     public function options(array $value): self
     {

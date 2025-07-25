@@ -55,7 +55,7 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAllowanceCharge|null $acii
      * @psalm-param TEntity $acii
      * @throws Throwable
@@ -66,7 +66,7 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvItemAllowanceCharge|null $acii
 
      * @throws Throwable

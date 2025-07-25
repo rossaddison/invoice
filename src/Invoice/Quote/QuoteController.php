@@ -320,7 +320,7 @@ final class QuoteController extends BaseController
                         $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this quote
-                    // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+                    // Related logic: see UserClientRepository function get_not_assigned_to_user which ensures that only
                     // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
                     // So this line is an extra measure to ensure that the quote is being made out to the correct payer
                     // ie. not more than one user is associated with the client.
@@ -329,7 +329,7 @@ final class QuoteController extends BaseController
                         $saved_model = $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $gR);
                         /**
                          * The QuoteAmount entity is created automatically during the above saveQuote
-                         * @see src\Invoice\Entity\Quote $this->quoteAmount = new QuoteAmount();
+                         * Related logic: see src\Invoice\Entity\Quote $this->quoteAmount = new QuoteAmount();
                          */
                         $model_id = $saved_model->getId();
                         if (null !== $model_id) {
@@ -590,7 +590,7 @@ final class QuoteController extends BaseController
             $client_id = $ajax_body['client_id'];
             $user_client = $ucR->repoUserquery((string) $client_id);
             // Ensure that the client has only one (paying) user account otherwise reject this quote
-            // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+            // Related logic: see UserClientRepository function get_not_assigned_to_user which ensures that only
             // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
             // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
             // ie. not more than one user is associated with the client.
@@ -725,8 +725,8 @@ final class QuoteController extends BaseController
             $quote_tax_rate['tax_rate_id'] = 1;
         }
         /**
-         * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
-         * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php
+         * Related logic: see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
+         * Related logic: see ..\resources\views\invoice\setting\views partial_settings_taxes.php
          */
         $quote_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
         $quote_tax_rate['quote_tax_rate_amount'] = 0;
@@ -1388,7 +1388,7 @@ final class QuoteController extends BaseController
         $urlCreator->__invoke([], $order);
         $sort = Sort::only(['status_id','number','date_created','date_expires','id','client_id'])->withOrderString($sortString);
 
-        // Get the current user and determine from (@see Settings...User Account) whether they have been given
+        // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
         // 'line of defense' to support role based admin control.
 
@@ -1400,7 +1400,7 @@ final class QuoteController extends BaseController
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
             if ($userinv) {
-                // Determine what clients have been allocated to this user (@see Settings...User Account)
+                // Determine what clients have been allocated to this user (Related logic: see Settings...User Account)
                 // by looking at UserClient table
 
                 // eg. If the user is a guest-accountant, they will have been allocated certain clients
@@ -1535,7 +1535,7 @@ final class QuoteController extends BaseController
             $order = OrderHelper::stringToArray($sortString);
             $urlCreator->__invoke([], $order);
             $sort = Sort::only(['id','status_id','number','date_created','date_expires','client_id'])
-                        // (@see vendor\yiisoft\data\src\Reader\Sort
+                        // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                         // - => 'desc'  so -id => default descending on id
                         // Show the latest quotes first => -id
                         ->withOrder($order);

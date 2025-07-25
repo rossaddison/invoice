@@ -37,7 +37,7 @@ use Yiisoft\Html\Tag\Form;
 $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 
 /**
- * @see alert if there are no delivery locations associated with this quote
+ * Related logic: see alert if there are no delivery locations associated with this quote
  */
 echo $alert;
 

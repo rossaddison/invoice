@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @see src\Widget\Bootstrap5ModalInv renderPartialLayoutWithFormAsString $this->formParameters
- * @see inv\modal_layout which accepts this form via 'inv\add' controller action
+ * Related logic: see src\Widget\Bootstrap5ModalInv renderPartialLayoutWithFormAsString $this->formParameters
+ * Related logic: see inv\modal_layout which accepts this form via 'inv\add' controller action
  */
 
 use Yiisoft\FormModel\Field;

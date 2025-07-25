@@ -6,7 +6,7 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var array $onetimepasswordsuccess
  */
 

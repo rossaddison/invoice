@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see PaymentController function view_custom_fields and function view
+ * Related logic: see PaymentController function view_custom_fields and function view
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\PaymentCustom\PaymentCustomForm $paymentCustomForm
  * @var App\Invoice\Setting\SettingRepository $s

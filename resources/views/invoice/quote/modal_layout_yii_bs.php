@@ -9,8 +9,8 @@ use Yiisoft\Bootstrap5\Utility\Responsive;
 use Yiisoft\Bootstrap5\ModalDialogFullScreenSize;
 
 /**
- * @see The usage of the refactored Modal has been put on hold
- * @see App\Widget\Bootstrap5ModalQuote $this->layoutParameters['form']
+ * Related logic: see The usage of the refactored Modal has been put on hold
+ * Related logic: see App\Widget\Bootstrap5ModalQuote $this->layoutParameters['form']
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $form
  * @var string $type

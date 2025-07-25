@@ -65,7 +65,7 @@ final class ContractController extends BaseController
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'name', 'reference'])
-            // (@see vendor\yiisoft\data\src\Reader\Sort
+            // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
             // - => 'desc'  so -id => default descending on id
             // Show the latest quotes first => -id
             ->withOrderString($query_params['sort'] ?? '-id');

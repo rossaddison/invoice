@@ -44,7 +44,7 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|GentorRelation|null $generatorrelation
      * @throws Throwable
      */
@@ -54,7 +54,7 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|GentorRelation|null $generatorrelation
      * @throws Throwable
      */

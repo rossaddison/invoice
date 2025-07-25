@@ -235,7 +235,7 @@ class InvoiceLine implements XmlSerializable
     }
 
     /**
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=InvoiceLine
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=InvoiceLine
      * @param Writer $writer
      */
     #[\Override]

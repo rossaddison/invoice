@@ -38,7 +38,7 @@ final class GeneratorRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Gentor|null $generator
      * @throws Throwable
      */
@@ -48,7 +48,7 @@ final class GeneratorRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Gentor|null $generator
      * @throws Throwable
      */

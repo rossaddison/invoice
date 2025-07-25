@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see GeneratorController function google_translate_lang
+ * Related logic: see GeneratorController function google_translate_lang
  * @var array $combined_array
  */
 

@@ -54,7 +54,7 @@ final class QuoteTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteTaxRate|null $quotetaxrate
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ final class QuoteTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteTaxRate|null $quotetaxrate
      * @throws Throwable
      */

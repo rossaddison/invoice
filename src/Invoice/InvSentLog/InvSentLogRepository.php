@@ -145,7 +145,7 @@ final class InvSentLogRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvSentLog|null $invsentlog
      * @psalm-param TEntity $invsentlog
      * @throws Throwable

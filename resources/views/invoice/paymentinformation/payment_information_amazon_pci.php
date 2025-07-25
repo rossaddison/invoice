@@ -6,20 +6,20 @@ use Yiisoft\Html\Html;
 
 /**
  * @link https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#4-render-the-button
- * @see PaymentInformationController function amazonInForm
+ * Related logic: see PaymentInformationController function amazonInForm
  * @var App\Invoice\Entity\Client $client_on_invoice
  * @var App\Invoice\Entity\Inv $invoice
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
  * @var App\Invoice\Setting\SettingRepository $s
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator

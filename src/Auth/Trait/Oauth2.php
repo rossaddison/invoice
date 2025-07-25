@@ -58,7 +58,7 @@ trait Oauth2
         Yandex $yandex,
     ): void {
         /**
-         * @see config/common/params.php
+         * Related logic: see config/common/params.php
          */
         $developerSandboxHmrc->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('developersandboxhmrc'));
         $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
@@ -97,7 +97,7 @@ trait Oauth2
         $yandex->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('yandex'));
 
         /**
-         * @see https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView
+         * Related logic: see https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView
          * Rebuild the authUrl and tokenUrl to include the tenant (default: 'common') which can be
          * 'common', 'organisation', 'consumers', or ID. ID is used here.
          * The tenant can be acquired from Microsoft Entra Admin Centre ... Identity Overview ... Tenant

@@ -131,7 +131,7 @@ final class SalesOrderController extends BaseController
         $sort_string = $query_params['sort'] ?? '-id';
         $sort = Sort::only(['status_id','number','date_created', 'id','client_id'])->withOrderString((string) $sort_string);
 
-        // Get the current user and determine from (@see Settings...User Account) whether they have been given
+        // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
         // 'line of defense' to support role based admin control.
 
@@ -143,7 +143,7 @@ final class SalesOrderController extends BaseController
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
             if ($userinv) {
-                // Determine what clients have been allocated to this user (@see Settings...User Account)
+                // Determine what clients have been allocated to this user (Related logic: see Settings...User Account)
                 // by looking at UserClient table
 
                 // eg. If the user is a guest-accountant, they will have been allocated certain clients
@@ -201,7 +201,7 @@ final class SalesOrderController extends BaseController
         /** @psalm-suppress MixedAssignment $sort_string */
         $sort_string = $query_params['sort'] ?? '-id';
         $sort = Sort::only(['id','status_id','number','date_created','client_id'])
-                    // (@see vendor\yiisoft\data\src\Reader\Sort
+                    // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest quotes first => -id
                     /** @psalm-suppress MixedArgument $sort_string */
@@ -229,7 +229,7 @@ final class SalesOrderController extends BaseController
     // Sales Orders are created from Quotes see quote/approve
 
     /**
-     * @see SalesOrderRepository getStatuses function
+     * Related logic: see SalesOrderRepository getStatuses function
      * @param CurrentRoute $currentRoute
      * @param SOR $soR
      * @return Response
@@ -270,7 +270,7 @@ final class SalesOrderController extends BaseController
     }
 
     /**
-     * @see SalesOrderRepository getStatuses function
+     * Related logic: see SalesOrderRepository getStatuses function
      * @param CurrentRoute $currentRoute
      * @param SOR $soR
      * @return Response

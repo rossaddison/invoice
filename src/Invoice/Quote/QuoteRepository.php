@@ -110,7 +110,7 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Quote|null $quote
      * @throws Throwable
      */
@@ -120,7 +120,7 @@ final class QuoteRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Quote|null $quote
      * @throws Throwable
      */

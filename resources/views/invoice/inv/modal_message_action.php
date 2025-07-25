@@ -5,10 +5,10 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @see .\resources\views\invoice\inv\modal_message_layout.php
- * @see .\src\widget\Bootstrap5ModalTranslatorMessageWithAction.php
- * @see example .\src\Invoice\Inv\InvController.php action view
- * @see example .\resources\views\invoice\inv\view.php
+ * Related logic: see .\resources\views\invoice\inv\modal_message_layout.php
+ * Related logic: see .\src\widget\Bootstrap5ModalTranslatorMessageWithAction.php
+ * Related logic: see example .\src\Invoice\Inv\InvController.php action view
+ * Related logic: see example .\resources\views\invoice\inv\view.php
  *
  * @var App\Invoice\Setting\SettingRepository $s
  * @var string $translatedHeading

@@ -54,7 +54,7 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientCustom|null $clientcustom
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ClientCustom|null $clientcustom
      * @throws Throwable
      */

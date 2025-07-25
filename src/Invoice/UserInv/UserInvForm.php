@@ -15,7 +15,7 @@ final class UserInvForm extends FormModel
     private ?int $user_id = null;
 
     /**
-     * @see Dropdown 0 = Admin, 1 = Not Admin i.e. User with viewInv permission (not editInv Permission)
+     * Related logic: see Dropdown 0 = Admin, 1 = Not Admin i.e. User with viewInv permission (not editInv Permission)
      */
     #[Required]
     private ?int $type = null;

@@ -74,7 +74,7 @@ final class CreateCommand extends Command
         } catch (Throwable $t) {
             /**
              * Avoid Information Exposure
-             * @see https://cwe.mitre.org/data/definitions/200.html
+             * Related logic: see https://cwe.mitre.org/data/definitions/200.html
              * Previously: $io->error($t->getMessage() . ' ' . $t->getFile() . ' ' . $t->getLine());             *
              */
             throw $t;

@@ -12,7 +12,7 @@ class Contact implements XmlSerializable
     public function __construct(private readonly ?string $name, private readonly ?string $firstname, private readonly ?string $lastname, private readonly ?string $telephone, private readonly ?string $telefax, private readonly ?string $electronicMail) {}
 
     /**
-     * @see StoreCoveHelper validate_supplier_contact
+     * Related logic: see StoreCoveHelper validate_supplier_contact
      * @return string|null
      */
     public function getName(): ?string

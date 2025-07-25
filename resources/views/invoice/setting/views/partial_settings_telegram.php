@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see src\Invoice\Helpers\Telegram\TelegramHelper;
+ * Related logic: see src\Invoice\Helpers\Telegram\TelegramHelper;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator

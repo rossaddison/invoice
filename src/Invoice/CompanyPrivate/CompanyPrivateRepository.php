@@ -50,7 +50,7 @@ final class CompanyPrivateRepository extends Select\Repository
     }
 
     /**
-    * @see Reader/ReadableDataInterface|InvalidArgumentException
+    * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
     * @param array|CompanyPrivate|null $companyprivate
     * @throws Throwable
     */
@@ -60,7 +60,7 @@ final class CompanyPrivateRepository extends Select\Repository
     }
 
     /**
-    * @see Reader/ReadableDataInterface|InvalidArgumentException
+    * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
     * @param array|CompanyPrivate|null $companyprivate
     * @throws Throwable
     */

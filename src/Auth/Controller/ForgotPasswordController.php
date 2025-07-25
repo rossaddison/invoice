@@ -54,8 +54,8 @@ final class ForgotPasswordController
      * stored under entity Token. Two separate fields. This token when sent to user is always masked and when received by the
      * ResetPasswordController.php it is unmasked and compared and a form with 'new password' and confirm 'new password' are presented
      *
-     * @see src\ViewInjection\CommonViewInjection.php
-     * @see resources\views\site\forgotemailfailed.php and forgotusernotfound.php and forgotalert.php
+     * Related logic: see src\ViewInjection\CommonViewInjection.php
+     * Related logic: see resources\views\site\forgotemailfailed.php and forgotusernotfound.php and forgotalert.php
      *
      * @param AuthService $authService
      * @param CurrentRoute $currentRoute
@@ -105,8 +105,8 @@ final class ForgotPasswordController
                                 /**
                                  * This new Token will be nullified when the password is actually reset in the Token extension table i.e.
                                  * by searching the user ... identity ... token belonging to the user named 'request-password-reset'
-                                 * @see PasswordResetController.php
-                                 * @see https://github.com/yiisoft/yii2-app-advanced/blob/master/common/models/User.php function removePasswordResetToken
+                                 * Related logic: see PasswordResetController.php
+                                 * Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/common/models/User.php function removePasswordResetToken
                                  */
                                 $requestPasswordResetToken = $this->requestPasswordResetToken($identityId, $tR);
                             }
@@ -122,10 +122,10 @@ final class ForgotPasswordController
                         $_language = $currentRoute->getArgument('_language');
 
                         /**
-                         * @see A new UserInv (extension table of user) for the user is created.
+                         * Related logic: see A new UserInv (extension table of user) for the user is created.
                          * For additional headers to strengthen security refer to:
-                         * @see https://en.wikipedia.org/wiki/Email#Message_format
-                         * @see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
+                         * Related logic: see https://en.wikipedia.org/wiki/Email#Message_format
+                         * Related logic: see https://github.com/yiisoft/mailer/blob/1d3480bc26cbeba47b24e61f9ec0e717c244c0b7/tests/MessageTest.php#L217
                          * @var string $_language
                          */
                         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink($user, $_language, $requestPasswordResetToken);
@@ -159,8 +159,8 @@ final class ForgotPasswordController
             }
             /**
              * Once the user has presented their email address and submitted the form, show this message
-             * @see resources/messages/en/app.php
-             * @see resources/views/site/forgotalert.php
+             * Related logic: see resources/messages/en/app.php
+             * Related logic: see resources/views/site/forgotalert.php
              * 'i.password_reset_email' .....
              * 'You requested a new password for your installation. Please click the link in your inbox to reset your password:',
              */

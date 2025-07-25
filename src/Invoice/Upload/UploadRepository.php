@@ -84,7 +84,7 @@ final class UploadRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Upload|null $upload
      * @throws Throwable
      */
@@ -94,7 +94,7 @@ final class UploadRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Upload|null $upload
      * @throws Throwable
      */

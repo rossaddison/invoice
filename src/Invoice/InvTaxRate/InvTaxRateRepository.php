@@ -56,7 +56,7 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvTaxRate|null $invtaxrate
      * @throwable
      */
@@ -66,7 +66,7 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvTaxRate|null $invtaxrate
      * @throwable
      */

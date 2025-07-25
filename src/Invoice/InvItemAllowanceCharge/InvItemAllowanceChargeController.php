@@ -167,7 +167,7 @@ final class InvItemAllowanceChargeController extends BaseController
     public function index(Request $request, InvItemAllowanceChargeRepository $iiacR): Response
     {
         /**
-         * @see ...www\invoice\resources\views\invoice\inv\partial_item_table.php search ... Make sure to fill
+         * Related logic: see ...www\invoice\resources\views\invoice\inv\partial_item_table.php search ... Make sure to fill
          */
         $params = $request->getQueryParams();
         /** @var string $params['inv_item_id'] */

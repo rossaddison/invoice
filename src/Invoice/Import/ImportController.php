@@ -66,7 +66,7 @@ final class ImportController extends BaseController
         $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');
         $settingInvoiceplanePassword = $this->sR->getSetting('invoiceplane_database_password') ?: '';
         if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0) {
-            $dsn = (new Dsn(
+            $dsn = (string) (new Dsn(
                 'mysql',
                 '127.0.0.1',
                 $settingInvoiceplaneName,
@@ -74,8 +74,7 @@ final class ImportController extends BaseController
                 [
                     'charset' => 'utf8mb4',
                 ],
-            )
-            )->asString();
+            ));
             $arrayCache = new ArrayCache();
             $schemaCache = new SchemaCache($arrayCache);
             $pdoDriver = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword);

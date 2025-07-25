@@ -20,7 +20,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Alias to `haveHttpHeader`
-     * @see \Codeception\Module\PhpBrowser::setHeader()
+     * Related logic: see \Codeception\Module\PhpBrowser::setHeader()
      */
     public function setHeader(string $name, string $value): void
     {
@@ -31,7 +31,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Authenticates user for HTTP_AUTH
-     * @see \Codeception\Module\PhpBrowser::amHttpAuthenticated()
+     * Related logic: see \Codeception\Module\PhpBrowser::amHttpAuthenticated()
      */
     public function amHttpAuthenticated($username, $password): void
     {
@@ -48,7 +48,7 @@ trait FunctionalTesterActions
      * $I->amOnUrl('https://codeception.com');
      * $I->amOnPage('/quickstart'); // moves to https://codeception.com/quickstart
      * ```
-     * @see \Codeception\Module\PhpBrowser::amOnUrl()
+     * Related logic: see \Codeception\Module\PhpBrowser::amOnUrl()
      */
     public function amOnUrl($url): void
     {
@@ -72,7 +72,7 @@ trait FunctionalTesterActions
      * // moves to https://user.mysite.com/
      * ```
      *
-     * @see \Codeception\Module\PhpBrowser::amOnSubdomain()
+     * Related logic: see \Codeception\Module\PhpBrowser::amOnSubdomain()
      */
     public function amOnSubdomain($subdomain): void
     {
@@ -98,7 +98,7 @@ trait FunctionalTesterActions
      * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
      *
      * @return mixed
-     * @see \Codeception\Module\PhpBrowser::executeInGuzzle()
+     * Related logic: see \Codeception\Module\PhpBrowser::executeInGuzzle()
      */
     public function executeInGuzzle(\Closure $function)
     {
@@ -131,7 +131,7 @@ trait FunctionalTesterActions
      * @param string $name the name of the request header
      * @param string $value the value to set it to for subsequent
      *        requests
-     * @see \Codeception\Lib\InnerBrowser::haveHttpHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::haveHttpHeader()
      */
     public function haveHttpHeader(string $name, string $value): void
     {
@@ -155,7 +155,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @param string $name the name of the header to unset.
-     * @see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::unsetHttpHeader()
      */
     public function unsetHttpHeader(string $name): void
     {
@@ -166,7 +166,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * @deprecated Use [unsetHttpHeader](#unsetHttpHeader) instead
-     * @see \Codeception\Lib\InnerBrowser::deleteHeader()
+     * Related logic: see \Codeception\Lib\InnerBrowser::deleteHeader()
      */
     public function deleteHeader(string $name): void
     {
@@ -185,7 +185,7 @@ trait FunctionalTesterActions
      * // opens /register page
      * $I->amOnPage('/register');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::amOnPage()
+     * Related logic: see \Codeception\Lib\InnerBrowser::amOnPage()
      */
     public function amOnPage(string $page): void
     {
@@ -221,7 +221,7 @@ trait FunctionalTesterActions
      * $I->click(['link' => 'Login']);
      * ```
      * @param array|string $link
-     * @see \Codeception\Lib\InnerBrowser::click()
+     * Related logic: see \Codeception\Lib\InnerBrowser::click()
      */
     public function click($link, $context = null): void
     {
@@ -259,7 +259,7 @@ trait FunctionalTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::see()
+     * Related logic: see \Codeception\Lib\InnerBrowser::see()
      */
     public function see(string $text, $selector = null): void
     {
@@ -298,7 +298,7 @@ trait FunctionalTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::see()
+     * Related logic: see \Codeception\Lib\InnerBrowser::see()
      */
     public function canSee(string $text, $selector = null): void
     {
@@ -334,7 +334,7 @@ trait FunctionalTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::dontSee()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function dontSee(string $text, $selector = null): void
     {
@@ -371,7 +371,7 @@ trait FunctionalTesterActions
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param array|string $selector optional
-     * @see \Codeception\Lib\InnerBrowser::dontSee()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function cantSee(string $text, $selector = null): void
     {
@@ -388,7 +388,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInSource()
      */
     public function seeInSource(string $raw): void
     {
@@ -406,7 +406,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInSource()
      */
     public function canSeeInSource(string $raw): void
     {
@@ -423,7 +423,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInSource()
      */
     public function dontSeeInSource(string $raw): void
     {
@@ -441,7 +441,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInSource()
      */
     public function cantSeeInSource(string $raw): void
     {
@@ -459,7 +459,7 @@ trait FunctionalTesterActions
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function seeLink(string $text, ?string $url = null): void
     {
@@ -478,7 +478,7 @@ trait FunctionalTesterActions
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function canSeeLink(string $text, ?string $url = null): void
     {
@@ -496,7 +496,7 @@ trait FunctionalTesterActions
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function dontSeeLink(string $text, string $url = ''): void
     {
@@ -515,7 +515,7 @@ trait FunctionalTesterActions
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function cantSeeLink(string $text, string $url = ''): void
     {
@@ -534,7 +534,7 @@ trait FunctionalTesterActions
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function seeInCurrentUrl(string $uri): void
     {
@@ -554,7 +554,7 @@ trait FunctionalTesterActions
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function canSeeInCurrentUrl(string $uri): void
     {
@@ -570,7 +570,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function dontSeeInCurrentUrl(string $uri): void
     {
@@ -587,7 +587,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function cantSeeInCurrentUrl(string $uri): void
     {
@@ -605,7 +605,7 @@ trait FunctionalTesterActions
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function seeCurrentUrlEquals(string $uri): void
     {
@@ -624,7 +624,7 @@ trait FunctionalTesterActions
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function canSeeCurrentUrlEquals(string $uri): void
     {
@@ -642,7 +642,7 @@ trait FunctionalTesterActions
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function dontSeeCurrentUrlEquals(string $uri): void
     {
@@ -661,7 +661,7 @@ trait FunctionalTesterActions
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function cantSeeCurrentUrlEquals(string $uri): void
     {
@@ -678,7 +678,7 @@ trait FunctionalTesterActions
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function seeCurrentUrlMatches(string $uri): void
     {
@@ -696,7 +696,7 @@ trait FunctionalTesterActions
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function canSeeCurrentUrlMatches(string $uri): void
     {
@@ -713,7 +713,7 @@ trait FunctionalTesterActions
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function dontSeeCurrentUrlMatches(string $uri): void
     {
@@ -731,7 +731,7 @@ trait FunctionalTesterActions
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function cantSeeCurrentUrlMatches(string $uri): void
     {
@@ -749,7 +749,7 @@ trait FunctionalTesterActions
      * $user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
      */
     public function grabFromCurrentUrl(?string $uri = null): mixed
     {
@@ -767,7 +767,7 @@ trait FunctionalTesterActions
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function seeCheckboxIsChecked($checkbox): void
     {
@@ -786,7 +786,7 @@ trait FunctionalTesterActions
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function canSeeCheckboxIsChecked($checkbox): void
     {
@@ -803,7 +803,7 @@ trait FunctionalTesterActions
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function dontSeeCheckboxIsChecked($checkbox): void
     {
@@ -821,7 +821,7 @@ trait FunctionalTesterActions
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function cantSeeCheckboxIsChecked($checkbox): void
     {
@@ -845,7 +845,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::seeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function seeInField($field, $value): void
     {
@@ -870,7 +870,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::seeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function canSeeInField($field, $value): void
     {
@@ -893,7 +893,7 @@ trait FunctionalTesterActions
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function dontSeeInField($field, $value): void
     {
@@ -917,7 +917,7 @@ trait FunctionalTesterActions
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
      * @param array|string $field
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function cantSeeInField($field, $value): void
     {
@@ -979,7 +979,7 @@ trait FunctionalTesterActions
      * // $I->amOnPage('/path/to/form-page') may be needed
      * $I->seeInFormFields('//form[@id=my-form]', string $form);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInFormFields()
      */
     public function seeInFormFields($formSelector, array $params): void
     {
@@ -1042,7 +1042,7 @@ trait FunctionalTesterActions
      * // $I->amOnPage('/path/to/form-page') may be needed
      * $I->seeInFormFields('//form[@id=my-form]', string $form);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInFormFields()
      */
     public function canSeeInFormFields($formSelector, array $params): void
     {
@@ -1085,7 +1085,7 @@ trait FunctionalTesterActions
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
      */
     public function dontSeeInFormFields($formSelector, array $params): void
     {
@@ -1129,7 +1129,7 @@ trait FunctionalTesterActions
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInFormFields()
      */
     public function cantSeeInFormFields($formSelector, array $params): void
     {
@@ -1309,7 +1309,7 @@ trait FunctionalTesterActions
      *     ]
      * ]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::submitForm()
+     * Related logic: see \Codeception\Lib\InnerBrowser::submitForm()
      */
     public function submitForm($selector, array $params, ?string $button = null): void
     {
@@ -1326,7 +1326,7 @@ trait FunctionalTesterActions
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@example.com');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::fillField()
+     * Related logic: see \Codeception\Lib\InnerBrowser::fillField()
      */
     public function fillField($field, $value): void
     {
@@ -1359,7 +1359,7 @@ trait FunctionalTesterActions
      * $I->selectOption('Which OS do you use?', ['text' => 'Windows']); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', ['value' => 'windows']); // Only search by value 'windows'
      * ```
-     * @see \Codeception\Lib\InnerBrowser::selectOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::selectOption()
      */
     public function selectOption($select, $option): void
     {
@@ -1375,7 +1375,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->checkOption('#agree');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::checkOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::checkOption()
      */
     public function checkOption($option): void
     {
@@ -1391,7 +1391,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->uncheckOption('#notify');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::uncheckOption()
+     * Related logic: see \Codeception\Lib\InnerBrowser::uncheckOption()
      */
     public function uncheckOption($option): void
     {
@@ -1408,7 +1408,7 @@ trait FunctionalTesterActions
      * // file is stored in 'tests/_data/prices.xls'
      * $I->attachFile('input[@type="file"]', 'prices.xls');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::attachFile()
+     * Related logic: see \Codeception\Lib\InnerBrowser::attachFile()
      */
     public function attachFile($field, string $filename): void
     {
@@ -1420,7 +1420,7 @@ trait FunctionalTesterActions
      *
      * Sends an ajax GET request with the passed parameters.
      * See `sendAjaxPostRequest()`
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
      */
     public function sendAjaxGetRequest(string $uri, array $params = []): void
     {
@@ -1448,7 +1448,7 @@ trait FunctionalTesterActions
      *     'category' => 'miscellaneous',
      * ]]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
      */
     public function sendAjaxPostRequest(string $uri, array $params = []): void
     {
@@ -1465,7 +1465,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->sendAjaxRequest('PUT', '/posts/7', ['title' => 'new title']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
+     * Related logic: see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
      */
     public function sendAjaxRequest(string $method, string $uri, array $params = []): void
     {
@@ -1484,7 +1484,7 @@ trait FunctionalTesterActions
      * $I->makeHtmlSnapshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
      * ```
-     * @see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
+     * Related logic: see \Codeception\Lib\InnerBrowser::makeHtmlSnapshot()
      */
     public function makeHtmlSnapshot(?string $name = null): void
     {
@@ -1504,7 +1504,7 @@ trait FunctionalTesterActions
      * $heading = $I->grabTextFrom('descendant-or-self::h1');
      * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabTextFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabTextFrom()
      */
     public function grabTextFrom($cssOrXPathOrRegex): mixed
     {
@@ -1521,7 +1521,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->grabAttributeFrom('#tooltip', 'title');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
      */
     public function grabAttributeFrom($cssOrXpath, string $attribute): mixed
     {
@@ -1550,7 +1550,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return string[]
-     * @see \Codeception\Lib\InnerBrowser::grabMultiple()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabMultiple()
      */
     public function grabMultiple($cssOrXpath, ?string $attribute = null): array
     {
@@ -1570,7 +1570,7 @@ trait FunctionalTesterActions
      * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
      * $name = $I->grabValueFrom(['name' => 'username']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::grabValueFrom()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabValueFrom()
      */
     public function grabValueFrom($field): mixed
     {
@@ -1589,7 +1589,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::setCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setCookie()
      */
     public function setCookie($name, $val, $params = [])
     {
@@ -1602,7 +1602,7 @@ trait FunctionalTesterActions
      * Grabs a cookie value.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay caused by the browser, so try `$I->wait(0.1)`.
-     * @see \Codeception\Lib\InnerBrowser::grabCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabCookie()
      */
     public function grabCookie(string $cookie, array $params = []): mixed
     {
@@ -1616,7 +1616,7 @@ trait FunctionalTesterActions
      *
      * @throws \Codeception\Exception\ModuleException if no page was opened.
      * @return string Current page source code.
-     * @see \Codeception\Lib\InnerBrowser::grabPageSource()
+     * Related logic: see \Codeception\Lib\InnerBrowser::grabPageSource()
      */
     public function grabPageSource(): string
     {
@@ -1635,7 +1635,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function seeCookie($cookie, $params = [])
     {
@@ -1655,7 +1655,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function canSeeCookie($cookie, $params = [])
     {
@@ -1669,7 +1669,7 @@ trait FunctionalTesterActions
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function dontSeeCookie($cookie, $params = [])
     {
@@ -1684,7 +1684,7 @@ trait FunctionalTesterActions
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function cantSeeCookie($cookie, $params = [])
     {
@@ -1698,7 +1698,7 @@ trait FunctionalTesterActions
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::resetCookie()
+     * Related logic: see \Codeception\Lib\InnerBrowser::resetCookie()
      */
     public function resetCookie($cookie, $params = [])
     {
@@ -1722,7 +1722,7 @@ trait FunctionalTesterActions
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function seeElement($selector, array $attributes = []): void
     {
@@ -1747,7 +1747,7 @@ trait FunctionalTesterActions
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function canSeeElement($selector, array $attributes = []): void
     {
@@ -1767,7 +1767,7 @@ trait FunctionalTesterActions
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function dontSeeElement($selector, array $attributes = []): void
     {
@@ -1788,7 +1788,7 @@ trait FunctionalTesterActions
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function cantSeeElement($selector, array $attributes = []): void
     {
@@ -1807,7 +1807,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @param int|int[] $expected
-     * @see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
      */
     public function seeNumberOfElements($selector, $expected): void
     {
@@ -1827,7 +1827,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @param int|int[] $expected
-     * @see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeNumberOfElements()
      */
     public function canSeeNumberOfElements($selector, $expected): void
     {
@@ -1845,7 +1845,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function seeOptionIsSelected($selector, $optionText)
     {
@@ -1864,7 +1864,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function canSeeOptionIsSelected($selector, $optionText)
     {
@@ -1882,7 +1882,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function dontSeeOptionIsSelected($selector, $optionText)
     {
@@ -1901,7 +1901,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function cantSeeOptionIsSelected($selector, $optionText)
     {
@@ -1912,7 +1912,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that current page has 404 response status code.
-     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function seePageNotFound(): void
     {
@@ -1924,7 +1924,7 @@ trait FunctionalTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Asserts that current page has 404 response status code.
-     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function canSeePageNotFound(): void
     {
@@ -1943,7 +1943,7 @@ trait FunctionalTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function seeResponseCodeIs(int $code): void
     {
@@ -1963,7 +1963,7 @@ trait FunctionalTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function canSeeResponseCodeIs(int $code): void
     {
@@ -1974,7 +1974,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that response code is between a certain range. Between actually means [from <= CODE <= to]
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
      */
     public function seeResponseCodeIsBetween(int $from, int $to): void
     {
@@ -1986,7 +1986,7 @@ trait FunctionalTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that response code is between a certain range. Between actually means [from <= CODE <= to]
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsBetween()
      */
     public function canSeeResponseCodeIsBetween(int $from, int $to): void
     {
@@ -2005,7 +2005,7 @@ trait FunctionalTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
      */
     public function dontSeeResponseCodeIs(int $code): void
     {
@@ -2025,7 +2025,7 @@ trait FunctionalTesterActions
      * // recommended \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeResponseCodeIs()
      */
     public function cantSeeResponseCodeIs(int $code): void
     {
@@ -2036,7 +2036,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code 2xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
      */
     public function seeResponseCodeIsSuccessful(): void
     {
@@ -2048,7 +2048,7 @@ trait FunctionalTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code 2xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsSuccessful()
      */
     public function canSeeResponseCodeIsSuccessful(): void
     {
@@ -2059,7 +2059,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code 3xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
      */
     public function seeResponseCodeIsRedirection(): void
     {
@@ -2071,7 +2071,7 @@ trait FunctionalTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code 3xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsRedirection()
      */
     public function canSeeResponseCodeIsRedirection(): void
     {
@@ -2082,7 +2082,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code is 4xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
      */
     public function seeResponseCodeIsClientError(): void
     {
@@ -2094,7 +2094,7 @@ trait FunctionalTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code is 4xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsClientError()
      */
     public function canSeeResponseCodeIsClientError(): void
     {
@@ -2105,7 +2105,7 @@ trait FunctionalTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the response code is 5xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
      */
     public function seeResponseCodeIsServerError(): void
     {
@@ -2117,7 +2117,7 @@ trait FunctionalTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that the response code is 5xx
-     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeResponseCodeIsServerError()
      */
     public function canSeeResponseCodeIsServerError(): void
     {
@@ -2135,7 +2135,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function seeInTitle($title)
     {
@@ -2154,7 +2154,7 @@ trait FunctionalTesterActions
      * ```
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function canSeeInTitle($title)
     {
@@ -2167,7 +2167,7 @@ trait FunctionalTesterActions
      * Checks that the page title does not contain the given string.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function dontSeeInTitle($title)
     {
@@ -2181,7 +2181,7 @@ trait FunctionalTesterActions
      * Checks that the page title does not contain the given string.
      *
      * @return mixed|void
-     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
+     * Related logic: see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function cantSeeInTitle($title)
     {
@@ -2203,7 +2203,7 @@ trait FunctionalTesterActions
      * # switch to iframe
      * $I->switchToIframe("another_frame");
      * ```
-     * @see \Codeception\Lib\InnerBrowser::switchToIframe()
+     * Related logic: see \Codeception\Lib\InnerBrowser::switchToIframe()
      */
     public function switchToIframe(string $name): void
     {
@@ -2216,7 +2216,7 @@ trait FunctionalTesterActions
      * Moves back in history.
      *
      * @param int $numberOfSteps (default value 1)
-     * @see \Codeception\Lib\InnerBrowser::moveBack()
+     * Related logic: see \Codeception\Lib\InnerBrowser::moveBack()
      */
     public function moveBack(int $numberOfSteps = 1): void
     {
@@ -2232,7 +2232,7 @@ trait FunctionalTesterActions
      * ```php
      * $I->setServerParameters([]);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::setServerParameters()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setServerParameters()
      */
     public function setServerParameters(array $params): void
     {
@@ -2247,7 +2247,7 @@ trait FunctionalTesterActions
      * ```php
      * $I->haveServerParameter('name', 'value');
      * ```
-     * @see \Codeception\Lib\InnerBrowser::haveServerParameter()
+     * Related logic: see \Codeception\Lib\InnerBrowser::haveServerParameter()
      */
     public function haveServerParameter(string $name, string $value): void
     {
@@ -2263,7 +2263,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->stopFollowingRedirects();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::stopFollowingRedirects()
      */
     public function stopFollowingRedirects(): void
     {
@@ -2279,7 +2279,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->startFollowingRedirects();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::startFollowingRedirects()
      */
     public function startFollowingRedirects(): void
     {
@@ -2295,7 +2295,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->followRedirect();
      * ```
-     * @see \Codeception\Lib\InnerBrowser::followRedirect()
+     * Related logic: see \Codeception\Lib\InnerBrowser::followRedirect()
      */
     public function followRedirect(): void
     {
@@ -2311,7 +2311,7 @@ trait FunctionalTesterActions
      * <?php
      * $I->setMaxRedirects(2);
      * ```
-     * @see \Codeception\Lib\InnerBrowser::setMaxRedirects()
+     * Related logic: see \Codeception\Lib\InnerBrowser::setMaxRedirects()
      */
     public function setMaxRedirects(int $maxRedirects): void
     {

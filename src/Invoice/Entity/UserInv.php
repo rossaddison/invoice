@@ -32,7 +32,7 @@ class UserInv
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null,
         /**
-         * @see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
+         * Related logic: see src/Invoice/UserInv/UserInvForm 0 => Admin, 1 => Not Admin
          */
         #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $type = null,

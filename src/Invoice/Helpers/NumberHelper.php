@@ -426,7 +426,7 @@ final readonly class NumberHelper
     }
 
     /**
-     * @see QuoteController function default_tax_quote
+     * Related logic: see QuoteController function default_tax_quote
      * @param string $quote_id
      */
     public function calculate_quote_taxes(string $quote_id, QTRR $qtrR, QAR $qaR): float
@@ -470,7 +470,7 @@ final readonly class NumberHelper
     }
 
     /**
-     * @see InvController function default_tax_inv
+     * Related logic: see InvController function default_tax_inv
      * @param $inv_id
      */
     public function calculate_inv_taxes(string $inv_id, ITRR $itrR, IAR $iaR): float

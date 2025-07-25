@@ -38,7 +38,7 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
      * @throws Throwable
      */
@@ -48,7 +48,7 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|TaxRate|null $taxRate
      * @throws Throwable
      */

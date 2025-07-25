@@ -9,7 +9,7 @@ use App\Invoice\Setting\SettingRepository;
 final class PeppolArrays
 {
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
      */
     public function getAllowancesSubsetArray(): array
@@ -38,7 +38,7 @@ final class PeppolArrays
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL7161/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL7161/
      * @return array
      */
     public function getChargesArray(): array
@@ -402,7 +402,7 @@ final class PeppolArrays
 
     /**
      * Used with product/edit and clientpeppol/add and edit
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/icd.xml
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/icd.xml
      * @return array
      */
     public function getIso_6523_icd(): array
@@ -1556,7 +1556,7 @@ final class PeppolArrays
     }
 
     /**
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/UNCL7143.xml
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/structure/codelist/UNCL7143.xml
      * @return array
      */
     public function getUncl7143(): array
@@ -2572,7 +2572,7 @@ final class PeppolArrays
     // Converted to php with: https://wtools.io/convert-json-to-php-array
 
     /**
-     * @see src/Invoice/Helpers/Peppol/uncl2005
+     * Related logic: see src/Invoice/Helpers/Peppol/uncl2005
      * @return array
      */
     public function getUncl2005subset(): array
@@ -2600,8 +2600,8 @@ final class PeppolArrays
     }
 
     /**
-     * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
-     * @see InvController/edit function;
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
+     * Related logic: see InvController/edit function;
      * @return string
      */
     public function getCurrent_stand_in_code_value(SettingRepository $s): string
@@ -2627,8 +2627,8 @@ final class PeppolArrays
     }
 
     /**
-     * @see Subset of https://docs.peppol.eu/poacc/billing/3.0/codelist/ICD/
-     * @see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
+     * Related logic: see Subset of https://docs.peppol.eu/poacc/billing/3.0/codelist/ICD/
+     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
      * @return array
      */
     public static function electronic_address_scheme(): array

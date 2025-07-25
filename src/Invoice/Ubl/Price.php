@@ -14,7 +14,7 @@ class Price implements XmlSerializable
     public function __construct(private readonly ?AllowanceCharge $allowanceCharge, private readonly string $priceAmount, private readonly string $baseQuantity, private readonly string $unitCodeListId) {}
 
     /**
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=Price
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=Price
      * @param Writer $writer
      */
     #[\Override]

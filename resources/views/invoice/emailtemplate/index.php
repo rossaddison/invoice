@@ -73,7 +73,7 @@ echo $alert;
                 <td>
                     <?php
             /**
-             * @see https://getbootstrap.com/docs/5.3/components/dropdowns/
+             * Related logic: see https://getbootstrap.com/docs/5.3/components/dropdowns/
              */
         ?>
                     <div class="btn-group">

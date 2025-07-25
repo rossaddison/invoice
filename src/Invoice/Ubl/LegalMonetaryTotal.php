@@ -7,7 +7,7 @@ namespace App\Invoice\Ubl;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 
-/** @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-LegalMonetaryTotal/ */
+/** Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-LegalMonetaryTotal/ */
 class LegalMonetaryTotal implements XmlSerializable
 {
     public function __construct(private readonly float $lineExtensionAmount, private readonly float $taxExclusiveAmount, private readonly float $taxInclusiveAmount, private readonly float $allowanceTotalAmount, private readonly float $payableAmount, private readonly string $document_currency) {}
@@ -20,7 +20,7 @@ class LegalMonetaryTotal implements XmlSerializable
     {
         $writer->write([
             /**
-             * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cbc-LineExtensionAmount/
+             * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cbc-LineExtensionAmount/
              */
             [
                 'name' => Schema::CBC . 'LineExtensionAmount',

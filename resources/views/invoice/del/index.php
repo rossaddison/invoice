@@ -18,7 +18,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 /**
- * @see App\Invoice\DeliveryLocation\DeliveryLocationController function index
+ * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function index
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
@@ -224,7 +224,7 @@ $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $defaultPageSizeOffsetPaginator = (int) $s->getSetting('default_list_limit');
 
 $sort = Sort::only(['id'])
-    // (@see vendor\yiisoft\data\src\Reader\Sort
+    // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
     // - => 'desc'  so -id => default descending on id
     ->withOrderString($sortString);
 

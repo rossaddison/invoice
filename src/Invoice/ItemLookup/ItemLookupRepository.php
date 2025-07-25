@@ -51,7 +51,7 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ItemLookup|null $itemlookup
      */
     public function save(array|ItemLookup|null $itemlookup): void

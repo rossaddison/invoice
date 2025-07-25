@@ -9,8 +9,8 @@ class stripe_v10_Asset extends __Asset
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
         // stripe v10 15-11-2022  ./stripe/css/checkout.css
-        // @see paymentinformation/form
-        // @see ...views/invoice/paymentinformation/paymentinformation.php
+        // Related logic: see paymentinformation/form
+        // Related logic: see ...views/invoice/paymentinformation/paymentinformation.php
         'stripe/css/checkout.css',
     ];
 

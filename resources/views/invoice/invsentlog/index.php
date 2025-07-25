@@ -30,7 +30,7 @@ use Yiisoft\Yii\DataView\GridView;
 echo $alert;
 
 /*
- * @see https://emojipedia.org/incoming-envelope
+ * Related logic: see https://emojipedia.org/incoming-envelope
  */
 ?>
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Libraries;
 
 /**
- * @see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
+ * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
  *
  * final class Crypt
  */
@@ -26,7 +26,7 @@ final class Crypt
 
     /**
      * A salt now must be added to a hash to prevent hash table lookups used by attackers
-     * @see https://cwe.mitre.org/data/definitions/916.html
+     * Related logic: see https://cwe.mitre.org/data/definitions/916.html
      * @return string
      */
     public function salt(): string
@@ -34,7 +34,7 @@ final class Crypt
         /**
          * Previously: return substr(sha1((string)mt_rand()), 0, 22);
          * Use of Password Hash With Insufficient Computational Effort
-         * @see https://www.php.net/manual/en/function.hash-algos.php
+         * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
          */
         $random = (string) mt_rand();
         $hash = hash('256', $random);

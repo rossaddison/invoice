@@ -18,7 +18,7 @@ final class CustomValueForm extends FormModel
     #[Required]
     private ?string $value = '';
     /**
-     * @see App\Invoice\Entity\CustomValue
+     * Related logic: see App\Invoice\Entity\CustomValue
             #[BelongsTo(target: CustomField::class, nullable: false, fkAction:'NO ACTION')]
             private ?CustomField $custom_field = null;
      */
@@ -43,9 +43,9 @@ final class CustomValueForm extends FormModel
     }
 
     /**
-     * @see The above construct retrieves the relation getCustomField() from the entity CustomValue
-     * @see resources/views/invoice/customvalue/_view.php search Field::text($form, 'custom_field_id')
-     * @see Use this function as a relation to get to the Custom Field label value
+     * Related logic: see The above construct retrieves the relation getCustomField() from the entity CustomValue
+     * Related logic: see resources/views/invoice/customvalue/_view.php search Field::text($form, 'custom_field_id')
+     * Related logic: see Use this function as a relation to get to the Custom Field label value
      */
     public function getCustomField(): CustomField|null
     {

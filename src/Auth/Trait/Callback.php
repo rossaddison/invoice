@@ -61,7 +61,7 @@ trait Callback
 
         $codeVerifier = (string) $this->session->get('code_verifier');
         /**
-         * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
+         * Related logic: see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
          * For user-restricted access, the 'Authorization Code' Grant Type is used
          * Use the code received, to get an access_token
          */
@@ -84,7 +84,7 @@ trait Callback
 
         if ($this->sR->getEnv() == 'dev') {
             /**
-             * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc function getTestUserArray;
+             * Related logic: see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc function getTestUserArray;
              */
             $requestBody = [
                 'serviceNames' => ['national-insurance'],
@@ -145,14 +145,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getDeveloperSandboxHmrcAccessToken
+                 * Related logic: see Trait\Oauth2 function getDeveloperSandboxHmrcAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getDeveloperSandboxHmrcAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'developersandboxhmrc');
                 return $this->viewRenderer->render('proceed', [
@@ -169,7 +169,7 @@ trait Callback
      * Purpose: Once Facebook redirects to this callback, in this callback function:
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
-     * @see src/Invoice/UserInv/UserInvController function facebook
+     * Related logic: see src/Invoice/UserInv/UserInvController function facebook
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
@@ -297,14 +297,14 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * @see Trait\Oauth2 function getFacebookAccessToken
+                     * Related logic: see Trait\Oauth2 function getFacebookAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getFacebookAccessToken($user, $tR);
                     /**
-                     * @see A new UserInv (extension table of user) for the user is created.
+                     * Related logic: see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'facebook');
                     return $this->viewRenderer->render('proceed', [
@@ -322,8 +322,8 @@ trait Callback
      * Purpose: Once Github redirects to this callback, in this callback function:
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
-     * @see src/Invoice/UserInv/UserInvController function github
-     * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+     * Related logic: see src/Invoice/UserInv/UserInvController function github
+     * Related logic: see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
@@ -387,7 +387,7 @@ trait Callback
          * Every time you receive an access token, you should use the token to revalidate the user's identity.
          * A user can change which account they are signed into when you send them to authorize your app,
          * and you risk mixing user data if you do not validate the user's identity after every sign in.
-         * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
+         * Related logic: see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
          */
         $userArray = $this->github->getCurrentUserJsonArray($oAuthTokenType);
         /**
@@ -443,14 +443,14 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * @see Trait\Oauth2 function getGithubAccessToken
+                     * Related logic: see Trait\Oauth2 function getGithubAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getGithubAccessToken($user, $tR);
                     /**
-                     * @see A new UserInv (extension table of user) for the user is created.
+                     * Related logic: see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'github');
                     return $this->viewRenderer->render('proceed', [
@@ -465,7 +465,7 @@ trait Callback
     }
 
     /**
-     * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
+     * Related logic: see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
      */
     public function callbackGoogle(
         ServerRequestInterface $request,
@@ -578,14 +578,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getGoogleAccessToken
+                 * Related logic: see Trait\Oauth2 function getGoogleAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getGoogleAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
                 return $this->viewRenderer->render('proceed', [
@@ -691,14 +691,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getGovUkAccessToken
+                 * Related logic: see Trait\Oauth2 function getGovUkAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getGovUkAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'govuk');
                 return $this->viewRenderer->render('proceed', [
@@ -821,14 +821,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getLinkedInAccessToken
+                 * Related logic: see Trait\Oauth2 function getLinkedInAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getLinkedInAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'linkedin');
                 return $this->viewRenderer->render('proceed', [
@@ -940,14 +940,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
+                 * Related logic: see Trait\Oauth2 function getMicrosoftOnlineAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getMicrosoftOnlineAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'microsoftonline');
                 return $this->viewRenderer->render('proceed', [
@@ -1125,14 +1125,14 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * @see Trait\Oauth2 function getXAccessToken
+                     * Related logic: see Trait\Oauth2 function getXAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getXAccessToken($user, $tR);
                     /**
-                     * @see A new UserInv (extension table of user) for the user is created.
+                     * Related logic: see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
                         $translator,
@@ -1308,14 +1308,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getYandexAccessToken
+                 * Related logic: see Trait\Oauth2 function getYandexAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getVKontakteAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
                     $translator,
@@ -1446,14 +1446,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getYandexAccessToken
+                 * Related logic: see Trait\Oauth2 function getYandexAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getYandexAccessToken($user, $tR);
                 /**
-                 * @see A new UserInv (extension table of user) for the user is created.
+                 * Related logic: see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
                     $translator,

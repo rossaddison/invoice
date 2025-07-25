@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Invoice\Client\ClientController function view
+ * Related logic: see App\Invoice\Client\ClientController function view
  *
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\ClientHelper $clientHelper

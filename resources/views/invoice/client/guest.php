@@ -116,8 +116,8 @@ $columns = [
                 $invoices = $iR->findAllWithClient($clientId);
                 /**
                  *  Initialize the ArrayCollection
-                 *  @see Doctrine\Common\Collections\ArrayCollection
-                 *  @see src\Invoice\Entity\Client function setInvs()
+                 *  Related logic: see Doctrine\Common\Collections\ArrayCollection
+                 *  Related logic: see src\Invoice\Entity\Client function setInvs()
                  */
                 $model->setInvs();
                 /**
@@ -132,7 +132,7 @@ $columns = [
                 }
                 /**
                  * Use the ArrayCollection count method to determine how many invoices there are for this client
-                 * @see \vendor\doctrine\Common\Collections\ArrayCollection count method;
+                 * Related logic: see \vendor\doctrine\Common\Collections\ArrayCollection count method;
                  */
                 return $model->getInvs()->count();
             }

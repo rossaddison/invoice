@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see App\Invoice\SalesOrder\SalesOrderController function add()
+ * Related logic: see App\Invoice\SalesOrder\SalesOrderController function add()
  * @var App\Invoice\CustomField\CustomFieldRepository $cfR
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH

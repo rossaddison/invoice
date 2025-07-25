@@ -181,7 +181,7 @@ final class ClientController extends BaseController
             /**
              * Default to en so that all country names are in English if route language not found
              * TODO: rebuild country list to match currently available languages
-             * @see src\Invoice\Helpers\Country-list\en
+             * Related logic: see src\Invoice\Helpers\Country-list\en
              */
             'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
             'customFields' => $cfR->repoTablequery('client_custom'),
@@ -280,7 +280,7 @@ final class ClientController extends BaseController
                     /**
                     * Default to en so that all country names are in English if route language not found
                     * TODO: rebuild country list to match currently available languages
-                    * @see src\Invoice\Helpers\Country-list\en
+                    * Related logic: see src\Invoice\Helpers\Country-list\en
                     */
                     'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
                     'customFields' => $cfR->repoTablequery('client_custom'),
@@ -459,7 +459,7 @@ final class ClientController extends BaseController
         ucR $ucR,
     ): \Yiisoft\DataResponse\DataResponse {
         /**
-         * @see $canEdit used in client/index.php to display via label
+         * Related logic: see $canEdit used in client/index.php to display via label
          *      whether a client has been assigned to an active user account
          */
         $canEdit = $this->rbac();
@@ -477,7 +477,7 @@ final class ClientController extends BaseController
         $order = OrderHelper::stringToArray($sortString);
         $urlCreator->__invoke([], $order);
         $sort = Sort::only(['id', 'client_birthdate', 'client_mobile', 'client_phone'])
-                    // (@see vendor\yiisoft\data\src\Reader\Sort
+                    // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                     // - => 'desc'  so -id => default descending on id
                     // Show the latest products first => -id
                     ->withOrder($order);

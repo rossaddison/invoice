@@ -137,7 +137,7 @@ class Client
     public function setClient_date_created(string $client_date_created): void
     {
         /**
-         * @see ImportController insertClients function
+         * Related logic: see ImportController insertClients function
          */
         $this->client_date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new DateTimeImmutable('now');
     }

@@ -457,8 +457,8 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function ()
-     * @see ...\product\index.php
+     * Related logic: see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function ()
+     * Related logic: see ...\product\index.php
      * @param Request $request
      * @return \Yiisoft\DataResponse\DataResponse
      */
@@ -481,7 +481,7 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @see  ...\src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js
+     * Related logic: see  ...\src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js
      * @param ViewRenderer $head
      * @param Request $request
      * @param fR $fR
@@ -590,8 +590,8 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @see  ...resources/views/invoice/product/modal-product-lookups-quote.php
-     * @see  ...src\Invoice\Asset\rebuild-1.13\js modal_product_lookups.js $(document).on('click',
+     * Related logic: see  ...resources/views/invoice/product/modal-product-lookups-quote.php
+     * Related logic: see  ...src\Invoice\Asset\rebuild-1.13\js modal_product_lookups.js $(document).on('click',
      *      '.select-items-confirm-quote', function () => selection_quote
      * @param FormHydrator $formHydrator
      * @param Request $request
@@ -639,8 +639,8 @@ final class ProductController extends BaseController
     }
 
     /**
-     * @see ...views\invoice\product\modal-product-lookups-inv.php
-     * @see ... src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js $(document).on('click', '.select-items-confirm-inv', function ()
+     * Related logic: see ...views\invoice\product\modal-product-lookups-inv.php
+     * Related logic: see ... src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js $(document).on('click', '.select-items-confirm-inv', function ()
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param pR $pR
@@ -867,7 +867,7 @@ final class ProductController extends BaseController
                 $product_id = $product->getProduct_id();
                 if ($product_id) {
                     if (!empty($_FILES)) {
-                        // @see https://github.com/vimeo/psalm/issues/5458
+                        // Related logic: see https://github.com/vimeo/psalm/issues/5458
                         /** @var array $_FILES['ImageAttachForm'] */
                         /** @var string $_FILES['ImageAttachForm']['tmp_name']['attachFile'] */
                         $temporary_file = $_FILES['ImageAttachForm']['tmp_name']['attachFile'];
@@ -987,7 +987,7 @@ final class ProductController extends BaseController
                     $file_size = filesize($target_path_with_filename);
                     if ($file_size != false) {
                         $allowed_content_type_array = $piR->getContentTypes();
-                        // Check extension against allowed content file types @see ProductImageRepository getContentTypes
+                        // Check extension against allowed content file types Related logic: see ProductImageRepository getContentTypes
                         $save_ctype = isset($allowed_content_type_array[$file_ext]);
                         /** @var string $ctype */
                         $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $piR->getContentTypeDefaultOctetStream();

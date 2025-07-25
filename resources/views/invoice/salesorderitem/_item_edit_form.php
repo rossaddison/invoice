@@ -7,7 +7,7 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
- * @see App\Invoice\SalesOrderItem\SalesOrderItemController
+ * Related logic: see App\Invoice\SalesOrderItem\SalesOrderItemController
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\SalesOrderItem\SalesOrderItemForm $form

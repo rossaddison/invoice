@@ -52,7 +52,7 @@ final class CompanyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Company|null $company
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class CompanyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Company|null $company
      * @throws Throwable
      */

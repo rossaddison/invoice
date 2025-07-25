@@ -81,7 +81,7 @@ final class InvForm extends FormModel
         $this->payment_method = $inv->getPayment_method();
         $this->creditinvoice_parent_id = (int) $inv->getCreditinvoice_parent_id();
         /**
-         * @see App\Invoice\Entity\Client
+         * Related logic: see App\Invoice\Entity\Client
                 #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
                 private ?Client $client = null;
          */

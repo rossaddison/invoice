@@ -23,6 +23,7 @@ on:
       - 'fixer-output.txt'
 jobs:
   cs-fix:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     # Settings ...
     # Actions ...

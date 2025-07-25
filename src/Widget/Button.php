@@ -171,8 +171,8 @@ final readonly class Button
     }
 
     /**
-     * @see src\Auth\Controller\SignupController.php
-     * @see src\Invoice\UserInv\UserInvController function signup
+     * Related logic: see src\Auth\Controller\SignupController.php
+     * Related logic: see src\Invoice\UserInv\UserInvController function signup
      * @param UrlGenerator $generator
      * @param string $_language
      * @return string
@@ -188,8 +188,8 @@ final readonly class Button
     }
 
     /**
-     * @see TelegramController function delete_webhook
-     * @see ..config/common/routes/routes.php
+     * Related logic: see TelegramController function delete_webhook
+     * Related logic: see ..config/common/routes/routes.php
      * @param UrlGenerator $generator
      * @param Translator $translator
      * @return string
@@ -258,8 +258,8 @@ final readonly class Button
 
     /**
      * 24/04/2025
-     * @see npm_modules/govuk-frontend
-     * @see public/img/govuk-opengraph-image.png
+     * Related logic: see npm_modules/govuk-frontend
+     * Related logic: see public/img/govuk-opengraph-image.png
      * @param string $govukAuthUrl
      * @return string
      */

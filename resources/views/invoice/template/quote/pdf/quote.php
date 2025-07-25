@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Invoice\Helpers\PdfHelper function generate_quote_pdf
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generate_quote_pdf
  *
  * @var App\Invoice\Entity\QuoteAmount $quote_amount
  * @var App\Invoice\Entity\Quote $quote

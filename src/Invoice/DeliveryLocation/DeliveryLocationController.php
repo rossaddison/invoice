@@ -47,7 +47,7 @@ final class DeliveryLocationController extends BaseController
     }
 
     /**
-     * @see ../resources/views/invoice/del/index.php
+     * Related logic: see ../resources/views/invoice/del/index.php
      * @param DeliveryLocationRepository $delRepository
      * @param CR $cR
      * @param IR $iR
@@ -101,8 +101,8 @@ final class DeliveryLocationController extends BaseController
         $client_id = $currentRoute->getArgument('client_id');
         /**
          * Query parameters are between the square brackets in the example below
-         * @see config/common/routes/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
-         * @see vendor/yiisoft/router/src/UrlGeneratorInterface Query parameters
+         * Related logic: see config/common/routes/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+         * Related logic: see vendor/yiisoft/router/src/UrlGeneratorInterface Query parameters
          * Delivery locations can be added from either the quote form or the invoice form
          * Origin allows us to return to either the quote form or invoice form on completion
          * of creating the delivery location by creating a return $url

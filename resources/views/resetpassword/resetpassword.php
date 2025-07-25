@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see App\Auth\Controller\ResetPasswordController function resetpassword
+ * Related logic: see App\Auth\Controller\ResetPasswordController function resetpassword
  *
  * @var App\Auth\Form\ResetPasswordForm $formModel
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

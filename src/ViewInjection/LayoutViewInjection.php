@@ -18,9 +18,9 @@ use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 
 /**
- * @see ./views/layout/main.php or alternative(s)
- * @see ./views/layout/templates/soletrader/main.php
- * @see ./invoice/config/common/params.php 'yiisoft/yii-view-renderer'
+ * Related logic: see ./views/layout/main.php or alternative(s)
+ * Related logic: see ./views/layout/templates/soletrader/main.php
+ * Related logic: see ./invoice/config/common/params.php 'yiisoft/yii-view-renderer'
  */
 
 final readonly class LayoutViewInjection implements LayoutParametersInjectionInterface
@@ -47,7 +47,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $companyEmail = '';
         $companyLogoFileName = '';
         /**
-         * @see src/Invoice/Entity/CompanyPrivate for default values 80, 40, 10 respectively
+         * Related logic: see src/Invoice/Entity/CompanyPrivate for default values 80, 40, 10 respectively
          */
         $companyLogoWidth = 80;
         $companyLogoHeight = 40;
@@ -103,9 +103,9 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $noFrontPageContactDetails = $this->settingRepository->getSetting('no_front_contact_details_page') == '1' ? true : false;
         $noFrontPageContactUs = $this->settingRepository->getSetting('no_front_contact_us_page') == '1' ? true : false;
         /**
-         * @see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
+         * Related logic: see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
          *      e.g YII_DEBUG=true
-         * @see {root} autoload.php
+         * Related logic: see {root} autoload.php
          */
         $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
         $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true' ? true : false;
@@ -157,7 +157,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'companyLogoHeight' => $companyLogoHeight ?? '',
             'companyLogoMargin' => $companyLogoMargin ?? '',
             /**
-             * @see Use the repository name to build a quick link to scrutinizer php and javascript code checks
+             * Related logic: see Use the repository name to build a quick link to scrutinizer php and javascript code checks
              * in invoice/layout under debug mode
              */
             'scrutinizerRepository' => 'rossaddison/invoice',

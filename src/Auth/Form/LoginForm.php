@@ -70,9 +70,9 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
 
     /**
      * Purpose: Use the yiisoft/validator's error messages folder
-     * @see config/common/di/translator.php
-     * @see config/common/params.php 'yiisoft/translator' => ['validatorCategory' => 'yii-validator']
-     * @see config/common/params.php 'yiisoft/aliases' => ['aliases' => ['@validatorMessages' => '@vendor/yiisoft/validator/messages']]
+     * Related logic: see config/common/di/translator.php
+     * Related logic: see config/common/params.php 'yiisoft/translator' => ['validatorCategory' => 'yii-validator']
+     * Related logic: see config/common/params.php 'yiisoft/aliases' => ['aliases' => ['@validatorMessages' => '@vendor/yiisoft/validator/messages']]
      *
      * @return array
      */

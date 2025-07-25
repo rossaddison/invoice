@@ -138,7 +138,7 @@ class AmazonPayPaymentService
     }
 
     /**
-     * @see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
+     * Related logic: see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
      * @param Inv $invoice
      * @param string $url_key
      * @param float $amount
@@ -206,7 +206,7 @@ class AmazonPayPaymentService
     }
 
     /**
-     * @see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
+     * Related logic: see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
      * Step 3: Sign the payload
      *
      * @param string $payloadJSON

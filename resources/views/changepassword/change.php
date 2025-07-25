@@ -7,14 +7,14 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see App\Auth\Controller\ChangePasswordController function change
+ * Related logic: see App\Auth\Controller\ChangePasswordController function change
  *
  * @var App\Auth\Form\ChangePasswordForm $formModel
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  *
- * @see resources\rbac\items.php admin permissions
+ * Related logic: see resources\rbac\items.php admin permissions
  * @var bool $changePasswordForAnyUser
  *
  * @var string $csrf

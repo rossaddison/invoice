@@ -42,7 +42,7 @@ trait CliTesterActions
      * ```
      *
      * @param string|\Throwable $throwable
-     * @see \Codeception\Module\Asserts::expectThrowable()
+     * Related logic: see \Codeception\Module\Asserts::expectThrowable()
      */
     public function expectThrowable($throwable, callable $callback): void
     {
@@ -53,7 +53,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file does not exist.
-     * @see \Codeception\Module\AbstractAsserts::assertFileNotExists()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileNotExists()
      */
     public function assertFileNotExists(string $filename, string $message = '')
     {
@@ -67,7 +67,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertGreaterOrEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertGreaterOrEquals()
      */
     public function assertGreaterOrEquals($expected, $actual, string $message = '')
     {
@@ -80,7 +80,7 @@ trait CliTesterActions
      * Asserts that a variable is empty.
      *
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsEmpty()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsEmpty()
      */
     public function assertIsEmpty($actual, string $message = '')
     {
@@ -94,7 +94,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertLessOrEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertLessOrEquals()
      */
     public function assertLessOrEquals($expected, $actual, string $message = '')
     {
@@ -105,7 +105,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string does not match a given regular expression.
-     * @see \Codeception\Module\AbstractAsserts::assertNotRegExp()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotRegExp()
      */
     public function assertNotRegExp(string $pattern, string $string, string $message = '')
     {
@@ -116,7 +116,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string matches a given regular expression.
-     * @see \Codeception\Module\AbstractAsserts::assertRegExp()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertRegExp()
      */
     public function assertRegExp(string $pattern, string $string, string $message = '')
     {
@@ -129,7 +129,7 @@ trait CliTesterActions
      * Evaluates a PHPUnit\Framework\Constraint matcher object.
      *
      * @param mixed $value
-     * @see \Codeception\Module\AbstractAsserts::assertThatItsNot()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertThatItsNot()
      */
     public function assertThatItsNot($value, \PHPUnit\Framework\Constraint\Constraint $constraint, string $message = '')
     {
@@ -143,7 +143,7 @@ trait CliTesterActions
      *
      * @param int|string $key
      * @param array|\ArrayAccess $array
-     * @see \Codeception\Module\AbstractAsserts::assertArrayHasKey()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertArrayHasKey()
      */
     public function assertArrayHasKey($key, $array, string $message = '')
     {
@@ -157,7 +157,7 @@ trait CliTesterActions
      *
      * @param int|string $key
      * @param array|\ArrayAccess $array
-     * @see \Codeception\Module\AbstractAsserts::assertArrayNotHasKey()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertArrayNotHasKey()
      */
     public function assertArrayNotHasKey($key, $array, string $message = '')
     {
@@ -168,7 +168,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a class has a specified attribute.
-     * @see \Codeception\Module\AbstractAsserts::assertClassHasAttribute()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertClassHasAttribute()
      */
     public function assertClassHasAttribute(string $attributeName, string $className, string $message = '')
     {
@@ -179,7 +179,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a class has a specified static attribute.
-     * @see \Codeception\Module\AbstractAsserts::assertClassHasStaticAttribute()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertClassHasStaticAttribute()
      */
     public function assertClassHasStaticAttribute(string $attributeName, string $className, string $message = '')
     {
@@ -190,7 +190,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a class does not have a specified attribute.
-     * @see \Codeception\Module\AbstractAsserts::assertClassNotHasAttribute()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertClassNotHasAttribute()
      */
     public function assertClassNotHasAttribute(string $attributeName, string $className, string $message = '')
     {
@@ -201,7 +201,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a class does not have a specified static attribute.
-     * @see \Codeception\Module\AbstractAsserts::assertClassNotHasStaticAttribute()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertClassNotHasStaticAttribute()
      */
     public function assertClassNotHasStaticAttribute(string $attributeName, string $className, string $message = '')
     {
@@ -214,7 +214,7 @@ trait CliTesterActions
      * Asserts that a haystack contains a needle.
      *
      * @param mixed $needle
-     * @see \Codeception\Module\AbstractAsserts::assertContains()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertContains()
      */
     public function assertContains($needle, iterable $haystack, string $message = '')
     {
@@ -225,7 +225,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * @param mixed $needle
-     * @see \Codeception\Module\AbstractAsserts::assertContainsEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertContainsEquals()
      */
     public function assertContainsEquals($needle, iterable $haystack, string $message = '')
     {
@@ -236,7 +236,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a haystack contains only values of a given type.
-     * @see \Codeception\Module\AbstractAsserts::assertContainsOnly()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertContainsOnly()
      */
     public function assertContainsOnly(string $type, iterable $haystack, ?bool $isNativeType = null, string $message = '')
     {
@@ -247,7 +247,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a haystack contains only instances of a given class name.
-     * @see \Codeception\Module\AbstractAsserts::assertContainsOnlyInstancesOf()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertContainsOnlyInstancesOf()
      */
     public function assertContainsOnlyInstancesOf(string $className, iterable $haystack, string $message = '')
     {
@@ -260,7 +260,7 @@ trait CliTesterActions
      * Asserts the number of elements of an array, Countable or Traversable.
      *
      * @param \Countable|iterable $haystack
-     * @see \Codeception\Module\AbstractAsserts::assertCount()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertCount()
      */
     public function assertCount(int $expectedCount, $haystack, string $message = '')
     {
@@ -271,7 +271,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a directory does not exist.
-     * @see \Codeception\Module\AbstractAsserts::assertDirectoryDoesNotExist()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDirectoryDoesNotExist()
      */
     public function assertDirectoryDoesNotExist(string $directory, string $message = '')
     {
@@ -282,7 +282,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a directory exists.
-     * @see \Codeception\Module\AbstractAsserts::assertDirectoryExists()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDirectoryExists()
      */
     public function assertDirectoryExists(string $directory, string $message = '')
     {
@@ -293,7 +293,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a directory exists and is not readable.
-     * @see \Codeception\Module\AbstractAsserts::assertDirectoryIsNotReadable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDirectoryIsNotReadable()
      */
     public function assertDirectoryIsNotReadable(string $directory, string $message = '')
     {
@@ -304,7 +304,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a directory exists and is not writable.
-     * @see \Codeception\Module\AbstractAsserts::assertDirectoryIsNotWritable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDirectoryIsNotWritable()
      */
     public function assertDirectoryIsNotWritable(string $directory, string $message = '')
     {
@@ -315,7 +315,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a directory exists and is readable.
-     * @see \Codeception\Module\AbstractAsserts::assertDirectoryIsReadable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDirectoryIsReadable()
      */
     public function assertDirectoryIsReadable(string $directory, string $message = '')
     {
@@ -326,7 +326,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a directory exists and is writable.
-     * @see \Codeception\Module\AbstractAsserts::assertDirectoryIsWritable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDirectoryIsWritable()
      */
     public function assertDirectoryIsWritable(string $directory, string $message = '')
     {
@@ -337,7 +337,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string does not match a given regular expression.
-     * @see \Codeception\Module\AbstractAsserts::assertDoesNotMatchRegularExpression()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertDoesNotMatchRegularExpression()
      */
     public function assertDoesNotMatchRegularExpression(string $pattern, string $string, string $message = '')
     {
@@ -352,7 +352,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert empty $actual
-     * @see \Codeception\Module\AbstractAsserts::assertEmpty()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertEmpty()
      */
     public function assertEmpty($actual, string $message = '')
     {
@@ -366,7 +366,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertEquals()
      */
     public function assertEquals($expected, $actual, string $message = '')
     {
@@ -380,7 +380,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertEqualsCanonicalizing()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertEqualsCanonicalizing()
      */
     public function assertEqualsCanonicalizing($expected, $actual, string $message = '')
     {
@@ -394,7 +394,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertEqualsIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertEqualsIgnoringCase()
      */
     public function assertEqualsIgnoringCase($expected, $actual, string $message = '')
     {
@@ -408,7 +408,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertEqualsWithDelta()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertEqualsWithDelta()
      */
     public function assertEqualsWithDelta($expected, $actual, float $delta, string $message = '')
     {
@@ -423,7 +423,7 @@ trait CliTesterActions
      * @param mixed $condition
      *
      * @phpstan-assert false $condition
-     * @see \Codeception\Module\AbstractAsserts::assertFalse()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFalse()
      */
     public function assertFalse($condition, string $message = '')
     {
@@ -434,7 +434,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file does not exist.
-     * @see \Codeception\Module\AbstractAsserts::assertFileDoesNotExist()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileDoesNotExist()
      */
     public function assertFileDoesNotExist(string $filename, string $message = '')
     {
@@ -445,7 +445,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of one file is equal to the contents of another file.
-     * @see \Codeception\Module\AbstractAsserts::assertFileEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileEquals()
      */
     public function assertFileEquals(string $expected, string $actual, string $message = '')
     {
@@ -456,7 +456,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of one file is equal to the contents of another file (canonicalizing).
-     * @see \Codeception\Module\AbstractAsserts::assertFileEqualsCanonicalizing()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileEqualsCanonicalizing()
      */
     public function assertFileEqualsCanonicalizing(string $expected, string $actual, string $message = '')
     {
@@ -467,7 +467,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of one file is equal to the contents of another file (ignoring case).
-     * @see \Codeception\Module\AbstractAsserts::assertFileEqualsIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileEqualsIgnoringCase()
      */
     public function assertFileEqualsIgnoringCase(string $expected, string $actual, string $message = '')
     {
@@ -478,7 +478,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file exists.
-     * @see \Codeception\Module\AbstractAsserts::assertFileExists()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileExists()
      */
     public function assertFileExists(string $filename, string $message = '')
     {
@@ -489,7 +489,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file exists and is not readable.
-     * @see \Codeception\Module\AbstractAsserts::assertFileIsNotReadable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileIsNotReadable()
      */
     public function assertFileIsNotReadable(string $file, string $message = '')
     {
@@ -500,7 +500,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file exists and is not writable.
-     * @see \Codeception\Module\AbstractAsserts::assertFileIsNotWritable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileIsNotWritable()
      */
     public function assertFileIsNotWritable(string $file, string $message = '')
     {
@@ -511,7 +511,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file exists and is readable.
-     * @see \Codeception\Module\AbstractAsserts::assertFileIsReadable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileIsReadable()
      */
     public function assertFileIsReadable(string $file, string $message = '')
     {
@@ -522,7 +522,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file exists and is writable.
-     * @see \Codeception\Module\AbstractAsserts::assertFileIsWritable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileIsWritable()
      */
     public function assertFileIsWritable(string $file, string $message = '')
     {
@@ -533,7 +533,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of one file is not equal to the contents of another file.
-     * @see \Codeception\Module\AbstractAsserts::assertFileNotEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileNotEquals()
      */
     public function assertFileNotEquals(string $expected, string $actual, string $message = '')
     {
@@ -544,7 +544,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of one file is not equal to the contents of another file (canonicalizing).
-     * @see \Codeception\Module\AbstractAsserts::assertFileNotEqualsCanonicalizing()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileNotEqualsCanonicalizing()
      */
     public function assertFileNotEqualsCanonicalizing(string $expected, string $actual, string $message = '')
     {
@@ -555,7 +555,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of one file is not equal to the contents of another file (ignoring case).
-     * @see \Codeception\Module\AbstractAsserts::assertFileNotEqualsIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFileNotEqualsIgnoringCase()
      */
     public function assertFileNotEqualsIgnoringCase(string $expected, string $actual, string $message = '')
     {
@@ -568,7 +568,7 @@ trait CliTesterActions
      * Asserts that a variable is finite.
      *
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertFinite()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertFinite()
      */
     public function assertFinite($actual, string $message = '')
     {
@@ -582,7 +582,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertGreaterThan()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertGreaterThan()
      */
     public function assertGreaterThan($expected, $actual, string $message = '')
     {
@@ -596,7 +596,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertGreaterThanOrEqual()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertGreaterThanOrEqual()
      */
     public function assertGreaterThanOrEqual($expected, $actual, string $message = '')
     {
@@ -609,7 +609,7 @@ trait CliTesterActions
      * Asserts that a variable is infinite.
      *
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertInfinite()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertInfinite()
      */
     public function assertInfinite($actual, string $message = '')
     {
@@ -627,7 +627,7 @@ trait CliTesterActions
      * @param class-string<ExpectedType> $expected
      *
      * @phpstan-assert =ExpectedType $actual
-     * @see \Codeception\Module\AbstractAsserts::assertInstanceOf()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertInstanceOf()
      */
     public function assertInstanceOf(string $expected, $actual, string $message = '')
     {
@@ -642,7 +642,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert array $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsArray()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsArray()
      */
     public function assertIsArray($actual, string $message = '')
     {
@@ -657,7 +657,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert bool $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsBool()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsBool()
      */
     public function assertIsBool($actual, string $message = '')
     {
@@ -672,7 +672,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert callable $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsCallable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsCallable()
      */
     public function assertIsCallable($actual, string $message = '')
     {
@@ -687,7 +687,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert resource $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsClosedResource()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsClosedResource()
      */
     public function assertIsClosedResource($actual, string $message = '')
     {
@@ -702,7 +702,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert float $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsFloat()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsFloat()
      */
     public function assertIsFloat($actual, string $message = '')
     {
@@ -717,7 +717,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert int $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsInt()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsInt()
      */
     public function assertIsInt($actual, string $message = '')
     {
@@ -732,7 +732,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert iterable $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsIterable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsIterable()
      */
     public function assertIsIterable($actual, string $message = '')
     {
@@ -747,7 +747,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !array $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotArray()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotArray()
      */
     public function assertIsNotArray($actual, string $message = '')
     {
@@ -762,7 +762,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !bool $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotBool()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotBool()
      */
     public function assertIsNotBool($actual, string $message = '')
     {
@@ -777,7 +777,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !callable $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotCallable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotCallable()
      */
     public function assertIsNotCallable($actual, string $message = '')
     {
@@ -792,7 +792,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !resource $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotClosedResource()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotClosedResource()
      */
     public function assertIsNotClosedResource($actual, string $message = '')
     {
@@ -807,7 +807,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !float $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotFloat()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotFloat()
      */
     public function assertIsNotFloat($actual, string $message = '')
     {
@@ -822,7 +822,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !int $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotInt()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotInt()
      */
     public function assertIsNotInt($actual, string $message = '')
     {
@@ -837,7 +837,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !iterable $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotIterable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotIterable()
      */
     public function assertIsNotIterable($actual, string $message = '')
     {
@@ -852,7 +852,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !numeric $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotNumeric()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotNumeric()
      */
     public function assertIsNotNumeric($actual, string $message = '')
     {
@@ -867,7 +867,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !object $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotObject()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotObject()
      */
     public function assertIsNotObject($actual, string $message = '')
     {
@@ -878,7 +878,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file/dir exists and is not readable.
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotReadable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotReadable()
      */
     public function assertIsNotReadable(string $filename, string $message = '')
     {
@@ -893,7 +893,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !resource $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotResource()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotResource()
      */
     public function assertIsNotResource($actual, string $message = '')
     {
@@ -908,7 +908,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @psalm-assert !scalar $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotScalar()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotScalar()
      */
     public function assertIsNotScalar($actual, string $message = '')
     {
@@ -923,7 +923,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !string $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotString()
      */
     public function assertIsNotString($actual, string $message = '')
     {
@@ -934,7 +934,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file/dir exists and is not writable.
-     * @see \Codeception\Module\AbstractAsserts::assertIsNotWritable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNotWritable()
      */
     public function assertIsNotWritable(string $filename, string $message = '')
     {
@@ -949,7 +949,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert numeric $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsNumeric()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsNumeric()
      */
     public function assertIsNumeric($actual, string $message = '')
     {
@@ -964,7 +964,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert object $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsObject()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsObject()
      */
     public function assertIsObject($actual, string $message = '')
     {
@@ -975,7 +975,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file/dir is readable.
-     * @see \Codeception\Module\AbstractAsserts::assertIsReadable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsReadable()
      */
     public function assertIsReadable(string $filename, string $message = '')
     {
@@ -990,7 +990,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert resource $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsResource()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsResource()
      */
     public function assertIsResource($actual, string $message = '')
     {
@@ -1005,7 +1005,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert scalar $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsScalar()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsScalar()
      */
     public function assertIsScalar($actual, string $message = '')
     {
@@ -1020,7 +1020,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert string $actual
-     * @see \Codeception\Module\AbstractAsserts::assertIsString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsString()
      */
     public function assertIsString($actual, string $message = '')
     {
@@ -1031,7 +1031,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a file/dir exists and is writable.
-     * @see \Codeception\Module\AbstractAsserts::assertIsWritable()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertIsWritable()
      */
     public function assertIsWritable(string $filename, string $message = '')
     {
@@ -1042,7 +1042,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string is a valid JSON string.
-     * @see \Codeception\Module\AbstractAsserts::assertJson()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJson()
      */
     public function assertJson(string $actualJson, string $message = '')
     {
@@ -1053,7 +1053,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that two JSON files are equal.
-     * @see \Codeception\Module\AbstractAsserts::assertJsonFileEqualsJsonFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJsonFileEqualsJsonFile()
      */
     public function assertJsonFileEqualsJsonFile(string $expectedFile, string $actualFile, string $message = '')
     {
@@ -1064,7 +1064,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that two JSON files are not equal.
-     * @see \Codeception\Module\AbstractAsserts::assertJsonFileNotEqualsJsonFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJsonFileNotEqualsJsonFile()
      */
     public function assertJsonFileNotEqualsJsonFile(string $expectedFile, string $actualFile, string $message = '')
     {
@@ -1075,7 +1075,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the generated JSON encoded object and the content of the given file are equal.
-     * @see \Codeception\Module\AbstractAsserts::assertJsonStringEqualsJsonFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJsonStringEqualsJsonFile()
      */
     public function assertJsonStringEqualsJsonFile(string $expectedFile, string $actualJson, string $message = '')
     {
@@ -1086,7 +1086,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that two given JSON encoded objects or arrays are equal.
-     * @see \Codeception\Module\AbstractAsserts::assertJsonStringEqualsJsonString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJsonStringEqualsJsonString()
      */
     public function assertJsonStringEqualsJsonString(string $expectedJson, string $actualJson, string $message = '')
     {
@@ -1097,7 +1097,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the generated JSON encoded object and the content of the given file are not equal.
-     * @see \Codeception\Module\AbstractAsserts::assertJsonStringNotEqualsJsonFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJsonStringNotEqualsJsonFile()
      */
     public function assertJsonStringNotEqualsJsonFile(string $expectedFile, string $actualJson, string $message = '')
     {
@@ -1108,7 +1108,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that two given JSON encoded objects or arrays are not equal.
-     * @see \Codeception\Module\AbstractAsserts::assertJsonStringNotEqualsJsonString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertJsonStringNotEqualsJsonString()
      */
     public function assertJsonStringNotEqualsJsonString(string $expectedJson, string $actualJson, string $message = '')
     {
@@ -1122,7 +1122,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertLessThan()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertLessThan()
      */
     public function assertLessThan($expected, $actual, string $message = '')
     {
@@ -1136,7 +1136,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertLessThanOrEqual()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertLessThanOrEqual()
      */
     public function assertLessThanOrEqual($expected, $actual, string $message = '')
     {
@@ -1147,7 +1147,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string matches a given regular expression.
-     * @see \Codeception\Module\AbstractAsserts::assertMatchesRegularExpression()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertMatchesRegularExpression()
      */
     public function assertMatchesRegularExpression(string $pattern, string $string, string $message = '')
     {
@@ -1160,7 +1160,7 @@ trait CliTesterActions
      * Asserts that a variable is nan.
      *
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNan()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNan()
      */
     public function assertNan($actual, string $message = '')
     {
@@ -1173,7 +1173,7 @@ trait CliTesterActions
      * Asserts that a haystack does not contain a needle.
      *
      * @param mixed $needle
-     * @see \Codeception\Module\AbstractAsserts::assertNotContains()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotContains()
      */
     public function assertNotContains($needle, iterable $haystack, string $message = '')
     {
@@ -1183,7 +1183,7 @@ trait CliTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * @see \Codeception\Module\AbstractAsserts::assertNotContainsEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotContainsEquals()
      */
     public function assertNotContainsEquals($needle, iterable $haystack, string $message = '')
     {
@@ -1194,7 +1194,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a haystack does not contain only values of a given type.
-     * @see \Codeception\Module\AbstractAsserts::assertNotContainsOnly()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotContainsOnly()
      */
     public function assertNotContainsOnly(string $type, iterable $haystack, ?bool $isNativeType = null, string $message = '')
     {
@@ -1207,7 +1207,7 @@ trait CliTesterActions
      * Asserts the number of elements of an array, Countable or Traversable.
      *
      * @param \Countable|iterable $haystack
-     * @see \Codeception\Module\AbstractAsserts::assertNotCount()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotCount()
      */
     public function assertNotCount(int $expectedCount, $haystack, string $message = '')
     {
@@ -1222,7 +1222,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !empty $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotEmpty()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotEmpty()
      */
     public function assertNotEmpty($actual, string $message = '')
     {
@@ -1236,7 +1236,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotEquals()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotEquals()
      */
     public function assertNotEquals($expected, $actual, string $message = '')
     {
@@ -1250,7 +1250,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotEqualsCanonicalizing()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotEqualsCanonicalizing()
      */
     public function assertNotEqualsCanonicalizing($expected, $actual, string $message = '')
     {
@@ -1264,7 +1264,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotEqualsIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotEqualsIgnoringCase()
      */
     public function assertNotEqualsIgnoringCase($expected, $actual, string $message = '')
     {
@@ -1278,7 +1278,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotEqualsWithDelta()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotEqualsWithDelta()
      */
     public function assertNotEqualsWithDelta($expected, $actual, float $delta, string $message = '')
     {
@@ -1293,7 +1293,7 @@ trait CliTesterActions
      * @param mixed $condition
      *
      * @phpstan-assert !false $condition
-     * @see \Codeception\Module\AbstractAsserts::assertNotFalse()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotFalse()
      */
     public function assertNotFalse($condition, string $message = '')
     {
@@ -1311,7 +1311,7 @@ trait CliTesterActions
      * @param class-string<ExpectedType> $expected
      *
      * @phpstan-assert !ExpectedType $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotInstanceOf()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotInstanceOf()
      */
     public function assertNotInstanceOf(string $expected, $actual, string $message = '')
     {
@@ -1326,7 +1326,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert !null $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotNull()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotNull()
      */
     public function assertNotNull($actual, string $message = '')
     {
@@ -1340,7 +1340,7 @@ trait CliTesterActions
      *
      * @param mixed $expected
      * @param mixed $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotSame()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotSame()
      */
     public function assertNotSame($expected, $actual, string $message = '')
     {
@@ -1354,7 +1354,7 @@ trait CliTesterActions
      *
      * @param \Countable|iterable $expected
      * @param \Countable|iterable $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNotSameSize()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotSameSize()
      */
     public function assertNotSameSize($expected, $actual, string $message = '')
     {
@@ -1369,7 +1369,7 @@ trait CliTesterActions
      * @param mixed $condition
      *
      * @phpstan-assert !true $condition
-     * @see \Codeception\Module\AbstractAsserts::assertNotTrue()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNotTrue()
      */
     public function assertNotTrue($condition, string $message = '')
     {
@@ -1384,7 +1384,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert null $actual
-     * @see \Codeception\Module\AbstractAsserts::assertNull()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertNull()
      */
     public function assertNull($actual, string $message = '')
     {
@@ -1395,7 +1395,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that an object has a specified attribute.
-     * @see \Codeception\Module\AbstractAsserts::assertObjectHasAttribute()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertObjectHasAttribute()
      */
     public function assertObjectHasAttribute(string $attributeName, object $object, string $message = '')
     {
@@ -1406,7 +1406,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that an object does not have a specified attribute.
-     * @see \Codeception\Module\AbstractAsserts::assertObjectNotHasAttribute()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertObjectNotHasAttribute()
      */
     public function assertObjectNotHasAttribute(string $attributeName, object $object, string $message = '')
     {
@@ -1426,7 +1426,7 @@ trait CliTesterActions
      * @param mixed $actual
      *
      * @phpstan-assert =ExpectedType $actual
-     * @see \Codeception\Module\AbstractAsserts::assertSame()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertSame()
      */
     public function assertSame($expected, $actual, string $message = '')
     {
@@ -1440,7 +1440,7 @@ trait CliTesterActions
      *
      * @param \Countable|iterable $expected
      * @param \Countable|iterable $actual
-     * @see \Codeception\Module\AbstractAsserts::assertSameSize()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertSameSize()
      */
     public function assertSameSize($expected, $actual, string $message = '')
     {
@@ -1450,7 +1450,7 @@ trait CliTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * @see \Codeception\Module\AbstractAsserts::assertStringContainsString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringContainsString()
      */
     public function assertStringContainsString(string $needle, string $haystack, string $message = '')
     {
@@ -1460,7 +1460,7 @@ trait CliTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * @see \Codeception\Module\AbstractAsserts::assertStringContainsStringIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringContainsStringIgnoringCase()
      */
     public function assertStringContainsStringIgnoringCase(string $needle, string $haystack, string $message = '')
     {
@@ -1471,7 +1471,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string ends not with a given suffix.
-     * @see \Codeception\Module\AbstractAsserts::assertStringEndsNotWith()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringEndsNotWith()
      */
     public function assertStringEndsNotWith(string $suffix, string $string, string $message = '')
     {
@@ -1482,7 +1482,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string ends with a given suffix.
-     * @see \Codeception\Module\AbstractAsserts::assertStringEndsWith()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringEndsWith()
      */
     public function assertStringEndsWith(string $suffix, string $string, string $message = '')
     {
@@ -1493,7 +1493,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of a string is equal to the contents of a file.
-     * @see \Codeception\Module\AbstractAsserts::assertStringEqualsFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringEqualsFile()
      */
     public function assertStringEqualsFile(string $expectedFile, string $actualString, string $message = '')
     {
@@ -1504,7 +1504,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of a string is equal to the contents of a file (canonicalizing).
-     * @see \Codeception\Module\AbstractAsserts::assertStringEqualsFileCanonicalizing()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringEqualsFileCanonicalizing()
      */
     public function assertStringEqualsFileCanonicalizing(string $expectedFile, string $actualString, string $message = '')
     {
@@ -1515,7 +1515,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of a string is equal to the contents of a file (ignoring case).
-     * @see \Codeception\Module\AbstractAsserts::assertStringEqualsFileIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringEqualsFileIgnoringCase()
      */
     public function assertStringEqualsFileIgnoringCase(string $expectedFile, string $actualString, string $message = '')
     {
@@ -1526,7 +1526,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string matches a given format string.
-     * @see \Codeception\Module\AbstractAsserts::assertStringMatchesFormat()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringMatchesFormat()
      */
     public function assertStringMatchesFormat(string $format, string $string, string $message = '')
     {
@@ -1537,7 +1537,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string matches a given format file.
-     * @see \Codeception\Module\AbstractAsserts::assertStringMatchesFormatFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringMatchesFormatFile()
      */
     public function assertStringMatchesFormatFile(string $formatFile, string $string, string $message = '')
     {
@@ -1547,7 +1547,7 @@ trait CliTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotContainsString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotContainsString()
      */
     public function assertStringNotContainsString(string $needle, string $haystack, string $message = '')
     {
@@ -1557,7 +1557,7 @@ trait CliTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotContainsStringIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotContainsStringIgnoringCase()
      */
     public function assertStringNotContainsStringIgnoringCase(string $needle, string $haystack, string $message = '')
     {
@@ -1568,7 +1568,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of a string is not equal to the contents of a file.
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotEqualsFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotEqualsFile()
      */
     public function assertStringNotEqualsFile(string $expectedFile, string $actualString, string $message = '')
     {
@@ -1579,7 +1579,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of a string is not equal to the contents of a file (canonicalizing).
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotEqualsFileCanonicalizing()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotEqualsFileCanonicalizing()
      */
     public function assertStringNotEqualsFileCanonicalizing(string $expectedFile, string $actualString, string $message = '')
     {
@@ -1590,7 +1590,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that the contents of a string is not equal to the contents of a file (ignoring case).
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotEqualsFileIgnoringCase()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotEqualsFileIgnoringCase()
      */
     public function assertStringNotEqualsFileIgnoringCase(string $expectedFile, string $actualString, string $message = '')
     {
@@ -1601,7 +1601,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string does not match a given format string.
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotMatchesFormat()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotMatchesFormat()
      */
     public function assertStringNotMatchesFormat(string $format, string $string, string $message = '')
     {
@@ -1612,7 +1612,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string does not match a given format string.
-     * @see \Codeception\Module\AbstractAsserts::assertStringNotMatchesFormatFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringNotMatchesFormatFile()
      */
     public function assertStringNotMatchesFormatFile(string $formatFile, string $string, string $message = '')
     {
@@ -1623,7 +1623,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string starts not with a given prefix.
-     * @see \Codeception\Module\AbstractAsserts::assertStringStartsNotWith()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringStartsNotWith()
      */
     public function assertStringStartsNotWith(string $prefix, string $string, string $message = '')
     {
@@ -1634,7 +1634,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that a string starts with a given prefix.
-     * @see \Codeception\Module\AbstractAsserts::assertStringStartsWith()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertStringStartsWith()
      */
     public function assertStringStartsWith(string $prefix, string $string, string $message = '')
     {
@@ -1647,7 +1647,7 @@ trait CliTesterActions
      * Evaluates a PHPUnit\Framework\Constraint matcher object.
      *
      * @param mixed $value
-     * @see \Codeception\Module\AbstractAsserts::assertThat()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertThat()
      */
     public function assertThat($value, \PHPUnit\Framework\Constraint\Constraint $constraint, string $message = '')
     {
@@ -1662,7 +1662,7 @@ trait CliTesterActions
      * @param mixed $condition
      *
      * @phpstan-assert true $condition
-     * @see \Codeception\Module\AbstractAsserts::assertTrue()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertTrue()
      */
     public function assertTrue($condition, string $message = '')
     {
@@ -1673,7 +1673,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that two XML files are equal.
-     * @see \Codeception\Module\AbstractAsserts::assertXmlFileEqualsXmlFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertXmlFileEqualsXmlFile()
      */
     public function assertXmlFileEqualsXmlFile(string $expectedFile, string $actualFile, string $message = '')
     {
@@ -1684,7 +1684,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that two XML files are not equal.
-     * @see \Codeception\Module\AbstractAsserts::assertXmlFileNotEqualsXmlFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertXmlFileNotEqualsXmlFile()
      */
     public function assertXmlFileNotEqualsXmlFile(string $expectedFile, string $actualFile, string $message = '')
     {
@@ -1697,7 +1697,7 @@ trait CliTesterActions
      * Asserts that two XML documents are equal.
      *
      * @param \DOMDocument|string $actualXml
-     * @see \Codeception\Module\AbstractAsserts::assertXmlStringEqualsXmlFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertXmlStringEqualsXmlFile()
      */
     public function assertXmlStringEqualsXmlFile(string $expectedFile, $actualXml, string $message = '')
     {
@@ -1711,7 +1711,7 @@ trait CliTesterActions
      *
      * @param \DOMDocument|string $expectedXml
      * @param \DOMDocument|string $actualXml
-     * @see \Codeception\Module\AbstractAsserts::assertXmlStringEqualsXmlString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertXmlStringEqualsXmlString()
      */
     public function assertXmlStringEqualsXmlString($expectedXml, $actualXml, string $message = '')
     {
@@ -1724,7 +1724,7 @@ trait CliTesterActions
      * Asserts that two XML documents are not equal.
      *
      * @param \DOMDocument|string $actualXml
-     * @see \Codeception\Module\AbstractAsserts::assertXmlStringNotEqualsXmlFile()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertXmlStringNotEqualsXmlFile()
      */
     public function assertXmlStringNotEqualsXmlFile(string $expectedFile, $actualXml, string $message = '')
     {
@@ -1738,7 +1738,7 @@ trait CliTesterActions
      *
      * @param \DOMDocument|string $expectedXml
      * @param \DOMDocument|string $actualXml
-     * @see \Codeception\Module\AbstractAsserts::assertXmlStringNotEqualsXmlString()
+     * Related logic: see \Codeception\Module\AbstractAsserts::assertXmlStringNotEqualsXmlString()
      */
     public function assertXmlStringNotEqualsXmlString($expectedXml, $actualXml, string $message = '')
     {
@@ -1749,7 +1749,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Fails a test with the given message.
-     * @see \Codeception\Module\AbstractAsserts::fail()
+     * Related logic: see \Codeception\Module\AbstractAsserts::fail()
      */
     public function fail(string $message = '')
     {
@@ -1760,7 +1760,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Mark the test as incomplete.
-     * @see \Codeception\Module\AbstractAsserts::markTestIncomplete()
+     * Related logic: see \Codeception\Module\AbstractAsserts::markTestIncomplete()
      */
     public function markTestIncomplete(string $message = '')
     {
@@ -1771,7 +1771,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Mark the test as skipped.
-     * @see \Codeception\Module\AbstractAsserts::markTestSkipped()
+     * Related logic: see \Codeception\Module\AbstractAsserts::markTestSkipped()
      */
     public function markTestSkipped(string $message = '')
     {
@@ -1791,7 +1791,7 @@ trait CliTesterActions
      * // do not fail test when command fails
      * $I->runShellCommand('phpunit', false);
      * ```
-     * @see \Codeception\Module\Cli::runShellCommand()
+     * Related logic: see \Codeception\Module\Cli::runShellCommand()
      */
     public function runShellCommand(string $command, bool $failNonZero = true): void
     {
@@ -1802,7 +1802,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that output from last executed command contains text
-     * @see \Codeception\Module\Cli::seeInShellOutput()
+     * Related logic: see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function seeInShellOutput(string $text): void
     {
@@ -1814,7 +1814,7 @@ trait CliTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that output from last executed command contains text
-     * @see \Codeception\Module\Cli::seeInShellOutput()
+     * Related logic: see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function canSeeInShellOutput(string $text): void
     {
@@ -1825,7 +1825,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that output from latest command doesn't contain text
-     * @see \Codeception\Module\Cli::dontSeeInShellOutput()
+     * Related logic: see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function dontSeeInShellOutput(string $text): void
     {
@@ -1837,7 +1837,7 @@ trait CliTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      * Checks that output from latest command doesn't contain text
-     * @see \Codeception\Module\Cli::dontSeeInShellOutput()
+     * Related logic: see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function cantSeeInShellOutput(string $text): void
     {
@@ -1847,7 +1847,7 @@ trait CliTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * @see \Codeception\Module\Cli::seeShellOutputMatches()
+     * Related logic: see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function seeShellOutputMatches(string $regex): void
     {
@@ -1859,7 +1859,7 @@ trait CliTesterActions
      *
      * [!] Conditional Assertion: Test won't be stopped on fail
      *
-     * @see \Codeception\Module\Cli::seeShellOutputMatches()
+     * Related logic: see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function canSeeShellOutputMatches(string $regex): void
     {
@@ -1870,7 +1870,7 @@ trait CliTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Returns the output from latest command
-     * @see \Codeception\Module\Cli::grabShellOutput()
+     * Related logic: see \Codeception\Module\Cli::grabShellOutput()
      */
     public function grabShellOutput(): string
     {
@@ -1886,7 +1886,7 @@ trait CliTesterActions
      * <?php
      * $I->seeResultCodeIs(0);
      * ```
-     * @see \Codeception\Module\Cli::seeResultCodeIs()
+     * Related logic: see \Codeception\Module\Cli::seeResultCodeIs()
      */
     public function seeResultCodeIs(int $code): void
     {
@@ -1903,7 +1903,7 @@ trait CliTesterActions
      * <?php
      * $I->seeResultCodeIs(0);
      * ```
-     * @see \Codeception\Module\Cli::seeResultCodeIs()
+     * Related logic: see \Codeception\Module\Cli::seeResultCodeIs()
      */
     public function canSeeResultCodeIs(int $code): void
     {
@@ -1919,7 +1919,7 @@ trait CliTesterActions
      * <?php
      * $I->seeResultCodeIsNot(0);
      * ```
-     * @see \Codeception\Module\Cli::seeResultCodeIsNot()
+     * Related logic: see \Codeception\Module\Cli::seeResultCodeIsNot()
      */
     public function seeResultCodeIsNot(int $code): void
     {
@@ -1936,7 +1936,7 @@ trait CliTesterActions
      * <?php
      * $I->seeResultCodeIsNot(0);
      * ```
-     * @see \Codeception\Module\Cli::seeResultCodeIsNot()
+     * Related logic: see \Codeception\Module\Cli::seeResultCodeIsNot()
      */
     public function canSeeResultCodeIsNot(int $code): void
     {

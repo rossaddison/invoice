@@ -58,7 +58,7 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserClient|null $userclient
      * @throws Throwable
      */
@@ -68,7 +68,7 @@ final class UserClientRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param UserClient $userclient
      * @throws Throwable
      */

@@ -57,7 +57,7 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param AllowanceCharge|array|null $allowanceCharge
      * @psalm-param TEntity $allowanceCharge
      * @throws Throwable
@@ -68,7 +68,7 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param AllowanceCharge|array|null $allowanceCharge
 
      * @throws Throwable

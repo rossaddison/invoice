@@ -111,7 +111,7 @@ final class DeliveryController extends BaseController
         $currentPageNeverZero = (int) $page > 0 ? (int) $page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'delivery_location_id'])
-                // (@see vendor\yiisoft\data\src\Reader\Sort
+                // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest quotes first => -id
                 ->withOrderString($query_params['sort'] ?? '-id');

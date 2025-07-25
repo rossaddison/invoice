@@ -52,7 +52,7 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteItemAmount|null $quoteitemamount
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteItemAmount|null $quoteitemamount
      * @throws Throwable
      */

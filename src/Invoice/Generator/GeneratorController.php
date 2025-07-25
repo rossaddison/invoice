@@ -56,9 +56,9 @@ class GeneratorController extends BaseController
     public const string _ROUTE = '_route.php';
 
     /**
-     * @see Note: The working file app.php in ./resources/messages/en is too big for google to translate.
+     * Related logic: see Note: The working file app.php in ./resources/messages/en is too big for google to translate.
      *
-     * @see Note these below filenames e.g. '_ip_lang.php' represent the filenames in:
+     * Related logic: see Note these below filenames e.g. '_ip_lang.php' represent the filenames in:
      * ./resources/views/invoice/generator/templates_protected. As strings they will be
      * used to construct a filename. The translation of the specific ./src/Invoice/Language/English file
      * is placed in the templates_protected/{individual file} 'php shell template' to build a new php file.
@@ -236,15 +236,15 @@ class GeneratorController extends BaseController
                         /**
                          * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
                          * @psalm-suppress DeprecatedClass
-                         * @see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead.
+                         * Related logic: see Google\Protobuf\Internal\RepeatedField is deprecated. Use Google\Protobuf\RepeatedField instead.
                          */
                         $response_get_translations = $response->getTranslations();
                         /**
                         * @psalm-suppress RawObjectIteration $response_get_translations
                         * @var \Google\Cloud\Translate\V3\Translation $translation
                         * @var string $key
-                        * @see $content = ['view.contact.form.name' => 'Name']
-                        * @see $response_get_translations = ['Name' => 'Naam']
+                        * Related logic: see $content = ['view.contact.form.name' => 'Name']
+                        * Related logic: see $response_get_translations = ['Name' => 'Naam']
                         */
                         foreach ($response_get_translations as $key => $translation) {
                             $result_array[] = $translation->getTranslatedText();
@@ -343,7 +343,7 @@ class GeneratorController extends BaseController
                 $file = self::_APP;
                 break;
                 /**
-                 * @see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
+                 * Related logic: see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
                  *      $urlGenerator->generate('generator/google_translate_lang', ['type' => 'a_latest']),  false, false),
                  */
             case 'diff':

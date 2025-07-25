@@ -21,7 +21,7 @@ use Yiisoft\Bootstrap5\NavLink;
 use Yiisoft\Bootstrap5\NavStyle;
 
 /**
- * @see Note: This layout is not currently being used. Refer to soletrader/main.php
+ * Related logic: see Note: This layout is not currently being used. Refer to soletrader/main.php
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -29,7 +29,7 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
  *
- * @see \App\ApplicationViewInjection
+ * Related logic: see \App\ApplicationViewInjection
  *
  * @var User|null $user
  * @var bool $debugMode

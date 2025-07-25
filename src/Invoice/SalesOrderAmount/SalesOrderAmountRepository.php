@@ -56,7 +56,7 @@ final class SalesOrderAmountRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderAmount|null $soamount
      * @throws Throwable
      */
@@ -66,7 +66,7 @@ final class SalesOrderAmountRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderAmount|null $soamount
      * @throws Throwable
      */

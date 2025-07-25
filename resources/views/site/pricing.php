@@ -10,9 +10,9 @@ use Yiisoft\Html\Tag\P;
 
 /**
  * @link  Acknowledgement to bootstrapbrain free templates wavelite for the bootstrap 5 code classes and structure
- * @see This wavelite template has been adjusted to accomodate
- * @see ..\invoice\src\ViewInjection\CommonViewInjection.php
- * @see ..\invoice\resources\messages\en\app.php
+ * Related logic: see This wavelite template has been adjusted to accomodate
+ * Related logic: see ..\invoice\src\ViewInjection\CommonViewInjection.php
+ * Related logic: see ..\invoice\resources\messages\en\app.php
  * @var App\Invoice\Setting\SettingRepository $s
  * @var array $pricing
  */

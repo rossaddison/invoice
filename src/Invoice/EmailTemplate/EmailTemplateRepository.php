@@ -39,7 +39,7 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|EmailTemplate|null $emailtemplate
      * @throws Throwable
      */
@@ -49,7 +49,7 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|EmailTemplate|null $emailtemplate
      * @throws Throwable
      */

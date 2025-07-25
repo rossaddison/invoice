@@ -54,7 +54,7 @@ final class SalesOrderCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderCustom|null $quotecustom
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ final class SalesOrderCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|SalesOrderCustom|null $so_custom
      * @throws Throwable
      */

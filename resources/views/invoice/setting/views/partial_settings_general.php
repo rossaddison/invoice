@@ -601,8 +601,8 @@ foreach ($number_formats as $key => $value) { ?>
                                 <div class="input-group-text">
                                     <?php
     /**
-     * @see ..\src\Invoice\Asset\rebuild-1.13\js\setting.js
-     * @see $(document).on('click', '#btn_generate_cron_key', function ()
+     * Related logic: see ..\src\Invoice\Asset\rebuild-1.13\js\setting.js
+     * Related logic: see $(document).on('click', '#btn_generate_cron_key', function ()
      */
 ?>
                                     <button id="btn_generate_cron_key" type="button" class="btn_generate_cron_key btn btn-primary btn-block">

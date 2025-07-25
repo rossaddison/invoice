@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see ...src\Invoice\Product\ProductController function view $parameters['partial_product_gallery']
+ * Related logic: see ...src\Invoice\Product\ProductController function view $parameters['partial_product_gallery']
  * @var App\Invoice\Entity\Product $product
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator

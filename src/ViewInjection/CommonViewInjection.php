@@ -103,8 +103,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'url' => $this->url,
 
             /**
-             * @see \invoice\resources\messages\en\app.php
-             * @see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
+             * Related logic: see \invoice\resources\messages\en\app.php
+             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
              */
             'about' => [
                 'we' => $this->translator->translate('site.soletrader.about.we'),
@@ -154,17 +154,17 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                 'phone' => $this->translator->translate('site.soletrader.contact.phone'),
             ],
             'forgotalert' => [
-                'passwordResetEmail' => $this->translator->translate('password_reset_email'),
+                'passwordResetEmail' => $this->translator->translate('password.reset.email'),
             ],
             'adminmustmakeactive' => [
-                'adminMustMakeActive' => $this->translator->translate('loginalert_user_inactive'),
+                'adminMustMakeActive' => $this->translator->translate('loginalert.user.inactive'),
             ],
             'forgotemailfailed' => [
-                'passwordResetFailed' => $this->translator->translate('password_reset_failed'),
+                'passwordResetFailed' => $this->translator->translate('password.reset.failed'),
                 'invoiceEmailException' => $this->translator->translate('email.exception'),
             ],
             'forgotusernotfound' => [
-                'loginAlertUserNotFound' => $this->translator->translate('loginalert_user_not_found'),
+                'loginAlertUserNotFound' => $this->translator->translate('loginalert.user.not.found'),
             ],
             'oauth2callbackresultunauthorised' => [
                 'oauth2callbackresultunauthorised' => $this->translator->translate('layout.page.not-authorised'),
@@ -173,18 +173,18 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                 'onetimePasswordError' => $this->translator->translate('two.factor.authentication.error'),
             ],
             'resetpasswordfailed' => [
-                'resetPasswordFailed' => $this->translator->translate('password_reset_failed'),
+                'resetPasswordFailed' => $this->translator->translate('password.reset.failed'),
             ],
             'resetpasswordsuccess' => [
-                'resetPasswordSuccess' => $this->translator->translate('password_reset'),
+                'resetPasswordSuccess' => $this->translator->translate('password.reset'),
             ],
             'signupfailed' => [
                 'emailNotSentSuccessfully' => $this->translator->translate('email.not.sent.successfully'),
                 'invoiceEmailException' => $this->translator->translate('email.exception'),
-                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('loginalert_user_inactive'),
+                'localhostUserCanLoginAfterAdminMakesActive' => $this->translator->translate('loginalert.user.inactive'),
             ],
             'signupsuccess' => [
-                'emailSuccessfullySent' => $this->translator->translate('email_successfully_sent'),
+                'emailSuccessfullySent' => $this->translator->translate('email.successfully.sent'),
             ],
         ];
     }

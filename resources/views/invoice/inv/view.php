@@ -299,8 +299,8 @@ if ($showButtons && $invEdit) {
                     // Show the create credit invoice button if the invoice is read-only or if it is paid
                     // and the user is allowed to edit.
                     /**
-                     * @see Modal string activated with #create-credit-inv. Modal string from InvController/index output to $modal_create_credit
-                     * @see InvController/create_credit_confirm run from src\Invoice\Asset\rebuild-1.1.3\inv.js create-credit-confirm
+                     * Related logic: see Modal string activated with #create-credit-inv. Modal string from InvController/index output to $modal_create_credit
+                     * Related logic: see InvController/create_credit_confirm run from src\Invoice\Asset\rebuild-1.1.3\inv.js create-credit-confirm
                      */
                     if (($readOnly === true || $inv->getStatus_id() === 4) && $invEdit && !(int) $inv->getCreditinvoice_parent_id() > 0) {
                         ?>
@@ -451,7 +451,7 @@ if ($invEdit) {
                                 <i class="fa fa-copy fa-margin"></i>
     <?=
  /**
-  * @see resources/views/invoice/inv/modal_copy_inv.php
+  * Related logic: see resources/views/invoice/inv/modal_copy_inv.php
   * Options ... Copy Invoice
   */
 

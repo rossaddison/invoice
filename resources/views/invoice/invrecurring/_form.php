@@ -75,8 +75,8 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
                     <?=
     /**
      * Purpose: Changing this frequency will calculate the start date from the current (above) immutable invoice date
-     * @see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js get_recur_start_date
-     * @see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js $('#frequency').change(function () {
+     * Related logic: see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js get_recur_start_date
+     * Related logic: see C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\inv.js $('#frequency').change(function () {
      */
     Field::select($form, 'frequency')
     ->label($translator->translate('recurring.frequency'))

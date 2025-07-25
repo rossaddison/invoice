@@ -53,7 +53,7 @@ final class UserInvRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserInv|null $userinv
      * @throws Throwable
      */
@@ -63,7 +63,7 @@ final class UserInvRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|UserInv|null $userinv
      * @throws Throwable
      */

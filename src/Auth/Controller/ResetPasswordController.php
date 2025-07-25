@@ -73,7 +73,7 @@ final class ResetPasswordController
                              * 2.) nullify PasswordResetToken by setting the Token:token to null but retaining the Token:type
                              *     so that the token(Random::string(32)) for this type can be reset
                              * 3.) generateAuthKey in Identity
-                             * @see https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php
+                             * Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php
                              */
                             //1.)
                             $user->setPassword($resetPasswordForm->getNewPassword());

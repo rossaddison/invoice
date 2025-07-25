@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Invoice\Client\ClientController function view search partial_notes
+ * Related logic: see App\Invoice\Client\ClientController function view search partial_notes
  *
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var array $client_notes

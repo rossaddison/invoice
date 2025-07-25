@@ -55,7 +55,7 @@ final class ContractRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Contract|null $contract
      * @psalm-param TEntity $contract
      * @throws Throwable
@@ -66,7 +66,7 @@ final class ContractRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Contract|null $contract
      * @throws Throwable
      */

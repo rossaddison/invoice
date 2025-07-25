@@ -17,7 +17,7 @@ class PaymentMeans implements XmlSerializable
     public function __construct(private readonly ?PayeeFinancialAccount $payeeFinancialAccount, private readonly ?string $paymentId = '') {}
 
     /**
-     * @see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentMeans
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PaymentMeans
      * @param Writer $writer
      */
     #[\Override]

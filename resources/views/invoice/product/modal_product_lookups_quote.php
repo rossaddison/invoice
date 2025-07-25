@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Yiisoft\Html\Tag\Button;
 
 /**
- * @see ...\src\Invoice\Quote\QuoteController function view $parameters['modal_choose_items']
- * @see ...\resources\views\invoice\product\_partial_product_table_modal.php
+ * Related logic: see ...\src\Invoice\Quote\QuoteController function view $parameters['modal_choose_items']
+ * Related logic: see ...\resources\views\invoice\product\_partial_product_table_modal.php
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $families
  * @var array $products

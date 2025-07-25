@@ -7,10 +7,10 @@ use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
  *
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var array $signupfailed
  *
- * @see 'invoice.email.not.sent.successfully'
+ * Related logic: see 'invoice.email.not.sent.successfully'
  */
 
 echo Alert::widget()

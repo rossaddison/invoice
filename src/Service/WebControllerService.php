@@ -19,7 +19,7 @@ final readonly class WebControllerService
 
     /** Bug: Trailing # at end of browser url if ... string $hash = '';
      *  Fix: ?string $hash = null
-     *  @see
+     *  Related logic: see
      */
     /** @psalm-suppress MixedArgumentTypeCoercion $arguments **/
     public function getRedirectResponse(string $url, array $arguments = [], array $queryParameters = [], ?string $hash = null): ResponseInterface

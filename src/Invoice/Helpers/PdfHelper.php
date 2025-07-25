@@ -579,7 +579,7 @@ class PdfHelper
     //                            $templateId = $pdf->importPage($pageNo);
     //                            $size = $pdf->getTemplateSize($templateId);
     //                            /**
-    //                             * @see setasign\fpdf\fpdf.php                             *
+    //                             * Related logic: see setasign\fpdf\fpdf.php                             *
     //                             * @var int $size['w']
     //                             * @var int $size['h']
     //                             */
@@ -599,7 +599,7 @@ class PdfHelper
     //                            $templateId = $pdf->importPage($pageNo);
     //                            $size = $pdf->getTemplateSize($templateId);
     //                            /**
-    //                             * @see setasign\fpdf\fpdf.php                             *
+    //                             * Related logic: see setasign\fpdf\fpdf.php                             *
     //                             * @var int $size['w']
     //                             * @var int $size['h']
     //                             */

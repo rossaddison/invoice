@@ -56,7 +56,7 @@ final class InvAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvAllowanceCharge|null $invallowancecharge
      * @psalm-param TEntity $invallowancecharge
      * @throws Throwable
@@ -67,7 +67,7 @@ final class InvAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvAllowanceCharge|null $invallowancecharge
 
      * @throws Throwable

@@ -65,7 +65,7 @@ final class ProductImageController extends BaseController
         $query_params = $request->getQueryParams();
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'product_id', 'file_name_original'])
-                // (@see vendor\yiisoft\data\src\Reader\Sort
+                // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest uploads first => -id
                 ->withOrderString($query_params['sort'] ?? '-id');
@@ -82,8 +82,8 @@ final class ProductImageController extends BaseController
     }
 
     /**
-     * @see Alternative currently used: ProductController function image_attachment_move_to
-     * @see This function is not currently used but can be adapted for use
+     * Related logic: see Alternative currently used: ProductController function image_attachment_move_to
+     * Related logic: see This function is not currently used but can be adapted for use
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator

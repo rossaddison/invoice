@@ -52,7 +52,7 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvCustom|null $invcustom
      * @throws Throwable
      */
@@ -62,7 +62,7 @@ final class InvCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|InvCustom|null $invcustom
      * @throws Throwable
      */

@@ -23,7 +23,7 @@ final readonly class InvItemService
     public function __construct(private InvItemRepository $repository) {}
 
     /**
-     * @see InvController function inv_to_inv_items
+     * Related logic: see InvController function inv_to_inv_items
      * @param InvItem $model
      * @param array $array
      * @param string $inv_id
@@ -121,7 +121,7 @@ final readonly class InvItemService
     }
 
     /**
-     * @see InvController function inv_to_inv_inv_items
+     * Related logic: see InvController function inv_to_inv_inv_items
      * @param string $copyInvId
      * @param int $originalId
      * @param int $newId
@@ -196,7 +196,7 @@ final readonly class InvItemService
     }
 
     /**
-     * @see InvController function inv_to_inv_items
+     * Related logic: see InvController function inv_to_inv_items
      * @param InvItem $model
      * @param array $array
      * @param string $inv_id
@@ -314,7 +314,7 @@ final readonly class InvItemService
      * Any adjustments to this function should be reflected also in the similar InvItemController function saveInvItemAmount
      * which is used when the user adjusts e.g. a product item
      *
-     * @see Used in InvController function inv_to_inv_items
+     * Related logic: see Used in InvController function inv_to_inv_items
      * @param int $inv_item_id
      * @param float $quantity
      * @param float $price
@@ -350,7 +350,7 @@ final readonly class InvItemService
         // VAT
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNTS MUST BE REMOVED BEFORE VAT IS DETERMINED
-            // @see https://informi.co.uk/finance/how-vat-affected-discounts
+            // Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
             $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100.00));
         }
         $iias_array['discount'] = $discount_total;

@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Img;
 use App\Widget\QrCode as QrCodeWidget;
 
 /**
- * @see App\Invoice\Helpers\PdfHelper
+ * Related logic: see App\Invoice\Helpers\PdfHelper
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -40,8 +40,8 @@ use App\Widget\QrCode as QrCodeWidget;
                 <div id="logo">
                     <?php
                         /**
-                         * @see src/Invoice/Setting/SettingRepository function get_company_private_logos_folder_aliases()
-                         * @see CompanyPrivateController function add()
+                         * Related logic: see src/Invoice/Setting/SettingRepository function get_company_private_logos_folder_aliases()
+                         * Related logic: see CompanyPrivateController function add()
                          *
                          * The private logo filename which exists between a start and end date is modified with Random::string(4)
                          * and transferred to the public logo location i.e destination.public.logo

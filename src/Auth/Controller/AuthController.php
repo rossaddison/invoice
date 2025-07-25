@@ -179,14 +179,14 @@ final class AuthController
                         }
                         $this->tfaNotEnabledUnblockBaseController($userId);
                         /**
-                         * @see UserInvController function signup where the userinv active field is made active i.e. true upon a positive email verification
+                         * Related logic: see UserInvController function signup where the userinv active field is made active i.e. true upon a positive email verification
                          */
                         $status = $userInv->getActive();
                         /**
                          * The admin does not automatically have a 'userinv account with status as active' IF
                          * signing up NOT by email e.g by localhost  . The below code, if ($isAdminUser) {
                             }, => makes allowances for this.
-                         * @see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
+                         * Related logic: see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
                          *      and the userinv account's status field is made active i.e. 1
                          */
                         $userRoles = $this->manager->getRolesByUserId($userId);
@@ -352,7 +352,7 @@ final class AuthController
     }
 
     /**
-     * @see src\Auth\Asset\rebuild\js\keypad_copy_to_clipboard.js
+     * Related logic: see src\Auth\Asset\rebuild\js\keypad_copy_to_clipboard.js
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function ajaxShowSetup(ServerRequestInterface $request): \Yiisoft\DataResponse\DataResponse
@@ -502,7 +502,7 @@ final class AuthController
             // Apply rate limiting for authentication attempts
             $clientIp = $this->getClientIpAddress($request);
             $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
-            /** @see config/web/di/rate-limit.php */
+            /** Related logic: see config/web/di/rate-limit.php */
             if (!$this->checkRateLimit($rateLimitKey)) {
                 $this->logger->log(LogLevel::WARNING, 'Rate limit reached for 2FA verification from IP: ' . $clientIp);
                 $error = $translator->translate('two.factor.authentication.rate.limit.reached');
@@ -535,7 +535,7 @@ final class AuthController
                                     // Regenerate session ID on successful authentication
                                     $this->session->regenerateId();
                                     $this->removeSessionTempsAndPermitEntryToBaseController($verifiedUserId);
-                                    /** @see HmrcController function fphValidate */
+                                    /** Related logic: see HmrcController function fphValidate */
                                     $this->session->set('otp', $inputCode);
                                     $this->session->set('otpRef', TokenMask::apply($totpSecret));
                                     return $this->redirectToInvoiceIndex();
@@ -829,7 +829,7 @@ final class AuthController
     }
 
     /**
-     * @see https://github.com/rossaddison/invoice/discussions/215
+     * Related logic: see https://github.com/rossaddison/invoice/discussions/215
      * @param string $provider
      * @throws \InvalidArgumentException
      * @return string
@@ -1000,7 +1000,7 @@ final class AuthController
         try {
             $result = $this->rateLimiter->hit($key);
             // The hit method returns a CounterState object, check if the limit is not reached
-            /** @see config/web/di/rate-limit ... adjust down to 2 for testing ... default 4 **/
+            /** Related logic: see config/web/di/rate-limit ... adjust down to 2 for testing ... default 4 **/
             return !$result->isLimitReached();
         } catch (\Exception $e) {
             // Log error but don't block authentication if rate limiter fails

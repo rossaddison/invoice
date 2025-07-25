@@ -7,7 +7,7 @@ namespace App\Invoice\Helpers\StoreCove;
 final class StoreCoveArrays
 {
     /**
-     * @see https://codebeautify.org/html-to-json-converter
+     * Related logic: see https://codebeautify.org/html-to-json-converter
      *
      * @return array
      */

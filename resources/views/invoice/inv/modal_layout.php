@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see App\Widget\Bootstrap5ModalInv $this->layoutParameters['form']
+ * Related logic: see App\Widget\Bootstrap5ModalInv $this->layoutParameters['form']
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $form
  * @var string $type

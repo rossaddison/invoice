@@ -12,16 +12,16 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Entity\Inv $invoice
  * @var App\Invoice\PaymentInformation\PaymentInformationForm $form
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['dateHelper' => Reference::to(DateHelper::class)]]
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['numberHelper' => Reference::to(NumberHelper::class)]]
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  *
- * @see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
+ * Related logic: see config\common\params 'yiisoft/view' => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
  * @var App\Invoice\Setting\SettingRepository $s
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator

@@ -108,7 +108,7 @@ final readonly class InvAmountService
     /**
      * Update the Invoice Amounts when an inv item allowance or charge is added to an invoice item.
      * Also update the Invoice totals using Numberhelper calculate inv_taxes function
-     * @see InvItemAllowanceChargeController functions add and edit
+     * Related logic: see InvItemAllowanceChargeController functions add and edit
      * @param int $inv_id
      * @param IAR $iaR
      * @param IIAR $iiaR
@@ -122,7 +122,7 @@ final readonly class InvAmountService
             $inv = $model->getInv();
             if (null !== $inv) {
                 /**
-                 * @see Entity\Inv #[HasMany(target: InvItem::class)] private ArrayCollection $items;
+                 * Related logic: see Entity\Inv #[HasMany(target: InvItem::class)] private ArrayCollection $items;
                  * @var
                  */
                 $items = $inv->getItems();

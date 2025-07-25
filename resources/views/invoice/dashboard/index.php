@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @see src\Invoice\InvoiceController function dashboard
- * @see App\Invoice\Inv\InvRepository function getStatuses
+ * Related logic: see src\Invoice\InvoiceController function dashboard
+ * Related logic: see App\Invoice\Inv\InvRepository function getStatuses
  *
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper

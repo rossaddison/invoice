@@ -108,7 +108,7 @@ final class InstallCommand extends Command
             $allPassed = false;
         } else {
             /**
-             * @see {root}/autoload.php
+             * Related logic: see {root}/autoload.php
              */
             $checks[] = [
                 'Composer',

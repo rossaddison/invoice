@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
 
 /**
- * @see QuoteController function url_key
+ * Related logic: see QuoteController function url_key
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Entity\Quote $quote
  * @var App\Invoice\Entity\QuoteAmount $quote_amount
@@ -23,7 +23,7 @@ use Yiisoft\Html\Tag\Img;
  * @var array $quote_tax_rates
  * @var bool $has_expired
  *
- * @see src\ViewInjection\LayoutViewInjection
+ * Related logic: see src\ViewInjection\LayoutViewInjection
  * @var string $companyLogoFileName
  * @var string $logoPath
  * @var int $companyLogoWidth
@@ -99,7 +99,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
             <?php
                 /**
-                 * @see src\ViewInjection\LayoutViewInjection.php $logoPath, $companyLogoWidth, $companyLogoHeight
+                 * Related logic: see src\ViewInjection\LayoutViewInjection.php $logoPath, $companyLogoWidth, $companyLogoHeight
                  */
                 echo Img::tag()
                     ->width($companyLogoWidth)

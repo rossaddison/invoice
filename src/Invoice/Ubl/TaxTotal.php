@@ -23,7 +23,7 @@ class TaxTotal implements XmlSerializable
     }
 
     /**
-     * @see PeppolHelper/TaxAmounts function
+     * Related logic: see PeppolHelper/TaxAmounts function
      *
      * @param Writer $writer
      */

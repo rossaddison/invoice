@@ -55,7 +55,7 @@ final class ChangePasswordController
                 /**
                  *  Identity and User are in a HasOne relationship so no null value
                  *  Get the username or emailaddress of the current user
-                 *  @see src\User\User function getLogin()
+                 *  Related logic: see src\User\User function getLogin()
                  */
                 $login = $identity->getUser()?->getLogin();
                 if ($request->getMethod() === Method::POST
@@ -63,7 +63,7 @@ final class ChangePasswordController
                   && $changePasswordForm->change()
                 ) {
                     // Identity implements CookieLoginIdentityInterface: ensure the regeneration of the cookie auth key by means of $authService->logout();
-                    // @see vendor\yiisoft\user\src\Login\Cookie\CookieLoginIdentityInterface
+                    // Related logic: see vendor\yiisoft\user\src\Login\Cookie\CookieLoginIdentityInterface
                     // Specific note: "Make sure to invalidate earlier issued keys when you implement force user logout,
                     // PASSWORD CHANGE and other scenarios, that require forceful access revocation for old sessions.
                     // The authService logout function will regenerate the auth key here => overwriting any auth key
@@ -75,8 +75,8 @@ final class ChangePasswordController
                     'formModel' => $changePasswordForm,
                     'login' => $login,
                     /**
-                     * @see resources\rbac\items.php
-                     * @see https://github.com/yiisoft/demo/pull/602
+                     * Related logic: see resources\rbac\items.php
+                     * Related logic: see https://github.com/yiisoft/demo/pull/602
                      */
                     'changePasswordForAnyUser' => $this->currentUser->can('changePasswordForAnyUser'),
                 ]);
@@ -93,7 +93,7 @@ final class ChangePasswordController
     private function flashMessage(string $level, string $message): Flash|null
     {
         /**
-         * @see Prevent empty messages from being added to the queue
+         * Related logic: see Prevent empty messages from being added to the queue
          */
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);

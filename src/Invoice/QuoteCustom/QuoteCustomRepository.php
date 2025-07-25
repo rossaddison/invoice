@@ -54,7 +54,7 @@ final class QuoteCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteCustom|null $quotecustom
      * @throws Throwable
      */
@@ -64,7 +64,7 @@ final class QuoteCustomRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|QuoteCustom|null $quotecustom
      * @throws Throwable
      */

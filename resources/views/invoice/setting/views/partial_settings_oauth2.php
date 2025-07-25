@@ -5,14 +5,14 @@ declare(strict_types=1);
 use Yiisoft\Html\Tag\I;
 
 /**
- * @see src\Auth\controller\AuthController
- * @see src\Auth\Trait\Oauth2
- * @see src\Auth\Controller\SignupController
- * @see App\Widget\Button
- * @see resources\views\auth\login
- * @see resource\views\signup\signup
- * @see App\Invoice\InvoiceController no_developer_sandbox_hmrc_continue_button
- * @see App\Invoice\Setting\SettingController function tab_index oauth2
+ * Related logic: see src\Auth\controller\AuthController
+ * Related logic: see src\Auth\Trait\Oauth2
+ * Related logic: see src\Auth\Controller\SignupController
+ * Related logic: see App\Widget\Button
+ * Related logic: see resources\views\auth\login
+ * Related logic: see resource\views\signup\signup
+ * Related logic: see App\Invoice\InvoiceController no_developer_sandbox_hmrc_continue_button
+ * Related logic: see App\Invoice\Setting\SettingController function tab_index oauth2
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

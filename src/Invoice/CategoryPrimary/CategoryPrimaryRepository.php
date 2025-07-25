@@ -38,7 +38,7 @@ final class CategoryPrimaryRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CategoryPrimary|null $categoryPrimary
      * @throws Throwable
      */

@@ -6,10 +6,10 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /** *
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var array $forgotemailfailed
  *
- * @see 'i.password_reset_failed' .....
+ * Related logic: see 'i.password_reset_failed' .....
  * 'An error occurred while trying to send your password reset email. Please review the application logs or contact the system administrator.',
  */
 

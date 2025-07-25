@@ -106,7 +106,7 @@ foreach ($custom_fields as $custom_field) {
                                 // Query parameters used to generate return url
                                 [
                                     /**
-                                     * @see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
+                                     * Related logic: see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
                                      * Purpose: Use origin and origin_id to generate return url to client view after user has
                                      * created the new postal address for the client
                                      * e.g  {origin}/view, ['client_id' => {origin_id}],
@@ -565,10 +565,10 @@ foreach ($custom_fields as $custom_field) {
      *      $urlGenerator->generate('quote/add',['origin' => 'main'])],
      * Note: {origin} is set in ClientController/index function ...
      *      'action' => ['quote/add', ['origin' => $client_id]],
-     * @see config/common/routes quote/add/{origin}
-     * @see ClientController/view function 'client_modal_layout_quote' => [ .... ]
-     * @see views\invoice\quote\modal_layout.php
-     * @see views\invoice\quote\modal_add_quote_form.php contained in above file.
+     * Related logic: see config/common/routes quote/add/{origin}
+     * Related logic: see ClientController/view function 'client_modal_layout_quote' => [ .... ]
+     * Related logic: see views\invoice\quote\modal_layout.php
+     * Related logic: see views\invoice\quote\modal_add_quote_form.php contained in above file.
      * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->getClient_id() or 'quote' or 'main'])
      * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
      * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index

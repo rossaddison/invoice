@@ -230,8 +230,8 @@ final class InvoiceController extends BaseController
     /**
      * Use curL to call the store_cove api ... 1.1.3. Make your first API call
      * Tab: ERP or Accounting System, NOT: Individual Company, NOT: Reseller or Systems Integrator
-     * @see config\common\routes\routes.php api-store-cove
-     * @see https://www.storecove.com/docs 3.3.2. Sending a document UBL format
+     * Related logic: see config\common\routes\routes.php api-store-cove
+     * Related logic: see https://www.storecove.com/docs 3.3.2. Sending a document UBL format
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function store_cove_call_api(): \Yiisoft\DataResponse\DataResponse
@@ -255,7 +255,7 @@ final class InvoiceController extends BaseController
             curl_setopt($site, CURLOPT_HTTPHEADER, ['Accept: application/json',"Authorization: Bearer $api_key_here",'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             /**
-             * @see https://www.storecove.com/docs/#_getting_started 1.1.3. Make your first API call
+             * Related logic: see https://www.storecove.com/docs/#_getting_started 1.1.3. Make your first API call
              */
             $data = '{"documentTypes": ["invoice"], "network": "peppol", "metaScheme": "iso6523-actorid-upis", "scheme": "nl:kvk", "identifier":"60881119"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
@@ -272,8 +272,8 @@ final class InvoiceController extends BaseController
 
     /**
      * Use curL to call the store_cove api ... 1.1.4a. Create a sender: Get the Legal Entity Id
-     * @see config\common\routes\routes.php api-store-cove-get-legal-entity-id
-     * @see https://www.storecove.com/docs/
+     * Related logic: see config\common\routes\routes.php api-store-cove-get-legal-entity-id
+     * Related logic: see https://www.storecove.com/docs/
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function store_cove_call_api_get_legal_entity_id(): \Yiisoft\DataResponse\DataResponse
@@ -311,8 +311,8 @@ final class InvoiceController extends BaseController
 
     /**
      * Use curL to call the store_cove api ... 1.1.4b Create a Sender: Create an Identifier
-     * @see config\common\routes\routes.php api-store-cove-legal-entity-identifier
-     * @see https://www.storecove.com/docs/
+     * Related logic: see config\common\routes\routes.php api-store-cove-legal-entity-identifier
+     * Related logic: see https://www.storecove.com/docs/
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function store_cove_call_api_legal_entity_identifier(): \Yiisoft\DataResponse\DataResponse
@@ -358,7 +358,7 @@ final class InvoiceController extends BaseController
     }
 
     /**
-     * @see https://app.storecove.com/en/docs #1.1.5 Send your first invoice .. Click on green button for json copy
+     * Related logic: see https://app.storecove.com/en/docs #1.1.5 Send your first invoice .. Click on green button for json copy
      * Paste json copy into $data
      * @return \Yiisoft\DataResponse\DataResponse
      */

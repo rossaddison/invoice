@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see GeneratorController function quick_view_schema
+ * Related logic: see GeneratorController function quick_view_schema
  * @var Cycle\Database\TableInterface[] $tables
  * @var bool $isGuest
  * @var string $alerts

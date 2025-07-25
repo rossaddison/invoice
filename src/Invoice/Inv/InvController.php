@@ -276,7 +276,7 @@ final class InvController extends BaseController
         // The file does not exist yet in the target path but it exists in the tmp folder on the server
         if (!$file_exists) {
             // Record the details of this upload
-            // (@see https://www.php.net/manual/en/function.is-uploaded-file.php)
+            // (Related logic: see https://www.php.net/manual/en/function.is-uploaded-file.php)
             // Returns true if the file named by filename was uploaded via HTTP POST.
             // This is useful to help ensure that a malicious user hasn't tried to trick
             // the script into working on files upon which it should not be working--for instance, /etc/passwd.
@@ -370,7 +370,7 @@ final class InvController extends BaseController
                 if (null !== $client_id) {
                     $url_key = $invoice->getUrl_key();
                     if (!empty($_FILES)) {
-                        // @see https://github.com/vimeo/psalm/issues/5458
+                        // Related logic: see https://github.com/vimeo/psalm/issues/5458
 
                         /** @var array $_FILES['InvAttachmentsForm'] */
                         /** @var string $_FILES['InvAttachmentsForm']['tmp_name']['attachFile'] */
@@ -530,7 +530,7 @@ final class InvController extends BaseController
                         $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
-                    // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+                    // Related logic: see UserClientRepository function get_not_assigned_to_user which ensures that only
                     // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
                     // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
                     // ie. not more than one user is associated with the client.
@@ -539,7 +539,7 @@ final class InvController extends BaseController
                         $saved_model = $this->inv_service->saveInv($user, $inv, $body, $this->sR, $gR);
                         /**
                          * The InvAmount entity is created automatically during the above saveInv
-                         * @see src\Invoice\Entity\Inv ... New InvAmount();
+                         * Related logic: see src\Invoice\Entity\Inv ... New InvAmount();
                          */
                         $model_id = $saved_model->getId();
                         if (null !== $model_id) {
@@ -686,7 +686,7 @@ final class InvController extends BaseController
                         $this->flashMessage('warning', $this->translator->translate('user.client.no.account'));
                     }
                     // Ensure that the client has only one (paying) user account otherwise reject this invoice
-                    // @see UserClientRepository function get_not_assigned_to_user which ensures that only
+                    // Related logic: see UserClientRepository function get_not_assigned_to_user which ensures that only
                     // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
                     // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
                     // ie. not more than one user is associated with the client.
@@ -723,8 +723,8 @@ final class InvController extends BaseController
     }
 
     /**
-     * @see src/Invoice/Asset/rebuild1.13/js/inv.js function $(document).on('click', '#create-credit-confirm', function ()
-     * @see resources/views/invoice/inv/modal_create_credit
+     * Related logic: see src/Invoice/Asset/rebuild1.13/js/inv.js function $(document).on('click', '#create-credit-confirm', function ()
+     * Related logic: see resources/views/invoice/inv/modal_create_credit
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param IR $iR
@@ -824,8 +824,8 @@ final class InvController extends BaseController
         $inv_tax_rate['inv_id'] = $inv->getId();
         $inv_tax_rate['tax_rate_id'] = $taxrate->getTaxRateId();
         /**
-        * @see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
-        * @see ..\resources\views\invoice\setting\views partial_settings_taxes.php
+        * Related logic: see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
+        * Related logic: see ..\resources\views\invoice\setting\views partial_settings_taxes.php
         */
         $inv_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
 
@@ -979,7 +979,7 @@ final class InvController extends BaseController
                     $file_size = filesize($target_path_with_filename);
                     if ($file_size != false) {
                         $allowed_content_type_array = $upR->getContentTypes();
-                        // Check extension against allowed content file types @see UploadRepository getContentTypes
+                        // Check extension against allowed content file types Related logic: see UploadRepository getContentTypes
                         $save_ctype = isset($allowed_content_type_array[$file_ext]);
                         /** @var string $ctype */
                         $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
@@ -1856,7 +1856,7 @@ final class InvController extends BaseController
     }
 
     /**
-     * @see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]') status and page are digits
+     * Related logic: see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]') status and page are digits
      * @param IAR $iaR
      * @param IRR $irR
      * @param IR $iR
@@ -1892,7 +1892,7 @@ final class InvController extends BaseController
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
-        // Get the current user and determine from (@see Settings...User Account) whether they have been given
+        // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second
         // 'line of defense' to support role based admin control.
         // Retrieve the user from Yii-Demo's list of users in the User Table
@@ -1904,7 +1904,7 @@ final class InvController extends BaseController
 
             if (null !== $userInv && null !== $user_id) {
                 $userInvListLimit = $userInv->getListLimit();
-                // Determine what clients have been allocated to this user (@see Settings...User Account)
+                // Determine what clients have been allocated to this user (Related logic: see Settings...User Account)
                 // by looking at UserClient table
                 // eg. If the user is a guest-accountant, they will have been allocated certain clients
                 // A user-quest-accountant will be allocated a series of clients
@@ -2394,7 +2394,7 @@ final class InvController extends BaseController
                                 $file_size = filesize($temp_aliase);
                                 if ($file_size != false) {
                                     $allowed_content_type_array = $upR->getContentTypes();
-                                    // Check extension against allowed content file types @see UploadRepository getContentTypes
+                                    // Check extension against allowed content file types Related logic: see UploadRepository getContentTypes
                                     $save_ctype = isset($allowed_content_type_array[$file_ext]);
                                     /**
                                      * @var string $ctype
@@ -2479,7 +2479,7 @@ final class InvController extends BaseController
                                 $file_size = filesize($temp_aliase);
                                 if ($file_size != false) {
                                     $allowed_content_type_array = $upR->getContentTypes();
-                                    // Check extension against allowed content file types @see UploadRepository getContentTypes
+                                    // Check extension against allowed content file types Related logic: see UploadRepository getContentTypes
                                     $save_ctype = isset($allowed_content_type_array[$file_ext]);
                                     /** @var string $ctype */
                                     $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();
@@ -2725,7 +2725,7 @@ final class InvController extends BaseController
     }
 
     /**
-     * @see Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
+     * Related logic: see Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ACIIR $aciiR
@@ -2875,7 +2875,7 @@ final class InvController extends BaseController
                 'name' => $inv_item->getName(),
                 'description' => $inv_item->getDescription(),
                 /**
-                 * @see quantity #[GreaterThan(0.00)]. See InvItemForm
+                 * Related logic: see quantity #[GreaterThan(0.00)]. See InvItemForm
                  */
                 'quantity' => $inv_item->getQuantity(),
                 'price' => $inv_item->getPrice(),
@@ -2883,13 +2883,13 @@ final class InvController extends BaseController
                 'order' => $inv_item->getOrder(),
                 'is_recurring' => $inv_item->getIs_recurring(),
                 /**
-                 * @see Not required since will conflict with task which does not require a product_unit i.e. service/product
+                 * Related logic: see Not required since will conflict with task which does not require a product_unit i.e. service/product
                  */
                 'product_unit' => $inv_item->getProduct_unit(),
                 'inv_id' => $copy_id,
                 'so_item_id' => $inv_item->getSo_item_id(),
                 /**
-                 * @see tax_rate_id #[Required]. See InvItemForm
+                 * Related logic: see tax_rate_id #[Required]. See InvItemForm
                  */
                 'tax_rate_id' => $inv_item->getTax_rate_id(),
                 'product_id' => $inv_item->getProduct_id(),
@@ -3045,7 +3045,7 @@ final class InvController extends BaseController
                      * and whether read only effects i.e. disable_read_only, are being used.
                      * 'disable_read_only' is false by default in InvoiceController on setting up.
                      *
-                     * @see 'read_only_toggle' Settings .... Invoices ... Other Settings ... Disable the read only button on ... {status}
+                     * Related logic: see 'read_only_toggle' Settings .... Invoices ... Other Settings ... Disable the read only button on ... {status}
                      */
                     if (($this->sR->getSetting('read_only_toggle') == '2')  &&  ($this->sR->getSetting('disable_read_only') == '0')) {
                         $inv->setIs_read_only(true);
@@ -3313,7 +3313,7 @@ final class InvController extends BaseController
     }
 
     /**
-     * @see src/Invoice/Asset/rebuild-1.13/js/inv.js
+     * Related logic: see src/Invoice/Asset/rebuild-1.13/js/inv.js
      * @param Request $request
      * @param FormHydrator $formHydrator
      */
@@ -3675,7 +3675,7 @@ final class InvController extends BaseController
                             }
                             /**
                              * Previously: echo $this->peppol_output($upR, $uploads_temp_peppol_absolute_path_dot_xml);
-                             * @see https://cwe.mitre.org/data/definitions/79.html
+                             * Related logic: see https://cwe.mitre.org/data/definitions/79.html
                              *
                              * Unsanitized input from data from a remote resource flows into the echo statement,
                              * where it is used to render an HTML page returned to the user. This may result
@@ -3728,8 +3728,8 @@ final class InvController extends BaseController
     } // peppol stream toggle
 
     /**
-     * @see https://www.storecove.com/docs#_json_object
-     * @see StoreCove API key stored under Online Payment keys under Settings...View...Online Payment
+     * Related logic: see https://www.storecove.com/docs#_json_object
+     * Related logic: see StoreCove API key stored under Online Payment keys under Settings...View...Online Payment
      * @param int $id
      * @param CurrentUser $currentUser
      * @param cpR $cpR
@@ -3846,7 +3846,7 @@ final class InvController extends BaseController
             if ($file_size != false) {
                 // xml is included in the getContentTypes allowed array
                 $allowed_content_type_array = $upR->getContentTypes();
-                // Check current extension against allowed content file types @see UploadRepository getContentTypes
+                // Check current extension against allowed content file types Related logic: see UploadRepository getContentTypes
                 $save_ctype = isset($allowed_content_type_array[$file_ext]);
                 /** @var string $ctype */
                 $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] : $upR->getContentTypeDefaultOctetStream();

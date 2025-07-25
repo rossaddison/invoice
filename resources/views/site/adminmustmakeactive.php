@@ -6,10 +6,10 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /** *
- * @see \src\ViewInjection\CommonViewInjection.php
+ * Related logic: see \src\ViewInjection\CommonViewInjection.php
  * @var array $adminmustmakeactive
  *
- * @see 'i.loginalert_user_inactive' .....
+ * Related logic: see 'loginalert.user.inactive' .....
  * 'This user is marked as inactive. Please contact the system administrator.',
  */
 

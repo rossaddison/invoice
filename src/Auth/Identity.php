@@ -71,7 +71,7 @@ class Identity implements CookieLoginIdentityInterface
 
     /**
      * Regenerate after logout / new Identity() after signing up
-     * @see src\Auth\AuthService logout function
+     * Related logic: see src\Auth\AuthService logout function
      * @return string
      */
     public function regenerateCookieLoginKey(): string

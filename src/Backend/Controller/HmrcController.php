@@ -136,7 +136,7 @@ final class HmrcController extends BaseController
     }
 
     /**
-     * @see scope
+     * Related logic: see scope
      * $api = "self-assessment" / "vat" / "employment" / "customs" / "individuals"
      * @param string $api
      * @return string
@@ -159,7 +159,7 @@ final class HmrcController extends BaseController
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**
-         * @see src\Auth\Controller\AuthController
+         * Related logic: see src\Auth\Controller\AuthController
          *      function callbackDeveloperSandboxHmrc
          */
         $tokenString = (string) $this->session->get('hmrc_access_token');
@@ -199,8 +199,8 @@ final class HmrcController extends BaseController
      * Note: The connection method determines what headers are included
      *       16 headers are required for the WebAppViaServer Method
      *       Insert this array into TestFraudPreventionHeaders function below
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/
-     * @see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/
+     * Related logic: see https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
      * @param string $govClientConnectionMethod
      * @param string $govClientBrowserJsUserAgent
      * @param string $govClientDeviceID

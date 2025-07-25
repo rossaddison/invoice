@@ -55,7 +55,7 @@ final class MerchantRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Merchant|null $merchant
      * @throws Throwable
      */
@@ -65,7 +65,7 @@ final class MerchantRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Merchant|null $merchant
      * @throws Throwable
      */

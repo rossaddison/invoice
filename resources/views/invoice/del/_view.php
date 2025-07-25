@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @see App\Invoice\DeliveryLocation\DeliveryLocationController function view
+ * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function view
  * @var App\Invoice\DeliveryLocation\DeliveryLocationForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -149,20 +149,20 @@ use Yiisoft\Html\Tag\Form;
                     ['style' => 'text-decoration:none'],
                 ); ?>
                 <?= Field::text($form, 'global_location_number')
-                                                                                                                                                    ->label($translator->translate('delivery.location.global.location.number'))
-                                                                                                                                                    ->addInputAttributes([
-                                                                                                                                                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
-                                                                                                                                                        'disabled' => 'disabled',
-                                                                                                                                                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
-                                                                                                                                                    ]);
+                                                                                                                                                                    ->label($translator->translate('delivery.location.global.location.number'))
+                                                                                                                                                                    ->addInputAttributes([
+                                                                                                                                                                        'placeholder' => $translator->translate('delivery.location.global.location.number'),
+                                                                                                                                                                        'disabled' => 'disabled',
+                                                                                                                                                                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
+                                                                                                                                                                    ]);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?php
     $optionsDataEAS = [];
 /**
- * @see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
- * @see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
+ * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
+ * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
  * @var int $key
  * @var array $value
  */

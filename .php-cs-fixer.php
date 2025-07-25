@@ -11,35 +11,31 @@ ini_set('memory_limit', '512M');
 $root = __DIR__;
 $finder = (new Finder())
     ->in([
-        $root. '/config',
-        $root. '/dev-scripts-psalm-1',
-        $root . '/src',
-        $root . '/resources/views',
+        $root.'/config',
+        $root.'/dev-scripts-psalm-1',
+        $root.'/src',
+        $root.'/resources/views',
     ])
+    // relative not absolute paths
+    ->exclude([
+        'invoice/del',
+        'invoice/generatorrelation',
+    ])    
     ->append([
-        $root . '/public/index.php',
+        $root.'/public/index.php',
     ]);
 
 return (new Config())
     ->setCacheFile(__DIR__ . '/runtime/cache/.php-cs-fixer.cache')
-    ->setParallelConfig(ParallelConfigFactory::detect())
+    ->setParallelConfig(ParallelConfigFactory::detect(
+        // $filesPerProcess
+        10, 
+        // $processTimeout in seconds   
+        200, 
+        // $maxProcesses    
+        10
+    ))
     ->setRules([
         '@PER-CS2.0' => true,
-        '@Symfony' => true,
-        'no_unused_imports' => true,
-        'array_syntax' => [
-            'syntax' => 'short'
-        ],
-        'ordered_imports' => [
-            'sort_algorithm' => 'alpha'
-        ],
-        'single_quote' => true,
-        'binary_operator_spaces' => [
-            'default' => 'align_single_space_minimal'
-        ],
-        'blank_line_before_statement' => [
-            'statements' => ['return']
-        ],
-        'method_chaining_indentation' => true,
     ])
     ->setFinder($finder);

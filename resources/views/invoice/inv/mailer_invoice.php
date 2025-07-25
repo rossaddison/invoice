@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Input;
 
 /**
- * @see InvController function email_stage_0
+ * Related logic: see InvController function email_stage_0
  * @var App\Invoice\Inv\MailerInvForm $form
  * @var App\Invoice\Entity\Inv $invoice
  * @var App\Invoice\Entity\UserInv $userInv

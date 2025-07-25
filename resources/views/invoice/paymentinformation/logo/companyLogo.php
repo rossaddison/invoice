@@ -6,8 +6,8 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Img;
 
 /**
- * @see App\Invoice\PaymentInformation\PaymentInformationController function renderPartialAsStringCompanyLogo
- * @see $src e.g. ? 'public/logo/'.$companyLogoFileName : '/site/logo.png'
+ * Related logic: see App\Invoice\PaymentInformation\PaymentInformationController function renderPartialAsStringCompanyLogo
+ * Related logic: see $src e.g. ? 'public/logo/'.$companyLogoFileName : '/site/logo.png'
  * @var string $src
  */
 

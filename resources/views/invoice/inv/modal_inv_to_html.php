@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see id="inv-to-html" triggered by <a href="#inv-to-html" data-bs-toggle="modal"  style="text-decoration:none"> views/inv/view.php
+ * Related logic: see id="inv-to-html" triggered by <a href="#inv-to-html" data-bs-toggle="modal"  style="text-decoration:none"> views/inv/view.php
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator

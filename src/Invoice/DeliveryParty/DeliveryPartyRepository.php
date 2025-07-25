@@ -55,7 +55,7 @@ final class DeliveryPartyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|DeliveryParty|null $deliveryparty
      * @psalm-param TEntity $deliveryparty
      * @throws Throwable
@@ -66,7 +66,7 @@ final class DeliveryPartyRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|DeliveryParty|null $deliveryparty
 
      * @throws Throwable

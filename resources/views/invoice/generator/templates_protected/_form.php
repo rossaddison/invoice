@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see GeneratorController function form
+ * Related logic: see GeneratorController function form
  * @var App\Invoice\Entity\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
@@ -83,15 +83,15 @@ echo '      <?= Html::closeTag(\'div\'); ?>';
 foreach ($orm_schema->getColumns() as $column) {
     /**
      * If the column is not a relation column ending in _id
-     * @see src/Invoice/Entity/Product
-     * @see #[Column(type: 'integer(11)', nullable: true)]
-     * @see private ?int $family_id = null;
+     * Related logic: see src/Invoice/Entity/Product
+     * Related logic: see #[Column(type: 'integer(11)', nullable: true)]
+     * Related logic: see private ?int $family_id = null;
      */
     if (substr($column->getName(), -3) <> '_id') {
         /**
-         * @see src/Invoice/Entity/Client
-         * @see #[Column(type: 'bool', default: false)]
-         * @see private bool $client_active = false;
+         * Related logic: see src/Invoice/Entity/Client
+         * Related logic: see #[Column(type: 'bool', default: false)]
+         * Related logic: see private bool $client_active = false;
          */
         if (($column->getType() === 'bool') && ($column->getAbstractType() === 'bool')) {
             echo "<?= Html::openTag('div'); ?>";
@@ -103,9 +103,9 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
         /**
-         * @see src/Invoice/Entity/ClientNote
-         * @see #[Column(type: 'date', nullable: false)]
-         * @see private mixed $date_note;
+         * Related logic: see src/Invoice/Entity/ClientNote
+         * Related logic: see #[Column(type: 'date', nullable: false)]
+         * Related logic: see private mixed $date_note;
          */
         if (($column->getType() === 'mixed') && (($column->getAbstractType() === 'date'))) {
             echo "<?= Html::openTag('div'); ?>";
@@ -116,9 +116,9 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
         /**
-         * @see src/Invoice/Entity/Product
-         * @see #[Column(type: 'decimal(20,2)', nullable: true)]
-         * @see private ?float $purchase_price = null;
+         * Related logic: see src/Invoice/Entity/Product
+         * Related logic: see #[Column(type: 'decimal(20,2)', nullable: true)]
+         * Related logic: see private ?float $purchase_price = null;
          */
         if (($column->getType() === 'float') && ($column->getAbstractType() === 'decimal')) {
             echo "<?= Html::openTag('div'); ?>";
@@ -133,9 +133,9 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
         /**
-         * @see src/Invoice/Entity/ClientNote
-         * @see #[Column(type: 'longText', nullable:false)]
-         * @see private string $note =  '';
+         * Related logic: see src/Invoice/Entity/ClientNote
+         * Related logic: see #[Column(type: 'longText', nullable:false)]
+         * Related logic: see private string $note =  '';
          */
         if (($column->getType() === 'string') && ($column->getAbstractType() <> 'date')) {
             echo "<?= Html::openTag('div'); ?>";

@@ -61,7 +61,7 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     * @see Reader/ReadableDataInterface|InvalidArgumentException
+     * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|CustomValue|null $customvalue
      * @throws Throwable
      */
