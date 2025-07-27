@@ -40,6 +40,7 @@ trait OpenBankingProviders
         'wonderful' => [
             // No authUrl, tokenUrl, or userinfoUrl (authentication is via static API token)
             'apiBaseUrl' => 'https://api.wonderful.one/',
+            'quickPayUrl' => 'https://api.wonderful.one/v2/quick-pay',
             'scope' => '', // Not required
             'documentationUrl' => 'https://api.wonderful.one/', // Official API docs
             'furtherSecuredWithOIDC' => [
@@ -247,9 +248,7 @@ trait OpenBankingProviders
                 /**
                  * @param array<string, mixed> $provider
                  */
-                function (array $provider): bool {
-                    return isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '';
-                },
+                fn(array $provider): bool => isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '',
             ),
         );
         return $names;

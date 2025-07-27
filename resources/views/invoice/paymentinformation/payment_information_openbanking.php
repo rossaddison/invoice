@@ -2,27 +2,36 @@
 
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\Translator;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**
- * @var Translator $translator
- * @var string $alert
- * @var string $title
- * @var float $balance
- * @var float $total
- * @var string $authUrl
- * @var string $client_chosen_gateway
+ * @var Translator   $translator
+ * @var UrlGenerator $urlGenerator
+ * @var string       $alert
+ * @var string       $title
+ * @var float        $balance
+ * @var float        $total
+ * @var string       $authUrl
+ * @var string       $client_chosen_gateway
  * @var array|object $client_on_invoice
  * @var object|array $invoice
- * @var string $inv_url_key
- * @var bool $is_overdue
- * @var bool $disable_form
- * @var string $companyLogo
- * @var string $partial_client_address
- * @var string $payment_method
- * @var string $provider
- * @var string $json_encoded_items
+ * @var string       $inv_url_key
+ * @var bool         $authToken
+ * @var bool         $is_overdue
+ * @var bool         $disable_form
+ * @var string       $companyLogo
+ * @var string       $partial_client_address
+ * @var string       $payment_method
+ * @var string       $provider
+ * @var string       $json_encoded_items
+ * @var string       $wonderfulId
+ * @var string       $amountFormatted
+ * @var string       $reference
+ * @var string       $createdAt
+ * @var string       $updatedAt
+ * @var string       $status
+ * @var string       $paymentLink
  */
-
 echo $alert;
 echo $companyLogo;
 
@@ -73,8 +82,8 @@ if (!empty($authUrl) && !$disable_form) {
         Html::encode($translator->translate('open.banking.pay.with') . $provider),
         $authUrl,
         [
-            'class' => 'btn btn-primary',
-            'rel' => 'noopener noreferrer',
+            'class'  => 'btn btn-primary',
+            'rel'    => 'noopener noreferrer',
             'target' => '_blank',
         ],
     );
@@ -83,6 +92,33 @@ if (!empty($authUrl) && !$disable_form) {
         'p',
         Html::encode($translator->translate('open.banking.payment.not.required')),
     );
+} elseif ($authToken) {
+    $htmlString = '<div class="wonderful-payment-summary">
+                <h3>Open Banking Payment Details</h3>
+                <ul>
+                    <li><strong>ID:</strong>' . $wonderfulId . '</li>
+                    <li><strong>Amount:</strong>' . $amountFormatted . '</li>
+                    <li><strong>Status:</strong>' . ucfirst($status) . '</li>
+                    <li><strong>Reference:</strong>' . $reference . '</li>
+                    <li><strong>Created At:</strong>' . $createdAt . '</li>
+                    <li><strong>Updated At:</strong>' . $updatedAt . '</li>
+                </ul>
+            </div>';
+    if ('paid' == $status) {
+        echo $htmlString;
+    };
+    if ('created' == $status) {
+        echo $htmlString;
+        echo Html::a(
+            Html::encode($translator->translate('open.banking.pay.with') . $provider),
+            $urlGenerator->generateAbsolute($paymentLink, [], []),
+            [
+                'class'  => 'btn btn-success',
+                'rel'    => 'noopener noreferrer',
+                'target' => '_blank',
+            ],
+        );
+    }
 } else {
     echo Html::tag(
         'p',

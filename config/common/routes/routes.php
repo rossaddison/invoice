@@ -1228,10 +1228,6 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'stripe_incomplete'])
                 ->name('paymentinformation/stripe_incomplete'),
-            Route::methods([Method::GET, Method::POST], '/paymentinformation/make_payment_omnipay/{url_key}')
-                ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
-                ->action([PaymentInformationController::class, 'make_payment_omnipay'])
-                ->name('paymentinformation/make_payment_omnipay'),
             Route::methods([Method::GET, Method::POST], '/paymentinformation/fetch')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'fetch'])
@@ -1240,14 +1236,6 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'inform'])
                 ->name('paymentinformation/inform'),
-            Route::methods([Method::GET, Method::POST], '/paymentinformation/omnnipay_payment_return/{url_key}/{driver}')
-                ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
-                ->action([PaymentInformationController::class, 'omnipay_payment_return'])
-                ->name('paymentinformation/omnipay_payment_return'),
-            Route::methods([Method::GET, Method::POST], '/paymentinformation/omnnipay_payment_cancel/{url_key}/{driver}')
-                ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
-                ->action([PaymentInformationController::class, 'omnipay_payment_cancel'])
-                ->name('paymentinformation/omnipay_payment_cancel'),
             Route::get('/paymentpeppol')
                 ->action([PaymentPeppolController::class, 'index'])
                 ->name('paymentpeppol/index'),

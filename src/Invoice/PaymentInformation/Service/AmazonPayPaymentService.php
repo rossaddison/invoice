@@ -15,16 +15,10 @@ use Yiisoft\Security\Random;
 
 class AmazonPayPaymentService
 {
-    private SettingRepository $settingRepository;
-    private Crypt $crypt;
-
     public function __construct(
-        SettingRepository $settingRepository,
-        Crypt $crypt,
-    ) {
-        $this->settingRepository = $settingRepository;
-        $this->crypt = $crypt;
-    }
+        private readonly SettingRepository $settingRepository,
+        private readonly Crypt $crypt,
+    ) {}
 
     /**
      * Create a payment request for Amazon Pay.

@@ -127,16 +127,15 @@ $this->setTitle($translator->translate('login'));
                         ->class('form-floating')
                         ->csrf($csrf)
                         ->id('loginForm')
-                        ->open() ?>
+                        ->open(); ?>
                     <?= Field::text($formModel, 'login')
                         ->addInputAttributes(['autocomplete' => 'username'])
                         ->inputClass('form-control')
-                        ->label($translator->translate('layout.login'))
-                        ->autofocus() ?>
+                        ->label($translator->translate('layout.login')); ?>
                     <?= Field::password($formModel, 'password')
                         ->addInputAttributes(['autocomplete' => 'current-password'])
                         ->inputClass('form-control')
-                        ->label($translator->translate('layout.password'))
+                        ->label($translator->translate('layout.password'));
 ?>
                     <?= Field::checkbox($formModel, 'rememberMe')
     ->containerClass('form-check form-switch text-start mt-2')

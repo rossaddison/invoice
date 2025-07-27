@@ -23,8 +23,8 @@ echo [4a] Run Node Modules Update
 echo [4b] Run Install or update nvm-windows to the latest version
 echo [5] Run Composer Require Checker
 echo [5a] Run Codeception Tests
-echo [5b] Run Rector See Potential Changes
-echo [5c] Run Rector Make Changes
+echo [5b] Run Rector See Potential Changes ... Tip: Always post validate with [1] Run PHP Psalm
+echo [5c] Run Rector Make Changes ... Caution! May conflict with [1] Run PHP Psalm
 echo [5d] Run Code Style Fixer with a dry-run to see potential changes
 echo [5e] Run Code Style Fixer and actually change the coding style of the files
 echo [6] Run 'serve' Command
@@ -251,7 +251,7 @@ pause
 goto menu
 
 :rector_see_changes
-echo See changes that Rector Proposes
+echo See changes that Rector Proposes ... Caution! Changes may conflict with Psalm
 php vendor/bin/rector process --dry-run --output-format=console
 pause
 goto menu

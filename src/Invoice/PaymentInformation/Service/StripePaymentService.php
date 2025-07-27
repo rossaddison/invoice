@@ -12,13 +12,8 @@ use App\Invoice\Entity\Inv;
 
 class StripePaymentService
 {
-    private SettingRepository $settings;
-    private Crypt $crypt;
-
-    public function __construct(SettingRepository $settings, Crypt $crypt)
+    public function __construct(private readonly SettingRepository $settings, private readonly Crypt $crypt)
     {
-        $this->settings = $settings;
-        $this->crypt = $crypt;
         $this->setApiKey();
     }
 

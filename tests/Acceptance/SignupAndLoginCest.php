@@ -9,6 +9,8 @@ use Tests\Support\AcceptanceTester;
 final class SignupAndLoginCest
 {
     public function __construct(
+        private readonly string $emptyLogin = '',
+        private readonly string $emptyPassword = '',    
         private readonly string $liveAdminUserLogin = 'james',
         private readonly string $liveAdminUserPassword = 'james',
         private readonly string $firstUserLogin = 'firstUserLogin',
@@ -138,15 +140,15 @@ final class SignupAndLoginCest
 
         $I->expectTo('see log in page.');
         $I->see('Login');
-    }
+    }    
 
     public function testLoginEmptyDataTest(AcceptanceTester $I): void
     {
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', '');
-        $I->fillField('#login-password', '');
+        $I->fillField('#login-login', $this->emptyLogin);
+        $I->fillField('#login-password', $this->emptyPassword);
 
         $I->click('Submit', '#loginForm');
 

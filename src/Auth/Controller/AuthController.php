@@ -1032,7 +1032,7 @@ final class AuthController
                 $ip = trim($serverParams[$header]);
 
                 // Handle comma-separated IPs (X-Forwarded-For can contain multiple IPs)
-                if (strpos($ip, ',') !== false) {
+                if (str_contains($ip, ',')) {
                     $ips = explode(',', $ip);
                     $ip = trim($ips[0]); // Use the first IP
                 }

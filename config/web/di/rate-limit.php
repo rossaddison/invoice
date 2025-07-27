@@ -20,7 +20,7 @@ return [
     CounterInterface::class => [
         'class' => Counter::class,
         '__construct()' => [
-            'limit' => 2,
+            'limit' => 5,
             'periodInSeconds' => 10,
         ],
     ],

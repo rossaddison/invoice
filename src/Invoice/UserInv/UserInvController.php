@@ -395,7 +395,7 @@ final class UserInvController extends BaseController
                                     $this->manager->assign('observer', $form->getUser_id());
                                     $this->flashMessage('info', $this->translator->translate('user.inv.role.all.new'));
                                 } else {
-                                    $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.already.assigned'));
+                                    $this->flashMessage('warning', $this->translator->translate('user.inv.role.observer.assigned.already'));
                                 }
                                 $this->userinvService->saveUserInv($userinv, $body);
                             }

@@ -19,19 +19,11 @@ use Psr\Log\LoggerInterface;
  */
 class BraintreePaymentService
 {
-    private SettingRepository $settings;
-    private Crypt $crypt;
-    private LoggerInterface $logger;
-
     public function __construct(
-        SettingRepository $settings,
-        Crypt $crypt,
-        LoggerInterface $logger,
-    ) {
-        $this->settings = $settings;
-        $this->crypt = $crypt;
-        $this->logger = $logger;
-    }
+        private readonly SettingRepository $settings,
+        private readonly Crypt $crypt,
+        private readonly LoggerInterface $logger,
+    ) {}
 
     /**
      * Creates and configures a Braintree Gateway instance

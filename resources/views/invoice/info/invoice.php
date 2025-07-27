@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>27th July 2025</b></p>
+<p>Open Banking Wonderful Preliminary code created.</p>
+<p>Increased the rate-limit from 2 to 5 in config\web\di\rate-limit.php because it was affecting codeception tests</p>
+<p>Removed Omnipay since it is not PCI compliant and not being maintained sufficiently.</p>
 <p><b>25th July 2025</b></p>
 <p>Installation Testing</p>
 <p><b>Step 1:</b> Create a database in phpMyAdmin using default settings - yii3_i</p>

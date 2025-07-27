@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82287252eecbddca8d22a2b3c374388d",
+    "content-hash": "472d134e775b9a7a2eb33271f491eea5",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -4868,69 +4868,6 @@
             "time": "2025-06-05T08:06:30+00:00"
         },
         {
-            "name": "league/omnipay",
-            "version": "v3.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/omnipay.git",
-                "reference": "38f66a0cc043ed51d6edf7956d6439a2f263501f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay/zipball/38f66a0cc043ed51d6edf7956d6439a2f263501f",
-                "reference": "38f66a0cc043ed51d6edf7956d6439a2f263501f",
-                "shasum": ""
-            },
-            "require": {
-                "omnipay/common": "^3.1",
-                "php": "^7.2|^8.0",
-                "php-http/discovery": "^1.14",
-                "php-http/guzzle7-adapter": "^1"
-            },
-            "require-dev": {
-                "omnipay/tests": "^3|^4"
-            },
-            "type": "metapackage",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adrian Macneil",
-                    "email": "adrian@adrianmacneil.com"
-                },
-                {
-                    "name": "Barry vd. Heuvel",
-                    "email": "barryvdh@gmail.com"
-                }
-            ],
-            "description": "Omnipay payment processing library",
-            "homepage": "https://omnipay.thephpleague.com/",
-            "keywords": [
-                "checkout",
-                "creditcard",
-                "omnipay",
-                "payment"
-            ],
-            "support": {
-                "issues": "https://github.com/thephpleague/omnipay/issues",
-                "source": "https://github.com/thephpleague/omnipay/tree/v3.2.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/barryvdh",
-                    "type": "github"
-                }
-            ],
-            "time": "2021-06-05T11:34:12+00:00"
-        },
-        {
             "name": "league/uri",
             "version": "7.5.1",
             "source": {
@@ -5280,96 +5217,6 @@
                 "source": "https://github.com/mollie/mollie-api-php/tree/v3.3.2"
             },
             "time": "2025-07-25T09:43:59+00:00"
-        },
-        {
-            "name": "moneyphp/money",
-            "version": "v4.7.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/moneyphp/money.git",
-                "reference": "1a23f0e1b22e2c59ed5ed70cfbe4cbe696be9348"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/moneyphp/money/zipball/1a23f0e1b22e2c59ed5ed70cfbe4cbe696be9348",
-                "reference": "1a23f0e1b22e2c59ed5ed70cfbe4cbe696be9348",
-                "shasum": ""
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "ext-filter": "*",
-                "ext-json": "*",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
-            },
-            "require-dev": {
-                "cache/taggable-cache": "^1.1.0",
-                "doctrine/coding-standard": "^12.0",
-                "doctrine/instantiator": "^1.5.0 || ^2.0",
-                "ext-gmp": "*",
-                "ext-intl": "*",
-                "florianv/exchanger": "^2.8.1",
-                "florianv/swap": "^4.3.0",
-                "moneyphp/crypto-currencies": "^1.1.0",
-                "moneyphp/iso-currencies": "^3.4",
-                "php-http/message": "^1.16.0",
-                "php-http/mock-client": "^1.6.0",
-                "phpbench/phpbench": "^1.2.5",
-                "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan": "^2.1.9",
-                "phpstan/phpstan-phpunit": "^2.0",
-                "phpunit/phpunit": "^10.5.9",
-                "psr/cache": "^1.0.1 || ^2.0 || ^3.0",
-                "ticketswap/phpstan-error-formatter": "^1.1"
-            },
-            "suggest": {
-                "ext-gmp": "Calculate without integer limits",
-                "ext-intl": "Format Money objects with intl",
-                "florianv/exchanger": "Exchange rates library for PHP",
-                "florianv/swap": "Exchange rates library for PHP",
-                "psr/cache-implementation": "Used for Currency caching"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Money\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mathias Verraes",
-                    "email": "mathias@verraes.net",
-                    "homepage": "http://verraes.net"
-                },
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                },
-                {
-                    "name": "Frederik Bosch",
-                    "email": "f.bosch@genkgo.nl"
-                }
-            ],
-            "description": "PHP implementation of Fowler's Money pattern",
-            "homepage": "http://moneyphp.org",
-            "keywords": [
-                "Value Object",
-                "money",
-                "vo"
-            ],
-            "support": {
-                "issues": "https://github.com/moneyphp/money/issues",
-                "source": "https://github.com/moneyphp/money/tree/v4.7.1"
-            },
-            "time": "2025-06-06T07:12:38+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6100,163 +5947,6 @@
             "time": "2024-09-09T07:06:30+00:00"
         },
         {
-            "name": "omnipay/common",
-            "version": "v3.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/omnipay-common.git",
-                "reference": "83552de28815c5e46f66360c4d52c3a82a7d5efc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/83552de28815c5e46f66360c4d52c3a82a7d5efc",
-                "reference": "83552de28815c5e46f66360c4d52c3a82a7d5efc",
-                "shasum": ""
-            },
-            "require": {
-                "moneyphp/money": "^3.1|^4.0.3",
-                "php": "^7.2|^8",
-                "php-http/client-implementation": "^1",
-                "php-http/discovery": "^1.14",
-                "php-http/message": "^1.5",
-                "php-http/message-factory": "^1.1",
-                "symfony/http-foundation": "^2.1|^3|^4|^5|^6|^7"
-            },
-            "require-dev": {
-                "http-interop/http-factory-guzzle": "^1.1",
-                "omnipay/tests": "^4.1",
-                "php-http/guzzle7-adapter": "^1",
-                "php-http/mock-client": "^1.6",
-                "squizlabs/php_codesniffer": "^3.8.1"
-            },
-            "suggest": {
-                "league/omnipay": "The default Omnipay package provides a default HTTP Adapter."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Omnipay\\Common\\": "src/Common"
-                },
-                "classmap": [
-                    "src/Omnipay.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adrian Macneil",
-                    "email": "adrian@adrianmacneil.com"
-                },
-                {
-                    "name": "Barry vd. Heuvel",
-                    "email": "barryvdh@gmail.com"
-                },
-                {
-                    "name": "Jason Judge",
-                    "email": "jason.judge@consil.co.uk"
-                },
-                {
-                    "name": "Del"
-                },
-                {
-                    "name": "Omnipay Contributors",
-                    "homepage": "https://github.com/thephpleague/omnipay-common/contributors"
-                }
-            ],
-            "description": "Common components for Omnipay payment processing library",
-            "homepage": "https://github.com/thephpleague/omnipay-common",
-            "keywords": [
-                "gateway",
-                "merchant",
-                "omnipay",
-                "pay",
-                "payment",
-                "purchase"
-            ],
-            "support": {
-                "issues": "https://github.com/thephpleague/omnipay-common/issues",
-                "source": "https://github.com/thephpleague/omnipay-common/tree/v3.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/barryvdh",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-03-03T09:25:00+00:00"
-        },
-        {
-            "name": "omnipay/stripe",
-            "version": "v3.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/omnipay-stripe.git",
-                "reference": "20812498efedc1079baae5fea96567fefd669105"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay-stripe/zipball/20812498efedc1079baae5fea96567fefd669105",
-                "reference": "20812498efedc1079baae5fea96567fefd669105",
-                "shasum": ""
-            },
-            "require": {
-                "omnipay/common": "^3"
-            },
-            "require-dev": {
-                "omnipay/tests": "^3",
-                "phpro/grumphp": "^0.14",
-                "squizlabs/php_codesniffer": "^3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Omnipay\\Stripe\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adrian Macneil",
-                    "email": "adrian@adrianmacneil.com"
-                },
-                {
-                    "name": "Omnipay Contributors",
-                    "homepage": "https://github.com/thephpleague/omnipay-stripe/contributors"
-                }
-            ],
-            "description": "Stripe driver for the Omnipay payment processing library",
-            "homepage": "https://github.com/thephpleague/omnipay-stripe",
-            "keywords": [
-                "gateway",
-                "merchant",
-                "omnipay",
-                "pay",
-                "payment",
-                "stripe"
-            ],
-            "support": {
-                "issues": "https://github.com/thephpleague/omnipay-stripe/issues",
-                "source": "https://github.com/thephpleague/omnipay-stripe/tree/v3.2.0"
-            },
-            "time": "2022-03-22T10:58:41+00:00"
-        },
-        {
             "name": "paragonie/constant_time_encoding",
             "version": "v3.0.0",
             "source": {
@@ -6701,61 +6391,6 @@
                 "source": "https://github.com/php-http/message/tree/1.16.2"
             },
             "time": "2024-10-02T11:34:13+00:00"
-        },
-        {
-            "name": "php-http/message-factory",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message-factory.git",
-                "reference": "4d8778e1c7d405cbb471574821c1ff5b68cc8f57"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message-factory/zipball/4d8778e1c7d405cbb471574821c1ff5b68cc8f57",
-                "reference": "4d8778e1c7d405cbb471574821c1ff5b68cc8f57",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "psr/http-message": "^1.0 || ^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "Factory interfaces for PSR-7 HTTP Message",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "stream",
-                "uri"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/message-factory/issues",
-                "source": "https://github.com/php-http/message-factory/tree/1.1.0"
-            },
-            "abandoned": "psr/http-factory",
-            "time": "2023-04-14T14:16:17+00:00"
         },
         {
             "name": "php-http/multipart-stream-builder",
@@ -7464,16 +7099,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.19",
+            "version": "2.1.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf"
+                "reference": "a9ccfef95210f92ba6feea6e8d1eef42b5605499"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/473a8c30e450d87099f76313edcbb90852f9afdf",
-                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a9ccfef95210f92ba6feea6e8d1eef42b5605499",
+                "reference": "a9ccfef95210f92ba6feea6e8d1eef42b5605499",
                 "shasum": ""
             },
             "require": {
@@ -7518,7 +7153,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-21T19:58:24+00:00"
+            "time": "2025-07-26T20:45:26+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
@@ -8559,12 +8194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "2f452b6f6da50bf214522ddf2a13c515f932720d"
+                "reference": "7c8d82ac054ac582d537b6a62098f28ef3493bbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/2f452b6f6da50bf214522ddf2a13c515f932720d",
-                "reference": "2f452b6f6da50bf214522ddf2a13c515f932720d",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/7c8d82ac054ac582d537b6a62098f28ef3493bbf",
+                "reference": "7c8d82ac054ac582d537b6a62098f28ef3493bbf",
                 "shasum": ""
             },
             "require": {
@@ -8584,7 +8219,7 @@
                 "psr/http-server-middleware": "^1.0.2",
                 "psr/log-implementation": "^2.0",
                 "psr/simple-cache-implementation": "^1.0",
-                "rector/rector": "^2.1.1",
+                "rector/rector": "^2.1.2",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/assets": "^5.1",
                 "yiisoft/factory": "^1.3",
@@ -8593,7 +8228,7 @@
                 "yiisoft/json": "^1.0",
                 "yiisoft/router": "^4.0",
                 "yiisoft/session": "^3.0",
-                "yiisoft/view": "^12.2",
+                "yiisoft/view": "^12.2.1",
                 "yiisoft/widget": "^2.2"
             },
             "require-dev": {
@@ -8603,7 +8238,7 @@
                 "roave/infection-static-analysis-plugin": ">=1.38",
                 "spatie/phpunit-watcher": "^1.24",
                 "styleci/cli": "^1.6.0",
-                "vimeo/psalm": "^6.12.1",
+                "vimeo/psalm": "^6.13.0",
                 "yiisoft/cache": "^3.1",
                 "yiisoft/di": "^1.4",
                 "yiisoft/log": "^2.1.1",
@@ -8658,7 +8293,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-12T16:18:29+00:00"
+            "time": "2025-07-27T15:41:56+00:00"
         },
         {
             "name": "rossaddison/yii-gii",
@@ -8666,12 +8301,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-gii.git",
-                "reference": "7f3005a26197f8e7ad9b2806d8fd216b061d0ec0"
+                "reference": "499c1210b1d337ce0cf4516b3dfc1864f0416cec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-gii/zipball/7f3005a26197f8e7ad9b2806d8fd216b061d0ec0",
-                "reference": "7f3005a26197f8e7ad9b2806d8fd216b061d0ec0",
+                "url": "https://api.github.com/repos/rossaddison/yii-gii/zipball/499c1210b1d337ce0cf4516b3dfc1864f0416cec",
+                "reference": "499c1210b1d337ce0cf4516b3dfc1864f0416cec",
                 "shasum": ""
             },
             "require": {
@@ -8679,7 +8314,7 @@
                 "php": "^8.3",
                 "phpspec/php-diff": "^1.1.3",
                 "psr/http-message": "^1.0||^2.0",
-                "symfony/console": "^6.0||^7.3.0",
+                "symfony/console": "^6.0||^7.3.1",
                 "yiisoft/active-record": "dev-master",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/arrays": "^2.1||^3.2",
@@ -8694,7 +8329,7 @@
                 "yiisoft/json": "^1.0",
                 "yiisoft/router": "^3.0||^4.0",
                 "yiisoft/strings": "^2.6",
-                "yiisoft/validator": "^2.3",
+                "yiisoft/validator": "^2.5",
                 "yiisoft/yii-console": "^2.3",
                 "yiisoft/yii-middleware": "^1.1.0"
             },
@@ -8702,15 +8337,15 @@
                 "jetbrains/phpstorm-attributes": "^1.2",
                 "maglnet/composer-require-checker": "^4.16.1",
                 "nyholm/psr7": "^1.8.2",
-                "phpunit/phpunit": "^10.0||^11.0||^12.2.3",
-                "rector/rector": "^1||^2.0.18",
+                "phpunit/phpunit": "^10.0||^11.0||^12.2.7",
+                "rector/rector": "^1||^2.1.2",
                 "roave/infection-static-analysis-plugin": ">=1.38",
                 "spatie/phpunit-watcher": "^1.24",
-                "vimeo/psalm": "^6.12.0",
+                "vimeo/psalm": "^6.13.0",
                 "yiisoft/cache": "^3.1",
                 "yiisoft/db-sqlite": "dev-master",
                 "yiisoft/di": "^1.4",
-                "yiisoft/dummy-provider": "^1.0.1",
+                "yiisoft/dummy-provider": "^1.1.0",
                 "yiisoft/event-dispatcher": "^1.1",
                 "yiisoft/files": "^2.0",
                 "yiisoft/log": "^2.1.1",
@@ -8764,7 +8399,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-24T17:02:27+00:00"
+            "time": "2025-07-27T15:40:01+00:00"
         },
         {
             "name": "rossaddison/yii-sentry",
@@ -8772,12 +8407,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-sentry.git",
-                "reference": "305f1949c24eae4d92b5c9ed1c3666bdf81693b6"
+                "reference": "414b2a0a4c59ba168f92e83ab6511f76b002fdb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-sentry/zipball/305f1949c24eae4d92b5c9ed1c3666bdf81693b6",
-                "reference": "305f1949c24eae4d92b5c9ed1c3666bdf81693b6",
+                "url": "https://api.github.com/repos/rossaddison/yii-sentry/zipball/414b2a0a4c59ba168f92e83ab6511f76b002fdb7",
+                "reference": "414b2a0a4c59ba168f92e83ab6511f76b002fdb7",
                 "shasum": ""
             },
             "require": {
@@ -8785,7 +8420,7 @@
                 "psr/http-message": "^2.0",
                 "psr/http-server-handler": "^1.0.2",
                 "psr/http-server-middleware": "^1.0.2",
-                "sentry/sentry": "^4.14.1",
+                "sentry/sentry": "^4.14.2",
                 "symfony/console": "^7.3.1",
                 "yiisoft/di": "^1.4"
             },
@@ -8794,11 +8429,11 @@
                 "httpsoft/http-message": "^1.1.6",
                 "maglnet/composer-require-checker": "^4.16.1",
                 "php-http/guzzle7-adapter": "^1.1",
-                "phpunit/phpunit": "^12.2.5",
-                "rector/rector": "^2.1.0",
+                "phpunit/phpunit": "^12.2.7",
+                "rector/rector": "^2.1.2",
                 "roave/infection-static-analysis-plugin": ">=1.38",
                 "spatie/phpunit-watcher": ">=1.24.0",
-                "vimeo/psalm": "^6.12.0",
+                "vimeo/psalm": "^6.13.0",
                 "yiisoft/error-handler": "^4.1",
                 "yiisoft/yii-console": "^2.3",
                 "yiisoft/yii-event": "^2.1"
@@ -8866,7 +8501,7 @@
                     "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2025-06-30T23:06:28+00:00"
+            "time": "2025-07-27T16:07:43+00:00"
         },
         {
             "name": "sabre/uri",
@@ -21859,12 +21494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017"
+                "reference": "81355a1946c1cb0d4dd1966161015b8522f30173"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
-                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/81355a1946c1cb0d4dd1966161015b8522f30173",
+                "reference": "81355a1946c1cb0d4dd1966161015b8522f30173",
                 "shasum": ""
             },
             "conflict": {
@@ -22061,7 +21696,7 @@
                 "elefant/cms": "<2.0.7",
                 "elgg/elgg": "<3.3.24|>=4,<4.0.5",
                 "elijaa/phpmemcacheadmin": "<=1.3",
-                "elmsln/haxcms": "<11.0.8",
+                "elmsln/haxcms": "<11.0.14",
                 "encore/laravel-admin": "<=1.8.19",
                 "endroid/qr-code-bundle": "<3.4.2",
                 "enhavo/enhavo-app": "<=0.13.1",
@@ -22811,7 +22446,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-22T16:07:09+00:00"
+            "time": "2025-07-25T21:05:39+00:00"
         },
         {
             "name": "sanmai/later",
@@ -23829,51 +23464,6 @@
                 }
             ],
             "time": "2024-10-20T05:08:20+00:00"
-        },
-        {
-            "name": "styleci/cli",
-            "version": "v1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/StyleCI/CLI.git",
-                "reference": "67bbf2169e40d07b6d5964e897d0ce548addd051"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/StyleCI/CLI/zipball/67bbf2169e40d07b6d5964e897d0ce548addd051",
-                "reference": "67bbf2169e40d07b6d5964e897d0ce548addd051",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "ext-zlib": "*",
-                "php": "^7.4.15 || ^8.0.2"
-            },
-            "suggest": {
-                "ext-curl": "Required for high performance HTTP transport"
-            },
-            "bin": [
-                "bin/styleci"
-            ],
-            "type": "library",
-            "extra": {
-                "bin-dir": "bin"
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "StyleCI",
-                    "email": "support@styleci.io"
-                }
-            ],
-            "description": "The CLI tool for StyleCI",
-            "support": {
-                "source": "https://github.com/StyleCI/CLI/tree/v1.6.0"
-            },
-            "time": "2025-03-22T22:13:08+00:00"
         },
         {
             "name": "symfony/browser-kit",
