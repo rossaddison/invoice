@@ -1,2 +1,2 @@
 
-Found 0 of 982 files that can be fixed in 13.722 seconds, 34.00 MB memory used
+Found 0 of 981 files that can be fixed in 13.632 seconds, 34.00 MB memory used
