@@ -14,7 +14,6 @@ return [
             'editUser',
             'editClientPeppol',
             'changePasswordForAnyUser',
-            'entryToBaseController',
         ],
     ],
     [
