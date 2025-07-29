@@ -144,7 +144,7 @@
         "codeception/module-asserts": "^3.2",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^3.0.1",
-        "friendsofphp/php-cs-fixer": "^3.84.0",
+        "friendsofphp/php-cs-fixer": "^3.85.1",
         "phpunit/phpunit": "^12.2.7",
         "rector/rector": "^2.1.2",
         "roave/better-reflection": "^6.59",
