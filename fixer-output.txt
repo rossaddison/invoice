@@ -1,2 +1,32 @@
+   1) /home/runner/work/invoice/invoice/config/web/di/payment-service.php (array_indentation)
+      ---------- begin diff ----------
+--- /home/runner/work/invoice/invoice/config/web/di/payment-service.php
++++ /home/runner/work/invoice/invoice/config/web/di/payment-service.php
+@@ -17,5 +17,5 @@
+             'crypt' => new Crypt(),
+         ],
+     ],
+-    
++
+ ];
 
-Found 0 of 981 files that can be fixed in 13.632 seconds, 34.00 MB memory used
+      ----------- end diff -----------
+
+   2) /home/runner/work/invoice/invoice/src/Widget/Button.php (no_trailing_whitespace, braces_position, single_line_empty_body)
+      ---------- begin diff ----------
+--- /home/runner/work/invoice/invoice/src/Widget/Button.php
++++ /home/runner/work/invoice/invoice/src/Widget/Button.php
+@@ -190,7 +190,7 @@
+     public static function defaultPaymentMethod(UrlGenerator $generator, Translator $translator): string
+     {
+         return A::tag()
+-        ->addClass('btn btn-success')        
++        ->addClass('btn btn-success')
+         ->href(
+             $generator->generate(
+                 'setting/tab_index',
+
+      ----------- end diff -----------
+
+
+Found 2 of 982 files that can be fixed in 13.725 seconds, 34.00 MB memory used

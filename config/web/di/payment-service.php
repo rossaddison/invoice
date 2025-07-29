@@ -17,5 +17,5 @@ return [
             'crypt' => new Crypt(),
         ],
     ],
-    
+
 ];
