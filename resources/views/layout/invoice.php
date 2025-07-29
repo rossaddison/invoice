@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Invoice\Asset\InvoiceAsset;
 use App\Invoice\Asset\MonospaceAsset;
+use App\Invoice\Asset\NProgressAsset;
 // PCI Compliant Payment Gateway Assets
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
 use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
@@ -13,6 +14,7 @@ use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Style;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Bootstrap5\ButtonSize;
@@ -63,6 +65,7 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
  */
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
+$assetManager->register(NProgressAsset::class);
 $assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
 $s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(stripe_v10_Asset::class);
@@ -122,6 +125,11 @@ $this->beginPage();
         <?= Meta::documentEncoding('utf-8') ?>
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
         <?= Meta::data('viewport', 'width=device-width, initial-scale=1') ?>
+        <?= Style::tag()->content('#nprogress .bar {
+                    height: 2px !important; /* ~2mm */
+                    background: #2196f3 !important;
+                }')->render();
+?>
         <title>
             <?= $s->getSetting('custom_title') ?: 'Yii-Invoice'; ?>
         </title>
@@ -129,10 +137,10 @@ $this->beginPage();
     </head>
     <body>
         <?php
-        Html::tag('Noscript', Html::tag('Div', $translator->translate('please.enable.js'), ['class' => 'alert alert-danger no-margin']));
+    Html::tag('Noscript', Html::tag('Div', $translator->translate('please.enable.js'), ['class' => 'alert alert-danger no-margin']));
 ?>
-        
         <?php
+echo Html::script('NProgress.start();')->type('module');
 $this->beginBody();
 
 $offcanvasPlacement = match ($bootstrap5OffcanvasPlacement) {
@@ -734,7 +742,8 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
             <?= PerformanceMetrics::widget(); ?>           
         </footer>
         <?php
-        $this->endBody();
+            echo Html::script('NProgress.done();')->type('module');
+$this->endBody();
 ?>
     </body>
 </html>
