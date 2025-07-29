@@ -190,7 +190,7 @@ final readonly class Button
     public static function defaultPaymentMethod(UrlGenerator $generator, Translator $translator): string
     {
         return A::tag()
-        ->addClass('btn btn-success')        
+        ->addClass('btn btn-success')
         ->href(
             $generator->generate(
                 'setting/tab_index',
