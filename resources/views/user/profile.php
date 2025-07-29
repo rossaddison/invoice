@@ -20,6 +20,7 @@ $title = Html::encode($this->getTitle());
 ?>
 
 <?= DetailView::widget()
+    ->data($item)
     ->attributes(['class' => 'container'])
     ->fieldListAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
     ->fieldAttributes(['class' => 'col-xl-5'])

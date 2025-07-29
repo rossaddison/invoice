@@ -111,7 +111,7 @@ class Inv
         private ?string $document_description = '',
         #[Column(type: 'string(32)', nullable: false)]
         private string $url_key = '',
-        #[Column(type: 'integer(11)', nullable: false, default: 1)]
+        #[Column(type: 'integer(11)', nullable: false, default: 6)]
         private ?int $payment_method = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $creditinvoice_parent_id = null,

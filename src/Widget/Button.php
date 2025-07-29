@@ -187,6 +187,22 @@ final readonly class Button
         ->render();
     }
 
+    public static function defaultPaymentMethod(UrlGenerator $generator, Translator $translator): string
+    {
+        return A::tag()
+        ->addClass('btn btn-success')        
+        ->href(
+            $generator->generate(
+                'setting/tab_index',
+                ['language' => 'en'],
+                ['active' => 'invoices'],
+                'settings[invoice_default_payment_method]',
+            ),
+        )
+        ->content($translator->translate('default.payment.method'))
+        ->render();
+    }
+
     /**
      * Related logic: see TelegramController function delete_webhook
      * Related logic: see ..config/common/routes/routes.php

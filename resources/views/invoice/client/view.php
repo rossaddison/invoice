@@ -83,7 +83,7 @@ foreach ($custom_fields as $custom_field) {
                    <i class="fa fa-file-text"></i><?= $translator->translate('create.invoice'); ?>
                 </a>
                 <?php if ($cpR->repoClientCount($clientId = (string) $client->getClient_id()) === 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['client.id' => $client->getClient_id()]); ?>" 
+                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClient_id()]); ?>" 
                    class="btn btn-info" style="text-decoration:none">
                      <i class="fa fa-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
                 </a>

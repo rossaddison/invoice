@@ -1636,6 +1636,7 @@ There should be no existing data in these tables prior to importing and no exist
   'tax.information' => 'Taxes Information',
   'tax.point' => 'Date Tax Point',
   'tax.rate' => 'Tax Rate',
+  'tax.rate.active.not' => 'Warning: No Tax Rates have been made active. Activate at least one tax rate. Settings ... Tax Rate',  
   'tax.rate.add' => 'Tax Rate Add',
   'tax.rate.code' => 'Invoice Tax Rate Code',
   'tax.rate.decimal.places' => 'Tax Rate Decimal Places',

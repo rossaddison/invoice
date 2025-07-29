@@ -334,7 +334,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                     <?php
 // Options ... Pay Now
                     // Show the pay now button if not a draft and the user has viewPayment permission ie. not editPayment permission
-                    if (($readOnly === false && in_array($inv->getStatus_id(), [2, 3]) && $invAmountBalance > 0) && $paymentView) {
+                    if ((in_array($inv->getStatus_id(), [2, 3]) && $invAmountBalance > 0) && $paymentView) {
                         ?>
     <?php
         /**

@@ -57,7 +57,10 @@ echo Form::tag()
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
-            <?= Html::closeTag('div'); ?>        
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= $button::defaultPaymentMethod($urlGenerator, $translator); ?>
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'client_id')
     ->label($translator->translate('user.account.clients'))

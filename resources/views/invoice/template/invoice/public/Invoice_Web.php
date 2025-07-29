@@ -198,8 +198,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             <tr class="<?=($is_overdue ? 'overdue' : '') ?>">
                                 <td><?= $translator->translate('amount.due'); ?></td>
                                 <td style="text-align:right;"><?= $numberHelper->format_currency($inv_amount->getBalance() ?? 0.00); ?></td>
-                            </tr>
-                            
+                            </tr>                            
                             <tr>
                                 <td><?= $translator->translate('payment.method') . ': '; ?></td>
                                 <td><?= Html::encode($payment_method->getName()); ?></td>

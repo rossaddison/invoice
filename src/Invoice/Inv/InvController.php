@@ -3420,6 +3420,9 @@ final class InvController extends BaseController
         $inv = $iR->repoUrl_key_guest_loaded($urlKey);
         if ($inv instanceof Inv) {
             $inv_id = $inv->getId();
+            if ($itrR->repoCount($inv_id) == 0) {
+                $this->flashMessage('warning', $this->translator->translate('tax.rate.active.not'));
+            }
             $client_id = $inv->getClient_id();
             $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             if ($user) {
@@ -3457,7 +3460,7 @@ final class InvController extends BaseController
                                     'custom_fields' => $custom_fields,
                                     'inv' => $inv,
                                     'inv_amount' => $inv_amount,
-                                    'inv_tax_rates' => ($inv_id > 0) && $itrR->repoCount($inv_id) > 0 ? $itrR->repoInvquery($inv_id) : null,
+                                    'inv_tax_rates' => ($inv_id > 0) && $itrR->repoCount($inv_id) > 0 ? $itrR->repoInvquery($inv_id) : [],
                                     'inv_url_key' => $urlKey,
                                     'iiaR' => $iiaR,
                                     'is_overdue' => $is_overdue,

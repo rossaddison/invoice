@@ -92,6 +92,7 @@ final class PaymentInformationController
         private string $telegramToken,
     ) {
         $this->factory                   = $factory;
+        $this->flash                     = $flash;
         $this->merchantService           = $merchantService;
         $this->amazonPayPaymentService   = $amazonPayPaymentService;
         $this->braintreePaymentService   = $braintreePaymentService;
@@ -100,7 +101,6 @@ final class PaymentInformationController
         $this->openBankingOauthClient    = $openBankingOauthClient;
         $this->paymentService            = $paymentService;
         $this->session                   = $session;
-        $this->flash                     = $flash;
         $this->iaR                       = $iaR;
         $this->iR                        = $iR;
         $this->sR                        = $sR;
@@ -238,7 +238,7 @@ final class PaymentInformationController
         if ($result['success']) {
             $view_data = [
                 'render' => $this->viewRenderer->renderPartialAsString(
-                    'setting/payment_message',
+                    '//invoice/setting/payment_message',
                     [
                         'heading'     => $this->translator->translate('payment.information.amazon.payment.session.complete') . $checkout_session_id,
                         'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
@@ -252,7 +252,7 @@ final class PaymentInformationController
         } else {
             $view_data = [
                 'render' => $this->viewRenderer->renderPartialAsString(
-                    'setting/payment_message',
+                    '//invoice/setting/payment_message',
                     [
                         'heading'     => $this->translator->translate('payment.information.amazon.payment.session.incomplete'),
                         'message'     => $result['message'] ?? ($this->translator->translate('payment') . ':' . $this->translator->translate('incomplete')),
@@ -315,7 +315,7 @@ final class PaymentInformationController
         $ref = $currentRoute->getArgument('ref');
         $view_data = [
             'render' => $this->viewRenderer->renderPartialAsString(
-                'setting/payment_message',
+                '//invoice/setting/payment_message',
                 [
                     'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $ref ?? 'No ref provided'),
                     'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
@@ -536,7 +536,7 @@ final class PaymentInformationController
             $this->flashMessage('warning', (string) $pemCheck['message']);
 
             return $this->viewRenderer->render(
-                'setting/payment_message',
+                '//invoice/setting/payment_message',
                 [
                     'heading' => '',
                     'message' => 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem',
@@ -721,7 +721,7 @@ final class PaymentInformationController
                 // This completion handler is primarily for consistency with other payment methods
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(
-                        'setting/payment_message',
+                        '//invoice/setting/payment_message',
                         [
                             'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $invoiceNumber),
                             'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
@@ -792,7 +792,7 @@ final class PaymentInformationController
             'inv_url_key'                => $url_key,
             'is_overdue'                 => $is_overdue,
             'partial_client_address'     => $this->viewRenderer->renderPartialAsString(
-                'client/partial_client_address',
+                '//invoice/client/partial_client_address',
                 [
                     'client' => $cR->repoClientquery($invoice->getClient_id()),
                 ],
@@ -967,7 +967,7 @@ final class PaymentInformationController
 
                         $view_data = [
                             'render' => $this->viewRenderer->renderPartialAsString(
-                                'paymentinformation/payment_message',
+                                '//invoice/paymentinformation/payment_message',
                                 [
                                     'heading'     => $heading,
                                     'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete') . 'Payment Id: ' . $paymentId,
@@ -1001,7 +1001,7 @@ final class PaymentInformationController
                     $this->iR->save($invoice);
                     $view_data = [
                         'render' => $this->viewRenderer->renderPartialAsString(
-                            'paymentinformation/payment_message',
+                            '//invoice/paymentinformation/payment_message',
                             [
                                 'heading'     => $heading,
                                 'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
@@ -1108,7 +1108,7 @@ final class PaymentInformationController
                   : sprintf($this->translator->translate('online.payment.payment.failed'), (string) $invoiceNumber . ' ' . ((string) $result['message'] ?: ''));
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(
-                        'paymentinformation/payment_message',
+                        '//invoice/paymentinformation/payment_message',
                         [
                             'heading'     => $heading,
                             'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
@@ -1203,7 +1203,7 @@ final class PaymentInformationController
 
             return $this->factory->createResponse(
                 $this->viewRenderer->renderPartialAsString(
-                    'setting/payment_message',
+                    '//invoice/setting/payment_message',
                     [
                         'heading'     => '',
                         'message'     => $payment_success_msg,
@@ -1239,7 +1239,7 @@ final class PaymentInformationController
 
         return $this->factory->createResponse(
             $this->viewRenderer->renderPartialAsString(
-                'setting/payment_message',
+                '//invoice/setting/payment_message',
                 [
                     'heading'     => '',
                     'message'     => $payment_failure_msg,
@@ -1283,7 +1283,7 @@ final class PaymentInformationController
 
     public function renderPartialAsStringBraintreeLogo(string $merchantId): string
     {
-        return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/brainTreeLogo', [
+        return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/braintreeLogo', [
             'merchantId' => $merchantId,
         ]);
     }

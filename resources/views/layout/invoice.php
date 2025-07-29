@@ -6,7 +6,7 @@ use App\Invoice\Asset\InvoiceAsset;
 use App\Invoice\Asset\MonospaceAsset;
 // PCI Compliant Payment Gateway Assets
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
-use App\Invoice\Asset\pciAsset\amazon_pay_v2_4_Asset;
+use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
 use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
@@ -65,10 +65,9 @@ $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
 $assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
 $s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
-// '0' => PCI Compliant version
-$s->getSetting('gateway_stripe_version') == '0' ? $assetManager->register(stripe_v10_Asset::class) : '';
-$s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(amazon_pay_v2_4_Asset::class) : '';
-$s->getSetting('gateway_braintree_version') == '0' ? $assetManager->register(braintree_dropin_1_33_7_Asset::class) : '';
+$assetManager->register(stripe_v10_Asset::class);
+$assetManager->register(amazon_pay_v2_7_Asset::class);
+$assetManager->register(braintree_dropin_1_33_7_Asset::class);
 $vat = ($s->getSetting('enable_vat_registration') == '0');
 // NOTE: $locale must correspond with SettingRepository/locale_language_array and
 // ALSO: src/Invoice/Language/{folder_name}

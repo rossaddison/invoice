@@ -52,6 +52,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>29th July 2025</b></p>
+<p>Payment Gateways: AmazonPay, Braintree, Stripe, Mollie tested</p>
 <p><b>27th July 2025</b></p>
 <p>Open Banking Wonderful Preliminary code created.</p>
 <p>Increased the rate-limit from 2 to 5 in config\web\di\rate-limit.php because it was affecting codeception tests</p>
@@ -1295,7 +1297,7 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
      */
 </code>
 <p>This will need to be looked at later.</p>     
-<p><b>10th December 2022</b></p>
+<p><b>10th December 2022(Update July 2025 - Omnipay has been deleted)</b></p>
 <p>Github Static Analysis: Psalm Level 7,6,5,4 testing - errors 0</p>
 <p>1. Payment and Merchant (Online log) views upgraded to GridView.</p>
 <p>2. A subarray has been added to the gateway array under SettingRepository/payment_gateways function <code>'version' => array(

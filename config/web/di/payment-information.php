@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Inv\InvController;
+use App\Invoice\PaymentInformation\PaymentInformationController;
 use App\Invoice\Libraries\Crypt;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -12,13 +12,14 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Translator\Translator;
 
 return [
-    InvController::class => [
-        'class' => InvController::class,
+    PaymentInformationController::class => [
+        'class' => PaymentInformationController::class,
         '__construct()' => [
-            'crypt' => new Crypt(),
             DataResponseFactoryInterface::class => DataResponseFactory::class,
             UrlGeneratorInterface::class => UrlGenerator::class,
             TranslatorInterface::class => Translator::class,
+            'crypt' => new Crypt(),
+            'telegramToken' => '',
         ],
     ],
 ];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\pciAsset;
 
-class amazon_pay_v2_4_Asset extends __Asset
+class amazon_pay_v2_7_Asset extends __Asset
 {
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
