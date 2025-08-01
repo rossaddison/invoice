@@ -1228,6 +1228,10 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'stripe_incomplete'])
                 ->name('paymentinformation/stripe_incomplete'),
+            Route::methods([Method::GET, Method::POST], '/paymentinformation/wonderful_complete/{url_key}')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
+                ->action([PaymentInformationController::class, 'wonderful_complete'])
+                ->name('paymentinformation/wonderful_complete'),
             Route::methods([Method::GET, Method::POST], '/paymentinformation/fetch')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'fetch'])

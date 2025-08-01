@@ -240,7 +240,7 @@ goto menu
 
 :require_checker
 echo Running Composer Require Checker...
-php vendor/bin/composer-require-checker
+php -d memory_limit=512M vendor/bin/composer-require-checker
 pause
 goto menu
 

@@ -52,6 +52,15 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>1st August 2025</b></p>
+<p>Bugfix: Adjusting CompanyLogo width: required changing the logo as well.</p>
+<p>Open Banking Wonderful api is functional</p>
+<p><strong>Steps to using Wonderful api</strong></p>
+<p><b>Step 1:</b> Settings ... View ... Online Payment ... Enable Online Payments ... Add a Payment Provider ... Online Banking</p>
+<p><b>Step 2:</b> Goto wonderful.co.uk and get your authToken a.k.a apiToken</p>
+<p><b>Step 3:</b> Fill in and enable the OpenBanking Form on the same page.</p>
+<p><b>Step 4:</b> If you are not using Wonderful as a third party provider, leave the apiToken blank.</p>
+<p><img src="/img/wonderful.jpg" height="300" width="450"/></p>
 <p><b>29th July 2025</b></p>
 <p>Payment Gateways: AmazonPay, Braintree, Stripe, Mollie tested</p>
 <p><b>27th July 2025</b></p>

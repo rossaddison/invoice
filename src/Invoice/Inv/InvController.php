@@ -3413,7 +3413,7 @@ final class InvController extends BaseController
         }
 
         // If the status is sent 2, viewed 3, or paid 4 and the url key exists accept otherwise not found response
-        if ($iR->repoUrl_key_guest_count($urlKey) < 1) {
+        if (($iR->repoUrl_key_guest_count($urlKey) < 1) && (!$currentUser->isGuest())) {
             return $this->webService->getNotFoundResponse();
         }
 

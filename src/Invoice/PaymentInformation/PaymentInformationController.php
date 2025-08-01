@@ -16,11 +16,9 @@ use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\Merchant;
 use App\Invoice\Entity\Payment;
-use App\Invoice\Entity\Setting;
 // Libraries
 use App\Invoice\Helpers\DateHelper;
 // Psr
-use App\Invoice\Helpers\Telegram\TelegramHelper;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
 // Repositories
@@ -47,7 +45,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Stripe\Stripe;
-use Vjik\TelegramBot\Api\FailResult;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -151,12 +148,13 @@ final class PaymentInformationController
         $provider       = $this->sR->getSetting('open_banking_provider');
         $providerConfig = $provider ? $this->getOpenBankingProviderConfig($provider) : null;
 
-        // Determine if provider is 'wonderful'
-        $isWonderful = 'wonderful' === $provider;
+        // Determine if provider is 'wonderful' by examining if the apiToken is filled
+        $isWonderful = (strlen($this->sR->getSetting('gateway_openbanking_apiToken')) > 0);
 
         // Prepare view data
         $viewData = [
             'alert'                  => $this->alert(),
+            'authUrl'                => '',
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
             'client_on_invoice'      => $cR->repoClientquery($invoice->getClient_id()),
@@ -178,24 +176,24 @@ final class PaymentInformationController
 
         if ($isWonderful) {
             $details = $this->openBankingPaymentService->paymentStatusAndDetails($url_key, (int) $balance, (int) $total, $invoice, $items_array);
-            $data = (array) $details['data'];
-            // Wonderful requires an authToken, not an authUrl
-            $viewData['wonderfulId'] = (string) $data['id'];
-            $viewData['amountFormatted'] = (string) $data['amount_formatted'];
-            $viewData['reference'] = (string) $data['reference'];
-            $viewData['createdAt'] = (string) $data['created_at'];
-            $viewData['updatedAt'] = (string) $data['updated_at'];
-            $viewData['status'] = (string) $data['status'];
+            $singleKeyArray = (array) ($details['data'] ?? []);
+            $data = (array) ($singleKeyArray['data'] ?? []);
+            $viewData['wonderfulId'] = (string) ($data['id'] ?? '');
+            $viewData['amountFormatted'] = (string) ($data['amount_formatted'] ?? '');
+            $viewData['reference'] = (string) ($data['reference'] ?? '');
+            $viewData['createdAt'] = (string) ($data['created_at'] ?? '');
+            $viewData['updatedAt'] = (string) ($data['updated_at'] ?? '');
+            $viewData['status'] = (string) ($data['status'] ?? '');
+            // Wonderful requires an authToken, not an authUrl because it is not oauth linked
             $viewData['authToken'] = true;
-            $viewData['paymentLink'] = (string) $data['pay_link'];
+            $viewData['paymentLink'] = (string) ($data['pay_link'] ?? '');
         } else {
-            // Other providers use authUrl
+            // Other open banking providers use authUrl since they are oauth2.0 linked
             $authUrl               = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
             $viewData['authUrl']   = $authUrl;
-            $viewData['returnUrl'] = ['paymentinformation/paymentinformation_openbanking', ['url_key' => $url_key]];
+            $viewData['returnUrl'] = ['paymentinformation/paymentinformation_openbanking', ['url_key' => $url_key, '_language' => 'en'], [], null];
         }
-
-        return $this->viewRenderer->render('invoice/payment_information_openbanking', $viewData);
+        return $this->viewRenderer->render('//invoice/paymentinformation/payment_information_openbanking', $viewData);
     }
 
     /**
@@ -1268,6 +1266,9 @@ final class PaymentInformationController
                 foreach ($companyPrivates as $private) {
                     if ($private->getCompany_id() == (string) $company->getId()) {
                         $companyLogoFileName = $private->getLogo_filename();
+                        $companyLogoWidth = $private->getLogo_width() ?? 0;
+                        $companyLogoHeight = $private->getLogo_height() ?? 0;
+                        $companyLogoMargin = $private->getLogo_margin() ?? 0;
                     }
                 }
             }
@@ -1278,6 +1279,9 @@ final class PaymentInformationController
             'src' => $src,
             // if debug_mode == '1' => reveal the source in the tooltip
             'tooltipTitle' => '1' == $this->sR->getSetting('debug_mode') ? $src : '',
+            'logoWidth' => $companyLogoWidth ?? 0,
+            'logoHeight' => $companyLogoHeight ?? 0,
+            'logoMargin' => $companyLogoMargin ?? 0,
         ]);
     }
 

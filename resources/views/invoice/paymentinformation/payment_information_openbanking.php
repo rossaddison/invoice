@@ -1,10 +1,12 @@
 <?php
 
+use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**
+ * @var sR           $s
  * @var Translator   $translator
  * @var UrlGenerator $urlGenerator
  * @var string       $alert
@@ -32,13 +34,6 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
  * @var string       $status
  * @var string       $paymentLink
  */
-echo $alert;
-echo $companyLogo;
-
-echo Html::tag('h2', Html::encode($title));
-
-echo Html::tag('p', Html::encode($translator->translate('amount.payment')) . ': ' . Html::encode(number_format($balance, 2)));
-echo Html::tag('p', Html::encode($translator->translate('total')) . ': ' . Html::encode(number_format($total, 2)));
 
 $clientName = '';
 if (is_object($client_on_invoice) && method_exists($client_on_invoice, 'getClient_name')) {
@@ -50,78 +45,129 @@ if (is_object($client_on_invoice) && method_exists($client_on_invoice, 'getClien
 } elseif (is_array($client_on_invoice) && isset($client_on_invoice['client_name']) && is_string($client_on_invoice['client_name'])) {
     $clientName = $client_on_invoice['client_name'];
 }
-echo Html::tag('p', Html::encode($translator->translate('client')) . ': ' . Html::encode($clientName));
-echo $partial_client_address;
 
-echo Html::tag('p', Html::encode($translator->translate('payment.method')) . ': ' . Html::encode($payment_method) . $provider);
+?>
 
-echo Html::tag(
-    'p',
-    Html::encode($translator->translate('invoice')) . ': ' . Html::encode($inv_url_key),
-);
+<?= Html::openTag('div', ['class' => 'container py-4']); ?>
+    <!-- Alert message -->
+    <?php if (!empty($alert)): ?>
+        <div class="mb-3">
+            <?= $alert; ?>
+        </div>
+    <?php endif; ?>
 
-if ($is_overdue) {
-    echo Html::tag(
-        'div',
-        Html::encode($translator->translate('invoice.is.overdue')),
-        ['class' => 'alert alert-warning'],
-    );
-}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex align-items-center">
+                <?php if (!empty($companyLogo)): ?>
+                    <span class="me-3"><?= $companyLogo; ?></span>
+                <?php endif; ?>
+                <h2 class="mb-0"><?= Html::encode($title); ?></h2>
+            </div>
+        </div>
+        <div class="card-body">
 
-// Disabled form notice
-if ($disable_form) {
-    echo Html::tag(
-        'div',
-        Html::encode($translator->translate('form.disabled.already.paid')),
-        ['class' => 'alert alert-info'],
-    );
-}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p class="fs-4 mb-0">
+                        <strong><?= Html::encode($translator->translate('amount.payment')) ?>:</strong>
+                        <span class="text-success fw-bold display-6" style="letter-spacing:1px;">
+                            <?= Html::encode($s->format_currency($balance)); ?>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <strong><?= Html::encode($translator->translate('client')); ?>:</strong>
+                        <?= Html::encode($clientName); ?>
+                    </p>
+                </div>
+            </div>
 
-if (!empty($authUrl) && !$disable_form) {
-    echo Html::a(
-        Html::encode($translator->translate('open.banking.pay.with') . $provider),
-        $authUrl,
-        [
-            'class'  => 'btn btn-primary',
-            'rel'    => 'noopener noreferrer',
-            'target' => '_blank',
-        ],
-    );
-} elseif ($disable_form) {
-    echo Html::tag(
-        'p',
-        Html::encode($translator->translate('open.banking.payment.not.required')),
-    );
-} elseif ($authToken) {
-    $htmlString = '<div class="wonderful-payment-summary">
-                <h3>Open Banking Payment Details</h3>
-                <ul>
-                    <li><strong>ID:</strong>' . $wonderfulId . '</li>
-                    <li><strong>Amount:</strong>' . $amountFormatted . '</li>
-                    <li><strong>Status:</strong>' . ucfirst($status) . '</li>
-                    <li><strong>Reference:</strong>' . $reference . '</li>
-                    <li><strong>Created At:</strong>' . $createdAt . '</li>
-                    <li><strong>Updated At:</strong>' . $updatedAt . '</li>
-                </ul>
-            </div>';
-    if ('paid' == $status) {
-        echo $htmlString;
-    };
-    if ('created' == $status) {
-        echo $htmlString;
-        echo Html::a(
-            Html::encode($translator->translate('open.banking.pay.with') . $provider),
-            $urlGenerator->generateAbsolute($paymentLink, [], []),
-            [
-                'class'  => 'btn btn-success',
-                'rel'    => 'noopener noreferrer',
-                'target' => '_blank',
-            ],
-        );
-    }
-} else {
-    echo Html::tag(
-        'p',
-        Html::encode($translator->translate('open.banking.not.configured')),
-    );
-}
+            <?php if (!empty($partial_client_address)): ?>
+                <div class="mb-2"><?= $partial_client_address; ?></div>
+            <?php endif; ?>
+
+            <p>
+                <strong><?= Html::encode($translator->translate('invoice')) ?>:</strong>
+                <?= Html::encode($inv_url_key); ?>
+            </p>
+
+            <?php if ($is_overdue): ?>
+                <div class="alert alert-warning mb-3">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <?= Html::encode($translator->translate('invoice.is.overdue')); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($disable_form): ?>
+                <div class="alert alert-info mb-3">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <?= Html::encode($translator->translate('form.disabled.already.paid')); ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Payment Actions -->
+            <div class="mt-4">
+                <?php if (!empty($authUrl) && !$disable_form): ?>
+                    <a href="<?= $authUrl; ?>"
+                       class="btn btn-primary btn-lg"
+                       rel="noopener noreferrer"
+                       target="_blank">
+                        <?= Html::encode($translator->translate('open.banking.pay.with') . $provider); ?>
+                    </a>
+                <?php elseif ($disable_form): ?>
+                    <p class="text-muted">
+                        <?= Html::encode($translator->translate('open.banking.payment.not.required')); ?>
+                    </p>
+                <?php elseif ($authToken): ?>
+                    <div class="wonderful-payment-summary mb-3">
+                        <h4 class="mb-3"><?= Html::encode($translator->translate('details')); ?></h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row"><?= 'Wonderful Id'; ?></th>
+                                        <td><?= Html::encode($wonderfulId); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><?= Html::encode($translator->translate('Amount')); ?></th>
+                                        <td>
+                                            <span class="text-success fw-bold fs-5">
+                                                <?= Html::encode($amountFormatted); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><?= Html::encode($translator->translate('Status')); ?></th>
+                                        <td><?= Html::encode(ucfirst($status)); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><?= Html::encode($translator->translate('Reference')); ?></th>
+                                        <td><?= Html::encode($reference); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><?= Html::encode($translator->translate('Created At')); ?></th>
+                                        <td><?= Html::encode($createdAt); ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <?php if ('created' == $status): ?>
+                        <a href="<?= Html::encode($paymentLink); ?>"
+                           class="btn btn-success btn-lg"
+                           rel="noopener noreferrer"
+                           target="_blank">
+                            <?= Html::encode($translator->translate('open.banking.pay.with') . ' Wonderful'); ?>
+                        </a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <p class="text-muted">
+                        <?= Html::encode($translator->translate('open.banking.not.configured')); ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?= Html::closeTag('div'); ?>

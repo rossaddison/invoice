@@ -216,13 +216,15 @@ final class CompanyPrivateController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 // the filename before it was changed
-                $existing_logo_filename = $company_private->getLogo_filename() ?? '';
+                $existing_logo_filename = (string) ($body['existing_logo_filename'] ?? ($company_private->getLogo_filename() ?? ''));
                 // the file that has just been selected
                 /**
                  * @var array $_FILES['logo_filename']
                  * @var array $body
                  */
-                $body['logo_filename'] = (string) $_FILES['logo_filename']['name'];
+                $body['logo_filename'] = !empty((string) $_FILES['logo_filename']['name'])
+                ? (string) $_FILES['logo_filename']['name']
+                : $existing_logo_filename;
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     // Replace filename's spaces with underscore and add random string preventing overwrites
                     $modified_original_file_name = Random::string(4) . '_' . (string) preg_replace('/\s+/', '_', $body['logo_filename']);
