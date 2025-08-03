@@ -780,8 +780,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
     );
     Html::closeTag('div');
 } ?>
-                                    <input type="text" id="dropzone_client_id" readonly class="form-control" value="<?= $inv->getClient()?->getClient_id(); ?>" hidden>
-                                </div>
+                                <input type="text" id="dropzone_client_id" readonly class="form-control" value="<?= $inv->getClient()?->getClient_id(); ?>" hidden>
                             </div>
                         </div>
                     </div>

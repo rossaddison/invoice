@@ -1228,7 +1228,7 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'stripe_incomplete'])
                 ->name('paymentinformation/stripe_incomplete'),
-            Route::methods([Method::GET, Method::POST], '/paymentinformation/wonderful_complete/{url_key}')
+            Route::methods([Method::GET, Method::POST], '/paymentinformation/wonderful_complete/{url_key}/{ref}')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'wonderful_complete'])
                 ->name('paymentinformation/wonderful_complete'),

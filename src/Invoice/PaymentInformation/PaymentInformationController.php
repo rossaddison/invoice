@@ -175,7 +175,7 @@ final class PaymentInformationController
         ];
 
         if ($isWonderful) {
-            $details = $this->openBankingPaymentService->paymentStatusAndDetails($url_key, (int) $balance, (int) $total, $invoice, $items_array);
+            $details = $this->openBankingPaymentService->paymentStatusAndDetails($url_key, $balance, $total, $invoice, $items_array);
             $singleKeyArray = (array) ($details['data'] ?? []);
             $data = (array) ($singleKeyArray['data'] ?? []);
             $viewData['wonderfulId'] = (string) ($data['id'] ?? '');
@@ -316,7 +316,7 @@ final class PaymentInformationController
                 '//invoice/setting/payment_message',
                 [
                     'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $ref ?? 'No ref provided'),
-                    'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                    'message'     => 'Ref: ' . ($ref ?? 'No ref provided'),
                     'url'         => 'inv/url_key',
                     'url_key'     => $urlKey,
                     'gateway'     => 'Wonderful',

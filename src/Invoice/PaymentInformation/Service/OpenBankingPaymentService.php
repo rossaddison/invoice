@@ -93,7 +93,7 @@ final class OpenBankingPaymentService
         );
     }
 
-    public function paymentStatusAndDetails(string $urlKey, int $balance, int $total, Inv $invoice, array $items_array): array
+    public function paymentStatusAndDetails(string $urlKey, float $balance, float $total, Inv $invoice, array $items_array): array
     {
         $amount = ((($balance > 0) && ($total > 0)) ? $balance : 0);
         $merchant_payment_reference = 'won-' . ($invoice->getNumber() ?? '#') . '-' . ($invoice->getClient()?->getClient_full_name() ?? 'No Client Full Name');

@@ -14122,12 +14122,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "40c4e05324decc72297da989d4051b6678e7c19d"
+                "reference": "ffed6587956ae59540e902408e2469d5e5de030f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/40c4e05324decc72297da989d4051b6678e7c19d",
-                "reference": "40c4e05324decc72297da989d4051b6678e7c19d",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/ffed6587956ae59540e902408e2469d5e5de030f",
+                "reference": "ffed6587956ae59540e902408e2469d5e5de030f",
                 "shasum": ""
             },
             "require": {
@@ -14199,7 +14199,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-31T03:53:33+00:00"
+            "time": "2025-08-01T17:00:42+00:00"
         },
         {
             "name": "yiisoft/db-mysql",

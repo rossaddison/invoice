@@ -52,6 +52,13 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>3rd August 2025</b></p>
+<p>Replaced int with float since amount being sent via Wonderful was being truncated. e.g. £3.60 truncated to £3.00</p>
+<p>The return url is functional but ref was being truncated because the route did not have it so included ref in the route.</p>  
+<p>A more general message is preferred on the completion page for Wonderful which is compiled in the PaymentInformationController function wonderful_complete.</p>
+<p>Next: Refund a Credit Note if Payment has been made by the customer via Wonderful</p>
+<p>Next: Include an Oauth2.0 payment provider e.g. Tink in the Open Banking selection process. Tink uses OIDC so this will be an interesting integration.</p>
+<p>Current Payment Providers: ...src\Invoice\Setting\Trait\OpenBankProviders.php</p>
 <p><b>1st August 2025</b></p>
 <p>Bugfix: Adjusting CompanyLogo width: required changing the logo as well.</p>
 <p>Open Banking Wonderful api is functional</p>
