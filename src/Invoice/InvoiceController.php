@@ -182,6 +182,7 @@ final class InvoiceController extends BaseController
             'peppol_xml_stream' => 1,
             'public_invoice_template' => 'Invoice_Web',
             'public_quote_template' => 'Quote_Web',
+            'qr_height_and_width' => 240,
             'quotes_expire_after' => 15,
             // Set the invoice to read-only on sent by default;
             'read_only_toggle' => 2,

@@ -797,14 +797,14 @@ final class AuthController
 
     private function tfaNotEnabledUnblockBaseController(string $userId): void
     {
-        // If tfa is not been used, the 'noEntryToBaseController' must be removed
+        // If tfa is not being used, the 'noEntryToBaseController' must be removed
         if ($this->manager->userHasPermission($userId, 'noEntryToBaseController')) {
             $roles = $this->manager->getRolesByUserId($userId);
             foreach ($roles as $role) {
                 $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
             }
         }
-        // If tfa is not been used, the 'entryToBaseController' permission can be added now
+        // If tfa is not being used, the 'entryToBaseController' permission can be added now
         if (!$this->manager->userHasPermission($userId, 'entryToBaseController')) {
             $roles = $this->manager->getRolesByUserId($userId);
             foreach ($roles as $role) {

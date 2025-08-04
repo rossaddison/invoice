@@ -59,6 +59,8 @@
 <p>Next: Refund a Credit Note if Payment has been made by the customer via Wonderful</p>
 <p>Next: Include an Oauth2.0 payment provider e.g. Tink in the Open Banking selection process. Tink uses OIDC so this will be an interesting integration.</p>
 <p>Current Payment Providers: ...src\Invoice\Setting\Trait\OpenBankProviders.php</p>
+<p><b>4th August 2025</b></p>
+<p>TFA should be run with Oauth so the callbacks in src/Auth/Trait/Callback.php now include TFA if chosen.</p>
 <p><b>1st August 2025</b></p>
 <p>Bugfix: Adjusting CompanyLogo width: required changing the logo as well.</p>
 <p>Open Banking Wonderful api is functional</p>

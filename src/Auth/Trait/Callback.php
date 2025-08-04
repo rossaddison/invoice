@@ -61,7 +61,7 @@ trait Callback
 
         $codeVerifier = (string) $this->session->get('code_verifier');
         /**
-         * Related logic: see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
+         * @see https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation
          * For user-restricted access, the 'Authorization Code' Grant Type is used
          * Use the code received, to get an access_token
          */
@@ -84,7 +84,7 @@ trait Callback
 
         if ($this->sR->getEnv() == 'dev') {
             /**
-             * Related logic: see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc function getTestUserArray;
+             * @see Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc function getTestUserArray;
              */
             $requestBody = [
                 'serviceNames' => ['national-insurance'],
@@ -111,21 +111,7 @@ trait Callback
             $email = $userArray['emailAddress'] ?? 'noemail' . $login . '@' . str_replace('https://', '', $this->developerSandboxHmrc->getApiBaseUrl1());
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'developersandboxhmrc') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'developersandboxhmrc');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('developersandboxhmrc', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -145,14 +131,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getDeveloperSandboxHmrcAccessToken
+                 * @see Trait\Oauth2 function getDeveloperSandboxHmrcAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getDeveloperSandboxHmrcAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'developersandboxhmrc');
                 return $this->viewRenderer->render('proceed', [
@@ -169,7 +155,7 @@ trait Callback
      * Purpose: Once Facebook redirects to this callback, in this callback function:
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
-     * Related logic: see src/Invoice/UserInv/UserInvController function facebook
+     * @see src/Invoice/UserInv/UserInvController function facebook
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
@@ -263,22 +249,7 @@ trait Callback
                 // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
                 // but it will be used later to build a passwordHash
                 if ($this->authService->oauthLogin($login)) {
-                    $identity = $this->authService->getIdentity();
-                    $userId = $identity->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            // disable our facebook access token as soon as the user logs in for the first time
-                            $status = $userInv->getActive();
-                            if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', 'facebook') : '';
-                                return $this->redirectToInvoiceIndex();
-                            }
-                            $this->disableToken($tR, $userId, 'facebook');
-                            return $this->redirectToAdminMustMakeActive();
-                        }
-                    }
-                    return $this->redirectToMain();
+                    return $this->tfaCheckBeforeRedirects('facebook', $tR, $uiR);
                 }
                 $user = new User($login, $email, $password);
                 $uR->save($user);
@@ -297,14 +268,14 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * Related logic: see Trait\Oauth2 function getFacebookAccessToken
+                     * @see Trait\Oauth2 function getFacebookAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getFacebookAccessToken($user, $tR);
                     /**
-                     * Related logic: see A new UserInv (extension table of user) for the user is created.
+                     * @see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'facebook');
                     return $this->viewRenderer->render('proceed', [
@@ -322,8 +293,8 @@ trait Callback
      * Purpose: Once Github redirects to this callback, in this callback function:
      * 1. the user is logged in, or a new user is created, and the proceedToMenuButton is created
      * 2. clicking on the proceedToMenuButton will further create a userinv extension of the user table
-     * Related logic: see src/Invoice/UserInv/UserInvController function github
-     * Related logic: see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+     * @see src/Invoice/UserInv/UserInvController function github
+     * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
      * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param TokenRepository $tR
@@ -387,7 +358,7 @@ trait Callback
          * Every time you receive an access token, you should use the token to revalidate the user's identity.
          * A user can change which account they are signed into when you send them to authorize your app,
          * and you risk mixing user data if you do not validate the user's identity after every sign in.
-         * Related logic: see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
+         * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
          */
         $userArray = $this->github->getCurrentUserJsonArray($oAuthTokenType);
         /**
@@ -408,22 +379,7 @@ trait Callback
                 // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
                 // but it will be used later to build a passwordHash
                 if ($this->authService->oauthLogin($login)) {
-                    $identity = $this->authService->getIdentity();
-                    $userId = $identity->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            // disable the github verification token as soon as the user logs in for the first time
-                            $status = $userInv->getActive();
-                            if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', 'github') : '';
-                                return $this->redirectToInvoiceIndex();
-                            }
-                            $this->disableToken($tR, $userId, 'github');
-                            return $this->redirectToAdminMustMakeActive();
-                        }
-                    }
-                    return $this->redirectToMain();
+                    return $this->tfaCheckBeforeRedirects('github', $tR, $uiR);
                 }
                 $user = new User($login, $email, $password);
                 $uR->save($user);
@@ -443,14 +399,14 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * Related logic: see Trait\Oauth2 function getGithubAccessToken
+                     * @see Trait\Oauth2 function getGithubAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getGithubAccessToken($user, $tR);
                     /**
-                     * Related logic: see A new UserInv (extension table of user) for the user is created.
+                     * @see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'github');
                     return $this->viewRenderer->render('proceed', [
@@ -465,7 +421,7 @@ trait Callback
     }
 
     /**
-     * Related logic: see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
+     * @see https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
      */
     public function callbackGoogle(
         ServerRequestInterface $request,
@@ -544,21 +500,7 @@ trait Callback
             $email = $userArray['email'] ?? 'noemail' . $login . '@google.com';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'google') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'google');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('google', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -578,14 +520,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getGoogleAccessToken
+                 * @see Trait\Oauth2 function getGoogleAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getGoogleAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
                 return $this->viewRenderer->render('proceed', [
@@ -657,21 +599,7 @@ trait Callback
             $email = $userArray['email'] ?? 'noemail' . $login . '@gov.uk';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'govuk') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'govuk');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('govuk', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -691,14 +619,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getGovUkAccessToken
+                 * @see Trait\Oauth2 function getGovUkAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getGovUkAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'govuk');
                 return $this->viewRenderer->render('proceed', [
@@ -787,21 +715,7 @@ trait Callback
             $email = $userArray['email'] ?? 'noemail' . $login . '@linkedin.com';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'linkedin') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'linkedin');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('linkedin', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -821,14 +735,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getLinkedInAccessToken
+                 * @see Trait\Oauth2 function getLinkedInAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getLinkedInAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'linkedin');
                 return $this->viewRenderer->render('proceed', [
@@ -906,21 +820,7 @@ trait Callback
             $email = $userArray['email'] ?? 'noemail' . $login . '@microsoftonline.com';
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'microsoftonline') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'microsoftonline');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('microsoftonline', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -940,14 +840,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getMicrosoftOnlineAccessToken
+                 * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getMicrosoftOnlineAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'microsoftonline');
                 return $this->viewRenderer->render('proceed', [
@@ -960,6 +860,7 @@ trait Callback
         return $this->redirectToMain();
     }
 
+    // Untested
     public function callbackOpenBanking(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
@@ -1092,21 +993,7 @@ trait Callback
                 $email = $userArray['email'] ?? 'noemail' . $login . '@x.com';
                 $password = Random::string(32);
                 if ($this->authService->oauthLogin($login)) {
-                    $identity = $this->authService->getIdentity();
-                    $userId = $identity->getId();
-                    if (null !== $userId) {
-                        $userInv = $uiR->repoUserInvUserIdquery($userId);
-                        if (null !== $userInv) {
-                            $status = $userInv->getActive();
-                            if ($status || $userId == 1) {
-                                $userId == 1 ? $this->disableToken($tR, '1', 'x') : '';
-                                return $this->redirectToInvoiceIndex();
-                            }
-                            $this->disableToken($tR, $userId, 'x');
-                            return $this->redirectToAdminMustMakeActive();
-                        }
-                    }
-                    return $this->redirectToMain();
+                    return $this->tfaCheckBeforeRedirects('x', $tR, $uiR);
                 }
                 $user = new User($login, $email, $password);
                 $uR->save($user);
@@ -1125,14 +1012,14 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * Related logic: see Trait\Oauth2 function getXAccessToken
+                     * @see Trait\Oauth2 function getXAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
                     $randomAndTimeToken = $this->getXAccessToken($user, $tR);
                     /**
-                     * Related logic: see A new UserInv (extension table of user) for the user is created.
+                     * @see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
                         $translator,
@@ -1273,22 +1160,7 @@ trait Callback
             // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
             // but it will be used later to build a passwordHash
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        // disable the vkontakte verification token as soon as the user logs in for the first time
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'vkontakte') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'vkontakte');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('vkontakte', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -1308,14 +1180,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getYandexAccessToken
+                 * @see Trait\Oauth2 function getYandexAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getVKontakteAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
                     $translator,
@@ -1411,22 +1283,7 @@ trait Callback
             // The password does not need to be validated here so use authService->oauthLogin($login) instead of authService->login($login, $password)
             // but it will be used later to build a passwordHash
             if ($this->authService->oauthLogin($login)) {
-                $identity = $this->authService->getIdentity();
-                $userId = $identity->getId();
-                if (null !== $userId) {
-                    $userInv = $uiR->repoUserInvUserIdquery($userId);
-                    if (null !== $userInv) {
-                        // disable the yandex verification token as soon as the user logs in for the first time
-                        $status = $userInv->getActive();
-                        if ($status || $userId == 1) {
-                            $userId == 1 ? $this->disableToken($tR, '1', 'yandex') : '';
-                            return $this->redirectToInvoiceIndex();
-                        }
-                        $this->disableToken($tR, $userId, 'yandex');
-                        return $this->redirectToAdminMustMakeActive();
-                    }
-                }
-                return $this->redirectToMain();
+                return $this->tfaCheckBeforeRedirects('yandex', $tR, $uiR);
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
@@ -1446,14 +1303,14 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * Related logic: see Trait\Oauth2 function getYandexAccessToken
+                 * @see Trait\Oauth2 function getYandexAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
                 $randomAndTimeToken = $this->getYandexAccessToken($user, $tR);
                 /**
-                 * Related logic: see A new UserInv (extension table of user) for the user is created.
+                 * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
                     $translator,
@@ -1471,6 +1328,48 @@ trait Callback
         }
 
         $this->authService->logout();
+        return $this->redirectToMain();
+    }
+
+    public function tfaCheckBeforeRedirects(string $providerName, TokenRepository $tR, UserInvRepository $uiR): ResponseInterface
+    {
+        $identity = $this->authService->getIdentity();
+        $userId = $identity->getId();
+        if (null !== $userId) {
+            $userInv = $uiR->repoUserInvUserIdquery($userId);
+            if (null !== $userInv) {
+                $user = $userInv->getUser();
+                if (null !== $user) {
+                    if ($this->sR->getSetting('enable_tfa') == '1') {
+                        $this->tfaIsEnabledBlockBaseController($userId);
+                        $enabled = $user->is2FAEnabled();
+                        if ($enabled == false) {
+                            $this->session->set('pending_2fa_user_id', $userId);
+                            return $this->webService->getRedirectResponse('auth/showSetup');
+                        }
+                        $this->session->set('verified_2fa_user_id', $userId);
+                        return $this->webService->getRedirectResponse('auth/verifyLogin');
+                    }
+                    $this->tfaNotEnabledUnblockBaseController($userId);
+                    $status = $userInv->getActive();
+                    $userRoles = $this->manager->getRolesByUserId($userId);
+                    $isAdminUser = false;
+                    foreach ($userRoles as $role) {
+                        if ($role->getName() === 'admin') {
+                            $isAdminUser = true;
+                            break;
+                        }
+                    }
+                    if ($status || $isAdminUser) {
+                        $isAdminUser ? $this->disableToken($tR, '1', $providerName) : '';
+                        $this->session->regenerateId();
+                        return $this->redirectToInvoiceIndex();
+                    }
+                    $this->disableToken($tR, $userId, $this->getTokenType($providerName));
+                    return $this->redirectToAdminMustMakeActive();
+                }
+            }
+        }
         return $this->redirectToMain();
     }
 
