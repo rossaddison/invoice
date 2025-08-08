@@ -9,10 +9,15 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\OrderHelper;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
@@ -21,12 +26,15 @@ use Yiisoft\Yii\DataView\GridView;
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Router\CurrentRoute $currentRoute
- * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $families
+ * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
+ * @var string $sortString
+ * @psalm-var positive-int $page
  */
 
 echo $alert;
@@ -87,9 +95,10 @@ $toolbar = Div::tag();
             withSorting: true,
         ),
         new DataColumn(
-            'id',
+            'family_name',
             header: $translator->translate('family'),
             content: static fn(Family $model) => Html::encode($model->getFamily_name() ?? ''),
+            withSorting: true,
         ),
         new DataColumn(
             'category_primary_id',
@@ -146,28 +155,38 @@ $toolbar = Div::tag();
     ];
 ?>
 <?php
+$urlCreator = new UrlCreator($urlGenerator);
+$urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
+$sort = Sort::only(['id'])
+        ->withOrderString($sortString);
+$toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
+    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+    Form::tag()->close();
+$sortedAndPagedPaginator = (new OffsetPaginator($families))
+    ->withPageSize($s->positiveListLimit())
+    ->withCurrentPage($page)
+    ->withSort($sort)
+    ->withToken(PageToken::next((string) $page));
 $grid_summary = $s->grid_summary(
-    $paginator,
+    $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
     $translator->translate('families'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-product'])
 ->columns(...$columns)
-->dataReader($paginator)
+->dataReader($sortedAndPagedPaginator)
+->urlCreator($urlCreator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->multiSort(true)
 ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
 ->header($header)
 ->id('w4-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
 ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])

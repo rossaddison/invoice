@@ -53,22 +53,22 @@ final class FamilyController extends BaseController
      * @param csR $csR
      */
     public function index(
+        Request $request,
         CurrentRoute $currentRoute,
         fR $familyRepository,
         cpR $cpR,
         csR $csR,
     ): \Yiisoft\DataResponse\DataResponse {
-        $familys = $this->familys($familyRepository);
+        $families = $this->familys($familyRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($familys))
-            ->withPageSize($this->sR->positiveListLimit())
-            ->withCurrentPage($currentPageNeverZero);
+        $query_params = $request->getQueryParams();
         $parameters = [
             'alert' => $this->alert(),
-            'familys' => $familys,
-            'paginator' => $paginator,
+            'families' => $families,
+            'page' => $currentPageNeverZero,
+            'sortString' => $query_params['sort'] ?? '-id',
             /**
              * The family repository does not include a loaded query
              * because there are no relations (for backward compatibility purposes) therefore
