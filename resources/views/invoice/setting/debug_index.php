@@ -105,7 +105,7 @@ $toolbar = Div::tag();
             filter: (new DropdownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
         ),
         new DataColumn(
-            property: 'setting_value',    
+            property: 'setting_value',
             header: $translator->translate('setting.value'),
             content: static fn(Setting $model) => Html::encode($model->getSetting_value()),
             withSorting: true,
