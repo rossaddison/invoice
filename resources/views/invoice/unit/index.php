@@ -73,17 +73,17 @@ $toolbar = Div::tag();
     <?php
         $columns = [
             new DataColumn(
-                'unit_id',
+                property: 'unit_id',
                 header: $translator->translate('id'),
                 content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
             ),
             new DataColumn(
-                'unit_name',
+                property: 'unit_name',
                 header: $translator->translate('unit.name'),
                 content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
             ),
             new DataColumn(
-                'unit_name_plrl',
+                property: 'unit_name_plrl',
                 header: $translator->translate('unit.name.plrl'),
                 content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
             ),

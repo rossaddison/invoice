@@ -28,7 +28,6 @@ use Ramsey\Uuid\Uuid;
 // Yii
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Cache\ArrayCache;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Mysql\Connection;
@@ -40,6 +39,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -79,21 +79,38 @@ final class SettingController extends BaseController
      *
      * @param CurrentRoute $currentRoute
      */
-    public function debug_index(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse
-    {
+    public function debug_index(
+        FastRouteGenerator $urlFastRouteGenerator,
+        CurrentRoute $currentRoute,
+        Request $request,
+        sR $sR,
+    ): \Yiisoft\DataResponse\DataResponse {
+
         $pageNum = (int) $currentRoute->getArgument('page', '1');
+        $query_params = $request->getQueryParams();
+        /**
+         * @var string $query_params['page']
+         */
+        $currentPage = $query_params['page'] ?? $pageNum;
         /** @psalm-var positive-int $currentPageNeverZero */
-        $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
-        $paginator = (new OffsetPaginator($this->settings()))
-        ->withPageSize($this->sR->positiveListLimit())
-        ->withCurrentPage($currentPageNeverZero);
-        $canEdit = $this->rbac();
+        $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
+        $settings = $this->settings();
+        if (isset($query_params['setting_key']) && !empty($query_params['setting_key'])) {
+            $settings = $sR->filter_setting_key((string) $query_params['setting_key']);
+        }
+        if (isset($query_params['setting_value']) && !empty($query_params['setting_value'])) {
+            $settings = $sR->filter_setting_value((string) $query_params['setting_value']);
+        }
         $parameters = [
-            'paginator' => $paginator,
             'alert' => $this->alert(),
-            'canEdit' => $canEdit,
-            'settings' => $this->settings(),
-            'session' => $this->session,
+            'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
+            'optionsDataSettingsKeyDropDownFilter' => $this->optionsDataSettingsKey($sR),
+            'optionsDataSettingsValueDropDownFilter' => $this->optionsDataSettingsValue($sR),
+            'page' => $currentPageNeverZero,
+            'settings' => $settings,
+            /** @var string $query_params['sort'] */
+            'sortString' => $query_params['sort'] ?? '-id, setting_key, setting_value',
+            'urlFastRouteGenerator' => $urlFastRouteGenerator,
         ];
         return $this->viewRenderer->render('debug_index', $parameters);
     }
@@ -558,7 +575,7 @@ final class SettingController extends BaseController
             $setting->setSetting_value((string) $limit);
             $this->sR->save($setting);
         }
-        return $this->webService->getRedirectResponse($origin . '/index');
+        return $this->webService->getRedirectResponse($origin !== 'setting' ? $origin . '/index' : 'setting/debug_index');
     }
 
     /**
@@ -748,5 +765,39 @@ final class SettingController extends BaseController
             return true;
         }
         return false;
+    }
+
+    public function optionsDataSettingsKey(sR $sR): array
+    {
+        $optionsDataSettings = [];
+        $settings = $sR->findAllPreloaded();
+        /**
+         * @var Setting $setting
+         */
+        foreach ($settings as $setting) {
+            $settingKey = $setting->getSetting_key();
+            // Remove repeats
+            if (!in_array($setting->getSetting_key(), $optionsDataSettings)) {
+                $optionsDataSettings[$settingKey] = $setting->getSetting_key();
+            }
+        }
+        return $optionsDataSettings;
+    }
+
+    public function optionsDataSettingsValue(sR $sR): array
+    {
+        $optionsDataSettings = [];
+        $settings = $sR->findAllPreloaded();
+        /**
+         * @var Setting $setting
+         */
+        foreach ($settings as $setting) {
+            $settingValue = $setting->getSetting_value();
+            // Remove repeats
+            if (!in_array($setting->getSetting_value(), $optionsDataSettings)) {
+                $optionsDataSettings[$settingValue] = $setting->getSetting_value();
+            }
+        }
+        return $optionsDataSettings;
     }
 }

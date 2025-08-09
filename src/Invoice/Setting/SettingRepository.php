@@ -120,6 +120,20 @@ final class SettingRepository extends Select\Repository
         return (string) $params['env'];
     }
 
+    public function filter_setting_key(string $setting_key): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['setting_key' => ltrim(rtrim($setting_key))]);
+        return $this->prepareDataReader($query);
+    }
+
+    public function filter_setting_value(string $setting_value): EntityReader
+    {
+        $select = $this->select();
+        $query = $select->where(['setting_value' => ltrim(rtrim($setting_value))]);
+        return $this->prepareDataReader($query);
+    }
+
     /**
      * @return array
      */
@@ -1414,19 +1428,20 @@ final class SettingRepository extends Select\Repository
                     'label' => 'Sandbox',
                 ],
             ],
-            'OpenBanking' => [
-                // Only Wonderful has an apiToken
+            'Open_Banking_With_Wonderful' => [
                 'apiToken' => [
                     'type' => 'password',
-                    'label' => 'Token',
+                    'label' => 'API Token',
                 ],
-                /**
-                 * Related logic: see settings/views/partial_settings_online_payment.php line 115 $key
-                 * Related logic: see resources/messages/en/app.php online.payment.thirdPartyProvider
-                 */
-                'thirdPartyProvider' => [
-                    'type' => 'text',
-                    'label' => 'Third Party Provider',
+            ],
+            'Open_Banking_With_Tink' => [
+                'clientId' => [
+                    'type' => 'password',
+                    'label' => 'Client Id',
+                ],
+                'clientSecret' => [
+                    'type' => 'password',
+                    'label' => 'Client Secret',
                 ],
             ],
             'StoreCove' => [
