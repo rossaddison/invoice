@@ -16,6 +16,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
@@ -91,26 +92,24 @@ $toolbar = Div::tag();
 <?php
     $columns = [
         new DataColumn(
-            'id',
+            property: 'id',
             header: $translator->translate('id'),
             content: static fn(Setting $model) => Html::encode($model->getSetting_id()),
             withSorting: true,
         ),
         new DataColumn(
-            field: 'setting_key',
-            property: 'filter_setting_key',
+            property: 'setting_key',
             header: $translator->translate('setting.key'),
             content: static fn(Setting $model) => Html::encode($model->getSetting_key()),
-            filter: $optionsDataSettingsKeyDropDownFilter,
             withSorting: true,
+            filter: (new DropDownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
         ),
         new DataColumn(
-            field: 'setting_value',
-            property: 'filter_setting_value',
+            property: 'setting_value',    
             header: $translator->translate('setting.value'),
             content: static fn(Setting $model) => Html::encode($model->getSetting_value()),
-            filter: $optionsDataSettingsValueDropDownFilter,
             withSorting: true,
+            filter: (new DropDownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
@@ -149,7 +148,7 @@ $toolbar = Div::tag();
 <?php
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
-$sort = Sort::only(['id'])
+$sort = Sort::only(['id', 'setting_key', 'setting_value'])
         ->withOrderString($sortString);
 
 $sortedAndPagedPaginator = (new OffsetPaginator($settings))

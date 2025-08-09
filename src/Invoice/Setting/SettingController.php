@@ -95,11 +95,11 @@ final class SettingController extends BaseController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
         $settings = $this->settings();
-        if (isset($query_params['filter_setting_key']) && !empty($query_params['filter_setting_key'])) {
-            $settings = $sR->filter_setting_key((string) $query_params['filter_setting_key']);
+        if (isset($query_params['setting_key']) && !empty($query_params['setting_key'])) {
+            $settings = $sR->filter_setting_key((string) $query_params['setting_key']);
         }
-        if (isset($query_params['filter_setting_value']) && !empty($query_params['filter_setting_value'])) {
-            $settings = $sR->filter_setting_value((string) $query_params['filter_setting_value']);
+        if (isset($query_params['setting_value']) && !empty($query_params['setting_value'])) {
+            $settings = $sR->filter_setting_value((string) $query_params['setting_value']);
         }
         $parameters = [
             'alert' => $this->alert(),
@@ -109,7 +109,7 @@ final class SettingController extends BaseController
             'page' => $currentPageNeverZero,
             'settings' => $settings,
             /** @var string $query_params['sort'] */
-            'sortString' => $query_params['sort'] ?? '-id',
+            'sortString' => $query_params['sort'] ?? '-id, setting_key, setting_value',
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
         ];
         return $this->viewRenderer->render('debug_index', $parameters);
