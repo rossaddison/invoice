@@ -102,14 +102,14 @@ $toolbar = Div::tag();
             header: $translator->translate('setting.key'),
             content: static fn(Setting $model) => Html::encode($model->getSetting_key()),
             withSorting: true,
-            filter: (new DropDownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
+            filter: (new DropdownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
         ),
         new DataColumn(
             property: 'setting_value',    
             header: $translator->translate('setting.value'),
             content: static fn(Setting $model) => Html::encode($model->getSetting_value()),
             withSorting: true,
-            filter: (new DropDownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
+            filter: (new DropdownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
         ),
         new ActionColumn(buttons: [
             new ActionButton(
