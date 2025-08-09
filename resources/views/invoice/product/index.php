@@ -16,6 +16,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
@@ -99,57 +100,49 @@ $toolbar = Div::tag();
             withSorting: true,
         ),
         new DataColumn(
-            field: 'family_id',
-            property: 'filter_family_id',
+            property: 'family_id',
             header: $translator->translate('family.name'),
             encodeHeader: true,
             content: static fn(Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
-            filter: $optionsDataFamiliesDropdownFilter,
+            filter: (new DropdownFilter())->optionsData($optionsDataFamiliesDropdownFilter),
             visible: true,
             withSorting: true,
         ),
         new DataColumn(
-            /**
-             * Use: Full parameter input example of DataColumn
-             * Related logic: see Yiisoft\Yii\DataView\Column\DataColumn bool|array|FilterWidget|DropdownFilter|TextInputFilter
-             */
-            field: 'product_sku',
-            property: 'filter_product_sku',
+            property: 'product_sku',
             header: $translator->translate('product.sku'),
             encodeHeader: true,
             content: static fn(Product $model): string => Html::encode($model->getProduct_sku()),
-            // bool|array   bool => TextInputFilter e.g. filter: true; array => DropDownFilter e.g. as below
-            filter: $optionsDataProductsDropdownFilter,
+            filter: (new DropdownFilter())->optionsData($optionsDataProductsDropdownFilter),
             visible: true,
             withSorting: false,
         ),
         new DataColumn(
-            'product_description',
+            property: 'product_description',
             header: $translator->translate('product.description'),
             content: static fn(Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
             withSorting: true,
         ),
         new DataColumn(
-            field: 'product_price',
-            property: 'filter_product_price',
+            property: 'product_price',
             header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
             content: static fn(Product $model): string => Html::encode($model->getProduct_price()),
             filter: true,
             withSorting: false,
         ),
         new DataColumn(
-            'product_price_base_quantity',
+            property: 'product_price_base_quantity',
             header: $translator->translate('product.price.base.quantity'),
             content: static fn(Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
             withSorting: true,
         ),
         new DataColumn(
-            'product_unit',
+            property: 'product_unit',
             header: $translator->translate('product.unit'),
             content: static fn(Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
         ),
         new DataColumn(
-            'tax_rate_id',
+            property: 'tax_rate_id',
             header: $translator->translate('tax.rate'),
             content: static fn(Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
                         ? Html::encode($model->getTaxrate()?->getTaxRateName())
@@ -157,7 +150,7 @@ $toolbar = Div::tag();
             withSorting: true,
         ),
         new DataColumn(
-            'product_tariff',
+            property: 'product_tariff',
             header: $s->getSetting('sumex') ? $translator->translate('product.tariff') . '(' . $s->getSetting('currency_symbol') . ')' : '',
             content: static fn(Product $model): string => ($s->getSetting('sumex')
                         ? Html::encode($model->getProduct_tariff())

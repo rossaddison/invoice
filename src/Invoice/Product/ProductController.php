@@ -428,18 +428,18 @@ final class ProductController extends BaseController
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
         $products = $pR->findAllPreloaded();
-        if (isset($query_params['filter_family_id']) && !empty($query_params['filter_family_id'])) {
-            $products = $pR->filter_family_id((string) $query_params['filter_family_id']);
+        if (isset($query_params['family_id']) && !empty($query_params['family_id'])) {
+            $products = $pR->filter_family_id((string) $query_params['family_id']);
         }
-        if (isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) {
-            $products = $pR->filter_product_sku((string) $query_params['filter_product_sku']);
+        if (isset($query_params['product_sku']) && !empty($query_params['product_sku'])) {
+            $products = $pR->filter_product_sku((string) $query_params['product_sku']);
         }
-        if (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price'])) {
-            $products = $pR->filter_product_price((string) $query_params['filter_product_price']);
+        if (isset($query_params['product_price']) && !empty($query_params['product_price'])) {
+            $products = $pR->filter_product_price((string) $query_params['product_price']);
         }
-        if ((isset($query_params['filter_product_sku']) && !empty($query_params['filter_product_sku'])) &&
-           (isset($query_params['filter_product_price']) && !empty($query_params['filter_product_price']))) {
-            $products = $pR->filter_product_sku_price((string) $query_params['filter_product_price'], (string) $query_params['filter_product_sku']);
+        if ((isset($query_params['product_sku']) && !empty($query_params['product_sku'])) &&
+           (isset($query_params['product_price']) && !empty($query_params['product_price']))) {
+            $products = $pR->filter_product_sku_price((string) $query_params['product_price'], (string) $query_params['product_sku']);
         }
 
         $parameters = [
@@ -450,7 +450,7 @@ final class ProductController extends BaseController
             'optionsDataFamiliesDropdownFilter' => $this->optionsDataFamilies($fR),
             'products' => $products,
             /** @var string $query_params['sort'] */
-            'sortString' => $query_params['sort'] ?? '-id',
+            'sortString' => $query_params['sort'] ?? '-id, -product_sku',
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
         ];
         return $this->viewRenderer->render('index', $parameters);
