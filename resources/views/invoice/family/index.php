@@ -89,13 +89,13 @@ $toolbar = Div::tag();
 <?php
     $columns = [
         new DataColumn(
-            'id',
+            property: 'id',
             header: $translator->translate('id'),
             content: static fn(Family $model) => Html::encode($model->getFamily_id()),
             withSorting: true,
         ),
         new DataColumn(
-            'family_name',
+            property: 'family_name',
             header: $translator->translate('family'),
             content: static fn(Family $model) => Html::encode($model->getFamily_name() ?? ''),
             withSorting: true,
