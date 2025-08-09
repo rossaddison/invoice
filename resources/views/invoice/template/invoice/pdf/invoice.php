@@ -22,6 +22,7 @@ use Yiisoft\Html\Html;
  * @var bool $show_item_discounts
  * @var string $cldr
  * @var string $company_logo_and_address    setting/company_logo_and_address.php
+ * @var string $delivery_location
  * @var string $top_custom_fields           appear at the top of quote.pdf
  * @var string $view_custom_fields          appear at the bottom of quote.pdf
  */
@@ -109,8 +110,7 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
             </tr>
             <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
         </table>
-    </div>
-
+    </div>    
     <h3 class="invoice-title"><b><?= $vat === '0' ? Html::encode($translator->translate('invoice') . ' ' . ($inv->getNumber() ?? '#')) : ''; ?></b></h3>
 
     <table class="items table-primary table table-borderless no-margin">
@@ -259,6 +259,9 @@ if ($items) {
         </tr>
         </tbody>
     </table>
+    <div style="page-break-before: always">
+        <?php echo $delivery_location; ?>
+    </div>
 </main>    
 <footer class="notes">
     <br>

@@ -76,7 +76,7 @@ echo Form::tag()
                 <?= Field::select($form, 'group_id')
     ->label($translator->translate('group'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : $defaultGroupId))
+    ->value($defaultGroupId ?: 0)
     ->prompt($translator->translate('none'))
     ->optionsData($groups)
     ->hint($translator->translate('hint.this.field.is.required'));

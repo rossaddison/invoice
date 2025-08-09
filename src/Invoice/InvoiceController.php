@@ -74,7 +74,6 @@ final class InvoiceController extends BaseController
              * whether this setting exists. If not THIS function will be run.
              * CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
              */
-            'default_settings_exist' => '1',
 
             'bootstrap5_offcanvas_enable' => 0,
             'bootstrap5_offcanvas_placement' => 'top',
@@ -97,6 +96,7 @@ final class InvoiceController extends BaseController
             'default_quote_group' => 2,
             'default_invoice_terms' => '',
             'default_sales_order_group' => 3,
+            'default_settings_exist' => '1',
             'default_language' => 'English',
             //paginator list limit
             'default_list_limit' => 120,

@@ -187,7 +187,7 @@ final class InvController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->date_helper = new DateHelper($sR);
         $this->number_helper = new NumberHelper($sR);
-        $this->pdf_helper = new PdfHelper($sR, $session);
+        $this->pdf_helper = new PdfHelper($sR, $session, $translator);
     }
 
     /**
@@ -1413,6 +1413,7 @@ final class InvController extends BaseController
      * @param int $id
      * @param CCR $ccR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param CVR $cvR
      * @param ETR $etR
      * @param ICR $icR
@@ -1429,6 +1430,7 @@ final class InvController extends BaseController
         int $id,
         CCR $ccR,
         CFR $cfR,
+        DLR $dlR,
         CVR $cvR,
         ETR $etR,
         ICR $icR,
@@ -1560,6 +1562,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CCR $ccR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param CVR $cvR
      * @param IAR $iaR
      * @param ICR $icR
@@ -1590,6 +1593,7 @@ final class InvController extends BaseController
         CR $cR,
         CCR $ccR,
         CFR $cfR,
+        DLR $dlR,
         CVR $cvR,
         IAR $iaR,
         ICR $icR,
@@ -1634,7 +1638,7 @@ final class InvController extends BaseController
                 $so = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                 // true => invoice ie. not quote
                 // If $stream is false => pdfhelper->generate_inv_pdf => mpdfhelper->pdf_Create => filename returned
-                $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $viewrenderer);
+                $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $viewrenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template($inv_id, true, $email_body, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     $mail_subject = $template_helper->parse_template($inv_id, true, $subject, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
@@ -1676,6 +1680,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CCR $ccR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param CVR $cvR
      * @param GR $gR
      * @param IAR $iaR
@@ -1702,6 +1707,7 @@ final class InvController extends BaseController
         CR $cR,
         CCR $ccR,
         CFR $cfR,
+        DLR $dlR,
         CVR $cvR,
         GR $gR,
         IAR $iaR,
@@ -1780,6 +1786,7 @@ final class InvController extends BaseController
                     $cR,
                     $ccR,
                     $cfR,
+                    $dlR,
                     $cvR,
                     $iaR,
                     $icR,
@@ -1964,6 +1971,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
@@ -1975,7 +1983,7 @@ final class InvController extends BaseController
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function html(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse
+    public function html(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse
     {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
@@ -1995,6 +2003,7 @@ final class InvController extends BaseController
                     $cR,
                     $cvR,
                     $cfR,
+                    $dlR,
                     $iiR,
                     $iiaR,
                     $inv,
@@ -2122,12 +2131,12 @@ final class InvController extends BaseController
                                                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
                 'defaultInvoiceGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_invoice_group')))
                                             ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName
-                                                                                               : $this->sR->getSetting('i.not_set'))
-                                            : $this->sR->getSetting('i.not_set'),
+                                                                                               : $this->sR->getSetting('not.set'))
+                                            : $this->sR->getSetting('not.set'),
                 'defaultInvoicePaymentMethod' => null !== ($pmR = $pmR->repoPaymentMethodquery($this->sR->getSetting('invoice_default_payment_method')))
                                             ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 ? $paymentMethodName
-                                                                                                : $this->sR->getSetting('i.not_set'))
-                                            : $this->sR->getSetting('i.not_set'),
+                                                                                                : $this->sR->getSetting('not.set'))
+                                            : $this->sR->getSetting('not.set'),
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
                 'invs' => $invs,
@@ -2198,6 +2207,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param SOR $soR
      * @param IAR $iaR
@@ -2210,17 +2220,17 @@ final class InvController extends BaseController
      * @param UIR $uiR
      * @param Request $request
      */
-    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
+    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
     {
         // include is a value of 0 or 1 passed from inv.js function inv_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the inv or not.
-        $inv_id = (string) $this->session->get('inv_id');
+        $inv_id = (string) ($this->session->get('inv_id') ?? '0');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
         if ($inv_amount) {
             $custom = (($include === 1) ? true : false);
             $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-            $pdfhelper = new PdfHelper($this->sR, $this->session);
+            $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
             // The invoice will be streamed if set under Settings...View...Invoices...Pdf Settings
             $stream = ($this->sR->getSetting('pdf_stream_inv') == '0') ? false : true;
             // If we are required to mark invoices as 'sent' when sent.
@@ -2231,7 +2241,7 @@ final class InvController extends BaseController
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
                 $so = !empty($inv->getSo_id()) ? $soR->repoSalesOrderUnloadedquery($inv->getSo_id()) : null;
-                $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 return $this->pdf_archive_message();
             } // $inv
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -2261,6 +2271,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
@@ -2272,14 +2283,14 @@ final class InvController extends BaseController
      * @param SOR $soR
      * @param SumexR $sumexR
      */
-    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
+    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
     {
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
                 $inv_custom_values = $this->inv_custom_values((string) $inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                $pdfhelper = new PdfHelper($this->sR, $this->session);
+                $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
@@ -2290,7 +2301,7 @@ final class InvController extends BaseController
                 $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 } //inv
             } //$inv_amount
         } //$inv_id
@@ -2301,6 +2312,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
@@ -2312,14 +2324,14 @@ final class InvController extends BaseController
      * @param SOR $soR
      * @param SumexR $sumexR
      */
-    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
+    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
     {
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
                 $inv_custom_values = $this->inv_custom_values((string) $inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                $pdfhelper = new PdfHelper($this->sR, $this->session);
+                $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
                 // The invoice will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
@@ -2330,7 +2342,7 @@ final class InvController extends BaseController
                 $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 } //inv
             } //inv_amount
         } // inv_id
@@ -2341,6 +2353,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
@@ -2353,7 +2366,7 @@ final class InvController extends BaseController
      * @param UPR $upR
      * @return mixed
      */
-    public function pdf_download_include_cf(#[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
+    public function pdf_download_include_cf(#[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
     {
         if ($url_key) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
@@ -2368,7 +2381,7 @@ final class InvController extends BaseController
                 if ($inv_amount) {
                     $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
                     // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                    $pdfhelper = new PdfHelper($this->sR, $this->session);
+                    $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
                     // The invoice will be not be streamed ie. shown (in a separate tab see setting), but will be downloaded
                     $stream = false;
                     $c_f = true;
@@ -2382,7 +2395,7 @@ final class InvController extends BaseController
                         $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                         // Because the invoice is not streamed an aliase of temporary folder file location is returned
                         /** @var string $temp_aliase */
-                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -2425,6 +2438,7 @@ final class InvController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
@@ -2437,7 +2451,7 @@ final class InvController extends BaseController
      * @param UPR $upR
      * @return mixed
      */
-    public function pdf_download_exclude_cf(#[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
+    public function pdf_download_exclude_cf(#[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
     {
         if ($urlKey) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
@@ -2452,7 +2466,7 @@ final class InvController extends BaseController
                 if ($inv_amount) {
                     $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
                     // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                    $pdfhelper = new PdfHelper($this->sR, $this->session);
+                    $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
                     // The invoice will be not be streamed ie. shown (in a separate tab see setting), but will be downloaded
                     $stream = false;
                     $c_f = false;
@@ -2466,7 +2480,7 @@ final class InvController extends BaseController
                         $so = $soR->repoSalesOrderLoadedquery($inv->getSo_id());
                         // Because the invoice is not streamed an aliase of temporary folder file location is returned
                         /** @var string $temp_aliase */
-                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**

@@ -32,6 +32,7 @@ use App\Invoice\Entity\TaxRate;
 // Inv
 use App\User\UserService;
 use App\User\User;
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Inv\InvService;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvAmount\InvAmountService;
@@ -71,7 +72,6 @@ use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
 use App\Invoice\Contract\ContractRepository as ContractRepo;
 use App\Invoice\CustomValue\CustomValueRepository as CVR;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\Group\GroupRepository as GR;
@@ -194,7 +194,7 @@ final class QuoteController extends BaseController
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->number_helper = new NumberHelper($sR);
-        $this->pdf_helper = new PdfHelper($sR, $session);
+        $this->pdf_helper = new PdfHelper($sR, $session, $translator);
     }
 
     /**
@@ -336,8 +336,8 @@ final class QuoteController extends BaseController
                             $this->default_taxes($quote, $trR, $formHydrator);
                             // Inform the user of generated quote number for draft setting
                             $this->flashMessage('info', $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                            ? $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('yes')
-                            : $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('no'));
+                            ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
+                            : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'));
                         } //$model_id
                         $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         if ($origin == 'main' || $origin == 'quote') {
@@ -612,8 +612,8 @@ final class QuoteController extends BaseController
                             $this->flashMessage(
                                 'info',
                                 $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                                  ? $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('yes')
-                                  : $this->translator->translate('generate_quote_number_for_draft') . '=>' . $this->translator->translate('no'),
+                                  ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
+                                  : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'),
                             );
                             //return response to quote.js to reload page at location
                             return $this->factory->createResponse(Json::encode($parameters));
@@ -1125,6 +1125,7 @@ final class QuoteController extends BaseController
      * @param CR $cR
      * @param CCR $ccR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param CVR $cvR
      * @param IAR $iaR
      * @param ICR $icR
@@ -1154,6 +1155,7 @@ final class QuoteController extends BaseController
         CR $cR,
         CCR $ccR,
         CFR $cfR,
+        DLR $dlR,
         CVR $cvR,
         IAR $iaR,
         ICR $icR,
@@ -1180,7 +1182,7 @@ final class QuoteController extends BaseController
             if ($quote_entity) {
                 $stream = false;
                 /** @var string $pdf_template_target_path */
-                $pdf_template_target_path = $this->pdf_helper->generate_quote_pdf($quote_id, $quote_entity->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $viewrenderer);
+                $pdf_template_target_path = $this->pdf_helper->generate_quote_pdf($quote_id, $quote_entity->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $viewrenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template($quote_id, false, $email_body, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     $mail_subject = $template_helper->parse_template($quote_id, false, $subject, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
@@ -1220,6 +1222,7 @@ final class QuoteController extends BaseController
      * @param CR $cR
      * @param CCR $ccR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param CVR $cvR
      * @param GR $gR
      * @param IAR $iaR
@@ -1244,6 +1247,7 @@ final class QuoteController extends BaseController
         CR $cR,
         CCR $ccR,
         CFR $cfR,
+        DLR $dlR,
         CVR $cvR,
         GR $gR,
         IAR $iaR,
@@ -1317,7 +1321,7 @@ final class QuoteController extends BaseController
 
                 $this->generate_quote_number_if_applicable((string) $quote_id, $qR, $this->sR, $gR);
                 // Custom fields are automatically included on the quote
-                if ($this->email_stage_1((string) $quote_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles, $cR, $ccR, $cfR, $cvR, $iaR, $icR, $qiaR, $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR, $uiR, $this->viewRenderer)) {
+                if ($this->email_stage_1((string) $quote_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles, $cR, $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR, $uiR, $this->viewRenderer)) {
                     $this->sR->quote_mark_sent((string) $quote_id, $qR);
                     $this->flashMessage('success', $this->translator->translate('email.successfully.sent'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
@@ -1578,8 +1582,8 @@ final class QuoteController extends BaseController
                                                         ? (int) $this->sR->getSetting('default_list_limit') : 1,
                 'defaultQuoteGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_quote_group')))
                                             ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName
-                                                                                             : $this->sR->getSetting('i.not_set'))
-                                            : $this->sR->getSetting('i.not_set'),
+                                                                                             : $this->sR->getSetting('not_set'))
+                                            : $this->sR->getSetting('not_set'),
                 'quoteStatuses' => $quote_statuses,
                 'max' => (int) $sR->getSetting('default_list_limit'),
                 'qR' => $quoteRepo,
@@ -1705,6 +1709,7 @@ final class QuoteController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param QAR $qaR
      * @param QCR $qcR
@@ -1716,7 +1721,7 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the quote or not.
@@ -1726,7 +1731,7 @@ final class QuoteController extends BaseController
             $custom = (($include === 1) ? true : false);
             $quote_custom_values = $this->quote_custom_values((string) $this->session->get('quote_id'), $qcR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-            $pdfhelper = new PdfHelper($sR, $this->session);
+            $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
             // The quote will be streamed ie. shown, and not archived
             $stream = true;
             // If we are required to mark quotes as 'sent' when sent.
@@ -1736,7 +1741,7 @@ final class QuoteController extends BaseController
             }
             $quote = $qR->repoQuoteUnloadedquery($quote_id);
             if ($quote) {
-                $pdfhelper->generate_quote_pdf($quote_id, $quote->getUser_id(), $stream, $custom, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                $pdfhelper->generate_quote_pdf($quote_id, $quote->getUser_id(), $stream, $custom, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
                 $parameters = ($include == '1' ? ['success' => 1] : ['success' => 0]);
                 return $this->factory->createResponse(Json::encode($parameters));
             } // $inv
@@ -1750,6 +1755,7 @@ final class QuoteController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param QAR $qaR
      * @param QCR $qcR
@@ -1760,14 +1766,14 @@ final class QuoteController extends BaseController
      * @param SR $sR
      * @param UIR $uiR
      */
-    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
+    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
     {
         if ($quote_id) {
             $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote_id) > 0) ? $qaR->repoQuotequery((string) $quote_id) : null);
             if ($quote_amount) {
                 $quote_custom_values = $this->quote_custom_values((string) $quote_id, $qcR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                $pdfhelper = new PdfHelper($sR, $this->session);
+                $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
@@ -1777,7 +1783,7 @@ final class QuoteController extends BaseController
                 }
                 $quote = $qR->repoQuoteUnloadedquery((string) $quote_id);
                 if ($quote) {
-                    $pdfhelper->generate_quote_pdf((string) $quote_id, $quote->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                    $pdfhelper->generate_quote_pdf((string) $quote_id, $quote->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
                 }
             }
         } //quote_id
@@ -1788,6 +1794,7 @@ final class QuoteController extends BaseController
      * @param CR $cR
      * @param CVR $cvR
      * @param CFR $cfR
+     * @param DLR $dlR
      * @param GR $gR
      * @param QAR $qaR
      * @param QCR $qcR
@@ -1798,14 +1805,14 @@ final class QuoteController extends BaseController
      * @param SR $sR
      * @param UIR $uiR
      */
-    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
+    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
     {
         if ($quote_id) {
             $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote_id) > 0) ? $qaR->repoQuotequery((string) $quote_id) : null);
             if ($quote_amount) {
                 $quote_custom_values = $this->quote_custom_values((string) $quote_id, $qcR);
                 // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                $pdfhelper = new PdfHelper($sR, $this->session);
+                $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
@@ -1815,7 +1822,7 @@ final class QuoteController extends BaseController
                 }
                 $quote = $qR->repoQuoteUnloadedquery((string) $quote_id);
                 if ($quote) {
-                    $pdfhelper->generate_quote_pdf((string) $quote_id, $quote->getUser_id(), $stream, false, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                    $pdfhelper->generate_quote_pdf((string) $quote_id, $quote->getUser_id(), $stream, false, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
                 }
             }
         } // quote_id

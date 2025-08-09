@@ -149,7 +149,7 @@ final class DeliveryLocationController extends BaseController
                          * @psalm-suppress MixedArgumentTypeCoercion
                          */
                         return $this->webService->getRedirectResponse($url, [
-                            'inv_id' => $origin_id,
+                            'id' => $origin_id,
                             '_language' => $currentRoute->getArgument('_language'),
                         ]);
                     }

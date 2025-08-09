@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var int $defaultGroupId
  * @var string $actionName
  * @var string $alert
  * @var string $csrf
@@ -72,7 +73,7 @@ echo Form::tag()
                 <?= Field::select($form, 'group_id')
     ->label($translator->translate('quote.group'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getGroup_id() >= 0 ? $form->getGroup_id() : 2))
+    ->value($defaultGroupId ?: 0)
     ->prompt($translator->translate('none'))
     ->optionsData($groups)
     ->tabIndex(2)

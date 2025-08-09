@@ -51,7 +51,7 @@ class MailerHelper
         CFR $cfR,
         CVR $cvR,
     ) {
-        $this->pdfhelper = new PdfHelper($this->s, $this->session);
+        $this->pdfhelper = new PdfHelper($this->s, $this->session, $this->translator);
         $this->templatehelper = new TemplateHelper($this->s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $this->invoicehelper = new InvoiceHelper($this->s, $this->session);
         $this->logger = $logger;

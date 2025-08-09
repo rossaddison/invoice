@@ -21,7 +21,7 @@ use Yiisoft\Html\Html;
  * @var bool $show_item_discounts
  * @var string $cldr
  * @var string $company_logo_and_address    setting/company_logo_and_address.php
- *
+ * @var string $delivery_location
  * @var string $top_custom_fields           appear at the top of quote.pdf
  * @var string $view_custom_fields          appear at the bottom of quote.pdf
  */
@@ -253,7 +253,9 @@ if ($items) {
         </tr>
         </tbody>
     </table>
-
+    <div style="page-break-before: always">
+        <?php echo $delivery_location; ?>
+    </div>
 </main>
 
 <footer>

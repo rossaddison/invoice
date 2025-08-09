@@ -494,7 +494,7 @@ final class SalesOrderController extends BaseController
         return $custom_field_form_values;
     }
 
-    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR, SettingRepository $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR, SettingRepository $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the quote or not.
@@ -505,12 +505,12 @@ final class SalesOrderController extends BaseController
             $custom = (($include === (string) 1) ? true : false);
             $salesorder_custom_values = $this->salesorder_custom_values((string) $this->session->get('so_id'), $socR);
             // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-            $pdfhelper = new PdfHelper($sR, $this->session);
+            $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
             // The salesorder will be streamed ie. shown in the browser, and not archived
             $stream = true;
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if ($so) {
-                $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(), $stream, $custom, $salesorder_amount, $salesorder_custom_values, $cR, $cvR, $cfR, $soiR, $soiaR, $soR, $sotrR, $uiR, $this->viewRenderer, $this->translator);
+                $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(), $stream, $custom, $salesorder_amount, $salesorder_custom_values, $cR, $cvR, $cfR, $dlR, $soiR, $soiaR, $soR, $sotrR, $uiR, $this->viewRenderer, $this->translator);
                 $parameters = ($include == '1' ?
                 [
                     'success' => 1,

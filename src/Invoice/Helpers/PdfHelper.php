@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\QuoteAmount;
@@ -11,24 +12,18 @@ use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\SalesOrder;
 use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\InvItem;
-//use App\Invoice\Entity\UserInv;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
-//use App\Invoice\Libraries\Sumex;
-//use App\Invoice\InvAmount\InvAmountRepository;
-//use App\Invoice\Inv\InvRepository;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Sumex\SumexRepository;
-//use App\Invoice\UserInv\UserInvRepository;
-//use setasign\Fpdi\Fpdi;
-//use Yiisoft\Aliases\Aliases;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class PdfHelper
 {
     private readonly CountryHelper $countryhelper;
 
-    public function __construct(private readonly SR $s, private readonly Session $session)
+    public function __construct(private readonly SR $s, private readonly Session $session, private readonly Translator $translator)
     {
         $this->countryhelper = new CountryHelper();
     }
@@ -88,6 +83,7 @@ class PdfHelper
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
         \App\Invoice\CustomField\CustomFieldRepository $cfR,
+        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
         \App\Invoice\QuoteItem\QuoteItemRepository $qiR,
         \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR,
         \App\Invoice\Quote\QuoteRepository $qR,
@@ -104,7 +100,7 @@ class PdfHelper
                 // If a template has been selected in the dropdown use it otherwise use the default 'quote' template under
                 // views/invoice/template/quote/pdf/quote.pdf
                 $quote_template = (!empty($this->s->getSetting('pdf_quote_template')) ? $this->s->getSetting('pdf_quote_template') : 'quote');
-
+                $_language = $this->session->get('_language');
                 // Determine if discounts should be displayed if there are items on the quote
                 $items = ($qiR->repoCount($quote_id) > 0 ? $qiR->repoQuoteItemIdquery($quote_id) : null);
 
@@ -160,6 +156,7 @@ class PdfHelper
                             'isSalesOrder' => false,
                         ],
                     ),
+                    'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $quote->getDelivery_location_id(), $viewrenderer),
                     'userInv' => $userinv,
                     'client' => $cR->repoClientquery((string) $quote->getClient()?->getClient_id()),
                     'quote_amount' => $quote_amount,
@@ -174,7 +171,7 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $filename = $this->s->getSetting('i.quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
+                $filename = $this->s->getSetting('quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
                 return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
             }
         }
@@ -210,6 +207,7 @@ class PdfHelper
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
         \App\Invoice\CustomField\CustomFieldRepository $cfR,
+        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
         \App\Invoice\SalesOrderItem\SalesOrderItemRepository $soiR,
         \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR,
         \App\Invoice\SalesOrder\SalesOrderRepository $soR,
@@ -227,7 +225,7 @@ class PdfHelper
                 // If a template has been selected in the dropdown use it otherwise use the default 'salesorder' template under
                 // views/invoice/template/salesorder/pdf/salesorder.pdf
                 $salesorder_template = (!empty($this->s->getSetting('pdf_salesorder_template')) ? $this->s->getSetting('pdf_salesorder_template') : 'salesorder');
-
+                $_language = $this->session->get('_language') ?? 'en';
                 // Determine if discounts should be displayed if there are items on the salesorder
                 $items = ($soiR->repoCount($so_id) > 0 ? $soiR->repoSalesOrderItemIdquery($so_id) : null);
                 // e-invoicing requirement
@@ -330,6 +328,7 @@ class PdfHelper
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
         \App\Invoice\CustomField\CustomFieldRepository $cfR,
+        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
         \App\Invoice\InvItem\InvItemRepository $iiR,
         \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR,
         Inv $inv,
@@ -410,6 +409,7 @@ class PdfHelper
                         'isSalesOrder' => false,
                     ],
                 ),
+                'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $inv->getDelivery_location_id(), $viewrenderer),
                 'client' => $cR->repoClientquery((string) $inv->getClient()?->getClient_id()),
                 'inv_amount' => $inv_amount,
                 'cldr' => array_search($this->get_print_language($inv), $this->s->locale_language_array()),
@@ -450,6 +450,7 @@ class PdfHelper
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
         \App\Invoice\CustomField\CustomFieldRepository $cfR,
+        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
         \App\Invoice\InvItem\InvItemRepository $iiR,
         \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR,
         \App\Invoice\Inv\InvRepository $iR,
@@ -461,7 +462,7 @@ class PdfHelper
         if (null !== $inv_id) {
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
             if ($inv) {
-                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $iiR, $iiaR, $inv, $itrR, $uiR, $sumexR, $viewrenderer);
+                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $inv, $itrR, $uiR, $sumexR, $viewrenderer);
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
@@ -507,137 +508,27 @@ class PdfHelper
         };
     }
 
-    ///**
-    // *
-    // * @param InvRepository $iR
-    // * @param InvAmountRepository $iaR
-    // * @param SumexRepository $SumexR
-    // * @param $uiR
-    // * @param int $inv_id
-    // * @param bool $stream
-    // * @param bool $client
-    // * @throws \Exception
-    // * @psalm-suppress MissingReturnType
-    // */
-    //
-    //public function generate_inv_sumex(
-    //        InvRepository $iR,
-    //        InvAmountRepository $iaR,
-    //        SumexRepository $SumexR,
-    //        UserInvRepository $uiR,
-    //        int $inv_id,
-    //        bool $stream = true,
-    //        bool $client = false)
-    //{
-    //    if ($inv_id) {
-    //        $inv = $iR->repoCount((string)$inv_id) > 0 ? $iR->repoInvLoadedquery((string)$inv_id) : null;
-    //        if ($inv instanceof Inv) {
-    //            /** @var InvAmount $inv_amount */
-    //            $inv_amount = $iaR->repoInvAmountquery($inv_id);
-    //            /** @var \App\Invoice\Entity\Sumex $sumex_treatment */
-    //            $sumex_treatment = $SumexR->repoSumexInvoicequery((string)$inv_id);
-    //            $user_details = $uiR->repoUserInvUserIdquery($inv->getUser_id());
-    //            if ($user_details instanceof UserInv) {
-    //                $sumex = new Sumex($inv, $inv_amount, $user_details, $sumex_treatment, $this->s, $this->session);
-    //                $temp = tempnam("/tmp", "invsumex_");
-    //                $tempCopy = tempnam("/tmp", "invsumex_");
-    //
-    //                /** @var \setasign\Fpdi\Fpdi $pdf */
-    //                $pdf = new Fpdi();
-    //
-    //                $sumexPDF = $sumex->pdf($inv_id);
-    //                if (is_string($sumexPDF)) {
-    //                    $sha1sum = sha1($sumexPDF);
-    //                    $shortsum = substr($sha1sum, 0, 8);
-    //
-    //                                        $filename = $this->s->trans('invoice') . '_' . ($inv->getNumber() ?: 'Number Not Provided'). '_' . $shortsum;
-    //                    if (!$client) {
-    //                        $f = fopen($temp, 'wb');
-    //                        if (!$f) {
-    //                            throw new \Exception(sprintf('Unable to create output file %s', $temp));
-    //                        }
-    //                        fwrite($f, $sumexPDF, strlen($sumexPDF));
-    //                        fclose($f);
-    //
-    //                        // Hackish
-    //                        $sumexPDF = str_replace(
-    //                            "Giustificativo per la richiesta di rimborso",
-    //                            "Copia: Giustificativo per la richiesta di rimborso",
-    //                            $sumexPDF
-    //                        );
-    //
-    //                        $fc = fopen($tempCopy, 'wb');
-    //                        if (!$fc) {
-    //                            throw new \Exception(sprintf('Unable to create output file %s', $tempCopy));
-    //                        }
-    //                        fwrite($fc, $sumexPDF, strlen($sumexPDF));
-    //                        fclose($fc);
-    //
-    //                        $pageCount = $pdf->setSourceFile($temp);
-    //
-    //                          for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-    //                            $templateId = $pdf->importPage($pageNo);
-    //                            $size = $pdf->getTemplateSize($templateId);
-    //                            /**
-    //                             * Related logic: see setasign\fpdf\fpdf.php                             *
-    //                             * @var int $size['w']
-    //                             * @var int $size['h']
-    //                             */
-    //                            if ($size['w'] > $size['h']) {
-    //                                $pageFormat = 'L';  //  landscape
-    //                            } else {
-    //                                $pageFormat = 'P';  //  portrait
-    //                            }
-    //                            $pdf->addPage($pageFormat, array($size['w'], $size['h']), 0);
-    //                            $pdf->useTemplate($templateId);
-    //                        }
-    //
-    //                        $pageCount = $pdf->setSourceFile($tempCopy);
-    //
-    //                        for ($pageNo = 2; $pageNo <= $pageCount; $pageNo++) {
-    //
-    //                            $templateId = $pdf->importPage($pageNo);
-    //                            $size = $pdf->getTemplateSize($templateId);
-    //                            /**
-    //                             * Related logic: see setasign\fpdf\fpdf.php                             *
-    //                             * @var int $size['w']
-    //                             * @var int $size['h']
-    //                             */
-    //                            if ($size['w'] > $size['h']) {
-    //                                $pageFormat = 'L';  //  landscape
-    //                            } else {
-    //                                $pageFormat = 'P';  //  portrait
-    //                            }
-    //                            $pdf->addPage($pageFormat, array($size['w'], $size['h']));
-    //                            $pdf->useTemplate($templateId);
-    //                        }
-    //
-    //                        unlink($temp);
-    //                        unlink($tempCopy);
-    //
-    //                        if ($stream) {
-    //                            header("Content-Type:application/pdf");
-    //                            // string
-    //                            return $pdf->Output($filename . '.pdf', 'I');
-    //                        }
-    //                        $aliases = new Aliases(['@uploads_temp_folder' => dirname(__DIR__).DIRECTORY_SEPARATOR.'Uploads'.DIRECTORY_SEPARATOR]);
-    //                        $filePath = $aliases->get('@uploads_temp_folder') . $filename . '.pdf';
-    //                        $pdf->Output($filePath, 'F');
-    //                        // string
-    //                        return $filePath;
-    //                    } else {
-    //                        if ($stream) {
-    //                            // string
-    //                            return $sumexPDF;
-    //                        }
-    //                        $aliases = new Aliases(['@uploads_temp_folder' => dirname(__DIR__).DIRECTORY_SEPARATOR.'Uploads'.DIRECTORY_SEPARATOR]);
-    //                        $filePath = $aliases->get('@uploads_temp_folder') . $filename . '.pdf';
-    //                        // string
-    //                        return $filePath;
-    //                    }
-    //               } //is_string
-    //            } // instanceof UserInv
-    //        }
-    //    }
-    //}
+    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id, ViewRenderer $viewRenderer): string
+    {
+        if (!empty($delivery_location_id)) {
+            $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
+            if (null !== $del) {
+                return $viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
+                    'actionName' => 'del/view',
+                    'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
+                    'title' => $this->translator->translate('delivery.location'),
+                    'building_number' => $del->getBuildingNumber(),
+                    'address_1' => $del->getAddress_1(),
+                    'address_2' => $del->getAddress_2(),
+                    'city' => $del->getCity(),
+                    'state' => $del->getZip(),
+                    'country' => $del->getCountry(),
+                    'global_location_number' => $del->getGlobal_location_number(),
+                ]);
+            } //null!==$del
+        } else {
+            return '';
+        }
+        return '';
+    }
 }
