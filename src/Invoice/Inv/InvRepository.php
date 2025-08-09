@@ -75,11 +75,15 @@ final class InvRepository extends Select\Repository
         return $this->findAllPreloaded();
     }
 
-    public function filterClient(string $client_full_name): EntityReader
+    public function filterClient(string $fullName): EntityReader
     {
+        $nameParts = explode(' ', $fullName);
+        $firstName = $nameParts[0];
+        $secondName = $nameParts[1];
         $query = $this->select()
                        ->load(['client'])
-                       ->where(['client.client_full_name' => $client_full_name]);
+                       ->where(['client.client_name' => $firstName])
+                       ->where(['client.client_surname' => $secondName]);
         return $this->prepareDataReader($query);
     }
 
