@@ -9,7 +9,6 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 #[Entity(repository: \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository::class)]
-
 class InvItemAllowanceCharge
 {
     #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
@@ -18,13 +17,16 @@ class InvItemAllowanceCharge
     #[BelongsTo(target: InvItem::class, nullable: false, fkAction: 'NO ACTION')]
     private ?InvItem $inv_item = null;
 
+    #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
+    private ?Inv $inv = null;
+
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $inv_item_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat = null) {}
+        private ?float $vat_or_tax = null) {}
 
     public function getAllowanceCharge(): ?AllowanceCharge
     {
@@ -34,6 +36,16 @@ class InvItemAllowanceCharge
     public function setAllowanceCharge(?AllowanceCharge $allowance_charge): void
     {
         $this->allowance_charge = $allowance_charge;
+    }
+
+    public function getInv(): ?Inv
+    {
+        return $this->inv;
+    }
+
+    public function setInv(?Inv $inv): void
+    {
+        $this->inv = $inv;
     }
 
     public function getInvItem(): ?InvItem
@@ -96,23 +108,26 @@ class InvItemAllowanceCharge
         $this->amount = $amount;
     }
 
-    public function getVat(): string
+    public function getVatOrTax(): string
     {
-        return (string) $this->vat;
+        return (string) $this->vat_or_tax;
     }
 
-    public function setVat(float $vat): void
+    public function setVatOrTax(float $vatOrTax): void
     {
-        $this->vat = $vat;
+        $this->vat_or_tax = $vatOrTax;
     }
 
-    public function nullifyRelationOnChange(int $allowance_charge_id, int $inv_item_id): void
+    public function nullifyRelationOnChange(int $allowance_charge_id, int $inv_item_id, int $inv_id): void
     {
         if ($this->allowance_charge_id != $allowance_charge_id) {
-            //$this->allowance_charge = null;
+            $this->allowance_charge = null;
         }
         if ($this->inv_item_id != $inv_item_id) {
-            //$this->inv_item = null;
+            $this->inv_item = null;
+        }
+        if ($this->inv_id != $inv_id) {
+            $this->inv = null;
         }
     }
 }

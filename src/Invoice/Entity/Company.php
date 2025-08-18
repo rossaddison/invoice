@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\Entity\CompanyPrivate;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\ORM\Entity\Behavior;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[Entity(repository: \App\Invoice\Company\CompanyRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
@@ -19,6 +22,12 @@ class Company
 
     #[Column(type: 'datetime')]
     private readonly DateTimeImmutable $date_modified;
+
+    /**
+     * @var ArrayCollection<array-key, CompanyPrivate>
+     */
+    #[HasMany(target: CompanyPrivate::class)]
+    private ArrayCollection $companyPrivates;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -64,6 +73,12 @@ class Company
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
+        $this->companyPrivates = new ArrayCollection();
+    }
+
+    public function getCompanyPrivates(): ArrayCollection
+    {
+        return $this->companyPrivates;
     }
 
     public function getId(): int|null

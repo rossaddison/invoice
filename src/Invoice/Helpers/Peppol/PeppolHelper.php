@@ -791,12 +791,12 @@ class PeppolHelper
                         // equivalent displayed
                         'taxTotal' => [
                             // document level currency code tax amount
-                            'doc_cc_tax_amount' => $ac->getVat(),
+                            'doc_cc_tax_amount' => $ac->getVatOrTax(),
                             // document currency code
                             // views/invoice/setting/views/partial_settings_peppol
                             'doc_cc' => $this->s->getSetting('currency_code_to'),
                             // supplier tax currency code tax amount
-                            'supp_tax_cc_tax_amount' => $ac->getVat(),
+                            'supp_tax_cc_tax_amount' => $ac->getVatOrTax(),
                             // supplier currency code
                             // views/invoice/setting/views/partial_settings_peppol
                             'supp_cc' => $this->s->getSetting('currency_code_from'),

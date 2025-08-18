@@ -21,6 +21,12 @@ final class InvAmountForm extends FormModel
     private ?float $item_tax_total = null;
 
     #[Required]
+    private ?float $packhandleship_total = null;
+
+    #[Required]
+    private ?float $packhandleship_tax = null;
+
+    #[Required]
     private ?float $tax_total = null;
 
     #[Required]
@@ -38,6 +44,8 @@ final class InvAmountForm extends FormModel
         $this->sign = $invAmount->getSign();
         $this->item_subtotal = $invAmount->getItem_subtotal();
         $this->item_tax_total = $invAmount->getItem_tax_total();
+        $this->packhandleship_total = $invAmount->getPackhandleship_total();
+        $this->packhandleship_tax = $invAmount->getPackhandleship_tax();
         $this->tax_total = $invAmount->getTax_total();
         $this->total = $invAmount->getTotal();
         $this->paid = $invAmount->getPaid();
@@ -62,6 +70,16 @@ final class InvAmountForm extends FormModel
     public function getItem_tax_total(): float|null
     {
         return $this->item_tax_total;
+    }
+
+    public function getPackhandleship_total(): float|null
+    {
+        return $this->packhandleship_total;
+    }
+
+    public function getPackhandleship_tax(): float|null
+    {
+        return $this->packhandleship_tax;
     }
 
     public function getTax_total(): float|null
@@ -98,13 +116,15 @@ final class InvAmountForm extends FormModel
     /**
      * @return Required[][]
      *
-     * @psalm-return array{item_subtotal: list{Required}, item_tax_total: list{Required}, tax_total: list{Required}, total: list{Required}, inv_id: list{Required}}
+     * @psalm-return array{item_subtotal: list{Required}, item_tax_total: list{Required}, packhandleship_total: list{Required}, packhandleship_tax: list{Required}, tax_total: list{Required}, total: list{Required}, inv_id: list{Required}}
      */
     public function getRules(): array
     {
         return [
             'item_subtotal' => [new Required()],
             'item_tax_total' => [new Required()],
+            'packhandleship_total' => [new Required()],
+            'packhandleship_tax' => [new Required()],
             'tax_total' => [new Required()],
             'total' => [new Required()],
             'inv_id' => [new Required()],

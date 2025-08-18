@@ -51,7 +51,6 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
- * @var array $order
  * @var bool $visible
  * @var bool $visibleToggleInvSentLogColumn
  * @var int $clientCount

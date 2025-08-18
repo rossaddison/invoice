@@ -23,7 +23,7 @@ class InvAllowanceCharge
         private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat = null) {}
+        private ?float $vat_or_tax = null) {}
 
     public function getAllowanceCharge(): ?AllowanceCharge
     {
@@ -80,14 +80,14 @@ class InvAllowanceCharge
         $this->amount = $amount;
     }
 
-    public function getVat(): string
+    public function getVatOrTax(): string
     {
-        return (string) $this->vat;
+        return (string) $this->vat_or_tax;
     }
 
-    public function setVat(float $vat): void
+    public function setVatOrTax(float $vat_or_tax): void
     {
-        $this->vat = $vat;
+        $this->vat_or_tax = $vat_or_tax;
     }
 
     public function nullifyRelationOnChange(int $allowance_charge_id): void

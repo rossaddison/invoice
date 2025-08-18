@@ -6,6 +6,7 @@ namespace App\Invoice\Helpers;
 
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Entity\Inv;
+use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\QuoteAmount;
 use App\Invoice\Entity\QuoteItem;
@@ -300,6 +301,7 @@ class PdfHelper
     }   //generate_quote_pdf
 
     /**
+     *
      * @param string|null $inv_id
      * @param string $user_id
      * @param bool $custom
@@ -309,7 +311,10 @@ class PdfHelper
      * @param \App\Invoice\Client\ClientRepository $cR
      * @param \App\Invoice\CustomValue\CustomValueRepository $cvR
      * @param \App\Invoice\CustomField\CustomFieldRepository $cfR
+     * @param \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR
+     * @param \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR
      * @param \App\Invoice\InvItem\InvItemRepository $iiR
+     * @param \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
      * @param \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR
      * @param Inv $inv
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
@@ -329,7 +334,9 @@ class PdfHelper
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
         \App\Invoice\CustomField\CustomFieldRepository $cfR,
         \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
+        \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
         \App\Invoice\InvItem\InvItemRepository $iiR,
+        \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR,
         \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR,
         Inv $inv,
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
@@ -352,6 +359,7 @@ class PdfHelper
             $date_helper = new DateHelper($this->s);
             $_language = $this->session->get('_language');
             $show_item_discounts = false;
+            $vat = $this->s->getSetting('enable_vat_registration');
             // Determine if any of the items have a discount, if so then the discount amount row will have to be shown.
             if (null !== $items) {
                 /** @var InvItem $item */
@@ -363,6 +371,7 @@ class PdfHelper
             }
             // Get all data related to building the inv including custom fields
             $data = [
+                'aciiR' => $aciiR,
                 'inv' => $inv,
                 'inv_tax_rates' => (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : null),
                 'items' => $items,
@@ -409,6 +418,7 @@ class PdfHelper
                         'isSalesOrder' => false,
                     ],
                 ),
+                'inv_allowance_charges' => $this->view_partial_inv_allowance_charges($inv_id, $vat, $aciR, $viewrenderer),
                 'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $inv->getDelivery_location_id(), $viewrenderer),
                 'client' => $cR->repoClientquery((string) $inv->getClient()?->getClient_id()),
                 'inv_amount' => $inv_amount,
@@ -431,7 +441,9 @@ class PdfHelper
      * @param \App\Invoice\Client\ClientRepository $cR
      * @param \App\Invoice\CustomValue\CustomValueRepository $cvR
      * @param \App\Invoice\CustomField\CustomFieldRepository $cfR
+     * @param \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
      * @param \App\Invoice\InvItem\InvItemRepository $iiR
+     * @param \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
      * @param \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR
      * @param \App\Invoice\Inv\InvRepository $iR
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
@@ -451,7 +463,9 @@ class PdfHelper
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
         \App\Invoice\CustomField\CustomFieldRepository $cfR,
         \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
+        \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
         \App\Invoice\InvItem\InvItemRepository $iiR,
+        \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR,
         \App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR,
         \App\Invoice\Inv\InvRepository $iR,
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
@@ -462,7 +476,7 @@ class PdfHelper
         if (null !== $inv_id) {
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
             if ($inv) {
-                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $inv, $itrR, $uiR, $sumexR, $viewrenderer);
+                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $sumexR, $viewrenderer);
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
@@ -506,6 +520,51 @@ class PdfHelper
             $status_id == 5 && empty($this->s->getSetting('pdf_invoice_template_overdue')) => 'overdue',
             default => strlen($this->s->getSetting('pdf_invoice_template')) > 0 ? $this->s->getSetting('pdf_invoice_template') : 'invoice',
         };
+    }
+
+    /**
+     *
+     * @param string $inv_id
+     * @param string $vat
+     * @param \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR
+     * @param ViewRenderer $viewRenderer
+     * @return string
+     */
+    private function view_partial_inv_allowance_charges(
+        string $inv_id,
+        string $vat,
+        \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
+        ViewRenderer $viewRenderer,
+    ): string {
+        $identifier = 0;
+        $print = '';
+        if (!empty($inv_id)) {
+            $inv_allowance_charges = $aciR->repoACIquery($inv_id);
+            /**
+             * @var InvAllowanceCharge $inv_allowance_charge
+             */
+            foreach ($inv_allowance_charges as $inv_allowance_charge) {
+                $allowanceCharge = $inv_allowance_charge->getAllowanceCharge();
+                $allowanceOrCharge = '';
+                if ($allowanceCharge) {
+                    $identifier = $allowanceCharge->getIdentifier();
+                    $allowanceOrCharge = $identifier ? $this->translator->translate('allowance.or.charge.allowance') : $this->translator->translate('allowance.or.charge.charge');
+                }
+
+                $amount = $inv_allowance_charge->getAmount();
+                $vatOrTax = $inv_allowance_charge->getVatOrTax();
+                $amountTitle = $this->translator->translate('allowance.or.charge.amount');
+                $vatOrHeadingTitle = $identifier ? ($vat ? $this->translator->translate('allowance.or.charge.allowance.vat') : $this->translator->translate('allowance.or.charge.allowance.tax')) : ($vat ? $this->translator->translate('allowance.or.charge.charge.vat') : $this->translator->translate('allowance.or.charge.charge.tax'));
+                $print .= "{$allowanceOrCharge}: {$amountTitle} {$amount}, {$vatOrHeadingTitle}: {$vatOrTax}<br>";
+            }
+            return $viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_allowance_charges', [
+                'title' => $this->translator->translate('allowance.or.charge.inv'),
+                'inv_allowance_charges' => $print,
+            ]);
+        } else {
+            return '';
+        }
+        return '';
     }
 
     private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id, ViewRenderer $viewRenderer): string

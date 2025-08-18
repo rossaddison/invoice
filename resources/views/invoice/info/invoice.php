@@ -52,6 +52,25 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>17th August 2025</b></p>
+<p>Peppol arrays have been updated to the 24th November 2024 arrays. It has been over 2 years since this has been done. 
+   The $vat field for InvAllowanceCharge and InvItemAllowanceCharge have been adjusted to $vatOrTax so that non-vat operating
+   companies can include a gst tax or a tax similar to vat when working with handling, packing, and shipping fees. 
+   I have included a field called Packhandleship_tax and packhandleship_total in the InvAmount entity which will reflect
+   the overall value of invoice allowances and charges when using the categories under Peppol. These categories are useful
+   in a non-peppol context and particularly a non-vat context hence the more flexible approach and renaming of $vat to 
+   $vat_or_tax. The InvAmount entity has been adjusted to accomodate these two new totals which really are a net 
+   invallowancecharge field ... so not strictly just packing, handling, and shipping. The InvAllowanceCharge index
+   has been upgraded to allow indexing and sorting. </p>
+
+<p><b>Step 1:</b> Peppol ... Add Parent Invoice Allowance and Charges</p>
+<p><b>Step 2:</b> Under Options ... Add Overall Invoice Allowance and Charges</p>
+<p><b>Step 3:</b> Use the + sign on individual line items under the invoice view to input allowances or charges.</p>
+
+Refresh the view screen to see updated totals so allow redirects to complete once Inv Allowance Charges are entered.
+The NumberHelper works independently of screen refreshes and redirects. 
+ 
+Next: Include some Codeception Tests which will secure these concepts if bugs creep in later with 'failure' notifications output in the cli.</p>
 <p><b>3rd August 2025</b></p>
 <p>Replaced int with float since amount being sent via Wonderful was being truncated. e.g. £3.60 truncated to £3.00</p>
 <p>The return url is functional but ref was being truncated because the route did not have it so included ref in the route.</p>  

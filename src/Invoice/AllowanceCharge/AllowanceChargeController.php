@@ -118,7 +118,7 @@ final class AllowanceChargeController extends BaseController
         $peppolArrays = new PeppolArrays();
         $charges = $peppolArrays->getChargesArray();
         $parameters = [
-            'title' => $this->translator->translate('allowance.or.charge.add'),
+            'title' => $this->translator->translate('allowance.or.charge.level'),
             'actionName' => 'allowancecharge/add_charge',
             'actionArguments' => [],
             'errors' => [],
@@ -273,6 +273,9 @@ final class AllowanceChargeController extends BaseController
             $form = new AllowanceChargeForm($allowanceCharge);
             $peppolArrays = new PeppolArrays();
             $charges = $peppolArrays->getChargesArray();
+            //$shippingCharges = $peppolArrays->getCommonChargesShipping();
+            //$packagingCharges = $peppolArrays->getCommonChargesPackaging();
+            //$charges =
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge.edit.charge'),
                 'actionName' => 'allowancecharge/edit_allowance',

@@ -117,26 +117,26 @@ final class InvItemAllowanceChargeController extends BaseController
                                     // charge add
                                     if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
                                         $all_charges += (float) $acii->getAmount();
-                                        $all_charges_vat += (float) $acii->getVat();
+                                        $all_charges_vat += (float) $acii->getVatOrTax();
                                     } else {
                                         // allowance subtract
                                         $all_allowances += (float) $acii->getAmount();
-                                        $all_allowances_vat += (float) $acii->getVat();
+                                        $all_allowances_vat += (float) $acii->getVatOrTax();
                                     }
                                 }
                                 // Record the charges and allowances in the InvItemAmount Entity
                                 $inv_item_amount->setCharge($all_charges);
                                 $inv_item_amount->setAllowance($all_allowances);
-                                $all_vat = $all_charges_vat - $all_allowances_vat;
+                                $all_vat_or_tax = $all_charges_vat - $all_allowances_vat;
                                 $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
                                 $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
                                 $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
                                 $quantity_price = $current_item_quantity * $current_item_price;
                                 $current_discount_item_total = $current_item_quantity * $discount_per_item;
-                                $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
                                 $qpIncAc = $quantity_price + $all_charges - $all_allowances;
-                                $current_tax_total = ($qpIncAc - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
-                                $new_tax_total = $current_tax_total + ($this->sR->getSetting('enable_vat_registration') == '0' ? 0.00 : $all_vat);
+                                $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
+                                $current_tax_total = ($quantity_price - $current_discount_item_total) * ($tax_percent ?? 0.00) / 100.00;
+                                $new_tax_total = $current_tax_total + $all_vat_or_tax;
                                 // include all item allowance charges in the subtotal
                                 $inv_item_amount->setSubtotal($qpIncAc);
                                 $inv_item_amount->setDiscount($current_discount_item_total);
@@ -285,11 +285,11 @@ final class InvItemAllowanceChargeController extends BaseController
                                         // charge add
                                         if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
                                             $all_charges += (float) $acii->getAmount();
-                                            $all_charges_vat += (float) $acii->getVat();
+                                            $all_charges_vat += (float) $acii->getVatOrTax();
                                         } else {
                                             // allowance subtract
                                             $all_allowances += (float) $acii->getAmount();
-                                            $all_allowances_vat += (float) $acii->getVat();
+                                            $all_allowances_vat += (float) $acii->getVatOrTax();
                                         }
                                     }
                                     // Record the charges and allowances in the InvItemAmount Entity

@@ -44,7 +44,7 @@ $translator->translate('custom.fields');
 <br>
 
 <?php
-    $gridComponents->header('i.custom_fields');
+    $gridComponents->header('custom.fields');
 $columns = [
     new DataColumn(
         'id',

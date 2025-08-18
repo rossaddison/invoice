@@ -103,6 +103,34 @@ final class InvAllowanceChargeRepository extends Select\Repository
     }
 
     /**
+     * @param string $invNumber
+     * @psalm-return EntityReader
+     */
+    public function repoInvNumberQuery(string $invNumber): EntityReader
+    {
+        $query = $this->select()
+                      ->load('inv')
+                      ->where(['inv.number' => $invNumber]);
+        return $this->prepareDataReader($query);
+    }
+
+    public function repoReasonCodeQuery(string $reasonCode): EntityReader
+    {
+        $query = $this->select()
+                      ->load('allowance_charge')
+                      ->where(['allowance_charge.reason_code' => $reasonCode]);
+        return $this->prepareDataReader($query);
+    }
+
+    public function repoReasonQuery(string $reason): EntityReader
+    {
+        $query = $this->select()
+                      ->load('allowance_charge')
+                      ->where(['allowance_charge.reason' => $reason]);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * @param string $inv_id
      * @psalm-return EntityReader
      */
@@ -112,6 +140,29 @@ final class InvAllowanceChargeRepository extends Select\Repository
                       ->load('allowance_charge')
                       ->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query);
+    }
+
+    public function getPackHandleShipTotal(string $inv_id): array
+    {
+        $all = $this->repoACIquery($inv_id);
+        $totalAmount = 0.00;
+        $totalTax = 0.00;
+        /**
+         * @var InvAllowanceCharge $each
+         */
+        foreach ($all as $each) {
+            $amount  = $each->getAmount();
+            $tax = $each->getVatOrTax();
+            if ($each->getAllowanceCharge()?->getIdentifier()) {
+                $totalAmount += (float) $amount;
+                $totalTax += (float) $tax;
+
+            } else {
+                $totalAmount -= (float) $amount;
+                $totalTax -= (float) $tax;
+            }
+        }
+        return ['totalAmount' => $totalAmount, 'totalTax' => $totalTax];
     }
 
     /**

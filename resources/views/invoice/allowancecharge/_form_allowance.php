@@ -23,10 +23,6 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Html::openTag('h1'); ?>
-    <?= (Html::a($title, 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AllowanceCharge/', ['class' => 'btn btn-primary'])); ?>
-<?= Html::closeTag('h1'); ?>
-
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
@@ -55,13 +51,20 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?= Field::hidden($form, 'id')
-        ->addInputAttributes([
-            'class' => 'form-control',
-        ])
-        ->hideLabel()
-        ->value(Html::encode($form->getId()));
+            ->addInputAttributes([
+                'class' => 'form-control',
+            ])
+            ->hideLabel()
+            ->value(Html::encode($form->getId()));
 ?>
         <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
+            <?= Field::checkbox($form, 'level')
+    ->inputLabel($translator->translate('allowance.or.charge.level')) // set the custom label here
+    ->inputLabelAttributes(['class' => 'form-check-label fs-4'])
+    ->inputClass('form-check-input')
+?>
+        <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?php
     $optionsDataReason = [];

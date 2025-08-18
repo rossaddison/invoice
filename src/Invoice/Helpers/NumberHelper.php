@@ -159,7 +159,7 @@ final readonly class NumberHelper
     public function calculate_inv(string $inv_id, ACIR $aciR, IIR $iiR, IIAR $iiaR, ITRR $itrR, IAR $iaR, IR $iR, PYMR $pymR): void
     {
         $inv_allowance_charge_amount_total = 0.00;
-        $inv_allowance_charge_vat_total = 0.00;
+        $inv_allowance_charge_tax_total = 0.00;
         // Get all items that belong to a specific invoice by accessing $iiR
         // Sum all these item's amounts
         // -------------------------
@@ -178,27 +178,28 @@ final readonly class NumberHelper
         //----------
         // Invoice Tax
         // ---------
-        if ($this->s->getSetting('enable_vat_registration') === '0') {
-            $inv_tax_rate_total = $this->calculate_inv_taxes($inv_id, $itrR, $iaR);
-        } else {
-            $inv_allowance_charges = $aciR->repoACIquery($inv_id);
-            /** @var InvAllowanceCharge $inv_allowance_charge */
-            foreach ($inv_allowance_charges as $inv_allowance_charge) {
-                $isCharge = $inv_allowance_charge->getAllowanceCharge()?->getIdentifier();
-                if ($isCharge) {
-                    $inv_allowance_charge_amount_total += (float) $inv_allowance_charge->getAmount();
-                    $inv_allowance_charge_vat_total += (float) $inv_allowance_charge->getVat();
-                } else {
-                    $inv_allowance_charge_amount_total -= (float) $inv_allowance_charge->getAmount();
-                    $inv_allowance_charge_vat_total -= (float) $inv_allowance_charge->getVat();
-                }
+        $inv_tax_rate_total = $this->s->getSetting('enable_vat_registration') === '0' ? $this->calculate_inv_taxes($inv_id, $itrR, $iaR) : 0.00;
+
+        $inv_allowance_charges = $aciR->repoACIquery($inv_id);
+        /** @var InvAllowanceCharge $inv_allowance_charge */
+        foreach ($inv_allowance_charges as $inv_allowance_charge) {
+            $isCharge = $inv_allowance_charge->getAllowanceCharge()?->getIdentifier();
+            if ($isCharge) {
+                $inv_allowance_charge_amount_total += (float) $inv_allowance_charge->getAmount();
+                $inv_allowance_charge_tax_total += (float) $inv_allowance_charge->getVatOrTax();
+            } else {
+                $inv_allowance_charge_amount_total -= (float) $inv_allowance_charge->getAmount();
+                $inv_allowance_charge_tax_total -= (float) $inv_allowance_charge->getVatOrTax();
             }
-            $inv_tax_rate_total = $inv_allowance_charge_vat_total;
         }
         //-------------------------------------------------
         // Before Early Cash Settlement Discount and Charge
         // ------------------------------------------------
-        $final_discountable_and_chargeable_total = $inv_subtotal_discount_and_charge_and_tax_included + $inv_tax_rate_total + $inv_allowance_charge_amount_total;
+        $final_discountable_and_chargeable_total =
+                $inv_subtotal_discount_and_charge_and_tax_included +
+                $inv_tax_rate_total +
+                $inv_allowance_charge_amount_total +
+                $inv_allowance_charge_tax_total;
         //-----------------------------------------------
         // Note: Not applicable to VAT system: inv...view
         // ...Edit input boxes will be hidden since Early
@@ -219,6 +220,10 @@ final readonly class NumberHelper
                 $inv_amount->setInv_id((int) $inv_id);
                 $inv_amount->setItem_subtotal($inv_item_subtotal_discount ?: 0.00);
                 $inv_amount->setItem_tax_total((float) $inv_item_amounts['tax_total'] ?: 0.00);
+                /** Overall i.e. not line item total */
+                $inv_amount->setPackhandleship_total($inv_allowance_charge_amount_total);
+                /** Overall i.e. not line item tax e.g. vat or gst */
+                $inv_amount->setPackhandleship_tax($inv_allowance_charge_tax_total);
                 $inv_amount->setTax_total($inv_tax_rate_total ?: 0.00);
                 $inv_amount->setTotal($inv_total ?: 0.00);
                 // The balance will be reduced with each payment
@@ -519,34 +524,34 @@ final readonly class NumberHelper
     public function recur_frequencies(): array
     {
         return [
-            '1D' => 'i.calendar_day_1',
-            '2D' => 'i.calendar_day_2',
-            '3D' => 'i.calendar_day_3',
-            '4D' => 'i.calendar_day_4',
-            '5D' => 'i.calendar_day_5',
-            '6D' => 'i.calendar_day_6',
-            '15D' => 'i.calendar_day_15',
-            '30D' => 'i.calendar_day_30',
-            '7D' => 'i.calendar_week_1',
-            '14D' => 'i.calendar_week_2',
-            '21D' => 'i.calendar_week_3',
-            '28D' => 'i.calendar_week_4',
-            '1M' => 'i.calendar_month_1',
-            '2M' => 'i.calendar_month_2',
-            '3M' => 'i.calendar_month_3',
-            '4M' => 'i.calendar_month_4',
-            '5M' => 'i.calendar_month_5',
-            '6M' => 'i.calendar_month_6',
-            '7M' => 'i.calendar_month_7',
-            '8M' => 'i.calendar_month_8',
-            '9M' => 'i.calendar_month_9',
-            '10M' => 'i.calendar_month_10',
-            '11M' => 'i.calendar_month_11',
-            '1Y' => 'i.calendar_year_1',
-            '2Y' => 'i.calendar_year_2',
-            '3Y' => 'i.calendar_year_3',
-            '4Y' => 'i.calendar_year_4',
-            '5Y' => 'i.calendar_year_5',
+            '1D' => 'calendar_day_1',
+            '2D' => 'calendar_day_2',
+            '3D' => 'calendar_day_3',
+            '4D' => 'calendar_day_4',
+            '5D' => 'calendar_day_5',
+            '6D' => 'calendar_day_6',
+            '15D' => 'calendar_day_15',
+            '30D' => 'calendar_day_30',
+            '7D' => 'calendar_week_1',
+            '14D' => 'calendar_week_2',
+            '21D' => 'calendar_week_3',
+            '28D' => 'calendar_week_4',
+            '1M' => 'calendar_month_1',
+            '2M' => 'calendar_month_2',
+            '3M' => 'calendar_month_3',
+            '4M' => 'calendar_month_4',
+            '5M' => 'calendar_month_5',
+            '6M' => 'calendar_month_6',
+            '7M' => 'calendar_month_7',
+            '8M' => 'calendar_month_8',
+            '9M' => 'calendar_month_9',
+            '10M' => 'calendar_month_10',
+            '11M' => 'calendar_month_11',
+            '1Y' => 'calendar_year_1',
+            '2Y' => 'calendar_year_2',
+            '3Y' => 'calendar_year_3',
+            '4Y' => 'calendar_year_4',
+            '5Y' => 'calendar_year_5',
         ];
     }
 }

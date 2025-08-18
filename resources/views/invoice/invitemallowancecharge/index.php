@@ -60,13 +60,6 @@ $backButton = A::tag()
 $toolbar = Div::tag();
 ?>
 <div>
-    <h5><?= $translator->translate('allowance.or.charge.item'); ?></h5>
-    <div class="btn-group">
-    </div>
-    <br>
-    <br>
-</div>
-<div>
 <br>    
 </div>
 <?php
@@ -115,23 +108,30 @@ $url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $
         ),
         new DataColumn(
             header: $translator->translate('vat'),
-            content: static fn(InvItemAllowanceCharge $model) => $numberHelper->format_currency($model->getVat()),
+            content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
+                // show the charge in brackets
+                if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
+                    return '(' . $numberHelper->format_currency($model->getVatOrTax()) . ')';
+                } else {
+                    return $numberHelper->format_currency($model->getVatOrTax());
+                }
+            },
         ),
         new DataColumn(
             header: $translator->translate('edit'),
-            content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), [])->render();
+            content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), []);
             },
         ),
         new DataColumn(
             header: $translator->translate('view'),
-            content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): string {
-                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), [])->render();
+            content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): A {
+                return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), []);
             },
         ),
         new DataColumn(
             header: $translator->translate('delete'),
-            content: static function (InvItemAllowanceCharge $model) use ($translator, $urlGenerator): string {
+            content: static function (InvItemAllowanceCharge $model) use ($translator, $urlGenerator): A {
                 return Html::a(
                     Html::tag(
                         'button',
@@ -144,7 +144,7 @@ $url = $urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $
                     ),
                     $urlGenerator->generate('invitemallowancecharge/delete', ['id' => $model->getId()]),
                     [],
-                )->render();
+                );
             },
         ),
     ];

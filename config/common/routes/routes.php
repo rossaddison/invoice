@@ -1082,8 +1082,7 @@ return [
                 ->action([InvController::class, 'inv_to_inv_confirm'])
                 ->name('inv/inv_to_inv_confirm'),
             // InvAllowanceCharge
-            // InvAllowanceCharge
-            Route::get('/invallowancecharge')
+            Route::get('/invallowancecharge[/page/{page:\d+}]')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
                 ->action([InvAllowanceChargeController::class, 'index'])
                 ->name('invallowancecharge/index'),
@@ -1232,6 +1231,10 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'wonderful_complete'])
                 ->name('paymentinformation/wonderful_complete'),
+            Route::methods([Method::GET, Method::POST], '/paymentinformation/tink_complete/{url_key}/{payment_request_id}')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
+                ->action([PaymentInformationController::class, 'tink_complete'])
+                ->name('paymentinformation/tink_complete'),
             Route::methods([Method::GET, Method::POST], '/paymentinformation/fetch')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('viewPayment'))
                 ->action([PaymentInformationController::class, 'fetch'])

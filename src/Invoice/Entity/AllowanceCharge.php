@@ -17,9 +17,16 @@ class AllowanceCharge
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'bool', typecast: 'bool', default: false, nullable: false)]
-        private bool $identifier = false, #[Column(type: 'string(3)', nullable: false)]
-        private string $reason_code = '', #[Column(type: 'longText)', nullable: false)]
+        private bool $identifier = false, #[Column(type: 'tinyInteger(1)', nullable: false, default: 0)]
+        /* 0 = Overall, 1 = InvoiceLine */
+        private int $level = 0, #[Column(type: 'string(3)', nullable: false)]
+        private string $reason_code = '', #[Column(type: 'longText', nullable: false)]
         private string $reason = '', #[Column(type: 'integer(11)', nullable: false)]
+        /**
+         * $multiplier_factor_numeric x $base_amount = $amount
+         * Fixed $amount i.e. no calculation involved ... use a 0 or 1 for $multiplier_factor_numeric
+         * $multiplier_factor_numeric > 1 => $base_amount must be > 0
+         */
         private int $multiplier_factor_numeric = 0, #[Column(type: 'integer(11)', nullable: false)]
         private int $amount = 0, #[Column(type: 'integer(11)', nullable: false)]
         private int $base_amount = 0, #[Column(type: 'integer(11)', nullable: false)]
@@ -43,6 +50,16 @@ class AllowanceCharge
     public function setIdentifier(bool $identifier): void
     {
         $this->identifier = $identifier;
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): void
+    {
+        $this->level = $level;
     }
 
     public function getReasonCode(): string

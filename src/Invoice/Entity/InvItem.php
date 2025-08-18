@@ -6,9 +6,7 @@ namespace App\Invoice\Entity;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimeImmutable;
 
@@ -32,12 +30,6 @@ class InvItem
 
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
-
-    /**
-     * @var ArrayCollection<array-key, InvItemAllowanceCharge>
-     */
-    #[HasMany(target: InvItemAllowanceCharge::class)]
-    private ArrayCollection $invitemallowancecharges;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -79,7 +71,6 @@ class InvItem
     ) {
         $this->date_added = new DateTimeImmutable();
         $this->date = new DateTimeImmutable();
-        $this->invitemallowancecharges = new ArrayCollection();
     }
 
     public function getId(): int|null
@@ -90,21 +81,6 @@ class InvItem
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    public function setInvItemAllowanceCharges(): void
-    {
-        $this->invitemallowancecharges = new ArrayCollection();
-    }
-
-    public function getInvItemAllowanceCharges(): ArrayCollection
-    {
-        return $this->invitemallowancecharges;
-    }
-
-    public function addInvItemAllowanceCharge(InvItemAllowanceCharge $invItemAllowanceCharge): void
-    {
-        $this->invitemallowancecharges[] = $invItemAllowanceCharge;
     }
 
     public function getTaxRate(): TaxRate|null

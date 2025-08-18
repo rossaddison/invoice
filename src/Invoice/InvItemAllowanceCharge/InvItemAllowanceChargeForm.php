@@ -16,14 +16,14 @@ final class InvItemAllowanceChargeForm extends FormModel
     #[Required]
     private ?float $amount = null;
     #[Required]
-    private ?float $vat = null;
+    private ?float $vat_or_tax = null;
 
     public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, private readonly ?int $inv_item_id)
     {
         $this->inv_id = (int) $invItemAllowanceCharge->getInv_id();
         $this->allowance_charge_id = (int) $invItemAllowanceCharge->getAllowance_charge_id();
         $this->amount = (float) $invItemAllowanceCharge->getAmount();
-        $this->vat = (float) $invItemAllowanceCharge->getVat();
+        $this->vat_or_tax = (float) $invItemAllowanceCharge->getVatOrTax();
     }
 
     public function getInv_id(): int|null
@@ -46,9 +46,9 @@ final class InvItemAllowanceChargeForm extends FormModel
         return $this->amount;
     }
 
-    public function getVat(): float|null
+    public function getVatOrTax(): float|null
     {
-        return $this->vat;
+        return $this->vat_or_tax;
     }
 
     /**

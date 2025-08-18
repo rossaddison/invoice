@@ -81,20 +81,53 @@ $columns = [
         content: static fn(AllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
+        property: 'level',
+        header: $translator->translate('allowance.or.charge.level'),
+        content: static function (AllowanceCharge $model): string {
+            return ($model->getLevel() == 0) ? '⬅ Overall' : 'Invoice Line ➡';
+        },
+    ),
+    new DataColumn(
+        'reason_code',
+        header: $translator->translate('allowance.or.charge.reason.code'),
+        content: static fn(AllowanceCharge $model) => $model->getReasonCode(),
+    ),
+    new DataColumn(
+        'reason',
+        header: $translator->translate('allowance.or.charge.reason'),
+        content: static fn(AllowanceCharge $model) => $model->getReason(),
+    ),
+    new DataColumn(
+        'base_amount',
+        header: $translator->translate('allowance.or.charge.base.amount'),
+        content: static fn(AllowanceCharge $model) => $model->getBaseAmount(),
+    ),
+    new DataColumn(
+        'multiplier_factor_numeric',
+        header: $translator->translate('allowance.or.charge.multiplier.factor.numeric'),
+        content: static function (AllowanceCharge $model): string {
+            return ($model->getMultiplierFactorNumeric() == 0 || $model->getMultiplierFactorNumeric() == 1) ? '0 or 1 => Fixed Amount' : (string) $model->getMultiplierFactorNumeric() . '>1 => Variable Amount';
+        },
+    ),
+    new DataColumn(
+        'amount',
+        header: $translator->translate('allowance.or.charge.amount'),
+        content: static fn(AllowanceCharge $model) => $model->getAmount(),
+    ),
+    new DataColumn(
         header: $translator->translate('view'),
-        content: static function (AllowanceCharge $model) use ($urlGenerator): string {
+        content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return Html::a(
                 Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
                 $urlGenerator->generate('allowancecharge/view', ['id' => $model->getId()]),
                 [],
-            )
-                                        ->render();
+            );
         },
     ),
     new DataColumn(
         'identifier',
-        header: $translator->translate('allowance.or.charge.edit.allowance'),
-        content: static function (AllowanceCharge $model) use ($urlGenerator): string {
+        header: $translator->translate('allowance.or.charge.allowance'),
+        content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return !$model->getIdentifier() ?
                   Html::a(
                       Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
@@ -103,13 +136,13 @@ $columns = [
                           ['id' => $model->getId()],
                       ),
                       [],
-                  )->render() : '';
+                  ) : Html::a();
         },
     ),
     new DataColumn(
         'identifier',
-        header: $translator->translate('allowance.or.charge.edit.charge'),
-        content: static function (AllowanceCharge $model) use ($urlGenerator): string {
+        header: $translator->translate('allowance.or.charge.charge'),
+        content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return $model->getIdentifier() ?
                 Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
@@ -118,12 +151,12 @@ $columns = [
                         ['id' => $model->getId()],
                     ),
                     [],
-                )->render() : '';
+                ) : Html::a();
         },
     ),
     new DataColumn(
         header: $translator->translate('delete'),
-        content: static function (AllowanceCharge $model) use ($translator, $urlGenerator): string {
+        content: static function (AllowanceCharge $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -136,7 +169,7 @@ $columns = [
                 ),
                 $urlGenerator->generate('allowancecharge/delete', ['id' => $model->getId()]),
                 [],
-            )->render();
+            );
         },
     ),
 ]

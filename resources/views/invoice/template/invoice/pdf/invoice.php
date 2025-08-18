@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\InvItemAllowanceCharge;
 use Yiisoft\Html\Html;
 
 /**
@@ -13,8 +14,10 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Entity\Sumex|null $sumex
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
  * @var App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $inv_tax_rates
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $items
@@ -23,6 +26,7 @@ use Yiisoft\Html\Html;
  * @var string $cldr
  * @var string $company_logo_and_address    setting/company_logo_and_address.php
  * @var string $delivery_location
+ * @var string $inv_allowance_charges
  * @var string $top_custom_fields           appear at the top of quote.pdf
  * @var string $view_custom_fields          appear at the bottom of quote.pdf
  */
@@ -125,6 +129,7 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
             <?php endif; ?>
             <?php if ($vat === '0') { ?>     
             <th class="item-price text-right"><?= Html::encode($translator->translate('tax')); ?></th>
+            <th class="item-price text-right"></th>
             <th class="item-price text-right">%</th>
             <?php } else { ?>
                 <th class="item-price text-right"><?= Html::encode($translator->translate('vat.abbreviation')); ?></th>    
@@ -136,123 +141,196 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
         <tbody>
 
         <?php
-if ($items) {
-    /**
-     * @var App\Invoice\Entity\InvItem $item
-     */
-    foreach ($items as $item) {
-        $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
-        ?>
+        if ($items) {
+            /**
+             * @var App\Invoice\Entity\InvItem $item
+             */
+            foreach ($items as $item) {
+                $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
+                ?>
             <tr>
-                <td><?= Html::encode($item->getName()); ?></td>
-                <td><?php echo nl2br(Html::encode($item->getDescription())); ?></td>
-                <td class="text-right">
-                    <?php echo Html::encode($s->format_amount($item->getQuantity())); ?>
-                    <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
-                        <br>
-                        <small><?= Html::encode($item->getProduct_unit()); ?></small>
-                    <?php endif; ?>
-                </td>
-                <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($item->getPrice())); ?>
-                </td>
-                <?php if ($show_item_discounts) : ?>
-                    <td class="text-right">
-                        <?php echo Html::encode($s->format_currency($item->getDiscount_amount())); ?>
-                    </td>
-                <?php endif; ?>
-                <td class="text-right">
-                    <?php
-                    echo Html::encode($s->format_currency($inv_item_amount?->getTax_total()));
-        ?>
-                </td>
-                <td class="text-right">
-                    <?php
-            echo Html::encode($item->getTaxRate()?->getTaxRatePercent());
-        ?>
-                </td>
-                <td class="text-right">
-                    <?php
-            echo Html::encode($s->format_currency($inv_item_amount?->getTotal()));
-        ?>
-                </td>
-            </tr>
-        <?php
-    }
-} ?>
+                        <td><?= Html::encode($item->getName()); ?></td>
+                        <td><?php echo nl2br(Html::encode($item->getDescription())); ?></td>
+                        <td class="text-right">
+                            <?php echo Html::encode($s->format_amount($item->getQuantity())); ?>
+                            <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
+                                <br>
+                                <small><?= Html::encode($item->getProduct_unit()); ?></small>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-right">
+                            <?php echo Html::encode($s->format_currency($item->getPrice())); ?>
+                        </td>
+                        <?php if ($show_item_discounts) : ?>
+                            <td class="text-right">
+                                <?php echo Html::encode($s->format_currency($item->getDiscount_amount())); ?>
+                            </td>
+                        <?php endif; ?>
+                        <td class="text-right">
+                            <?php
+                                $quantity = $item->getQuantity();
+                $price = $item->getPrice();
+                $taxPercent = ($item->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100;
+                echo (null !== $quantity && null !== $price && $taxPercent) ?
+                    Html::encode($s->format_currency($quantity * $price * $taxPercent))
+                : Html::encode($s->format_currency(0.00));
+                ?>
+                        </td>    
+                        <td class="text-right">
+                            <?php
+                echo Html::encode($s->format_currency($inv_item_amount?->getTax_total()));
+                ?>
+                        
+                        <td class="text-right">
+                            <?php
+                    echo Html::encode($item->getTaxRate()?->getTaxRatePercent());
+                ?>
+                        </td>
+                        <td class="text-right">
+                           
+                        </td>
+                    </tr>
+                    <?php $invItemAllowanceCharges = $aciiR->repoInvItemquery((string) $item->getId());
+                /**
+                 * @var InvItemAllowanceCharge $invItemAllowanceCharge
+                 */
+                foreach ($invItemAllowanceCharges as $invItemAllowanceCharge) { ?>
+                    <tr>
+                        <td><?= Html::encode($invItemAllowanceCharge->getAllowanceCharge()?->getReasonCode()); ?></td>
+                        <td><?php echo nl2br(Html::encode($invItemAllowanceCharge->getAllowanceCharge()?->getReason())); ?></td>
+                        <td class="text-right">
+                        </td>
+                        <td class="text-right">
+                            <?php
+                        $amount = $invItemAllowanceCharge->getAmount();
+                    $isCharge = ($invItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == 1 ? true : false);
+                    echo Html::encode(($isCharge ? '' : '(') . $s->format_currency($amount) . ($isCharge ? '' : ')'));
+                    ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                        $vatInvItem = $invItemAllowanceCharge->getVatOrTax();
+                    echo Html::encode(($isCharge ? '' : '(') . $s->format_currency($vatInvItem) . ($isCharge ? '' : ')'));
+                    ?>
+                        </td>
+                        <td class="text-right">
+                        </td>
+                        <td class="text-right">
+                            <?php
+                        $percent = $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent();
+                    echo Html::encode($percent ?? 0.00);
+                    ?>
+                        </td>
+                        <td class="text-right">
+                            
+                        </td>
+                        <td class="text-right">
+                        </td>
+                    </tr>    
+                    <?php } ?>        
+                <?php
+            }
+        } ?>
 
         </tbody>
         <tbody class="invoice-sums">
 
         <tr>
-            <?php if ($vat === '0') { ?>
+            <?php
+/** Price Discount Quantity **/
+                if ($vat === '0') {
+                    ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
                         $translator->translate('subtotal'),
                     ) . " (" . Html::encode($translator->translate('price')) . "-" . Html::encode($translator->translate('discount')) . ") x " . Html::encode($translator->translate('qty')); ?></td>
-            <?php } else { ?>
+            <?php } else { ?>            
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
                         $translator->translate('subtotal'),
                     ); ?></td> 
             <?php } ?> 
+            <td class="text-right"></td>
             <td class="text-right"><?php echo Html::encode($s->format_currency($inv_amount->getItem_subtotal())); ?></td>
         </tr>
 
-        <?php if ($inv_amount->getItem_tax_total() > 0) { ?>
+        <?php
+/** Item Tax **/
+              if ($inv_amount->getItem_tax_total() > 0) { ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                     <?= Html::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')); ?>
                 </td>
+                <td class="text-right"></td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($inv_amount->getItem_tax_total())); ?>
                 </td>
             </tr>
         <?php } ?>
             
-        <?php if (!empty($inv_tax_rates) && ($vat === '0')) { ?>    
+        <?php if ($vat == '0') { ?>    
         <?php
-                        /**
-                         * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
-                         */
+/**
+ * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
+ */
                         foreach ($inv_tax_rates as $inv_tax_rate) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?php echo Html::encode($inv_tax_rate->getTaxRate()?->getTaxRateName()) .
-                                           ' (' .
-                                           Html::encode($s->format_amount($inv_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
+                    <?php echo Html::encode($inv_tax_rate->getTaxRate()?->getTaxRateName()); ?>
                 </td>
+                <td class="text-right"><?= $inv_tax_rate->getTaxRate()?->getTaxRatePercent(); ?></td>
                 <td class="text-right">
                     <?php echo Html::encode($s->format_currency($inv_tax_rate->getInv_tax_rate_amount())); ?>
                 </td>
             </tr>
         <?php endforeach ?>
         <?php } ?>   
-        <?php if ($vat === '0') { ?>    
-        <?php if ($inv->getDiscount_percent() !== 0.00) { ?>
-            <tr>
-                <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?= Html::encode($translator->translate('discount')); ?>
-                </td>
-                <td class="text-right">
-                    <?php echo Html::encode($s->format_amount($inv->getDiscount_percent())); ?>%
-                </td>
-            </tr>
-        <?php } elseif ($inv->getDiscount_amount() !== 0.00) { ?>
-            <tr>
-                <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?= Html::encode($translator->translate('discount')); ?>
-                </td>
-                <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($inv->getDiscount_amount())); ?>
-                </td>
-            </tr>
-        <?php } ?>
-        <?php } ?>
+        <?php if ($vat == '0') { ?>    
+            <?php if ($inv->getDiscount_percent() !== 0.00) { ?>
+                <tr>
+                    <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
+                        <?= Html::encode($translator->translate('discount')); ?>
+                    </td>
+                    <td class="text-right"></td>
+                    <td class="text-right">
+                        <?php echo Html::encode($s->format_amount($inv->getDiscount_percent())); ?>%
+                    </td>
+                </tr>
+            <?php } elseif ($inv->getDiscount_amount() !== 0.00) { ?>
+                <tr>
+                    <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
+                        <?= Html::encode($translator->translate('discount')); ?>
+                    </td>
+                    <td class="text-right"></td>
+                    <td class="text-right">
+                        <?php echo Html::encode($s->format_currency($inv->getDiscount_amount())); ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        <?php } ?>            
+        <tr>
+            <td colspan="6" class="text-right">
+                <?= Html::encode($translator->translate('allowance.or.charge.shipping.handling.packaging')); ?>
+            </td>
+            <td class="text-right"></td>
+            <td class="text-right">
+                <?php echo Html::encode($s->format_currency($inv_amount->getPackHandleShip_total())); ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" class="text-right">
+                <?= Html::encode($vat == '1' ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat') : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax')); ?>
+            </td>
+            <td class="text-right"><?= 100 * ($inv_amount->getPackHandleShip_tax() / $inv_amount->getPackHandleShip_total()); ?></td>
+            <td class="text-right">
+                <?php echo Html::encode($s->format_currency($inv_amount->getPackHandleShip_tax())); ?>
+            </td>
+        </tr>    
         <tr>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                 <b><?= Html::encode($translator->translate('total')); ?></b>
             </td>
+            <td class="text-right"></td>
             <td class="text-right">
                 <b><?php echo Html::encode($s->format_currency($inv_amount->getTotal())); ?></b>
             </td>
@@ -260,13 +338,15 @@ if ($items) {
         </tbody>
     </table>
     <div style="page-break-before: always">
+        <?php echo $inv_allowance_charges; ?>
+    </div>
+    <div>
         <?php echo $delivery_location; ?>
     </div>
 </main>    
 <footer class="notes">
     <br>
     <?php if ($inv->getTerms()) { ?>
-    <div style="page-break-before: always"></div>
     <div>
         <b><?= Html::encode($translator->translate('terms')); ?></b><br>
         <?php

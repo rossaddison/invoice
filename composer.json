@@ -64,6 +64,7 @@
         "psr/http-server-middleware": "^1.0.2",
         "psr/log": "^3.0.2",
         "ramsey/uuid": "^4.9.0",
+        "rossaddison/data-cycle": "dev-master",
         "rossaddison/yii-auth-client": "dev-master",
         "rossaddison/yii-gii": "dev-phpspec-diff",
         "rossaddison/yii-sentry": "dev-master",
@@ -73,7 +74,7 @@
         "stripe/stripe-php": "^17.5.0",
         "symfony/console": "^7.3.2",
         "symfony/process": "^7.3",
-        "vjik/telegram-bot-api": "^0.9.1",
+        "vjik/telegram-bot-api": "^0.9.2",
         "vlucas/phpdotenv": "^5.6.2",
         "yiisoft/access": "^2.0",
         "yiisoft/aliases": "^3.1",
@@ -136,7 +137,7 @@
         "yiisoft/yii-runner-console": "^2.2",
         "yiisoft/yii-runner-http": "^3.2",
         "yiisoft/yii-view-renderer": "^7.3",
-        "zircote/swagger-php": "^4.11.1||^5.3.0"
+        "zircote/swagger-php": "^4.11.1||^5.3.1"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -205,6 +206,10 @@
     {
         "type": "composer",
         "url": "https://asset-packagist.org"
+    },
+    {
+        "type": "vcs",
+        "url": "https://github.com/rossaddison/data-cycle"
     },
     {
         "type": "vcs",

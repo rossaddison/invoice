@@ -6,6 +6,7 @@ namespace App\Invoice\InvAllowanceCharge;
 
 use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
+use App\Invoice\Setting\SettingRepository;
 
 final readonly class InvAllowanceChargeService
 {
@@ -31,8 +32,8 @@ final readonly class InvAllowanceChargeService
                 } else {
                     $amount = (float) $array['amount'];
                 }
-                $vat = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00) / 100.00;
-                $model->setVat($vat);
+                $vatOrTax = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00) / 100.00;
+                $model->setVatOrTax($vatOrTax);
             }
         }
         $this->repository->save($model);

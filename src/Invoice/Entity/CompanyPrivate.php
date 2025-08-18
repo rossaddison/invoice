@@ -56,6 +56,19 @@ class CompanyPrivate
         $this->date_modified = new DateTimeImmutable();
     }
 
+    public function isActiveToday(): bool
+    {
+        $today = new \DateTimeImmutable('today');
+        $startDate = $this->getStart_date();
+        $endDate = $this->getEnd_date();
+
+        if ($startDate === null || $endDate === null) {
+            return false;
+        }
+
+        return $today >= $startDate && $today <= $endDate;
+    }
+
     //get relation $company
     public function getCompany(): ?Company
     {

@@ -25,6 +25,8 @@ final readonly class InvAmountService
         $model->setSign(1);
         $model->setItem_subtotal(0.00);
         $model->setItem_tax_total(0.00);
+        $model->setPackhandleship_total(0.00);
+        $model->setPackhandleship_tax(0.00);
         $model->setTax_total(0.00);
         $model->setTotal(0.00);
         $model->setPaid(0.00);
@@ -44,6 +46,8 @@ final readonly class InvAmountService
         $model->setSign(1);
         null !== $basis_invoice ? $model->setItem_subtotal(($basis_invoice->getItem_subtotal() ?: 0.00) * -1.00) : '';
         null !== $basis_invoice ? $model->setItem_tax_total(($basis_invoice->getItem_tax_total() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setPackhandleship_total(($basis_invoice->getPackhandleship_total() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setPackhandleship_tax(($basis_invoice->getPackhandleship_tax() ?: 0.00) * -1.00) : '';
         null !== $basis_invoice ? $model->setTax_total(($basis_invoice->getTax_total() ?? 0.00) * -1.00) : '';
         null !== $basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?? 0.00) * -1.00) : '';
         $model->setPaid(0.00);
@@ -64,6 +68,8 @@ final readonly class InvAmountService
         /** @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
         $model->setItem_subtotal($basis_invoice->getItem_subtotal());
         $model->setItem_tax_total($basis_invoice->getItem_tax_total() ?: 0.00);
+        $model->setPackhandleship_total($basis_invoice->getPackhandleship_total() ?: 0.00);
+        $model->setPackhandleship_tax($basis_invoice->getPackhandleship_tax() ?: 0.00);
         $model->setTax_total($basis_invoice->getTax_total() ?? 0.00);
         $model->setTotal($basis_invoice->getTotal() ?? 0.00);
         $model->setPaid(0.00);
@@ -82,6 +88,8 @@ final readonly class InvAmountService
         $model->setSign(1);
         isset($array['item_subtotal']) ? $model->setItem_subtotal((float) $array['item_subtotal']) : '';
         isset($array['item_tax_total']) ? $model->setItem_tax_total((float) $array['item_tax_total']) : '';
+        isset($array['packhandleship_total']) ? $model->setPackhandleship_total((float) $array['packhandleship_total']) : '';
+        isset($array['packhandleship_tax']) ? $model->setPackhandleship_tax((float) $array['packhandleship_tax']) : '';
         isset($array['tax_total']) ? $model->setTax_total((float) $array['tax_total']) : '';
         isset($array['total']) ? $model->setTotal((float) $array['total']) : '';
         isset($array['paid']) ? $model->setPaid((float) $array['paid']) : '';
@@ -98,6 +106,8 @@ final readonly class InvAmountService
         $model->setInv_id((int) $array['inv_id']);
         $model->setItem_subtotal((float) $array['item_subtotal']);
         $model->setItem_tax_total((float) $array['item_taxtotal']);
+        $model->setPackhandleship_total((float) $array['packhandleship_total']);
+        $model->setPackhandleship_tax((float) $array['packhandleship_tax']);
         $model->setTax_total((float) $array['tax_total']);
         $model->setTotal((float) $array['total']);
         $model->setPaid((float) $array['paid']);
@@ -127,6 +137,8 @@ final readonly class InvAmountService
                  */
                 $items = $inv->getItems();
                 $subtotal = 0.00;
+                $packHandleShipTotal = 0.00;
+                $packHandleShipTax = 0.00;
                 $taxTotal = 0.00;
                 $discount = 0.00;
                 $charge = 0.00;
@@ -147,9 +159,12 @@ final readonly class InvAmountService
                         }
                     }
                 }
+
                 $model->setSign(1);
                 $model->setItem_subtotal($subtotal);
                 $model->setItem_tax_total($taxTotal);
+                $model->setPackhandleship_total($packHandleShipTotal);
+                $model->setPackhandleship_tax($packHandleShipTax);
                 $additionalTaxTotal = $numberHelper->calculate_inv_taxes((string) $inv_id, $itrR, $iaR);
                 $model->setTax_total($additionalTaxTotal);
                 $model->setTotal($subtotal + $taxTotal + $additionalTaxTotal);

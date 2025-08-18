@@ -16,6 +16,9 @@ final class AllowanceChargeForm extends FormModel
     #[Required]
     private ?bool $identifier = false;
 
+    #[Required]
+    private int $level = 0;
+
     /**
      * Related logic: see Not required because determined from value 'reason' in array using AllowanceChargeContoller
      */
@@ -40,6 +43,7 @@ final class AllowanceChargeForm extends FormModel
     {
         $this->id = $allowanceCharge->getId();
         $this->identifier = $allowanceCharge->getIdentifier();
+        $this->level = $allowanceCharge->getLevel();
         $this->reason_code = $allowanceCharge->getReasonCode();
         $this->reason = $allowanceCharge->getReason();
         $this->multiplier_factor_numeric = $allowanceCharge->getMultiplierFactorNumeric();
@@ -51,6 +55,11 @@ final class AllowanceChargeForm extends FormModel
     public function getIdentifier(): bool|null
     {
         return $this->identifier;
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
     }
 
     public function getReasonCode(): string|null

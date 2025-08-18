@@ -65,13 +65,13 @@ echo Form::tag()
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Field::text($form, 'vat')
+                    <?= Field::text($form, 'vat_or_tax')
     ->label($translator->translate('vat.abbreviation'))
     ->addInputAttributes([
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getVat()));
+    ->value(Html::encode($form->getVatOrTax()));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

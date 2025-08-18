@@ -34,6 +34,7 @@ use App\Invoice\Entity\Upload;
 // Inv
 use App\User\UserService;
 use App\User\User;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
 use App\Invoice\InvAmount\InvAmountService;
@@ -144,9 +145,11 @@ final class InvController extends BaseController
     private readonly PdfHelper $pdf_helper;
 
     /**
+     *
      * @param Crypt $crypt
      * @param DataResponseFactoryInterface $factory
      * @param DelRepo $delRepo
+     * @param InvAllowanceChargeService $inv_allowance_charge_service
      * @param InvAmountService $inv_amount_service
      * @param InvService $inv_service
      * @param InvCustomService $inv_custom_service
@@ -155,18 +158,20 @@ final class InvController extends BaseController
      * @param InvTaxRateService $inv_tax_rate_service
      * @param LoggerInterface $logger
      * @param MailerInterface $mailer
+     * @param UrlGenerator $url_generator
      * @param SessionInterface $session
      * @param SR $sR
      * @param TranslatorInterface $translator
      * @param UserService $userService
-     * @param UrlGenerator $url_generator
      * @param ViewRenderer $viewRenderer
      * @param WebControllerService $webService
+     * @param Flash $flash
      */
     public function __construct(
         private readonly Crypt $crypt,
         private readonly DataResponseFactoryInterface $factory,
         private readonly DelRepo $delRepo,
+        private readonly InvAllowanceChargeService $inv_allowance_charge_service,
         private readonly InvAmountService $inv_amount_service,
         private readonly InvService $inv_service,
         private readonly InvCustomService $inv_custom_service,
@@ -1563,10 +1568,12 @@ final class InvController extends BaseController
      * @param CCR $ccR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @apram ACIR $aciR
      * @param CVR $cvR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIAR $iiaR
+     * @param ACIIR $aciiR
      * @param IIR $iiR
      * @param IR $iR
      * @param ITRR $itrR
@@ -1594,10 +1601,12 @@ final class InvController extends BaseController
         CCR $ccR,
         CFR $cfR,
         DLR $dlR,
+        ACIR $aciR,
         CVR $cvR,
         IAR $iaR,
         ICR $icR,
         IIAR $iiaR,
+        ACIIR $aciiR,
         IIR $iiR,
         IR $iR,
         ITRR $itrR,
@@ -1638,7 +1647,7 @@ final class InvController extends BaseController
                 $so = ($inv->getSo_id() ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                 // true => invoice ie. not quote
                 // If $stream is false => pdfhelper->generate_inv_pdf => mpdfhelper->pdf_Create => filename returned
-                $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $viewrenderer);
+                $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $viewrenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template($inv_id, true, $email_body, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     $mail_subject = $template_helper->parse_template($inv_id, true, $subject, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
@@ -1681,9 +1690,11 @@ final class InvController extends BaseController
      * @param CCR $ccR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param CVR $cvR
      * @param GR $gR
      * @param IAR $iaR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param ICR $icR
      * @param IIR $iiR
@@ -1708,9 +1719,11 @@ final class InvController extends BaseController
         CCR $ccR,
         CFR $cfR,
         DLR $dlR,
+        ACIR $aciR,
         CVR $cvR,
         GR $gR,
         IAR $iaR,
+        ACIIR $aciiR,
         IIAR $iiaR,
         ICR $icR,
         IIR $iiR,
@@ -1787,10 +1800,12 @@ final class InvController extends BaseController
                     $ccR,
                     $cfR,
                     $dlR,
+                    $aciR,
                     $cvR,
                     $iaR,
                     $icR,
                     $iiaR,
+                    $aciiR,
                     $iiR,
                     $iR,
                     $itrR,
@@ -1972,10 +1987,12 @@ final class InvController extends BaseController
      * @param CVR $cvR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
@@ -1983,7 +2000,7 @@ final class InvController extends BaseController
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function html(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse
+    public function html(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, SOR $soR): \Yiisoft\DataResponse\DataResponse
     {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
@@ -2004,7 +2021,9 @@ final class InvController extends BaseController
                     $cvR,
                     $cfR,
                     $dlR,
+                    $aciR,
                     $iiR,
+                    $aciiR,
                     $iiaR,
                     $inv,
                     $itrR,
@@ -2208,11 +2227,13 @@ final class InvController extends BaseController
      * @param CVR $cvR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param SOR $soR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
@@ -2220,7 +2241,7 @@ final class InvController extends BaseController
      * @param UIR $uiR
      * @param Request $request
      */
-    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
+    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
     {
         // include is a value of 0 or 1 passed from inv.js function inv_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the inv or not.
@@ -2241,7 +2262,7 @@ final class InvController extends BaseController
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
                 $so = !empty($inv->getSo_id()) ? $soR->repoSalesOrderUnloadedquery($inv->getSo_id()) : null;
-                $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 return $this->pdf_archive_message();
             } // $inv
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -2272,10 +2293,12 @@ final class InvController extends BaseController
      * @param CVR $cvR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
@@ -2283,7 +2306,7 @@ final class InvController extends BaseController
      * @param SOR $soR
      * @param SumexR $sumexR
      */
-    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
+    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
     {
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
@@ -2301,7 +2324,7 @@ final class InvController extends BaseController
                 $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 } //inv
             } //$inv_amount
         } //$inv_id
@@ -2313,10 +2336,12 @@ final class InvController extends BaseController
      * @param CVR $cvR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
@@ -2324,7 +2349,7 @@ final class InvController extends BaseController
      * @param SOR $soR
      * @param SumexR $sumexR
      */
-    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
+    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR, SumexR $sumexR): void
     {
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ? $iaR->repoInvquery($inv_id) : null);
@@ -2342,7 +2367,7 @@ final class InvController extends BaseController
                 $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
                     $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
-                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    $pdfhelper->generate_inv_pdf((string) $inv_id, $inv->getUser_id(), $stream, false, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                 } //inv
             } //inv_amount
         } // inv_id
@@ -2354,10 +2379,12 @@ final class InvController extends BaseController
      * @param CVR $cvR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
@@ -2366,7 +2393,7 @@ final class InvController extends BaseController
      * @param UPR $upR
      * @return mixed
      */
-    public function pdf_download_include_cf(#[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
+    public function pdf_download_include_cf(#[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
     {
         if ($url_key) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
@@ -2395,7 +2422,7 @@ final class InvController extends BaseController
                         $so = (!empty($inv->getSo_id()) ? $soR->repoSalesOrderLoadedquery($inv->getSo_id()) : null);
                         // Because the invoice is not streamed an aliase of temporary folder file location is returned
                         /** @var string $temp_aliase */
-                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -2439,10 +2466,12 @@ final class InvController extends BaseController
      * @param CVR $cvR
      * @param CFR $cfR
      * @param DLR $dlR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
@@ -2451,7 +2480,7 @@ final class InvController extends BaseController
      * @param UPR $upR
      * @return mixed
      */
-    public function pdf_download_exclude_cf(#[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
+    public function pdf_download_exclude_cf(#[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR, SumexR $sumexR, UIR $uiR, UPR $upR): mixed
     {
         if ($urlKey) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
@@ -2480,7 +2509,7 @@ final class InvController extends BaseController
                         $so = $soR->repoSalesOrderLoadedquery($inv->getSo_id());
                         // Because the invoice is not streamed an aliase of temporary folder file location is returned
                         /** @var string $temp_aliase */
-                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $iiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                        $temp_aliase = $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $c_f, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -2716,6 +2745,27 @@ final class InvController extends BaseController
         return null;
     }
 
+    private function inv_to_inv_inv_allowance_charges(string $inv_id, string $copy_id, ACIR $aciR, FormHydrator $formHydrator): void
+    {
+        $inv_allowance_charges = $aciR->repoACIquery($inv_id);
+        /**
+         * @var InvAllowanceCharge $inv_allowance_charge
+         */
+        foreach ($inv_allowance_charges as $inv_allowance_charge) {
+            $copy_inv_allowance_charge = [
+                'inv_id' => $copy_id,
+                'allowance_charge_id' => $inv_allowance_charge->getAllowance_charge_id(),
+                'amount' => $inv_allowance_charge->getAmount(),
+                'vat_or_tax' => $inv_allowance_charge->getVatOrTax(),
+            ];
+            $invAllowanceCharge = new InvAllowanceCharge();
+            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $copy_id);
+            if ($formHydrator->populateAndValidate($form, $copy_inv_allowance_charge)) {
+                $this->inv_allowance_charge_service->saveInvAllowanceCharge($invAllowanceCharge, $copy_inv_allowance_charge);
+            }
+        }
+    }
+
     /**
      * @param int $invId
      * @param int $copiedId
@@ -2729,6 +2779,8 @@ final class InvController extends BaseController
             $array['inv_id'] = $original->getInv_id();
             $array['item_subtotal'] = $original->getItem_subtotal();
             $array['item_taxtotal'] = $original->getItem_tax_total();
+            $array['packhandleship_tax'] = $original->getPackhandleship_tax();
+            $array['packhandleship_total'] = $original->getPackhandleship_tax();
             $array['tax_total'] = $original->getTax_total();
             $array['total'] = $original->getTotal();
             $array['paid'] = 0;
@@ -2743,6 +2795,7 @@ final class InvController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ACIIR $aciiR
+     * @param ACIR $aciR
      * @param GR $gR
      * @param IIAS $iiaS
      * @param PR $pR
@@ -2763,6 +2816,7 @@ final class InvController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ACIIR $aciiR,
+        ACIR $aciR,
         GR $gR,
         IIAS $iiaS,
         PR $pR,
@@ -2814,6 +2868,7 @@ final class InvController extends BaseController
                         $this->inv_to_inv_inv_items($inv_id, $copy_id, $iiaR, $iiaS, $pR, $taskR, $iiR, $trR, $aciiR, $formHydrator, $unR);
                         $this->inv_to_inv_inv_tax_rates($inv_id, $copy_id, $itrR, $formHydrator);
                         $this->inv_to_inv_inv_custom($inv_id, $copy_id, $icR, $formHydrator);
+                        $this->inv_to_inv_inv_allowance_charges($inv_id, $copy_id, $aciR, $formHydrator);
                         $this->inv_to_inv_inv_amount((int) $inv_id, (int) $copy_id, $iaR);
                         $iR->save($copy);
                         $parameters = ['success' => 1];
@@ -4346,12 +4401,12 @@ final class InvController extends BaseController
             $draft = ($inv->getStatus_id() == '1' ? true : false);
             $inv_tax_rates = (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : null);
             // Allowances or Charges: DOCUMENT Level using $aciR
-            $acis = $aciR->repoACIquery((string) $inv->getId());
+            $packHandleShipTotal = $aciR->getPackHandleShipTotal((string) $inv->getId());
             // Allowances or Charges: ITEM Level using $aciiR
             ////$inv_item_allowances_charges=$aciiR->repoACIquery((string)$inv->getId());
             ////$inv_item_allowances_charges_count=$aciiR->repoCount((string)$inv->getId());
             return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_item_table', [
-                'dlAcis' => $acis,
+                'packHandleShipTotal' => $packHandleShipTotal,
                 'aciiR' => $aciiR,
                 // Only make buttons available if status is draft
                 'draft' => $draft,

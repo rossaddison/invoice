@@ -17,7 +17,7 @@ use Yiisoft\Html\Html;
     'id' => 'add-inv-allowance-charge',
     'class' => 'modal',
     'tab-index' => '-1']); ?>
-    <?= Html::openTag('div', ['class' => 'modal-dialog']); ?>
+    <?= Html::openTag('div', ['class' => 'modal-dialog modal-lg']); ?>
         <?= Html::openTag('div', ['class' => 'modal-content']); ?>
             <?= Html::openTag('div', ['class' => 'modal-header']); ?>
                 <?= Html::openTag('h5', ['class' => 'modal-title']); ?>
@@ -33,7 +33,7 @@ use Yiisoft\Html\Html;
                 <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'modal-body']); ?>
-                <?php echo $modal_add_allowance_charge_form; ?>    
+                <?= $modal_add_allowance_charge_form; ?>    
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

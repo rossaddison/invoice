@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItem;
 
-use App\Invoice\Entity\AllowanceCharge;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvItemAllowanceCharge;
@@ -139,7 +138,7 @@ final readonly class InvItemService
             $iiac->setInv_id((int) $copyInvId);
             $iiac->setInv_item_id($newId);
             $iiac->setAmount((float) $originalAC->getAmount());
-            $iiac->setVat((float) $originalAC->getVat());
+            $iiac->setVatOrTax((float) $originalAC->getVatOrTax());
             $aciiR->save($iiac);
         }
     }

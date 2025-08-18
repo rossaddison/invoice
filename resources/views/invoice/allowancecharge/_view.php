@@ -41,6 +41,13 @@ use Yiisoft\Html\Tag\Form;
                     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
+                <?= Field::checkbox($form, 'level')
+    ->inputLabel($translator->translate('allowance.or.charge.level')) // set the custom label here
+    ->inputLabelAttributes(['class' => 'form-check-label fs-4'])
+    ->inputClass('form-check-input')
+?>
+            <?= Html::closeTag('div'); ?>  
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'reason_code')
     ->addInputAttributes(['style' => 'background:lightblue'])
@@ -69,10 +76,18 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'base_amount')
     ->addInputAttributes(['style' => 'background:lightblue'])
     ->label($translator->translate('allowance.or.charge.amount'))
-    ->value(Html::encode($form->getBaseAmount() ?? ''))
+    ->value(Html::encode($form->getAmount() ?? ''))
     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?= Field::text($form, 'base_amount')
+    ->addInputAttributes(['style' => 'background:lightblue'])
+    ->label($translator->translate('allowance.or.charge.base.amount'))
+    ->value(Html::encode($form->getBaseAmount() ?? ''))
+    ->readonly(true);
+?>
+            <?= Html::closeTag('div'); ?>            
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

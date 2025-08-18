@@ -249,7 +249,7 @@ if ($showButtons && $invEdit) {
                         <li>
                             <a href="#add-inv-allowance-charge" data-bs-toggle="modal"  style="text-decoration:none">
                                 <i class="fa fa-plus fa-margin"></i>
-                                <?= $translator->translate('allowance.or.charge.add'); ?>
+                                <?= $translator->translate('allowance.or.charge.inv.add'); ?>
                             </a>
                         </li>
                     <?php } ?>
@@ -822,5 +822,5 @@ $terms = (string) $paymentTermArray[$termsKey];
             <div id="view_partial_inv_attachments">
 <?= $partial_inv_attachments; ?>
             </div>
-<?php  echo $modal_add_allowance_charge; ?>
+<?= $modal_add_allowance_charge; ?>
         <?= Html::closeTag('div'); ?>

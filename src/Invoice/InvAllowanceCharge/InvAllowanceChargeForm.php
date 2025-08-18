@@ -17,13 +17,13 @@ final class InvAllowanceChargeForm extends FormModel
     #[GreaterThan(0)]
     private ?int $amount = null;
 
-    private ?int $vat = null;
+    private ?int $vat_or_tax = null;
 
     public function __construct(InvAllowanceCharge $invAllowanceCharge, private readonly ?int $inv_id)
     {
         $this->allowance_charge_id = (int) $invAllowanceCharge->getAllowance_charge_id();
         $this->amount = (int) $invAllowanceCharge->getAmount();
-        $this->vat = (int) $invAllowanceCharge->getVat();
+        $this->vat_or_tax = (int) $invAllowanceCharge->getVatOrTax();
     }
 
     public function getId(): int|null
@@ -46,9 +46,9 @@ final class InvAllowanceChargeForm extends FormModel
         return $this->amount;
     }
 
-    public function getVat(): int|null
+    public function getVatOrTax(): int|null
     {
-        return $this->vat;
+        return $this->vat_or_tax;
     }
 
     /**

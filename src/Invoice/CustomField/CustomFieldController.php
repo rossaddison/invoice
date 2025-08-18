@@ -263,13 +263,13 @@ final class CustomFieldController extends BaseController
         // The default position on the form is custom fields so if none of the other options are chosen then the new field
         // will appear under the default custom field section. The client form has five areas where the new field can appear.
         $positions = [
-            'client' => ['i.custom_fields', 'i.address', 'i.contact_information', 'i.personal_information', 'i.tax_information'],
-            'product' => ['i.custom_fields'],
+            'client' => ['custom.fields', 'address', 'contact.information', 'personal.information', 'tax.information'],
+            'product' => ['custom.fields'],
             // A custom field created with "properties" will appear in the address section
-            'invoice' => ['i.custom_fields','i.properties'],
-            'payment' => ['i.custom_fields'],
-            'quote' => ['i.custom_fields','i.properties'],
-            'user' => ['i.custom_fields', 'i.account_information', 'i.address', 'i.tax_information', 'i.contact_information'],
+            'invoice' => ['custom.fields','properties'],
+            'payment' => ['custom.fields'],
+            'quote' => ['custom.fields','properties'],
+            'user' => ['custom.fields', 'account.information', 'address', 'tax.information', 'contact.information'],
         ];
         foreach ($positions as $key => $val) {
             foreach ($val as $key2 => $val2) {
