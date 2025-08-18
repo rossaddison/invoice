@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20d5c86cac9034a32e16814cf59731fb",
+    "content-hash": "582263598dc5740ccf8363715ae00af3",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3289,16 +3289,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.64.1",
+            "version": "v1.64.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "000a7957f2cf6d7d04d47f8d3ef981777d38b6f9"
+                "reference": "5fe68c9fa99020fdf3060094568f99d77bdc240c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/000a7957f2cf6d7d04d47f8d3ef981777d38b6f9",
-                "reference": "000a7957f2cf6d7d04d47f8d3ef981777d38b6f9",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/5fe68c9fa99020fdf3060094568f99d77bdc240c",
+                "reference": "5fe68c9fa99020fdf3060094568f99d77bdc240c",
                 "shasum": ""
             },
             "require": {
@@ -3349,9 +3349,9 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.64.1"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.64.2"
             },
-            "time": "2025-07-18T20:06:03+00:00"
+            "time": "2025-08-18T18:45:43+00:00"
         },
         {
             "name": "google/cloud-translate",
@@ -3411,20 +3411,20 @@
         },
         {
             "name": "google/common-protos",
-            "version": "4.12.2",
+            "version": "4.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/common-protos-php.git",
-                "reference": "0a399e6f39576e39ae9b66d3c704ae294afab1dc"
+                "reference": "64f73256492585461ab291aee90d07175d0c79b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/0a399e6f39576e39ae9b66d3c704ae294afab1dc",
-                "reference": "0a399e6f39576e39ae9b66d3c704ae294afab1dc",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/64f73256492585461ab291aee90d07175d0c79b9",
+                "reference": "64f73256492585461ab291aee90d07175d0c79b9",
                 "shasum": ""
             },
             "require": {
-                "google/protobuf": "^v3.25.3||^4.26.1",
+                "google/protobuf": "^4.26.1",
                 "php": "^8.1"
             },
             "require-dev": {
@@ -3464,9 +3464,9 @@
                 "google"
             ],
             "support": {
-                "source": "https://github.com/googleapis/common-protos-php/tree/v4.12.2"
+                "source": "https://github.com/googleapis/common-protos-php/tree/v4.12.3"
             },
-            "time": "2025-07-18T20:06:03+00:00"
+            "time": "2025-08-18T18:45:43+00:00"
         },
         {
             "name": "google/gax",
@@ -14065,76 +14065,6 @@
             "time": "2025-08-16T17:33:24+00:00"
         },
         {
-            "name": "yiisoft/data-cycle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/data-cycle.git",
-                "reference": "12b8fff921c9cc79c481227e2d25f5b2baf64a0b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data-cycle/zipball/12b8fff921c9cc79c481227e2d25f5b2baf64a0b",
-                "reference": "12b8fff921c9cc79c481227e2d25f5b2baf64a0b",
-                "shasum": ""
-            },
-            "require": {
-                "cycle/database": "^2.11",
-                "cycle/orm": "^2.9",
-                "ext-mbstring": "*",
-                "php": "^8.1",
-                "yiisoft/data": "dev-master"
-            },
-            "require-dev": {
-                "maglnet/composer-require-checker": "^4.7",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^2.0",
-                "roave/infection-static-analysis-plugin": "^1.35",
-                "spatie/phpunit-watcher": "^1.24",
-                "vimeo/psalm": "^5.26",
-                "vlucas/phpdotenv": "^5.6"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Data\\Cycle\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Cycle ORM query adapter for yiisoft/data",
-            "homepage": "https://www.yiiframework.com/",
-            "keywords": [
-                "cycle",
-                "data provider",
-                "database",
-                "db",
-                "orm"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/data-cycle/issues?state=open",
-                "source": "https://github.com/yiisoft/data-cycle",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "opencollective"
-                }
-            ],
-            "time": "2025-03-17T12:03:34+00:00"
-        },
-        {
             "name": "yiisoft/data-response",
             "version": "2.1.0",
             "source": {
@@ -14221,12 +14151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "3e9cad28dad53bc40223c0c905e30762e825313a"
+                "reference": "d8bd8062d9641d9568a6dfde26c6d5d1ea84ab65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/3e9cad28dad53bc40223c0c905e30762e825313a",
-                "reference": "3e9cad28dad53bc40223c0c905e30762e825313a",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/d8bd8062d9641d9568a6dfde26c6d5d1ea84ab65",
+                "reference": "d8bd8062d9641d9568a6dfde26c6d5d1ea84ab65",
                 "shasum": ""
             },
             "require": {
@@ -14298,7 +14228,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-16T14:51:58+00:00"
+            "time": "2025-08-18T11:46:58+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -17680,12 +17610,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "27572d6666ea0c3a2b9866e54d64364013dbe084"
+                "reference": "ec3ab2d967fccdd4dd6b617448bca344d3cd4c9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/27572d6666ea0c3a2b9866e54d64364013dbe084",
-                "reference": "27572d6666ea0c3a2b9866e54d64364013dbe084",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/ec3ab2d967fccdd4dd6b617448bca344d3cd4c9e",
+                "reference": "ec3ab2d967fccdd4dd6b617448bca344d3cd4c9e",
                 "shasum": ""
             },
             "require": {
@@ -17768,7 +17698,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-29T09:42:20+00:00"
+            "time": "2025-08-18T11:46:41+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -24289,7 +24219,6 @@
         "rossaddison/yii-gii": 20,
         "rossaddison/yii-sentry": 20,
         "yiisoft/data": 20,
-        "yiisoft/data-cycle": 20,
         "yiisoft/db": 20,
         "yiisoft/db-mysql": 20,
         "yiisoft/rate-limiter": 20,
