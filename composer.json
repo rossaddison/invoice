@@ -88,7 +88,6 @@
         "yiisoft/cookies": "^1.2.3",
         "yiisoft/csrf": "^2.2.2",
         "yiisoft/data": "dev-master",
-        "yiisoft/data-cycle": "dev-master",
         "yiisoft/data-response": "^2.1",
         "yiisoft/db": "dev-master",
         "yiisoft/db-mysql": "dev-master",
