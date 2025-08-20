@@ -51,12 +51,14 @@ trait OpenBankingProviders
             'notes' => 'Authentication is via dashboard-issued API token. OAuth2 endpoints are not available.',
         ],
         'tink' => [
-            'authUrl' => 'https://oauth.tink.com/authorize/',
+            'authUrl' => 'https://link.tink.com/authorize/',
             'tokenUrl' => 'https://oauth.tink.com/api/v1/oauth/token',
             'apiBaseUrl' => 'https://api.tink.com/data/v2/',
-            'scope' => 'accounts:read transactions:read',
+            'scope' => 'payment:read payment:write',
+            'paymentRequestUrl' => 'https://api.tink.com/api/v1/payments/requests',
+            'sandboxUrl' => 'https://console.tink.com/app-settings/client',
             'userinfoUrl' => 'https://api.tink.com/api/v1/user-info',
-            'documentationUrl' => 'https://docs.tink.com/resources/api-reference/open-banking-apis',
+            'documentationUrl' => 'https://docs.tink.com/resources/payments/one-time-payments/initiate-your-first-one-time-payment',
             'furtherSecuredWithOIDC' => [
                 'value' => true,
                 'date' => '2025-07-12',

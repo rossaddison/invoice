@@ -132,6 +132,20 @@ final class PaymentInformationController
         );
     }
 
+    /**
+     *  'inv' => [
+     *      'id',
+     *      'balance',
+     *      'customer_id',
+     *      'customer',
+     *      'currency',
+     *      'customer_email',
+     *      'description',
+     *      'number',
+     *      'url_key'
+     *   ],
+     */
+
     public function openBankingInForm(
         string $client_chosen_gateway,
         string $url_key,
@@ -139,18 +153,17 @@ final class PaymentInformationController
         cR $cR,
         Inv $invoice,
         array $items_array,
+        array $inv,
         bool $disable_form,
         bool $is_overdue,
         string $payment_method_for_this_invoice,
         float $total,
     ): Response {
-        // Get the Open Banking provider and config
-        $provider       = $this->sR->getSetting('open_banking_provider');
-        $providerConfig = $provider ? $this->getOpenBankingProviderConfig($provider) : null;
-
+        $provider = $this->extractProviderLower($client_chosen_gateway);
+        $providerConfig = (null !== $provider) ? $this->getOpenBankingProviderConfig($provider) : null;
         // Determine if provider is 'wonderful' by examining if the apiToken is filled
-        $isWonderful = (strlen($this->sR->getSetting('gateway_openbanking_apiToken')) > 0);
-
+        $isWonderful = ($client_chosen_gateway == 'Open_Banking_With_Wonderful') && (strlen($this->sR->getSetting('gateway_open_banking_with_wonderful_apiToken')) > 0);
+        $isTink = ($client_chosen_gateway == 'Open_Banking_With_Tink');
         // Prepare view data
         $viewData = [
             'alert'                  => $this->alert(),
@@ -170,28 +183,66 @@ final class PaymentInformationController
             ),
             'payment_method' => $payment_method_for_this_invoice,
             'provider'       => $provider,
-            'title'          => 'Open Banking is enabled',
+            'title'          => 'Open Banking with ' . ucfirst($provider ?? 'Not Provided') . ' is enabled',
             'total'          => $total,
         ];
-
+        $amount = ((($balance > 0) && ($total > 0)) ? $balance : 0);
         if ($isWonderful) {
-            $details = $this->openBankingPaymentService->paymentStatusAndDetails($url_key, $balance, $total, $invoice, $items_array);
-            $singleKeyArray = (array) ($details['data'] ?? []);
-            $data = (array) ($singleKeyArray['data'] ?? []);
-            $viewData['wonderfulId'] = (string) ($data['id'] ?? '');
-            $viewData['amountFormatted'] = (string) ($data['amount_formatted'] ?? '');
-            $viewData['reference'] = (string) ($data['reference'] ?? '');
-            $viewData['createdAt'] = (string) ($data['created_at'] ?? '');
-            $viewData['updatedAt'] = (string) ($data['updated_at'] ?? '');
-            $viewData['status'] = (string) ($data['status'] ?? '');
-            // Wonderful requires an authToken, not an authUrl because it is not oauth linked
-            $viewData['authToken'] = true;
-            $viewData['paymentLink'] = (string) ($data['pay_link'] ?? '');
+            $providerType = 'wonderful';
+        } elseif ($isTink) {
+            $providerType = 'tink';
         } else {
-            // Other open banking providers use authUrl since they are oauth2.0 linked
-            $authUrl               = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
-            $viewData['authUrl']   = $authUrl;
-            $viewData['returnUrl'] = ['paymentinformation/paymentinformation_openbanking', ['url_key' => $url_key, '_language' => 'en'], [], null];
+            $providerType = 'oauth';
+        }
+        switch ($providerType) {
+            case 'wonderful':
+                // The default currency is GBP so yii_invoice_array not used
+                $details = $this->openBankingPaymentService->paymentStatusAndDetails($url_key, $amount, $invoice, $items_array);
+                $singleKeyArray = (array) ($details['data'] ?? []);
+                $data = (array) ($singleKeyArray['data'] ?? []);
+                $viewData['wonderfulId'] = (string) ($data['id'] ?? '');
+                $viewData['amountFormatted'] = (string) ($data['amount_formatted'] ?? '');
+                $viewData['reference'] = (string) ($data['reference'] ?? '');
+                $viewData['createdAt'] = (string) ($data['created_at'] ?? '');
+                $viewData['updatedAt'] = (string) ($data['updated_at'] ?? '');
+                $viewData['status'] = (string) ($data['status'] ?? '');
+                // Wonderful requires an authToken, not an authUrl because it is not oauth linked
+                $viewData['authToken'] = true;
+                $viewData['paymentLink'] = (string) ($data['pay_link'] ?? '');
+                break;
+
+            case 'tink':
+                $recipientName = ((null !== ($company = $this->compR->repoCompanyActivequery())) ? $company->getName() : 'Unknown');
+                if (null !== $company && null !== $company->getName()) {
+                    $clientId = $this->sR->getSetting('gateway_open_banking_with_tink_client_id');
+                    $clientSecret = $this->sR->getSetting('gateway_open_banking_with_tink_client_secret');
+                    if (strlen($clientId) > 0 && strlen($clientSecret) > 0) {
+                        if (in_array((string) $inv['currency'], ['SEK', 'EUR', 'NOK', 'DKK', 'GBP'])) {
+                            $invCurrency = strtoupper((string) $inv['currency']);
+                            $details = $this->openBankingPaymentService->initiateTinkPayment($amount, $invoice, $company, $invCurrency, (string) $recipientName, (int) $clientId, (int) $clientSecret);
+                            $singleKeyArray = (array) ($details['data'] ?? []);
+                            $data = (array) ($singleKeyArray['data'] ?? []);
+                            $paymentRequestId = (string) ($data['id'] ?? '');
+                            $viewData['authToken'] = false;
+                            $market = (string) ($data['market'] ?? '');
+                            $locale = 'en_GB';
+                            $redirectUri = urlencode($this->urlGenerator->generate('paymentinformation/tink_complete', ['url_key' => $url_key, 'payment_request_id' => $paymentRequestId]));
+                            $viewData['authUrl'] = "https://link.tink.com/1.0/pay/direct/?client_id={$clientId}&redirect_uri={$redirectUri}&market={$market}&locale={$locale}&payment_request_id={$paymentRequestId}";
+                        } else {
+                            $viewData['alert'] = 'Currency not supported.';
+                        }
+                    } else {
+                        $viewData['alert'] = 'Missing Credentials Client Id and Client Secret';
+                    }
+                }
+                break;
+
+            default:
+                // Other open banking providers use authUrl since they are oauth2.0 linked
+                $authUrl               = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
+                $viewData['authUrl']   = $authUrl;
+                $viewData['returnUrl'] = ['paymentinformation/paymentinformation_openbanking', ['url_key' => $url_key, '_language' => 'en'], [], null];
+                break;
         }
         return $this->viewRenderer->render('//invoice/paymentinformation/payment_information_openbanking', $viewData);
     }
@@ -307,6 +358,26 @@ final class PaymentInformationController
         return $this->webService->getNotFoundResponse();
     }
 
+    public function tink_complete(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    {
+        $urlKey = $currentRoute->getArgument('url_key');
+        $ref = $currentRoute->getArgument('ref');
+        $view_data = [
+            'render' => $this->viewRenderer->renderPartialAsString(
+                '//invoice/setting/payment_message',
+                [
+                    'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $ref ?? 'No ref provided'),
+                    'message'     => 'Ref: ' . ($ref ?? 'No ref provided'),
+                    'url'         => 'inv/url_key',
+                    'url_key'     => $urlKey,
+                    'gateway'     => 'Wonderful',
+                    'sandbox_url' => '',
+                ],
+            ),
+        ];
+        return $this->viewRenderer->render('payment_completion_page', $view_data);
+    }
+
     public function wonderful_complete(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
     {
         $urlKey = $currentRoute->getArgument('url_key');
@@ -355,7 +426,6 @@ final class PaymentInformationController
                 if (null !== $invoice_amount_record) {
                     $balance = $invoice_amount_record->getBalance();
                     $total   = $invoice_amount_record->getTotal();
-                    // Load details that will go with the swipe payment intent
                     $yii_invoice_array = [
                         'id'          => $invoice_id,
                         'balance'     => $balance,
@@ -411,6 +481,9 @@ final class PaymentInformationController
         return $this->webService->getNotFoundResponse();
     }
 
+    /**
+     * Related logic: see SettingRepository function active_payment_gateways
+     */
     public function pciCompliantGatewayInForms(
         string $d,
         Request $request,
@@ -432,7 +505,8 @@ final class PaymentInformationController
         if (null !== $invoice->getNumber()) {
             if ('1' === $this->sR->getSetting('gateway_' . $d . '_enabled')) {
                 switch ($client_chosen_gateway) {
-                    case 'OpenBanking':
+                    case 'Open_Banking_With_Wonderful':
+                    case 'Open_Banking_With_Tink':
                         return $this->openBankingInForm(
                             $client_chosen_gateway,
                             $url_key,
@@ -440,6 +514,7 @@ final class PaymentInformationController
                             $cR,
                             $invoice,
                             $items_array,
+                            $yii_invoice_array,
                             $disable_form,
                             $is_overdue,
                             $payment_method_for_this_invoice,
@@ -1272,6 +1347,7 @@ final class PaymentInformationController
                     }
                 }
             }
+            break;
         }
         $src = (null !== $companyLogoFileName ? '/logo/' . $companyLogoFileName : '/site/logo.png');
 
@@ -1295,5 +1371,20 @@ final class PaymentInformationController
     public function renderPartialAsStringMollieLogo(): string
     {
         return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/mollieLogo');
+    }
+
+    /*
+     * Extracts the provider name from a string like 'Open_Banking_With_Wonderful'
+     * and returns it in lowercase (e.g., 'wonderful').
+     *
+     * @param string $gateway
+     * @return string|null Lowercase provider name, or null if not found.
+     */
+    private function extractProviderLower(string $gateway): ?string
+    {
+        if (preg_match('/Open_Banking_With_([A-Za-z0-9]+)/', $gateway, $matches)) {
+            return strtolower($matches[1]);
+        }
+        return null;
     }
 }
