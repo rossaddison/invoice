@@ -26,7 +26,8 @@ use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
-
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 /**
  * Related logic: see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
  */
@@ -587,9 +588,14 @@ $toolbar = Div::tag();
                         ->content(($model->getNumber() ?? '#') . ' 🔍')
                         ->href($urlGenerator->generate('inv/view', ['id' => $model->getId()]));
             },
-            filter: $optionsDataInvNumberDropDownFilter,
+            filter: DropdownFilter::widget()
+                    ->addAttributes([
+                        'name' => 'number', 
+                        //'onchange' => ''
+                    ])
+                    ->optionsData($optionsDataInvNumberDropDownFilter),        
             withSorting: false,
-        ),
+        ),            
         new DataColumn(
             header: '💳',
             field: 'creditinvoice_parent_id',
@@ -691,7 +697,12 @@ $toolbar = Div::tag();
             field: 'client_id',
             header: $translator->translate('client'),
             content: static fn(Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
-            filter: $optionsDataClientsDropdownFilter,
+            filter: DropdownFilter::widget()
+                    ->addAttributes([
+                        'name' => 'client_id', 
+                        //'onchange' => ''
+                    ])
+                    ->optionsData($optionsDataClientsDropdownFilter),
             withSorting: false,
             encodeContent: false,
         ),
@@ -756,7 +767,7 @@ $toolbar = Div::tag();
                                 ? number_format($invAmountTotal, $decimalPlaces)
                                 : number_format(0, $decimalPlaces)));
             },
-            filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+            filter: TextInputFilter::widget()
                     ->addAttributes(['style' => 'max-width: 50px']),
             withSorting: false,
         ),
