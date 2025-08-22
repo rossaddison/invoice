@@ -2123,7 +2123,7 @@ final class InvController extends BaseController
             }
             if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
                 $invs = $invRepo->filterInvAmountTotal($queryFilterInvAmountTotal);
-            }            
+            }
             if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
                (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);

@@ -28,6 +28,7 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
+
 /**
  * Related logic: see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
  */
@@ -590,12 +591,12 @@ $toolbar = Div::tag();
             },
             filter: DropdownFilter::widget()
                     ->addAttributes([
-                        'name' => 'number', 
+                        'name' => 'number',
                         //'onchange' => ''
                     ])
-                    ->optionsData($optionsDataInvNumberDropDownFilter),        
+                    ->optionsData($optionsDataInvNumberDropDownFilter),
             withSorting: false,
-        ),            
+        ),
         new DataColumn(
             header: '💳',
             field: 'creditinvoice_parent_id',
@@ -699,7 +700,7 @@ $toolbar = Div::tag();
             content: static fn(Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
             filter: DropdownFilter::widget()
                     ->addAttributes([
-                        'name' => 'client_id', 
+                        'name' => 'client_id',
                         //'onchange' => ''
                     ])
                     ->optionsData($optionsDataClientsDropdownFilter),

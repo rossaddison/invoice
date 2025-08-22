@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86dd2a7f120717fa1b1755cc4205175c",
+    "content-hash": "c68aa057e1125939ec7fb5135b38f9b0",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5317,16 +5317,16 @@
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v8.2.5",
+            "version": "v8.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "e175b05e3e00977b85feb96a8cccb174ac63621f"
+                "reference": "dd30e3b01061cf8dfe65e7041ab4cc46d8ebdd44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/e175b05e3e00977b85feb96a8cccb174ac63621f",
-                "reference": "e175b05e3e00977b85feb96a8cccb174ac63621f",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/dd30e3b01061cf8dfe65e7041ab4cc46d8ebdd44",
+                "reference": "dd30e3b01061cf8dfe65e7041ab4cc46d8ebdd44",
                 "shasum": ""
             },
             "require": {
@@ -5336,7 +5336,7 @@
                 "mpdf/psr-log-aware-trait": "^2.0 || ^3.0",
                 "myclabs/deep-copy": "^1.7",
                 "paragonie/random_compat": "^1.4|^2.0|^9.99.99",
-                "php": "^5.6 || ^7.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "^5.6 || ^7.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "setasign/fpdi": "^2.1"
@@ -5394,7 +5394,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-11-18T15:30:42+00:00"
+            "time": "2025-08-18T08:51:51+00:00"
         },
         {
             "name": "mpdf/psr-http-message-shim",
@@ -6826,16 +6826,16 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "1.9.3",
+            "version": "1.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "e3fac8b24f56113f7cb96af14958c0dd16330f54"
+                "reference": "638a154f8d4ee6a5cfa96d6a34dfbe0cffa9566d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/e3fac8b24f56113f7cb96af14958c0dd16330f54",
-                "reference": "e3fac8b24f56113f7cb96af14958c0dd16330f54",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/638a154f8d4ee6a5cfa96d6a34dfbe0cffa9566d",
+                "reference": "638a154f8d4ee6a5cfa96d6a34dfbe0cffa9566d",
                 "shasum": ""
             },
             "require": {
@@ -6843,7 +6843,7 @@
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
-                "phpunit/phpunit": "^8.5.39 || ^9.6.20 || ^10.5.28"
+                "phpunit/phpunit": "^8.5.44 || ^9.6.25 || ^10.5.53 || ^11.5.34"
             },
             "type": "library",
             "extra": {
@@ -6885,7 +6885,7 @@
             ],
             "support": {
                 "issues": "https://github.com/schmittjoh/php-option/issues",
-                "source": "https://github.com/schmittjoh/php-option/tree/1.9.3"
+                "source": "https://github.com/schmittjoh/php-option/tree/1.9.4"
             },
             "funding": [
                 {
@@ -6897,7 +6897,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-20T21:41:07+00:00"
+            "time": "2025-08-21T11:53:16+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -8194,12 +8194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/data-cycle.git",
-                "reference": "6ac4e4d7fa3199b54309e8c5bb329cee261ff1aa"
+                "reference": "fa3c6d68f3416f2ecb42df38bbefa413a0837fb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/6ac4e4d7fa3199b54309e8c5bb329cee261ff1aa",
-                "reference": "6ac4e4d7fa3199b54309e8c5bb329cee261ff1aa",
+                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/fa3c6d68f3416f2ecb42df38bbefa413a0837fb5",
+                "reference": "fa3c6d68f3416f2ecb42df38bbefa413a0837fb5",
                 "shasum": ""
             },
             "require": {
@@ -8213,7 +8213,7 @@
                 "maglnet/composer-require-checker": "^4.16.1",
                 "phpunit/phpunit": "^12.3.6",
                 "rector/rector": "^2.1.4",
-                "roave/infection-static-analysis-plugin": ">=1.38",
+                "roave/infection-static-analysis-plugin": ">=1.39",
                 "spatie/phpunit-watcher": ">=1.24.0",
                 "vimeo/psalm": "^6.13.1",
                 "vlucas/phpdotenv": "^5.6.2"
@@ -8272,7 +8272,7 @@
                     "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2025-08-20T17:42:44+00:00"
+            "time": "2025-08-22T10:51:43+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",
@@ -14175,12 +14175,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "dc689e6675de254acd972d30db6ee49d5d19bc54"
+                "reference": "fcbc39b79aaf9d9adc8b4ef565dafb4e8a2497e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/dc689e6675de254acd972d30db6ee49d5d19bc54",
-                "reference": "dc689e6675de254acd972d30db6ee49d5d19bc54",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/fcbc39b79aaf9d9adc8b4ef565dafb4e8a2497e4",
+                "reference": "fcbc39b79aaf9d9adc8b4ef565dafb4e8a2497e4",
                 "shasum": ""
             },
             "require": {
@@ -14252,7 +14252,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-18T19:16:55+00:00"
+            "time": "2025-08-21T09:31:46+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14260,12 +14260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "6b406369d3835015b6bf739b9e5e4372f63b3963"
+                "reference": "320fe4efe83c8e732abe3b523731019261e77054"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/6b406369d3835015b6bf739b9e5e4372f63b3963",
-                "reference": "6b406369d3835015b6bf739b9e5e4372f63b3963",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/320fe4efe83c8e732abe3b523731019261e77054",
+                "reference": "320fe4efe83c8e732abe3b523731019261e77054",
                 "shasum": ""
             },
             "require": {
@@ -14330,7 +14330,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-15T16:58:40+00:00"
+            "time": "2025-08-21T09:31:52+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -21497,30 +21497,30 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.59.0",
+            "version": "6.60.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "e59267bf734297e1abfc4f7ddb3d35e4be95c0f6"
+                "reference": "53dd01710b5c705b1b570a1820bd65e70529ebc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/e59267bf734297e1abfc4f7ddb3d35e4be95c0f6",
-                "reference": "e59267bf734297e1abfc4f7ddb3d35e4be95c0f6",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/53dd01710b5c705b1b570a1820bd65e70529ebc7",
+                "reference": "53dd01710b5c705b1b570a1820bd65e70529ebc7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "jetbrains/phpstorm-stubs": "2024.3",
-                "nikic/php-parser": "^5.4.0",
-                "php": "~8.2.0 || ~8.3.2 || ~8.4.1"
+                "nikic/php-parser": "^5.6.0",
+                "php": "~8.2.0 || ~8.3.2 || ~8.4.1 || ~8.5.0"
             },
             "conflict": {
                 "thecodingmachine/safe": "<1.1.3"
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.4.1",
-                "phpunit/phpunit": "^11.5.21"
+                "phpunit/phpunit": "^11.5.28"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -21560,22 +21560,22 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.59.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.60.0"
             },
-            "time": "2025-05-27T21:09:39+00:00"
+            "time": "2025-08-21T11:08:59+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
-            "version": "1.38.0",
+            "version": "1.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "431c7bba21df58bf11186ec03501e2b47d321b2f"
+                "reference": "8f4b2c20f55c51d6d1af53daccc5ee03bf2198de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/431c7bba21df58bf11186ec03501e2b47d321b2f",
-                "reference": "431c7bba21df58bf11186ec03501e2b47d321b2f",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/8f4b2c20f55c51d6d1af53daccc5ee03bf2198de",
+                "reference": "8f4b2c20f55c51d6d1af53daccc5ee03bf2198de",
                 "shasum": ""
             },
             "require": {
@@ -21583,7 +21583,7 @@
                 "infection/infection": "0.29.14",
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
                 "sanmai/later": "^0.1.7",
-                "vimeo/psalm": "^6.12.0"
+                "vimeo/psalm": "^6.13.1"
             },
             "conflict": {
                 "symfony/polyfill-php84": "<1.30.0"
@@ -21591,7 +21591,7 @@
             "require-dev": {
                 "azjezz/psl": "^3.3.0",
                 "doctrine/coding-standard": "^13.0.1",
-                "phpunit/phpunit": "^11.5.21",
+                "phpunit/phpunit": "^11.5.34",
                 "psalm/plugin-phpunit": "^0.19.5"
             },
             "bin": [
@@ -21616,9 +21616,9 @@
             "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
             "support": {
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.38.0"
+                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.39.0"
             },
-            "time": "2025-06-04T01:32:53+00:00"
+            "time": "2025-08-21T11:27:22+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -21626,12 +21626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "fca3081453f67915439c330713fed6676b995a81"
+                "reference": "afc1b5ea0233d87f958f1a73da7468f387da9022"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fca3081453f67915439c330713fed6676b995a81",
-                "reference": "fca3081453f67915439c330713fed6676b995a81",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/afc1b5ea0233d87f958f1a73da7468f387da9022",
+                "reference": "afc1b5ea0233d87f958f1a73da7468f387da9022",
                 "shasum": ""
             },
             "conflict": {
@@ -22440,7 +22440,7 @@
                 "uasoft-indonesia/badaso": "<=2.9.7",
                 "unisharp/laravel-filemanager": "<2.9.1",
                 "universal-omega/dynamic-page-list3": "<3.6.4",
-                "unopim/unopim": "<0.1.5",
+                "unopim/unopim": "<=0.2",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
                 "uvdesk/community-skeleton": "<=1.1.1",
@@ -22582,7 +22582,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-20T19:04:41+00:00"
+            "time": "2025-08-21T15:06:11+00:00"
         },
         {
             "name": "sanmai/later",
