@@ -3887,16 +3887,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "7c69f28996b0a6920945dd20b3857e499d9ca96c"
+                "reference": "481557b130ef3790cf82b713667b43030dc9c957"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/7c69f28996b0a6920945dd20b3857e499d9ca96c",
-                "reference": "7c69f28996b0a6920945dd20b3857e499d9ca96c",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/481557b130ef3790cf82b713667b43030dc9c957",
+                "reference": "481557b130ef3790cf82b713667b43030dc9c957",
                 "shasum": ""
             },
             "require": {
@@ -3904,7 +3904,7 @@
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
-                "phpunit/phpunit": "^8.5.39 || ^9.6.20"
+                "phpunit/phpunit": "^8.5.44 || ^9.6.25"
             },
             "type": "library",
             "extra": {
@@ -3950,7 +3950,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/2.2.0"
+                "source": "https://github.com/guzzle/promises/tree/2.3.0"
             },
             "funding": [
                 {
@@ -3966,7 +3966,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-27T13:27:01+00:00"
+            "time": "2025-08-22T14:34:08+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -8194,12 +8194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/data-cycle.git",
-                "reference": "fa3c6d68f3416f2ecb42df38bbefa413a0837fb5"
+                "reference": "5f3f5f86095216e253b4e2de8f9994be95c3fa34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/fa3c6d68f3416f2ecb42df38bbefa413a0837fb5",
-                "reference": "fa3c6d68f3416f2ecb42df38bbefa413a0837fb5",
+                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/5f3f5f86095216e253b4e2de8f9994be95c3fa34",
+                "reference": "5f3f5f86095216e253b4e2de8f9994be95c3fa34",
                 "shasum": ""
             },
             "require": {
@@ -8272,7 +8272,7 @@
                     "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2025-08-22T10:51:43+00:00"
+            "time": "2025-08-23T21:12:15+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",
@@ -14175,12 +14175,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "fcbc39b79aaf9d9adc8b4ef565dafb4e8a2497e4"
+                "reference": "692e0387cdac9f1cf0e79dee7548b32c77cfa693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/fcbc39b79aaf9d9adc8b4ef565dafb4e8a2497e4",
-                "reference": "fcbc39b79aaf9d9adc8b4ef565dafb4e8a2497e4",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/692e0387cdac9f1cf0e79dee7548b32c77cfa693",
+                "reference": "692e0387cdac9f1cf0e79dee7548b32c77cfa693",
                 "shasum": ""
             },
             "require": {
@@ -14252,7 +14252,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-21T09:31:46+00:00"
+            "time": "2025-08-23T17:13:41+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -21626,12 +21626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "afc1b5ea0233d87f958f1a73da7468f387da9022"
+                "reference": "f9827bdb1caa9af2bde8def6899734610e7bddf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/afc1b5ea0233d87f958f1a73da7468f387da9022",
-                "reference": "afc1b5ea0233d87f958f1a73da7468f387da9022",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f9827bdb1caa9af2bde8def6899734610e7bddf9",
+                "reference": "f9827bdb1caa9af2bde8def6899734610e7bddf9",
                 "shasum": ""
             },
             "conflict": {
@@ -22440,7 +22440,7 @@
                 "uasoft-indonesia/badaso": "<=2.9.7",
                 "unisharp/laravel-filemanager": "<2.9.1",
                 "universal-omega/dynamic-page-list3": "<3.6.4",
-                "unopim/unopim": "<=0.2",
+                "unopim/unopim": "<=0.3",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
                 "uvdesk/community-skeleton": "<=1.1.1",
@@ -22582,7 +22582,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-21T15:06:11+00:00"
+            "time": "2025-08-22T17:05:03+00:00"
         },
         {
             "name": "sanmai/later",

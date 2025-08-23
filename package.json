@@ -4,7 +4,7 @@
     "description": "Yii3 Invoice",
     "dependencies": {
         "bootstrap": "^5.3.7",
-        "govuk-frontend": "^5.11.1"
+        "govuk-frontend": "^5.11.2"
     },
     "devDependencies": {
         "jest": "^30.0.5",

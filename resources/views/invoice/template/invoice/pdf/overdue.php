@@ -321,7 +321,13 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
             <td colspan="6" class="text-right">
                 <?= Html::encode($vat == '1' ? $translator->translate('allowance.or.charge.shipping.handling.packaging.vat') : $translator->translate('allowance.or.charge.shipping.handling.packaging.tax')); ?>
             </td>
-            <td class="text-right"><?= 100 * ($inv_amount->getPackHandleShip_tax() / $inv_amount->getPackHandleShip_total()); ?></td>
+            <td class="text-right">
+                <?php
+                    $total = $inv_amount->getPackHandleShip_total();
+$tax = $inv_amount->getPackHandleShip_tax();
+echo $total != 0 ? number_format(100 * ($tax / $total), 2) : '0.00';
+?>
+            </td>    
             <td class="text-right">
                 <?php echo Html::encode($s->format_currency($inv_amount->getPackHandleShip_tax())); ?>
             </td>
