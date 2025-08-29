@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "description": "Yii3 Invoice",
     "dependencies": {
-        "bootstrap": "^5.3.7",
+        "bootstrap": "^5.3.8",
         "govuk-frontend": "^5.11.2"
     },
     "devDependencies": {
-        "jest": "^30.0.5",
+        "jest": "^30.1.1",
         "typescript": "^5.9.2"
     },
     "license": "BSD-3-Clause"
