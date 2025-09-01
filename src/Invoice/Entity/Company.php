@@ -27,7 +27,7 @@ class Company
      * @var ArrayCollection<array-key, CompanyPrivate>
      */
     #[HasMany(target: CompanyPrivate::class)]
-    private ArrayCollection $companyPrivates;
+    private readonly ArrayCollection $companyPrivates;
 
     public function __construct(
         #[Column(type: 'primary')]
