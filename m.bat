@@ -27,9 +27,9 @@ goto menu
 REM ================== MAIN MENU ==================
 :menu
 cls
-echo ===============================================================
-echo           INVOICE SYSTEM MAIN MENU
-echo ===============================================================
+echo ======================================================================================
+echo                               INVOICE SYSTEM MAIN MENU
+echo ======================================================================================
 echo [0]  Installation Menu             [6]   PHP Built-in 'serve'
 echo [1]  Run PHP Psalm (Full)          [7]   user/create username password
 echo [2]  Psalm on File                 [8]   user/assignRole role userId
@@ -100,7 +100,6 @@ echo Invalid choice. Please try again.
 pause
 goto menu
 
-REM ================== SYSTEM DIAGNOSTICS ==================
 :diagnostics
 echo .......... SYSTEM DIAGNOSTICS ..........
 php -v
@@ -114,7 +113,6 @@ npm list --depth=0
 pause
 goto menu
 
-REM ================== INSTALLATION MENU ==================
 :installation_menu
 echo Installation menu...
 if exist install.bat (
@@ -127,7 +125,6 @@ if exist install.bat (
 pause
 goto menu
 
-REM ================== PSALM ==================
 :psalm
 echo Running PHP Psalm...
 php vendor/bin/psalm
@@ -162,7 +159,6 @@ php vendor/bin/psalm --show-info || echo Psalm version does not support --show-i
 pause
 goto menu
 
-REM ================== COMPOSER ==================
 :outdated
 echo Checking Composer Outdated...
 composer outdated
@@ -201,7 +197,6 @@ composer update
 pause
 goto menu
 
-REM ================== NODE/NPM TASKS ==================
 :node_modules_update
 echo Updating Node modules...
 npx npm-check-updates -u
@@ -228,14 +223,12 @@ npm list --depth=0
 pause
 goto menu
 
-REM ================== COMPOSER/REQUIRE/CHECKER ==================
 :require_checker
 echo Running Composer Require Checker...
 php -d memory_limit=512M vendor/bin/composer-require-checker
 pause
 goto menu
 
-REM ================== CODECEPTION TESTS ==================
 :codeception_tests
 echo Running Codeception Tests...
 php vendor/bin/codecept run
@@ -248,7 +241,6 @@ php vendor/bin/codecept build
 pause
 goto menu
 
-REM ================== PHP-CS-FIXER ==================
 :code_style_suggest_changes
 echo PHP-CS-Fixer Dry Run (see potential changes)...
 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff 
@@ -261,7 +253,6 @@ php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
 pause
 goto menu
 
-REM ================== RECTOR ==================
 :rector_see_changes
 echo Rector Dry Run (see proposed changes)...
 php vendor/bin/rector process --dry-run --output-format=console
@@ -274,7 +265,6 @@ php vendor/bin/rector
 pause
 goto menu
 
-REM ================== YII COMMANDS ==================
 :serve
 echo Running PHP built-in server via Yii...
 php yii serve
@@ -318,7 +308,6 @@ php yii invoice/items
 pause
 goto menu
 
-REM ================== DANGEROUS COMMANDS (Confirmation) ==================
 :confirm_warning_12
 call :confirm_delete "invoice_setting_truncate"
 goto menu
@@ -352,41 +341,46 @@ echo Cancelled.
 pause
 goto menu
 
-REM ================== ACTUAL TRUNCATE COMMANDS ==================
 :invoice_setting_truncate
 php yii invoice/setting/truncate
 pause
 goto menu
+
 :invoice_generator_truncate
 php yii invoice/generator/truncate
 pause
 goto menu
+
 :invoice_inv_truncate1
 php yii invoice/inv/truncate1
 pause
 goto menu
+
 :invoice_quote_truncate2
 php yii invoice/quote/truncate2
 pause
 goto menu
+
 :invoice_salesorder_truncate3
 php yii invoice/salesorder/truncate3
 pause
 goto menu
+
 :invoice_nonuserrelated_truncate4
 php yii invoice/nonuserrelated/truncate4
 pause
 goto menu
+
 :invoice_userrelated_truncate5
 php yii invoice/userrelated/truncate5
 pause
 goto menu
+
 :invoice_autoincrementsettooneafter_truncate6
 php yii invoice/autoincrementsettooneafter/truncate6
 pause
 goto menu
 
-REM ================== EXIT HANDLERS ==================
 :exit_to_directory
 echo Returning to the current directory. Goodbye!
 cmd

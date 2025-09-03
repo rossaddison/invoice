@@ -52,6 +52,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>3rd September 2025</b></p>
+<p>After installing google-gemini/gemini-cli globally with <code>npm install -g @google/gemini-cli</code>, created Readme's using</p>
+<p>Google Gemini from the command line and creation of ge_min_i.bat for inter alia analysing code, creating documentation, summaries in this repo.</p>
+<p>Bugfixes for PDF and product sorting/filtering, improvements to index screens, and enhancements to Peppol invoice handling.</p>
+<p>Codeception and phpunit test upgrades, plus improvements to developer scripts (e.g., <code>m.bat</code>).</p>
 <p><b>17th August 2025</b></p>
 <p>Peppol arrays have been updated to the 24th November 2024 arrays. It has been over 2 years since this has been done. 
    The $vat field for InvAllowanceCharge and InvItemAllowanceCharge have been adjusted to $vatOrTax so that non-vat operating
