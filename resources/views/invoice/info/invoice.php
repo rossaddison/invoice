@@ -112,13 +112,13 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p><b>19th July 2025</b></p>
 <p>Replace styleci.yml with cs.yml</p>
 <p>Purpose: The cs.yml has been restructured to complete a dry-run, then create a pull request if changes are needed ... similar to styleci.yml</p>
-<p><a href="https://github.com/copilot/c/39b041f7-aa7a-4a44-91ee-c541f003c78d" target="_blank">PHP CS Fixer GitHub Actions workflow: General Questions</a></p>
+<p>PHP CS Fixer GitHub Actions workflow Adjusted</p>
 <p><b>18th July 2025</b></p>
 <p>Include a new function opCacheHealthCheck() in App\Widget\PerformanceMetrics</p>
 <p>Used in resources/views/layout/invoice.php to identify poor php.ini setups</p>
 <p>Wonderful - Open Banking removed from Oauth2.0. An authToken is required. Not an authUrl.
 <p>New function: getOpenBankingProvidersWithAuthUrl used to differentiate between TPP offering Oauth2.0 and those only providing it through a token.</p>
-<p><a href="https://github.com/copilot/c/8d6ef7ec-97c7-48bf-8ef3-caca4017035d" target="_blank">Incorporating Open Banking into PaymentInformationController</a></p>
+<p>Incorporating Open Banking into PaymentInformationController</p>
 <p><b>15th July 2025</b></p>
 <p>An environment branch has been created and is passing all tests but is degraded in terms of performance.</p>
 <p>Improve ChangePasswordForm and ResetPasswordForm</p>
@@ -157,18 +157,15 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p>Recovery Code Entity and Service supports the user.</p>
 <p>Option of entering the 8 digit recovery code on the verify login screen only i.e. not during setup.</p>
 <p>Fade out 40 seconds script on auth login. Ai generated scripts converted to php.</p>
-<p><a href="https://github.com/copilot/share/002343be-4100-8480-a050-0a09444b6875" target="_blank"> Fade-out effect using php and vanilla javascript</a></p>
+<p>Fade-out effect using php implemented</p>
 <p>Url's no longer carrying annoying trailing hash. src/Service/WebControllerService Bugfix: ?string = null and not string = ''</p>
 <p><b>28th June 2025</b></p>
 <p>Installation testing</p>
 <p>The invoice autoload.php function has been adjusted to check for composer. This simplifies the InstallCommand run with Symfony</p>
 <p>The m.bat has been updated to include a submenu for installation</p>
 <p>The installation submenu includes options Post Composer Install with Symfony, Pre Composer Install, and a yiipath existance check mainly for Unix and runs independently as install.bat.</p>
-<p><a href="https://github.com/copilot/share/824a52be-4824-8000-8952-8848404b6135" target="_blank"> Troubleshooting hanging install</a></p>
-<p><a href="https://github.com/copilot/share/0a03032c-4024-8c22-8100-1a0044c14925" target="_blank"> Checking folder existance in php</a></p>
-<p><a href="https://github.com/copilot/share/0a4a002e-4804-8c24-9043-180940832164" target="_blank"> Automating installation testing with Github Copilot</a></p>
 <p><b>27th June 2025</b></p>
-<p><a href="https://github.com/copilot/share/8a22503c-0024-80a0-8943-1a01404b4166" target="_blank">Topic: Adjusting error handling for PHP 8.4</a></p>
+<p>Adjusting error handling for PHP 8.4</a></p>
 <p><b>26th June 2025</b></p>
 <p>Applied rector and included 2 rector options in m.bat</p>
 <p>Removed files no longer needed for Google Translate e.g. ip_lang.php</p>
@@ -176,9 +173,8 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p><b>24th June 2025</b></p>
 <p>Restore Sentry using vcs rossaddison/yii-sentry.</p>
 <p>Next Signup for performance testing with Sentry.</p>
-<p><a href="https://github.com/copilot/share/8a22503c-0024-80a0-8943-1a01404b4166" target="_blank">Topic: Adjusting error handling for PHP 8.4</a></p>
 <p><b>21st June 2025</b></p>
-<p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
+<p>Scripts for filtering used translation keys included in separate folder in root</a></p>
 <p>Include hash in WebControllerService function getRedirectResponse</p>
 <p>Remove underscores in translation keys and replace with dots</p>
 <p>resources/messages/en/app.php has simplified and sorted keys</p>
@@ -187,14 +183,12 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p>After a locale is selected from Google Translate dropdown, and app.php produced, redirection to this dropdown occurs using hash</p>
 <p><b>18th June 2025</b></p>
 <p>Transfer code e.g. new Flash($session) into a di container under config/common/params/di/flash.php. 53 Controllers affected after Autowiring discussion.</p>
-<p><a href="https://github.com/copilot/c/a3f639e9-ce93-49be-96b7-dcdbd4de5f97" target="_blank">Topic: Autowiring (should have created a new conversation)</a></p>
 <p><b>15th June 2025</b></p>
-<p><a href="https://github.com/copilot/share/800203bc-0920-8082-a850-984064014965" target="_blank">Topic: Script for filtering used translation keys</a></p>
+<p>Script for filtering used translation keys stored in root</p>
 <p><b>14th June 2025</b></p>
 <p>uopz has been removed from composer.json for compatibility with docker.</p>
 <p>Docker php requirement reduced to 8.3</p>
-<p>Shared Conversations:</p>
-<p><a href="https://github.com/copilot/share/022253bc-0004-88a2-b010-084860c36925" target="_blank">Topic: Setting up a repository on Docker</a></p>
+<p>Setting up a repository on Docker</p>
 <p><h5>How to Connect 'Docker on Linux' running in Docker Desktop to WampServer phpMyAdmin Database</h5></p>
 <p><ol>
     <li class="step">
@@ -379,13 +373,12 @@ CMD ["php-fpm"]
   </pre>
 </p>
 <p><b>13th June 2025</b></p>
-<p>Share Conversations: </p>
-<p><a href="https://github.com/copilot/share/c222033e-4904-8004-8842-1a0860c94174" target="_blank">Topic: Aegis: </a></p>
-<p><a href="https://github.com/copilot/share/0a23003e-4004-8420-a053-8a0040cb4936" target="_blank">Topic: Most actively maintained MFA: </a></p>
-<P><a href="https://github.com/copilot/share/c043023c-0824-80a0-b951-1a4064816075" target="_blank">Topic: Html for textbox string length: </a></p>
-<p><a href="https://github.com/copilot/share/820a01ac-4800-8ca0-8152-0800608b2024" target="_blank">Topic: Php based 9 digit keypad: </a></p>
-<p><a href="https://github.com/copilot/share/804301be-4024-8c06-9012-0808408b6175" target="_blank">Topic: Adding an additional permission to middleware: </a></p>
-<p><a href="https://github.com/copilot/share/c26a133e-0024-8004-9141-0a4040892135" target="_blank">Topic: Best practices for using OTP's: </a></p>
+<p>Aegis: </a></p>
+<p>Most actively maintained MFA</p>
+<P>Html for textbox string length</p>
+<p>Php based 9 digit keypad</p>
+<p>Adding an additional permission to middleware:</p>
+<p>Best practices for using OTP's</p>
 <p><b>12th June 2025</b></p>
 <p>I am not using Telegram for OTP.</p>
 <p>Two Factor Authentication using Aegis Authenticator app for android is functional</p>

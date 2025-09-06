@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbd602b1c5fe80f85cac6aec2a18c270",
+    "content-hash": "75fcf8b81490b7a1c3d9b58b23709faf",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -7916,20 +7916,20 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.9.0",
+            "version": "4.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "4e0e23cc785f0724a0e838279a9eb03f28b092a0"
+                "reference": "81f941f6f729b1e3ceea61d9d014f8b6c6800440"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/4e0e23cc785f0724a0e838279a9eb03f28b092a0",
-                "reference": "4e0e23cc785f0724a0e838279a9eb03f28b092a0",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/81f941f6f729b1e3ceea61d9d014f8b6c6800440",
+                "reference": "81f941f6f729b1e3ceea61d9d014f8b6c6800440",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.8.8 || ^0.9 || ^0.10 || ^0.11 || ^0.12 || ^0.13",
+                "brick/math": "^0.8.8 || ^0.9 || ^0.10 || ^0.11 || ^0.12 || ^0.13 || ^0.14",
                 "php": "^8.0",
                 "ramsey/collection": "^1.2 || ^2.0"
             },
@@ -7988,22 +7988,22 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.9.0"
+                "source": "https://github.com/ramsey/uuid/tree/4.9.1"
             },
-            "time": "2025-06-25T14:20:11+00:00"
+            "time": "2025-09-04T20:59:21+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "2.1.4",
+            "version": "2.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "fe613c528819222f8686a9a037a315ef9d4915b3"
+                "reference": "729aabc0ec66e700ef164e26454a1357f222a2f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/fe613c528819222f8686a9a037a315ef9d4915b3",
-                "reference": "fe613c528819222f8686a9a037a315ef9d4915b3",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/729aabc0ec66e700ef164e26454a1357f222a2f3",
+                "reference": "729aabc0ec66e700ef164e26454a1357f222a2f3",
                 "shasum": ""
             },
             "require": {
@@ -8042,7 +8042,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.4"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.6"
             },
             "funding": [
                 {
@@ -8050,7 +8050,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-15T14:41:36+00:00"
+            "time": "2025-09-05T15:43:08+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -8194,12 +8194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/data-cycle.git",
-                "reference": "b146d1ec4737d60908d99470bac8d4514ed21826"
+                "reference": "d56b1929d3ed23ab413d526bc7fdf5f660c1e2cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/b146d1ec4737d60908d99470bac8d4514ed21826",
-                "reference": "b146d1ec4737d60908d99470bac8d4514ed21826",
+                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/d56b1929d3ed23ab413d526bc7fdf5f660c1e2cc",
+                "reference": "d56b1929d3ed23ab413d526bc7fdf5f660c1e2cc",
                 "shasum": ""
             },
             "require": {
@@ -8214,7 +8214,7 @@
                 "friendsofphp/php-cs-fixer": "^3.86.0",
                 "maglnet/composer-require-checker": "^4.16.1",
                 "phpunit/phpunit": "^12.3.7",
-                "rector/rector": "^2.1.4",
+                "rector/rector": "^2.1.5",
                 "roave/infection-static-analysis-plugin": ">=1.39",
                 "spatie/phpunit-watcher": ">=1.24.0",
                 "vimeo/psalm": "^6.13.1",
@@ -8274,20 +8274,20 @@
                     "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2025-08-29T20:18:06+00:00"
+            "time": "2025-09-04T18:48:14+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",
-            "version": "dev-master",
+            "version": "dev-invoice",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "08cf293a5dd184bd36a84d96f27a93afd02d815a"
+                "reference": "89839113dd7a1954cd4e60731a50762b456da023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/08cf293a5dd184bd36a84d96f27a93afd02d815a",
-                "reference": "08cf293a5dd184bd36a84d96f27a93afd02d815a",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/89839113dd7a1954cd4e60731a50762b456da023",
+                "reference": "89839113dd7a1954cd4e60731a50762b456da023",
                 "shasum": ""
             },
             "require": {
@@ -8333,7 +8333,6 @@
                 "yiisoft/psr-dummy-provider": "^1.0.2",
                 "yiisoft/router-fastroute": "^4.0.1"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -8381,7 +8380,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-31T19:03:25+00:00"
+            "time": "2025-09-06T07:45:52+00:00"
         },
         {
             "name": "rossaddison/yii-gii",
@@ -13175,12 +13174,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "618522c7d2ae58feed56fb4c482f2577dafb4b11"
+                "reference": "10cd947a38baff67921e998e606a8710b9fe5d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/618522c7d2ae58feed56fb4c482f2577dafb4b11",
-                "reference": "618522c7d2ae58feed56fb4c482f2577dafb4b11",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/10cd947a38baff67921e998e606a8710b9fe5d76",
+                "reference": "10cd947a38baff67921e998e606a8710b9fe5d76",
                 "shasum": ""
             },
             "require": {
@@ -13252,7 +13251,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-02T01:30:46+00:00"
+            "time": "2025-09-04T04:17:18+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14185,12 +14184,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "52a9c4b11b828c5b28ec7a8ba7d5d3e78b04dfb9"
+                "reference": "f7475e587e0294d3da66c3dada96371f61e0c4e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/52a9c4b11b828c5b28ec7a8ba7d5d3e78b04dfb9",
-                "reference": "52a9c4b11b828c5b28ec7a8ba7d5d3e78b04dfb9",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/f7475e587e0294d3da66c3dada96371f61e0c4e0",
+                "reference": "f7475e587e0294d3da66c3dada96371f61e0c4e0",
                 "shasum": ""
             },
             "require": {
@@ -14262,7 +14261,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-02T06:59:24+00:00"
+            "time": "2025-09-05T19:31:29+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14488,16 +14487,16 @@
         },
         {
             "name": "yiisoft/error-handler",
-            "version": "4.2.0",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/error-handler.git",
-                "reference": "69099c218640c803d987b5fdb2676df897a1403e"
+                "reference": "4b53520cfc827e5912ccb88a0a6e2b37da5f2156"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/error-handler/zipball/69099c218640c803d987b5fdb2676df897a1403e",
-                "reference": "69099c218640c803d987b5fdb2676df897a1403e",
+                "url": "https://api.github.com/repos/yiisoft/error-handler/zipball/4b53520cfc827e5912ccb88a0a6e2b37da5f2156",
+                "reference": "4b53520cfc827e5912ccb88a0a6e2b37da5f2156",
                 "shasum": ""
             },
             "require": {
@@ -14579,7 +14578,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-19T10:06:25+00:00"
+            "time": "2025-09-06T05:26:06+00:00"
         },
         {
             "name": "yiisoft/event-dispatcher",
@@ -17644,12 +17643,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "cb1676b800ddff4d721ee36b08dec98a12686747"
+                "reference": "4ea1b58de6ad18dc07b697ea26b29f1b42c83448"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/cb1676b800ddff4d721ee36b08dec98a12686747",
-                "reference": "cb1676b800ddff4d721ee36b08dec98a12686747",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/4ea1b58de6ad18dc07b697ea26b29f1b42c83448",
+                "reference": "4ea1b58de6ad18dc07b697ea26b29f1b42c83448",
                 "shasum": ""
             },
             "require": {
@@ -17732,7 +17731,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-28T07:36:28+00:00"
+            "time": "2025-09-05T09:39:38+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -19185,16 +19184,16 @@
         },
         {
             "name": "codeception/module-phpbrowser",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/module-phpbrowser.git",
-                "reference": "a972411f60cd00d00d5e5e3b35496ba4a23bcffc"
+                "reference": "460e392c77370f7836012b16e06071eb1607876a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/module-phpbrowser/zipball/a972411f60cd00d00d5e5e3b35496ba4a23bcffc",
-                "reference": "a972411f60cd00d00d5e5e3b35496ba4a23bcffc",
+                "url": "https://api.github.com/repos/Codeception/module-phpbrowser/zipball/460e392c77370f7836012b16e06071eb1607876a",
+                "reference": "460e392c77370f7836012b16e06071eb1607876a",
                 "shasum": ""
             },
             "require": {
@@ -19202,8 +19201,8 @@
                 "codeception/lib-innerbrowser": "*@dev",
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.4",
-                "php": "^8.0",
-                "symfony/browser-kit": "^5.4 || ^6.0 || ^7.0"
+                "php": "^8.1",
+                "symfony/browser-kit": "^5.4 | ^6.0 | ^7.0"
             },
             "conflict": {
                 "codeception/codeception": "<5.0",
@@ -19211,8 +19210,10 @@
             },
             "require-dev": {
                 "aws/aws-sdk-php": "^3.199",
-                "codeception/module-rest": "^2.0 || *@dev",
-                "ext-curl": "*"
+                "codeception/module-rest": "^2.0 | *@dev",
+                "ext-curl": "*",
+                "phpstan/phpstan": "^1.10",
+                "squizlabs/php_codesniffer": "^3.10"
             },
             "suggest": {
                 "codeception/phpbuiltinserver": "Start and stop PHP built-in web server for your tests"
@@ -19244,9 +19245,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/module-phpbrowser/issues",
-                "source": "https://github.com/Codeception/module-phpbrowser/tree/3.0.1"
+                "source": "https://github.com/Codeception/module-phpbrowser/tree/3.0.2"
             },
-            "time": "2023-12-08T19:41:28+00:00"
+            "time": "2025-09-04T10:45:58+00:00"
         },
         {
             "name": "codeception/stub",
@@ -21506,16 +21507,16 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.61.0",
+            "version": "6.62.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "d0c9955a6cce8dfefe379b6ea53a26488dc1feb6"
+                "reference": "46a39461696c5ac228355e3b1781f23029c8347c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/d0c9955a6cce8dfefe379b6ea53a26488dc1feb6",
-                "reference": "d0c9955a6cce8dfefe379b6ea53a26488dc1feb6",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/46a39461696c5ac228355e3b1781f23029c8347c",
+                "reference": "46a39461696c5ac228355e3b1781f23029c8347c",
                 "shasum": ""
             },
             "require": {
@@ -21529,7 +21530,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.4.1",
-                "phpunit/phpunit": "^11.5.35"
+                "phpunit/phpunit": "^11.5.36"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -21569,9 +21570,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.61.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.62.0"
             },
-            "time": "2025-09-02T20:05:51+00:00"
+            "time": "2025-09-04T22:43:09+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
@@ -21635,12 +21636,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "4fbe7e09e34b1554269750e19674f1f6fd84a4ae"
+                "reference": "dc5c4ede5c331ae21fb68947ff89672df9b7cc7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4fbe7e09e34b1554269750e19674f1f6fd84a4ae",
-                "reference": "4fbe7e09e34b1554269750e19674f1f6fd84a4ae",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/dc5c4ede5c331ae21fb68947ff89672df9b7cc7d",
+                "reference": "dc5c4ede5c331ae21fb68947ff89672df9b7cc7d",
                 "shasum": ""
             },
             "conflict": {
@@ -22064,7 +22065,7 @@
                 "marshmallow/nova-tiptap": "<5.7",
                 "matomo/matomo": "<1.11",
                 "matyhtf/framework": "<3.0.6",
-                "mautic/core": "<5.2.6|>=6.0.0.0-alpha,<6.0.2",
+                "mautic/core": "<5.2.8|>=6.0.0.0-alpha,<6.0.5",
                 "mautic/core-lib": ">=1.0.0.0-beta,<4.4.13|>=5.0.0.0-alpha,<5.1.1",
                 "maximebf/debugbar": "<1.19",
                 "mdanter/ecc": "<2",
@@ -22218,7 +22219,7 @@
                 "prestashop/blockwishlist": ">=2,<2.1.1",
                 "prestashop/contactform": ">=1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
-                "prestashop/prestashop": "<8.1.6",
+                "prestashop/prestashop": "<8.2.3",
                 "prestashop/productcomments": "<5.0.2",
                 "prestashop/ps_contactinfo": "<=3.3.2",
                 "prestashop/ps_emailsubscription": "<2.6.1",
@@ -22592,7 +22593,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-02T17:05:04+00:00"
+            "time": "2025-09-04T20:05:35+00:00"
         },
         {
             "name": "sanmai/later",

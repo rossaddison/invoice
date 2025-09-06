@@ -64,7 +64,7 @@ if "%choice%"=="2a" goto psalm_directory
 if "%choice%"=="2b" goto psalm_clear_cache
 if "%choice%"=="2c" goto psalm_config
 if "%choice%"=="3" goto outdated
-if "%choice%"=="3a" goto composerwhynot
+if "%choice%"=="3a" goto composer_whynot
 if "%choice%"=="3b" goto composer_clear_cache_and_resolve_lock_conflicts
 if "%choice%"=="3c" goto composer_validate
 if "%choice%"=="3d" goto composer_dumpautoload
@@ -165,23 +165,10 @@ composer outdated
 pause
 goto menu
 
-:composerwhynot
-set /p repo="Package name (e.g. vendor/package): "
-set /p version="Version (e.g. 1.0.0): "
-composer why-not %repo% %version%
-pause
-goto menu
-
 :composer_clear_cache_and_resolve_lock_conflicts
 echo Clearing Composer cache and resolving lock file conflicts...
 composer clear-cache
 composer update --lock
-pause
-goto menu
-
-:composer_validate
-echo Validating composer.json and composer.lock...
-composer validate
 pause
 goto menu
 
@@ -196,6 +183,20 @@ echo Updating Composer...
 composer update
 pause
 goto menu
+
+:composer_validate
+echo Validating composer.json and composer.lock...
+composer validate
+pause
+goto menu
+
+:composer_whynot
+set /p repo="Package name (e.g. vendor/package): "
+set /p version="Version (e.g. 1.0.0): "
+composer why-not %repo% %version%
+pause
+goto menu
+
 
 :node_modules_update
 echo Updating Node modules...
