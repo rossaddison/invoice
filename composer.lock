@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75fcf8b81490b7a1c3d9b58b23709faf",
+    "content-hash": "792b01e7e2c917c4564c44d5246696dd",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -8190,7 +8190,7 @@
         },
         {
             "name": "rossaddison/data-cycle",
-            "version": "dev-master",
+            "version": "dev-invoice",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/data-cycle.git",
@@ -8220,7 +8220,6 @@
                 "vimeo/psalm": "^6.13.1",
                 "vlucas/phpdotenv": "^5.6.2"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -17643,12 +17642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "4ea1b58de6ad18dc07b697ea26b29f1b42c83448"
+                "reference": "b3e6335279ef508d79da35ef2a501184839752b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/4ea1b58de6ad18dc07b697ea26b29f1b42c83448",
-                "reference": "4ea1b58de6ad18dc07b697ea26b29f1b42c83448",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/b3e6335279ef508d79da35ef2a501184839752b2",
+                "reference": "b3e6335279ef508d79da35ef2a501184839752b2",
                 "shasum": ""
             },
             "require": {
@@ -17731,7 +17730,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-05T09:39:38+00:00"
+            "time": "2025-09-06T15:25:05+00:00"
         },
         {
             "name": "yiisoft/yii-event",

@@ -64,7 +64,7 @@
         "psr/http-server-middleware": "^1.0.2",
         "psr/log": "^3.0.2",
         "ramsey/uuid": "^4.9.1",
-        "rossaddison/data-cycle": "dev-master",
+        "rossaddison/data-cycle": "dev-invoice",
         "rossaddison/yii-auth-client": "dev-invoice",
         "rossaddison/yii-gii": "dev-phpspec-diff",
         "rossaddison/yii-sentry": "dev-master",
