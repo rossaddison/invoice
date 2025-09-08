@@ -688,7 +688,7 @@ trait Callback
         /**
          * @var array $userArray
          */
-        $userArray = $this->linkedIn->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
+        $userArray = $this->linkedIn->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * eg. [
          *      'sub' => 'P1c9jkRFSy',
@@ -806,7 +806,7 @@ trait Callback
         /**
          * @var array $userArray
          */
-        $userArray = $this->microsoftOnline->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
+        $userArray = $this->microsoftOnline->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var int $userArray['id']
          */
@@ -974,7 +974,7 @@ trait Callback
             'code_verifier' => $codeVerifier,
         ];
         $oAuthTokenType = $this->x->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
-        $userArray = $this->x->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
+        $userArray = $this->x->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var array $userArray['data']
          */
@@ -1125,7 +1125,7 @@ trait Callback
          *       ]
          * @var array $userArray
          */
-        $userArray = $this->vkontakte->step8ObtainingUserDataArrayUsingCurlWithClientId($oAuthTokenType, $this->vkontakte->getClientId());
+        $userArray = $this->vkontakte->step8ObtainingUserDataArrayWithClientId($oAuthTokenType, $this->vkontakte->getClientId(), $this->configWebDiAuthGuzzle, $this->requestFactory);
 
         /**
          * @var array $userArray['user']
@@ -1266,7 +1266,7 @@ trait Callback
         /**
          * @var array $userArray
          */
-        $userArray = $this->yandex->getCurrentUserJsonArrayUsingCurl($oAuthTokenType);
+        $userArray = $this->yandex->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var int $userArray['id']
          */
