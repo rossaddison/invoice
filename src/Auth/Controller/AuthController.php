@@ -22,6 +22,8 @@ use App\User\User;
 use App\User\UserRepository;
 use App\User\RecoveryCodeService;
 use OTPHP\TOTP;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -100,6 +102,8 @@ final class AuthController
         private readonly LoggerInterface $logger,
         private readonly Flash $flash,
         private readonly CounterInterface $rateLimiter,
+        private readonly ClientInterface $configWebDiAuthGuzzle,
+        private readonly RequestFactoryInterface $requestFactory,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         // use the Oauth2 trait function

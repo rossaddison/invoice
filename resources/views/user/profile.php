@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\H2;
-use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Yii\DataView\Field\DataField;
+use Yiisoft\Yii\DataView\DetailView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DataField;
+use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 
 /**
  * Related logic: see https://github.com/yiisoft/yii-dataview/blob/master/tests/DetailView/Bootstrap5Test.php
@@ -19,28 +20,29 @@ $this->setTitle('Profile');
 $title = Html::encode($this->getTitle());
 ?>
 
-<?= DetailView::widget()
+<?= (string) DetailView::widget()
     ->data($item)
-    ->attributes(['class' => 'container'])
-    ->fieldListAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
+    ->containerAttributes(['class' => 'container'])
+    ->listAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
     ->fieldAttributes(['class' => 'col-xl-5'])
-    ->header(H2::tag()->class('text-center')->content("<strong>$title</strong>")->encode(false)->render())
+    ->fieldTag(H2::tag()->class('text-center')->content("<strong>$title</strong>")->encode(false)->render())
     ->fields(
         new DataField(
-            name: 'id',
+            property: 'id',
             label: 'ID',
             value: $item->getId(),
         ),
         new DataField(
-            name: 'login',
+            property: 'login',
             label: $translator->translate('gridview.login'),
             value: $item->getLogin(),
         ),
         new DataField(
-            name: 'create_at',
+            property: 'create_at',
             label: $translator->translate('gridview.create.at'),
             value: $item->getCreatedAt()->format('H:i:s d.m.Y'),
         ),
     )
     ->labelAttributes(['class' => 'fw-bold'])
-    ->valueAttributes(['class' => 'alert alert-info']);
+    ->valueAttributes(['class' => 'alert alert-info'])
+    ->valuePresenter(new SimpleValuePresenter());
