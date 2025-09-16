@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6dbf9db4a798b18bcd8b836694762952",
+    "content-hash": "4d664e27e296740c27044fd64acf24a4",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -16585,16 +16585,16 @@
         },
         {
             "name": "yiisoft/router-fastroute",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/router-fastroute.git",
-                "reference": "a141141526723753464286c8713b8d1584494a88"
+                "reference": "6f7bd28ceaae7a0941fc33ccbb1bede030f69c49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/router-fastroute/zipball/a141141526723753464286c8713b8d1584494a88",
-                "reference": "a141141526723753464286c8713b8d1584494a88",
+                "url": "https://api.github.com/repos/yiisoft/router-fastroute/zipball/6f7bd28ceaae7a0941fc33ccbb1bede030f69c49",
+                "reference": "6f7bd28ceaae7a0941fc33ccbb1bede030f69c49",
                 "shasum": ""
             },
             "require": {
@@ -16611,13 +16611,13 @@
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.7.1",
                 "nyholm/psr7": "^1.8.2",
-                "phpunit/phpunit": "^10.5.45",
+                "phpunit/phpunit": "^10.5.55",
                 "psr/container": "^2.0.2",
-                "rector/rector": "^2.0.9",
+                "rector/rector": "^2.1.7",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.8.6",
-                "yiisoft/di": "^1.3",
+                "yiisoft/di": "^1.4",
                 "yiisoft/test-support": "^3.0.2"
             },
             "type": "library",
@@ -16664,7 +16664,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-26T07:37:13+00:00"
+            "time": "2025-09-16T06:28:46+00:00"
         },
         {
             "name": "yiisoft/security",
