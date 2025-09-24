@@ -13,11 +13,13 @@ use App\Auth\Form\SignupForm;
 use App\Auth\Trait\Oauth2;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
@@ -33,22 +35,17 @@ use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc;
-use Yiisoft\Yii\AuthClient\Client\Facebook;
-use Yiisoft\Yii\AuthClient\Client\GitHub;
-use Yiisoft\Yii\AuthClient\Client\Google;
-use Yiisoft\Yii\AuthClient\Client\GovUk;
-use Yiisoft\Yii\AuthClient\Client\LinkedIn;
-use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
-use Yiisoft\Yii\AuthClient\Client\OpenBanking;
-use Yiisoft\Yii\AuthClient\Client\VKontakte;
-use Yiisoft\Yii\AuthClient\Client\X;
-use Yiisoft\Yii\AuthClient\Client\Yandex;
+use App\Auth\Client\DeveloperSandboxHmrc;
+use App\Auth\Client\GovUk;
+use App\Auth\Client\OpenBanking;
+use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class SignupController
 {
     use Oauth2;
+
+    use OpenBankingProviders;
 
     public const string EMAIL_VERIFICATION_TOKEN = 'email-verification';
     private Manager $manager;
@@ -62,65 +59,50 @@ final class SignupController
         // add, save, remove, clear, children, parents
         private ItemStorage $itemstorage,
         Rule $rule,
-        private WebControllerService $webService,
-        private SessionInterface $session,
+        private readonly DataResponseFactoryInterface $factory,
+        private readonly WebControllerService $webService,
+        private readonly SessionInterface $session,
         private ViewRenderer $viewRenderer,
-        private MailerInterface $mailer,
-        private sR $sR,
-        private DeveloperSandboxHmrc $developerSandboxHmrc,
-        private Facebook $facebook,
-        private GitHub $github,
-        private Google $google,
-        private GovUk $govUk,
-        private LinkedIn $linkedIn,
-        private MicrosoftOnline $microsoftOnline,
-        private OpenBanking $openBanking,
-        private VKontakte $vkontakte,
-        private X $x,
-        private Yandex $yandex,
-        private Translator $translator,
-        private UrlGenerator $urlGenerator,
-        private CurrentRoute $currentRoute,
-        private LoggerInterface $logger,
+        private readonly MailerInterface $mailer,
+        private readonly sR $sR,
+        private readonly Translator $translator,
+        private readonly UrlGenerator $urlGenerator,
+        private readonly CurrentRoute $currentRoute,
+        private readonly LoggerInterface $logger,
     ) {
         // Related logic: see yiisoft/rbac-php
         $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
-        $this->session = $session;
         $this->flash = new Flash($this->session);
         $this->viewRenderer = $viewRenderer->withControllerName('signup');
-        $this->mailer = $mailer;
-        $this->sR = $sR;
-        $this->developerSandboxHmrc = $developerSandboxHmrc;
-        $this->facebook = $facebook;
-        $this->github = $github;
-        $this->google = $google;
-        $this->govUk = $govUk;
-        $this->linkedIn = $linkedIn;
-        $this->microsoftOnline = $microsoftOnline;
-        $this->openBanking = $openBanking;
-        $this->vkontakte = $vkontakte;
-        $this->x = $x;
-        $this->yandex = $yandex;
-        $this->initializeOauth2IdentityProviderCredentials(
-            $developerSandboxHmrc,
-            $facebook,
-            $github,
-            $google,
-            $govUk,
-            $linkedIn,
-            $microsoftOnline,
-            $openBanking,
-            $vkontakte,
-            $x,
-            $yandex,
-        );
-        $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
-        $this->translator = $translator;
-        $this->urlGenerator = $urlGenerator;
-        $this->currentRoute = $currentRoute;
-        $this->logger = $logger;
+        $this->initializeOauth2IdentityProviderCredentials();
+        $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $sR->getSetting('telegram_token');
+    }
+    
+    /**
+     * Related logic: see AuthChoice function authRoutedButtons() 
+     * @param ServerRequestInterface $request
+     * @param AuthChoice $authChoice
+     * @return ResponseInterface
+     */
+    public function authclient(
+        ServerRequestInterface $request,
+        AuthChoice $authChoice,
+    ): ResponseInterface {
+        $query = $request->getQueryParams();
+        $clientName = (string) $query['authclient'];
+        $client = $authChoice->getClient($clientName);
+        $codeVerifier = Random::string(128);
+        $this->session->set('code_verifier', $codeVerifier);
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
+        $selectedIdentityProviders = $this->selectedIdentityProviders($codeChallenge);
+        $selectedClient = (array) $selectedIdentityProviders[$clientName];
+        $clientParams = (array) $selectedClient['params'];
+        $clientAuthUrl = $client->buildAuthUrl($request, $clientParams);
+        return $this->factory
+                    ->createResponse(null, 302)
+                    ->withHeader('Location', $clientAuthUrl);
     }
 
     /**
@@ -150,6 +132,30 @@ final class SignupController
         if (!$authService->isGuest()) {
             return $this->webService->getRedirectResponse('site/index');
         }
+
+        $openBankingAuthUrl = '';
+        $selectedOpenBankingProvider = $this->sR->getSetting('open_banking_provider');
+        // If a provider has been selected, configure the client accordingly
+        if (strlen($selectedOpenBankingProvider) > 0) {
+            $providerConfig = $this->getOpenBankingProviderConfig($selectedOpenBankingProvider);
+            if ($providerConfig !== null) {
+                /** @var OpenBanking $openBanking */
+                $openBanking = (AuthChoice::widget())->getClient('openbanking');
+                $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
+                $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
+                $openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
+                $codeVerifier = Random::string(128);
+                $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
+                $this->session->set('code_verifier', $codeVerifier);
+                $openBankingAuthUrl = $openBanking->getAuthUrl() . '?' . http_build_query([
+                    'response_type' => 'code',
+                    'scope' => $openBanking->getScope(),
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ]);
+            }
+        }
+
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
             $userId = $user->getId();
@@ -208,97 +214,23 @@ final class SignupController
             }
             return $this->webService->getRedirectResponse('site/signupsuccess');
         }
-        $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
-        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
-        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
-        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
-        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
-        $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
-        $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
-        $noOpenBankingContinueButton = $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false;
-        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
 
         $codeVerifier = Random::string(128);
-
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-
-        $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
-        $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
-
         $this->session->set('code_verifier', $codeVerifier);
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
-            'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ?
-                $this->developerSandboxHmrc
-                     ->buildAuthUrl(
-                         $request,
-                         $params = [
-                             'response_type' => 'code',
-                         ],
-                     ) : '',
+            'selectedOpenBankingProvider' => $selectedOpenBankingProvider,
+
+            'noOpenBankingContinueButton' => $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false,
+            'openBankingAuthUrl' => $openBankingAuthUrl,
+
             'sessionOtp' => $this->session->get('otp'),
             'telegramToken' => $this->telegramToken,
-            'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
-            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
-            'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
-            'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
-                $request,
-                $params = [
-                    'return_type' => 'id_token',
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-            ) : '',
-            'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
-            'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
-            'openBankingAuthUrl' => strlen($this->openBanking->getClientId()) > 0 ? $this->openBanking->buildAuthUrl(
-                $request,
-                $params = [
-                    'return_type' => 'id_token',
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-            ) : '',
-            'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
-                $request,
-                $params = [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-            ) : '',
-            /**
-             * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
-             * to perform the OAuth exchange from public clients securely using two parameters code_challenge and
-             * code_challenge_method.
-             * @link https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
-             */
-            'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl(
-                $request,
-                $params = [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-            ) : '',
-            'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl(
-                $request,
-                $params = [
-                    'code_challenge' => $codeChallenge,
-                    'code_challenge_method' => 'S256',
-                ],
-            ) : '',
-            'noDeveloperSandboxHmrcContinueButton' => $noDeveloperSandboxHmrcContinueButton,
-            'noFacebookContinueButton' => $noFacebookContinueButton,
-            'noGithubContinueButton' => $noGithubContinueButton,
-            'noGoogleContinueButton' => $noGoogleContinueButton,
-            'noGovUkContinueButton' => $noGovUkContinueButton,
-            'noLinkedInContinueButton' => $noLinkedInContinueButton,
-            'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
-            'noOpenBankingContinueButton' => $noOpenBankingContinueButton,
-            'noVKontakteContinueButton' => $noVKontakteContinueButton,
-            'noXContinueButton' => $noXContinueButton,
-            'noYandexContinueButton' => $noYandexContinueButton,
+            'request' => $request,
+            'selectedIdentityProviders' => $this->selectedIdentityProviders($codeChallenge),
         ]);
-    }
+    }    
 
     /**
      * @param User $user

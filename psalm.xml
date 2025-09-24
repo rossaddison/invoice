@@ -22,6 +22,11 @@
         </ignoreFiles>        
     </projectFiles>
     <issueHandlers>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Auth/Client" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
         <!-- Implemented 16/02/2025 psalm version upgrade to 6.6.0.             
              The Cycle/ORM  requires Entity Classes not to be final so that proxies can 
              be created using the ProxyFactory. -->             

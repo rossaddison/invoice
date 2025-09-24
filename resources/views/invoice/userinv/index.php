@@ -143,7 +143,6 @@ echo '<br>'
             },
         ),
         new DataColumn(
-            field: 'user_id',
             header: $translator->translate('gridview.login'),
             property: 'filterUser',
             content: static function (UserInv $model) use ($urlGenerator): string|A {

@@ -312,7 +312,6 @@ echo Breadcrumbs::widget()
             },
         ),
         new DataColumn(
-            field: 'number',
             property: 'filterQuoteNumber',
             header: $translator->translate('quote.number'),
             content: static function (Quote $model) use ($urlGenerator): A {
@@ -337,7 +336,6 @@ echo Breadcrumbs::widget()
             content: static fn(Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
         ),
         new DataColumn(
-            field: 'client_id',
             property: 'filterClient',
             header: $translator->translate('client'),
             content: static function (Quote $model): string {
@@ -352,7 +350,6 @@ echo Breadcrumbs::widget()
             withSorting: false,
         ),
         new DataColumn(
-            field: 'id',
             property: 'filterQuoteAmountTotal',
             header: $translator->translate('total') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
             content: static function (Quote $model) use ($decimalPlaces): Label {

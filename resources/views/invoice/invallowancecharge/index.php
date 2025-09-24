@@ -78,7 +78,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterInvNumber',
-            field: 'inv_id',
             header: $translator->translate('invoice'),
             content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
                 return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
@@ -88,7 +87,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterReasonCode',
-            field: 'allowance_charge_id',
             header: $translator->translate('allowance.or.charge.reason.code'),
             content: static function (InvAllowanceCharge $model): string {
                 return $model->getAllowanceCharge()?->getReasonCode() ?? '';
@@ -98,7 +96,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterReason',
-            field: 'allowance_charge_id',
             header: $translator->translate('allowance.or.charge.reason'),
             content: static function (InvAllowanceCharge $model): string {
                 return $model->getAllowanceCharge()?->getReason() ?? '';

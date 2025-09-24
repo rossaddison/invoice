@@ -52,6 +52,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>24th September 2025</b></p>
+<p>Dependency Injector yii-auth-client.php created under config/web/di</p>
+<p>AuthChoice integrated into AuthController</p>
+<p>Instead of AuthChoice absoluteButtons function on auth/login</p>
 <p><b>3rd September 2025</b></p>
 <p>After installing google-gemini/gemini-cli globally with <code>npm install -g @google/gemini-cli</code>, created Readme's using</p>
 <p>Google Gemini from the command line and creation of ge_min_i.bat for inter alia analysing code, creating documentation, summaries in this repo.</p>

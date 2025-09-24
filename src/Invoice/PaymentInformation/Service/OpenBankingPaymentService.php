@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\SessionInterface;
-use Yiisoft\Yii\AuthClient\Client\OpenBanking;
+use App\Auth\Client\OpenBanking;
 
 final class OpenBankingPaymentService
 {
@@ -85,7 +85,7 @@ final class OpenBankingPaymentService
             throw new \RuntimeException('Missing code verifier in session.');
         }
 
-        return $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier(
+        return $this->openBanking->fetchAccessTokenWithCodeVerifier(
             $request,
             $code,
             [

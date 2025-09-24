@@ -235,7 +235,7 @@ final readonly class Button
             ->addClass('btn btn-dark')
             ->render() . A::tag()
             ->addClass('btn btn-dark')
-            ->content($this->translator->translate('continue.with.developer.sandbox.hmrc'))
+            ->content($this->translator->translate('continue.with.developersandboxhmrc'))
             ->href($developerSandboxHmrcAuthUrl)
             ->id('btn-sandboxhmrc')
             ->render() .

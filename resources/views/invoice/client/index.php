@@ -97,7 +97,6 @@ $columns = [
         withSorting: true,
     ),
     new DataColumn(
-        field: 'client_name',
         property: 'filter_client_name',
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
@@ -110,7 +109,6 @@ $columns = [
         withSorting: false,
     ),
     new DataColumn(
-        field: 'client_surname',
         property: 'filter_client_surname',
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {

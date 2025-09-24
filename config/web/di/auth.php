@@ -5,9 +5,7 @@ declare(strict_types=1);
 use App\Auth\Identity;
 use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\ORMInterface;
-use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
@@ -44,5 +42,4 @@ return [
             $currentUser->clear();
         },
     ],
-    ClientInterface::class => Client::class,
 ];

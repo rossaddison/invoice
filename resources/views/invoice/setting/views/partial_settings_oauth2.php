@@ -132,7 +132,16 @@ use Yiisoft\Html\Tag\I;
                                     <?php } ?>
                             </select>
                         </div>
-                    </div>    
+                    </div>  
+                    <div class="checkbox">
+                        <?php $body['settings[no_openidconnect_continue_button]'] = $s->getSetting('no_openidconnect_continue_button');?>
+                        <label>
+                            <input type="hidden" name="settings[no_openidconnect_continue_button]" value="0">
+                            <input type="checkbox" name="settings[no_openidconnect_continue_button]" value="1"
+                                <?php $s->check_select($body['settings[no_openidconnect_continue_button]'], 1, '==', true) ?>>
+                            <?= I::tag()->addClass('bi')->render() . ' Open Id Connect'; ?>
+                        </label>
+                    </div>      
                     <div class="checkbox">
                         <?php $body['settings[no_vkontakte_continue_button]'] = $s->getSetting('no_vkontakte_continue_button');?>
                         <label>

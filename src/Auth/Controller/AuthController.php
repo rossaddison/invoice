@@ -26,9 +26,12 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\Factory\Factory;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Http\Method;
@@ -42,18 +45,15 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
+use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc;
-use Yiisoft\Yii\AuthClient\Client\Facebook;
-use Yiisoft\Yii\AuthClient\Client\GitHub;
-use Yiisoft\Yii\AuthClient\Client\Google;
-use Yiisoft\Yii\AuthClient\Client\GovUk;
-use Yiisoft\Yii\AuthClient\Client\LinkedIn;
-use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
-use Yiisoft\Yii\AuthClient\Client\OpenBanking;
-use Yiisoft\Yii\AuthClient\Client\X;
-use Yiisoft\Yii\AuthClient\Client\VKontakte;
-use Yiisoft\Yii\AuthClient\Client\Yandex;
+use App\Auth\Client\DeveloperSandboxHmrc;
+use App\Auth\Client\GovUk;
+use App\Auth\Client\OpenBanking;
+use Yiisoft\Yii\AuthClient\AuthAction;
+use Yiisoft\Yii\AuthClient\StateStorage\StateStorageInterface;
+use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
+
 use Yiisoft\Yii\RateLimiter\CounterInterface;
 
 final class AuthController
@@ -72,6 +72,7 @@ final class AuthController
     public const string LINKEDIN_ACCESS_TOKEN = 'linkedin-access';
     public const string MICROSOFTONLINE_ACCESS_TOKEN = 'microsoftonline-access';
     public const string OPENBANKING_ACCESS_TOKEN = 'openbanking-access';
+    public const string OIDC_ACCESS_TOKEN = 'oidc-access';
     public const string X_ACCESS_TOKEN = 'x-access';
     public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
@@ -87,41 +88,57 @@ final class AuthController
         private readonly Manager $manager,
         private readonly SessionInterface $session,
         private readonly SettingRepository $sR,
-        private readonly DeveloperSandboxHmrc $developerSandboxHmrc,
-        private readonly Facebook $facebook,
-        private readonly GitHub $github,
-        private readonly Google $google,
-        private readonly GovUk $govUk,
-        private readonly LinkedIn $linkedIn,
-        private readonly MicrosoftOnline $microsoftOnline,
-        private readonly OpenBanking $openBanking,
-        private readonly VKontakte $vkontakte,
-        private readonly X $x,
-        private readonly Yandex $yandex,
         private readonly UrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
+        private readonly TranslatorInterface $translator,    
+        // trait variables
         private readonly Flash $flash,
         private readonly CounterInterface $rateLimiter,
         private readonly ClientInterface $configWebDiAuthGuzzle,
         private readonly RequestFactoryInterface $requestFactory,
+        private readonly WebView $webView,
+        private readonly AssetManager $assetManager,
+        private readonly StateStorageInterface $stateStorage,
+        private readonly Factory $yiisoftFactory,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
-        $this->initializeOauth2IdentityProviderCredentials(
-            $developerSandboxHmrc,
-            $facebook,
-            $github,
-            $google,
-            $govUk,
-            $linkedIn,
-            $microsoftOnline,
-            $openBanking,
-            $vkontakte,
-            $x,
-            $yandex,
-        );
-        $this->initializeOauth2IdentityProviderDualUrls($sR, $developerSandboxHmrc);
+        $this->initializeOauth2IdentityProviderCredentials();
+        $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $this->sR->getSetting('telegram_token');
+    }
+    
+    /**
+     * Related logic: see AuthChoice function authRoutedButtons() 
+     * @param ServerRequestInterface $request
+     * @param AuthChoice $authChoice
+     * @return ResponseInterface
+     */
+    public function authclient(
+        ServerRequestInterface $request,
+        AuthChoice $authChoice,
+    ): ResponseInterface {
+        $query = $request->getQueryParams();
+        $clientName = (string) $query['authclient'];
+        $client = $authChoice->getClient($clientName);
+        $codeVerifier = Random::string(128);
+        $this->session->set('code_verifier', $codeVerifier);
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
+        $selectedIdentityProviders = $this->selectedIdentityProviders($codeChallenge);
+        $selectedClient = (array) $selectedIdentityProviders[$clientName];
+        $clientParams = (array) $selectedClient['params'];
+        $clientAuthUrl = $client->buildAuthUrl($request, $clientParams);
+        return $this->factory
+                    ->createResponse(null, 302)
+                    ->withHeader('Location', $clientAuthUrl);
+    }    
+    
+    public function callback(
+        ServerRequestInterface $request,    
+        RequestHandlerInterface $handler,    
+        AuthAction $authAction
+    ): ResponseInterface { 
+        return $authAction->process($request, $handler);    
     }
 
     public function login(
@@ -145,15 +162,18 @@ final class AuthController
         if (strlen($selectedOpenBankingProvider) > 0) {
             $providerConfig = $this->getOpenBankingProviderConfig($selectedOpenBankingProvider);
             if ($providerConfig !== null) {
-                $this->openBanking->setAuthUrl((string) $providerConfig['authUrl']);
-                $this->openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
-                $this->openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
+                $authChoice = AuthChoice::widget();
+                /** @var OpenBanking $openBanking */
+                $openBanking = $authChoice->getClient('openbanking');
+                $openBanking->setAuthUrl((string) $providerConfig['authUrl']);
+                $openBanking->setTokenUrl((string) $providerConfig['tokenUrl']);
+                $openBanking->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
                 $codeVerifier = Random::string(128);
                 $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
                 $this->session->set('code_verifier', $codeVerifier);
-                $openBankingAuthUrl = $this->openBanking->getAuthUrl() . '?' . http_build_query([
+                $openBankingAuthUrl = $openBanking->getAuthUrl() . '?' . http_build_query([
                     'response_type' => 'code',
-                    'scope' => $this->openBanking->getScope(),
+                    'scope' => $openBanking->getScope(),
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ]);
@@ -193,14 +213,7 @@ final class AuthController
                          * Related logic: see UserInvController function signup which is triggered once user's email verification link is clicked in their user account
                          *      and the userinv account's status field is made active i.e. 1
                          */
-                        $userRoles = $this->manager->getRolesByUserId($userId);
-                        $isAdminUser = false;
-                        foreach ($userRoles as $role) {
-                            if ($role->getName() === 'admin') {
-                                $isAdminUser = true;
-                                break;
-                            }
-                        }
+                        $isAdminUser = $this->isAdminUser($userId);
 
                         if ($status || $isAdminUser) {
                             // Disable email verification token for admin users who don't need email verification
@@ -227,87 +240,19 @@ final class AuthController
             }
             $this->logout($uR, $uiR);
         }
-        $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
-        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
-        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
-        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
-        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
-        $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
-        $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
-        $noOpenBankingContinueButton = $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false;
-        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
-        $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
-        $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
-
+        
         $codeVerifier = Random::string(128);
-
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
-
         $this->session->set('code_verifier', $codeVerifier);
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
         return $this->viewRenderer->render(
             'login',
             [
                 'formModel' => $loginForm,
-                'developerSandboxHmrcAuthUrl' => strlen($this->developerSandboxHmrc->getClientId()) > 0 ? $this->developerSandboxHmrc->buildAuthUrl(
-                    $request,
-                    $params = [
-                        'code_challenge' => $codeChallenge,
-                        'code_challenge_method' => 'S256',
-                    ],
-                ) : '',
-                'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
-                'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
-                'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
-                'govUkAuthUrl' => strlen($this->govUk->getClientId()) > 0 ? $this->govUk->buildAuthUrl(
-                    $request,
-                    $params = [
-                        'return_type' => 'id_token',
-                        'code_challenge' => $codeChallenge,
-                        'code_challenge_method' => 'S256',
-                    ],
-                ) : '',
-                'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
-                'microsoftOnlineAuthUrl' => strlen($this->microsoftOnline->getClientId()) > 0 ? $this->microsoftOnline->buildAuthUrl($request, $params = []) : '',
-                'openBankingAuthUrl' => $openBankingAuthUrl,
                 'selectedOpenBankingProvider' => $selectedOpenBankingProvider,
-                'vkontakteAuthUrl' => strlen($this->vkontakte->getClientId()) > 0 ? $this->vkontakte->buildAuthUrl(
-                    $request,
-                    $params = [
-                        'code_challenge' => $codeChallenge,
-                        'code_challenge_method' => 'S256',
-                    ],
-                ) : '',
-                /**
-                 * PKCE: An extension to the authorization code flow to prevent several attacks and to be able
-                 * to perform the OAuth exchange from public clients securely using two parameters code_challenge and
-                 * code_challenge_method.
-                 * @link https://developer.x.com/en/docs/authentication/oauth-2-0/user-access-token
-                 */
-                'xAuthUrl' => strlen($this->x->getClientId()) > 0 ? $this->x->buildAuthUrl(
-                    $request,
-                    $params = [
-                        'code_challenge' => $codeChallenge,
-                        'code_challenge_method' => 'S256',
-                    ],
-                ) : '',
-                'yandexAuthUrl' => strlen($this->yandex->getClientId()) > 0 ? $this->yandex->buildAuthUrl(
-                    $request,
-                    $params = [
-                        'code_challenge' => $codeChallenge,
-                        'code_challenge_method' => 'S256',
-                    ],
-                ) : '',
-                'noDeveloperSandboxHmrcContinueButton' => $noDeveloperSandboxHmrcContinueButton,
-                'noGithubContinueButton' => $noGithubContinueButton,
-                'noGoogleContinueButton' => $noGoogleContinueButton,
-                'noGovUkContinueButton' => $noGovUkContinueButton,
-                'noFacebookContinueButton' => $noFacebookContinueButton,
-                'noLinkedInContinueButton' => $noLinkedInContinueButton,
-                'noMicrosoftOnlineContinueButton' => $noMicrosoftOnlineContinueButton,
-                'noOpenBankingContinueButton' => $noOpenBankingContinueButton,
-                'noVKontakteContinueButton' => $noVKontakteContinueButton,
-                'noXContinueButton' => $noXContinueButton,
-                'noYandexContinueButton' => $noYandexContinueButton,
+                'noOpenBankingContinueButton' => $this->sR->getSetting('no_openbanking_continue_button') == '1' ? true : false,
+                'openBankingAuthUrl' => $openBankingAuthUrl,
+                'request' => $request,
+                'selectedIdentityProviders' => $this->selectedIdentityProviders($codeChallenge),
             ],
         );
     }
@@ -624,55 +569,52 @@ final class AuthController
     }
 
     /**
-     * Get the 'authState' session variable created automatically (validateAuthState always true)
-     * in the callback function yii-auth-client\src\OAuth2\buildAuthUrl
-     * and compare it with the 'state' variable returned by an identity Provider e.g. Facebook
+     * Validates the 'authState' session variable against the 'state' returned by an identity provider.
+     * Ensures state integrity and prevents CSRF attacks.
+     *
      * @param string $identityProvider
      * @param string $state
      * @psalm-return void
      */
     private function blockInvalidState(string $identityProvider, string $state): void
     {
-        // Validate and sanitize the state parameter
+        // Early return if state is empty
         if ($state === '') {
-            $this->logger->log(LogLevel::ALERT, 'Invalid or empty OAuth2 state parameter from provider: ' . $identityProvider);
+            $this->logger->log(LogLevel::ALERT, "Invalid or empty OAuth2 state parameter from provider: {$identityProvider}");
             exit(1);
         }
 
         // Sanitize state parameter to prevent injection attacks
-        $state = preg_replace('/[^a-zA-Z0-9\-_]/', '', $state);
-        if ($state === '') {
-            $this->logger->log(LogLevel::ALERT, 'State parameter contains invalid characters from provider: ' . $identityProvider);
+        $sanitizedState = preg_replace('/[^a-zA-Z0-9\-_]/', '', $state);
+        if ($sanitizedState === '') {
+            $this->logger->log(LogLevel::ALERT, "State parameter contains invalid characters from provider: {$identityProvider}");
             exit(1);
         }
 
-        /**
-         * @psalm-suppress MixedMethodCall,
-         * @psalm-suppress MixedAssignment $sessionState
-         */
-        $sessionState = match ($identityProvider) {
-            'developergovsandboxhmrc' => $this->developerSandboxHmrc->getSessionAuthState() ?? null,
-            'facebook' => $this->facebook->getSessionAuthState() ?? null,
-            'github' => $this->github->getSessionAuthState() ?? null,
-            'google' => $this->google->getSessionAuthState() ?? null,
-            'govUk' => $this->govUk->getSessionAuthState() ?? null,
-            'linkedIn' => $this->linkedIn->getSessionAuthState() ?? null,
-            'microsoftOnline' => $this->microsoftOnline->getSessionAuthState() ?? null,
-            'openBanking' => $this->openBanking->getSessionAuthState() ?? null,
-            'vkontakte' => $this->vkontakte->getSessionAuthState() ?? null,
-            'x' => $this->x->getSessionAuthState() ?? null,
-            'yandex' => $this->yandex->getSessionAuthState() ?? null,
-        };
+        $authChoice = AuthChoice::widget();
 
-        if (null !== $sessionState && null !== $state) {
+        try {
+            // raises an exception if the idP is not found
+            $client = $authChoice->getClient($identityProvider);
+            /**
+             * @var string|null $sessionState
+             */
+            $sessionState = $client->getSessionAuthState();
+
+            if ($sessionState === null) {
+                $this->logger->log(LogLevel::ALERT, "Session Auth state is null for provider: {$identityProvider}");
+                exit(1);
+            }
+
             // Use constant-time comparison to prevent timing attacks
-            if (!$sessionState || !hash_equals((string) $sessionState, $state)) {
+            if (!$sessionState || !hash_equals($sessionState, $state)) {
                 // State is invalid, possible cross-site request forgery. Exit with an error code.
                 $this->logger->log(LogLevel::ALERT, 'CSRF attack attempt detected for provider: ' . $identityProvider);
                 exit(1);
             }
-        } else {
-            $this->logger->log(LogLevel::ALERT, 'Session Auth state is null for provider: ' . $identityProvider);
+        } catch (\Exception $e) {
+            // Log exception details for debugging
+            $this->logger->log(LogLevel::ALERT, "Exception validating OAuth2 state for provider: {$identityProvider}. Error: " . $e->getMessage());
             exit(1);
         }
     }
@@ -859,6 +801,19 @@ final class AuthController
         $value = self::{$const};
         assert(is_string($value));
         return $value;
+    }
+
+    private function isAdminUser(string $userId): bool
+    {
+        $userRoles = $this->manager->getRolesByUserId($userId);
+        $isAdminUser = false;
+        foreach ($userRoles as $role) {
+            if ($role->getName() === 'admin') {
+                $isAdminUser = true;
+                break;
+            }
+        }
+        return $isAdminUser;
     }
 
     /**

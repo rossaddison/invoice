@@ -152,6 +152,14 @@ return [
                */
                 'tenant' => $_ENV['MICROSOFTONLINE_API_CLIENT_TENANT'] ?? 'common',
             ],
+            'oidc' => [
+                'class' => 'Yiisoft\Yii\AuthClient\Client\Google::class',
+                //'issuerUrl' => 'dev-0yhorhwwkgkdmu1g.uk.auth0.com',
+                'issuerUrl' => 'https://accounts.google.com/.well-known/openid-configuration',
+                'clientId' => $_ENV['OIDC_API_CLIENT_ID'] ?? '',
+                'clientSecret' => $_ENV['OIDC_API_CLIENT_SECRET'] ?? '',
+                'returnUrl' => $_ENV['OIDC_API_CLIENT_RETURN_URL'] ?? '',
+            ],
             'openbanking' => [
                 'class' => 'Yiisoft\Yii\AuthClient\Client\OpenBanking::class',
                 'clientId' => $_ENV['OPENBANKING_API_CLIENT_ID'] ?? '',

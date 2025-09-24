@@ -7,18 +7,7 @@ namespace App\Auth\Trait;
 use App\Auth\Token;
 use App\Auth\TokenRepository;
 use App\User\User;
-use App\Invoice\Setting\SettingRepository as sR;
-use Yiisoft\Yii\AuthClient\Client\DeveloperSandboxHmrc;
-use Yiisoft\Yii\AuthClient\Client\Facebook;
-use Yiisoft\Yii\AuthClient\Client\GitHub;
-use Yiisoft\Yii\AuthClient\Client\Google;
-use Yiisoft\Yii\AuthClient\Client\GovUk;
-use Yiisoft\Yii\AuthClient\Client\LinkedIn;
-use Yiisoft\Yii\AuthClient\Client\MicrosoftOnline;
-use Yiisoft\Yii\AuthClient\Client\OpenBanking;
-use Yiisoft\Yii\AuthClient\Client\VKontakte;
-use Yiisoft\Yii\AuthClient\Client\X;
-use Yiisoft\Yii\AuthClient\Client\Yandex;
+use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 trait Oauth2
 {
@@ -38,95 +27,140 @@ trait Oauth2
 
     public const string OPENBANKING_ACCESS_TOKEN = 'openbanking-access';
 
+    public const string OIDC_ACCESS_TOKEN = 'oidc-access';
+
     public const string VKONTAKTE_ACCESS_TOKEN = 'vkontakte-access';
 
     public const string X_ACCESS_TOKEN = 'x-access';
 
     public const string YANDEX_ACCESS_TOKEN = 'yandex-access';
 
-    private function initializeOauth2IdentityProviderCredentials(
-        DeveloperSandboxHmrc $developerSandboxHmrc,
-        Facebook $facebook,
-        GitHub $github,
-        Google $google,
-        GovUk $govUk,
-        LinkedIn $linkedIn,
-        MicrosoftOnline $microsoftOnline,
-        OpenBanking $openBanking,
-        VKontakte $vkontakte,
-        X $x,
-        Yandex $yandex,
-    ): void {
+    private function initializeOauth2IdentityProviderCredentials(): void
+    {
         /**
          * Related logic: see config/common/params.php
-         */
-        $developerSandboxHmrc->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('developersandboxhmrc'));
-        $facebook->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('facebook'));
-        $github->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('github'));
-        $google->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('google'));
-        $govUk->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('govuk'));
-        $linkedIn->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('linkedin'));
-        $microsoftOnline->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('microsoftonline'));
-        $openBanking->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('openbanking'));
-        $vkontakte->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('vkontakte'));
-        $x->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('x'));
-        $yandex->setOauth2ReturnUrl($this->sR->getOauth2IdentityProviderReturnUrl('yandex'));
-
-        $developerSandboxHmrc->setClientId($this->sR->getOauth2IdentityProviderClientId('developersandboxhmrc'));
-        $facebook->setClientId($this->sR->getOauth2IdentityProviderClientId('facebook'));
-        $github->setClientId($this->sR->getOauth2IdentityProviderClientId('github'));
-        $google->setClientId($this->sR->getOauth2IdentityProviderClientId('google'));
-        $govUk->setClientId($this->sR->getOauth2IdentityProviderClientId('govuk'));
-        $linkedIn->setClientId($this->sR->getOauth2IdentityProviderClientId('linkedin'));
-        $microsoftOnline->setClientId($this->sR->getOauth2IdentityProviderClientId('microsoftonline'));
-        $openBanking->setClientId($this->sR->getOauth2IdentityProviderClientId('openbanking'));
-        $vkontakte->setClientId($this->sR->getOauth2IdentityProviderClientId('vkontakte'));
-        $x->setClientId($this->sR->getOauth2IdentityProviderClientId('x'));
-        $yandex->setClientId($this->sR->getOauth2IdentityProviderClientId('yandex'));
-
-        $developerSandboxHmrc->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('developersandboxhmrc'));
-        $facebook->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('facebook'));
-        $github->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('github'));
-        $google->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('google'));
-        $govUk->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('govuk'));
-        $linkedIn->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('linkedin'));
-        $microsoftOnline->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('microsoftonline'));
-        $openBanking->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('openbanking'));
-        $vkontakte->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('vkontakte'));
-        $x->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('x'));
-        $yandex->setClientSecret($this->sR->getOauth2IdentityProviderClientSecret('yandex'));
-
-        /**
+         * No need to instantiate AuthChoice. It has been dependency injected
+         * and generates a button on the auth/login view
+         * at config/web/yii-auth-client
+         *
          * Related logic: see https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView
          * Rebuild the authUrl and tokenUrl to include the tenant (default: 'common') which can be
          * 'common', 'organisation', 'consumers', or ID. ID is used here.
          * The tenant can be acquired from Microsoft Entra Admin Centre ... Identity Overview ... Tenant
          * and is inserted into the root's .env file.
          */
-        $microsoftOnline->setTenant($this->sR->getOauth2MicrosoftEntraIdentityOverviewTenant('microsoftonline'));
+
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
+        $microsoftOnline = (AuthChoice::widget())->getClient('microsoftonline');
 
         $authUrl = $microsoftOnline->getAuthUrlWithTenantInserted($microsoftOnline->getTenant());
+
         $microsoftOnline->setAuthUrl($authUrl);
 
         $tokenUrl = $microsoftOnline->getTokenUrlWithTenantInserted($microsoftOnline->getTenant());
         $microsoftOnline->setTokenUrl($tokenUrl);
     }
 
-    /**
-     * Initialize development or production urls
-     *
-     * @param sR $sR
-     * @param DeveloperSandboxHmrc $developerSandboxHmrc
-     */
-    private function initializeOauth2IdentityProviderDualUrls(
-        sR $sR,
-        DeveloperSandboxHmrc $developerSandboxHmrc,
-    ): void {
-        if ($sR->getEnv() == 'dev') {
+    private function initializeOauth2IdentityProviderDualUrls(): void
+    {
+        if ($this->sR->getEnv() == 'dev') {
+
+            $authChoice = AuthChoice::widget();
+            $developerSandboxHmrc = $authChoice->getClient('developersandboxhmrc');
+            /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
             $developerSandboxHmrc->setEnvironment('dev');
         } else {
+            /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
             $developerSandboxHmrc->setEnvironment('prod');
         }
+    }
+    
+    private function selectedIdentityProviders(string $codeChallenge): array
+    {
+        $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
+        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
+        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
+        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
+        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
+        $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
+        $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
+        $noOidcContinueButton = $this->sR->getSetting('no_openidconnect_continue_button') == '1' ? true : false;
+        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
+        $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
+        $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
+        return $providers = [
+            'developersandboxhmrc' => [
+                'noflag' => $noDeveloperSandboxHmrcContinueButton,
+                'params' => [
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ],
+                'buttonName' => $this->translator->translate('continue.with.developersandboxhmrc'),
+            ],
+            'facebook' => [
+                'noflag' => $noFacebookContinueButton,
+                'params' => [],
+                'buttonName' => $this->translator->translate('continue.with.facebook'),
+             ],   
+            'github' => [
+                'noflag' => $noGithubContinueButton,
+                'params' => [],
+                'buttonName' => $this->translator->translate('continue.with.github'),
+            ],
+            'google' => [
+                'noflag' => $noGoogleContinueButton,
+                'params' => [],
+                'buttonName' => $this->translator->translate('continue.with.google'),
+            ],
+            'govuk' => [
+                'noflag' => $noGovUkContinueButton,
+                'params' => [
+                    'return_type' => 'id_token',
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ],
+                'buttonName' => $this->translator->translate('continue.with.govuk'),
+            ],
+            'linkedin' => [
+                'noflag' => $noLinkedInContinueButton,
+                'params' => [],
+                'buttonName' => $this->translator->translate('continue.with.linkedin'),
+            ],
+            'microsoftonline' => [
+                'noflag' => $noMicrosoftOnlineContinueButton,
+                'params' => [],
+                'buttonName' => $this->translator->translate('continue.with.microsoftonline'),
+            ],
+            'oidc' => [
+                'noflag' => $noOidcContinueButton,
+                'params' => [],
+                'buttonName' => $this->translator->translate('continue.with.oidc'),
+            ],
+            'vkontakte' => [
+                'noflag' => $noVKontakteContinueButton,
+                'params' => [
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ],
+                'buttonName' => $this->translator->translate('continue.with.vkontakte'),
+            ],
+            'x' => [
+                'noflag' => $noXContinueButton,
+                'params' => [
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ],
+                'buttonName' => $this->translator->translate('continue.with.x'),
+            ],
+            'yandex' => [
+                'noflag' => $noYandexContinueButton,
+                'params' => [
+                    'code_challenge' => $codeChallenge,
+                    'code_challenge_method' => 'S256',
+                ],
+                'buttonName' => $this->translator->translate('continue.with.yandex'),
+            ],
+        ];
     }
 
     /**
@@ -147,60 +181,5 @@ trait Oauth2
         $timeString = (string) $token->getCreated_at()->getTimestamp();
         // build the token with a timestamp built into it for comparison later
         return null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
-    }
-
-    private function getDeveloperSandboxHmrcAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);
-    }
-
-    private function getGithubAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::GITHUB_ACCESS_TOKEN);
-    }
-
-    private function getFaceBookAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::FACEBOOK_ACCESS_TOKEN);
-    }
-
-    private function getGoogleAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::GOOGLE_ACCESS_TOKEN);
-    }
-
-    private function getGovUkAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::GOVUK_ACCESS_TOKEN);
-    }
-
-    private function getLinkedInAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::LINKEDIN_ACCESS_TOKEN);
-    }
-
-    private function getMicrosoftOnlineAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::MICROSOFTONLINE_ACCESS_TOKEN);
-    }
-
-    private function getOpenBankingAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::OPENBANKING_ACCESS_TOKEN);
-    }
-
-    private function getVKontakteAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::VKONTAKTE_ACCESS_TOKEN);
-    }
-
-    private function getXAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::X_ACCESS_TOKEN);
-    }
-
-    private function getYandexAccessToken(User $user, TokenRepository $tR): string
-    {
-        return $this->getAccessToken($user, $tR, self::YANDEX_ACCESS_TOKEN);
     }
 }
