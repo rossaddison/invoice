@@ -587,7 +587,7 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
-        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\GovUk $govUk */
+        /** @psalm-var \App\Auth\Client\GovUk $govUk */
         $oAuthTokenType = $govUk->fetchAccessToken($request, $code, $params = []);
         /**
          * @var array $userArray
@@ -814,7 +814,7 @@ trait Callback
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
         $oAuthTokenType = $microsoftOnline->fetchAccessToken($request, $code, $params = [
             'grant_type' => 'authorization_code',
-            'redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline'
+            'redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline',
         ]);
         /**
          * @var array $userArray

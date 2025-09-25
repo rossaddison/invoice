@@ -79,9 +79,9 @@ final class SignupController
         $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $sR->getSetting('telegram_token');
     }
-    
+
     /**
-     * Related logic: see AuthChoice function authRoutedButtons() 
+     * Related logic: see AuthChoice function authRoutedButtons()
      * @param ServerRequestInterface $request
      * @param AuthChoice $authChoice
      * @return ResponseInterface
@@ -95,7 +95,7 @@ final class SignupController
         $client = $authChoice->getClient($clientName);
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
         $selectedIdentityProviders = $this->selectedIdentityProviders($codeChallenge);
         $selectedClient = (array) $selectedIdentityProviders[$clientName];
         $clientParams = (array) $selectedClient['params'];
@@ -217,7 +217,7 @@ final class SignupController
 
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
         return $this->viewRenderer->render('signup', [
             'formModel' => $signupForm,
             'selectedOpenBankingProvider' => $selectedOpenBankingProvider,
@@ -230,7 +230,7 @@ final class SignupController
             'request' => $request,
             'selectedIdentityProviders' => $this->selectedIdentityProviders($codeChallenge),
         ]);
-    }    
+    }
 
     /**
      * @param User $user

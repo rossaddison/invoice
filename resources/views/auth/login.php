@@ -43,7 +43,7 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
                 <div class="text-center">
                     <?php
                     /**
-                     * Note: The links are authRouted. 
+                     * Note: The links are authRouted.
                      * because these are absolute links that go to Identity Providers e.g. facebook
                      * ->authRoute will be used for the callbacks
                      */

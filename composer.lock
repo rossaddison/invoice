@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ad87c6dbe8fd1dbc875f878a06a8e06",
+    "content-hash": "9557a87b31cf9be69b4c645fbbaf3630",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -8147,12 +8147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "e3aa4381d80adaab21a1da74096ee80a23e0d4fc"
+                "reference": "b30f99d849c90ea238af7e596da6bd1bb85bc357"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/e3aa4381d80adaab21a1da74096ee80a23e0d4fc",
-                "reference": "e3aa4381d80adaab21a1da74096ee80a23e0d4fc",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/b30f99d849c90ea238af7e596da6bd1bb85bc357",
+                "reference": "b30f99d849c90ea238af7e596da6bd1bb85bc357",
                 "shasum": ""
             },
             "require": {
@@ -8248,7 +8248,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-24T22:20:00+00:00"
+            "time": "2025-09-24T23:34:43+00:00"
         },
         {
             "name": "rossaddison/yii-gii",

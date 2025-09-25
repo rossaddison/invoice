@@ -53,7 +53,6 @@ use App\Auth\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\AuthAction;
 use Yiisoft\Yii\AuthClient\StateStorage\StateStorageInterface;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
-
 use Yiisoft\Yii\RateLimiter\CounterInterface;
 
 final class AuthController
@@ -90,7 +89,7 @@ final class AuthController
         private readonly SettingRepository $sR,
         private readonly UrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
-        private readonly TranslatorInterface $translator,    
+        private readonly TranslatorInterface $translator,
         // trait variables
         private readonly Flash $flash,
         private readonly CounterInterface $rateLimiter,
@@ -107,9 +106,9 @@ final class AuthController
         $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $this->sR->getSetting('telegram_token');
     }
-    
+
     /**
-     * Related logic: see AuthChoice function authRoutedButtons() 
+     * Related logic: see AuthChoice function authRoutedButtons()
      * @param ServerRequestInterface $request
      * @param AuthChoice $authChoice
      * @return ResponseInterface
@@ -123,7 +122,7 @@ final class AuthController
         $client = $authChoice->getClient($clientName);
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
         $selectedIdentityProviders = $this->selectedIdentityProviders($codeChallenge);
         $selectedClient = (array) $selectedIdentityProviders[$clientName];
         $clientParams = (array) $selectedClient['params'];
@@ -131,14 +130,14 @@ final class AuthController
         return $this->factory
                     ->createResponse(null, 302)
                     ->withHeader('Location', $clientAuthUrl);
-    }    
-    
+    }
+
     public function callback(
-        ServerRequestInterface $request,    
-        RequestHandlerInterface $handler,    
-        AuthAction $authAction
-    ): ResponseInterface { 
-        return $authAction->process($request, $handler);    
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler,
+        AuthAction $authAction,
+    ): ResponseInterface {
+        return $authAction->process($request, $handler);
     }
 
     public function login(
@@ -240,10 +239,10 @@ final class AuthController
             }
             $this->logout($uR, $uiR);
         }
-        
+
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier , true)), '='), '+/', '-_');
+        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '='), '+/', '-_');
         return $this->viewRenderer->render(
             'login',
             [

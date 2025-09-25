@@ -165,12 +165,12 @@ return [
         ->middleware(LimitRequestsMiddleware::class)
         ->action([AuthController::class, 'login'])
         ->name('auth/login'),
-    Route::get('/authclient')      
+    Route::get('/authclient')
         ->action([AuthController::class, 'authclient'])
         ->name('auth/authclient'),
     Route::get('/callback')
         ->middleware(LimitRequestsMiddleware::class)
-        ->middleware(AuthAction::class)      
+        ->middleware(AuthAction::class)
         ->action([AuthController::class, 'callback'])
         ->name('auth/callback'),
     Route::methods([Method::GET, Method::POST], '/callbackDeveloperGovSandboxHmrc')

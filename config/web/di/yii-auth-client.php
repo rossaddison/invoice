@@ -153,7 +153,7 @@ return [
         '__construct()' => array_merge($constructArray, [
             'cache' => Reference::to(CacheInterface::class),
             'name' => 'oidc',
-             'title' => 'Open Id Connect'
+            'title' => 'Open Id Connect',
         ]),
         'setIssuerUrl()' => [$openidconnectClient['issuerUrl']],
         'setClientId()' => [$openidconnectClient['clientId']],
