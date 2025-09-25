@@ -10,36 +10,26 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 /**
+ * @var Psr\Http\Message\ServerRequestInterface $request
  * @var SignupForm                              $formModel
  * @var Yiisoft\Router\CurrentRoute             $currentRoute
  * @var WebView                                 $this
  * @var TranslatorInterface                     $translator
  * @var UrlGeneratorInterface                   $urlGenerator
  * @var string                                  $csrf
- * @var bool                                    $noDeveloperSandboxHmrcContinueButton
- * @var bool                                    $noFacebookContinueButton
- * @var bool                                    $noGithubContinueButton
- * @var bool                                    $noGoogleContinueButton
  * @var bool                                    $noGovUkContinueButton
- * @var bool                                    $noLinkedInContinueButton
- * @var bool                                    $noMicrosoftOnlineContinueButton
- * @var bool                                    $noVKontakteContinueButton
- * @var bool                                    $noXContinueButton
- * @var bool                                    $noYandexContinueButton
+ * @var bool                                    $noDeveloperSandboxHmrcContinueButton
+ * @var bool                                    $noOpenBankingContinueButton
  * @var int                                     $sessionOtp
  * @var string                                  $developerSandboxHmrcAuthUrl
- * @var string                                  $facebookAuthUrl
- * @var string                                  $githubAuthUrl
- * @var string                                  $googleAuthUrl
  * @var string                                  $govUkAuthUrl
- * @var string                                  $linkedInAuthUrl
- * @var string                                  $microsoftOnlineAuthUrl
+ * @var string                                  $openBankingAuthUrl
+ * @var string                                  $selectedOpenBankingProvider
  * @var string                                  $telegramToken
- * @var string                                  $vkontakteAuthUrl
- * @var string                                  $xAuthUrl
- * @var string                                  $yandexAuthUrl
+ * @var array                                   $selectedIdentityProviders
  */
 $this->setTitle($translator->translate('menu.signup'));
 ?>
@@ -52,54 +42,36 @@ $this->setTitle($translator->translate('menu.signup'));
                     <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
                 </div>
                 <div class="text-center">
-                    <?php $button = new Button($currentRoute, $translator, $urlGenerator); ?>
-                     <?php if ((strlen($developerSandboxHmrcAuthUrl ?: '') > 0) && !$noDeveloperSandboxHmrcContinueButton) { ?>
+                    <?php
+                    $authChoice = AuthChoice::widget();
+
+/**
+ * @var string $provider
+ * @var array $selectedIdentityProviders[$provider]
+ * @var string $provider
+ * @var array $info
+ * @var bool $info['noflag']
+ */
+foreach ($selectedIdentityProviders as $provider => $info) {
+    $noContinueButton = $info['noflag'];
+    if ($noContinueButton == false) {
+        echo '<br><br>';
+        echo $authChoice->absoluteButtons($request, $selectedIdentityProviders[$provider], $provider);
+    }
+}; ?>
+                    
+                    <?php $button = new Button($currentRoute, $translator, $urlGenerator); ?>    
+                    <?php if ((strlen($openBankingAuthUrl ?: '') > 0) && !$noOpenBankingContinueButton) { ?>
                         <br><br>
-                        <?= $button->developerSandboxHmrc($developerSandboxHmrcAuthUrl); ?>
-                    <?php } ?>
-                    <?php if ((strlen($facebookAuthUrl ?: '') > 0) && !$noFacebookContinueButton) { ?>
-                        <br><br>
-                        <?= $button->facebook($facebookAuthUrl); ?>
-                    <?php } ?>
-                    <?php if ((strlen($githubAuthUrl ?: '') > 0) && !$noGithubContinueButton) { ?>
-                        <br><br>
-                        <?= $button->github($githubAuthUrl ?: ''); ?>
+                        <?= $button->openBanking($openBankingAuthUrl, $selectedOpenBankingProvider); ?>
                     <?php } ?>    
-                    <?php if ((strlen($googleAuthUrl ?: '') > 0) && !$noGoogleContinueButton) { ?>
-                        <br><br>
-                        <?= $button->google($googleAuthUrl ?: ''); ?>
-                    <?php } ?>
-                    <?php if ((strlen($govUkAuthUrl ?: '') > 0) && !$noGovUkContinueButton) { ?>
-                        <br><br>
-                        <?= $button->govuk($govUkAuthUrl ?: ''); ?>
-                    <?php } ?>    
-                    <?php if ((strlen($linkedInAuthUrl ?: '') > 0) && !$noLinkedInContinueButton) { ?>
-                        <br><br>
-                        <?= $button->linkedin($linkedInAuthUrl ?: ''); ?>
-                    <?php } ?>
-                    <?php if ((strlen($microsoftOnlineAuthUrl ?: '') > 0) && !$noMicrosoftOnlineContinueButton) { ?>
-                        <br><br>
-                        <?= $button->microsoftonline($microsoftOnlineAuthUrl ?: ''); ?>
-                    <?php } ?>
-                    <?php if ((strlen($vkontakteAuthUrl ?: '') > 0) && !$noVKontakteContinueButton) { ?>
-                        <br><br>
-                        <?= $button->vkontakte($vkontakteAuthUrl ?: ''); ?>
-                    <?php } ?>
-                    <?php if ((strlen($xAuthUrl ?: '') > 0) && !$noXContinueButton) { ?>
-                        <br><br>
-                        <?= $button->x($xAuthUrl ?: ''); ?>
-                    <?php } ?>
-                    <?php if ((strlen($yandexAuthUrl ?: '') > 0) && !$noYandexContinueButton) { ?>
-                        <br><br>
-                        <?= $button->yandex($yandexAuthUrl ?: ''); ?>
-                    <?php } ?>       
                 </div>
                 <div class="card-body p-5 text-center">
                     <?= Form::tag()
-                        ->post($urlGenerator->generate('auth/signup'))
-                        ->csrf($csrf)
-                        ->id('signupForm')
-                        ->open();
+    ->post($urlGenerator->generate('auth/signup'))
+    ->csrf($csrf)
+    ->id('signupForm')
+    ->open();
 ?>
                     <?= Field::text($formModel, 'login')
     ->label($translator->translate('layout.login'))

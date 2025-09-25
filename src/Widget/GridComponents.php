@@ -40,7 +40,7 @@ final readonly class GridComponents
     public function offsetPaginationWidget(OffsetPaginator $sortedAndPagedPaginator): \Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface
     {
         return OffsetPagination::widget()
-        ->withPaginator($sortedAndPagedPaginator)
+        ->paginator($sortedAndPagedPaginator)
         ->listTag('ul')
         ->listAttributes(['class' => 'pagination'])
         ->itemTag('li')

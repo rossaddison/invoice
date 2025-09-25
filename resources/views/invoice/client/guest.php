@@ -79,7 +79,7 @@ $columns = [
         withSorting: true,
     ),
     new DataColumn(
-        field: 'client_name',
+        property: 'client_name',
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()
@@ -90,7 +90,7 @@ $columns = [
         withSorting: false,
     ),
     new DataColumn(
-        field: 'client_surname',
+        property: 'client_surname',
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
             return  A::tag()

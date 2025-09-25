@@ -78,6 +78,7 @@ use Yiisoft\DataResponse\Middleware\FormatDataResponseAsXml;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
+use Yiisoft\Yii\AuthClient\AuthAction;
 use Yiisoft\Yii\RateLimiter\Counter;
 use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
@@ -164,6 +165,14 @@ return [
         ->middleware(LimitRequestsMiddleware::class)
         ->action([AuthController::class, 'login'])
         ->name('auth/login'),
+    Route::get('/authclient')
+        ->action([AuthController::class, 'authclient'])
+        ->name('auth/authclient'),
+    Route::get('/callback')
+        ->middleware(LimitRequestsMiddleware::class)
+        ->middleware(AuthAction::class)
+        ->action([AuthController::class, 'callback'])
+        ->name('auth/callback'),
     Route::methods([Method::GET, Method::POST], '/callbackDeveloperGovSandboxHmrc')
         ->middleware(LimitRequestsMiddleware::class)
         ->action([AuthController::class, 'callbackDeveloperGovSandboxHmrc'])

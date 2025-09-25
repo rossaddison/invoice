@@ -14,6 +14,7 @@ use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 trait Callback
 {
@@ -35,12 +36,12 @@ trait Callback
         }
 
         $this->blockInvalidState('developergovsandboxhmrc', $state);
-
+        $developerSandboxHmrc = (AuthChoice::widget())->getClient('developersandboxhmrc');
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $this->developerSandboxHmrc->buildAuthUrl($request, []);
+            $authorizationUrl = $developerSandboxHmrc->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -65,8 +66,8 @@ trait Callback
          * For user-restricted access, the 'Authorization Code' Grant Type is used
          * Use the code received, to get an access_token
          */
-        $oAuthToken = $this->developerSandboxHmrc->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params = [
-            'redirect_uri' => $this->developerSandboxHmrc->getOauth2ReturnUrl(),
+        $oAuthToken = $developerSandboxHmrc->fetchAccessTokenWithCodeVerifier($request, $code, $params = [
+            'redirect_uri' => $developerSandboxHmrc->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
             'grant_type' => 'authorization_code',
         ]);
@@ -89,8 +90,8 @@ trait Callback
             $requestBody = [
                 'serviceNames' => ['national-insurance'],
             ];
-
-            $userArray = $this->developerSandboxHmrc->createTestUserIndividual($oAuthToken, $requestBody);
+            /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
+            $userArray = $developerSandboxHmrc->createTestUserIndividual($oAuthToken, $requestBody);
         } else {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.test.user.creation.not.allowed.prod'));
         }
@@ -108,7 +109,7 @@ trait Callback
              *
              * @var string $userArray['emailAddress']
              */
-            $email = $userArray['emailAddress'] ?? 'noemail' . $login . '@' . str_replace('https://', '', $this->developerSandboxHmrc->getApiBaseUrl1());
+            $email = $userArray['emailAddress'] ?? 'noemail' . $login . '@' . str_replace('https://', '', $developerSandboxHmrc->getApiBaseUrl1());
             $password = Random::string(32);
             if ($this->authService->oauthLogin($login)) {
                 return $this->tfaCheckBeforeRedirects('developersandboxhmrc', $tR, $uiR);
@@ -131,12 +132,12 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getDeveloperSandboxHmrcAccessToken
+                 * @see Trait\Oauth2 function getAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getDeveloperSandboxHmrcAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
@@ -198,6 +199,7 @@ trait Callback
         }
 
         $this->blockInvalidState('facebook', $state);
+        $facebook = (AuthChoice::widget())->getClient('facebook');
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -206,14 +208,13 @@ trait Callback
             // If we don't have an authorization code then get one
             // and use the protected function oauth2->generateAuthState to generate state param
             // which has a session id built into it
-            $authorizationUrl = $this->facebook->buildAuthUrl($request, []);
+            $authorizationUrl = $facebook->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         if ($code == 401) {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
-
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
@@ -224,11 +225,12 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
-        $oAuthTokenType = $this->facebook->fetchAccessToken($request, $code, $params = []);
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Facebook $facebook */
+        $oAuthTokenType = $facebook->fetchAccessToken($request, $code, $params = []);
         /**
          * @var array $userArray
          */
-        $userArray = $this->facebook->getCurrentUserJsonArray($oAuthTokenType);
+        $userArray = $facebook->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
          */
@@ -273,7 +275,7 @@ trait Callback
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getFacebookAccessToken($user, $tR);
+                    $randomAndTimeToken = $this->getAccessToken($user, $tR, self::FACEBOOK_ACCESS_TOKEN);
                     /**
                      * @see A new UserInv (extension table of user) for the user is created.
                      */
@@ -323,7 +325,7 @@ trait Callback
         }
 
         $this->blockInvalidState('github', $state);
-
+        $github = (AuthChoice::widget())->getClient('github');
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -331,7 +333,8 @@ trait Callback
             // If we don't have an authorization code then get one
             // and use the protected function oauth2->generateAuthState to generate state param 'authState'
             // which has a session id built into it
-            $authorizationUrl = $this->github->buildAuthUrl($request, []);
+
+            $authorizationUrl = $github->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -353,14 +356,15 @@ trait Callback
         // The 'request_uri' is included by default in $defaultParams[] and therefore not needed in $params
         // The $response->getBody()->getContents() for each Client e.g. Github will be parsed and loaded into an OAuthToken Type
         // For Github we know that the parameter key for the token is 'access_token' and not the default 'oauth_token'
-        $oAuthTokenType = $this->github->fetchAccessToken($request, $code, $params = []);
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\GitHub $github */
+        $oAuthTokenType = $github->fetchAccessToken($request, $code, $params = []);
         /**
          * Every time you receive an access token, you should use the token to revalidate the user's identity.
          * A user can change which account they are signed into when you send them to authorize your app,
          * and you risk mixing user data if you do not validate the user's identity after every sign in.
          * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
          */
-        $userArray = $this->github->getCurrentUserJsonArray($oAuthTokenType);
+        $userArray = $github->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
          */
@@ -399,12 +403,12 @@ trait Callback
                      */
                     $languageArray = $this->sR->locale_language_array();
                     /**
-                     * @see Trait\Oauth2 function getGithubAccessToken
+                     * @see Trait\Oauth2 function getAccessToken
                      * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getGithubAccessToken($user, $tR);
+                    $randomAndTimeToken = $this->getAccessToken($user, $tR, self::GITHUB_ACCESS_TOKEN);
                     /**
                      * @see A new UserInv (extension table of user) for the user is created.
                      */
@@ -441,12 +445,12 @@ trait Callback
         }
 
         $this->blockInvalidState('google', $state);
-
+        $google = (AuthChoice::widget())->getClient('google');
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $this->google->buildAuthUrl($request, []);
+            $authorizationUrl = $google->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -464,15 +468,15 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
-
-        $oAuthTokenType = $this->google->fetchAccessToken($request, $code, $params = [
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Google $google */
+        $oAuthTokenType = $google->fetchAccessToken($request, $code, $params = [
             'grant_type' => 'authorization_code',
         ]);
 
         /**
          * @var array $userArray
          */
-        $userArray = $this->google->getCurrentUserJsonArray($oAuthTokenType);
+        $userArray = $google->getCurrentUserJsonArray($oAuthTokenType);
 
         /**
          * @var int $userArray['id']
@@ -525,7 +529,7 @@ trait Callback
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getGoogleAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::GOOGLE_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
@@ -557,13 +561,15 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
+        $govUk = (AuthChoice::widget())->getClient('govuk');
+
         $this->blockInvalidState('govUk', $state);
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $this->govUk->buildAuthUrl($request, []);
+            $authorizationUrl = $govUk->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -581,11 +587,12 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state are both present
         }
-        $oAuthTokenType = $this->govUk->fetchAccessToken($request, $code, $params = []);
+        /** @psalm-var \App\Auth\Client\GovUk $govUk */
+        $oAuthTokenType = $govUk->fetchAccessToken($request, $code, $params = []);
         /**
          * @var array $userArray
          */
-        $userArray = $this->govUk->getCurrentUserJsonArray($oAuthTokenType);
+        $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
          */
@@ -619,12 +626,12 @@ trait Callback
                  */
                 $languageArray = $this->sR->locale_language_array();
                 /**
-                 * @see Trait\Oauth2 function getGovUkAccessToken
+                 * @see Trait\Oauth2 function getAccessToken
                  * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getGovUkAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::GOVUK_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
@@ -657,12 +664,12 @@ trait Callback
         }
 
         $this->blockInvalidState('linkedIn', $state);
-
+        $linkedIn = (AuthChoice::widget())->getClient('linkedin');
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $this->linkedIn->buildAuthUrl($request, []);
+            $authorizationUrl = $linkedIn->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -682,13 +689,14 @@ trait Callback
         }
         $params = [
             'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->linkedIn->getOauth2ReturnUrl(),
+            'redirect_uri' => $linkedIn->getOauth2ReturnUrl(),
         ];
-        $oAuthTokenType = $this->linkedIn->fetchAccessTokenWithCurl($request, $code, $params);
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\LinkedIn $linkedIn */
+        $oAuthTokenType = $linkedIn->fetchAccessToken($request, $code, $params);
         /**
          * @var array $userArray
          */
-        $userArray = $this->linkedIn->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
+        $userArray = $linkedIn->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * eg. [
          *      'sub' => 'P1c9jkRFSy',
@@ -740,7 +748,7 @@ trait Callback
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getLinkedInAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::LINKEDIN_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
@@ -774,20 +782,21 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
         }
 
-        $this->blockInvalidState('microsoftOnline', $state);
+        $this->blockInvalidState('microsoftonline', $state);
+        $microsoftOnline = (AuthChoice::widget())->getClient('microsoftonline');
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
         if (strlen($code) == 0) {
-            $authorizationUrl = $this->microsoftOnline->buildAuthUrl($request, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
+            $authorizationUrl = $microsoftOnline->buildAuthUrl($request, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
         /**
          * @psalm-suppress DocblockTypeContradiction $state
          */
-        if ($code == 401) {
+        if ($code == '401') {
             return $this->redirectToOauth2CallbackResultUnAuthorised();
         }
 
@@ -802,11 +811,15 @@ trait Callback
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.state.parameter.possible.csrf.attack'));
             // code and state and stateSession are both present
         }
-        $oAuthTokenType = $this->microsoftOnline->fetchAccessTokenWithCurl($request, $code, $params = ['redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline']);
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
+        $oAuthTokenType = $microsoftOnline->fetchAccessToken($request, $code, $params = [
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline',
+        ]);
         /**
          * @var array $userArray
          */
-        $userArray = $this->microsoftOnline->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
+        $userArray = $microsoftOnline->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var int $userArray['id']
          */
@@ -845,7 +858,7 @@ trait Callback
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getMicrosoftOnlineAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::MICROSOFTONLINE_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
@@ -879,9 +892,10 @@ trait Callback
         }
 
         $this->blockInvalidState('openbanking', $state);
+        $openBanking = (AuthChoice::widget())->getClient('openbanking');
 
         if (strlen($code) === 0) {
-            $authorizationUrl = $this->openBanking->buildAuthUrl($request, []);
+            $authorizationUrl = $openBanking->buildAuthUrl($request, []);
             return $this->webService->getRedirectResponse($authorizationUrl);
         }
 
@@ -896,8 +910,8 @@ trait Callback
         $codeVerifier = (string) $this->session->get('code_verifier');
 
         // Exchange code for token with PKCE
-        $oAuthToken = $this->openBanking->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, [
-            'redirect_uri' => $this->openBanking->getOauth2ReturnUrl(),
+        $oAuthToken = $openBanking->fetchAccessTokenWithCodeVerifier($request, $code, [
+            'redirect_uri' => $openBanking->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
             'grant_type' => 'authorization_code',
         ]);
@@ -937,6 +951,7 @@ trait Callback
         }
 
         $this->blockInvalidState('x', $state);
+        $x = (AuthChoice::widget())->getClient('x');
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -948,7 +963,7 @@ trait Callback
             // Store code_verifier in session or other storage
             $this->session->set('code_verifier', $codeVerifier);
 
-            $authorizationUrl = $this->x->buildAuthUrl(
+            $authorizationUrl = $x->buildAuthUrl(
                 $request,
                 [
                     'code_challenge' => $codeChallenge,
@@ -970,11 +985,12 @@ trait Callback
         $codeVerifier = (string) $this->session->get('code_verifier');
         $params = [
             'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->x->getOauth2ReturnUrl(),
+            'redirect_uri' => $x->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
         ];
-        $oAuthTokenType = $this->x->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
-        $userArray = $this->x->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
+        /** @psalm-var \Yiisoft\Yii\AuthClient\Client\X $x */
+        $oAuthTokenType = $x->fetchAccessTokenWithCodeVerifier($request, $code, $params);
+        $userArray = $x->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var array $userArray['data']
          */
@@ -1017,7 +1033,7 @@ trait Callback
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
-                    $randomAndTimeToken = $this->getXAccessToken($user, $tR);
+                    $randomAndTimeToken = $this->getAccessToken($user, $tR, self::X_ACCESS_TOKEN);
                     /**
                      * @see A new UserInv (extension table of user) for the user is created.
                      */
@@ -1062,6 +1078,8 @@ trait Callback
 
         $this->blockInvalidState('vkontakte', $state);
 
+        $vkontakte = (AuthChoice::widget())->getClient('vkontakte');
+
         /**
          * @psalm-suppress DocblockTypeContradiction $code
          */
@@ -1072,7 +1090,7 @@ trait Callback
             // Store code_verifier in session or other storage
             $this->session->set('code_verifier', $codeVerifier);
 
-            $authorizationUrl = $this->vkontakte->buildAuthUrl(
+            $authorizationUrl = $vkontakte->buildAuthUrl(
                 $request,
                 [
                     'code_challenge' => $codeChallenge,
@@ -1096,7 +1114,7 @@ trait Callback
         $params = [
             'device_id' => $device_id,
             'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->vkontakte->getOauth2ReturnUrl(),
+            'redirect_uri' => $vkontakte->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
         ];
 
@@ -1110,7 +1128,7 @@ trait Callback
          *                           'state' => '{string}'
          *                           'scope' => 'vkid.personal_info email'
          */
-        $oAuthTokenType = $this->vkontakte->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
+        $oAuthTokenType = $vkontakte->fetchAccessTokenWithCodeVerifier($request, $code, $params);
 
         /**
          * e.g.  'user' => [
@@ -1124,8 +1142,9 @@ trait Callback
          *          'birthday' => '09.09.1999'
          *       ]
          * @var array $userArray
+         * @psalm-var \Yiisoft\Yii\AuthClient\Client\VKontakte $vkontakte
          */
-        $userArray = $this->vkontakte->step8ObtainingUserDataArrayWithClientId($oAuthTokenType, $this->vkontakte->getClientId(), $this->configWebDiAuthGuzzle, $this->requestFactory);
+        $userArray = $vkontakte->step8ObtainingUserDataArrayWithClientId($oAuthTokenType, $vkontakte->getClientId(), $this->configWebDiAuthGuzzle, $this->requestFactory);
 
         /**
          * @var array $userArray['user']
@@ -1185,7 +1204,7 @@ trait Callback
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getVKontakteAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::VKONTAKTE_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
@@ -1226,6 +1245,7 @@ trait Callback
         }
 
         $this->blockInvalidState('yandex', $state);
+        $yandex = (AuthChoice::widget())->getClient('yandex');
 
         /**
          * @psalm-suppress DocblockTypeContradiction $code
@@ -1237,7 +1257,7 @@ trait Callback
             // Store code_verifier in session or other storage
             $this->session->set('code_verifier', $codeVerifier);
 
-            $authorizationUrl = $this->yandex->buildAuthUrl(
+            $authorizationUrl = $yandex->buildAuthUrl(
                 $request,
                 [
                     'code_challenge' => $codeChallenge,
@@ -1259,14 +1279,15 @@ trait Callback
         $codeVerifier = (string) $this->session->get('code_verifier');
         $params = [
             'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->yandex->getOauth2ReturnUrl(),
+            'redirect_uri' => $yandex->getOauth2ReturnUrl(),
             'code_verifier' => $codeVerifier,
         ];
-        $oAuthTokenType = $this->yandex->fetchAccessTokenWithCurlAndCodeVerifier($request, $code, $params);
+        $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($request, $code, $params);
         /**
          * @var array $userArray
+         * @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex
          */
-        $userArray = $this->yandex->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
+        $userArray = $yandex->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var int $userArray['id']
          */
@@ -1308,7 +1329,7 @@ trait Callback
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
-                $randomAndTimeToken = $this->getYandexAccessToken($user, $tR);
+                $randomAndTimeToken = $this->getAccessToken($user, $tR, self::YANDEX_ACCESS_TOKEN);
                 /**
                  * @see A new UserInv (extension table of user) for the user is created.
                  */

@@ -19,6 +19,7 @@ use Yiisoft\Bootstrap5\NavBarPlacement;
 use Yiisoft\Bootstrap5\NavLink;
 use Yiisoft\Bootstrap5\NavBar;
 use Yiisoft\Bootstrap5\NavStyle;
+use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
 
 /**
  * @var Yiisoft\Assets\AssetManager $assetManager
@@ -66,6 +67,7 @@ use Yiisoft\Bootstrap5\NavStyle;
  */
 $assetManager->register(AppAsset::class);
 $assetManager->register(AuthAegisTotpKeypadAsset::class);
+$assetManager->register(AuthChoiceAsset::class);
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());

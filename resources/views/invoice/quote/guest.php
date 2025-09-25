@@ -116,7 +116,6 @@ $toolbar = Div::tag();
             withSorting: true,
         ),
         new DataColumn(
-            field: 'number',
             property: 'filterQuoteNumber',
             header: $translator->translate('quote.number'),
             content: static function (Quote $model) use ($urlGenerator): A {

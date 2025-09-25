@@ -8,11 +8,11 @@ use Yiisoft\Assets\AssetBundle;
 
 class InvoiceAsset extends AssetBundle
 {
+    public ?string $sourcePath = '@src/Invoice/Asset';
+
     public ?string $basePath = '@assets';
 
     public ?string $baseUrl = '@assetsUrl';
-
-    public ?string $sourcePath = '@src/Invoice/Asset';
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [

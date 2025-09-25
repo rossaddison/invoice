@@ -48,7 +48,6 @@ $columns = [
         content: static fn(Merchant $model) => $model->getId(),
     ),
     new DataColumn(
-        field: 'inv_id',
         property: 'filterInvNumber',
         header: $translator->translate('invoice'),
         content: static function (Merchant $model) use ($urlGenerator): A|string {
@@ -74,7 +73,6 @@ $columns = [
         content: static fn(Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
     ),
     new DataColumn(
-        field: 'driver',
         property: 'filterMerchantProvider',
         header: $translator->translate('payment.provider'),
         content: static fn(Merchant $model): string => Html::encode($model->getDriver()),

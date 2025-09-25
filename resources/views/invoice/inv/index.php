@@ -581,7 +581,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterInvNumber',
-            field: 'number',
             header: $translator->translate('number'),
             content: static function (Inv $model) use ($urlGenerator): A {
                 return  A::tag()
@@ -599,7 +598,7 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             header: '💳',
-            field: 'creditinvoice_parent_id',
+            property: 'creditinvoice_parent_id',
             content: static function (Inv $model) use ($urlGenerator, $iR): A {
                 $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
                 if (null !== $visible) {
@@ -695,7 +694,6 @@ $toolbar = Div::tag();
          */
         new DataColumn(
             property: 'filterClient',
-            field: 'client_id',
             header: $translator->translate('client'),
             content: static fn(Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
             filter: DropdownFilter::widget()
@@ -709,7 +707,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterClientGroup',
-            field: 'client_id',
             header: $translator->translate('client.group'),
             content: static fn(Inv $model): string => $model->getClient()?->getClient_group() ?? '',
             filter: $optionsDataClientGroupDropDownFilter,
@@ -717,7 +714,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterDateCreatedYearMonth',
-            field: 'date_created',
             header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
             content: static fn(Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
             filter: $optionsDataYearMonthDropDownFilter,
@@ -757,7 +753,6 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             property: 'filterInvAmountTotal',
-            field: 'id',
             header: $translator->translate('total') . '➡️' . $s->getSetting('currency_symbol'),
             content: static function (Inv $model) use ($decimalPlaces): Label {
                 $invAmountTotal = $model->getInvAmount()->getTotal();

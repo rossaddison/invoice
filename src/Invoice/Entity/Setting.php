@@ -13,7 +13,7 @@ class Setting
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    public function __construct(#[Column(type: 'string(50)')]
+    public function __construct(#[Column(type: 'string(100)')]
         private string $setting_key = '', #[Column(type: 'string(191)')]
         private string $setting_value = '') {}
 

@@ -68,7 +68,6 @@ $columns = [
         },
     ),
     new DataColumn(
-        field: 'inv_id',
         property: 'filterInvNumber',
         header: $translator->translate('number'),
         content: static function (InvSentLog $model) use ($urlGenerator): A {
@@ -81,7 +80,6 @@ $columns = [
         withSorting: false,
     ),
     new DataColumn(
-        field: 'client_id',
         property: 'filterClient',
         header: $translator->translate('client'),
         content: static fn(InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),

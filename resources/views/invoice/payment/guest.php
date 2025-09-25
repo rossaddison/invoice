@@ -49,7 +49,6 @@ $toolbar = Div::tag();
             content: static fn(Payment $model): string => Html::encode($model->getId()),
         ),
         new DataColumn(
-            field: 'payment_date',
             property: 'paymentDateFilter',
             header: $translator->translate('payment.date'),
             content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
@@ -57,7 +56,6 @@ $toolbar = Div::tag();
             filter: true,
         ),
         new DataColumn(
-            field: 'amount',
             property: 'paymentAmountFilter',
             header: $translator->translate('amount'),
             content: static function (Payment $model) use ($s): string {

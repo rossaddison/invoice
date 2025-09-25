@@ -184,7 +184,6 @@ echo $alert;
         ),
         new DataColumn(
             property: 'filterInvNumber',
-            field: 'number',
             header: $translator->translate('number'),
             content: static function (Inv $model) use ($urlGenerator): A {
                 return  A::tag()
@@ -197,7 +196,7 @@ echo $alert;
         ),
         new DataColumn(
             header: '💳',
-            field: 'creditinvoice_parent_id',
+            property: 'creditinvoice_parent_id',
             content: static function (Inv $model) use ($urlGenerator, $iR): A {
                 $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
                 $url = ($model->getNumber() ?? '#') . '💳';
@@ -232,7 +231,6 @@ echo $alert;
             withSorting: true,
         ),
         new DataColumn(
-            field: 'id',
             property: 'filterInvAmountTotal',
             header: $translator->translate('total') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
             content: static function (Inv $model) use ($decimalPlaces): Label {

@@ -53,7 +53,7 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\AuthClient\Client\OpenBanking;
+use App\Auth\Client\OpenBanking;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class PaymentInformationController
@@ -334,7 +334,7 @@ final class PaymentInformationController
 
             // Exchange code for token
             try {
-                $token = $this->openBankingOauthClient->fetchAccessTokenWithCurlAndCodeVerifier(
+                $token = $this->openBankingOauthClient->fetchAccessTokenWithCodeVerifier(
                     $request,
                     $code,
                     [

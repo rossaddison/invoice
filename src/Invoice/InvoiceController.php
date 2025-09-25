@@ -155,6 +155,7 @@ final class InvoiceController extends BaseController
             'no_govuk_continue_button' => 1,
             'no_linkedin_continue_button' => 1,
             'no_microsoftonline_continue_button' => 1,
+            'no_openidconnect_continure_button' => 1,
             'no_x_continue_button' => 1,
             'no_yandex_continue_button' => 1,
             'no_vkontakte_continue_button' => 1,

@@ -68,7 +68,6 @@ $columns = [
         },
     ),
     new DataColumn(
-        field: 'inv_id',
         property: 'filterInvNumber',
         header: $translator->translate('number'),
         content: static function (InvSentLog $model) use ($urlGenerator): A {
