@@ -1,0 +1,147 @@
+/*
+|   =========================================================
+|   CSS Variables - InvoicePlane Reorganized CSS
+|   =========================================================
+|   
+|   This file contains CSS custom properties (variables) for:
+|   - Color scheme and theming
+|   - Typography settings  
+|   - Spacing and sizing
+|   - Border radius and shadows
+|   
+|   Original sources: 
+|   - src/Invoice/Asset/invoice/scss/_ip_variables.scss
+|   - Various color definitions throughout style.css
+|   
+|   TODO: Migrate remaining hard-coded values from existing CSS files
+*/
+
+:root {
+  /* Color Palette - From _ip_variables.scss */
+  --color-grey: #999999;
+  --color-blue: #3A87AD;
+  --color-yellow: #F89406;
+  --color-green: #468847;
+  --color-red: #B94A48;
+
+  /* Status Colors - From _ip_variables.scss */
+  --color-status-draft: #999999;
+  --color-status-sent: #3A87AD;
+  --color-status-viewed: #F89406;
+  --color-status-paid-approved: #468847;
+  --color-status-rejected-overdue: #B94A48;
+  --color-status-canceled: #333333;
+  --color-status-active: #468847;
+  --color-status-inactive: #B94A48;
+
+  /* Primary Theme Colors - From style.css */
+  --primary-color: #2C8EDD;
+  --primary-hover: #1a66a2;
+  --text-color: #333;
+  --text-muted: #777777;
+  --background-color: #fff;
+  --background-alt: #f5f5f5;
+
+  /* Border Colors - From style.css */
+  --border-color: #ddd;
+  --border-light: #eee;
+  --border-dark: #333;
+
+  /* Typography - From _ip_variables.scss */
+  --font-family-sans-serif: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-serif: Georgia, "Times New Roman", Times, serif;
+  --font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Font Sizes - From style.css */
+  --font-size-base: 14px;
+  --font-size-small: 12px;
+  --font-size-large: 18px;
+  --font-size-h1: 2em;
+
+  /* Line Heights */
+  --line-height-base: 1.428571429;
+  --line-height-condensed: 1.2;
+
+  /* Spacing System */
+  --spacing-xs: 3px;
+  --spacing-sm: 5px;  
+  --spacing-md: 10px;
+  --spacing-lg: 15px;
+  --spacing-xl: 20px;
+  --spacing-xxl: 30px;
+
+  /* Border Radius */
+  --border-radius-sm: 3px;
+  --border-radius-base: 4px;
+  --border-radius-lg: 6px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  /* Z-index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-navbar: 1080;
+  --z-loader: 99999;
+
+  /* Form Controls */
+  --input-height: 34px;
+  --input-padding-vertical: 6px;
+  --input-padding-horizontal: 12px;
+  --input-border-color: #ccc;
+  --input-border-focus: #66afe9;
+  --input-background: #fff;
+
+  /* Button Styles */
+  --btn-padding-vertical: 6px;
+  --btn-padding-horizontal: 12px;
+  --btn-font-weight: normal;
+
+  /* Table Styles */
+  --table-cell-padding: 8px;
+  --table-condensed-cell-padding: 5px;
+  --table-border-color: var(--border-color);
+
+  /* Grid System */
+  --container-max-width: 1200px;
+  --grid-gutter-width: 30px;
+
+  /* Component Sizes */
+  --navbar-height: 50px;
+  --sidebar-width: 66px;
+  --headerbar-height: 47px;
+
+  /* Animation */
+  --transition-base: all 0.2s ease-in-out;
+  --transition-fast: all 0.1s ease-in-out;
+  --transition-slow: all 0.3s ease-in-out;
+}
+
+/* Dark Mode Variables - Based on invoiceDark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: #f8f9fa;
+    --text-muted: #adb5bd;
+    --background-color: #212529;
+    --background-alt: #343a40;
+    --border-color: #495057;
+    --input-background: #495057;
+    --input-border-color: #6c757d;
+  }
+}
+
+/* TODO: Additional variables to extract from style.css:
+ * - Datepicker specific colors and sizes
+ * - Modal specific dimensions  
+ * - Alert/notification colors
+ * - Progress bar colors
+ * - Label/badge colors for different states
+ * - Print media specific overrides
+ */

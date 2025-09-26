@@ -1,0 +1,489 @@
+/*
+|   =========================================================
+|   Component Styles - InvoicePlane Reorganized CSS
+|   =========================================================
+|   
+|   This file contains UI component styles:
+|   - Buttons and button groups
+|   - Forms and form controls
+|   - Tables and data display
+|   - Modals and overlays
+|   - Cards and panels
+|   - Navigation components
+|   - Alerts and notifications
+|   - Labels and badges
+|   - Progress bars and loaders
+|   
+|   Original source: src/Invoice/Asset/invoice/css/style.css (component sections)
+|   Also includes styles from src/Invoice/Asset/invoiceDark/sass/_custom_styles.scss
+|   
+|   TODO: Complete migration of all Bootstrap components from style.css
+*/
+
+/* Buttons - TODO: Extract complete button styles from style.css */
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: var(--btn-font-weight);
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: var(--btn-padding-vertical) var(--btn-padding-horizontal);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  border-radius: var(--border-radius-base);
+  user-select: none;
+  transition: var(--transition-base);
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus {
+  outline: none;
+}
+
+.btn:hover,
+.btn:focus {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.btn:active,
+.btn.active {
+  outline: 0;
+  background-image: none;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+/* Button Variants - From _custom_styles.scss */
+.btn-success {
+  background-image: linear-gradient(#58a959, #488649 100%, #58a959);
+  color: #fff;
+  border-color: #4cae4c;
+}
+
+.btn-success:hover {
+  background-image: linear-gradient(#2f7d2f, #379337, #2f7d2f);
+  color: #fff;
+}
+
+.btn-default:hover, 
+.btn-default:focus {
+  color: #fff;
+}
+
+/* Forms - From style.css and _custom_styles.scss */
+.form-control {
+  display: block;
+  width: 100%;
+  height: var(--input-height);
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  background-color: var(--input-background);
+  background-image: none;
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--border-radius-base);
+  box-shadow: none;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.form-control:focus {
+  border-color: var(--input-border-focus);
+  outline: 0;
+  box-shadow: none;
+}
+
+.form-control::-moz-placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+  color: var(--text-muted);
+}
+
+.form-control::-webkit-input-placeholder {
+  color: var(--text-muted);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Tables - From style.css lines ~8116-8176 */
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: var(--spacing-lg);
+  font-size: 13px;
+  background-color: transparent;
+}
+
+.table.no-margin {
+  margin: 0 0 0 0;
+}
+
+.table td,
+.table th {
+  padding: var(--table-cell-padding);
+  line-height: var(--line-height-base);
+  vertical-align: middle !important;
+  border-top: 1px solid var(--table-border-color);
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--table-border-color);
+}
+
+.table tr.bold-border td {
+  border-bottom-width: 2px;
+}
+
+/* Item Table Styles - From style.css */
+.table.items td {
+  min-width: 150px;
+  max-width: 300px;
+  vertical-align: top !important;
+}
+
+.table.items td.td-icon {
+  max-width: 30px;
+  min-width: unset;
+}
+
+.table.items td.td-amount {
+  max-width: 200px;
+  text-align: right;
+}
+
+.table.items td.td-amount .form-control {
+  text-align: right;
+}
+
+.table.items td.td-textarea {
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.table.items td.td-quantity {
+  max-width: 200px;
+}
+
+.table.items td.td-vert-middle {
+  vertical-align: middle !important;
+}
+
+/* Item Table Specific - From style.css lines ~8166-8176 */
+#item_table td, #item_table th {
+  padding: var(--spacing-xs);
+}
+
+#item_table .form-control {
+  margin: 0;
+}
+
+#item_table tr.item input, 
+#item_table tr.item textarea {
+  border-color: #e5e5e5;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Item Table Enhancements - From _custom_styles.scss */
+#item_table .input-group {
+  padding-bottom: 0.5rem;
+  width: 100%;
+  height: 100%;
+}
+
+#item_table .ig-addon-aligned {
+  width: 10rem;
+  text-align: right;
+}
+
+#item_table select {
+  padding-left: 6px;
+}
+
+#item_table textarea.h135rem {
+  height: 13.5rem;
+}
+
+.table .input-group-addon {
+  font-size: var(--font-size-small);
+  padding: 4px 8px;
+}
+
+/* Modals - TODO: Extract complete modal styles from style.css */
+.modal {
+  margin: var(--spacing-xxl) auto;
+  overflow-y: auto;
+}
+
+/* Panels and Cards - TODO: Extract from style.css */
+.panel {
+  margin-bottom: var(--spacing-xl);
+  background-color: var(--background-color);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-base);
+  box-shadow: none;
+}
+
+.details-box {
+  padding: var(--spacing-md);
+}
+
+.details-box label {
+  margin: var(--spacing-xs) 0;
+}
+
+/* Labels and Badges - From style.css lines ~8430-8464 */
+.label {
+  font-weight: normal;
+  padding: 6px 12px;
+  color: white !important;
+  display: block;
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-small);
+}
+
+.label.label-inline {
+  display: inline;
+  width: auto;
+}
+
+/* Status Labels - From style.css and _custom_styles.scss */
+.label.draft {
+  background-color: var(--color-status-draft);
+}
+
+.label.sent {
+  background-color: #54a0c6;
+}
+
+.label.viewed {
+  background-color: #faa937;
+}
+
+.label.paid, .label.approved {
+  background-color: var(--color-status-paid-approved);
+}
+
+.label.rejected, .label.overdue {
+  background-color: #c76e6d;
+}
+
+.label.canceled {
+  background-color: var(--color-status-canceled);
+}
+
+.label.active {
+  background-color: var(--color-status-active);
+}
+
+.label.inactive {
+  background-color: var(--color-status-inactive);
+}
+
+/* Status Text Colors - From style.css lines ~8412-8429 */
+.draft {
+  color: var(--color-status-draft);
+}
+
+.sent {
+  color: var(--color-status-sent);
+}
+
+.viewed {
+  color: var(--color-status-viewed);
+}
+
+.paid, .approved {
+  color: var(--color-status-paid-approved);
+}
+
+.rejected, .overdue {
+  color: var(--color-status-rejected-overdue);
+}
+
+.canceled {
+  color: var(--color-status-canceled);
+}
+
+/* Alerts - From style.css lines ~8522-8529 */
+.alert {
+  padding: 15px;
+  margin-bottom: var(--spacing-xl);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-base);
+  margin-left: var(--spacing-lg);
+  margin-right: var(--spacing-lg);
+}
+
+.alert.alert-default {
+  background: #fbfbfb;
+  border: 1px solid var(--border-light);
+}
+
+/* Navigation Components - From style.css */
+.navbar {
+  position: relative;
+  min-height: var(--navbar-height);
+  margin-bottom: var(--spacing-xl);
+  border: 1px solid transparent;
+}
+
+/* Dropdown Components - From style.css lines ~8214-8247 */
+.dropdown-button {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-xl);
+  width: 100%;
+  clear: both;
+  font-weight: normal;
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  white-space: nowrap;
+}
+
+.dropdown-button:hover, .dropdown-button:focus {
+  text-decoration: none;
+  color: #262626;
+  background-color: var(--background-alt);
+}
+
+.active > .dropdown-button, 
+.active > .dropdown-button:hover, 
+.active > .dropdown-button:focus {
+  color: #fff;
+  text-decoration: none;
+  outline: 0;
+  background-color: var(--primary-color);
+}
+
+.disabled > .dropdown-button, 
+.disabled > .dropdown-button:hover, 
+.disabled > .dropdown-button:focus {
+  color: var(--text-muted);
+}
+
+.disabled > .dropdown-button:hover, 
+.disabled > .dropdown-button:focus {
+  text-decoration: none;
+  background-color: transparent;
+  background-image: none;
+  cursor: not-allowed;
+}
+
+.options {
+  margin: 0;
+}
+
+.options .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+/* Input Groups - From style.css */
+.input-group {
+  position: relative;
+  display: table;
+  border-collapse: separate;
+}
+
+.input-group-addon {
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  font-size: var(--font-size-base);
+  font-weight: normal;
+  line-height: 1;
+  color: var(--text-color);
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--border-radius-base);
+}
+
+/* Progress Components - TODO: Extract from style.css */
+.progress {
+  height: 20px;
+  margin-bottom: var(--spacing-xl);
+  overflow: hidden;
+  background-color: var(--background-alt);
+  border-radius: var(--border-radius-base);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Full Page Loader - From style.css lines ~8589-8617 */
+#fullpage-loader {
+  z-index: var(--z-loader);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+}
+
+#fullpage-loader .loader-content {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  font-size: 200px;
+  width: 100%;
+  text-align: center;
+}
+
+#fullpage-loader .loader-content #loader-error {
+  font-size: var(--font-size-large);
+  margin-bottom: 1rem;
+}
+
+#fullpage-loader .fullpage-loader-close {
+  font-size: var(--font-size-large);
+  margin: 2rem 2rem 0 0;
+}
+
+/* Responsive Components */
+@media (max-width: 767px) {
+  #fullpage-loader .loader-content {
+    font-size: 150px;
+    top: 10%;
+    left: 0;
+    margin-top: 0;
+    margin-left: 0;
+  }
+}
+
+/* TODO: Additional components to migrate from style.css:
+ * - Complete button variations and sizes
+ * - Form input variations (input-sm, input-lg)
+ * - Complete table variations (table-striped, table-hover)
+ * - Complete modal structure and animations
+ * - Navigation tabs and pills
+ * - Pagination components
+ * - Breadcrumb components
+ * - Tooltip and popover styles
+ * - Card/panel variations
+ * - List group components
+ * - Media object components
+ * - Well components
+ */
