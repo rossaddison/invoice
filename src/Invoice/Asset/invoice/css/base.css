@@ -1,0 +1,318 @@
+/*
+|   =========================================================
+|   Base Styles - InvoicePlane Reorganized CSS
+|   =========================================================
+|   
+|   This file contains foundational styles:
+|   - CSS Reset/Normalize
+|   - Basic element styling
+|   - Typography base styles
+|   - Form element defaults
+|   
+|   Original source: src/Invoice/Asset/invoice/css/style.css (lines 1-300)
+|   Based on normalize.css v3.0.3
+|   
+|   TODO: Complete migration of remaining normalize rules from style.css
+*/
+
+/* CSS Reset - From normalize.css v3.0.3 in style.css */
+html {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  font-size: 10px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+/* Box Sizing - From style.css */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+/* Typography Base - From style.css */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  margin: 0.67em 0;
+}
+
+/* Text Elements - From style.css normalize section */
+mark {
+  background: #ff0;
+  color: #000;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+/* Links - From style.css */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:hover, a:focus {
+  color: var(--primary-hover);
+  text-decoration: underline;
+  outline: 0;
+}
+
+a:active, a:hover {
+  outline: 0;
+}
+
+a:focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+/* Images - From style.css */
+img {
+  border: 0;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+.img-responsive {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Figures - From style.css */
+figure {
+  margin: 0;
+}
+
+/* Horizontal Rules - From style.css */
+hr {
+  box-sizing: content-box;
+  height: 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid var(--border-light);
+}
+
+/* Code Elements - From style.css */
+pre {
+  overflow: auto;
+}
+
+code, kbd, pre, samp {
+  font-family: var(--font-family-monospace);
+  font-size: 1em;
+}
+
+/* Form Elements Base - From style.css */
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+button {
+  overflow: visible;
+}
+
+button, select {
+  text-transform: none;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button[disabled], html input[disabled] {
+  cursor: default;
+}
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+input {
+  line-height: normal;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+  height: auto;
+}
+
+input[type="search"] {
+  -webkit-appearance: textfield;
+  box-sizing: content-box;
+}
+
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+fieldset {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-base);
+  margin: 0 2px;
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+legend {
+  border: 0;
+  padding: 0;
+  border-image: none;
+  border-style: none none solid;
+  border-width: 0 0 1px;
+  color: #555;
+  display: block;
+  font-size: var(--font-size-large);
+  line-height: 40px;
+  margin-bottom: var(--spacing-lg);
+  width: 100%;
+}
+
+textarea {
+  overflow: auto;
+  resize: vertical;
+}
+
+optgroup {
+  font-weight: bold;
+}
+
+/* Tables - From style.css */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td, th {
+  padding: 0;
+}
+
+/* Forms - From style.css */
+form {
+  margin: 0;
+}
+
+label {
+  font-weight: normal;
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+}
+
+/* Focus Overrides - From _custom_styles.scss */
+body *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Print Styles Base - From style.css */
+@media print {
+  *, *:before, *:after {
+    color: #000 !important;
+    text-shadow: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  a, a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  
+  a[href^="#"]:after, a[href^="javascript:"]:after {
+    content: "";
+  }
+  
+  pre, blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tr, img {
+    page-break-inside: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+  }
+  
+  p, h2, h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  h2, h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* TODO: Additional base styles to migrate from style.css:
+ * - Remaining form input types
+ * - Additional typography elements (blockquote, dl, etc.)
+ * - Print media query additions for table styling
+ * - Accessibility improvements
+ */

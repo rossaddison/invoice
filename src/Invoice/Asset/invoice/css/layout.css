@@ -1,0 +1,358 @@
+/*
+|   =========================================================
+|   Layout Styles - InvoicePlane Reorganized CSS
+|   =========================================================
+|   
+|   This file contains layout and structural styles:
+|   - Grid system and containers
+|   - Page layout structure (sidebar, main content, header)
+|   - Navigation layout
+|   - Responsive breakpoints
+|   - Flexbox layouts
+|   
+|   Original source: src/Invoice/Asset/invoice/css/style.css (layout sections)
+|   
+|   TODO: Complete migration of Bootstrap grid system from style.css
+*/
+
+/* Container and Grid - TODO: Extract Bootstrap grid from style.css */
+.container {
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: calc(var(--grid-gutter-width) / 2);
+  padding-right: calc(var(--grid-gutter-width) / 2);
+}
+
+/* Main Layout Structure - From style.css lines ~8280-8340 */
+#main-area {
+  display: flex;
+  max-width: 100%;
+  flex-direction: row;
+  padding: 0;
+}
+
+#main-content {
+  width: 100%;
+  border-left: 1px solid var(--border-color);
+}
+
+@media screen and (min-width: 992px) {
+  #main-content {
+    width: calc(100% - var(--sidebar-width));
+  }
+}
+
+/* Sidebar Layout - From style.css lines ~8257-8279 */
+.sidebar {
+  display: table-cell;
+  vertical-align: top;
+  width: var(--sidebar-width);
+  height: 100%;
+  padding: 0;
+}
+
+.sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar li a {
+  padding: 14px;
+  display: block;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 18px;
+  color: #555;
+  text-align: center;
+}
+
+.sidebar li a:hover {
+  color: var(--primary-color);
+}
+
+/* Hidden Sidebar - From style.css lines ~8334-8339 */
+.hidden-sidebar #main-area {
+  display: block !important;
+}
+
+.hidden-sidebar #main-content {
+  width: 100%;
+}
+
+/* Content Areas - From style.css lines ~8295-8312 */
+#content, .tab-content {
+  padding: var(--spacing-lg);
+  align-content: flex-start;
+  max-width: 100%;
+}
+
+#content.table-content, .tab-content.table-content {
+  padding: 0;
+}
+
+#content .alert, .tab-content .alert {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.table-content {
+  padding: 0;
+}
+
+.tab-rich-content {
+  padding: var(--spacing-lg);
+}
+
+/* Header Bar - From style.css lines ~8313-8333 */
+#headerbar {
+  min-height: var(--headerbar-height);
+  padding: 8px var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+#headerbar:before, #headerbar:after {
+  display: table;
+  content: " ";
+}
+
+#headerbar:after {
+  clear: both;
+}
+
+#headerbar .headerbar-item.pull-right {
+  margin-left: var(--spacing-md);
+}
+
+#headerbar .headerbar-title {
+  display: inline-block;
+  font-size: var(--font-size-base);
+  margin: 5px 0 5px;
+  line-height: 1.5;
+}
+
+/* Navigation Bar Layout - From style.css lines ~8177-8206 */
+.navbar .navbar-collapse {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar .navbar-toggle {
+  padding: 6px 8px;
+  color: rgba(255, 255, 255, 0.75);
+  border-color: #1e242c;
+}
+
+.navbar .navbar-toggle:hover {
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0);
+}
+
+.navbar .navbar-form {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.navbar .navbar-nav .fa {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.navbar-inner {
+  border-radius: 0;
+  padding: 0;
+  border: none;
+  text-align: right;
+}
+
+.navbar-search {
+  margin-top: 0;
+}
+
+/* Submenu - From style.css lines ~8248-8256 */
+#submenu {
+  max-width: 100% !important;
+}
+
+#submenu .submenu-row {
+  padding: 5px;
+}
+
+#submenu .nav-pills > li > a {
+  padding: 4px var(--spacing-md);
+}
+
+/* Settings Tabs Layout - From style.css lines ~8575-8581 */
+#settings-tabs {
+  text-align: center;
+}
+
+#settings-tabs > li {
+  float: none;
+  display: inline-block;
+}
+
+/* Form Settings Layout - From style.css lines ~8340-8346 */
+#form-settings .tab-content .tab-pane, 
+div.table-content .tab-pane {
+  padding-bottom: 50px;
+}
+
+#form-settings .tab-content #filter_results, 
+#form-settings .tab-content .table-responsive, 
+div.table-content #filter_results, 
+div.table-content .table-responsive {
+  min-height: 300px;
+  overflow-x: inherit;
+}
+
+/* Responsive Layout - From style.css media queries */
+@media (min-width: 1200px) {
+  .navbar-nav .visible-lg {
+    display: inline-block !important;
+  }
+  
+  #submenu .submenu-row {
+    float: left;
+    margin-right: var(--spacing-md);
+  }
+}
+
+@media (max-width: 1199px) {
+  #submenu .submenu-row {
+    float: left;
+    margin-right: var(--spacing-md);
+  }
+}
+
+@media (max-width: 991px) {
+  .sidebar li a {
+    padding: 7px;
+  }
+  
+  #content {
+    padding: var(--spacing-lg);
+  }
+  
+  .navbar-nav {
+    margin: 7px 0;
+  }
+  
+  .text-left-xs {
+    text-align: left;
+  }
+  
+  #submenu .navbar-collapse {
+    margin-top: 7px;
+  }
+  
+  .navbar-nav .visible-xs {
+    display: inline-block !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .navbar-nav {
+    margin: 7px 0;
+  }
+  
+  .navbar-nav .dropdown .dropdown-menu {
+    background: #1e242c;
+  }
+  
+  #content {
+    padding: var(--spacing-md);
+  }
+  
+  #content .row {
+    margin-left: calc(-1 * var(--spacing-md));
+    margin-right: calc(-1 * var(--spacing-md));
+  }
+  
+  .headerbar {
+    padding: 8px !important;
+  }
+  
+  .pull-right {
+    margin-left: 5px !important;
+  }
+}
+
+/* Utility Layout Classes */
+.pull-left {
+  float: left !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: " ";
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+/* Display utilities */
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.show {
+  display: block !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+/* Positioning */
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+/* Overflow */
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+/* TODO: Additional layout styles to migrate from style.css:
+ * - Complete Bootstrap grid system (rows, columns, offsets)
+ * - Flexbox utilities
+ * - Additional responsive utilities
+ * - Print layout modifications
+ * - Modal layout structure
+ * - Dropdown positioning
+ */
