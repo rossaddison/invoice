@@ -325,7 +325,7 @@ echo GridView::widget()
     ->summaryTemplate(($viewInv ?
                        $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '') . ' ' .
                        $grid_summary)
-    ->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-    ->emptyText($translator->translate('no.records'))
+    ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+    ->noResultsText($translator->translate('no.records'))
     ->toolbar($toolbarString);
 ?>

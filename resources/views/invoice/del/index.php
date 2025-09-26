@@ -264,6 +264,6 @@ echo GridView::widget()
 ->id('w341-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
+->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

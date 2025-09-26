@@ -130,7 +130,7 @@ echo GridView::widget()
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($grid_summary)
-->emptyTextAttributes(['class' => 'card-header bg-warning text-black'])
-->emptyText($translator->translate('no.records'))
+->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
 ?>
