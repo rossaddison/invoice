@@ -8147,12 +8147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "b30f99d849c90ea238af7e596da6bd1bb85bc357"
+                "reference": "5534ace5e3eb4c8010394fc84427ed81eb0f977c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/b30f99d849c90ea238af7e596da6bd1bb85bc357",
-                "reference": "b30f99d849c90ea238af7e596da6bd1bb85bc357",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/5534ace5e3eb4c8010394fc84427ed81eb0f977c",
+                "reference": "5534ace5e3eb4c8010394fc84427ed81eb0f977c",
                 "shasum": ""
             },
             "require": {
@@ -8248,7 +8248,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-24T23:34:43+00:00"
+            "time": "2025-09-25T10:00:26+00:00"
         },
         {
             "name": "rossaddison/yii-gii",
@@ -15300,16 +15300,16 @@
         },
         {
             "name": "yiisoft/hydrator",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/hydrator.git",
-                "reference": "3e9b69d0f529f54b422fee7dc38aeadea5dd6f73"
+                "reference": "f4531aefe8752bfa94024042f1aaf8948e5a1c58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/hydrator/zipball/3e9b69d0f529f54b422fee7dc38aeadea5dd6f73",
-                "reference": "3e9b69d0f529f54b422fee7dc38aeadea5dd6f73",
+                "url": "https://api.github.com/repos/yiisoft/hydrator/zipball/f4531aefe8752bfa94024042f1aaf8948e5a1c58",
+                "reference": "f4531aefe8752bfa94024042f1aaf8948e5a1c58",
                 "shasum": ""
             },
             "require": {
@@ -15373,7 +15373,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-08-08T07:46:59+00:00"
+            "time": "2025-09-25T06:01:02+00:00"
         },
         {
             "name": "yiisoft/hydrator-validator",
@@ -17729,12 +17729,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-cycle.git",
-                "reference": "2d06e6a020230d4004b83884d3dc7a8dcfd930b8"
+                "reference": "c61e5dad1428bca1b410c0b495e5748a51d4aaa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-cycle/zipball/2d06e6a020230d4004b83884d3dc7a8dcfd930b8",
-                "reference": "2d06e6a020230d4004b83884d3dc7a8dcfd930b8",
+                "url": "https://api.github.com/repos/yiisoft/yii-cycle/zipball/c61e5dad1428bca1b410c0b495e5748a51d4aaa4",
+                "reference": "c61e5dad1428bca1b410c0b495e5748a51d4aaa4",
                 "shasum": ""
             },
             "require": {
@@ -17828,7 +17828,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-13T12:54:24+00:00"
+            "time": "2025-09-25T22:16:41+00:00"
         },
         {
             "name": "yiisoft/yii-dataview",
@@ -17836,12 +17836,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "8646f5bc94f882e515deaa6d3f90279748c1ae71"
+                "reference": "eba2e5968c2155f93b912b2e5ae641a629a9ab08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/8646f5bc94f882e515deaa6d3f90279748c1ae71",
-                "reference": "8646f5bc94f882e515deaa6d3f90279748c1ae71",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/eba2e5968c2155f93b912b2e5ae641a629a9ab08",
+                "reference": "eba2e5968c2155f93b912b2e5ae641a629a9ab08",
                 "shasum": ""
             },
             "require": {
@@ -17924,7 +17924,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-24T16:36:26+00:00"
+            "time": "2025-09-26T06:42:53+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -20657,16 +20657,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.28",
+            "version": "2.1.29",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "578fa296a166605d97b94091f724f1257185d278"
+                "url": "https://github.com/phpstan/phpstan-phar-composer-source.git",
+                "reference": "git"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/578fa296a166605d97b94091f724f1257185d278",
-                "reference": "578fa296a166605d97b94091f724f1257185d278",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
+                "reference": "d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
                 "shasum": ""
             },
             "require": {
@@ -20711,7 +20711,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-19T08:58:49+00:00"
+            "time": "2025-09-25T06:58:18+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -21053,12 +21053,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c27695b6cc15fe0611fefd611ed79d527375e24e"
+                "reference": "81ad0dbf39aa1d5c728269fac4584f460206d87b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c27695b6cc15fe0611fefd611ed79d527375e24e",
-                "reference": "c27695b6cc15fe0611fefd611ed79d527375e24e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/81ad0dbf39aa1d5c728269fac4584f460206d87b",
+                "reference": "81ad0dbf39aa1d5c728269fac4584f460206d87b",
                 "shasum": ""
             },
             "require": {
@@ -21151,7 +21151,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-24T13:45:25+00:00"
+            "time": "2025-09-26T05:25:49+00:00"
         },
         {
             "name": "psy/psysh",
@@ -21892,12 +21892,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "d3b052a0e341dead204f13da63cf246eb58ae92b"
+                "reference": "048b46b22d692b1d8d993e0a3df7481029e441dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/d3b052a0e341dead204f13da63cf246eb58ae92b",
-                "reference": "d3b052a0e341dead204f13da63cf246eb58ae92b",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/048b46b22d692b1d8d993e0a3df7481029e441dc",
+                "reference": "048b46b22d692b1d8d993e0a3df7481029e441dc",
                 "shasum": ""
             },
             "require": {
@@ -21941,7 +21941,7 @@
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
                 "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.40.x"
             },
-            "time": "2025-09-24T03:44:27+00:00"
+            "time": "2025-09-25T00:42:58+00:00"
         },
         {
             "name": "roave/security-advisories",
