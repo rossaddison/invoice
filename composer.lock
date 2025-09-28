@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9557a87b31cf9be69b4c645fbbaf3630",
+    "content-hash": "6b62353644009eb1ed57cb1949375ae1",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -17092,32 +17092,32 @@
         },
         {
             "name": "yiisoft/translator",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/translator.git",
-                "reference": "94a0f11b307043917c21ba45d71e8087db8aeaf1"
+                "reference": "bcf86d7f454c7642441ec1ad3512b0f0e36b3fdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/translator/zipball/94a0f11b307043917c21ba45d71e8087db8aeaf1",
-                "reference": "94a0f11b307043917c21ba45d71e8087db8aeaf1",
+                "url": "https://api.github.com/repos/yiisoft/translator/zipball/bcf86d7f454c7642441ec1ad3512b0f0e36b3fdd",
+                "reference": "bcf86d7f454c7642441ec1ad3512b0f0e36b3fdd",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
+                "php": "8.0 - 8.4",
                 "psr/event-dispatcher": "1.0.0",
-                "yiisoft/files": "^1.0|^2.0",
+                "yiisoft/files": "^1.0 || ^2.0",
                 "yiisoft/i18n": "^1.0"
             },
             "require-dev": {
-                "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.6",
-                "rector/rector": "^2.0.3",
+                "maglnet/composer-require-checker": "^4.4",
+                "phpunit/phpunit": "^9.6.29",
+                "rector/rector": "^2.1.7",
                 "roave/infection-static-analysis-plugin": "^1.25",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.21",
-                "yiisoft/di": "^1.2"
+                "spatie/phpunit-watcher": "^1.23.6",
+                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.8.9",
+                "yiisoft/di": "^1.2.1"
             },
             "suggest": {
                 "ext-intl": "Allows using intl message formatter",
@@ -17168,7 +17168,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-12-26T07:49:19+00:00"
+            "time": "2025-09-28T06:41:14+00:00"
         },
         {
             "name": "yiisoft/translator-message-php",
