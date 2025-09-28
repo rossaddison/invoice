@@ -12,10 +12,9 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function index
@@ -40,20 +39,6 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 
-?>
-
-<?php
-$header = Div::tag()
-  ->addClass('row')
-  ->content(
-      H5::tag()
-    ->addClass('bg-primary text-white p-3 rounded-top')
-    ->content(
-        I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('delivery.location')),
-    ),
-  )
-  ->render();
-
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
@@ -62,163 +47,161 @@ $toolbarReset = A::tag()
   ->id('btn-reset')
   ->render();
 
-$toolbar = Div::tag();
-?>
-<h1><?= $translator->translate('delivery.location'); ?></h1>
-<?php
-    $columns = [
-        new DataColumn(
-            'id',
-            header: 'id',
-            content: static fn(DeliveryLocation $model) => (string) $model->getId(),
-            withSorting: true,
-        ),
-        new DataColumn(
-            'client_id',
-            header: $translator->translate('client'),
-            content: static function (DeliveryLocation $model) use ($cR): string {
-                if ($cR->repoClientCount($model->getClient_id()) > 0) {
-                    return $cR->repoClientquery($model->getClient_id())->getClient_name();
-                }
-                return '#';
-            },
-        ),
-        new DataColumn(
-            'id',
-            header: $translator->translate('quote.delivery.location.index.button.list'),
-            content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
-                $deliveryLocationId = $model->getId();
-                if (null !== $deliveryLocationId) {
-                    $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
-                    $buttons = '';
-                    $button = '';
-                    /**
-                     * @var App\Invoice\Entity\Quote $quote
-                     */
-                    foreach ($quotes as $quote) {
-                        $quoteId = $quote->getId();
-                        if (null !== $quoteId) {
-                            $button = (string) Html::a(
-                                ($quote->getNumber() ?? '#') .
-                                       ' ' .
-                                       ($quote->getDate_created())->format('Y-m-d'),
-                                $urlGenerator->generate('quote/view', ['id' => $quoteId]),
-                                ['class' => 'btn btn-primary btn-sm',
-                                    'data-bs-toggle' => 'tooltip',
-                                    'title' => $quoteId,
-                                ],
-                            );
-                            $buttons .= $button . str_repeat("&nbsp;", 1);
-                        }
+$columns = [
+    new DataColumn(
+        'id',
+        header: 'id',
+        content: static fn(DeliveryLocation $model) => (string) $model->getId(),
+        withSorting: true,
+    ),
+    new DataColumn(
+        'client_id',
+        header: $translator->translate('client'),
+        content: static function (DeliveryLocation $model) use ($cR): string {
+            if ($cR->repoClientCount($model->getClient_id()) > 0) {
+                return $cR->repoClientquery($model->getClient_id())->getClient_name();
+            }
+            return '#';
+        },
+    ),
+    new DataColumn(
+        'id',
+        header: $translator->translate('quote.delivery.location.index.button.list'),
+        content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
+            $deliveryLocationId = $model->getId();
+            if (null !== $deliveryLocationId) {
+                $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
+                $buttons = '';
+                $button = '';
+                /**
+                 * @var App\Invoice\Entity\Quote $quote
+                 */
+                foreach ($quotes as $quote) {
+                    $quoteId = $quote->getId();
+                    if (null !== $quoteId) {
+                        $button = (string) Html::a(
+                            ($quote->getNumber() ?? '#') .
+                                   ' ' .
+                                   ($quote->getDate_created())->format('Y-m-d'),
+                            $urlGenerator->generate('quote/view', ['id' => $quoteId]),
+                            ['class' => 'btn btn-primary btn-sm',
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => $quoteId,
+                            ],
+                        );
+                        $buttons .= $button . str_repeat("&nbsp;", 1);
                     }
-                    return $buttons;
                 }
-                return '';
-            },
-            withSorting: true,
-            encodeContent: false,
-        ),
-        new DataColumn(
-            'id',
-            header: $translator->translate('delivery.location.index.button.list'),
-            content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
-                $deliveryLocationId = $model->getId();
-                if (null !== $deliveryLocationId) {
-                    $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
-                    $buttons = '';
-                    $button = '';
-                    /**
-                     * @var App\Invoice\Entity\Inv $invoice
-                     */
-                    foreach ($invoices as $invoice) {
-                        $invoiceId = $invoice->getId();
-                        if (null !== $invoiceId) {
-                            $button = (string) Html::a(
-                                ($invoice->getNumber() ?? '#') .
-                                    ' ' .
-                                    ($invoice->getDate_created())->format(
-                                        'Y-m-d',
-                                    ),
-                                $urlGenerator->generate(
-                                    'inv/view',
-                                    ['id' => $invoiceId],
+                return $buttons;
+            }
+            return '';
+        },
+        withSorting: true,
+        encodeContent: false,
+    ),
+    new DataColumn(
+        'id',
+        header: $translator->translate('delivery.location.index.button.list'),
+        content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
+            $deliveryLocationId = $model->getId();
+            if (null !== $deliveryLocationId) {
+                $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
+                $buttons = '';
+                $button = '';
+                /**
+                 * @var App\Invoice\Entity\Inv $invoice
+                 */
+                foreach ($invoices as $invoice) {
+                    $invoiceId = $invoice->getId();
+                    if (null !== $invoiceId) {
+                        $button = (string) Html::a(
+                            ($invoice->getNumber() ?? '#') .
+                                ' ' .
+                                ($invoice->getDate_created())->format(
+                                    'Y-m-d',
                                 ),
-                                ['class' => 'btn btn-primary btn-sm',
-                                    'data-bs-toggle' => 'tooltip',
-                                    'title' => $invoiceId,
-                                ],
-                            );
-                            $buttons .= $button . str_repeat("&nbsp;", 1);
-                        }
+                            $urlGenerator->generate(
+                                'inv/view',
+                                ['id' => $invoiceId],
+                            ),
+                            ['class' => 'btn btn-primary btn-sm',
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => $invoiceId,
+                            ],
+                        );
+                        $buttons .= $button . str_repeat("&nbsp;", 1);
                     }
-                    return $buttons;
                 }
-                return '';
-            },
-            withSorting: true,
-            encodeContent: false,
+                return $buttons;
+            }
+            return '';
+        },
+        withSorting: true,
+        encodeContent: false,
+    ),
+    new DataColumn(
+        'global_location_number',
+        header: $translator->translate('delivery.location.global.location.number'),
+        content: static function (DeliveryLocation $model): string {
+            return $model->getGlobal_location_number() ?? '';
+        },
+        encodeContent: true,
+    ),
+    new DataColumn(
+        'date_created',
+        header: $translator->translate('date.created'),
+        content: static fn(DeliveryLocation $model): string => ($model->getDate_created())->format(
+            'Y-m-d',
         ),
-        new DataColumn(
-            'global_location_number',
-            header: $translator->translate('delivery.location.global.location.number'),
-            content: static function (DeliveryLocation $model): string {
-                return $model->getGlobal_location_number() ?? '';
-            },
-            encodeContent: true,
-        ),
-        new DataColumn(
-            'date_created',
-            header: $translator->translate('date.created'),
-            content: static fn(DeliveryLocation $model): string => ($model->getDate_created())->format(
-                'Y-m-d',
-            ),
-        ),
-        new DataColumn(
-            header: $translator->translate('view'),
-            content: static function (DeliveryLocation $model) use ($urlGenerator): string {
-                return Html::a(
-                    Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
-                    $urlGenerator->generate('del/view', ['id' => $model->getId()]),
+    ),
+    new DataColumn(
+        header: $translator->translate('view'),
+        content: static function (DeliveryLocation $model) use ($urlGenerator): string {
+            return Html::a(
+                Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+                $urlGenerator->generate('del/view', ['id' => $model->getId()]),
+                [
+                ],
+            )->render();
+        },
+        encodeContent: false,        
+    ),
+    new DataColumn(
+        header: $translator->translate('edit'),
+        content: static function (DeliveryLocation $model) use ($urlGenerator): string {
+            return Html::a(
+                Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
+                $urlGenerator->generate(
+                    'del/edit',
+                    ['id' => $model->getId()],
+                    ['origin' => 'del', 'origin_id' => '', 'action' => 'index'],
+                ),
+                [],
+            )->render();
+        },
+        encodeContent: false,        
+    ),
+    new DataColumn(
+        header: $translator->translate('delete'),
+        content: static function (DeliveryLocation $model) use ($translator, $urlGenerator): string {
+            return Html::a(
+                Html::tag(
+                    'button',
+                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
                     [
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
-                )->render();
-            },
-        ),
-        new DataColumn(
-            header: $translator->translate('edit'),
-            content: static function (DeliveryLocation $model) use ($urlGenerator): string {
-                return Html::a(
-                    Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
-                    $urlGenerator->generate(
-                        'del/edit',
-                        ['id' => $model->getId()],
-                        ['origin' => 'del', 'origin_id' => '', 'action' => 'index'],
-                    ),
-                    [],
-                )->render();
-            },
-        ),
-        new DataColumn(
-            header: $translator->translate('delete'),
-            content: static function (DeliveryLocation $model) use ($translator, $urlGenerator): string {
-                return Html::a(
-                    Html::tag(
-                        'button',
-                        Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                        [
-                            'type' => 'submit',
-                            'class' => 'dropdown-button',
-                            'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                        ],
-                    ),
-                    $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
-                    [],
-                )->render();
-            },
-        ),
-    ];
-?>
-<?php
+                ),
+                $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
+                [],
+            )->render();
+        },
+        encodeContent: false, 
+    ),           
+];
+        
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $defaultPageSizeOffsetPaginator = (int) $s->getSetting('default_list_limit');
@@ -260,9 +243,9 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
+->header($translator->translate('delivery.location'))
 ->id('w341-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $grid_summary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))

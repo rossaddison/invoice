@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Entity\ProductImage;
@@ -6,10 +7,9 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
@@ -24,23 +24,6 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 
-?>
-<h1><?= $translator->translate('productimage.index'); ?></h1>
-<div>
-</div>
-<?php
-    $header = Div::tag()
-        ->addClass('row')
-        ->content(
-            H5::tag()
-                ->addClass('bg-primary text-white p-3 rounded-top')
-                ->content(
-                    I::tag()->addClass('bi bi-receipt')
-                            ->content(' ' . Html::encode($translator->translate('product'))),
-                ),
-        )
-        ->render();
-
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -48,9 +31,7 @@ $toolbarReset = A::tag()
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'productimage/index'))
     ->id('btn-reset')
     ->render();
-$toolbar = Div::tag();
-?>
-<?php
+
 $columns = [
     new DataColumn(
         'id',
@@ -108,8 +89,7 @@ $columns = [
         },
     ),
 ];
-?>
-<?php
+
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -117,15 +97,18 @@ $grid_summary = $s->grid_summary(
     $translator->translate('product.image.plural'),
     '',
 );
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-125','id' => 'table-upload'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header('productimage.index')
 ->id('w44-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -133,4 +116,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>

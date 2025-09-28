@@ -5,15 +5,14 @@ declare(strict_types=1);
 use App\Invoice\Entity\InvRecurring;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Span;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\ColumnInterface;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Entity\InvRecurring $invRecurring
@@ -34,9 +33,7 @@ use Yiisoft\Yii\DataView\GridView;
  * @var string $status
  */
 
-?>
-<?= $alert; ?>
-<?php
+echo $alert;
 
 $toolbarReset = A::tag()
         ->addAttributes(['type' => 'reset'])
@@ -46,9 +43,6 @@ $toolbarReset = A::tag()
         ->id('btn-reset')
         ->render();
 
-$toolbar = Div::tag();
-?>
-<?php
 /**
  * @var ColumnInterface[] $columns
  */
@@ -140,8 +134,7 @@ $columns = [
         ),
     ]),
 ];
-?>
-<?php
+
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('invrecurring/index'))->csrf($csrf)->open() .
     Form::tag()->close();
@@ -158,7 +151,7 @@ echo GridView::widget()
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($gridComponents->header(' ' . $translator->translate('recurring.invoices')))
+->header($translator->translate('recurring.invoices'))
 ->id('w31-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -166,4 +159,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>

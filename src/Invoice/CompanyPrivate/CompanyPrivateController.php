@@ -50,7 +50,6 @@ final class CompanyPrivateController extends BaseController
         $paginator = new OffsetPaginator($this->companyprivates($companyprivateRepository));
         $parameters = [
             'canEdit' => $canEdit,
-            'company_private' => $this->translator->translate('setting.company.private'),
             'paginator' => $paginator,
             'alert' => $this->alert(),
         ];

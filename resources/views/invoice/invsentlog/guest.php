@@ -7,10 +7,9 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Entity\UserInv $userInv
@@ -33,21 +32,6 @@ echo $alert;
 /*
  * Related logic: see https://emojipedia.org/incoming-envelope
  */
-?>
-
-<h1>📨</h1>
-
-<?php
-    $header = Div::tag()
-        ->addClass('row')
-        ->content(
-            H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->content('📨'),
-            ),
-        )
-        ->render();
 
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
@@ -56,8 +40,6 @@ $toolbarReset = A::tag()
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'invsentlog/guest'))
   ->id('btn-reset')
   ->render();
-
-$toolbar = Div::tag();
 
 $columns = [
     new DataColumn(
@@ -76,6 +58,7 @@ $columns = [
                 ['id' => $model->getId()],
             ), ['style' => 'text-decoration:none']);
         },
+        encodeContent: false,
         filter: $optionsDataGuestInvNumberDropDownFilter,
         withSorting: false,
     ),
@@ -96,7 +79,6 @@ $columns = [
     ),
 ];
 
-echo '<br>';
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -104,16 +86,18 @@ $grid_summary = $s->grid_summary(
     $translator->translate('email.logs'),
     '',
 );
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
                  Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
                  Form::tag()->close();
+
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
   ->tableAttributes(['class' => 'table table-striped text-center h-10463', 'id' => 'table-invsentlog'])
   ->columns(...$columns)
   ->dataReader($paginator)
   ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-  ->header($header)
+  ->header('📨')
   ->id('w10463-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

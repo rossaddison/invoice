@@ -9,12 +9,11 @@ use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Entity\Unit $unit
@@ -30,19 +29,6 @@ use Yiisoft\Yii\DataView\GridView;
  */
 
 echo $alert;
-?>
-<?php
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('unit'))),
-            ),
-    )
-    ->render();
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -51,95 +37,82 @@ $toolbarReset = A::tag()
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'unit/index'))
     ->id('btn-reset')
     ->render();
-$toolbar = Div::tag();
-?>
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('unit'); ?>
-    <?= Html::closeTag('h5'); ?>    
-<?= Html::closeTag('div'); ?>
 
-<?= Html::openTag('div'); ?>
-    <?= Html::openTag('div', ['class' => 'btn-group']); ?>
-        <?= A::tag()
-            ->addClass('btn btn-success')
-            ->content(I::tag()
-                      ->addClass('fa fa-plus'))
-            ->href($urlGenerator->generate('unit/add')); ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+$columns = [
+    new DataColumn(
+        property: 'unit_id',
+        header: $translator->translate('id'),
+        content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
+    ),
+    new DataColumn(
+        property: 'unit_name',
+        header: $translator->translate('unit.name'),
+        content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
+    ),
+    new DataColumn(
+        property: 'unit_name_plrl',
+        header: $translator->translate('unit.name.plrl'),
+        content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
+    ),
 
-<br>
-    <?php
-        $columns = [
-            new DataColumn(
-                property: 'unit_id',
-                header: $translator->translate('id'),
-                content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
-            ),
-            new DataColumn(
-                property: 'unit_name',
-                header: $translator->translate('unit.name'),
-                content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
-            ),
-            new DataColumn(
-                property: 'unit_name_plrl',
-                header: $translator->translate('unit.name.plrl'),
-                content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
-            ),
+    new ActionColumn(buttons: [
+        new ActionButton(
+            content: '🔎',
+            url: static function (Unit $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnit_id()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('view'),
+            ],
+        ),
+        new ActionButton(
+            content: '✎',
+            url: static function (Unit $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnit_id()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('edit'),
+            ],
+        ),
+        new ActionButton(
+            content: '❌',
+            url: static function (Unit $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
+            },
+            attributes: [
+                'title' => $translator->translate('delete'),
+                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+            ],
+        ),
+    ]),
+];
 
-            new ActionColumn(buttons: [
-                new ActionButton(
-                    content: '🔎',
-                    url: static function (Unit $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnit_id()]);
-                    },
-                    attributes: [
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('view'),
-                    ],
-                ),
-                new ActionButton(
-                    content: '✎',
-                    url: static function (Unit $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnit_id()]);
-                    },
-                    attributes: [
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('edit'),
-                    ],
-                ),
-                new ActionButton(
-                    content: '❌',
-                    url: static function (Unit $model) use ($urlGenerator): string {
-                        return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
-                    },
-                    attributes: [
-                        'title' => $translator->translate('delete'),
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                    ],
-                ),
-            ]),
-        ];
-?>
-    <?php
-    $grid_summary = $s->grid_summary(
-        $paginator,
-        $translator,
-        (int) $s->getSetting('default_list_limit'),
-        $translator->translate('units'),
-        '',
-    );
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    (int) $s->getSetting('default_list_limit'),
+    $translator->translate('units'),
+    '',
+);
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open() .
+    A::tag()
+    ->href($urlGenerator->generate('unit/add'))
+    ->addClass('btn btn-info')
+    ->content('➕')
+    ->render() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-unit'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
+->header($translator->translate('unit'))
 ->id('w175-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -147,4 +120,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>

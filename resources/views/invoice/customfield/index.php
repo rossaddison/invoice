@@ -8,10 +8,10 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
@@ -31,20 +31,6 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 
 echo $alert;
 
-$translator->translate('custom.fields');
-?>
-
-<div>
-    <h5><?= $translator->translate('custom.fields'); ?></h5>
-    <div class="btn-group">
-        <a href="<?= $urlGenerator->generate('customfield/add');?>" class="btn btn-success" style="text-decoration:none"><i class="fa fa-plus"></i> <?= $translator->translate('new'); ?></a>
-    </div>
-</div>
-<br>
-<br>
-
-<?php
-    $gridComponents->header('custom.fields');
 $columns = [
     new DataColumn(
         'id',
@@ -102,6 +88,7 @@ $columns = [
             }
             return '';
         },
+        encodeContent: false,
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -137,17 +124,21 @@ $columns = [
     ]),
 ];
 
-?>
- <?php
-   $toolbarString =
-       Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
-                  ->csrf($csrf)
-                  ->open() .
-                   Div::tag()
-                       ->addClass('float-end m-3')
-                       ->content($gridComponents->toolbarReset($urlGenerator))
-                       ->encode(false)->render() .
-                   Form::tag()->close();
+$toolbarString =
+    Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
+               ->csrf($csrf)
+               ->open() .
+                A::tag()
+                    ->href($urlGenerator->generate('customfield/add'))
+                    ->addClass('btn btn-info')
+                    ->content('➕')
+                    ->render() .
+                Div::tag()
+                    ->addClass('float-end m-3')
+                    ->content($gridComponents->toolbarReset($urlGenerator))
+                    ->encode(false)->render() .
+                Form::tag()->close();
+
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -161,8 +152,8 @@ echo GridView::widget()
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($translator->translate('custom.fields'))
 ->multiSort(true)
-->header($gridComponents->header('custom.fields'))
 ->id('w75-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -170,4 +161,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>

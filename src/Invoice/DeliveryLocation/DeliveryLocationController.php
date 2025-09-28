@@ -79,7 +79,7 @@ final class DeliveryLocationController extends BaseController
             'qR' => $qR,
             'sortString' => $querySort ?? '-id',
         ];
-        return $this->viewRenderer->render('del/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
 
     public function add_in_invoice_flash(): void

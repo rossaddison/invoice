@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -27,8 +27,6 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 
-?>
-<?php
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -36,11 +34,6 @@ $toolbarReset = A::tag()
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/online_log'))
     ->id('btn-reset')
     ->render();
-
-$toolbar = Div::tag();
-?>
-
-<?php
 
 $columns = [
     new DataColumn(
@@ -90,8 +83,7 @@ $columns = [
         content: static fn(Merchant $model): string => Html::encode($model->getReference()),
     ),
 ];
-?>
-<?php
+
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -99,16 +91,18 @@ $grid_summary = $s->grid_summary(
     $translator->translate('payment.logs'),
     '',
 );
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
                  Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
                  Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-payment-online-log'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($gridComponents->header(' ' . $translator->translate('payment.logs')))
+->header($translator->translate('payment.logs'))
 ->id('w79-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

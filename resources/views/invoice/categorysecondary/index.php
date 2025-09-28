@@ -8,10 +8,10 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Entity\CategorySecondary $categorysecondary
@@ -28,10 +28,6 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 
-?>
-<?= Html::a(Html::tag('i', '', ['class' => 'fa fa-plus btn btn-primary fa-margin']), $urlGenerator->generate('categorysecondary/add'), []); ?>
-<?php
-
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
@@ -39,8 +35,6 @@ $toolbarReset = A::tag()
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'categorysecondary/index'))
   ->id('btn-reset')
   ->render();
-
-$toolbar = Div::tag();
 
 $columns = [
     new DataColumn(
@@ -89,16 +83,25 @@ $columns = [
         ),
     ]),
 ];
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('categorysecondary/index'))->csrf($csrf)->open() .
+    A::tag()
+        ->href($urlGenerator->generate('categorysecondary/add'))
+        ->addAttributes(['style' => 'text-decoration:none'])
+        ->content('➕')
+        ->render() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');
+
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
   ->tableAttributes(['class' => 'table table-striped text-center', 'id' => 'table-categorysecondary'])
   ->columns(...$columns)
   ->dataReader($paginator)
   ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+  ->header($translator->translate('category.secondary'))
   ->id('w371-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -106,4 +109,3 @@ echo GridView::widget()
   ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);
-?>      

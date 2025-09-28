@@ -7,10 +7,9 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -27,20 +26,6 @@ use Yiisoft\Yii\DataView\GridView;
  */
 
 echo $alert;
-?>
-
-<?php
-$header = Div::tag()
-  ->addClass('row')
-  ->content(
-      H5::tag()
-    ->addClass('bg-primary text-white p-3 rounded-top')
-    ->content(
-        I::tag()->addClass('bi bi-receipt')
-      ->content(' ' . Html::encode($translator->translate('delivery'))),
-    ),
-  )
-  ->render();
 
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
@@ -50,44 +35,39 @@ $toolbarReset = A::tag()
   ->id('btn-reset')
   ->render();
 
-$toolbar = Div::tag();
-?>
-<br>
-<?php
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('id'),
-            content: static fn(Delivery $model) => Html::encode($model->getId()),
-        ),
-        new DataColumn(
-            'start_date',
-            header: $translator->translate('start.date'),
-            content: static fn(Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? ''),
-        ),
-        new DataColumn(
-            'actual_delivery_date',
-            header: $translator->translate('delivery.actual.delivery.date'),
-            content: static fn(Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
-        ),
-        new DataColumn(
-            'end_date',
-            header: $translator->translate('end.date'),
-            content: static fn(Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? ''),
-        ),
-        new DataColumn(
-            content: static function (Delivery $model) use ($urlGenerator, $translator): string {
-                return Html::a($translator->translate('back'), $urlGenerator->generate('inv/edit', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
-            },
-        ),
-        new DataColumn(
-            'delivery_location_id',
-            header: $translator->translate('delivery.location.global.location.number'),
-            content: static fn(Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
-        ),
-    ];
-?>
-<?php
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static fn(Delivery $model) => Html::encode($model->getId()),
+    ),
+    new DataColumn(
+        'start_date',
+        header: $translator->translate('start.date'),
+        content: static fn(Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? ''),
+    ),
+    new DataColumn(
+        'actual_delivery_date',
+        header: $translator->translate('delivery.actual.delivery.date'),
+        content: static fn(Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
+    ),
+    new DataColumn(
+        'end_date',
+        header: $translator->translate('end.date'),
+        content: static fn(Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? ''),
+    ),
+    new DataColumn(
+        content: static function (Delivery $model) use ($urlGenerator, $translator): string {
+            return Html::a($translator->translate('back'), $urlGenerator->generate('inv/edit', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none'])->render();
+        },
+    ),
+    new DataColumn(
+        'delivery_location_id',
+        header: $translator->translate('delivery.location.global.location.number'),
+        content: static fn(Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
+    ),
+];
+
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -95,17 +75,19 @@ $grid_summary = $s->grid_summary(
     $translator->translate('deliveries'),
     '',
 );
+
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-191', 'id' => 'table-delivery'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
+->header($translator->translate('delivery'))
 ->id('w14-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -26,9 +26,6 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 
-?>
-<?php
-
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -37,10 +34,6 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
-?>
-
-<?php
 $columns = [
     new DataColumn(
         'id',
@@ -66,6 +59,7 @@ $columns = [
         content: static function (Merchant $model) use ($translator): Yiisoft\Html\Tag\CustomTag {
             return $model->getSuccessful() ? Html::tag('Label', $translator->translate('yes'), ['class' => 'btn btn-success']) : Html::tag('Label', $translator->translate('no'), ['class' => 'btn btn-danger']);
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'date',
@@ -89,18 +83,18 @@ $columns = [
         content: static fn(Merchant $model): string => Html::encode($model->getReference()),
     ),
 ];
-?>
-<?php
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-payment-guest-online-log'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($gridComponents->header(' ' . $translator->translate('payment.logs')))
+->header($translator->translate('payment.logs'))
 ->id('w78-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])

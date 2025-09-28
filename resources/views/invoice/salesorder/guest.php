@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Entity\SalesOrder;
@@ -7,11 +8,10 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Entity\SalesOrder $so
@@ -34,17 +34,6 @@ use Yiisoft\Yii\DataView\GridView;
  * @var string $csrf
  */
 
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('salesorder')),
-            ),
-    )
-    ->render();
-
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -53,59 +42,94 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
-?>
+// see SalesOrder/SalesOrderRepository getStatuses function
+// && Invoice\Asset\invoice\css\style.css & yii3i.css
 
-<div>
-    <!-- see SalesOrder/SalesOrderRepository getStatuses function 
-     && Invoice\Asset\invoice\css\style.css & yii3i.css -->
-    <div class="submenu-row">
-            <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 0]); ?>"
-                   class="btn <?php echo $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('all'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
-                   data-bs-toggle = "tooltip" title="<?= $s->getSetting('debug_mode') === '1' ? $translator->translate('payment.term.add.additional.terms.at.setting.repository') : ''; ?>"
-                   class="btn  <?php echo $status == 2 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(2); ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('2'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 3]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 3 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(3);  ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('3'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 4]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 4 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(4); ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('4'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 5]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 5 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(5);  ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('5'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 6]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 6 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(6);  ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('6'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 7]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 7 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(7);  ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('7'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 8]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 8 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(8);  ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('8'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('salesorder/guest', ['page' => 1,'status' => 9]); ?>" style="text-decoration:none"
-                   class="btn  <?php echo $status == 9 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(9);  ?>">
-                    <?= $soR->getSpecificStatusArrayLabel('9'); ?>
-                </a>
-            </div>
-    </div>
-</div>
-<div>
-<br>
-<?= $alert; ?>   
-</div>
-<?php $columns = [
+$statusBar =  Div::tag()
+    ->addClass('btn-group index-options')
+    ->content(
+        Html::a(
+            $translator->translate('all'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 0]),
+            [
+                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-default'),
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('2'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 2]),
+            [
+                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(2)),
+                'style' => 'text-decoration:none',
+                'data-bs-toggle' => 'tooltip',
+                'title' => $s->getSetting('debug_mode') === '1'
+                    ? $translator->translate('payment.term.add.additional.terms.at.setting.repository')
+                    : '',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('3'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 3]),
+            [
+                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(3)),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('4'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 4]),
+            [
+                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(4)),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('5'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 5]),
+            [
+                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(5)),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('6'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 6]),
+            [
+                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(6)),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('7'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 7]),
+            [
+                'class' => 'btn ' . ($status == 7 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(7)),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('8'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 8]),
+            [
+                'class' => 'btn ' . ($status == 8 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(8)),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $soR->getSpecificStatusArrayLabel('9'),
+            $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => 9]),
+            [
+                'class' => 'btn ' . ($status == 9 ? 'btn-primary' : 'label ' . $soR->getSpecificStatusArrayClass(9)),
+                'style' => 'text-decoration:none',
+            ],
+        ),
+    )
+    ->encode(false)
+    ->render();
+
+echo $alert;
+
+$columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
@@ -124,6 +148,7 @@ $toolbar = Div::tag();
             }
             return Html::tag('span');
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'quote_id',
@@ -172,8 +197,7 @@ $toolbar = Div::tag();
         },
     ),
 ];
-?>
-<?php
+
 $grid_summary =
     $s->grid_summary(
         $paginator,
@@ -182,17 +206,20 @@ $grid_summary =
         $translator->translate('salesorders'),
         (string) $so_statuses[$status]['label'],
     );
+
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open() .
+    $statusBar .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-quote'])
 ->dataReader($paginator)
 ->columns(...$columns)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
+->header($translator->translate('salesorder'))
 ->id('w12-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -200,6 +227,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>
-
- 

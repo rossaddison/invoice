@@ -7,10 +7,9 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Setting\SettingRepository $s
@@ -25,19 +24,6 @@ use Yiisoft\Yii\DataView\GridView;
  * @var string $csrf
  */
 
-?>
-<?php
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge')),
-            ),
-    )
-    ->render();
-
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -46,12 +32,8 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
 ?>
 <?= Html::openTag('div');?>
-    <?= Html::openTag('h5'); ?>
-        <?= $translator->translate('allowance.or.charge'); ?>
-    <?= Html::closeTag('h5'); ?>
     <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
         if ($canEdit) {
@@ -73,6 +55,7 @@ $toolbar = Div::tag();
 <?= Html::openTag('div');?>
     <?= Html::Tag('br'); ?>    
 <?= Html::closeTag('div');?>
+
 <?php
 $columns = [
     new DataColumn(
@@ -123,6 +106,7 @@ $columns = [
                 [],
             );
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'identifier',
@@ -138,6 +122,7 @@ $columns = [
                       [],
                   ) : Html::a();
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'identifier',
@@ -153,6 +138,7 @@ $columns = [
                     [],
                 ) : Html::a();
         },
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('delete'),
@@ -171,11 +157,12 @@ $columns = [
                 [],
             );
         },
+        encodeContent: false,
     ),
-]
-?>
-<?= $alert; ?>
-<?php
+];
+
+echo $alert;
+
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -183,6 +170,7 @@ $grid_summary = $s->grid_summary(
     $translator->translate('allowance.or.charge'),
     '',
 );
+
 $toolbarString =
     Form::tag()
     ->post($urlGenerator->generate('allowancecharge/index'))
@@ -190,13 +178,14 @@ $toolbarString =
     ->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
     ->columns(...$columns)
     ->dataReader($paginator)
     ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-allowancecharge'])
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-    ->header($header)
+    ->header($translator->translate('allowance.or.charge'))
     ->id('w3-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -204,4 +193,3 @@ echo GridView::widget()
     ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
     ->noResultsText($translator->translate('no.records'))
     ->toolbar($toolbarString);
-?>

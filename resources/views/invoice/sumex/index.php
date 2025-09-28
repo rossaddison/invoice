@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Entity\Sumex;
@@ -8,12 +9,11 @@ use Yiisoft\View\WebView;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -30,19 +30,6 @@ use Yiisoft\Router\CurrentRoute;
  */
 
 echo $alert;
-?>
-<?php
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('sumex'))),
-            ),
-    )
-    ->render();
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -52,57 +39,51 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
-?>
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static fn(Sumex $model) => Html::encode($model->getId()),
+    ),
+    new DataColumn(
+        'casenumber',
+        header: $translator->translate('case.number'),
+        content: static fn(Sumex $model) => Html::encode($model->getCasenumber()),
+    ),
+    new ActionColumn(buttons: [
+        new ActionButton(
+            content: '🔎',
+            url: static function (Sumex $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('sumex/view', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('view'),
+            ],
+        ),
+        new ActionButton(
+            content: '✎',
+            url: static function (Sumex $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('sumex/edit', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('edit'),
+            ],
+        ),
+        new ActionButton(
+            content: '❌',
+            url: static function (Sumex $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('sumex/delete', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'title' => $translator->translate('delete'),
+                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+            ],
+        ),
+    ]),
+];
 
-<div>
-<?php
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('id'),
-            content: static fn(Sumex $model) => Html::encode($model->getId()),
-        ),
-        new DataColumn(
-            'casenumber',
-            header: $translator->translate('case.number'),
-            content: static fn(Sumex $model) => Html::encode($model->getCasenumber()),
-        ),
-        new ActionColumn(buttons: [
-            new ActionButton(
-                content: '🔎',
-                url: static function (Sumex $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('sumex/view', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('view'),
-                ],
-            ),
-            new ActionButton(
-                content: '✎',
-                url: static function (Sumex $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('sumex/edit', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('edit'),
-                ],
-            ),
-            new ActionButton(
-                content: '❌',
-                url: static function (Sumex $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('sumex/delete', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                ],
-            ),
-        ]),
-    ];
-?>
-<?php
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -110,6 +91,7 @@ $grid_summary = $s->grid_summary(
     $translator->translate('sumex'),
     '',
 );
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
@@ -122,7 +104,7 @@ echo GridView::widget()
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-sumex'])
-->header($header)
+->header($translator->translate('sumex'))
 ->id('w142-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -130,6 +112,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>
-</div>
-

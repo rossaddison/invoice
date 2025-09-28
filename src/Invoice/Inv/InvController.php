@@ -30,6 +30,7 @@ use App\Invoice\Entity\Setting;
 use App\Invoice\Entity\Sumex;
 use App\Invoice\Entity\TaxRate;
 use App\Invoice\Entity\Upload;
+use App\Invoice\Inv\Exception\PdfNotFoundException;
 // Services
 // Inv
 use App\User\UserService;
@@ -2240,34 +2241,39 @@ final class InvController extends BaseController
      * @param SumexR $sumexR
      * @param UIR $uiR
      * @param Request $request
+     * @throw
      */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR, ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
     {
-        // include is a value of 0 or 1 passed from inv.js function inv_to_pdf_with(out)_custom_fields indicating whether the user
-        // wants custom fields included on the inv or not.
-        $inv_id = (string) ($this->session->get('inv_id') ?? '0');
-        $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
-        if ($inv_amount) {
-            $custom = (($include === 1) ? true : false);
-            $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
-            // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-            $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
-            // The invoice will be streamed if set under Settings...View...Invoices...Pdf Settings
-            $stream = ($this->sR->getSetting('pdf_stream_inv') == '0') ? false : true;
-            // If we are required to mark invoices as 'sent' when sent.
-            if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
-                $this->sR->invoice_mark_sent($inv_id, $iR);
-            }
-            $inv = $iR->repoInvUnloadedquery($inv_id);
-            if ($inv) {
-                $so = !empty($inv->getSo_id()) ? $soR->repoSalesOrderUnloadedquery($inv->getSo_id()) : null;
-                $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
-                return $this->pdf_archive_message();
-            } // $inv
+        try {
+            // include is a value of 0 or 1 passed from inv.js function inv_to_pdf_with(out)_custom_fields indicating whether the user
+            // wants custom fields included on the inv or not.
+            $inv_id = (string) ($this->session->get('inv_id') ?? '0');
+            $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ? $iaR->repoInvquery((int) $inv_id) : null);
+            if ($inv_amount) {
+                $custom = (($include === 1) ? true : false);
+                $inv_custom_values = $this->inv_custom_values($inv_id, $icR);
+                // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
+                $pdfhelper = new PdfHelper($this->sR, $this->session, $this->translator);
+                // The invoice will be streamed if set under Settings...View...Invoices...Pdf Settings
+                $stream = ($this->sR->getSetting('pdf_stream_inv') == '0') ? false : true;
+                // If we are required to mark invoices as 'sent' when sent.
+                if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
+                    $this->generate_inv_number_if_applicable($inv_id, $iR, $this->sR, $gR);
+                    $this->sR->invoice_mark_sent($inv_id, $iR);
+                }
+                $inv = $iR->repoInvUnloadedquery($inv_id);
+                if ($inv) {
+                    $so = !empty($inv->getSo_id()) ? $soR->repoSalesOrderUnloadedquery($inv->getSo_id()) : null;
+                    $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(), $stream, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR, $this->viewRenderer);
+                    return $this->pdf_archive_message();
+                } // $inv
+                return $this->factory->createResponse(Json::encode(['success' => 0]));
+            } // $inv_amount
             return $this->factory->createResponse(Json::encode(['success' => 0]));
-        } // $inv_amount
-        return $this->factory->createResponse(Json::encode(['success' => 0]));
+        } catch (\Yiisoft\ErrorHandler\Exception\ErrorException $e) {
+            throw new PdfNotFoundException($this->translator);
+        }
     }
 
     /**

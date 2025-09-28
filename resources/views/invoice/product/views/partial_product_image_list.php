@@ -4,8 +4,8 @@ declare(strict_types=1);
 use App\Invoice\Entity\ProductImage;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
  * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image

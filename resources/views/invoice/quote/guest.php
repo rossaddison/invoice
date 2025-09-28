@@ -7,10 +7,9 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * @var App\Invoice\Entity\Quote $quote
@@ -37,17 +36,6 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo $alert;
 
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('quote')),
-            ),
-    )
-    ->render();
-
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -58,107 +46,127 @@ $toolbarReset = A::tag()
 
 $toolbar = Div::tag();
 
-?>
-<div>
-    <h5><?= $translator->translate('quote'); ?></h5>
-    <br>
-    <div class="submenu-row">
-            <div class="btn-group index-options">
-                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 0]); ?>"
-                   class="btn <?= $status == 0 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('all'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 2]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 2 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('sent'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 3]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 3 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('viewed'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 4]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 4 ? 'btn-primary' : 'btn-default' ?>">
-                    <?= $translator->translate('approved'); ?>
-                </a>
-                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 5]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 5 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('rejected'); ?>
-                </a>                
-                <a href="<?= $urlGenerator->generate('quote/guest', ['page' => 1,'status' => 6]); ?>" style="text-decoration:none"
-                   class="btn  <?= $status == 6 ? 'btn-primary' : 'btn-default'  ?>">
-                    <?= $translator->translate('canceled'); ?>
-                </a>
-            </div>
-    </div>
-</div>
-<br>
-<?php
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('id'),
-            content: static function (Quote $model): string {
-                return (string) $model->getId();
-            },
-            withSorting: true,
+$statusBar =  Div::tag()
+    ->addClass('btn-group index-options')
+    ->content(
+        Html::a(
+            $translator->translate('all'),
+            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 0]),
+            [
+                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-default'),
+            ],
+        )
+        . Html::a(
+            $translator->translate('sent'),
+            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 2]),
+            [
+                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-default'),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $translator->translate('viewed'),
+            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 3]),
+            [
+                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-default'),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $translator->translate('approved'),
+            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 4]),
+            [
+                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-default'),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $translator->translate('rejected'),
+            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 5]),
+            [
+                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-default'),
+                'style' => 'text-decoration:none',
+            ],
+        )
+        . Html::a(
+            $translator->translate('canceled'),
+            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 6]),
+            [
+                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-default'),
+                'style' => 'text-decoration:none',
+            ],
         ),
-        new DataColumn(
-            'status_id',
-            header: $translator->translate('status'),
-            content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
-                if (null !== $model->getStatus_id()) {
-                    $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
-                    $class = $qR->getSpecificStatusArrayClass((string) $model->getStatus_id());
-                    return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label ' . $class]);
-                }
-                return '';
-            },
-            withSorting: true,
-        ),
-        new DataColumn(
-            property: 'filterQuoteNumber',
-            header: $translator->translate('quote.number'),
-            content: static function (Quote $model) use ($urlGenerator): A {
-                return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
-            },
-            filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
-                    ->addAttributes(['style' => 'max-width: 80px']),
-        ),
-        new DataColumn(
-            'client_id',
-            header: $translator->translate('id'),
-            content: static fn(Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
-        ),
-        new DataColumn(
-            'date_created',
-            header: $translator->translate('date.created'),
-            content: static fn(Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
-            withSorting: true,
-        ),
-        new DataColumn(
-            'date_expires',
-            content: static fn(Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
-            withSorting: true,
-        ),
-        new DataColumn(
-            'date_required',
-            content: static fn(Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
-        ),
-        new DataColumn(
-            'id',
-            header: $translator->translate('total'),
-            content: static function (Quote $model) use ($s, $qaR): string {
-                $quote_id = $model->getId();
-                if (null !== $quote_id) {
-                    $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
-                    return $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
-                }
-                return '';
-            },
-        ),
-    ];
-?>
-<?php
+    )
+    ->encode(false)
+    ->render();
+
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static function (Quote $model): string {
+            return (string) $model->getId();
+        },
+        withSorting: true,
+    ),
+    new DataColumn(
+        'status_id',
+        header: $translator->translate('status'),
+        content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
+            if (null !== $model->getStatus_id()) {
+                $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
+                $class = $qR->getSpecificStatusArrayClass((string) $model->getStatus_id());
+                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label ' . $class]);
+            }
+            return '';
+        },
+        encodeContent: false,
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'filterQuoteNumber',
+        header: $translator->translate('quote.number'),
+        content: static function (Quote $model) use ($urlGenerator): A {
+            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
+        },
+        encodeContent: false,
+        filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                ->addAttributes(['style' => 'max-width: 80px']),
+    ),
+    new DataColumn(
+        'client_id',
+        header: $translator->translate('id'),
+        content: static fn(Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
+    ),
+    new DataColumn(
+        'date_created',
+        header: $translator->translate('date.created'),
+        content: static fn(Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+        withSorting: true,
+    ),
+    new DataColumn(
+        'date_expires',
+        content: static fn(Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+        withSorting: true,
+    ),
+    new DataColumn(
+        'date_required',
+        content: static fn(Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
+    ),
+    new DataColumn(
+        'id',
+        header: $translator->translate('total'),
+        content: static function (Quote $model) use ($s, $qaR): string {
+            $quote_id = $model->getId();
+            if (null !== $quote_id) {
+                $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+                return $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
+            }
+            return '';
+        },
+    ),
+];
+
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -166,10 +174,13 @@ $grid_summary = $s->grid_summary(
     $translator->translate('quotes'),
     '',
 );
+
 $toolbarString =
     Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
+    $statusBar .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-quote-guest'])
@@ -184,9 +195,9 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($translator->translate('quote'))
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
-->header($header)
 ->id('w7-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -194,4 +205,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>

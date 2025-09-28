@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Invoice\Entity\InvAllowanceCharge;
@@ -6,16 +7,15 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Router\CurrentRoute;
 
@@ -41,18 +41,6 @@ use Yiisoft\Router\CurrentRoute;
 $vat = $s->getSetting('enable_vat_registration');
 
 echo $alert;
-?>
-<?php
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('allowance.or.charge.inv')),
-            ),
-    )
-    ->render();
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -62,94 +50,86 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
-?>
-
-<div>
-<br>    
-</div>
-<?php
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('id'),
-            content: static fn(InvAllowanceCharge $model) => $model->getId(),
-            withSorting: true,
-        ),
-        new DataColumn(
-            property: 'filterInvNumber',
-            header: $translator->translate('invoice'),
-            content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
-                return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static fn(InvAllowanceCharge $model) => $model->getId(),
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'filterInvNumber',
+        header: $translator->translate('invoice'),
+        content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
+            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
+        },
+        encodeContent: false,
+        filter: $optionsDataInvNumberDropDownFilter,
+        withSorting: false,
+    ),
+    new DataColumn(
+        property: 'filterReasonCode',
+        header: $translator->translate('allowance.or.charge.reason.code'),
+        content: static function (InvAllowanceCharge $model): string {
+            return $model->getAllowanceCharge()?->getReasonCode() ?? '';
+        },
+        filter: true,
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'filterReason',
+        header: $translator->translate('allowance.or.charge.reason'),
+        content: static function (InvAllowanceCharge $model): string {
+            return $model->getAllowanceCharge()?->getReason() ?? '';
+        },
+        filter: true,
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'amount',
+        header: $translator->translate('allowance.or.charge.amount'),
+        content: static fn(InvAllowanceCharge $model) => $model->getAmount(),
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'vat_or_tax',
+        header: $vat ? $translator->translate('vat') : $translator->translate('tax'),
+        content: static fn(InvAllowanceCharge $model) => $model->getVatOrTax(),
+        withSorting: true,
+    ),
+    new ActionColumn(buttons: [
+        new ActionButton(
+            content: '🔎',
+            url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);
             },
-            filter: $optionsDataInvNumberDropDownFilter,
-            withSorting: false,
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('view'),
+            ],
         ),
-        new DataColumn(
-            property: 'filterReasonCode',
-            header: $translator->translate('allowance.or.charge.reason.code'),
-            content: static function (InvAllowanceCharge $model): string {
-                return $model->getAllowanceCharge()?->getReasonCode() ?? '';
+        new ActionButton(
+            content: '✎',
+            url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);
             },
-            filter: true,
-            withSorting: true,
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('edit'),
+            ],
         ),
-        new DataColumn(
-            property: 'filterReason',
-            header: $translator->translate('allowance.or.charge.reason'),
-            content: static function (InvAllowanceCharge $model): string {
-                return $model->getAllowanceCharge()?->getReason() ?? '';
+        new ActionButton(
+            content: '❌',
+            url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('invallowancecharge/delete', ['id' => $model->getId()]);
             },
-            filter: true,
-            withSorting: true,
+            attributes: [
+                'title' => $translator->translate('delete'),
+                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+            ],
         ),
-        new DataColumn(
-            property: 'amount',
-            header: $translator->translate('allowance.or.charge.amount'),
-            content: static fn(InvAllowanceCharge $model) => $model->getAmount(),
-            withSorting: true,
-        ),
-        new DataColumn(
-            property: 'vat_or_tax',
-            header: $vat ? $translator->translate('vat') : $translator->translate('tax'),
-            content: static fn(InvAllowanceCharge $model) => $model->getVatOrTax(),
-            withSorting: true,
-        ),
-        new ActionColumn(buttons: [
-            new ActionButton(
-                content: '🔎',
-                url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('view'),
-                ],
-            ),
-            new ActionButton(
-                content: '✎',
-                url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('edit'),
-                ],
-            ),
-            new ActionButton(
-                content: '❌',
-                url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('invallowancecharge/delete', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                ],
-            ),
-        ]),
-    ];
-?>
-<?php
+    ]),
+];
 
 $toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open() .
     Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
@@ -188,9 +168,9 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($translator->translate('allowance.or.charge.inv'))
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
-->header($header)
 ->id('w937-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -198,4 +178,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>

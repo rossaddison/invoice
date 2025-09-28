@@ -8,12 +8,11 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
 /**
@@ -30,19 +29,6 @@ use Yiisoft\Router\CurrentRoute;
  */
 
 echo $alert;
-?>
-<?php
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-receipt')
-                        ->content(' ' . Html::encode($translator->translate('profile.singular'))),
-            ),
-    )
-    ->render();
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -52,79 +38,61 @@ $toolbarReset = A::tag()
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
-?>
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static fn(Profile $model) => Html::encode($model->getId()),
+    ),
+    new DataColumn(
+        'company_id',
+        header: $translator->translate('company'),
+        content: static fn(Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
+    ),
+    new DataColumn(
+        'email',
+        header: $translator->translate('email.address'),
+        content: static fn(Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
+    ),
+    new DataColumn(
+        'description',
+        header: $translator->translate('description'),
+        content: static fn(Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
+    ),
+    new ActionColumn(buttons: [
+        new ActionButton(
+            content: '🔎',
+            url: static function (Profile $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('profile/view', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('view'),
+            ],
+        ),
+        new ActionButton(
+            content: '✎',
+            url: static function (Profile $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('profile/edit', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('edit'),
+            ],
+        ),
+        new ActionButton(
+            content: '❌',
+            url: static function (Profile $model) use ($urlGenerator): string {
+                return $urlGenerator->generate('profile/delete', ['id' => $model->getId()]);
+            },
+            attributes: [
+                'title' => $translator->translate('delete'),
+                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+            ],
+        ),
+    ]),
+];
 
-<div>
-    <h5><?= $translator->translate('profile.singular'); ?></h5>
-    <div class="btn-group">
-        <a class="btn btn-success" href="<?= $urlGenerator->generate('profile/add'); ?>">
-            <i class="fa fa-plus"></i> <?= Html::encode($translator->translate('new')); ?>
-        </a>
-    </div>
-</div>
-<br>
-<div>
-
-</div>
-<div>
-<?php
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('id'),
-            content: static fn(Profile $model) => Html::encode($model->getId()),
-        ),
-        new DataColumn(
-            'company_id',
-            header: $translator->translate('company'),
-            content: static fn(Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
-        ),
-        new DataColumn(
-            'email',
-            header: $translator->translate('email.address'),
-            content: static fn(Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
-        ),
-        new DataColumn(
-            'description',
-            header: $translator->translate('description'),
-            content: static fn(Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
-        ),
-        new ActionColumn(buttons: [
-            new ActionButton(
-                content: '🔎',
-                url: static function (Profile $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('profile/view', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('view'),
-                ],
-            ),
-            new ActionButton(
-                content: '✎',
-                url: static function (Profile $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('profile/edit', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('edit'),
-                ],
-            ),
-            new ActionButton(
-                content: '❌',
-                url: static function (Profile $model) use ($urlGenerator): string {
-                    return $urlGenerator->generate('profile/delete', ['id' => $model->getId()]);
-                },
-                attributes: [
-                    'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                ],
-            ),
-        ]),
-    ];
-?>
-<?php
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,
@@ -132,16 +100,18 @@ $grid_summary = $s->grid_summary(
     $translator->translate('profiles'),
     '',
 );
+
 $toolbarString = Form::tag()->post($urlGenerator->generate('profile/index'))->csrf($csrf)->open() .
         Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
         Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-profile'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($header)
+->header($translator->translate('profile.singular'))
 ->id('w122-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
@@ -149,6 +119,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>
-</div>
-

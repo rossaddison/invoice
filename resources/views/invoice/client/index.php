@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Span;
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
  * @var App\Invoice\Entity\Client $client
@@ -40,12 +40,6 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 
 echo $alert;
 
-?>
-<div>
-    <h5><?= Html::encode($translator->translate('clients')); ?></h5>
-</div>    
-<?php
-    $gridComponents->header('i.client');
 $columns = [
     new DataColumn(
         'id',
@@ -59,6 +53,7 @@ $columns = [
         content: static function (Client $model) use ($button, $translator): Span {
             return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'id',
@@ -68,6 +63,7 @@ $columns = [
                     ? $button::activeLabel($translator)
                     : $button::inactiveLabel($translator);
         },
+        encodeContent: false,
         withSorting: false,
     ),
     new DataColumn(
@@ -78,6 +74,7 @@ $columns = [
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
         },
+        encodeContent: false,
         withSorting: false,
     ),
     new DataColumn(
@@ -105,6 +102,7 @@ $columns = [
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
         },
+        encodeContent: false,
         filter: $optionsDataClientNameDropdownFilter,
         withSorting: false,
     ),
@@ -117,6 +115,7 @@ $columns = [
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
         },
+        encodeContent: false,
         filter: $optionsDataClientSurnameDropdownFilter,
         withSorting: false,
     ),
@@ -222,18 +221,21 @@ $columns = [
             $heading = ($equal ? $translator->translate('client.peppol.add') : $translator->translate('client.peppol.edit'));
             return Html::a(Html::tag('i', $heading, ['class' => 'fa fa-' . ($equal ? 'plus' : 'edit') . 'fa-margin']), ($equal ? $addUrl : $editUrl), []);
         },
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (Client $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClient_id()]), []);
         },
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (Client $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'edit']), []);
         },
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('delete'),
@@ -252,18 +254,18 @@ $columns = [
                 [],
             );
         },
+        encodeContent: false,
     ),
 ];
 
-?>
- <?php
-   $grid_summary = $s->grid_summary(
-       $paginator,
-       $translator,
-       (int) $s->getSetting('default.list.limit'),
-       $translator->translate('clients'),
-       '',
-   );
+$grid_summary = $s->grid_summary(
+    $paginator,
+    $translator,
+    (int) $s->getSetting('default.list.limit'),
+    $translator->translate('clients'),
+    '',
+);
+
 $toolbarString =
     Form::tag()
     ->post($urlGenerator->generate('client/index'))
@@ -296,6 +298,7 @@ $toolbarString =
         )
         ->encode(false)->render() .
     Form::tag()->close();
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-client'])
@@ -310,6 +313,7 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->header($translator->translate('clients'))
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 ->id('w34-grid')
@@ -319,10 +323,5 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-?>
 
-<div>
-    <?php
-        echo $modal_create_client;
-?>
-</div>
+echo $modal_create_client;
