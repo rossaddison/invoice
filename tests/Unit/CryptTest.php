@@ -13,69 +13,22 @@ use App\Invoice\Libraries\Crypt;
 final class CryptTest extends TestCase
 {
     /**
-     * Test that Crypt can be instantiated without parameters
+     * Test that Crypt can be instantiated
      */
-    public function testConstructorWithoutParameters(): void
+    public function testConstructor(): void
     {
         $crypt = new Crypt();
         $this->assertInstanceOf(Crypt::class, $crypt);
     }
 
     /**
-     * Test that getSalt returns a non-empty string
+     * Test that getSalt returns null (salt is now handled internally)
      */
-    public function testGetSaltReturnsNonEmptyString(): void
+    public function testGetSaltReturnsNull(): void
     {
         $crypt = new Crypt();
         $salt = $crypt->getSalt();
-        
-        $this->assertIsString($salt);
-        $this->assertNotEmpty($salt);
-        $this->assertEquals(32, strlen($salt));
-    }
-
-    /**
-     * Test that constructor accepts and uses custom salt
-     */
-    public function testConstructorWithCustomSalt(): void
-    {
-        $customSalt = 'custom1234567890123456';
-        $crypt = new Crypt($customSalt);
-        
-        $this->assertEquals($customSalt, $crypt->getSalt());
-    }
-
-    /**
-     * Test that salt() method returns same value as getSalt() for backward compatibility
-     */
-    public function testSaltMethodBackwardCompatibility(): void
-    {
-        $crypt = new Crypt();
-        
-        $this->assertEquals($crypt->getSalt(), $crypt->salt());
-    }
-
-    /**
-     * Test that auto-generated salts are consistent within same instance
-     */
-    public function testSaltConsistencyWithinInstance(): void
-    {
-        $crypt = new Crypt();
-        $salt1 = $crypt->getSalt();
-        $salt2 = $crypt->getSalt();
-        
-        $this->assertEquals($salt1, $salt2);
-    }
-
-    /**
-     * Test that different instances generate different salts
-     */
-    public function testDifferentInstancesGenerateDifferentSalts(): void
-    {
-        $crypt1 = new Crypt();
-        $crypt2 = new Crypt();
-        
-        $this->assertNotEquals($crypt1->getSalt(), $crypt2->getSalt());
+        $this->assertNull($salt);
     }
 
     /**
@@ -85,10 +38,10 @@ final class CryptTest extends TestCase
     {
         $crypt = new Crypt();
         $testData = 'test data to encrypt';
-        
+
         $encoded = $crypt->encode($testData);
         $decoded = $crypt->decode($encoded);
-        
+
         $this->assertEquals($testData, $decoded);
     }
 
@@ -99,10 +52,9 @@ final class CryptTest extends TestCase
     {
         $crypt = new Crypt();
         $password = 'testpassword';
-        $salt = $crypt->getSalt();
-        
-        $hashedPassword = $crypt->generate_password($password, $salt);
-        
+
+        $hashedPassword = $crypt->generate_password($password);
+
         $this->assertIsString($hashedPassword);
         $this->assertNotEmpty($hashedPassword);
         $this->assertNotEquals($password, $hashedPassword);
@@ -115,10 +67,9 @@ final class CryptTest extends TestCase
     {
         $crypt = new Crypt();
         $password = 'testpassword';
-        $salt = $crypt->getSalt();
-        
-        $hashedPassword = $crypt->generate_password($password, $salt);
-        
+
+        $hashedPassword = $crypt->generate_password($password);
+
         $this->assertTrue($crypt->check_password($hashedPassword, $password));
         $this->assertFalse($crypt->check_password($hashedPassword, 'wrongpassword'));
     }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
-use Yiisoft\Security\Random;
-
 /**
  * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
  *
@@ -15,86 +13,43 @@ final class Crypt
 {
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
     private string $decrypt_key = self::DECRYPT_KEY;
-    private string $salt;
 
     /**
-     * Snyk: What is Salting?
-     * A salt is a random string that gets attached to a plaintext password before it gets hashed.
-     * A hash cannot be reversed but it can be compared with existing generated hash outputs.
-     * If a user is using a weak password, that password may have been hashed and stored somewhere for
-     * potential hackers to compare against. By adding a salt to the password, the hash output is no
-     * longer predictable. This is because it is increasing the uniqueness of the password, thus,
-     * the uniqueness of the hash itself.
+     * Password hashing and verification is now handled via PHP's password_hash and password_verify,
+     * which internally use secure, random salts and recommended algorithms like bcrypt or Argon2.
      */
 
     /**
-     * Constructor that accepts an optional salt parameter.
-     * If no salt is provided, one is automatically generated.
+     * Hash a password using a strong algorithm with automatic secure salt.
      *
-     * @param string|null $salt Optional salt value. If not provided, a salt will be auto-generated.
-     */
-    public function __construct(?string $salt = null)
-    {
-        $this->salt = $salt ?? $this->generateSalt();
-    }
-
-    /**
-     * Get the salt value.
-     *
-     * @return string The salt value
-     */
-    public function getSalt(): string
-    {
-        return $this->salt;
-    }
-
-    /**
-     * A salt now must be added to a hash to prevent hash table lookups used by attackers
-     * Related logic: see https://cwe.mitre.org/data/definitions/916.html
-     * @return string
-     * @deprecated Use getSalt() instead. This method is kept for backward compatibility.
-     */
-    public function salt(): string
-    {
-        return $this->getSalt();
-    }
-
-    /**
-     * Generate a salt using secure random generation.
-     * Previously: return substr(sha1((string)mt_rand()), 0, 22);
-     * Use of Password Hash With Insufficient Computational Effort
-     * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
-     *
-     * @return string The generated salt
-     */
-    private function generateSalt(): string
-    {
-        $random = Random::string(32);
-        $hash = hash('sha256', $random);
-        // Adjust the string length to accomodate minimum industry standards of 32
-        return substr($hash, 0, 32);
-    }
-
-    /**
      * @param string $password
-     * @param string $salt
      * @return string
      */
-    public function generate_password($password, $salt): string
+    public function generate_password(string $password): string
     {
-        return crypt($password, '$2a$10$' . $salt);
+        // Use PASSWORD_DEFAULT (currently bcrypt) or PASSWORD_ARGON2ID for strongest security.
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     /**
+     * Verify a password against a hash.
+     *
      * @param string $hash
      * @param string $password
      * @return bool
      */
-    public function check_password($hash, $password): bool
+    public function check_password(string $hash, string $password): bool
     {
-        $new_hash = crypt($password, $hash);
+        return password_verify($password, $hash);
+    }
 
-        return $hash == $new_hash;
+    /**
+     * Password salts are now handled internally; this always returns null.
+     * @deprecated Password salt is handled automatically. Do not use.
+     */
+    public function getSalt(): ?string
+    {
+        return null;
     }
 
     /**
