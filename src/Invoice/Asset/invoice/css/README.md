@@ -1,4 +1,4 @@
-# InvoicePlane CSS Reorganization
+# Yii3i CSS Reorganization
 
 This directory contains a proposed reorganization of the InvoicePlane CSS architecture, breaking down the monolithic `style.css` file into a more maintainable and modular structure.
 
