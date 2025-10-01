@@ -4,75 +4,96 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
-use Yiisoft\Security\Crypt as YiisoftCrypt;
-
 /**
- * Crypt library that uses Yiisoft's Crypt internally for encryption and decryption,
- * and supports a default key for backwards compatibility. The default key can be set
- * via constructor, environment variable (APP_CRYPT_KEY), or fallback to a hardcoded default.
+ * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
+ *
+ * final class Crypt
  */
 final class Crypt
 {
-    private YiisoftCrypt $crypt;
-    /**
-     * Default key used for all encode/decode operations.
-     * NOTE: This is a transitional solution. For strong security, use explicit key management long-term.
-     */
-    private string $defaultKey = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
+    private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
+    private string $decrypt_key = self::DECRYPT_KEY;
 
     /**
-     * Optionally allows passing a configured Yiisoft Crypt instance and/or overriding the default key.
-     * The key is resolved in this order: constructor argument > APP_CRYPT_KEY env > hardcoded default.
+     * Snyk: What is Salting?
+     * A salt is a random string that gets attached to a plaintext password before it gets hashed.
+     * A hash cannot be reversed but it can be compared with existing generated hash outputs.
+     * If a user is using a weak password, that password may have been hashed and stored somewhere for
+     * potential hackers to compare against. By adding a salt to the password, the hash output is no
+     * longer predictable. This is because it is increasing the uniqueness of the password, thus,
+     * the uniqueness of the hash itself.
      */
-    public function __construct(?YiisoftCrypt $crypt = null, ?string $defaultKey = null)
-    {
-        $this->crypt = $crypt ?? new YiisoftCrypt();
-        $envKey = getenv('APP_CRYPT_KEY');
-        $this->defaultKey = $defaultKey ?? ($envKey !== false ? $envKey : $this->defaultKey);
-    }
 
     /**
-     * Getter for the default key.
-     *
+     * A salt now must be added to a hash to prevent hash table lookups used by attackers
+     * Related logic: see https://cwe.mitre.org/data/definitions/916.html
      * @return string
      */
-    public function getDefaultKey(): string
+    public function salt(): string
     {
-        return $this->defaultKey;
+        /**
+         * Previously: return substr(sha1((string)mt_rand()), 0, 22);
+         * Use of Password Hash With Insufficient Computational Effort
+         * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
+         */
+        $random = (string) mt_rand();
+        $hash = hash('sha256', $random);
+        return substr($hash, 0, 22);
     }
 
     /**
-     * Setter for the default key.
-     *
-     * @param string $key
-     * @return void
+     * @param string $password
+     * @param string $salt
+     * @return string
      */
-    public function setDefaultKey(string $key): void
+    public function generate_password($password, $salt): string
     {
-        $this->defaultKey = $key;
+        return crypt($password, '$2a$10$' . $salt);
     }
 
     /**
-     * Encrypt data using Yiisoft's Crypt and the default key.
-     *
+     * @param string $hash
+     * @param string $password
+     * @return bool
+     */
+    public function check_password($hash, $password): bool
+    {
+        $new_hash = crypt($password, $hash);
+
+        return $hash == $new_hash;
+    }
+
+    /**
      * @param string $data
-     * @return string Base64-encoded encrypted string
-     * @throws \Exception
+     * @return mixed $encrypted
      */
-    public function encode(string $data): string
+    public function encode(string $data): mixed
     {
-        return base64_encode($this->crypt->encryptByPassword($data, $this->defaultKey));
+        $key = '';
+        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
+            $key = base64_decode($matches[1]);
+        }
+
+        /** @var mixed $encrypted */
+        return Cryptor::Encrypt($data, $key);
     }
 
     /**
-     * Decrypt data using Yiisoft's Crypt and the default key.
-     *
-     * @param string $data Base64-encoded encrypted string
-     * @return string
-     * @throws \Exception
+     * @param string $data
+     * @return mixed $decrypted
      */
-    public function decode(string $data): string
+    public function decode(string $data): mixed
     {
-        return $this->crypt->decryptByPassword(base64_decode($data), $this->defaultKey);
+        $key = '';
+        if (empty($data)) {
+            return '';
+        }
+
+        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
+            $key = base64_decode($matches[1]);
+        }
+
+        /** @var mixed $decrypted */
+        return Cryptor::Decrypt($data, $key);
     }
 }

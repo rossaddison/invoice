@@ -18,7 +18,7 @@ use Yiisoft\Yii\Middleware\Subfolder;
  */
 
 $construct = '__construct()';
-    
+
 return [
     Yiisoft\Yii\Http\Application::class => [
         $construct => [
