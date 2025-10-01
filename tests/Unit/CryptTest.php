@@ -31,7 +31,7 @@ final class CryptTest extends TestCase
         
         $this->assertIsString($salt);
         $this->assertNotEmpty($salt);
-        $this->assertEquals(22, strlen($salt));
+        $this->assertEquals(32, strlen($salt));
     }
 
     /**

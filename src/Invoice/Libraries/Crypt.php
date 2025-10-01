@@ -69,7 +69,8 @@ final class Crypt
     {
         $random = (string) mt_rand();
         $hash = hash('sha256', $random);
-        return substr($hash, 0, 22);
+        // Adjust the string length to accomodate minimum industry standards of 32
+        return substr($hash, 0, 32);
     }
 
     /**
