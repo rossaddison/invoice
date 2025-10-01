@@ -16,9 +16,12 @@ use Yiisoft\Yii\Middleware\Subfolder;
  * @var array $params['locale']['ignoredRequests']
  * @var string|null $_ENV['BASE_URL']
  */
+
+$construct = '__construct()';
+    
 return [
     Yiisoft\Yii\Http\Application::class => [
-        '__construct()' => [
+        $construct => [
             'dispatcher' => DynamicReference::to([
                 'class' => MiddlewareDispatcher::class,
                 'withMiddlewares()' => [$params['middlewares']],
@@ -27,13 +30,13 @@ return [
         ],
     ],
     Locale::class => [
-        '__construct()' => [
+        $construct => [
             'supportedLocales' => $params['locale']['locales'],
             'ignoredRequestUrlPatterns' => $params['locale']['ignoredRequests'],
         ],
     ],
     Subfolder::class => [
-        '__construct()' => [
+        $construct => [
             'prefix' => !empty(trim($_ENV['BASE_URL'] ?? '', '/')) ? $_ENV['BASE_URL'] : null,
         ],
     ],

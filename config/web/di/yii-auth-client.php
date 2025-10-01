@@ -85,9 +85,16 @@ $constructArray = [
     'session'        => Reference::to(Session::class),
 ];
 
+$construct = '__construct()';
+$setClientId = 'setClientId()';
+$setClientSecret = 'setClientSecret()';
+$setReturnUrl = 'setReturnUrl()';
+$setIssuerUrl = 'setIssuerUrl()';
+$setTenant = 'setTenant()';
+
 return [
     Session::class => [
-        '__construct()' => [
+        $construct => [
             'options' => [
                 'cookie_secure' => 0,
             ],
@@ -95,91 +102,91 @@ return [
     ],
     SessionInterface::class => Session::class,
     SessionStateStorage::class => [
-        '__construct()' => [
+        $construct => [
             'session' => Reference::to(SessionInterface::class),
         ],
     ],
     StateStorageInterface::class => Reference::to(SessionStateStorage::class),
     DeveloperSandboxHmrc::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$developersandboxhmrcClient['clientId']],
-        'setClientSecret()' => [$developersandboxhmrcClient['clientSecret']],
-        'setReturnUrl()' => [$developersandboxhmrcClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$developersandboxhmrcClient['clientId']],
+        $setClientSecret => [$developersandboxhmrcClient['clientSecret']],
+        $setReturnUrl => [$developersandboxhmrcClient['returnUrl']],
     ],
     Facebook::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$facebookClient['clientId']],
-        'setClientSecret()' => [$facebookClient['clientSecret']],
-        'setReturnUrl()' => [$facebookClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$facebookClient['clientId']],
+        $setClientSecret => [$facebookClient['clientSecret']],
+        $setReturnUrl => [$facebookClient['returnUrl']],
     ],
     GitHub::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$githubClient['clientId']],
-        'setClientSecret()' => [$githubClient['clientSecret']],
-        'setReturnUrl()' => [$githubClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$githubClient['clientId']],
+        $setClientSecret => [$githubClient['clientSecret']],
+        $setReturnUrl => [$githubClient['returnUrl']],
     ],
     Google::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$googleClient['clientId']],
-        'setClientSecret()' => [$googleClient['clientSecret']],
-        'setReturnUrl()' => [$googleClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$googleClient['clientId']],
+        $setClientSecret => [$googleClient['clientSecret']],
+        $setReturnUrl => [$googleClient['returnUrl']],
     ],
     GovUk::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$govukClient['clientId']],
-        'setClientSecret()' => [$govukClient['clientSecret']],
-        'setReturnUrl()' => [$govukClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$govukClient['clientId']],
+        $setClientSecret => [$govukClient['clientSecret']],
+        $setReturnUrl => [$govukClient['returnUrl']],
     ],
     LinkedIn::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$linkedinClient['clientId']],
-        'setClientSecret()' => [$linkedinClient['clientSecret']],
-        'setReturnUrl()' => [$linkedinClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$linkedinClient['clientId']],
+        $setClientSecret => [$linkedinClient['clientSecret']],
+        $setReturnUrl => [$linkedinClient['returnUrl']],
     ],
     MicrosoftOnline::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$microsoftonlineClient['clientId']],
-        'setClientSecret()' => [$microsoftonlineClient['clientSecret']],
-        'setReturnUrl()' => [$microsoftonlineClient['returnUrl']],
-        'setTenant()' => [$microsoftonlineClient['tenant']],
+        $construct => $constructArray,
+        $setClientId => [$microsoftonlineClient['clientId']],
+        $setClientSecret => [$microsoftonlineClient['clientSecret']],
+        $setReturnUrl => [$microsoftonlineClient['returnUrl']],
+        $setTenant => [$microsoftonlineClient['tenant']],
     ],
     OpenBanking::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$openbankingClient['clientId']],
-        'setClientSecret()' => [$openbankingClient['clientSecret']],
-        'setReturnUrl()' => [$openbankingClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$openbankingClient['clientId']],
+        $setClientSecret => [$openbankingClient['clientSecret']],
+        $setReturnUrl => [$openbankingClient['returnUrl']],
     ],
     OpenIdConnect::class => [
-        '__construct()' => array_merge($constructArray, [
+        $construct => array_merge($constructArray, [
             'cache' => Reference::to(CacheInterface::class),
             'name' => 'oidc',
             'title' => 'Open Id Connect',
         ]),
-        'setIssuerUrl()' => [$openidconnectClient['issuerUrl']],
-        'setClientId()' => [$openidconnectClient['clientId']],
-        'setClientSecret()' => [$openidconnectClient['clientSecret']],
-        'setReturnUrl()' => [$openidconnectClient['returnUrl']],
+        $setIssuerUrl => [$openidconnectClient['issuerUrl']],
+        $setClientId => [$openidconnectClient['clientId']],
+        $setClientSecret => [$openidconnectClient['clientSecret']],
+        $setReturnUrl => [$openidconnectClient['returnUrl']],
     ],
     VKontakte::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$vkontakteClient['clientId']],
-        'setClientSecret()' => [$vkontakteClient['clientSecret']],
-        'setReturnUrl()' => [$vkontakteClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$vkontakteClient['clientId']],
+        $setClientSecret => [$vkontakteClient['clientSecret']],
+        $setReturnUrl => [$vkontakteClient['returnUrl']],
     ],
     X::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$xClient['clientId']],
-        'setClientSecret()' => [$xClient['clientSecret']],
-        'setReturnUrl()' => [$xClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$xClient['clientId']],
+        $setClientSecret => [$xClient['clientSecret']],
+        $setReturnUrl => [$xClient['returnUrl']],
     ],
     Yandex::class => [
-        '__construct()' => $constructArray,
-        'setClientId()' => [$yandexClient['clientId']],
-        'setClientSecret()' => [$yandexClient['clientSecret']],
-        'setReturnUrl()' => [$yandexClient['returnUrl']],
+        $construct => $constructArray,
+        $setClientId => [$yandexClient['clientId']],
+        $setClientSecret => [$yandexClient['clientSecret']],
+        $setReturnUrl => [$yandexClient['returnUrl']],
     ],
     Collection::class => [
-        '__construct()' => [
+        $construct => [
             'clients' => [
                 'developersandboxhmrc' => Reference::to(DeveloperSandboxHmrc::class),
                 'facebook' => Reference::to(Facebook::class),
@@ -198,7 +205,7 @@ return [
     ],
     // Applied in: resources/views/auth/login
     AuthChoice::class => [
-        '__construct()' => [
+        $construct => [
             // $this->clients = Collection's clients
             'clientCollection' => Reference::to(Collection::class),
             'webView' => Reference::to(WebView::class),
@@ -207,7 +214,7 @@ return [
         ],
     ],
     AuthAction::class => [
-        '__construct()' => [
+        $construct => [
             'clientCollection' => Reference::to(Collection::class),
             'aliases' => Reference::to(Aliases::class),
             'webView' => Reference::to(WebView::class),

@@ -50,27 +50,24 @@ switch ($env) {
         $dbUser = 'root';
         $dbPassword = null;
         break;
-    case 'wamp':
-        $dbHost = 'localhost';
-        $dbUser = 'root';
-        $dbPassword = null;
-        break;
-    case 'lamp':
-        $dbHost = 'localhost';
-        $dbUser = 'root';
-        $dbPassword = null;
-        break;
-    case 'local':
-        $dbHost = 'localhost';
-        $dbUser = 'root';
-        $dbPassword = null;
-        break;
-        // Add more as needed
     default:
         $dbHost = 'localhost';
         $dbUser = 'root';
         $dbPassword = null;
 }
+
+$submitButtonConfigs = [
+    'default' => [
+        'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
+        'containerClass()' => ['d-grid gap-2 form-floating'],
+    ],
+    'bootstrap5-vertical' => [
+        'buttonClass()' => ['btn btn-primary'],
+    ],
+    'bootstrap5-horizontal' => [
+        'buttonClass()' => ['btn btn-primary'],
+    ],
+];
 
 return [
     'env' => $_ENV['YII_ENV'] ?? '',
@@ -189,6 +186,7 @@ return [
     'yiisoft/aliases' => [
         'aliases' => [
             '@root' => dirname(__DIR__, 2),
+            '@views' => dirname(__DIR__, 2) . '/resources/views',
             '@assets' => '@root/public/assets',
             '@assetsUrl' => '@baseUrl/assets',
             '@baseUrl' => '',
@@ -204,7 +202,6 @@ return [
             '@validatorMessages' => '@vendor/yiisoft/validator/messages',
             '@vendor' => '@root/vendor',
             '@layout' => '@views/layout',
-            '@views' => '@resources/views',
         ],
     ],
     'yiisoft/form' => [
@@ -225,10 +222,7 @@ return [
                 */
                 'hintClass' => 'text-danger h4',
                 'fieldConfigs' => [
-                    SubmitButton::class => [
-                        'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
-                        'containerClass()' => ['d-grid gap-2 form-floating'],
-                    ],
+                    $submitButtonConfigs['default'],
                     // if this Checkbox class is not used then the checkbox ends up floating
                     // because of the default containerClass above;
                     // refer to client form with active client checkbox
@@ -264,9 +258,7 @@ return [
                         'listAttributes()' => [['class' => 'mb-0']],
                         'header()' => [''],
                     ],
-                    SubmitButton::class => [
-                        'buttonClass()' => ['btn btn-primary'],
-                    ],
+                    SubmitButton::class => $submitButtonConfigs['bootstrap5-vertical'],
                 ],
                 'enrichFromValidationRules' => true,
             ],
@@ -280,10 +272,7 @@ return [
                 'inputValidClass' => 'is-valid',
                 'inputInvalidClass' => 'is-invalid',
                 'fieldConfigs' => [
-                    SubmitButton::class => [
-                        'buttonClass()' => ['btn btn-primary'],
-                    ],
-                    ErrorSummary::class => [
+                    SubmitButton::class => $submitButtonConfigs['bootstrap5-horizontal'],                  ErrorSummary::class => [
                         'containerClass()' => ['alert alert-danger'],
                         'listClass()' => ['mb-0'],
                         'header()' => [''],
@@ -294,7 +283,7 @@ return [
         ],
     ],
     'yiisoft/rbac-rules-container' => [
-        'rules' => require __DIR__ . '/rbac-rules.php',
+        'rules' => require_once __DIR__ . '/rbac-rules.php',
     ],
     'yiisoft/router-fastroute' => [
         'enableCache' => false,
