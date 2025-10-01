@@ -6,71 +6,71 @@ namespace Tests\Unit\Invoice\Libraries;
 
 use PHPUnit\Framework\TestCase;
 use App\Invoice\Libraries\Crypt;
+use Yiisoft\Security\Crypt as YiisoftCrypt;
+use Yiisoft\Security\AuthenticationException;
 
 /**
  * Unit tests for Crypt class
  */
 final class CryptTest extends TestCase
 {
-    /**
-     * Test that Crypt can be instantiated
-     */
-    public function testConstructor(): void
+    private string $testKey = 'base64:TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST==';
+
+    public function testConstructorAndDefaultKey(): void
     {
         $crypt = new Crypt();
         $this->assertInstanceOf(Crypt::class, $crypt);
+
+        $yiiCrypt = new YiisoftCrypt();
+        $cryptWithDep = new Crypt($yiiCrypt, $this->testKey);
+        $this->assertInstanceOf(Crypt::class, $cryptWithDep);
+
+        // Test getter/setter for defaultKey
+        $crypt->setDefaultKey($this->testKey);
+        $this->assertEquals($this->testKey, $crypt->getDefaultKey());
     }
 
-    /**
-     * Test that getSalt returns null (salt is now handled internally)
-     */
-    public function testGetSaltReturnsNull(): void
-    {
-        $crypt = new Crypt();
-        $salt = $crypt->getSalt();
-        $this->assertNull($salt);
-    }
-
-    /**
-     * Test encode and decode functionality
-     */
     public function testEncodeAndDecode(): void
     {
         $crypt = new Crypt();
+        $originalDefaultKey = $crypt->getDefaultKey();
+
         $testData = 'test data to encrypt';
+        // Optionally set a test key for predictable results
+        $crypt->setDefaultKey($this->testKey);
 
         $encoded = $crypt->encode($testData);
+        $this->assertIsString($encoded);
+        $this->assertNotEquals($testData, $encoded);
+
         $decoded = $crypt->decode($encoded);
-
         $this->assertEquals($testData, $decoded);
+
+        // Restore the original default key
+        $crypt->setDefaultKey($originalDefaultKey);
     }
 
-    /**
-     * Test generate_password method
-     */
-    public function testGeneratePassword(): void
+    public function testDecodeWithWrongKeyThrows(): void
     {
         $crypt = new Crypt();
-        $password = 'testpassword';
+        $testData = 'sensitive info';
+        $crypt->setDefaultKey($this->testKey);
+        $encoded = $crypt->encode($testData);
 
-        $hashedPassword = $crypt->generatePassword($password);
-
-        $this->assertIsString($hashedPassword);
-        $this->assertNotEmpty($hashedPassword);
-        $this->assertNotEquals($password, $hashedPassword);
+        $crypt->setDefaultKey('base64:WRONGKEYWRONGKEYWRONGKEYWRONGKEY==');
+        $this->expectException(AuthenticationException::class);
+        $crypt->decode($encoded);
     }
 
-    /**
-     * Test check_password method
-     */
-    public function testCheckPassword(): void
+    public function testEnvVarIsUsedIfPresent(): void
     {
+        // Set the environment variable temporarily
+        putenv('APP_CRYPT_KEY=' . $this->testKey);
+
         $crypt = new Crypt();
-        $password = 'testpassword';
+        $this->assertEquals($this->testKey, $crypt->getDefaultKey());
 
-        $hashedPassword = $crypt->generatePassword($password);
-
-        $this->assertTrue($crypt->checkPassword($hashedPassword, $password));
-        $this->assertFalse($crypt->checkPassword($hashedPassword, 'wrongpassword'));
+        // Clean up: Unset env var after test
+        putenv('APP_CRYPT_KEY');
     }
 }

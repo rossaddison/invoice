@@ -4,85 +4,75 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
+use Yiisoft\Security\Crypt as YiisoftCrypt;
+
 /**
- * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
- *
- * final class Crypt
+ * Crypt library that uses Yiisoft's Crypt internally for encryption and decryption,
+ * and supports a default key for backwards compatibility. The default key can be set
+ * via constructor, environment variable (APP_CRYPT_KEY), or fallback to a hardcoded default.
  */
 final class Crypt
 {
-    private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
-    private string $decrypt_key = self::DECRYPT_KEY;
-
+    private YiisoftCrypt $crypt;
     /**
-     * Password hashing and verification is now handled via PHP's password_hash and password_verify,
-     * which internally use secure, random salts and recommended algorithms like bcrypt or Argon2.
+     * Default key used for all encode/decode operations.
+     * NOTE: This is a transitional solution. For strong security, use explicit key management long-term.
      */
+    private string $defaultKey = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
 
     /**
-     * Hash a password using a strong algorithm with automatic secure salt.
+     * Optionally allows passing a configured Yiisoft Crypt instance and/or overriding the default key.
+     * The key is resolved in this order: constructor argument > APP_CRYPT_KEY env > hardcoded default.
+     */
+    public function __construct(?YiisoftCrypt $crypt = null, ?string $defaultKey = null)
+    {
+        $this->crypt = $crypt ?? new YiisoftCrypt();
+        $envKey = getenv('APP_CRYPT_KEY');
+        $this->defaultKey = $defaultKey ?? ($envKey !== false ? $envKey : $this->defaultKey);
+    }
+
+    /**
+     * Getter for the default key.
      *
-     * @param string $password
      * @return string
      */
-    public function generatePassword(string $password): string
+    public function getDefaultKey(): string
     {
-        // Use PASSWORD_DEFAULT (currently bcrypt) or PASSWORD_ARGON2ID for strongest security.
-        return password_hash($password, PASSWORD_DEFAULT);
+        return $this->defaultKey;
     }
 
     /**
-     * Verify a password against a hash.
+     * Setter for the default key.
      *
-     * @param string $hash
-     * @param string $password
-     * @return bool
+     * @param string $key
+     * @return void
      */
-    public function checkPassword(string $hash, string $password): bool
+    public function setDefaultKey(string $key): void
     {
-        return password_verify($password, $hash);
+        $this->defaultKey = $key;
     }
 
     /**
-     * Password salts are now handled internally; this always returns null.
-     * @deprecated Password salt is handled automatically. Do not use.
-     */
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-
-    /**
+     * Encrypt data using Yiisoft's Crypt and the default key.
+     *
      * @param string $data
-     * @return mixed $encrypted
+     * @return string Base64-encoded encrypted string
+     * @throws \Exception
      */
-    public function encode(string $data): mixed
+    public function encode(string $data): string
     {
-        $key = '';
-        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
-            $key = base64_decode($matches[1]);
-        }
-
-        /** @var mixed $encrypted */
-        return Cryptor::Encrypt($data, $key);
+        return base64_encode($this->crypt->encryptByPassword($data, $this->defaultKey));
     }
 
     /**
-     * @param string $data
-     * @return mixed $decrypted
+     * Decrypt data using Yiisoft's Crypt and the default key.
+     *
+     * @param string $data Base64-encoded encrypted string
+     * @return string
+     * @throws \Exception
      */
-    public function decode(string $data): mixed
+    public function decode(string $data): string
     {
-        $key = '';
-        if (empty($data)) {
-            return '';
-        }
-
-        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
-            $key = base64_decode($matches[1]);
-        }
-
-        /** @var mixed $decrypted */
-        return Cryptor::Decrypt($data, $key);
+        return $this->crypt->decryptByPassword(base64_decode($data), $this->defaultKey);
     }
 }
