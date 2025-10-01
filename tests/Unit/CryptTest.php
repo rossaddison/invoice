@@ -13,21 +13,11 @@ use App\Invoice\Libraries\Crypt;
 final class CryptTest extends TestCase
 {
     /**
-     * Raise an exception if there are no parameters
+     * Test that Crypt can be instantiated without parameters
      */
-    public function testCryptConstructorRequiresParameter()
+    public function testConstructorWithoutParameters(): void
     {
-        $this->expectException(\ArgumentCountError::class);
-        
-        new Crypt();
-    }
-    
-    /**
-     * Test that Crypt can be instantiated with parameters
-     */
-    public function testConstructorWithParameters(): void
-    {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         $this->assertInstanceOf(Crypt::class, $crypt);
     }
 
@@ -36,7 +26,7 @@ final class CryptTest extends TestCase
      */
     public function testGetSaltReturnsNonEmptyString(): void
     {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         $salt = $crypt->getSalt();
         
         $this->assertIsString($salt);
@@ -49,7 +39,8 @@ final class CryptTest extends TestCase
      */
     public function testConstructorWithCustomSalt(): void
     {
-        $crypt = new Crypt($customSalt = random_bytes(32));
+        $customSalt = 'custom1234567890123456';
+        $crypt = new Crypt($customSalt);
         
         $this->assertEquals($customSalt, $crypt->getSalt());
     }
@@ -59,7 +50,7 @@ final class CryptTest extends TestCase
      */
     public function testSaltMethodBackwardCompatibility(): void
     {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         
         $this->assertEquals($crypt->getSalt(), $crypt->salt());
     }
@@ -69,7 +60,7 @@ final class CryptTest extends TestCase
      */
     public function testSaltConsistencyWithinInstance(): void
     {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         $salt1 = $crypt->getSalt();
         $salt2 = $crypt->getSalt();
         
@@ -81,8 +72,8 @@ final class CryptTest extends TestCase
      */
     public function testDifferentInstancesGenerateDifferentSalts(): void
     {
-        $crypt1 = new Crypt(random_bytes(32));
-        $crypt2 = new Crypt(random_bytes(32));
+        $crypt1 = new Crypt();
+        $crypt2 = new Crypt();
         
         $this->assertNotEquals($crypt1->getSalt(), $crypt2->getSalt());
     }
@@ -92,7 +83,7 @@ final class CryptTest extends TestCase
      */
     public function testEncodeAndDecode(): void
     {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         $testData = 'test data to encrypt';
         
         $encoded = $crypt->encode($testData);
@@ -106,7 +97,7 @@ final class CryptTest extends TestCase
      */
     public function testGeneratePassword(): void
     {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         $password = 'testpassword';
         $salt = $crypt->getSalt();
         
@@ -122,7 +113,7 @@ final class CryptTest extends TestCase
      */
     public function testCheckPassword(): void
     {
-        $crypt = new Crypt(random_bytes(32));
+        $crypt = new Crypt();
         $password = 'testpassword';
         $salt = $crypt->getSalt();
         
