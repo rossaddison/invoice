@@ -25,12 +25,6 @@ jobs:
   cs-fix:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    # Settings ...
-    # Actions ...
-    # General ...
-    # Workflow permissions ... 
-    # 🔘 Read repository contents and package permissions ... 
-    # ☑ ️Allow Github Actions to create and approve pull requests
     permissions:
       contents: write
       pull-requests: write
@@ -45,13 +39,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
-          
+
       - name: Set BASE_REF
         id: vars
         run: |
-          # Default to 'main' if not a branch
           BASE_REF="main"
-          # If GITHUB_REF starts with refs/heads/, use the branch name
           if [[ "${GITHUB_REF}" == refs/heads/* ]]; then
             BASE_REF="${GITHUB_REF_NAME}"
           fi
@@ -60,14 +52,21 @@ jobs:
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Run PHP CS Fixer dry-run
+      - name: Run PHP CS Fixer dry-run and capture output
         id: csfixer
         run: |
-          php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff --verbose | tee fixer-output.txt
-          if grep -q 'fixed' fixer-output.txt; then
+          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff --verbose)
+          echo "$output" | tee fixer-output.txt
+          # Determine if any files were fixed based on output
+          if echo "$output" | grep -qE "Fixed all files in|Fixed [1-9][0-9]* files with"; then
             echo "has_changes=true" >> $GITHUB_ENV
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          elif echo "$output" | grep -qE "Found [1-9][0-9]* of [0-9]+ files that can be fixed"; then
+            echo "has_changes=true" >> $GITHUB_ENV
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           else
             echo "has_changes=false" >> $GITHUB_ENV
+            echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Apply PHP CS Fixer if needed
