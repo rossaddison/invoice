@@ -9,12 +9,12 @@ use App\Invoice\Libraries\Crypt;
 return [
     AmazonPayPaymentService::class => [
         '__construct()' => [
-            'crypt' => (new Crypt())->salt(),
+            'crypt' => new Crypt(),
         ],
     ],
     StripePaymentService::class => [
         '__construct()' => [
-            'crypt' => (new Crypt())->salt(),
+            'crypt' => new Crypt(),
         ],
     ],
 ];

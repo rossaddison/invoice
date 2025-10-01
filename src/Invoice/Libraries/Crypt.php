@@ -13,6 +13,7 @@ final class Crypt
 {
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
     private string $decrypt_key = self::DECRYPT_KEY;
+    private string $salt;
 
     /**
      * Snyk: What is Salting?
@@ -25,17 +26,47 @@ final class Crypt
      */
 
     /**
+     * Constructor that accepts an optional salt parameter.
+     * If no salt is provided, one is automatically generated.
+     *
+     * @param string|null $salt Optional salt value. If not provided, a salt will be auto-generated.
+     */
+    public function __construct(?string $salt = null)
+    {
+        $this->salt = $salt ?? $this->generateSalt();
+    }
+
+    /**
+     * Get the salt value.
+     *
+     * @return string The salt value
+     */
+    public function getSalt(): string
+    {
+        return $this->salt;
+    }
+
+    /**
      * A salt now must be added to a hash to prevent hash table lookups used by attackers
      * Related logic: see https://cwe.mitre.org/data/definitions/916.html
      * @return string
+     * @deprecated Use getSalt() instead. This method is kept for backward compatibility.
      */
     public function salt(): string
     {
-        /**
-         * Previously: return substr(sha1((string)mt_rand()), 0, 22);
-         * Use of Password Hash With Insufficient Computational Effort
-         * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
-         */
+        return $this->getSalt();
+    }
+
+    /**
+     * Generate a salt using secure random generation.
+     * Previously: return substr(sha1((string)mt_rand()), 0, 22);
+     * Use of Password Hash With Insufficient Computational Effort
+     * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
+     *
+     * @return string The generated salt
+     */
+    private function generateSalt(): string
+    {
         $random = (string) mt_rand();
         $hash = hash('sha256', $random);
         return substr($hash, 0, 22);
