@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
+use Yiisoft\Security\Random;
+
 /**
  * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
  *
@@ -67,7 +69,7 @@ final class Crypt
      */
     private function generateSalt(): string
     {
-        $random = (string) mt_rand();
+        $random = Random::string(32);
         $hash = hash('sha256', $random);
         // Adjust the string length to accomodate minimum industry standards of 32
         return substr($hash, 0, 32);
