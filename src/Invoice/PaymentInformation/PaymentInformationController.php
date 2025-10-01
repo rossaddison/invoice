@@ -62,8 +62,6 @@ final class PaymentInformationController
 
     use OpenBankingProviders;
 
-    private Crypt $crypt;
-
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
@@ -86,6 +84,7 @@ final class PaymentInformationController
         private compR $compR,
         private cPR $cPR,
         private Logger $logger,
+        private Crypt $crypt,
         private string $telegramToken,
     ) {
         $this->factory                   = $factory;
@@ -114,7 +113,7 @@ final class PaymentInformationController
                 ->withLayout('@views/layout/invoice.php');
         }
         $this->webService    = $webService;
-        $this->crypt         = new Crypt();
+        $this->crypt         = $crypt;
         $this->compR         = $compR;
         $this->cPR           = $cPR;
         $this->logger        = $logger;
