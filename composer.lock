@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c5cbf28f5f504130fc7132fbb9ae73c",
+    "content-hash": "50fcfa30fa6a300a8f3a6e1a40d7af20",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3220,16 +3220,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.48.0",
+            "version": "v1.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "3053a5bfe284538419d4fee8c9df148488db6d30"
+                "reference": "023f41a2c80fb98a493dfb9dffcab643481a7ab0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/3053a5bfe284538419d4fee8c9df148488db6d30",
-                "reference": "3053a5bfe284538419d4fee8c9df148488db6d30",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/023f41a2c80fb98a493dfb9dffcab643481a7ab0",
+                "reference": "023f41a2c80fb98a493dfb9dffcab643481a7ab0",
                 "shasum": ""
             },
             "require": {
@@ -3275,9 +3275,9 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.48.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.48.1"
             },
-            "time": "2025-09-16T22:09:18+00:00"
+            "time": "2025-09-30T04:22:33+00:00"
         },
         {
             "name": "google/cloud-core",
@@ -10245,12 +10245,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "a687b340755a81fe8a7114d45e3665feaa06b8cc"
+                "reference": "803529904889a7c55bfef861b1d6e62b45b07ae6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/a687b340755a81fe8a7114d45e3665feaa06b8cc",
-                "reference": "a687b340755a81fe8a7114d45e3665feaa06b8cc",
+                "url": "https://api.github.com/repos/symfony/console/zipball/803529904889a7c55bfef861b1d6e62b45b07ae6",
+                "reference": "803529904889a7c55bfef861b1d6e62b45b07ae6",
                 "shasum": ""
             },
             "require": {
@@ -10335,7 +10335,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-27T09:05:58+00:00"
+            "time": "2025-10-01T14:22:54+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -13364,12 +13364,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "e7607d019bc23d14ecce1179dffd846382a50a48"
+                "reference": "b1eabd1edae6d985cf695b332a2823fe9b7e3557"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/e7607d019bc23d14ecce1179dffd846382a50a48",
-                "reference": "e7607d019bc23d14ecce1179dffd846382a50a48",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/b1eabd1edae6d985cf695b332a2823fe9b7e3557",
+                "reference": "b1eabd1edae6d985cf695b332a2823fe9b7e3557",
                 "shasum": ""
             },
             "require": {
@@ -13443,7 +13443,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-27T08:37:41+00:00"
+            "time": "2025-09-30T03:25:30+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14376,12 +14376,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "488894bfe463255d0fe12424c5d356b869f73056"
+                "reference": "0d64ed64a98ac20b6410f82fb22d1d1715767909"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/488894bfe463255d0fe12424c5d356b869f73056",
-                "reference": "488894bfe463255d0fe12424c5d356b869f73056",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/0d64ed64a98ac20b6410f82fb22d1d1715767909",
+                "reference": "0d64ed64a98ac20b6410f82fb22d1d1715767909",
                 "shasum": ""
             },
             "require": {
@@ -14389,6 +14389,7 @@
                 "php": "8.1 - 8.4",
                 "psr/log": "^2.0|^3.0",
                 "psr/simple-cache": "^2.0|^3.0",
+                "psr/simple-cache-implementation": "*",
                 "yiisoft/db-implementation": "1.0.0"
             },
             "require-dev": {
@@ -14453,7 +14454,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-24T12:58:47+00:00"
+            "time": "2025-10-01T01:17:11+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14461,12 +14462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "6c5fc7bdf165ac587c1bf4032ecbed0347c4e4af"
+                "reference": "110a1f32407a9649a68b198de6ce11ca227b1cee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/6c5fc7bdf165ac587c1bf4032ecbed0347c4e4af",
-                "reference": "6c5fc7bdf165ac587c1bf4032ecbed0347c4e4af",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/110a1f32407a9649a68b198de6ce11ca227b1cee",
+                "reference": "110a1f32407a9649a68b198de6ce11ca227b1cee",
                 "shasum": ""
             },
             "require": {
@@ -14531,7 +14532,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-22T09:19:28+00:00"
+            "time": "2025-10-01T07:41:26+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -17835,12 +17836,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "e3692be8e8ae702155204ca11a64ad466b159a45"
+                "reference": "0be6584a0b022dbb58aad5cb7ccdf0edfa8665fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/e3692be8e8ae702155204ca11a64ad466b159a45",
-                "reference": "e3692be8e8ae702155204ca11a64ad466b159a45",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/0be6584a0b022dbb58aad5cb7ccdf0edfa8665fa",
+                "reference": "0be6584a0b022dbb58aad5cb7ccdf0edfa8665fa",
                 "shasum": ""
             },
             "require": {
@@ -17852,14 +17853,14 @@
                 "yiisoft/html": "^3.11",
                 "yiisoft/injector": "^1.2",
                 "yiisoft/router": "^4.0",
-                "yiisoft/translator": "^3.0",
+                "yiisoft/translator": "^3.2",
                 "yiisoft/validator": "^2.0",
                 "yiisoft/view": "^12.0.0",
                 "yiisoft/widget": "^2.0"
             },
             "require-dev": {
                 "maglnet/composer-require-checker": "^4.7.1",
-                "phpunit/phpunit": "^10.5.53",
+                "phpunit/phpunit": "^10.5.58",
                 "rector/rector": "^2.1.7",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
@@ -17923,7 +17924,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-28T05:24:55+00:00"
+            "time": "2025-10-01T11:03:26+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -21818,16 +21819,16 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.64.0",
+            "version": "6.65.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "d9f0f93b6c11d6738df13d8eb8777eb713fda82b"
+                "reference": "fa1906fd72991d7ac7ff9e8169eb4bcd4c51bdba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/d9f0f93b6c11d6738df13d8eb8777eb713fda82b",
-                "reference": "d9f0f93b6c11d6738df13d8eb8777eb713fda82b",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/fa1906fd72991d7ac7ff9e8169eb4bcd4c51bdba",
+                "reference": "fa1906fd72991d7ac7ff9e8169eb4bcd4c51bdba",
                 "shasum": ""
             },
             "require": {
@@ -21841,7 +21842,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.4.1",
-                "phpunit/phpunit": "^11.5.39"
+                "phpunit/phpunit": "^11.5.42"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -21881,9 +21882,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.64.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.65.0"
             },
-            "time": "2025-09-19T05:26:42+00:00"
+            "time": "2025-09-29T09:52:03+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
@@ -21891,12 +21892,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "df0b850730ac4cf53687411a01e8e8b951f0fc6d"
+                "reference": "d624e91038f7993a645674cc7d65bbf63c1cf1ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/df0b850730ac4cf53687411a01e8e8b951f0fc6d",
-                "reference": "df0b850730ac4cf53687411a01e8e8b951f0fc6d",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/d624e91038f7993a645674cc7d65bbf63c1cf1ce",
+                "reference": "d624e91038f7993a645674cc7d65bbf63c1cf1ce",
                 "shasum": ""
             },
             "require": {
@@ -21940,7 +21941,7 @@
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
                 "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.40.x"
             },
-            "time": "2025-09-28T01:44:23+00:00"
+            "time": "2025-09-29T01:38:13+00:00"
         },
         {
             "name": "roave/security-advisories",
