@@ -53,7 +53,7 @@ final class CryptTest extends TestCase
         $crypt = new Crypt();
         $password = 'testpassword';
 
-        $hashedPassword = $crypt->generate_password($password);
+        $hashedPassword = $crypt->generatePassword($password);
 
         $this->assertIsString($hashedPassword);
         $this->assertNotEmpty($hashedPassword);
@@ -68,9 +68,9 @@ final class CryptTest extends TestCase
         $crypt = new Crypt();
         $password = 'testpassword';
 
-        $hashedPassword = $crypt->generate_password($password);
+        $hashedPassword = $crypt->generatePassword($password);
 
-        $this->assertTrue($crypt->check_password($hashedPassword, $password));
-        $this->assertFalse($crypt->check_password($hashedPassword, 'wrongpassword'));
+        $this->assertTrue($crypt->checkPassword($hashedPassword, $password));
+        $this->assertFalse($crypt->checkPassword($hashedPassword, 'wrongpassword'));
     }
 }

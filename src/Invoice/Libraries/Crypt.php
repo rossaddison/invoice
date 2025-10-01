@@ -25,7 +25,7 @@ final class Crypt
      * @param string $password
      * @return string
      */
-    public function generate_password(string $password): string
+    public function generatePassword(string $password): string
     {
         // Use PASSWORD_DEFAULT (currently bcrypt) or PASSWORD_ARGON2ID for strongest security.
         return password_hash($password, PASSWORD_DEFAULT);
@@ -38,7 +38,7 @@ final class Crypt
      * @param string $password
      * @return bool
      */
-    public function check_password(string $hash, string $password): bool
+    public function checkPassword(string $hash, string $password): bool
     {
         return password_verify($password, $hash);
     }
