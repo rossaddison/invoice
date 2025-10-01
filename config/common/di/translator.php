@@ -43,7 +43,7 @@ return [
                 }),
                 DynamicReference::to(static function (Aliases $aliases) use ($yiisoftTranslatorParams) {
                     return new CategorySource(
-                         (string) $yiisoftTranslatorParams['validatorCategory'],
+                        (string) $yiisoftTranslatorParams['validatorCategory'],
                         new MessageSource($aliases->get('@validatorMessages')),
                         new IntlMessageFormatter(),
                     );
