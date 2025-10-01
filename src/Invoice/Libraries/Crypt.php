@@ -37,7 +37,7 @@ final class Crypt
          * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
          */
         $random = (string) mt_rand();
-        $hash = hash('256', $random);
+        $hash = hash('sha256', $random);
         return substr($hash, 0, 22);
     }
 

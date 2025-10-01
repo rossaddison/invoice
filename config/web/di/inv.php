@@ -15,7 +15,7 @@ return [
     InvController::class => [
         'class' => InvController::class,
         '__construct()' => [
-            'crypt' => new Crypt(),
+            'crypt' => (new Crypt())->salt(),
             DataResponseFactoryInterface::class => DataResponseFactory::class,
             UrlGeneratorInterface::class => UrlGenerator::class,
             TranslatorInterface::class => Translator::class,

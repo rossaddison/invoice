@@ -21,39 +21,40 @@ use Yiisoft\Definitions\DynamicReference;
  * @var string $params['yiisoft/translator']['validatorCategory']
  */
 
+$yiisoftTranslatorParams = $params['yiisoft/translator'];
+
 return [
     TranslatorInterface::class => [
         'class' => Translator::class,
         '__construct()' => [
-            $params['yiisoft/translator']['locale'],
-            $params['yiisoft/translator']['fallbackLocale'],
-            $params['yiisoft/translator']['defaultCategory'],
+            $yiisoftTranslatorParams['locale'],
+            $yiisoftTranslatorParams['fallbackLocale'],
+            $yiisoftTranslatorParams['defaultCategory'],
             Reference::optional(EventDispatcherInterface::class),
         ],
         'addCategorySources()' => [
             'categories' => [
-                DynamicReference::to(static function (Aliases $aliases) use ($params) {
+                DynamicReference::to(static function (Aliases $aliases) use ($yiisoftTranslatorParams) {
                     return new CategorySource(
-                        $params['yiisoft/translator']['defaultCategory'],
+                        (string) $yiisoftTranslatorParams['defaultCategory'],
                         new MessageSource($aliases->get('@messages')),
                         new IntlMessageFormatter(),
                     );
                 }),
-                DynamicReference::to(static function (Aliases $aliases) use ($params) {
+                DynamicReference::to(static function (Aliases $aliases) use ($yiisoftTranslatorParams) {
                     return new CategorySource(
-                        $params['yiisoft/translator']['validatorCategory'],
+                         (string) $yiisoftTranslatorParams['validatorCategory'],
                         new MessageSource($aliases->get('@validatorMessages')),
                         new IntlMessageFormatter(),
                     );
                 }),
             ],
         ],
-        'reset' => function () use ($params) {
+        'reset' => function () use ($yiisoftTranslatorParams) {
             /**
-             * @var string $params['yiisoft/translator']['locale']
              * @var Translator $this
              */
-            $this->setLocale($params['yiisoft/translator']['locale']);
+            $this->setLocale((string) $yiisoftTranslatorParams['locale']);
         },
     ],
 ];

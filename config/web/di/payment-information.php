@@ -18,7 +18,7 @@ return [
             DataResponseFactoryInterface::class => DataResponseFactory::class,
             UrlGeneratorInterface::class => UrlGenerator::class,
             TranslatorInterface::class => Translator::class,
-            'crypt' => new Crypt(),
+            'crypt' => (new Crypt())->salt(),
             'telegramToken' => '',
         ],
     ],
