@@ -145,6 +145,8 @@ final class InvoiceController extends BaseController
             'no_front_contact_interest_page' => 0,
             'no_front_gallery_page' => 0,
             'no_front_pricing_page' => 0,
+            'no_front_privacy_policy_page' => 0,
+            'no_front_terms_of_service_page' => 0,
             'no_front_site_slider_page' => 0,
             'no_front_team_page' => 0,
             'no_front_testimonial_page' => 0,

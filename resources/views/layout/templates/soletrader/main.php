@@ -185,6 +185,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageAbout,
             !$isGuest && $noFrontPageAbout,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageAbout,
         ),
         NavLink::to(
             Label::tag()
@@ -196,6 +199,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageAccreditations,
             !$isGuest && $noFrontPageAccreditations,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageAccreditations,
         ),
         NavLink::to(
             Label::tag()
@@ -205,6 +211,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageGallery,
             !$isGuest && $noFrontPageGallery,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageGallery,
         ),
         NavLink::to(
             Label::tag()
@@ -214,6 +223,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageTeam,
             !$isGuest && $noFrontPageTeam,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageTeam,
         ),
         NavLink::to(
             Label::tag()
@@ -223,6 +235,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPagePricing,
             !$isGuest && $noFrontPagePricing,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPagePricing,
         ),
         NavLink::to(
             Label::tag()
@@ -232,6 +247,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageTestimonial,
             !$isGuest && $noFrontPageTestimonial,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageTestimonial,
         ),
         NavLink::to(
             Label::tag()
@@ -241,6 +259,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPagePrivacyPolicy,
             !$isGuest && $noFrontPagePrivacyPolicy,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPagePrivacyPolicy,
         ),
         NavLink::to(
             Label::tag()
@@ -250,6 +271,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageTermsOfService,
             !$isGuest && $noFrontPageTermsOfService,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageTermsOfService,
         ),
         NavLink::to(
             Label::tag()
@@ -259,6 +283,9 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageContactDetails,
             !$isGuest && $noFrontPageContactDetails,
             false,
+            [],
+            [],
+            $isGuest && !$noFrontPageContactDetails,
         ),
         NavLink::to(
             Label::tag()
@@ -268,6 +295,9 @@ $this->setTitle($title);
             $isGuest && !$stopLoggingIn,
             !$isGuest && $stopLoggingIn,
             false,
+            [],
+            [],
+            $isGuest && !$stopLoggingIn,
         ),
         NavLink::to(
             Label::tag()
@@ -281,6 +311,9 @@ $this->setTitle($title);
             $isGuest && !$stopSigningUp,
             !$isGuest && $stopSigningUp,
             false,
+            [],
+            [],
+            $isGuest && !$stopSigningUp,
         ),
         NavLink::to(
             /**

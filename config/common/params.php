@@ -6,6 +6,7 @@ use App\ViewInjection\CommonViewInjection;
 use App\ViewInjection\LayoutViewInjection;
 use App\ViewInjection\LinkTagsViewInjection;
 use App\ViewInjection\MetaTagsViewInjection;
+use Psr\Log\LogLevel;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Form\Field\SubmitButton;
@@ -70,6 +71,26 @@ $submitButtonConfigs = [
 ];
 
 return [
+    'yiisoft/log-target-file' => [
+        'fileTarget' => [
+            'file' => '@runtime/logs/app.log',
+            'levels' => [
+                //LogLevel::EMERGENCY,
+                //LogLevel::ERROR,
+                //LogLevel::WARNING,
+                LogLevel::INFO,
+                //LogLevel::DEBUG,
+            ],
+            'dirMode' => 0755,
+            'fileMode' => null,
+        ],
+        'fileRotator' => [
+            'maxFileSize' => 500,
+            'maxFiles' => 100,
+            'fileMode' => null,
+            'compressRotatedFiles' => false,
+        ],
+    ],
     'env' => $_ENV['YII_ENV'] ?? '',
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
@@ -438,16 +459,6 @@ return [
         'annotation-paths' => [
             '@src/Controller',
             '@src/User/Controller',
-        ],
-    ],
-    'yiisoft/yii-sentry' => [
-        'handleConsoleErrors' => false, // Add to disable console errors.
-        'options' => [
-            // Set to `null` to disable error sending (note that in case of web application errors it only prevents
-            // sending them via HTTP). To disable interactions with Sentry SDK completely, remove middleware and the
-            // rest of the config.
-            'dsn' => $_ENV['SENTRY_DSN'] ?? null,
-            'environment' => $_ENV['YII_ENV'] ?? null, // Add to separate "production" / "staging" environment errors.
         ],
     ],
     'yiisoft/mailer' => [

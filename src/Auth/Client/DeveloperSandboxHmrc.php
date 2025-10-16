@@ -12,6 +12,7 @@ use DateTimeZone;
 use DateTime;
 
 /**
+ * @see https://developer.service.hmrc.gov.uk/developer/applications
  * @see https://github.com/MicrosoftDocs/dynamics365smb-docs/blob/main/business-central/LocalFunctionality/UnitedKingdom/fraud-prevention-data.md
  */
 

@@ -17,5 +17,6 @@ return [
                 FileTarget::class,
             ]),
         ],
+        'setFlushInterval()' => [100],
     ],
 ];

@@ -8,7 +8,6 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
@@ -25,18 +24,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  */
 
 $this->setTitle($translator->translate('menu.users'));
-
-// Define header gridview
-$header = Div::tag()
-    ->addClass('row')
-    ->content(
-        H5::tag()
-            ->addClass('bg-primary text-white p-3 rounded-top')
-            ->content(
-                I::tag()->addClass('bi bi-people-fill')->content(' ' . $translator->translate('gridview.title')),
-            ),
-    )
-    ->render();
 
 $toolbarApplyChange = Button::tag()
     ->addClass('btn btn-success me-1')
@@ -139,7 +126,7 @@ echo GridView::widget()
 ->tableAttributes(['class' => 'table table-hover'])
 ->dataReader($paginator)
 ->columns(...$columns)
-->header($header)
+->header($translator->translate('gridview.title'))
 ->id('w1-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'summary text-end mb-5'])

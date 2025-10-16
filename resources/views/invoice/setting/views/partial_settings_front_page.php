@@ -93,6 +93,24 @@ declare(strict_types=1);
                         </label>
                     </div>
                     <div class="checkbox">
+                        <?php $body['settings[no_front_privacy_policy_page]'] = $s->getSetting('no_front_privacy_policy_page');?>
+                        <label>
+                            <input type="hidden" name="settings[no_front_privacy_policy_page]" value="0">
+                            <input type="checkbox" name="settings[no_front_privacy_policy_page]" value="1"
+                                <?php $s->check_select($body['settings[no_front_privacy_policy_page]'], 1, '==', true) ?>>
+                            <?= $translator->translate('menu.privacy.policy'); ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <?php $body['settings[no_front_terms_of_service_page]'] = $s->getSetting('no_front_terms_of_service_page');?>
+                        <label>
+                            <input type="hidden" name="settings[no_front_terms_of_service_page]" value="0">
+                            <input type="checkbox" name="settings[no_front_terms_of_service_page]" value="1"
+                                <?php $s->check_select($body['settings[no_front_terms_of_service_page]'], 1, '==', true) ?>>
+                            <?= $translator->translate('menu.terms.of.service'); ?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
                         <?php $body['settings[no_front_site_slider_page]'] = $s->getSetting('no_front_site_slider_page');?>
                         <label>
                             <input type="hidden" name="settings[no_front_site_slider_page]" value="0">
@@ -100,7 +118,7 @@ declare(strict_types=1);
                                 <?php $s->check_select($body['settings[no_front_site_slider_page]'], 1, '==', true) ?>>
                             <?= $translator->translate('home'); ?>
                         </label>
-                    </div>             
+                    </div>
                 </div>
             </div>    
         </div>

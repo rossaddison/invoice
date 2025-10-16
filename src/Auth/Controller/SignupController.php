@@ -35,8 +35,6 @@ use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use App\Auth\Client\DeveloperSandboxHmrc;
-use App\Auth\Client\GovUk;
 use App\Auth\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;

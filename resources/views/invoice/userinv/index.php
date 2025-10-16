@@ -134,6 +134,7 @@ $columns = [
             }
             return '';
         },
+        encodeContent: false,
         filter: $optionsDataFilterUserInvLoginDropDown,
         withSorting: false,
     ),
@@ -177,6 +178,7 @@ $columns = [
                 ) : '';
             }
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'user_id',
@@ -200,6 +202,7 @@ $columns = [
                 ) : '';
             }
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'user_id',
@@ -226,6 +229,7 @@ $columns = [
                 return '';
             } // else
         },
+        encodeContent: false,
     ),
 
     new DataColumn(
@@ -249,6 +253,7 @@ $columns = [
                 return '';
             }
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'user',

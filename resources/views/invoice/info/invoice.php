@@ -4,8 +4,7 @@
         as a test platform for WAMP and also lightweight Alpine / heavier Ubuntu 22.04 LTS for LAMP.</b>
 </p>
 <p>Less emphasis has been placed on using javascript due to security vulnerabilities with jQuery. More emphasis is being placed on using php forms instead of javascript. </p> 
-<p>Free sponsorship has been provided by vultr.com in Frankfurt on 209.250.232.212</p>
-<p>The domain yii3i.co.uk will be moved over to 209.250.232.212 in September from hosts one.com. The vultr.com site is running on alpine and copilot AI has been most useful in helping me set this up.</p>
+<p>Free sponsorship has been provided by vultr.com in Frankfurt on yii3i.online for testing.<p>
 <p><b>To Do's - Longer Term Goals</b></p>
 <p>1. <s>Integration of Payment Gateways</s>PCI Compliant Stripe, Amazon Pay, Braintree, and Mollie have been introduced.</p>
 <p>2. Accountant Role with the ability of an accountant/bookkeeper to record payments against invoices.</p>
@@ -52,6 +51,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>16th October 2025</b></p>
+<p>Bugfix: Front pages ... Settings ... View ... Front Page</p>
 <p><b>24th September 2025</b></p>
 <p>Dependency Injector yii-auth-client.php created under config/web/di</p>
 <p>AuthChoice integrated into AuthController</p>

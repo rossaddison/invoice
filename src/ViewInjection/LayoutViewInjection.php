@@ -99,7 +99,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $noFrontPagePricing = $this->settingRepository->getSetting('no_front_pricing_page') == '1' ? true : false;
         $noFrontPageTestimonial = $this->settingRepository->getSetting('no_front_testimonial_page') == '1' ? true : false;
         $noFrontPagePrivacyPolicy = $this->settingRepository->getSetting('no_front_privacy_policy_page') == '1' ? true : false;
-        $noFrontPageTermsOfService = $this->settingRepository->getSetting('no_front_terms_of_service') == '1' ? true : false;
+        $noFrontPageTermsOfService = $this->settingRepository->getSetting('no_front_terms_of_service_page') == '1' ? true : false;
         $noFrontPageContactDetails = $this->settingRepository->getSetting('no_front_contact_details_page') == '1' ? true : false;
         $noFrontPageContactUs = $this->settingRepository->getSetting('no_front_contact_us_page') == '1' ? true : false;
         /**
