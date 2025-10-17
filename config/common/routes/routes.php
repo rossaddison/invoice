@@ -168,7 +168,7 @@ return [
     Route::get('/authclient')
         ->action([AuthController::class, 'authclient'])
         ->name('auth/authclient'),
-    Route::get('/callback')
+    Route::methods([Method::GET, Method::POST], '/callback')
         ->middleware(LimitRequestsMiddleware::class)
         ->middleware(AuthAction::class)
         ->action([AuthController::class, 'callback'])
