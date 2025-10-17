@@ -26,7 +26,6 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Yiisoft\Assets\AssetManager;
@@ -47,10 +46,7 @@ use Yiisoft\User\Login\Cookie\CookieLogin;
 use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use App\Auth\Client\DeveloperSandboxHmrc;
-use App\Auth\Client\GovUk;
 use App\Auth\Client\OpenBanking;
-use Yiisoft\Yii\AuthClient\AuthAction;
 use Yiisoft\Yii\AuthClient\StateStorage\StateStorageInterface;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 use Yiisoft\Yii\RateLimiter\CounterInterface;
@@ -99,6 +95,11 @@ final class AuthController
         private readonly AssetManager $assetManager,
         private readonly StateStorageInterface $stateStorage,
         private readonly Factory $yiisoftFactory,
+        // callback dependencies
+        private readonly TokenRepository $tokenRepository,
+        private readonly UserInvRepository $userInvRepository,
+        private readonly UserRepository $userRepository,
+        private readonly string $_language,
     ) {
         $this->viewRenderer = $viewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
@@ -132,12 +133,36 @@ final class AuthController
                     ->withHeader('Location', $clientAuthUrl);
     }
 
-    public function callback(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler,
-        AuthAction $authAction,
-    ): ResponseInterface {
-        return $authAction->process($request, $handler);
+    public function callback(ServerRequestInterface $request): ResponseInterface
+    {
+        $qp = $request->getQueryParams();
+        $authclient   = isset($qp['authclient']) && is_string($qp['authclient']) && $qp['authclient'] !== '' ? $qp['authclient'] : null;
+        $code         = isset($qp['code']) && is_string($qp['code']) && $qp['code'] !== '' ? $qp['code'] : null;
+        $state        = isset($qp['state']) && is_string($qp['state']) && $qp['state'] !== '' ? $qp['state'] : null;
+        $error        = isset($qp['error']) && is_string($qp['error']) && $qp['error'] !== '' ? $qp['error'] : null;
+        $errorCode    = isset($qp['error_code']) && is_string($qp['error_code']) && $qp['error_code'] !== '' ? $qp['error_code'] : null;
+        $errorReason  = isset($qp['error_reason']) && is_string($qp['error_reason']) && $qp['error_reason'] !== '' ? $qp['error_reason'] : null;
+        $sessionState = isset($qp['session_state']) && is_string($qp['session_state']) && $qp['session_state'] !== '' ? $qp['session_state'] : null;
+        $deviceId     = isset($qp['device_id']) && is_string($qp['device_id']) && $qp['device_id'] !== '' ? $qp['device_id'] : null;
+
+        if ($authclient === null) {
+            throw new \InvalidArgumentException("Missing or invalid 'authclient' query parameter.");
+        }
+
+        return match ($authclient) {
+            'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'facebook' => $this->callbackFacebook($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state, $error, $errorCode, $errorReason),
+            'github' => $this->callbackGithub($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'google' => $this->callbackGoogle($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'govuk' => $this->callbackGovUk($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'linkedin' => $this->callbackLinkedIn($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'microsoftonline' => $this->callbackMicrosoftOnline($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state, (string) $sessionState),
+            'openbanking' => $this->callbackOpenBanking($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'x' => $this->callbackX($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            'vkontakte' => $this->callbackVKontakte($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state, (string) $deviceId),
+            'yandex' => $this->callbackYandex($request, $this->translator, $this->tokenRepository, $this->userInvRepository, $this->userRepository, $this->_language, $code, $state),
+            default => throw new \InvalidArgumentException("Unsupported 'authclient' value: {$authclient}"),
+        };
     }
 
     public function login(
