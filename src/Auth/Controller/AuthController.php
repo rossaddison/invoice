@@ -133,9 +133,8 @@ final class AuthController
         TokenRepository $tokenRepository,
         UserInvRepository $userInvRepository,
         UserRepository $userRepository,
-        string $_language,    
-    ): ResponseInterface
-    {
+        string $_language,
+    ): ResponseInterface {
         $qp = $request->getQueryParams();
         $authclient   = isset($qp['authclient'])  &&  is_string($qp['authclient'])  && $qp['authclient'] !== '' ? $qp['authclient'] : null;
         $code         = isset($qp['code'])  &&  is_string($qp['code'])  && $qp['code'] !== '' ? $qp['code'] : null;
