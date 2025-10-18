@@ -40,7 +40,7 @@ $fontSizes = ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16',
                             <div class="form-group">
                                 <div class="checkbox">
                                     <?php $body['settings[bootstrap5_offcanvas_enable]'] = $s->getSetting('bootstrap5_offcanvas_enable');?>
-                                    <label <?= $s->where('bootstrap5_offcanvas_enable'); ?>">
+                                    <label <?= $s->where('bootstrap5_offcanvas_enable'); ?>>
                                         <input type="hidden" name="settings[bootstrap5_offcanvas_enable]" value="0">
                                         <input type="checkbox" name="settings[bootstrap5_offcanvas_enable]" value="1"
                                             <?php $s->check_select($body['settings[bootstrap5_offcanvas_enable]'], 1, '==', true) ?>>

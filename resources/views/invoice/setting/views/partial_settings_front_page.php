@@ -16,7 +16,7 @@ declare(strict_types=1);
             <div class="panel-heading">
                 <label <?= $s->where('front_page_file_locations_tooltip'); ?>><i class="bi bi-info-circle"></i>
                     <?= $translator->translate('front.page') . ' ' . '⛔'; ?>
-                </label>    
+                </label>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -28,7 +28,7 @@ declare(strict_types=1);
                                 <?php $s->check_select($body['settings[no_front_about_page]'], 1, '==', true) ?>>
                             <?= $translator->translate('menu.about'); ?>
                         </label>
-                    </div>                
+                    </div>
                     <div class="checkbox">
                         <?php $body['settings[no_front_accreditations_page]'] = $s->getSetting('no_front_accreditations_page');?>
                         <label>
@@ -120,7 +120,7 @@ declare(strict_types=1);
                         </label>
                     </div>
                 </div>
-            </div>    
+            </div>
         </div>
     </div>
 </div>
