@@ -17,7 +17,6 @@ use Yiisoft\Router\UrlGeneratorInterface;
  * @var array $params
  * @var array $params['yiisoft/router-fastroute']
  * @var bool $params['yiisoft/router-fastroute']['encodeRaw']
- * @var array $defaultArguments
  * @psalm-suppress MixedArgument $routes
  */
 
@@ -26,9 +25,6 @@ return [
         'class' => UrlGenerator::class,
         'setEncodeRaw()' => [$params['yiisoft/router-fastroute']['encodeRaw']],
         'setDefaultArgument()' => ['_language', 'en'],
-        'reset' => function (array $defaultArguments = []) {
-            $defaultArguments = ['_language', 'en'];
-        },
     ],
 
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
