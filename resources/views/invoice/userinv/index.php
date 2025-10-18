@@ -7,9 +7,11 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H4;
+use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
@@ -75,38 +77,60 @@ foreach ($unAssignedClientIds as $clientId) {
 echo '</tbody>';
 echo '</table>';
 echo '<br>'
-?>    
-    
-</div>    
-<div>
-    <h5><?= $translator->translate('users'); ?></h5>
-    <div class="btn-group index-options">
-        <a href="<?= $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 2]); ?>"
-           class="btn <?php echo $active == 2 ? 'btn-primary' : 'btn-default' ?>">
-            <?= $translator->translate('all'); ?>
-        </a>
-        <a href="<?= $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 1]); ?>" style="text-decoration:none"
-           class="btn  <?php echo $active == 1 ? 'btn-primary' : 'btn-default' ?>">
-            <?= $translator->translate('active'); ?>
-        </a>
-        <a href="<?= $urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 0]); ?>" style="text-decoration:none"
-           class="btn  <?php echo $active == 0 ? 'btn-primary' : 'btn-default' ?>">
-            <?= $translator->translate('inactive'); ?>
-        </a>
-        <?=
-        Html::a(
-            Html::tag('i', '', [
-                'class' => 'fa fa-plus',
-            ]),
-            $urlGenerator->generate('userinv/add'),
-            ['class' => 'btn btn-sm btn-primary'],
-        )->render();
 ?>
-    </div>
-</div>
-<br>
-<div id="content" class="table-content">  
-<div class="card shadow">
+<?= Html::openTag('div'); ?>
+    <?= H5::tag()->content($translator->translate('users'))->render(); ?>
+    <?= Html::openTag('div', ['class' => 'btn-group index-options']); ?>
+        <?=
+            A::tag()
+            ->href($urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 2]))
+            ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-default'))
+            ->addAttributes(
+                [
+                    'style' => 'text-decoration:none',
+                ],
+            )
+            ->content($translator->translate('all'))
+            ->render();
+?>
+        <?=
+    A::tag()
+    ->href($urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 1]))
+    ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-default'))
+    ->addAttributes(
+        [
+            'style' => 'text-decoration:none',
+        ],
+    )
+    ->content($translator->translate('active'))
+    ->render();
+?>
+        <?=
+    A::tag()
+    ->href($urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 0]))
+    ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-default'))
+    ->addAttributes(
+        [
+            'style' => 'text-decoration:none',
+        ],
+    )
+    ->content($translator->translate('inactive'))
+    ->render();
+?>   
+        <?=
+    Html::a(
+        Html::tag('i', '', [
+            'class' => 'fa fa-plus',
+        ]),
+        $urlGenerator->generate('userinv/add'),
+        ['class' => 'btn btn-sm btn-primary'],
+    )->render();
+?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Br::tag(); ?>
+<?= Html::openTag('div', ['id' => 'content', 'class' => 'table-content']); ?>
+<?= Html::openTag('div', ['class' => 'card-shadow']); ?>
 <?php
 $columns = [
     new DataColumn(
