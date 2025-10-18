@@ -76,7 +76,8 @@ foreach ($unAssignedClientIds as $clientId) {
 }
 echo '</tbody>';
 echo '</table>';
-echo '<br>'
+echo '<br>';
+    $textDecorationNone =  'text-decoration:none';
 ?>
 <?= Html::openTag('div'); ?>
     <?= H5::tag()->content($translator->translate('users'))->render(); ?>
@@ -87,7 +88,7 @@ echo '<br>'
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-default'))
             ->addAttributes(
                 [
-                    'style' => 'text-decoration:none',
+                    'style' => $textDecorationNone,
                 ],
             )
             ->content($translator->translate('all'))
@@ -99,7 +100,7 @@ echo '<br>'
     ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-default'))
     ->addAttributes(
         [
-            'style' => 'text-decoration:none',
+            'style' => $textDecorationNone,
         ],
     )
     ->content($translator->translate('active'))
@@ -111,7 +112,7 @@ echo '<br>'
     ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-default'))
     ->addAttributes(
         [
-            'style' => 'text-decoration:none',
+            'style' => $textDecorationNone,
         ],
     )
     ->content($translator->translate('inactive'))
@@ -135,14 +136,14 @@ echo '<br>'
 $columns = [
     new DataColumn(
         'active',
-        content: static function (UserInv $model) use ($translator): string {
+        content: static function (UserInv $model): string {
             return $model->getActive() ? '✔️' : '❌';
         },
     ),
     new DataColumn(
         'all_clients',
         header: $translator->translate('user.all.clients'),
-        content: static function (UserInv $model) use ($translator): string {
+        content: static function (UserInv $model): string {
             return $model->getAll_clients() ? '✔️' : '❌';
         },
     ),
@@ -171,7 +172,7 @@ $columns = [
     new DataColumn(
         'type',
         header: $translator->translate('user.type'),
-        content: static function (UserInv $model) use ($translator): string {
+        content: static function (UserInv $model): string {
             $user_types = [
                 0 => '🧑‍⚖️',
                 1 => '🧑',
@@ -306,11 +307,11 @@ $columns = [
     new DataColumn(
         'type',
         header: '🖉',
-        content: static function (UserInv $model) use ($urlGenerator, $canEdit): string|A {
+        content: static function (UserInv $model) use ($urlGenerator, $canEdit, $textDecorationNone): string|A {
             return $canEdit ? Html::a(
                 '🖉',
                 $urlGenerator->generate('userinv/edit', ['id' => $model->getId()]),
-                ['style' => 'text-decoration:none'],
+                ['style' => $textDecorationNone],
             ) : '';
         },
         encodeContent: false,
@@ -318,7 +319,7 @@ $columns = [
     new DataColumn(
         'type',
         header: '❌',
-        content: static function (UserInv $model) use ($translator, $urlGenerator): string|A {
+        content: static function (UserInv $model) use ($translator, $urlGenerator, $textDecorationNone): string|A {
             return $model->getType() == 1 ? Html::a(
                 Html::tag(
                     'button',
@@ -330,7 +331,7 @@ $columns = [
                     ],
                 ),
                 $urlGenerator->generate('userinv/delete', ['id' => $model->getId()]),
-                ['style' => 'text-decoration:none'],
+                ['style' => $textDecorationNone],
             ) : '';
         },
         encodeContent: false,
