@@ -8,6 +8,11 @@ namespace App\Invoice\Libraries;
  * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
  *
  * final class Crypt
+ *
+ * Security improvements:
+ * - Use cryptographically secure random values (random_bytes / random_int) for salts when legacy bcrypt salts are required.
+ * - Prefer PHP's password_hash / password_verify for new password hashing (safe salt generation + algorithm agility).
+ * - Maintain a fallback to legacy crypt-based verification to allow rolling migration of existing hashes.
  */
 final class Crypt
 {
@@ -15,52 +20,72 @@ final class Crypt
     private string $decrypt_key = self::DECRYPT_KEY;
 
     /**
-     * Snyk: What is Salting?
-     * A salt is a random string that gets attached to a plaintext password before it gets hashed.
-     * A hash cannot be reversed but it can be compared with existing generated hash outputs.
-     * If a user is using a weak password, that password may have been hashed and stored somewhere for
-     * potential hackers to compare against. By adding a salt to the password, the hash output is no
-     * longer predictable. This is because it is increasing the uniqueness of the password, thus,
-     * the uniqueness of the hash itself.
-     */
-
-    /**
-     * A salt now must be added to a hash to prevent hash table lookups used by attackers
-     * Related logic: see https://cwe.mitre.org/data/definitions/916.html
-     * @return string
+     * Generate a cryptographically secure salt suitable for legacy bcrypt-style crypt() usage.
+     *
+     * Notes:
+     * - bcrypt salts require 22 characters from the alphabet "./A-Za-z0-9".
+     * - For new password storage use password_hash() which generates its own secure salt automatically.
+     *
+     * @return string 22-character bcrypt-compatible salt
      */
     public function salt(): string
     {
-        /**
-         * Previously: return substr(sha1((string)mt_rand()), 0, 22);
-         * Use of Password Hash With Insufficient Computational Effort
-         * Related logic: see https://www.php.net/manual/en/function.hash-algos.php
-         */
-        $random = (string) mt_rand();
-        $hash = hash('sha256', $random);
-        return substr($hash, 0, 22);
+        // Use 16 bytes (128 bits) of entropy, base64-encode and adapt to bcrypt alphabet.
+        $raw = random_bytes(16);
+        // base64 encode then translate '+' -> '.' and remove '=' padding
+        $b64 = str_replace('=', '', strtr(base64_encode($raw), '+', '.'));
+        return substr($b64, 0, 22);
     }
 
     /**
+     * Generate a password hash.
+     *
+     * - If $salt is provided we will produce a legacy bcrypt-style hash using crypt() to preserve backwards compatibility.
+     * - If $salt is omitted (recommended) we'll use password_hash() which produces a secure, salted hash automatically.
+     *
      * @param string $password
-     * @param string $salt
-     * @return string
+     * @param string $salt optional legacy bcrypt salt (22 chars) to keep compatibility with older hashes
+     * @return string hash suitable for storage
      */
-    public function generate_password($password, $salt): string
+    public function generate_password(string $password, string $salt = ''): string
     {
-        return crypt($password, '$2a$10$' . $salt);
+        if (strlen($salt) > 0) {
+            // Legacy path: produce bcrypt hash with provided salt (preserve existing behaviour if callers pass a salt)
+            // Use $2y$ to be compatible with PHP's bcrypt safe identifier.
+            $prefix = '$2y$10$';
+            return crypt($password, $prefix . $salt);
+        }
+
+        // Recommended path: use PHP's password_hash which handles salt generation securely.
+        // PASSWORD_DEFAULT provides algorithm agility.
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     /**
-     * @param string $hash
-     * @param string $password
+     * Verify a password against a stored hash.
+     *
+     * - First try password_verify() (covers password_hash-generated hashes).
+     * - If that fails, fall back to legacy crypt() verification to support existing stored bcrypt/crypt hashes.
+     *
+     * When migrating, after verifying a legacy hash you should re-hash the password with
+     * password_hash() and store the new value so users gradually move to the stronger default.
+     *
+     * @param string $hash stored hash
+     * @param string $password plaintext password to verify
      * @return bool
      */
-    public function check_password($hash, $password): bool
+    public function check_password(string $hash, string $password): bool
     {
+        // Preferred method: password_verify (covers password_hash-produced hashes)
+        if (password_verify($password, $hash)) {
+            return true;
+        }
+
+        // Fallback: legacy crypt() check (keeps compatibility with older bcrypt-style hashes)
         $new_hash = crypt($password, $hash);
 
-        return $hash == $new_hash;
+        // Use hash_equals for timing-attack-safe comparison
+        return hash_equals($hash, $new_hash);
     }
 
     /**
