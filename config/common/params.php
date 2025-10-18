@@ -445,6 +445,25 @@ return [
                 ],
             ],
         ],
+        
+        /**
+         * Related logic: https://github.com/yiisoft/yii-cycle/pull/141/files#diff-09651a8d339eb91e3f0a340f94f4b0caf4df642c48812a526f8c80f7b8ba7ad4
+         * 
+         * Collection factories.
+         *
+         * @link https://cycle-orm.dev/docs/relation-collections/2.x
+         */
+        'collections' => [
+            /** Default factory (class or name from the `factories` list below) or {@see null} */
+            'default' => 'doctrine',
+            /** List of class names that implement {@see \Cycle\ORM\Collection\CollectionFactoryInterface} */
+            'factories' => [
+                //'array' => \Cycle\ORM\Collection\ArrayCollectionFactory::class,
+                'doctrine' => \Cycle\ORM\Collection\DoctrineCollectionFactory::class,
+                //'illuminate' => \Cycle\ORM\Collection\IlluminateCollectionFactory::class,
+            ],
+        ],
+        
         /**
      * Config for {Related logic: see \Yiisoft\Yii\Cycle\Schema\Conveyor\AnnotatedSchemaConveyor}
      * Annotated entity directories list.
