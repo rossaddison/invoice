@@ -77,7 +77,7 @@ foreach ($unAssignedClientIds as $clientId) {
 echo '</tbody>';
 echo '</table>';
 echo '<br>';
-    $textDecorationNone =  'text-decoration:none';
+$textDecorationNone =  'text-decoration:none';
 ?>
 <?= Html::openTag('div'); ?>
     <?= H5::tag()->content($translator->translate('users'))->render(); ?>
