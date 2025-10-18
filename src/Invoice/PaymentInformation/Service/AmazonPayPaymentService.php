@@ -18,7 +18,10 @@ class AmazonPayPaymentService
     public function __construct(
         private readonly SettingRepository $settingRepository,
         private readonly Crypt $crypt,
-    ) {}
+        private readonly string $salt,
+    ) {
+        $this->salt = (new Crypt())->salt();
+    }
 
     /**
      * Create a payment request for Amazon Pay.

@@ -19,6 +19,7 @@ return [
             UrlGeneratorInterface::class => UrlGenerator::class,
             TranslatorInterface::class => Translator::class,
             'crypt' => new Crypt(),
+            'salt' => (new Crypt())->salt(),
             'telegramToken' => '',
         ],
     ],

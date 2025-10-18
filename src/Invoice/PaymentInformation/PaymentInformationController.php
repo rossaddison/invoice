@@ -85,6 +85,7 @@ final class PaymentInformationController
         private cPR $cPR,
         private Logger $logger,
         private Crypt $crypt,
+        private string $salt,
         private string $telegramToken,
     ) {
         $this->factory                   = $factory;
@@ -114,6 +115,7 @@ final class PaymentInformationController
         }
         $this->webService    = $webService;
         $this->crypt         = $crypt;
+        $this->salt          = $crypt->salt();
         $this->compR         = $compR;
         $this->cPR           = $cPR;
         $this->logger        = $logger;
