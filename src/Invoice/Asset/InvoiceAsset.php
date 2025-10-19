@@ -38,16 +38,14 @@ class InvoiceAsset extends AssetBundle
          * The .js files are jquery based i.e Basic syntax is: $(selector).action()
          *
          * Modals use the following file which is available in unminified form
-         * Related logic: see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
+         * Related logic: see e.g. https:\code.jquery.com/jquery-4.0.0-beta.2.min.js
          * Modals use the following file which is available in minified form
-         * Related logic: see e.g. https:\\code.jquery.com/jquery-4.0.0-beta.2.min.js
+         * Related logic: see e.g. https:\code.jquery.com/jquery-4.0.0-beta.2.min.js
          */
 
-        // e.g. the settings tabs with general, invoice, quote etc depend on this file and also
-        // the create quote and create invoice buttons on the client view
-        // Renamed the dependencies.js file to a more specific name and load with lastest using
-        // https:\\code.jquery.com/{latest file} which is below:
-        'rebuild/js/jquery-4.0.0-beta.2.min.js',
+        // NOTE: jQuery removed from assets. Converted other scripts to vanilla JS.
+
+        //'rebuild/js/jquery-4.0.0-beta.2.min.js',
 
         //'//cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js',
         'rebuild/js/select2.min.js',
