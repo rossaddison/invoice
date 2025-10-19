@@ -36,24 +36,24 @@ use Yiisoft\Html\Tag\Input;
             'return {};' .
         '};' .
 
-       "$(document).ready(function ()  {" .
+       "document.addEventListener('DOMContentLoaded', function ()  {" .
        'var new_key = "";' .
        'var new_val = "";' .
        'var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];' .
-       "$('#mailerinvform-email_template').change(function () {" .
-            'var email_template_id = $(this).val();' .
+       "const emailTemplateSelect = document.getElementById('mailerinvform-email_template');" .
+       "if (emailTemplateSelect) {" .
+            "emailTemplateSelect.addEventListener('change', function () {" .
+            'var email_template_id = this.value;' .
             "if (email_template_id === '') return;" .
 
-            "var url =  $(location).attr('origin') + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
-            "$.ajax({ type: 'GET'," .
-                'contentType: "application/json; charset=utf-8",' .
-                'data: {' .
-                        'email_template_id: email_template_id' .
-                '},' .
-                'url: url,' .
-                'cache: false,' .
-                "dataType: 'json'," .
-                'success: function (data) {' .
+            "var url = window.location.origin + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
+            "const params = new URLSearchParams({ email_template_id: email_template_id });" .
+            "fetch(url + '?' + params.toString(), {" .
+                "method: 'GET'," .
+                'headers: { "Content-Type": "application/json; charset=utf-8" }' .
+            '})'  .
+            '.then(response => response.json())' .
+            '.then(data => {' .
                     'var response = parsedata(data);' .
                     'if (response.success === 1) {' .
                         'for (var key in response.email_template) {' .
@@ -62,25 +62,32 @@ use Yiisoft\Html\Tag\Input;
                                 'new_val = response.email_template[key];' .
                                 'switch(new_key) {' .
                                     'case "subject":' .
-                                        '$("#mailerinvform-subject.email-template-subject.form-control").val(new_val);' .
+                                        'const subjectElem = document.querySelector("#mailerinvform-subject.email-template-subject.form-control");' .
+                                        'if (subjectElem) subjectElem.value = new_val;' .
                                     'break;' .
                                     'case "body":' .
-                                        '$("textarea#mailerinvform-body.email-template-body.form-control.taggable").val(new_val);' .
+                                        'const bodyElem = document.querySelector("textarea#mailerinvform-body.email-template-body.form-control.taggable");' .
+                                        'if (bodyElem) bodyElem.value = new_val;' .
                                     'break;' .
                                     'case "from_name":' .
-                                        '$("#mailerinvform-from_name.email-template-from-name.form-control").val(new_val);' .
+                                        'const fromNameElem = document.querySelector("#mailerinvform-from_name.email-template-from-name.form-control");' .
+                                        'if (fromNameElem) fromNameElem.value = new_val;' .
                                     'break;' .
                                     'case "from_email":' .
-                                        '$("#mailerinvform-from_email.email-template-from-email.form-control").val(new_val);' .
+                                        'const fromEmailElem = document.querySelector("#mailerinvform-from_email.email-template-from-email.form-control");' .
+                                        'if (fromEmailElem) fromEmailElem.value = new_val;' .
                                     'break;' .
                                     'case "cc":' .
-                                        '$("#mailerinvform-cc.email-template-cc.form-control").val(new_val);' .
+                                        'const ccElem = document.querySelector("#mailerinvform-cc.email-template-cc.form-control");' .
+                                        'if (ccElem) ccElem.value = new_val;' .
                                     'break;' .
                                     'case "bcc":' .
-                                        '$("#mailerinvform-bcc.email-template-bcc.form-control").val(new_val);' .
+                                        'const bccElem = document.querySelector("#mailerinvform-bcc.email-template-bcc.form-control");' .
+                                        'if (bccElem) bccElem.value = new_val;' .
                                     'break;' .
                                     'case "pdf_template":' .
-                                        '$("#mailerinvform-pdf_template.email-template-pdf-template.form-control").val(new_val).trigger(' . "'change');" .
+                                        'const pdfElem = document.querySelector("#mailerinvform-pdf_template.email-template-pdf-template.form-control");' .
+                                        'if (pdfElem) { pdfElem.value = new_val; pdfElem.dispatchEvent(new Event(' . "'change')); }" .
                                     'break;' .
                                     'default:' .
                                 '}' .
@@ -88,15 +95,16 @@ use Yiisoft\Html\Tag\Input;
                             '}' .
                         '}' .
                     '}' .
-                '}' .
-            '});' .
+                '});' .
         '});' .
+    '}' .
     '});' .
 
-    '$(document).ready(function() {' .
-        // this is the email invoice window, disable the quote select
-        "$('#tags_invoice').prop('disabled', false);" .
-        "$('#tags_quote').prop('disabled', 'disabled');" .
+    "document.addEventListener('DOMContentLoaded', function() {" .
+        'const tagsInvoice = document.getElementById("tags_invoice");' .
+        'const tagsQuote = document.getElementById("tags_quote");' .
+        'if (tagsInvoice) tagsInvoice.disabled = false;' .
+        'if (tagsQuote) tagsQuote.disabled = true;' .
     '});';
 echo Html::script($js2)->type('module');
 ?>
@@ -309,9 +317,10 @@ echo Html::tag(
 </div>
 <?php
 // Fill the form with the template data
-$js6 = "$(document).ready(function() {" .
+$js6 = "document.addEventListener('DOMContentLoaded', function() {" .
         'var textContent = ' . (string) $autoTemplate['body'] . ';' .
-        '$("#mailerinvform-body").val(textContent);' .
+        'const bodyElem = document.getElementById("mailerinvform-body");' .
+        'if (bodyElem) bodyElem.value = textContent;' .
         '});';
 echo Html::script($js6)->type('module');
 ?>
