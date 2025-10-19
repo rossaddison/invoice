@@ -42,24 +42,24 @@ use Yiisoft\Html\Tag\Form;
             'return {};' .
         '};' .
 
-       "$(document).ready(function ()  {" .
+       "document.addEventListener('DOMContentLoaded', function ()  {" .
        'var new_key = "";' .
        'var new_val = "";' .
        'var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];' .
-       "$('#mailerquoteform-email_template').change(function () {" .
-            'var email_template_id = $(this).val();' .
+       "const emailTemplateSelect = document.getElementById('mailerquoteform-email_template');" .
+       "if (emailTemplateSelect) {" .
+            "emailTemplateSelect.addEventListener('change', function () {" .
+            'var email_template_id = this.value;' .
             "if (email_template_id === '') return;" .
 
-            "var url =  $(location).attr('origin') + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
-            "$.ajax({ type: 'GET'," .
-                'contentType: "application/json; charset=utf-8",' .
-                'data: {' .
-                        'email_template_id: email_template_id' .
-                '},' .
-                'url: url,' .
-                'cache: false,' .
-                "dataType: 'json'," .
-                'success: function (data) {' .
+            "var url = window.location.origin + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
+            "const params = new URLSearchParams({ email_template_id: email_template_id });" .
+            "fetch(url + '?' + params.toString(), {" .
+                "method: 'GET'," .
+                'headers: { "Content-Type": "application/json; charset=utf-8" }' .
+            '})'  .
+            '.then(response => response.json())' .
+            '.then(data => {' .
                     'var response = parsedata(data);' .
                     'if (response.success === 1) {' .
                         'for (var key in response.email_template) {' .
@@ -68,25 +68,32 @@ use Yiisoft\Html\Tag\Form;
                                 'new_val = response.email_template[key];' .
                                 'switch(new_key) {' .
                                     'case "subject":' .
-                                        '$("#mailerquoteform-subject.email-template-subject.form-control").val(new_val);' .
+                                        'const subjectElem = document.querySelector("#mailerquoteform-subject.email-template-subject.form-control");' .
+                                        'if (subjectElem) subjectElem.value = new_val;' .
                                         'break;' .
                                     'case "body":' .
-                                        '$("textarea#mailerquoteform-body.email-template-body.form-control.taggable").val(new_val);' .
+                                        'const bodyElem = document.querySelector("textarea#mailerquoteform-body.email-template-body.form-control.taggable");' .
+                                        'if (bodyElem) bodyElem.value = new_val;' .
                                         'break;' .
                                     'case "from_name":' .
-                                        '$("#mailerquoteform-from_name.email-template-from-name.form-control").val(new_val);' .
+                                        'const fromNameElem = document.querySelector("#mailerquoteform-from_name.email-template-from-name.form-control");' .
+                                        'if (fromNameElem) fromNameElem.value = new_val;' .
                                         'break;' .
                                     'case "from_email":' .
-                                        '$("#mailerquoteform-from_email.email-template-from-email.form-control").val(new_val);' .
+                                        'const fromEmailElem = document.querySelector("#mailerquoteform-from_email.email-template-from-email.form-control");' .
+                                        'if (fromEmailElem) fromEmailElem.value = new_val;' .
                                         'break;' .
                                     'case "cc":' .
-                                        '$("#mailerquoteform-cc.email-template-cc.form-control").val(new_val);' .
+                                        'const ccElem = document.querySelector("#mailerquoteform-cc.email-template-cc.form-control");' .
+                                        'if (ccElem) ccElem.value = new_val;' .
                                         'break;' .
                                     'case "bcc":' .
-                                        '$("#mailerquoteform-bcc.email-template-bcc.form-control").val(new_val);' .
+                                        'const bccElem = document.querySelector("#mailerquoteform-bcc.email-template-bcc.form-control");' .
+                                        'if (bccElem) bccElem.value = new_val;' .
                                         'break;' .
                                     'case "pdf_template":' .
-                                        '$("#mailerquoteform-pdf_template.email-template-pdf-template.form-control").val(new_val).trigger(' . "'change');" .
+                                        'const pdfElem = document.querySelector("#mailerquoteform-pdf_template.email-template-pdf-template.form-control");' .
+                                        'if (pdfElem) { pdfElem.value = new_val; pdfElem.dispatchEvent(new Event(' . "'change')); }" .
                                         'break;' .
                                     'default:' .
                                 '}' .
@@ -94,15 +101,16 @@ use Yiisoft\Html\Tag\Form;
                             '}' .
                         '}' .
                     '}' .
-                '}' .
-            '});' .
+                '});' .
         '});' .
+    '}' .
     '});' .
 
-    '$(document).ready(function() {' .
-        // this is the email quote window, disable the invoice select
-        "$('#tags_invoice').prop('disabled', disabled);" .
-        "$('#tags_quote').prop('disabled', 'false');" .
+    "document.addEventListener('DOMContentLoaded', function() {" .
+        'const tagsInvoice = document.getElementById("tags_invoice");' .
+        'const tagsQuote = document.getElementById("tags_quote");' .
+        'if (tagsInvoice) tagsInvoice.disabled = true;' .
+        'if (tagsQuote) tagsQuote.disabled = false;' .
     '});';
 echo Html::script($js3)->type('module');
 ?>
@@ -304,9 +312,10 @@ echo Html::tag(
     </div>
 </div>
 <?php
-$js9 = "$(document).ready(function() {" .
+$js9 = "document.addEventListener('DOMContentLoaded', function() {" .
         'var textContent = ' . $autoTemplate['body'] . ';' .
-        '$("#mailerquoteform-body").val(textContent);' .
+        'const bodyElem = document.getElementById("mailerquoteform-body");' .
+        'if (bodyElem) bodyElem.value = textContent;' .
         '});';
 echo Html::script($js9)->type('module');
 ?>
