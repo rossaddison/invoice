@@ -1,23 +1,20 @@
-document.addEventListener('click', event => {
-    if (event.target.matches('#adminEmail')) {
-        const input = document.getElementById('adminEmail');
-        const div = document.getElementById('email_template_from_email');
-        if (input.value) {
-            div.value = input.value;
-        }
-    }
-    if (event.target.matches('#senderEmail')) {
-        const input = document.getElementById('senderEmail');
-        const div = document.getElementById('email_template_from_email');
-        if (input.value) {
-            div.value = input.value;
-        }
-    }
-    if (event.target.matches('#fromEmail')) {
-        const input = document.getElementById('fromEmail');
-        const div = document.getElementById('email_template_from_email');
-        if (input.value) {
-            div.value = input.value;
-        }
-    }
-});
+(function () {
+    "use strict";
+
+    // Load email addresses into a target container via AJAX (fetch)
+    document.addEventListener('click', function (e) {
+        const trigger = e.target.closest('.load-email-addresses');
+        if (!trigger) return;
+
+        const url = trigger.dataset.url || (location.origin + '/invoice/email/addresses');
+        const targetId = trigger.dataset.target || 'email-addresses-container';
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        fetch(url, { cache: 'no-store' })
+            .then(function (res) { return res.text(); })
+            .then(function (html) { target.innerHTML = html; })
+            .catch(function (err) { console.error('Failed to load email addresses', err); });
+    });
+
+})();
