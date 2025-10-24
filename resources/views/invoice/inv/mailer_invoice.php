@@ -28,77 +28,115 @@ use Yiisoft\Html\Tag\Input;
 ?>
 
 <?php
-    $js2 =
-       'function parsedata(data) {' .
-            'if (!data) return {};' .
-            "if (typeof data === 'object') return data;" .
-            "if (typeof data === 'string') return JSON.parse(data);" .
-            'return {};' .
-        '};' .
 
-       "$(document).ready(function ()  {" .
-       'var new_key = "";' .
-       'var new_val = "";' .
-       'var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];' .
-       "$('#mailerinvform-email_template').change(function () {" .
-            'var email_template_id = $(this).val();' .
-            "if (email_template_id === '') return;" .
+$js5 = <<<'JS'
+    (function () {
+        "use strict";
 
-            "var url =  $(location).attr('origin') + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
-            "$.ajax({ type: 'GET'," .
-                'contentType: "application/json; charset=utf-8",' .
-                'data: {' .
-                        'email_template_id: email_template_id' .
-                '},' .
-                'url: url,' .
-                'cache: false,' .
-                "dataType: 'json'," .
-                'success: function (data) {' .
-                    'var response = parsedata(data);' .
-                    'if (response.success === 1) {' .
-                        'for (var key in response.email_template) {' .
-                            'if (response.email_template.hasOwnProperty(key)) {' .
-                                'new_key = key.replace("email_template_", "");' .
-                                'new_val = response.email_template[key];' .
-                                'switch(new_key) {' .
-                                    'case "subject":' .
-                                        '$("#mailerinvform-subject.email-template-subject.form-control").val(new_val);' .
-                                    'break;' .
-                                    'case "body":' .
-                                        '$("textarea#mailerinvform-body.email-template-body.form-control.taggable").val(new_val);' .
-                                    'break;' .
-                                    'case "from_name":' .
-                                        '$("#mailerinvform-from_name.email-template-from-name.form-control").val(new_val);' .
-                                    'break;' .
-                                    'case "from_email":' .
-                                        '$("#mailerinvform-from_email.email-template-from-email.form-control").val(new_val);' .
-                                    'break;' .
-                                    'case "cc":' .
-                                        '$("#mailerinvform-cc.email-template-cc.form-control").val(new_val);' .
-                                    'break;' .
-                                    'case "bcc":' .
-                                        '$("#mailerinvform-bcc.email-template-bcc.form-control").val(new_val);' .
-                                    'break;' .
-                                    'case "pdf_template":' .
-                                        '$("#mailerinvform-pdf_template.email-template-pdf-template.form-control").val(new_val).trigger(' . "'change');" .
-                                    'break;' .
-                                    'default:' .
-                                '}' .
+        function parsedata(data) {
+            if (!data) return {};
+            if (typeof data === 'object' && data !== null) return data;
+            if (typeof data === 'string') {
+                try { return JSON.parse(data); } catch (e) { return {}; }
+            }
+            return {};
+        }
 
-                            '}' .
-                        '}' .
-                    '}' .
-                '}' .
-            '});' .
-        '});' .
-    '});' .
+        document.addEventListener('DOMContentLoaded', function () {
+            var templateSelect = document.getElementById('mailerinvform-email_template');
 
-    '$(document).ready(function() {' .
-        // this is the email invoice window, disable the quote select
-        "$('#tags_invoice').prop('disabled', false);" .
-        "$('#tags_quote').prop('disabled', 'disabled');" .
-    '});';
-echo Html::script($js2)->type('module');
+            if (templateSelect) {
+                templateSelect.addEventListener('change', function () {
+                    var email_template_id = this.value;
+                    if (!email_template_id) return;
+
+                    var url = location.origin + "/invoice/emailtemplate/get_content/" + encodeURIComponent(email_template_id);
+
+                    var params = new URLSearchParams({ email_template_id: email_template_id });
+
+                    fetch(url + '?' + params.toString(), {
+                        method: 'GET',
+                        credentials: 'same-origin',
+                        cache: 'no-store',
+                        headers: { 'Accept': 'application/json' }
+                    })
+                        .then(function (res) {
+                            if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+                            return res.text();
+                        })
+                        .then(function (text) {
+                            var data;
+                            try { data = JSON.parse(text); } catch (e) { data = text; }
+                            var response = parsedata(data);
+
+                            if (response.success === 1 && response.email_template) {
+                                Object.keys(response.email_template).forEach(function (key) {
+                                    if (!Object.prototype.hasOwnProperty.call(response.email_template, key)) return;
+
+                                    var new_key = key.replace('email_template_', '');
+                                    var new_val = response.email_template[key];
+
+                                    switch (new_key) {
+                                        case 'subject': {
+                                            var el = document.querySelector('#mailerinvform-subject.email-template-subject.form-control');
+                                            if (el) el.value = new_val;
+                                            break;
+                                        }
+                                        case 'body': {
+                                            var ta = document.querySelector('textarea#mailerinvform-body.email-template-body.form-control.taggable');
+                                            if (ta) ta.value = new_val;
+                                            break;
+                                        }
+                                        case 'from_name': {
+                                            var el2 = document.querySelector('#mailerinvform-from_name.email-template-from-name.form-control');
+                                            if (el2) el2.value = new_val;
+                                            break;
+                                        }
+                                        case 'from_email': {
+                                            var el3 = document.querySelector('#mailerinvform-from_email.email-template-from-email.form-control');
+                                            if (el3) el3.value = new_val;
+                                            break;
+                                        }
+                                        case 'cc': {
+                                            var el4 = document.querySelector('#mailerinvform-cc.email-template-cc.form-control');
+                                            if (el4) el4.value = new_val;
+                                            break;
+                                        }
+                                        case 'bcc': {
+                                            var el5 = document.querySelector('#mailerinvform-bcc.email-template-bcc.form-control');
+                                            if (el5) el5.value = new_val;
+                                            break;
+                                        }
+                                        case 'pdf_template': {
+                                            var sel = document.querySelector('#mailerinvform-pdf_template.email-template-pdf-template.form-control');
+                                            if (sel) {
+                                                sel.value = new_val;
+                                                // Trigger change event on the select
+                                                sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                            }
+                                            break;
+                                        }
+                                        default:
+                                            // no-op for other fields
+                                    }
+                                });
+                            }
+                        })
+                        .catch(function (err) {
+                            console.error('Error loading email template content', err);
+                        });
+                }, false);
+            }
+
+            var tagsInvoice = document.getElementById('tags_invoice');
+            if (tagsInvoice) tagsInvoice.disabled = false;
+            var tagsQuote = document.getElementById('tags_quote');
+            if (tagsQuote) tagsQuote.disabled = true;
+        });
+    })();
+    JS;
+
+echo Html::script($js5)->type('module');
 ?>
 
 <div class="container py-5 h-100">
@@ -308,11 +346,29 @@ echo Html::tag(
     </div>
 </div>
 <?php
-// Fill the form with the template data
-$js6 = "$(document).ready(function() {" .
-        'var textContent = ' . (string) $autoTemplate['body'] . ';' .
-        '$("#mailerinvform-body").val(textContent);' .
-        '});';
+
+/** @psalm-var array<string,mixed>|null $autoTemplate */
+
+// Ensure $body is a string so Psalm doesn't infer mixed
+$body = '';
+if (is_array($autoTemplate) && array_key_exists('body', $autoTemplate) && is_string($autoTemplate['body'])) {
+    $body = $autoTemplate['body'];
+}
+
+// Use proper JSON flags (integer). JSON_HEX_* flags make a safe JS string literal.
+$bodyJson = json_encode($body, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS);
+
+$js6 = <<<JS
+document.addEventListener('DOMContentLoaded', function () {
+    "use strict";
+    var textContent = {$bodyJson};
+    var el = document.getElementById('mailerinvform-body');
+    if (el) {
+        el.value = textContent;
+    }
+});
+JS;
+
 echo Html::script($js6)->type('module');
 ?>
 

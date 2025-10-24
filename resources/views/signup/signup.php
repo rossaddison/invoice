@@ -82,9 +82,11 @@ foreach ($selectedIdentityProviders as $provider => $info) {
     ->autofocus()
 ?>
                     <?= Field::password($formModel, 'password')
+    ->addInputAttributes(['autocomplete' => 'current-password'])
     ->label($translator->translate('layout.password'))
 ?>
                     <?= Field::password($formModel, 'passwordVerify')
+    ->addInputAttributes(['autocomplete' => 'current-password'])
     ->label($translator->translate('layout.password-verify.new'))
 ?>
                     <?= Field::submitButton()

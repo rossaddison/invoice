@@ -650,14 +650,14 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                     </div>
                                     <div>
                                         <?php
-                                                /**
-                                                 * @var App\Invoice\Entity\CustomField $custom_field
-                                                 */
-                                                foreach ($custom_fields as $custom_field): ?>
-                                                     <?php if ($custom_field->getLocation() !== 1) {
-                                                         continue;
-                                                     } ?>
-                                                     <?php $cvH->print_field_for_view($custom_field, $form, $inv_custom_values, $custom_values); ?>
+                                            /**
+                                             * @var App\Invoice\Entity\CustomField $custom_field
+                                             */
+                                            foreach ($custom_fields as $custom_field): ?>
+                                                <?php if ($custom_field->getLocation() !== 1) {
+                                                    continue;
+                                                } ?>
+                                                <?php $cvH->print_field_for_view($custom_field, $form, $inv_custom_values, $custom_values); ?>
                                          <?php endforeach; ?>
                                     </div>
                                 </div>

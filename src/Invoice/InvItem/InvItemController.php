@@ -254,6 +254,7 @@ final class InvItemController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'inv_id' => $inv_id,
+                'inv_item_id' => $inv_item_id,
                 'invItemAllowancesChargesCount' => $inv_item_allowances_charges_count,
                 'invItemAllowancesCharges' => $inv_item_allowances_charges,
                 'isRecurring' => $is_recurring,

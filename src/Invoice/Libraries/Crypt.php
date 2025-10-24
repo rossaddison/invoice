@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Libraries;
 
 /**
- * Related logic: see https://github.com/InvoicePlane/InvoicePlane/blob/development/application/libraries/Crypt.php
- *
  * final class Crypt
  *
  * Security improvements:

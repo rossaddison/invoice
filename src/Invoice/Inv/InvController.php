@@ -1248,7 +1248,7 @@ final class InvController extends BaseController
                 'actionArguments' => ['id' => $inv_id],
                 'contractCount' => $contractRepo->repoClientCount($inv->getClient_id()),
                 'customFields' => $cfR->repoTablequery('inv_custom'),
-                'cvH' => new CVH($this->sR),
+                'cvH' => new CVH($this->sR, $cvR),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
                 'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
                 // There will initially be no custom_values attached to this invoice until they are filled in the field on the form
@@ -4050,7 +4050,7 @@ final class InvController extends BaseController
                     // Get the standard extra custom fields built for EVERY invoice.
                     'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
-                    'cvH' => new CVH($this->sR),
+                    'cvH' => new CVH($this->sR, $cvR),
                     'enabled_gateways' => $enabled_gateways,
                     // Get all the fields that have been setup for this SPECIFIC invoice in inv_custom.
                     'fields' => $icR->repoFields((string) $this->session->get('inv_id')),
@@ -4232,7 +4232,7 @@ final class InvController extends BaseController
             'custom_fields' => $cfR->repoTablequery('inv_custom'),
             'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
             'inv_custom_values' => $inv_custom_values,
-            'cvH' => new CVH($this->sR),
+            'cvH' => new CVH($this->sR, $cvR),
             'invCustomForm' => new InvCustomForm(new InvCustom()),
         ]);
     }

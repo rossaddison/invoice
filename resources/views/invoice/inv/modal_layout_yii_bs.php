@@ -17,27 +17,36 @@ use Yiisoft\Bootstrap5\ModalDialogFullScreenSize;
  */
 
 echo Modal::widget()
-->bodyAttributes(['style' => 'text-align:center;'])
-->body($form)
-->fullscreen(ModalDialogFullScreenSize::FULLSCREEN_SM_DOWN)
-->id('modal-add-' . $type)
-->responsive(Responsive::LG)
-->scrollable()
-->triggerButton()
-->footerAttributes(['class' => 'text-dark'])
-->footer(Button::tag()->addClass('btn btn-danger')->attribute('data-bs-dismiss', 'modal')->content($translator->translate('close')))
-->title('Modal title')
-->verticalCentered()
-->render();
+    ->bodyAttributes(['style' => 'text-align:center;'])
+    ->body($form)
+    ->fullscreen(ModalDialogFullScreenSize::FULLSCREEN_SM_DOWN)
+    ->id('modal-add-' . $type)
+    ->responsive(Responsive::LG)
+    ->scrollable()
+    ->triggerButton()
+    ->footerAttributes(['class' => 'text-dark'])
+    ->footer(Button::tag()->addClass('btn btn-danger')->attribute('data-bs-dismiss', 'modal')->content($translator->translate('close')))
+    ->title('Modal title')
+    ->verticalCentered()
+    ->render();
 
-/**
- * The inert attribute has to be used to avoid 'aria-hidden' => true related errors
- * The simplified modal_layout is not using 'aria-hidden'
- */
-$inert = '$(function () {' .
-        "const modal = document.getElementById('modal-add-inv');" .
-        "modal.removeAttribute('inert');" .
-        "modal.setAttribute('inert', '');" .
-'});';
+/** @psalm-var array<string,mixed>|null $autoTemplate */
+
+$body = '';
+if (is_array($autoTemplate) && array_key_exists('body', $autoTemplate) && is_string($autoTemplate['body'])) {
+    $body = $autoTemplate['body'];
+}
+
+$bodyJson = json_encode($body);
+$inert = <<<JS
+    document.addEventListener('DOMContentLoaded', function () {
+        "use strict";
+        var textContent = {$bodyJson};
+        var el = document.getElementById('mailerinvform-body');
+        if (el) {
+            el.value = textContent;
+        }
+    });
+    JS;
 
 echo Html::script($inert)->type('module');

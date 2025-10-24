@@ -51,8 +51,6 @@ final readonly class Button
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
                 'class' => 'btn btn-danger bi bi-arrow-left',
-                'id' => 'btn-cancel',
-                'name' => 'btn_cancel',
                 'value' => '1',
             ],
         ];
@@ -71,8 +69,6 @@ final readonly class Button
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
                 'class' => 'btn btn-danger bi bi-arrow-left',
-                'id' => 'btn-cancel',
-                'name' => 'btn_cancel',
                 'value' => 'main',
             ],
             [
@@ -80,8 +76,6 @@ final readonly class Button
                 '',
                 'type' => 'submit',
                 'class' => 'btn btn-success bi bi-save pull-right',
-                'id' => 'btn-submit',
-                'name' => 'btn_submit',
                 'value' => '1',
             ],
         ];
@@ -99,8 +93,6 @@ final readonly class Button
                 '',
                 'type' => 'submit',
                 'class' => 'btn btn-success bi bi-save pull-right',
-                'id' => 'btn-submit',
-                'name' => 'btn_submit',
                 'value' => '1',
             ],
         ];

@@ -1,41 +1,124 @@
-"use strict";
+(function () {
+    "use strict";
 
-$(document).ready(function () {    
-    // used in inv/guest quote/partial_item_table inv/partial_item_table
-    $('[data-bs-toggle="tooltip"]').tooltip();
+    function initTooltips() {
+        if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) return;
+        Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
+            try { new bootstrap.Tooltip(el); } catch (e) { /* ignore init errors */ }
+        });
+    }
 
-    // Select2 for all select inputs. used in modal_product_lookups.js
-    $('.simple-select').select2();
-    
-    // used in inv/index quote/index and numberous other places e.g. $toolbarReset
-    $(document).on('click', '.ajax-loader', function () {
-        $('#fullpage-loader').fadeIn(200);
-        window.fullpageloaderTimeout = window.setTimeout(function () {
-            $('#loader-error').fadeIn(200);
-            $('#loader-icon').removeClass('fa-spin').addClass('text-danger');
-        }, 10000);
-    });
-    
-    // used in resources/views/layout/invoice
-    $(document).on('click', '.fullpage-loader-close', function () {
-        $('#fullpage-loader').fadeOut(200);
-        $('#loader-error').hide();
-        $('#loader-icon').addClass('fa-spin').removeClass('text-danger');
-        clearTimeout(window.fullpageloaderTimeout);
-    });
-    
-    // used in emailtemplate.js
-    var password_input = $('.passwordmeter-input');
-    if (password_input) {
-        password_input.on('input', function(){
-            var strength = zxcvbn(password_input.val());
-
-            $('.passmeter-2, .passmeter-3').hide();
-            if (strength.score === 4) {
-                $('.passmeter-2, .passmeter-3').show();
-            } else if (strength.score === 3) {
-                $('.passmeter-2').show();
+    function initSimpleSelects(root) {
+        if (typeof TomSelect === 'undefined') return;
+        (root || document).querySelectorAll('.simple-select').forEach(function (el) {
+            if (!el._tomselect) {
+                // eslint-disable-next-line no-new
+                new TomSelect(el, {});
+                el._tomselect = true;
             }
         });
     }
-});
+
+    // Loader helpers (simple show/hide with a fallback to the original UX)
+    function showFullpageLoader() {
+        var loader = document.getElementById('fullpage-loader');
+        var loaderError = document.getElementById('loader-error');
+        var loaderIcon = document.getElementById('loader-icon');
+
+        if (loader) loader.style.display = 'block';
+        if (loaderError) loaderError.style.display = 'none';
+        if (loaderIcon) {
+            loaderIcon.classList.add('fa-spin');
+            loaderIcon.classList.remove('text-danger');
+        }
+        // set timeout to show error state if stays too long
+        window.fullpageloaderTimeout = window.setTimeout(function () {
+            if (loaderError) loaderError.style.display = 'block';
+            if (loaderIcon) {
+                loaderIcon.classList.remove('fa-spin');
+                loaderIcon.classList.add('text-danger');
+            }
+        }, 10000);
+    }
+
+    function hideFullpageLoader() {
+        var loader = document.getElementById('fullpage-loader');
+        var loaderError = document.getElementById('loader-error');
+        var loaderIcon = document.getElementById('loader-icon');
+
+        if (loader) loader.style.display = 'none';
+        if (loaderError) loader.style.display = 'none';
+        if (loaderIcon) {
+            loaderIcon.classList.add('fa-spin');
+            loaderIcon.classList.remove('text-danger');
+        }
+        if (window.fullpageloaderTimeout) {
+            clearTimeout(window.fullpageloaderTimeout);
+            window.fullpageloaderTimeout = null;
+        }
+    }
+
+    // Password meter input handling (uses zxcvbn if available)
+    function initPasswordMeters() {
+        var inputs = Array.from(document.querySelectorAll('.passwordmeter-input'));
+        if (!inputs.length) return;
+        inputs.forEach(function (password_input) {
+            password_input.addEventListener('input', function () {
+                var strength = null;
+                try {
+                    if (typeof zxcvbn === 'function') strength = zxcvbn(password_input.value);
+                } catch (e) { strength = null; }
+                // hide both by default
+                Array.from(document.querySelectorAll('.passmeter-2, .passmeter-3')).forEach(function (el) {
+                    el.style.display = 'none';
+                });
+                if (strength && typeof strength.score === 'number') {
+                    if (strength.score === 4) {
+                        Array.from(document.querySelectorAll('.passmeter-2, .passmeter-3')).forEach(function (el) {
+                            el.style.display = '';
+                        });
+                    } else if (strength.score === 3) {
+                        Array.from(document.querySelectorAll('.passmeter-2')).forEach(function (el) {
+                            el.style.display = '';
+                        });
+                    }
+                }
+            }, { passive: true });
+        });
+    }
+
+    // Delegated event handlers
+    document.addEventListener('click', function (e) {
+        var el = e.target;
+
+        // ajax-loader: show fullpage loader
+        if (el.closest && el.closest('.ajax-loader')) {
+            showFullpageLoader();
+            return;
+        }
+
+        // fullpage-loader-close: hide fullpage loader
+        if (el.closest && el.closest('.fullpage-loader-close')) {
+            hideFullpageLoader();
+            return;
+        }
+    }, true);
+
+    // Initialize on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', function () {
+        initTooltips();
+        initSimpleSelects();
+        initPasswordMeters();
+        // ensure initial loader state is hidden
+        hideFullpageLoader();
+    });
+
+    // In case script is loaded after DOMContentLoaded already fired
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        // run init synchronously
+        initTooltips();
+        initSimpleSelects();
+        initPasswordMeters();
+    }
+
+})();

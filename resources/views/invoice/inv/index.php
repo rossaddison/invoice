@@ -954,8 +954,8 @@ $columns = [
                                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                             ],
                         ),
-                        $urlGenerator->generate('inv/delete', ['id' => $model->getId()]),
-                    ) : Label::tag();
+                    )->href($urlGenerator->generate('inv/delete', ['id' => $model->getId()]))
+                     : Label::tag();
         },
         encodeContent: false,
         visible: $visible,

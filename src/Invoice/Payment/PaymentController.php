@@ -138,7 +138,7 @@ final class PaymentController extends BaseController
                                 $payment_methodRepository->findAllPreloaded() : null,
             'cR' => $cR,
             'iaR' => $iaR,
-            'cvH' => new CustomValuesHelper($this->sR),
+            'cvH' => new CustomValuesHelper($this->sR, $cvR),
             'customFields' => $cfR->repoTablequery('payment_custom'),
             // Applicable to normally building up permanent selection lists eg. dropdowns
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
@@ -358,7 +358,7 @@ final class PaymentController extends BaseController
                 'paymentMethods' => $payment_methodRepository->findAllPreloaded(),
                 'cR' => $cR,
                 'iaR' => $iaR,
-                'cvH' => new CustomValuesHelper($this->sR),
+                'cvH' => new CustomValuesHelper($this->sR, $cvR),
                 'customFields' => $cfR->repoTablequery('payment_custom'),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
                 'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
@@ -897,7 +897,7 @@ final class PaymentController extends BaseController
             'customFields' => $cfR->repoTablequery('payment_custom'),
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
             'paymentCustomValues' => $payment_custom_values,
-            'cvH' => new CustomValuesHelper($this->sR),
+            'cvH' => new CustomValuesHelper($this->sR, $cvR),
             'paymentCustomForm' => new PaymentCustomForm(new PaymentCustom()),
         ]);
     }

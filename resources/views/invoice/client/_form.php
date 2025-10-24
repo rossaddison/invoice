@@ -333,7 +333,7 @@ echo Field::select($form, 'client_country')
     ])
     ->required(false);
 ?>            
-            <?= Field::text($form, 'client_web')
+            <?= Field::url($form, 'client_web')
     ->label($translator->translate('web'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('web'),
