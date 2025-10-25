@@ -26,6 +26,7 @@ final class CompanyController extends BaseController
 
     public function __construct(
         private CompanyService $companyService,
+        private \App\Widget\FormFields $formFields,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -73,6 +74,7 @@ final class CompanyController extends BaseController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
+            'formFields' => $this->formFields,
             'companyPublic' => $this->translator->translate('company.public'),
         ];
 
@@ -111,6 +113,7 @@ final class CompanyController extends BaseController
                 'actionArguments' => ['id' => $company->getId()],
                 'errors' => [],
                 'form' => $form,
+                'formFields' => $this->formFields,
                 'companyPublic' => $this->translator->translate('company.public'),
             ];
             if ($request->getMethod() === Method::POST) {

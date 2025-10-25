@@ -6,30 +6,58 @@ namespace App\Invoice\Product;
 
 use App\Invoice\Entity\Product;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Number;
 use Yiisoft\Validator\Rule\Required;
 
 final class ProductForm extends FormModel
 {
+    #[Length(min: 0, max: 255)]
     public ?string $product_sku = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_sii_schemeid = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_sii_id = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_icc_listid = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_icc_listversionid = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_icc_id = null;
+
+    #[Length(min: 0, max: 2)]
     public ?string $product_country_of_origin_code = null;
+
+    #[Required]
+    #[Length(min: 1, max: 255)]
     public ?string $product_name = null;
+
     public ?string $product_description = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_additional_item_property_name = null;
+
+    #[Length(min: 0, max: 255)]
     public ?string $product_additional_item_property_value = null;
 
     #[Required]
+    #[Number(min: 0, max: 999999999999999999)]
     public ?float  $product_price = 0.00;
 
+    #[Required]
+    #[Number(min: 0.01, max: 999999999999999999)]
     public float   $product_price_base_quantity = 1.00;
 
     #[Required]
+    #[Number(min: 0, max: 999999999999999999)]
     public ?float  $purchase_price = 0.00;
 
+    #[Length(min: 0, max: 255)]
     public ?string $provider_name = null;
 
     #[Required]
@@ -43,6 +71,7 @@ final class ProductForm extends FormModel
 
     public ?string $unit_peppol_id = '';
 
+    #[Number(min: 0, max: 999999999999999999)]
     public ?float $product_tariff = 0.00;
 
     public function __construct(Product $product)

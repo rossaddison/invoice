@@ -6,32 +6,75 @@ namespace App\Invoice\Company;
 
 use App\Invoice\Entity\Company;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Email;
+use Yiisoft\Validator\Rule\Integer;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\Url;
 
 final class CompanyForm extends FormModel
 {
     private ?int $id = null;
+
+    #[Integer(min: 0, max: 1)]
     private ?int $current = 0;
 
     #[Required]
+    #[Length(min: 1, max: 255)]
     private ?string $name = '';
 
+    #[Length(min: 0, max: 255)]
     private ?string $address_1 = '';
+
+    #[Length(min: 0, max: 255)]
     private ?string $address_2 = '';
+
+    #[Length(min: 0, max: 100)]
     private ?string $city = '';
+
+    #[Length(min: 0, max: 100)]
     private ?string $state = '';
+
+    #[Length(min: 0, max: 20)]
     private ?string $zip = '';
+
+    #[Length(min: 0, max: 100)]
     private ?string $country = '';
+
+    #[Length(min: 0, max: 20)]
     private ?string $phone = '';
+
+    #[Length(min: 0, max: 20)]
     private ?string $fax = '';
 
     #[Required]
+    #[Email()]
+    #[Length(min: 1, max: 255)]
     private ?string $email = '';
 
+    #[Url()]
+    #[Length(min: 0, max: 255)]
     private ?string $web = '';
 
+    #[Length(min: 0, max: 255)]
+    private ?string $slack = '';
+
+    #[Length(min: 0, max: 255)]
+    private ?string $facebook = '';
+
+    #[Length(min: 0, max: 255)]
+    private ?string $twitter = '';
+
+    #[Length(min: 0, max: 255)]
+    private ?string $linkedin = '';
+
+    #[Length(min: 0, max: 255)]
+    private ?string $whatsapp = '';
+
+    #[Length(min: 0, max: 255)]
     private ?string $arbitrationBody = '';
 
+    #[Length(min: 0, max: 255)]
     private ?string $arbitrationJurisdiction = '';
 
     public function __construct(Company $company)
@@ -49,6 +92,11 @@ final class CompanyForm extends FormModel
         $this->fax = $company->getFax();
         $this->email = $company->getEmail();
         $this->web = $company->getWeb();
+        $this->slack = $company->getSlack();
+        $this->facebook = $company->getFacebook();
+        $this->twitter = $company->getTwitter();
+        $this->linkedin = $company->getLinkedIn();
+        $this->whatsapp = $company->getWhatsapp();
         $this->arbitrationBody = $company->getArbitrationBody();
         $this->arbitrationJurisdiction = $company->getArbitrationJurisdiction();
     }
@@ -116,6 +164,31 @@ final class CompanyForm extends FormModel
     public function getWeb(): string|null
     {
         return $this->web;
+    }
+
+    public function getSlack(): string|null
+    {
+        return $this->slack;
+    }
+
+    public function getFacebook(): string|null
+    {
+        return $this->facebook;
+    }
+
+    public function getTwitter(): string|null
+    {
+        return $this->twitter;
+    }
+
+    public function getLinkedin(): string|null
+    {
+        return $this->linkedin;
+    }
+
+    public function getWhatsapp(): string|null
+    {
+        return $this->whatsapp;
     }
 
     public function getArbitrationBody(): string|null

@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\CompanyPrivate\CompanyPrivateForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Widget\Button $button
+ * @var App\Widget\FormFields $formFields
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -65,102 +66,46 @@ foreach ($companies as $company) {
     }
 }
 ?>
-                    <?=
-    Field::select($form, 'company_id')
-    ->label($company_public)
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'company_id',
-    ])
-    ->optionsData($optionsDataCompany)
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                    <?= $formFields->companyPrivateCompanySelect($form, $optionsDataCompany, $company_public); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::hidden($form, 'id')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->hideLabel()
-    ->value(Html::encode($form->getId() ??  '')); ?>
+                    <?= $formFields->companyPrivateHiddenField($form, 'id'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'tax_code')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('tax.code'))
-    ->value(Html::encode($form->getTax_code() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'tax_code', 'tax.code'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'iban')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('user.iban'))
-    ->value(Html::encode($form->getIban() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'iban', 'user.iban'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'gln')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('gln'))
-    ->value(Html::encode($form->getGln() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'gln', 'gln'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'rcc')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('sumex.rcc'))
-    ->value(Html::encode($form->getRcc() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'rcc', 'sumex.rcc'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
                     <?= Html::openTag('label'); ?>
                         <?= Html::encode($form->getLogo_filename()); ?>
                     <?= Html::closeTag('label'); ?>
-                    <?= Field::file($form, 'logo_filename')
-    ->accept('image/*')
-    ->value(Html::encode($form->getLogo_filename())); ?>
+                    <?= $formFields->companyPrivateFileField($form, 'logo_filename'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'logo_width')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('company.private.logo.width'))
-    ->value(Html::encode($form->getLogo_width() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'logo_width', 'company.private.logo.width'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'logo_height')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('company.private.logo.height'))
-    ->value(Html::encode($form->getLogo_height() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'logo_height', 'company.private.logo.height'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Field::text($form, 'logo_margin')
-    ->addInputAttributes(['class' => 'form-control'])
-    ->label($translator->translate('company.private.logo.margin'))
-    ->value(Html::encode($form->getLogo_margin() ??  '')); ?>
+                    <?= $formFields->companyPrivateTextField($form, 'logo_margin', 'company.private.logo.margin'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::date($form, 'start_date')
-        ->addInputAttributes(
-            [
-                'class' => 'form-control',
-                'placeholder' => ' (' . $dateHelper->display() . ')',
-            ],
-        )
-        ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
-                            ? $startdate->format('Y-m-d')
-                            : (new \DateTimeImmutable('now'))->format('Y-m-d')));
-?>
+                        <?= $formFields->companyPrivateDateField($form, 'start_date', ' (' . $dateHelper->display() . ')'); ?>
                     <?= Html::closeTag('div'); ?>                                
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Html::openTag('div', ['class' => 'input-group']); ?>               
-                        <?= Field::date($form, 'end_date')
-    ->addInputAttributes(
-        [
-            'class' => 'form-control',
-            'placeholder' => ' (' . $dateHelper->display() . ')',
-        ],
-    )
-    ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
-                        ? $enddate->format('Y-m-d')
-                        : (new \DateTimeImmutable('now'))->format('Y-m-d')));
-?>
+                        <?= $formFields->companyPrivateDateField($form, 'end_date', ' (' . $dateHelper->display() . ')'); ?>
                     <?= Html::closeTag('div'); ?>                                
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

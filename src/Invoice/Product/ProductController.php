@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Product;
 
 use App\Invoice\BaseController;
+use App\Widget\FormFields;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\Product;
 use App\Invoice\Entity\ProductCustom;
@@ -84,6 +85,7 @@ final class ProductController extends BaseController
 
     public function __construct(
         private DataResponseFactoryInterface $responseFactory,
+        private FormFields $formFields,
         private ProductService $productService,
         private ProductCustomService $productCustomService,
         private QuoteItemService $quoteitemService,
@@ -144,6 +146,7 @@ final class ProductController extends BaseController
             'cvH' => new CVH($this->sR, $cvR),
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm,
+            'formFields' => $this->formFields,
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -244,6 +247,7 @@ final class ProductController extends BaseController
                     'cvH' => new CVH($this->sR, $cvR),
                     'productCustomValues' => $this->product_custom_values($product_id, $pcR),
                     'productCustomForm' => $productCustomForm,
+                    'formFields' => $this->formFields,
                 ];
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
@@ -259,27 +263,34 @@ final class ProductController extends BaseController
                         if ($cfR->repoTableCountquery('product_custom') > 0) {
                             if (isset($body['custom'])) {
                                 $custom = (array) $body['custom'];
+                                $errorsCustom = [];
                                 /** @var array|string $value */
                                 foreach ($custom as $custom_field_id => $value) {
                                     $product_custom = $pcR->repoFormValuequery($product_id, (string) $custom_field_id);
-                                    if (null !== $product_custom) {
-                                        $product_custom_input = [
-                                            'product_id' => $product_id,
-                                            'custom_field_id' => (int) $custom_field_id,
-                                            'value' => is_array($value) ? serialize($value) : $value,
-                                        ];
-                                        $productCustomForm = new ProductCustomForm($product_custom);
-                                        if ($formHydrator->populate($productCustomForm, $product_custom_input)
-                                           && $productCustomForm->isValid()
-                                        ) {
-                                            $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);
-                                        }
-                                        $parameters['errorsCustom'] = $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-                                        $parameters['productCustomForm'] = $productCustomForm;
+
+                                    // If product_custom doesn't exist, create a new one
+                                    if (null === $product_custom) {
+                                        $product_custom = new ProductCustom();
                                     }
+
+                                    $product_custom_input = [
+                                        'product_id' => $product_id,
+                                        'custom_field_id' => (int) $custom_field_id,
+                                        'value' => is_array($value) ? serialize($value) : $value,
+                                    ];
+
+                                    $productCustomForm = new ProductCustomForm($product_custom);
+                                    if ($formHydrator->populateAndValidate($productCustomForm, $product_custom_input)) {
+                                        $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);
+                                    } else {
+                                        $errorsCustom = array_merge($errorsCustom, $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty());
+                                    }
+                                    $parameters['productCustomForm'] = $productCustomForm;
                                 } //foreach
-                                $errors_custom = $parameters['errorsCustom'];
-                                if (count($errors_custom) > 0) {
+
+                                // If there are custom field errors, return to form
+                                if (count($errorsCustom) > 0) {
+                                    $parameters['errorsCustom'] = $errorsCustom;
                                     return $this->viewRenderer->render('_form', $parameters);
                                 }
                             } //isset

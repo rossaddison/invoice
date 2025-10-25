@@ -6,36 +6,53 @@ namespace App\Invoice\Client;
 
 use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;
+use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\Url;
 use DateTimeImmutable;
 
 final class ClientForm extends FormModel
 {
+    #[Length(min: 0, max: 10)]
     private ?string $client_title = '';
+    #[Length(min: 0, max: 50)]
     private ?string $client_name = '';
+    #[Length(min: 0, max: 3)]
     private ?string $client_group = '';
     private ?string $client_frequency = '';
     private ?string $client_number = '';
+    #[Length(min: 0, max: 100)]
     private ?string $client_address_1 = '';
+    #[Length(min: 0, max: 100)]
     private ?string $client_address_2 = '';
     private ?string $client_building_number = '';
+    #[Length(min: 0, max: 100)]
     private ?string $client_city = '';
+    #[Length(min: 0, max: 30)]
     private ?string $client_state = '';
+    #[Length(min: 0, max: 10)]
     private ?string $client_zip = '';
     private ?string $client_country = '';
     private ?string $client_phone = '';
     private ?string $client_fax = '';
+    #[Length(min: 0, max: 11)]
     private ?string $client_mobile = '';
+    #[Email()]
     private ?string $client_email = '';
+    #[Url()]
     private ?string $client_web = '';
     private ?string $client_vat_id = '';
     private ?string $client_tax_code = '';
     private ?string $client_language = '';
     private ?bool $client_active = false;
+    #[Length(min: 0, max: 151)]
     private ?string $client_surname = '';
+    #[Length(min: 0, max: 16)]
     private ?string $client_avs = '';
     private ?string $client_insurednumber = '';
+    #[Length(min: 0, max: 30)]
     private ?string $client_veka = '';
     private readonly mixed $client_birthdate;
 

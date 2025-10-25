@@ -10,6 +10,7 @@ use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
+use App\Widget\FormFields;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -29,6 +30,7 @@ final class CompanyPrivateController extends BaseController
 
     public function __construct(
         private CompanyPrivateService $companyPrivateService,
+        private FormFields $formFields,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -77,6 +79,7 @@ final class CompanyPrivateController extends BaseController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
+            'formFields' => $this->formFields,
             'companies' => $companyRepository->findAllPreloaded(),
             'company_public' => $this->translator->translate('company.public'),
         ];
@@ -202,6 +205,7 @@ final class CompanyPrivateController extends BaseController
                 'actionArguments' => ['id' => $company_private->getId()],
                 'errors' => [],
                 'form' => $form,
+                'formFields' => $this->formFields,
                 'companies' => $companyRepository->findAllPreloaded(),
                 'company_public' => $this->translator->translate('setting.company'),
             ];
@@ -315,6 +319,7 @@ final class CompanyPrivateController extends BaseController
                 'actionName' => 'companyprivate/view',
                 'actionArguments' => ['id' => $company_private->getId()],
                 'form' => $form,
+                'formFields' => $this->formFields,
                 'companies' => $companyRepository->findAllPreloaded(),
                 'companyprivate' => $company_private,
                 'company_public' => $this->translator->translate('company.public'),

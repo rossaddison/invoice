@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Invoice\Quote;
 
 use App\Invoice\BaseController;
+use App\Widget\FormFields;
 // Entity's
 use App\Invoice\Entity\Contract;
 use App\Invoice\Entity\CustomField;
@@ -166,6 +167,7 @@ final class QuoteController extends BaseController
      */
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
+        private readonly FormFields $formFields,
         private readonly InvAmountService $inv_amount_service,
         private readonly InvService $inv_service,
         private readonly InvCustomService $inv_custom_service,
@@ -901,6 +903,7 @@ final class QuoteController extends BaseController
                 'quoteCustomForm' => $quoteCustomForm,
                 'delCount' => $delRepo->repoClientCount($quote->getClient_id()),
                 'returnUrlAction' => 'edit',
+                'formFields' => $this->formFields,
             ];
             $delRepo->repoClientCount($quote->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('quote.delivery.location.none'));
             if ($request->getMethod() === Method::POST) {
@@ -1343,7 +1346,7 @@ final class QuoteController extends BaseController
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if (!empty($quote) && ($quote->getStatus_id() == 1) && ($quote->getNumber() == '')) {
             // Generate new quote number if applicable
-            if ($sR->getSetting('generate_quote_number_for_draft') == 0) {
+            if ((int) $sR->getSetting('generate_quote_number_for_draft') === 0) {
                 $quote_number = (string) $qR->get_quote_number($quote->getGroup_id(), $gR);
                 // Set new quote number and save
                 $quote->setNumber($quote_number);

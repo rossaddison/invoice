@@ -28,8 +28,18 @@ final readonly class CompanyService
         isset($array['fax']) ? $model->setFax((string) $array['fax']) : '';
         isset($array['email']) ? $model->setEmail((string) $array['email']) : '';
         isset($array['web']) ? $model->setWeb((string) $array['web']) : '';
-        isset($array['arbitrationBody']) ? $model->setWeb((string) $array['arbitrationBody']) : '';
-        isset($array['arbitrationJurisdiction']) ? $model->setWeb((string) $array['arbitrationJurisdiction']) : '';
+
+        // Social media fields
+        isset($array['slack']) ? $model->setSlack((string) $array['slack']) : '';
+        isset($array['facebook']) ? $model->setFacebook((string) $array['facebook']) : '';
+        isset($array['twitter']) ? $model->setTwitter((string) $array['twitter']) : '';
+        isset($array['linkedin']) ? $model->setLinkedIn((string) $array['linkedin']) : '';
+        isset($array['whatsapp']) ? $model->setWhatsapp((string) $array['whatsapp']) : '';
+
+        // Arbitration fields (fixed method calls)
+        isset($array['arbitrationBody']) ? $model->setArbitrationBody((string) $array['arbitrationBody']) : '';
+        isset($array['arbitrationJurisdiction']) ? $model->setArbitrationJurisdiction((string) $array['arbitrationJurisdiction']) : '';
+
         $this->repository->save($model);
     }
 

@@ -78,6 +78,7 @@ final class ClientController extends BaseController
     public function __construct(
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
+        private \App\Widget\FormFields $formFields,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
@@ -188,6 +189,7 @@ final class ClientController extends BaseController
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
             'clientCustomValues' => [],
             'clientCustomForm' => $clientCustomForm,
+            'formFields' => $this->formFields,
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -287,6 +289,7 @@ final class ClientController extends BaseController
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
                     'clientCustomValues' => $this->client_custom_values((string) $client_id, $ccR),
                     'clientCustomForm' => $clientCustomForm,
+                    'formFields' => $this->formFields,
                 ];
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];

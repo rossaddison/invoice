@@ -49,6 +49,7 @@ final class UserInvController extends BaseController
         private Manager $manager,
         private UrlGenerator $urlGenerator,
         private UserInvService $userinvService,
+        private \App\Widget\FormFields $formFields,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -96,6 +97,7 @@ final class UserInvController extends BaseController
             'aliases' => $aliases,
             'errors' => [],
             'form' => $form,
+            'formFields' => $this->formFields,
             // Only include newly signed up user ids in user Table in dropdown list i.e exclude those users already added and linked with client(s)
             'selected_country' => $this->sR->getSetting('default_country'),
             'selected_language' => $this->sR->getSetting('default_language'),
@@ -376,6 +378,7 @@ final class UserInvController extends BaseController
                 'actionArguments' => ['id' => $userinv->getId()],
                 'errors' => [],
                 'form' => $form,
+                'formFields' => $this->formFields,
                 'aliases' => $aliases,
                 'uR' => $uR,
             ];

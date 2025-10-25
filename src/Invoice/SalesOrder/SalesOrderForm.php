@@ -6,32 +6,58 @@ namespace App\Invoice\SalesOrder;
 
 use App\Invoice\Entity\SalesOrder;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Integer;
+use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Number;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
 final class SalesOrderForm extends FormModel
 {
+    #[Length(min: 0, max: 100)]
     private ?string $number = '';
+
     private mixed $date_created = '';
 
     #[Required]
     private ?string $quote_id = null;
+
     private ?string $inv_id = null;
 
     #[Required]
+    #[Integer(min: 1)]
     private ?int $group_id = null;
 
     #[Required]
+    #[Integer(min: 1)]
     private ?int $client_id = null;
+
+    #[Length(min: 0, max: 100)]
     private ?string $client_po_number = null;
+
+    #[Length(min: 0, max: 100)]
     private ?string $client_po_line_number = null;
+
+    #[Length(min: 0, max: 100)]
     private ?string $client_po_person = null;
+
+    #[Integer(min: 1, max: 9)]
     private ?int $status_id = 1;
+
+    #[Number(min: 0, max: 999999999999999999)]
     private ?float $discount_amount = 0;
+
+    #[Number(min: 0, max: 100)]
     private ?float $discount_percent = 0;
+
+    #[Length(min: 0, max: 32)]
     private ?string $url_key = '';
+
+    #[Length(min: 0, max: 90)]
     private ?string $password = '';
+
     private ?string $notes = '';
+
     private ?string $payment_term = '';
 
     public function __construct(SalesOrder $salesOrder)

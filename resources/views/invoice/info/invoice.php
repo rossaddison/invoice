@@ -51,6 +51,12 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>25th October 2025</b></p>
+<p>I am now using VS Code and integrating it with SonarQube Cloud using the Connection Method</p>
+<p>This is to bring code replication down</p>
+<p>A FormFields widget has been created for code reduction. Each function is tailored to specific entity needs.
+<p>Next: Custom Fields: Move basic functionality to the BaseController so that it code can also be reduced and try and implement some sort of validation on the custom fields. </p>
+<p>Also remove the 'NULL' appearing in the custom field.</p>
 <p><b>24th October 2025</b></p>
 <p>jQuery Dependency removed completely via remove_jquery branch</p>
 <p>pre_jquery_deletion branch created</p>

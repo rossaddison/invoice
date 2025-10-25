@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "YOUR_CONNECTION_NAME",
+        "projectKey": "rossaddison_invoice"
+    }
+}

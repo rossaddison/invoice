@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Client\ClientForm $form
  * @var App\Invoice\ClientCustom\ClientCustomForm $clientCustomForm
  * @var App\Invoice\Entity\Client $client
+ * @var App\Widget\FormFields $formFields
  *
  * Related logic: see config\common\params.php 'cvH'
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
@@ -81,75 +82,23 @@ Html::closeTag('div'),
 Html::closeTag('div')
 ?>
 
-<?= Field::select($form, 'client_title')
-    ->label($translator->translate('client.title'))
-    ->addInputAttributes([
-        'class' => 'form-control',
-    ])
-    ->value($form->getClient_title())
-    ->prompt($translator->translate('none'))
-    ->optionsData([
-        $translator->translate('client.title.mr'),
-        $translator->translate('client.title.mrs'),
-        $translator->translate('client.title.miss'),
-        $translator->translate('client.title.doctor'),
-        $translator->translate('client.title.professor'),
-    ])
-    ->required(false);
-?>
+<?= $formFields->clientTitleSelect($form, [
+    $translator->translate('client.title.mr'),
+    $translator->translate('client.title.mrs'),
+    $translator->translate('client.title.miss'),
+    $translator->translate('client.title.doctor'),
+    $translator->translate('client.title.professor'),
+]); ?>
     
-<?= Field::text($form, 'client_name')
-    ->label($translator->translate('client.name'))
-    ->addInputAttributes([
-        'value' => Html::encode($form->getClient_name() ?? ''),
-        'placeholder' => $translator->translate('client.name'),
-        'class' => 'form-control',
-    ])
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
-<?= Field::text($form, 'client_surname')
-    ->label($translator->translate('client.surname'))
-    ->addInputAttributes([
-        'value' => Html::encode($form->getClient_surname() ?? ''),
-        'placeholder' => $translator->translate('client.surname'),
-        'class' => 'form-control',
-    ])
-    ->required(false);
-?>
+<?= $formFields->clientTextField($form, 'client_name', 'client.name', true); ?>
+<?= $formFields->clientTextField($form, 'client_surname', 'client.surname', false); ?>
 
 
-<?= Field::email($form, 'client_email')
-    ->label($translator->translate('email'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('email'),
-        'value' =>  Html::encode($form->getClient_email() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_email',
-    ])
-    ->required(false);
-?>
+<?= $formFields->clientEmailField($form); ?>
 
-<?= Field::telephone($form, 'client_mobile')
-    ->label($translator->translate('mobile'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('mobile'),
-        'value' => Html::encode($form->getClient_mobile() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_mobile',
-    ])
-    ->required(false);
-?>
+<?= $formFields->clientTelephoneField($form, 'client_mobile', 'mobile'); ?>
 
-<?= Field::text($form, 'client_group')
-    ->label($translator->translate('client.group'))
-    ->addInputAttributes([
-        'value' => Html::encode($form->getClient_group() ?? ''),
-        'placeholder' => $translator->translate('client.group'),
-        'class' => 'form-control',
-    ])
-    ->required(false);
-?>
+<?= $formFields->clientTextField($form, 'client_group', 'client.group', false); ?>
 
 <?= Field::select($form, 'client_frequency')
     ->label($translator->translate('client.frequency'))
@@ -162,33 +111,16 @@ Html::closeTag('div')
     ->required(false);
 ?>
 
-<?= Field::text($form, 'client_number')
-    ->label($translator->translate('client.number'))
-    ->addInputAttributes([
-        'value' => Html::encode($form->getClient_number() ?? ''),
-        'placeholder' => $translator->translate('client.number'),
-        'class' => 'form-control',
-    ])
-    ->required(false);
-?>  
+<?= $formFields->clientTextField($form, 'client_number', 'client.number', false); ?>  
     
 <?php
-    $options = [];
+    $languageOptions = [];
 /** @var string $language */
 foreach ($s->locale_language_array() as $language) {
-    $options[$language] = ucfirst($language);
+    $languageOptions[$language] = ucfirst($language);
 }
-echo Field::select($form, 'client_language')
-    ->label($translator->translate('language'))
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'client_language',
-    ])
-->value(strlen($form->getClient_language() ?? '') > 0 ? $form->getClient_language() : $selectedLanguage)
-->optionsData($options)
-->required(true)
-->hint($translator->translate('hint.this.field.is.required'));
-?>  
+?>
+<?= $formFields->clientLanguageSelect($form, $languageOptions, $selectedLanguage); ?>  
 
 <?= Html::Tag('br'); ?>
 <?= Html::openTag('div', ['class' => 'card']); ?>
@@ -197,98 +129,33 @@ echo Field::select($form, 'client_language')
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'client_address_1')
-                ->label($translator->translate('street.address'))
-                ->addInputAttributes([
-                    'placeholder' => $translator->translate('street.address'),
-                    'value' => Html::encode($form->getClient_address_1() ?? ''),
-                    'class' => 'form-control',
-                    'id' => 'client_address_1',
-                ])
-                ->required(true)
-                ->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->clientTextField($form, 'client_address_1', 'street.address', true); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::tag('br'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'client_address_2')
-    ->label($translator->translate('street.address.2'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('street.address.2'),
-        'value' => Html::encode($form->getClient_address_2() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_address_2',
-    ])
-    ->required(false);
-?>
+            <?= $formFields->clientTextField($form, 'client_address_2', 'street.address.2', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'client_building_number')
-    ->label($translator->translate('client.building.number'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('client.building.number'),
-        'value' => Html::encode($form->getClient_building_number() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_building_number',
-    ])
-    ->required(false);
-?>
+            <?= $formFields->clientTextField($form, 'client_building_number', 'client.building.number', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'client_city')
-    ->label($translator->translate('city'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('city'),
-        'value' => Html::encode($form->getClient_city() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_city',
-    ])
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->clientTextField($form, 'client_city', 'city', true); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'client_state')
-    ->label($translator->translate('state'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('state'),
-        'value' => Html::encode($form->getClient_state() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_state',
-    ])
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->clientTextField($form, 'client_state', 'state', true); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'client_zip')
-    ->label($translator->translate('zip'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('zip'),
-        'value' => Html::encode($form->getClient_zip() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_zip',
-    ])
-    ->required(false);
-?>
+            <?= $formFields->clientTextField($form, 'client_zip', 'zip', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
-    /** @var string $country */
-    foreach ($countries as $cldr => $country) {
-        $options[$country] = ucfirst($country);
-    }
-echo Field::select($form, 'client_country')
-->label($translator->translate('country'))
-->addInputAttributes([
-    'id' => 'client_country',
-    'class' => 'form-control',
-    'selected' => $s->check_select(($form->getClient_country() ?? $client->getClient_country()), $selectedCountry),
-])
-->optionsData($options)
-->required(true)
-->hint($translator->translate('hint.this.field.is.required'));
+                $countryOptions = [];
+/** @var string $country */
+foreach ($countries as $cldr => $country) {
+    $countryOptions[$country] = ucfirst($country);
+}
 ?>
+            <?= $formFields->clientCountrySelect($form, $countryOptions, $selectedCountry); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
@@ -313,36 +180,9 @@ echo Field::select($form, 'client_country')
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::telephone($form, 'client_phone')
-        ->label($translator->translate('phone'))
-        ->addInputAttributes([
-            'placeholder' => $translator->translate('phone'),
-            'value' => Html::encode($form->getClient_phone() ?? ''),
-            'class' => 'form-control',
-            'id' => 'client_phone',
-        ])
-        ->required(false);
-?>
-            <?= Field::telephone($form, 'client_fax')
-    ->label($translator->translate('fax'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('phone'),
-        'value' => Html::encode($form->getClient_fax() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_fax',
-    ])
-    ->required(false);
-?>            
-            <?= Field::url($form, 'client_web')
-    ->label($translator->translate('web'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('web'),
-        'value' => Html::encode($form->getClient_web() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_web',
-    ])
-    ->required(false);
-?>
+            <?= $formFields->clientTelephoneField($form, 'client_phone', 'phone'); ?>
+            <?= $formFields->clientTelephoneField($form, 'client_fax', 'fax'); ?>            
+            <?= $formFields->clientUrlField($form); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
            <?= Html::openTag('div'); ?>
@@ -436,36 +276,9 @@ echo Field::date($form, 'client_birthdate')
     ->step(1)
     ->hint($translator->translate('client.age.hint'))
 ?>
-            <?= Field::text($form, 'client_avs')
-    ->label($translator->translate('sumex.ssn'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('sumx.ssn'),
-        'value' =>  Html::encode($form->getClient_avs() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_avs',
-    ])
-    ->required(false);
-?>
-            <?= Field::text($form, 'client_insurednumber')
-    ->label($translator->translate('sumex.insurednumber'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('sumex.insurednumber'),
-        'value' =>  Html::encode($form->getClient_insurednumber() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_insurednumber',
-    ])
-    ->required(false);
-?>
-            <?= Field::text($form, 'client_veka')
-    ->label($translator->translate('sumex.veka'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('sumex.veka'),
-        'value' =>  Html::encode($form->getClient_veka() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_veka',
-    ])
-    ->required(false);
-?>
+            <?= $formFields->clientTextField($form, 'client_avs', 'sumex.ssn', false); ?>
+            <?= $formFields->clientTextField($form, 'client_insurednumber', 'sumex.insurednumber', false); ?>
+            <?= $formFields->clientTextField($form, 'client_veka', 'sumex.veka', false); ?>
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
@@ -490,26 +303,8 @@ echo Field::date($form, 'client_birthdate')
         <?= $translator->translate('tax.information'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Field::text($form, 'client_vat_id')
-            ->label($translator->translate('vat.id'))
-            ->addInputAttributes([
-                'placeholder' => $translator->translate('vat.id'),
-                'value' =>  Html::encode($form->getClient_vat_id() ?? ''),
-                'class' => 'form-control',
-                'id' => 'client_vat_id',
-            ])
-            ->required(false);
-?>
-        <?= Field::text($form, 'client_tax_code')
-    ->label($translator->translate('tax.code'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('tax.code'),
-        'value' =>  Html::encode($form->getClient_tax_code() ?? ''),
-        'class' => 'form-control',
-        'id' => 'client_tax_code',
-    ])
-    ->required(false);
-?>
+        <?= $formFields->clientTextField($form, 'client_vat_id', 'vat.id', false); ?>
+        <?= $formFields->clientTextField($form, 'client_tax_code', 'tax.code', false); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
         /**

@@ -14,6 +14,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\User\UserRepository $uR
  * @var App\Widget\Button $button
+ * @var App\Widget\FormFields $formFields
  * @var Yiisoft\Aliases\Aliases $aliases
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\View $this
@@ -59,9 +60,8 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php
-    // build an array of userinv ids
-    $userInvIds = [];
-
+                // build an array of userinv ids
+                $userInvIds = [];
 /**
  * @var App\Invoice\Entity\UserInv $userInv
  */
@@ -71,7 +71,6 @@ foreach ($uiR->findAllPreloaded() as $userInv) {
 
 // build an array of newly signed up users not in userinv
 $optionsDataSignedUpUsersNotInUserInv = [];
-
 /**
  * @var App\User\User $user
  */
@@ -83,162 +82,59 @@ foreach ($uR->findAllPreloaded() as $user) {
         }
     }
 }
-echo Field::select($form, 'user_id')
-->label($translator->translate('users'))
-->addInputAttributes([
-    'class' => 'form-control',
-    'id' => 'user_id',
-])
-->optionsData($optionsDataSignedUpUsersNotInUserInv)
-->value(Html::encode($form->getUser_id() ?? ''))
-->hint($translator->translate('hint.this.field.is.required'));
 ?>
+            <?= $formFields->userInvUserSelect($form, $optionsDataSignedUpUsersNotInUserInv); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
-  $types = [
-      0 => $translator->translate('administrator'),
-      1 => $translator->translate('guest.read.only'),
-  ]
+    $typeOptions = [
+        0 => $translator->translate('administrator'),
+        1 => $translator->translate('guest.read.only'),
+    ];
 ?>
-            <?php
-    $optionsDataType = [];
-foreach ($types as $key => $value) {
-    $optionsDataType[$key] = $value;
-}
-echo Field::select($form, 'type')
-->label($translator->translate('type'))
-->addInputAttributes([
-    'class' => 'form-control',
-    'id' => 'type',
-])
-->optionsData($optionsDataType)
-->value(Html::encode($form->getType() ?? 1))
-->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->userInvTypeSelect($form, $typeOptions); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?> 
-                <?= Field::checkbox($form, 'active')
-        ->inputLabelAttributes(['class' => 'form-check-label'])
-        ->inputClass('form-check-input')
-        ->ariaDescribedBy($translator->translate('active'));
-?>
+                <?= $formFields->userInvCheckboxField($form, 'active', 'active'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::checkbox($form, 'all_clients')
-    ->inputLabelAttributes(['class' => 'form-check-label'])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('user.all.clients'));
-?>
+            <?= $formFields->userInvCheckboxField($form, 'all_clients', 'user.all.clients'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php
-    $optionsDataLanguage = [];
+    $languageOptions = [];
 /** @var string $language */
 foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0), 'name', 'name') as $language) {
-    $optionsDataLanguage[$language] = ucfirst($language);
+    $languageOptions[$language] = ucfirst($language);
 }
-echo Field::select($form, 'language')
-->label($translator->translate('language'))
-->addInputAttributes([
-    'class' => 'form-control',
-    'id' => 'language',
-])
-->optionsData($optionsDataLanguage)
-->value(Html::encode($form->getLanguage() ?? ''))
-->hint($translator->translate('hint.this.field.is.required'));
 ?>
+            <?= $formFields->userInvLanguageSelect($form, $languageOptions); ?>
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'name')
-    ->label($translator->translate('name'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('name'),
-        'class' => 'form-control',
-        'id' => 'name',
-    ])
-    ->value(Html::encode($form->getName() ?? ''))
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->userInvTextField($form, 'name', 'name', true); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'company')
-    ->label($translator->translate('company'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('company'),
-        'class' => 'form-control',
-        'id' => 'company',
-    ])
-    ->value(Html::encode($form->getCompany() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'company', 'company', false); ?>
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'address_1')
-    ->label($translator->translate('street.address'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('street.address'),
-        'class' => 'form-control',
-        'id' => 'address_1',
-    ])
-    ->value(Html::encode($form->getAddress_1() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'address_1', 'street.address', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'address_2')
-    ->label($translator->translate('street.address.2'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('street.address'),
-        'class' => 'form-control',
-        'id' => 'address_2',
-    ])
-    ->value(Html::encode($form->getAddress_2() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'address_2', 'street.address.2', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'city')
-    ->label($translator->translate('city'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('city'),
-        'class' => 'form-control',
-        'id' => 'city',
-    ])
-    ->value(Html::encode($form->getCity() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'city', 'city', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'state')
-    ->label($translator->translate('state'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('state'),
-        'class' => 'form-control',
-        'id' => 'state',
-    ])
-    ->value(Html::encode($form->getState() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'state', 'state', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'zip')
-    ->label($translator->translate('zip'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('zip'),
-        'class' => 'form-control',
-        'id' => 'zip',
-    ])
-    ->value(Html::encode($form->getZip() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'zip', 'zip', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'country')
-    ->label($translator->translate('country'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('country'),
-        'class' => 'form-control',
-        'id' => 'country',
-    ])
-    ->value(Html::encode($form->getCountry() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'country', 'country', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::telephone($form, 'phone')

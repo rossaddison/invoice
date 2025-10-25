@@ -1,0 +1,12 @@
+{
+    // SonarCloud Integration Setup:
+    // 1. Install "SonarQube for IDE" extension
+    // 2. Run: "SonarLint: Add SonarQube/SonarCloud Connection"
+    // 3. Choose "SonarCloud" and authenticate
+    // 4. Update "connectionId" below to match your connection name
+    // 5. Project key "rossaddison_invoice" should remain the same
+    "sonarlint.connectedMode.project": {
+        "connectionId": "rossaddison-sonarcloud",
+        "projectKey": "rossaddison_invoice"
+    }
+}

@@ -14,6 +14,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\PostalAddress\PostalAddressRepository $paR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
+ * @var App\Widget\FormFields $formFields
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $customFields
@@ -81,25 +82,10 @@ if ($vat) {
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'client_id')
-   ->label($translator->translate('client'))
-   ->addInputAttributes(['class' => 'form-control'])
-   ->value($form->getClient_id())
-   ->prompt($translator->translate('none'))
-   ->optionsData($optionsData['client'])
-   ->hint($translator->translate('hint.this.field.is.required'));
-
-?>
+                                    <?= $formFields->clientSelect($form, $optionsData); ?>
                                 <?= Html::closeTag('div'); ?>            
                                 <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'group_id')
-    ->label($translator->translate('group'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getGroup_id() ?? $defaultGroupId)
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsData['group'])
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                                    <?= $formFields->groupSelect($form, $optionsData, $defaultGroupId); ?>
                                 <?= Html::closeTag('div'); ?>   
 
                             <?php if ($deliveryCount > 0) { ?>
@@ -268,11 +254,7 @@ if ($vat) {
                         <?= Html::closeTag('div'); ?>
                         <?= Html::Tag('br'); ?>
                         <?= Html::openTag('div'); ?>
-                            <?= Field::date($form, 'date_created')
-    ->label($translator->translate('date.issued'))
-    ->value(!is_string($form->getDate_created()) ? $form->getDate_created()?->format('Y-m-d') : '')
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                            <?= $formFields->dateCreatedField($form); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form, 'date_supplied')
@@ -289,23 +271,10 @@ if ($vat) {
 ?>    
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
-                            <?= Field::password($form, 'password')
-    ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
-    ->value(Html::encode($form->getPassword()))
-    ->placeholder($translator->translate('password'))
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
+                            <?= $formFields->passwordField($form); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
-                            <?= Field::select($form, 'status_id')
-    ->label($translator->translate('status'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getStatus_id())
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsData['invoiceStatus'])
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
+                            <?= $formFields->statusSelect($form, $optionsData, 'invoiceStatus'); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::select($form, 'payment_method')
@@ -325,25 +294,7 @@ if ($vat) {
 ?>
                         <?= Html::closeTag('div'); ?>
                     <?php   if ($vat === false) { ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::text($form, 'discount_amount')
-    ->hideLabel(false)
-    ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
-    ->label($translator->translate('discount.amount') . ' ' . $s->getSetting('currency_symbol'))
-    ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
-    ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
-    ->placeholder($translator->translate('discount.amount'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::text($form, 'discount_percent')
-                            ->label($translator->translate('discount.percent'))
-                            ->disabled(($form->getDiscount_amount() > 0.00 && $form->getDiscount_percent() == 0.00) ? true : false)
-                            ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_percent'])
-                            ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
-                            ->placeholder($translator->translate('discount.percent'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>
+                        <?= $formFields->discountFields($form); ?>
                     <?php } ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::select($form, 'terms')
@@ -356,13 +307,7 @@ if ($vat) {
 ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
-                            <?= Field::textarea($form, 'note')
-    ->label($translator->translate('note'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getNote()))
-    ->placeholder($translator->translate('note'))
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
+                            <?= $formFields->notesField($form); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form, 'document_description')

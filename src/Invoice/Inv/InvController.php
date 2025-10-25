@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\BaseController;
+use App\Widget\FormFields;
 // Entity's
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Contract;
@@ -171,6 +172,7 @@ final class InvController extends BaseController
     public function __construct(
         private readonly Crypt $crypt,
         private readonly DataResponseFactoryInterface $factory,
+        private readonly FormFields $formFields,
         private readonly DelRepo $delRepo,
         private readonly InvAllowanceChargeService $inv_allowance_charge_service,
         private readonly InvAmountService $inv_amount_service,
@@ -1280,6 +1282,7 @@ final class InvController extends BaseController
                 ),
                 'paR' => $paR,
                 'postalAddressCount' => $paR->repoClientCount($inv->getClient_id()),
+                'formFields' => $this->formFields,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();

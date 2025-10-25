@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\User\UserRepository $uR
  * @var App\Invoice\UserInv\UserInvRepository $uiR
  * @var App\Widget\Button $button
+ * @var App\Widget\FormFields $formFields
  * @var Yiisoft\Aliases\Aliases $aliases
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\View $this
@@ -56,97 +57,40 @@ use Yiisoft\Html\Tag\Form;
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
-            <?php
-   echo Field::text($form, 'user_id')
-    ->label($translator->translate('users'))
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'user_id',
-    ])
-    ->readonly(true)
-    ->value(Html::encode($form->getUser_id() ?? ''))
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->userInvUserIdField($form); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
-  $types = [
-      0 => $translator->translate('administrator'),
-      1 => $translator->translate('guest.read.only'),
-  ]
+                $typeOptions = [
+                    0 => $translator->translate('administrator'),
+                    1 => $translator->translate('guest.read.only'),
+                ];
 ?>
-            <?php
-    $optionsDataType = [];
-foreach ($types as $key => $value) {
-    $optionsDataType[$key] = $value;
-}
-echo Field::select($form, 'type')
-->label($translator->translate('type'))
-->addInputAttributes([
-    'class' => 'form-control',
-    'id' => 'type',
-])
-->optionsData($optionsDataType)
-->value(Html::encode($form->getType() ?? 1))
-->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->userInvTypeSelect($form, $typeOptions); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Html::openTag('div', ['class' => 'p-2']); ?> 
-                <?= Field::checkbox($form, 'active')
-        ->inputLabelAttributes(['class' => 'form-check-label'])
-        ->inputClass('form-check-input')
-        ->ariaDescribedBy($translator->translate('active'));
-?>
+                <?= $formFields->userInvCheckboxField($form, 'active', 'active'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::checkbox($form, 'all_clients')
-    ->inputLabelAttributes(['class' => 'form-check-label'])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('user.all.clients'));
-?>
+            <?= $formFields->userInvCheckboxField($form, 'all_clients', 'user.all.clients'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
             <?php
-    $optionsDataLanguage = [];
+    $languageOptions = [];
 /** @var string $language */
 foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language'), 0), 'name', 'name') as $language) {
-    $optionsDataLanguage[$language] = ucfirst($language);
+    $languageOptions[$language] = ucfirst($language);
 }
-echo Field::select($form, 'language')
-->label($translator->translate('language'))
-->addInputAttributes([
-    'class' => 'form-control',
-    'id' => 'language',
-])
-->optionsData($optionsDataLanguage)
-->value(Html::encode($form->getLanguage() ?? ''))
-->hint($translator->translate('hint.this.field.is.required'));
 ?>
+            <?= $formFields->userInvLanguageSelect($form, $languageOptions); ?>
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'name')
-    ->label($translator->translate('name'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('name'),
-        'class' => 'form-control',
-        'id' => 'name',
-    ])
-    ->value(Html::encode($form->getName() ?? ''))
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+            <?= $formFields->userInvTextField($form, 'name', 'name', true); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'company')
-    ->label($translator->translate('company'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('company'),
-        'class' => 'form-control',
-        'id' => 'company',
-    ])
-    ->value(Html::encode($form->getCompany() ?? ''));
-?>
+            <?= $formFields->userInvTextField($form, 'company', 'company', false); ?>
         <?= Html::closeTag('div'); ?>   
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'address_1')

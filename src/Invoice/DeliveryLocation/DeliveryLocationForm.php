@@ -6,6 +6,7 @@ namespace App\Invoice\DeliveryLocation;
 
 use App\Invoice\Entity\DeliveryLocation;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
@@ -13,24 +14,40 @@ final class DeliveryLocationForm extends FormModel
 {
     private readonly DateTimeImmutable $date_created;
     private readonly DateTimeImmutable $date_modified;
+
+    #[Required]
     private ?string $client_id = '';
-    #[Required]
+
+    #[Length(min: 0, max: 255)]
     private ?string $name = '';
-    #[Required]
+
+    #[Length(min: 0, max: 255)]
     private ?string $building_number = '';
+
     #[Required]
+    #[Length(min: 1, max: 255)]
     private ?string $address_1 = '';
-    #[Required]
+
+    #[Length(min: 0, max: 255)]
     private ?string $address_2 = '';
-    #[Required]
+
+    #[Length(min: 0, max: 100)]
     private ?string $city = '';
-    #[Required]
+
+    #[Length(min: 0, max: 100)]
     private ?string $state = '';
+
     #[Required]
+    #[Length(min: 1, max: 20)]
     private ?string $zip = '';
-    #[Required]
+
+    #[Length(min: 0, max: 100)]
     private ?string $country = '';
+
+    #[Length(min: 0, max: 13)]
     private ?string $global_location_number = '';
+
+    #[Length(min: 0, max: 4)]
     private ?string $electronic_address_scheme = '';
 
     public function __construct(DeliveryLocation $del)

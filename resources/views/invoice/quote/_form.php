@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\QuoteCustom\QuoteCustomForm $quoteCustomForm
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
+ * @var App\Widget\FormFields $formFields
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $customFields
@@ -68,26 +69,8 @@ echo $alert;
                                          ->value(Html::encode($form->getNumber()))
 ?>
                                 <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'client_id')
-   ->label($translator->translate('user.account.clients'))
-   ->addInputAttributes(['class' => 'form-control'])
-   ->value($form->getClient_id())
-   ->prompt($translator->translate('none'))
-   ->optionsData($optionsData['client'])
-   ->hint($translator->translate('hint.this.field.is.required'));
-?>
-                                <?= Html::closeTag('div'); ?>            
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'group_id')
-    ->label($translator->translate('quote.group'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getGroup_id() ?? 2)
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsData['group'])
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
-                                <?= Html::closeTag('div'); ?>   
+                                <?= $formFields->clientSelect($form, $optionsData, 'user.account.clients'); ?>
+                                <?= $formFields->groupSelect($form, $optionsData); ?>   
                             
                             <?php if ($delCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
@@ -143,32 +126,9 @@ echo $alert;
 ?>
                         <?= Html::openTag('br'); ?>    
                         <?= Html::openTag('br'); ?>    
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::date($form, 'date_created')
-    ->label($translator->translate('date.issued'))
-    ->value($form->getDate_created() instanceof DateTimeImmutable ? ($form->getDate_created())->format('Y-m-d') : '')
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::password($form, 'password')
-    ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
-    ->value(Html::encode($form->getPassword()))
-    ->placeholder($translator->translate('password'))
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::select($form, 'status_id')
-    ->label($translator->translate('status'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getStatus_id())
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsData['quoteStatus'])
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
-                        <?= Html::closeTag('div'); ?>
+                        <?= $formFields->dateCreatedField($form, 'date.issued'); ?>
+                        <?= $formFields->passwordField($form); ?>
+                        <?= $formFields->statusSelect($form, $optionsData, 'quoteStatus'); ?>
                         <?= Html::openTag('div'); ?>
                         <?php // If the quote is in draft status; do not show the url_key
 if ($form->getStatus_id() == 1) { ?>
@@ -184,32 +144,8 @@ if ($form->getStatus_id() == 1) { ?>
                         <?php } ?>
                         <?= Html::closeTag('div'); ?>
                     <?php   if ($vat === false) { ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::text($form, 'discount_amount')
-                                ->hideLabel(false)
-                                ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00 ? true : false)
-                                ->label($translator->translate('discount.amount') . ' ' . $s->getSetting('currency_symbol'))
-                                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
-                                ->value(Html::encode($s->format_amount($form->getDiscount_amount() ?? 0.00)))
-                                ->placeholder($translator->translate('discount.amount'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::text($form, 'discount_percent')
-                            ->label($translator->translate('discount.percent'))
-                            ->disabled(($form->getDiscount_amount() > 0.00 && $form->getDiscount_percent() == 0.00) ? true : false)
-                            ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_percent'])
-                            ->value(Html::encode($s->format_amount($form->getDiscount_percent() ?? 0.00)))
-                            ->placeholder($translator->translate('discount.percent'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::textarea($form, 'notes')
-                            ->label($translator->translate('notes'))
-                            ->value(Html::encode($form->getNotes() ?? ''))
-                            ->hint($translator->translate('hint.this.field.is.not.required'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>    
+                        <?= $formFields->discountFields($form); ?>
+                        <?= $formFields->notesField($form); ?>    
                     <?php } ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::hidden($form, 'inv_id')
