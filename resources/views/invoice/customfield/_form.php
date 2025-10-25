@@ -85,27 +85,31 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
 
             <?php
-$arrays = [$user_input_types, $custom_value_fields];
+                $arrays = [$user_input_types, $custom_value_fields];
 $types = array_merge(...$arrays);
 $optionsDataType = [];
 /**
  * @var string $type
  */
 foreach ($types as $type) {
-    $alpha = str_replace("-", "_", strtolower($type));
-    $optionsDataType[$type] = ($translator->translate('' . $alpha));
+    $alpha = str_replace("-", ".", strtolower($type));
+    $translated = $translator->translate('' . $alpha);
+    if ($translated === '' || $translated === '#') {
+        continue;
+    }
+    $optionsDataType[$type] = $translated;
 }
 ?>    
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::select($form, 'type')
-            ->label($translator->translate('type'))
-            ->addInputAttributes([
-                'placeholder' => $translator->translate('type'),
-                'class' => 'form-control',
-                'id' => 'type',
-            ])
-            ->value(Html::encode($form->getType() ?? ''))
-            ->optionsData($optionsDataType);
+->label($translator->translate('type'))
+->addInputAttributes([
+    'placeholder' => $translator->translate('type'),
+    'class' => 'form-control',
+    'id' => 'type',
+])
+->value(Html::encode($form->getType() ?? ''))
+->optionsData($optionsDataType);
 ?>
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -140,33 +144,104 @@ foreach ($types as $type) {
 
         <?= Html::closeTag('div'); ?>
         <?php
-        // double dropdown box
-        $js2 = "$(function () {" . "\n" .
-               "var jsonPositions ='" . $positions . "';" . "\n" .
-               "jsonPositions = JSON.parse(jsonPositions);" . "\n" .
-               "function updatePositions(index, selKey) {" . "\n" .
-    '$("#location option").remove();' . "\n" .
-    "var pos = 0;" . "\n" .
-    "var key = Object" . '.' . 'keys(jsonPositions)[index];' . "\n" .
-    'for (pos in jsonPositions[key]) {' . "\n" .
-       'var opt = $("<' . "option" . '>");' . "\n" .
-       'opt.attr("value", pos);' . "\n" .
-       'opt.text(jsonPositions[key][pos]);' . "\n" .
-       'if (selKey == pos) {' . "\n" .
-          'opt.attr("selected", "selected");' . "\n" .
-       "}" . "\n" .
-       '$("#location").append(opt);' . "\n" .
-    '}' . "\n" .
-"}" . "\n" .
-'var optionIndex = $("#table option:selected").index();' . "\n" .
-'$("#table").on("change", function () {' . "\n" .
-'optionIndex = $("#table option:selected").index();' . "\n" .
-'updatePositions(optionIndex);' . "\n" .
-'});' . "\n" .
-'updatePositions(optionIndex,' . $valueSelected . ');' .
-'});';
-echo Html::script($js2)->type('module');
-?> 
+            // Normalize $positions into an array for use in the view
+            // Normalize $positions into an array for use in the view
+/**
+ * The view may receive:
+ *  - $positions as a JSON-encoded string,
+ *  - or as a PHP array,
+ *  - or as a Traversable (e.g. ArrayObject),
+ *  - or null.
+ *
+ * @psalm-var array<string, list<string>>|\Traversable<string, list<string>>|string|null $positions
+ * @psalm-var array|string|null $valueSelected
+ */
+
+// Normalize $positions into an array for use in the view
+$positionsArray = [];
+
+if (is_string($positions)) {
+    /**
+     * json_decode may return array|null|scalar. Tell Psalm the expected decoded shape.
+     * @psalm-var array<string, list<string>>|null $decoded
+     */
+    $decoded = json_decode($positions, true);
+
+    if (is_array($decoded)) {
+        $positionsArray = $decoded;
+    } else {
+        // treat a plain (non-JSON) string as a single element array
+        $positionsArray = [$positions];
+    }
+} elseif (is_array($positions)) {
+    $positionsArray = $positions;
+} elseif ($positions instanceof \Traversable) {
+    $positionsArray = iterator_to_array($positions);
+} elseif ($positions === null) {
+    $positionsArray = [];
+} else {
+    // scalars / objects — cast to array as a last resort
+    $positionsArray = (array) $positions;
+}
+
+$positionsJson = json_encode($positionsArray, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+$valueSelectedJson = isset($valueSelected) ? json_encode($valueSelected) : 'null';
+
+$js = <<<JS
+                document.addEventListener('DOMContentLoaded', function () {
+                    "use strict";
+
+                    const jsonPositions = {$positionsJson};
+
+                    const tableEl = document.getElementById('table');
+                    const locationEl = document.getElementById('location');
+
+                    function updatePositions(index, selKey) {
+                        if (!locationEl) return;
+
+                        locationEl.innerHTML = '';
+
+                        const keys = Object.keys(jsonPositions);
+                        if (keys.length === 0) return;
+
+                        if (typeof index !== 'number' || index < 0 || index >= keys.length) {
+                            index = 0;
+                        }
+
+                        const key = keys[index];
+                        const map = jsonPositions[key] || {};
+
+                        for (const pos in map) {
+                            if (!Object.prototype.hasOwnProperty.call(map, pos)) continue;
+                            const opt = document.createElement('option');
+                            opt.value = pos;
+                            opt.textContent = map[pos];
+                            if (selKey !== undefined && selKey !== null && String(selKey) === String(pos)) {
+                                opt.selected = true;
+                            }
+                            locationEl.appendChild(opt);
+                        }
+                    }
+
+                    let optionIndex = 0;
+                    if (tableEl && typeof tableEl.selectedIndex === 'number') {
+                        optionIndex = tableEl.selectedIndex;
+                    }
+
+                    if (tableEl) {
+                        tableEl.addEventListener('change', function () {
+                            optionIndex = tableEl.selectedIndex;
+                            updatePositions(optionIndex);
+                        }, false);
+                    }
+
+                    updatePositions(optionIndex, {$valueSelectedJson});
+                });
+            JS;
+
+echo Html::script($js)->type('module');
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

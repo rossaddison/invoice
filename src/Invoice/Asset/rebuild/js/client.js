@@ -1,85 +1,149 @@
-$(function () {
-    function parsedata(data) {             
-     if (!data) return {};
-     if (typeof data === 'object') return data;
-     if (typeof data === 'string') return JSON.parse(data);
-     return {};
-    };
+(function () {
+    "use strict";
 
-    // id="client_create_confirm button on views/invoice/client/modal_create_client.php
-    $(document).on('click', '#client_create_confirm', function () {
-    var url = $(location).attr('origin') + "/invoice/client/create_confirm";
-    var btn = $('.client_create_confirm');
-    var absolute_url = new URL($(location).attr('href'));
-    btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                client_name: $('#client_name').val(),
-                client_surname: $('#client_surname').val(),
-                client_email: $('#client_email').val()
-            },                
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                        var response =  parsedata(data);
-                        if (response.success === 1) {
-                            // The validation was successful and quote was created
-                            btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
-                            window.location = absolute_url;
-                            window.location.reload();
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try { return JSON.parse(data); } catch (e) { return {}; }
+        }
+        return {};
+    }
+
+    // Simple GET helper that builds a query string from params and returns parsed text/JSON
+    function getJson(url, params) {
+        var u = url;
+        if (params) {
+            var sp = new URLSearchParams();
+            Object.keys(params).forEach(function (k) {
+                var v = params[k];
+                if (Array.isArray(v)) {
+                    v.forEach(function (x) { sp.append(k, x); });
+                } else if (v !== undefined && v !== null) {
+                    sp.append(k, v);
+                }
+            });
+            u = url + (url.indexOf('?') === -1 ? '?' + sp.toString() : '&' + sp.toString());
+        }
+        return fetch(u, { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+                return res.text();
+            })
+            .then(function (text) {
+                try { return JSON.parse(text); } catch (e) { return text; }
+            });
+    }
+
+    // Delegated click handlers
+    document.addEventListener('click', function (e) {
+        var el = e.target;
+
+        // client_create_confirm
+        var createBtn = el.closest('#client_create_confirm');
+        if (createBtn) {
+            var url = location.origin + "/invoice/client/create_confirm";
+            var btn = document.querySelector('.client_create_confirm') || createBtn;
+            var absolute_url = new URL(location.href);
+
+            // UI feedback
+            if (btn) {
+                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                btn.disabled = true;
+            }
+
+            var payload = {
+                client_name: (document.getElementById('client_name') || {}).value || '',
+                client_surname: (document.getElementById('client_surname') || {}).value || '',
+                client_email: (document.getElementById('client_email') || {}).value || ''
+            };
+
+            getJson(url, payload)
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        // Mirror original behaviour: navigate/reload
+                        window.location = absolute_url;
+                        window.location.reload();
+                    } else {
+                        if (btn) {
+                            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+                            btn.disabled = false;
                         }
-            },
-            error: function(xhr, status, error) {                         
-                console.warn(xhr.responseText);
-                alert('Status: ' + status + ' An error: ' + error.toString());
-            }            
-        });
-    });
-    
-    // id="save_client_note_new button on views/invoice/client/view.php
-    $(document).on('click', '#save_client_note_new', function () {
-    var url = $(location).attr('origin') + "/invoice/client/save_client_note_new";
-    var url_note_list = $(location).attr('origin') + "/invoice/client/load_client_notes";
-    var btn_note = $('.save_client_note');
-    var absolute_url = new URL($(location).attr('href'));
-    btn_note.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                client_id: $('#client_id').val(),
-                client_note: $('#client_note').val()
-            },                
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                        var response =  parsedata(data);
-                        if (response.success === 1) {
-                            // The validation was successful and quote was created
-                            btn_note.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                            $('#client_note').val('');
-                            $('#notes_list').load(url_note_list,
-                            {
-                                client_id: $('#client_id').val()
-                            }, function (response) {
-                                console.log(response); 
-                            });
-                            window.location = absolute_url;
-                            window.location.reload();
-                        } else {
-                            // The validation was not successful
-                            $('.control-group').removeClass('error');
-                            for (var key in response.validation_errors) {
-                                $('#' + key).parent().addClass('has-error');
-                        }
+                        console.warn('create_confirm response', response);
                     }
-            },
-            error: function(xhr, status, error) {                         
-                console.warn(xhr.responseText);
-                alert('Status: ' + status + ' An error: ' + error.toString());
-            }            
-        });
-    });
-});
+                })
+                .catch(function (err) {
+                    console.warn(err);
+                    if (btn) { btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>'; btn.disabled = false; }
+                    alert('An error occurred while creating client. See console for details.');
+                });
+            return;
+        }
+
+        // save_client_note_new
+        var saveNoteBtn = el.closest('#save_client_note_new');
+        if (saveNoteBtn) {
+            var url = location.origin + "/invoice/client/save_client_note_new";
+            var url_note_list = location.origin + "/invoice/client/load_client_notes";
+            var btn_note = document.querySelector('.save_client_note') || saveNoteBtn;
+            var absolute_url = new URL(location.href);
+
+            if (btn_note) {
+                btn_note.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                btn_note.disabled = true;
+            }
+
+            var payloadNote = {
+                client_id: (document.getElementById('client_id') || {}).value || '',
+                client_note: (document.getElementById('client_note') || {}).value || ''
+            };
+
+            getJson(url, payloadNote)
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn_note) btn_note.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        var noteEl = document.getElementById('client_note');
+                        if (noteEl) noteEl.value = '';
+
+                        // Reload notes list (replace jQuery .load behavior)
+                        var notesList = document.getElementById('notes_list');
+                        if (notesList) {
+                            var loadUrl = url_note_list + '?client_id=' + encodeURIComponent(payloadNote.client_id);
+                            fetch(loadUrl, { cache: 'no-store', credentials: 'same-origin' })
+                                .then(function (r) { return r.text(); })
+                                .then(function (html) {
+                                    notesList.innerHTML = html;
+                                    console.log(html);
+                                })
+                                .catch(function (err) { console.error('load_client_notes failed', err); });
+                        }
+
+                        // Mirror original behaviour: navigate/reload
+                        window.location = absolute_url;
+                        window.location.reload();
+                    } else {
+                        // validation errors
+                        document.querySelectorAll('.control-group').forEach(function (g) { g.classList.remove('error'); });
+                        if (response.validation_errors) {
+                            Object.keys(response.validation_errors).forEach(function (key) {
+                                var elKey = document.getElementById(key);
+                                if (elKey && elKey.parentElement) elKey.parentElement.classList.add('has-error');
+                            });
+                        }
+                        if (btn_note) { btn_note.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>'; btn_note.disabled = false; }
+                    }
+                })
+                .catch(function (err) {
+                    console.warn(err);
+                    if (btn_note) { btn_note.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>'; btn_note.disabled = false; }
+                    alert('An error occurred while saving client note. See console for details.');
+                });
+            return;
+        }
+
+    }, true);
+
+})();

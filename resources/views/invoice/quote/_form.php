@@ -153,7 +153,7 @@ echo $alert;
                         <?= Html::openTag('div'); ?>
                             <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->hint($translator->translate('hint.this.field.is.not.required'));

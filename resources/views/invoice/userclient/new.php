@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Security\Random;
 
 /**
  * @var App\Invoice\Entity\UserInv $userinv
@@ -36,7 +37,9 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div', ['id' => 'content']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
-            <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'user_id', 'id' => 'user_id', 'value' => $userinv->getUser_id() ]); ?>
+            <?= Field::hidden($form, 'user_id')
+                    ->inputId('user_id-' . Random::string(10))
+                    ->value($userinv->getUser_id()); ?>
                 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
                     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
                         <?= Html::encode($userinv->getName()); ?>

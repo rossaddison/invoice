@@ -105,6 +105,7 @@ if ($vat) {
                             <?php if ($deliveryCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'delivery_id')
+
     ->label($translator->translate('delivery'))
     ->addInputAttributes(['class' => 'form-control'])
     ->value($form->getDelivery_id())
@@ -290,7 +291,7 @@ if ($vat) {
                         <?= Html::openTag('div'); ?>
                             <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->hint($translator->translate('hint.this.field.is.not.required'));

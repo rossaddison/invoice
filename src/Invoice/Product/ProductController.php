@@ -141,7 +141,7 @@ final class ProductController extends BaseController
             'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
             'customFields' => $cfR->repoTablequery('product_custom'),
             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-            'cvH' => new CVH($this->sR),
+            'cvH' => new CVH($this->sR, $cvR),
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm,
         ];
@@ -241,7 +241,7 @@ final class ProductController extends BaseController
                     'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
                     'customFields' => $cfR->repoTablequery('product_custom'),
                     'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                    'cvH' => new CVH($this->sR),
+                    'cvH' => new CVH($this->sR, $cvR),
                     'productCustomValues' => $this->product_custom_values($product_id, $pcR),
                     'productCustomForm' => $productCustomForm,
                 ];
@@ -777,7 +777,7 @@ final class ProductController extends BaseController
                         'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
                         'custom_fields' => $cfR->repoTablequery('product_custom'),
                         'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
-                        'cvH' => new CVH($this->sR),
+                        'cvH' => new CVH($this->sR, $cvR),
                         'product_custom_values' => $this->product_custom_values($product_id, $pcR),
                         'productCustomForm' => $productCustomForm,
                         'upR' => $upR,

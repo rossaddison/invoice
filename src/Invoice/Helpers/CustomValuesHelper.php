@@ -23,8 +23,10 @@ class CustomValuesHelper
 {
     private readonly DHelp $d;
 
-    public function __construct(private readonly SRepo $s)
-    {
+    public function __construct(
+        private readonly SRepo $s,
+        private readonly cvR $cvR,
+    ) {
         $this->d = new DHelp($this->s);
     }
 
@@ -129,7 +131,7 @@ class CustomValuesHelper
                 }
 
                 echo Label::tag()
-                ->forId('custom[' . $custom_field->getId() . ']')
+                ->forId($custom_field->getId(), )
                 ->content(Html::encode($custom_field->getLabel()));
 
                 echo Select::tag()
@@ -164,7 +166,7 @@ class CustomValuesHelper
                 }
 
                 echo Label::tag()
-                ->forId('custom[' . $custom_field->getId() . ']')
+                ->forId($custom_field->getId())
                 ->content(Html::encode($custom_field->getLabel()));
 
                 /**
@@ -186,8 +188,8 @@ class CustomValuesHelper
             case 'BOOLEAN':
                 echo Field::checkbox($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom[' . $custom_field->getId() . ']',
                     'id' => $custom_field->getId(),
+                    'name' => 'custom[' . $custom_field->getId() . ']',
                 ])
                 ->disabled(false)
                 ->inputClass('form-check-input')
@@ -256,66 +258,45 @@ class CustomValuesHelper
 
                 break;
             case 'SINGLE-CHOICE':
-                /** @var array $choices */
-                $choices = $custom_value[$custom_field->getId()];
-                $optionsData = [];
-                /** @var CustomValue $choice */
-                foreach ($choices as $choice) {
-                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
-                }
+                $customFieldId = $custom_field->getId();
 
-                echo Label::tag()
-                ->forId('custom[' . $custom_field->getId() . ']')
-                ->content(Html::encode($custom_field->getLabel()));
-                if (strlen((string) $fieldValue) > 0) {
-                    echo Select::tag()
-                    ->addAttributes(
-                        [
-                            'id' => $custom_field->getId(),
-                            'name' => 'custom[' . $custom_field->getId() . ']',
-                            'class' => 'form-control',
-                        ],
-                    )
+                $customValue = $this->cvR->repoCustomValueDropDown((string) $fieldValue, $customFieldId);
+                if (null !== $customValue) {
+                    echo Field::text($formModel, 'custom_field_id')
+                    ->addInputAttributes([
+                        'name' => 'custom[' . $custom_field->getId() . ']',
+                        'id' => $custom_field->getId(),
+                    ])
                     ->disabled(true)
-                    ->optionsData($optionsData)
-                    ->multiple(false)
-                    ->disabled(true)
-                    ->required($custom_field->getRequired() == 1 ? true : false)
-                    ->value($fieldValue);
-                } else {
-                    echo '';
+                    ->label($custom_field->getLabel())
+                    ->value(Html::encode($customValue->getValue()));
                 }
                 break;
             case 'MULTIPLE-CHOICE':
-                /** @var array $choices */
-                $choices = $custom_value[$custom_field->getId()];
+                $customFieldId = $custom_field->getId();
 
                 $selChoices = $this->is_serialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
 
-                $optionsData = [];
-                /** @var CustomValue $choice */
-                foreach ($choices as $choice) {
-                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
+                $fieldValues = '';
+                /**
+                 * @var string $value
+                 */
+                foreach ($selChoices as $value) {
+                    $printValue = $this->cvR->repoCustomValueDropDown($value, $customFieldId);
+                    if (null !== $printValue) {
+                        $fieldValues .= ($printValue->getValue()) . ', ';
+                    }
                 }
 
-                echo Label::tag()
-                ->forId('custom[' . $custom_field->getId() . ']')
-                ->content(Html::encode($custom_field->getLabel()));
-
-                /**
-                 * @psalm-suppress PossiblyInvalidArgument $selChoices
-                 */
-                echo Select::tag()
-                    ->addAttributes([
-                        'class' => 'form-control',
-                        'id' => $custom_field->getId(),
-                        'name' => 'custom[' . $custom_field->getId() . ']',
-                    ])
+                echo Field::text($formModel, 'custom_field_id')
+                ->addInputAttributes([
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
+                ])
                 ->disabled(true)
-                ->multiple(true)
-                ->optionsData($optionsData)
-                ->required($custom_field->getRequired() == 1 ? true : false)
-                ->values($selChoices);
+                ->label($custom_field->getLabel())
+                ->value(Html::encode($fieldValues ?: ''));
+
                 break;
             case 'BOOLEAN':
                 echo Field::checkbox($formModel, 'custom_field_id')
@@ -331,12 +312,20 @@ class CustomValuesHelper
                 break;
             case 'NUMBER':
                 echo Field::number($formModel, 'custom_field_id')
+                ->addInputAttributes([
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
+                ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
                 ->value(Html::encode((int) $fieldValue ?: 0));
                 break;
             default:
                 echo Field::text($formModel, 'custom_field_id')
+                ->addInputAttributes([
+                    'name' => 'custom[' . $custom_field->getId() . ']',
+                    'id' => $custom_field->getId(),
+                ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
                 ->value(Html::encode((string) $fieldValue ?: ''));

@@ -31,79 +31,113 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $pdfTemplates
  */
 
-?>
+$js3 = <<<'JS'
+(function () {
+    "use strict";
 
-<?php
-    $js3 =
-       'function parsedata(data) {' .
-            'if (!data) return {};' .
-            "if (typeof data === 'object') return data;" .
-            "if (typeof data === 'string') return JSON.parse(data);" .
-            'return {};' .
-        '};' .
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try { return JSON.parse(data); } catch (e) { return {}; }
+        }
+        return {};
+    }
 
-       "$(document).ready(function ()  {" .
-       'var new_key = "";' .
-       'var new_val = "";' .
-       'var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];' .
-       "$('#mailerquoteform-email_template').change(function () {" .
-            'var email_template_id = $(this).val();' .
-            "if (email_template_id === '') return;" .
+    document.addEventListener('DOMContentLoaded', function () {
+        var templateSelect = document.getElementById('mailerquoteform-email_template');
 
-            "var url =  $(location).attr('origin') + " . '"/invoice/emailtemplate/get_content/"' . '+ email_template_id;' .
-            "$.ajax({ type: 'GET'," .
-                'contentType: "application/json; charset=utf-8",' .
-                'data: {' .
-                        'email_template_id: email_template_id' .
-                '},' .
-                'url: url,' .
-                'cache: false,' .
-                "dataType: 'json'," .
-                'success: function (data) {' .
-                    'var response = parsedata(data);' .
-                    'if (response.success === 1) {' .
-                        'for (var key in response.email_template) {' .
-                            'if (response.email_template.hasOwnProperty(key)) {' .
-                                'new_key = key.replace("email_template_", "");' .
-                                'new_val = response.email_template[key];' .
-                                'switch(new_key) {' .
-                                    'case "subject":' .
-                                        '$("#mailerquoteform-subject.email-template-subject.form-control").val(new_val);' .
-                                        'break;' .
-                                    'case "body":' .
-                                        '$("textarea#mailerquoteform-body.email-template-body.form-control.taggable").val(new_val);' .
-                                        'break;' .
-                                    'case "from_name":' .
-                                        '$("#mailerquoteform-from_name.email-template-from-name.form-control").val(new_val);' .
-                                        'break;' .
-                                    'case "from_email":' .
-                                        '$("#mailerquoteform-from_email.email-template-from-email.form-control").val(new_val);' .
-                                        'break;' .
-                                    'case "cc":' .
-                                        '$("#mailerquoteform-cc.email-template-cc.form-control").val(new_val);' .
-                                        'break;' .
-                                    'case "bcc":' .
-                                        '$("#mailerquoteform-bcc.email-template-bcc.form-control").val(new_val);' .
-                                        'break;' .
-                                    'case "pdf_template":' .
-                                        '$("#mailerquoteform-pdf_template.email-template-pdf-template.form-control").val(new_val).trigger(' . "'change');" .
-                                        'break;' .
-                                    'default:' .
-                                '}' .
+        if (templateSelect) {
+            templateSelect.addEventListener('change', function () {
+                var email_template_id = this.value;
+                if (!email_template_id) return;
 
-                            '}' .
-                        '}' .
-                    '}' .
-                '}' .
-            '});' .
-        '});' .
-    '});' .
+                var url = location.origin + "/invoice/emailtemplate/get_content/" + encodeURIComponent(email_template_id);
+                var params = new URLSearchParams({ email_template_id: email_template_id });
 
-    '$(document).ready(function() {' .
-        // this is the email quote window, disable the invoice select
-        "$('#tags_invoice').prop('disabled', disabled);" .
-        "$('#tags_quote').prop('disabled', 'false');" .
-    '});';
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: { 'Accept': 'application/json' }
+                })
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+                        return res.text();
+                    })
+                    .then(function (text) {
+                        var data;
+                        try { data = JSON.parse(text); } catch (e) { data = text; }
+                        var response = parsedata(data);
+
+                        if (response.success === 1 && response.email_template) {
+                            Object.keys(response.email_template).forEach(function (key) {
+                                if (!Object.prototype.hasOwnProperty.call(response.email_template, key)) return;
+
+                                var new_key = key.replace('email_template_', '');
+                                var new_val = response.email_template[key];
+
+                                switch (new_key) {
+                                    case 'subject': {
+                                        var el = document.querySelector('#mailerquoteform-subject.email-template-subject.form-control');
+                                        if (el) el.value = new_val;
+                                        break;
+                                    }
+                                    case 'body': {
+                                        var ta = document.querySelector('textarea#mailerquoteform-body.email-template-body.form-control.taggable');
+                                        if (ta) ta.value = new_val;
+                                        break;
+                                    }
+                                    case 'from_name': {
+                                        var el2 = document.querySelector('#mailerquoteform-from_name.email-template-from-name.form-control');
+                                        if (el2) el2.value = new_val;
+                                        break;
+                                    }
+                                    case 'from_email': {
+                                        var el3 = document.querySelector('#mailerquoteform-from_email.email-template-from-email.form-control');
+                                        if (el3) el3.value = new_val;
+                                        break;
+                                    }
+                                    case 'cc': {
+                                        var el4 = document.querySelector('#mailerquoteform-cc.email-template-cc.form-control');
+                                        if (el4) el4.value = new_val;
+                                        break;
+                                    }
+                                    case 'bcc': {
+                                        var el5 = document.querySelector('#mailerquoteform-bcc.email-template-bcc.form-control');
+                                        if (el5) el5.value = new_val;
+                                        break;
+                                    }
+                                    case 'pdf_template': {
+                                        var sel = document.querySelector('#mailerquoteform-pdf_template.email-template-pdf-template.form-control');
+                                        if (sel) {
+                                            sel.value = new_val;
+                                            // Trigger change event on the select
+                                            sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                        }
+                                        break;
+                                    }
+                                    default:
+                                        // no-op
+                                }
+                            });
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error('Error loading email template content', err);
+                    });
+            }, false);
+        }
+
+        // On page load for the email quote window: disable invoice select, enable quote select
+        var tagsInvoice = document.getElementById('tags_invoice');
+        if (tagsInvoice) tagsInvoice.disabled = true;
+        var tagsQuote = document.getElementById('tags_quote');
+        if (tagsQuote) tagsQuote.disabled = false;
+    });
+})();
+JS;
+
 echo Html::script($js3)->type('module');
 ?>
 
@@ -304,10 +338,20 @@ echo Html::tag(
     </div>
 </div>
 <?php
-$js9 = "$(document).ready(function() {" .
-        'var textContent = ' . $autoTemplate['body'] . ';' .
-        '$("#mailerquoteform-body").val(textContent);' .
-        '});';
+$body = $autoTemplate['body'] ?? '';
+$bodyJson = json_encode($body); // safe JS string literal
+
+$js9 = <<<JS
+document.addEventListener('DOMContentLoaded', function () {
+    "use strict";
+    var textContent = {$bodyJson};
+    var el = document.getElementById('mailerquoteform-body');
+    if (el) {
+        el.value = textContent;
+    }
+});
+JS;
+
 echo Html::script($js9)->type('module');
 ?>
 

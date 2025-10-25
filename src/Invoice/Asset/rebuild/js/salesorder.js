@@ -1,68 +1,71 @@
-$(function () {
-    function parsedata(data) {             
-     if (!data) return {};
-     if (typeof data === 'object') return data;
-     if (typeof data === 'string') return JSON.parse(data);
-     return {};
-    };
+(function () {
+    "use strict";
 
-    // id="salesorder_to_pdf_confirm_with_custom_fields button on views/salesorder/modal_salesorder_to_pdf.php
-    $(document).on('click', '#salesorder_to_pdf_confirm_with_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/salesorder/pdf/1";    
-            window.open(url, '_blank');
-    }); 
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try { return JSON.parse(data); } catch (e) { return {}; }
+        }
+        return {};
+    }
 
-    // id="salesorder_to_pdf_confirm_without_custom_fields button on views/salesorder/modal_salesorder_to_pdf.php
-    $(document).on('click', '#salesorder_to_pdf_confirm_without_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/salesorder/pdf/0";    
-            window.open(url, '_blank');
-    });
-    
-    // Creates the invoice
-    $(document).on('click', '#so_to_invoice_confirm', function () {        
-        var url = $(location).attr('origin') + "/invoice/salesorder/so_to_invoice_confirm";
-        var btn = $('.so_to_invoice_confirm');
-        var absolute_url = new URL($(location).attr('href'));
-        btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-        $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                so_id: $('#so_id').val(),
-                client_id: $('#client_id').val(),
-                group_id: $('#group_id').val(),
-                password: $('#password').val()
-            },                            
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                        var response =  parsedata(data);
-                        if (response.success === 1) {
-                            // The validation was successful and invoice was created
-                            btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
-                            window.location = absolute_url;
-                            window.location.reload();
-                            alert(response.flash_message);
-                        }
-                        if (response.success === 0) {
-                            // The validation was not successful created
-                            btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
-                            window.location = absolute_url;
-                            window.location.reload();
-                            alert(response.flash_message);
-                        }    
-                        
-            },
-            error: function(xhr, status, error) {                         
-                        console.warn(xhr.responseText);
-                        alert('Status: ' + status + ' An error: ' + error.toString());
+    // Initialize Tom Select if present for salesorder selects
+    function initSelects() {
+        if (typeof TomSelect === 'undefined') return;
+        document.querySelectorAll('.simple-select').forEach(function (el) {
+            if (!el._tomselect) {
+                // eslint-disable-next-line no-new
+                new TomSelect(el, {});
+                el._tomselect = true;
             }
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', initSelects);
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target;
+
+        // Open sales order modal
+        const open = btn.closest('.open-salesorder-modal');
+        if (open) {
+            const url = open.dataset.url || (location.origin + '/invoice/salesorder/modal');
+            const target = document.getElementById(open.dataset.target || 'modal-placeholder-salesorder');
+            if (!target) return;
+            fetch(url, { cache: 'no-store' })
+                .then(r => r.text())
+                .then(html => {
+                    target.innerHTML = html;
+                    const modalEl = target.querySelector('.modal');
+                    if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                        new bootstrap.Modal(modalEl).show();
+                    }
+                    initSelects();
+                })
+                .catch(console.error);
+            return;
+        }
+
+        // Save sales order via AJAX
+        const saveBtn = btn.closest('.salesorder-save');
+        if (saveBtn) {
+            const form = document.querySelector('#salesorder_form');
+            if (!form) return;
+            const action = form.getAttribute('action') || (location.origin + '/invoice/salesorder/save');
+            const fd = new FormData(form);
+            const params = new URLSearchParams();
+            for (const [k, v] of fd.entries()) params.append(k, v);
+            fetch(action + '?' + params.toString(), { cache: 'no-store' })
+                .then(r => r.json())
+                .then(data => {
+                    const resp = parsedata(data);
+                    if (resp.success === 1) location.reload();
+                    else alert(resp.message || 'Save failed');
+                })
+                .catch(err => { console.warn(err); alert('An error occurred'); });
+            return;
+        }
     });
-});
 
-    
-        
-    
-
-
+})();

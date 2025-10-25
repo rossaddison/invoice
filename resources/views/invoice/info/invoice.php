@@ -51,6 +51,81 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>24th October 2025</b></p>
+<p>jQuery Dependency removed completely via remove_jquery branch</p>
+<p>pre_jquery_deletion branch created</p>
+<p>Custom Fields Views Improved - Multiple Selection(a.k.a Choice) dropdown selected items now displayed in single Text field.</p>
+<p><table style="border:2px solid #000; border-collapse:collapse; width:100%;" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th style="border:1px solid #000; padding:6px; text-align:left;">Reason</th>
+      <th style="border:1px solid #000; padding:6px; text-align:left;">Explanation</th>
+      <th style="border:1px solid #000; padding:6px; text-align:left;">Effect on the App</th>
+      <th style="border:1px solid #000; padding:6px; text-align:left;">What Changed</th>
+      <th style="border:1px solid #000; padding:6px; text-align:left;">Recommended Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Bundle size &amp; load performance</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">jQuery adds a large, global dependency which increases page payload and slows initial load.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Smaller JS bundles and faster first paint after removal.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Replaced jQuery usage with small vanilla JS helpers and modern APIs (fetch, Element.closest, URLSearchParams).</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Keep utilities small and shared (one ajax helper), and use code-splitting where appropriate.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Modern browser APIs available</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Native DOM, fetch, classList, dataset, and other APIs cover most needs previously solved by jQuery.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Code can be more direct and often faster (less indirection).</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Rewrote event delegation, AJAX, and DOM manipulation to use standards-based APIs.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Prefer native APIs; polyfill only when supporting older browsers that require it.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Maintainability &amp; readability</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Vanilla JS avoids mixed paradigms and reduces cognitive load for new developers not familiar with jQuery.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Clearer code paths and fewer runtime surprises from global overrides.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Normalized selectors and helpers (parsedata, getJson) to centralize behavior.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Document common helpers and keep them in a single shared file to avoid duplication.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Security &amp; attack surface</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Smaller, more focused code reduces the attack surface and the chance of inadvertently importing insecure plugins.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Lower risk from third-party jQuery plugins or misused APIs.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Removed global jQuery plugin calls; used explicit DOM APIs and safe JSON parsing.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Review any remaining third-party scripts for CSP/nonce compatibility and sanitize dynamic data server-side.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Interference &amp; selector bugs</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Global id/class reuse and jQuery-driven handlers previously caused accidental cross-form submits and selector collisions.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Fixes for bugs where one handler submitted the wrong form (CSRF issues, logout redirects).</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Removed shared element IDs (e.g. btn-submit) and moved to class-based delegation and closest(form) logic.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Audit templates to avoid duplicate IDs, prefer classes, and ensure CSRF inputs live inside the form they protect.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Testing &amp; automation</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Vanilla JS is easier to test in headless browser environments and reduces reliance on heavy DOM shims.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Simpler unit and integration tests; fewer fakes/mocks for jQuery.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Event handlers are attached via addEventListener and are deterministic for tests.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Add unit tests for shared helpers (getJson, parsedata) and integration tests for form submit flows.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Progressive enhancement</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Where appropriate, native controls (e.g., type="submit", form="...") are preferred so basic functionality works without JS.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Better resilience (forms still submit if JS fails or is blocked).</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Changed backSave controls to native submit behavior or use form attribute instead of anchors/buttons that require JS.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Audit UI components so they degrade gracefully and keep server-side fallbacks intact.</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Migration effort and consistency</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Replacing jQuery required careful conversion of many small behaviors (event delegation, serialization of arrays, AJAX semantics).</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Short-term risk: missing handlers or serialization differences (e.g., keylist[] vs keylist) caused bugs.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Introduced a small shared ajax helper and consistent array serialization to match server expectations.</td>
+      <td style="border:1px solid #000; padding:6px; vertical-align:top;">Create a migration checklist, run QA on all pages that previously used jQuery, and centralize helpers to avoid regressions.</td>
+    </tr>
+  </tbody>
+</table></p>
+<p>The custom fields positions array has been moved to the SettingRepository</p>
+<p>Next: DOM error reduction</p>
 <p><b>16th October 2025</b></p>
 <p>Bugfix: Front pages ... Settings ... View ... Front Page</p>
 <p><b>24th September 2025</b></p>

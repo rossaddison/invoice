@@ -242,6 +242,30 @@ final class SettingRepository extends Select\Repository
         }
     }
 
+    public function getEntityPositionsArray(string $entity): array
+    {
+        return match ($entity) {
+            'client' => ['custom.fields', 'address', 'contact.information', 'personal.information', 'tax.information'],
+            'product' => ['custom.fields'],
+            'invoice' => ['custom.fields'],
+            'payment' => ['custom.fields'],
+            'quote' => ['custom.fields'],
+            'user' => ['custom.fields', 'account.information', 'address', 'tax.information', 'contact.information'],
+        };
+    }
+
+    public function viewPositionsArray(): array
+    {
+        return [
+            'client' => ['custom.fields', 'address', 'contact.information', 'personal.information', 'tax.information'],
+            'product' => ['custom.fields'],
+            'invoice' => ['custom.fields'],
+            'payment' => ['custom.fields'],
+            'quote' => ['custom.fields'],
+            'user' => ['custom.fields', 'account.information', 'address', 'tax.information', 'contact.information'],
+        ];
+    }
+
     public function getGovClientPublicPort(): int
     {
         $server = $this->getServer();

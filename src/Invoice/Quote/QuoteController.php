@@ -891,7 +891,7 @@ final class QuoteController extends BaseController
                 'groups' => $groupRepo->findAllPreloaded(),
                 'numberhelper' => new NumberHelper($this->sR),
                 'quote_statuses' => $quoteRepo->getStatuses($this->translator),
-                'cvH' => new CVH($this->sR),
+                'cvH' => new CVH($this->sR, $cvR),
                 'customFields' => $cfR->repoTablequery('quote_custom'),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
                 'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
@@ -2868,7 +2868,7 @@ final class QuoteController extends BaseController
                         // Get the standard extra custom fields built for EVERY quote.
                         'customFields' => $cfR->repoTablequery('quote_custom'),
                         'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
-                        'cvH' => new CVH($this->sR),
+                        'cvH' => new CVH($this->sR, $cvR),
                         'quoteCustomValues' => $quote_custom_values,
                         'quoteStatuses' => $qR->getStatuses($this->translator),
                         'quote' => $quote,
@@ -2940,7 +2940,7 @@ final class QuoteController extends BaseController
                             'custom_fields' => $cfR->repoTablequery('quote_custom'),
                             'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
                             'quote_custom_values' => $quote_custom_values,
-                            'cvH' => new CVH($this->sR),
+                            'cvH' => new CVH($this->sR, $cvR),
                             'cvR' => $cvR,
                             'quoteCustomForm' => new QuoteCustomForm(new QuoteCustom()),
                         ]),

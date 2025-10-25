@@ -131,21 +131,21 @@ class PdfHelper
                     // Custom fields appearing near the top of the quote
                     'custom_fields' => $cfR->repoTablequery('quote_custom'),
                     'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
-                    'cvH' => new CVH($this->s),
+                    'cvH' => new CVH($this->s, $cvR),
                     'cvR' => $cvR,
                     'quote_custom_values' => $quote_custom_values,
                     'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/top_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('quote_custom'),
                         'cvR' => $cvR,
                         'quote_custom_values' => $quote_custom_values,
-                        'cvH' => new CVH($this->s),
+                        'cvH' => new CVH($this->s, $cvR),
                     ]),
                     // Custom fields appearing at the bottom of the quote
                     'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/view_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('quote_custom'),
                         'cvR' => $cvR,
                         'quote_custom_values' => $quote_custom_values,
-                        'cvH' => new CVH($this->s),
+                        'cvH' => new CVH($this->s, $cvR),
                     ]),
                     'company_logo_and_address' => $viewrenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
@@ -260,14 +260,14 @@ class PdfHelper
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                         'cvR' => $cvR,
                         'salesorder_custom_values' => $so_custom_values,
-                        'cvH' => new CVH($this->s),
+                        'cvH' => new CVH($this->s, $cvR),
                     ]),
                     // Custom fields appearing at the bottom of the salesorder
                     'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/view_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                         'cvR' => $cvR,
                         'salesorder_custom_values' => $so_custom_values,
-                        'cvH' => new CVH($this->s),
+                        'cvH' => new CVH($this->s, $cvR),
                     ]),
                     'company_logo_and_address' => $viewrenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
@@ -383,20 +383,20 @@ class PdfHelper
                 // Custom fields appearing near the top of the quote
                 'custom_fields' => $cfR->repoTablequery('inv_custom'),
                 'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
-                'cvH' => new CVH($this->s),
+                'cvH' => new CVH($this->s, $cvR),
                 'inv_custom_values' => $inv_custom_values,
                 'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/top_custom_fields', [
                     'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'cvR' => $cvR,
                     'inv_custom_values' => $inv_custom_values,
-                    'cvH' => new CVH($this->s),
+                    'cvH' => new CVH($this->s, $cvR),
                 ]),
                 // Custom fields appearing at the bottom of the invoice
                 'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/view_custom_fields', [
                     'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'cvR' => $cvR,
                     'inv_custom_values' => $inv_custom_values,
-                    'cvH' => new CVH($this->s),
+                    'cvH' => new CVH($this->s, $cvR),
                 ]),
                 'sumex' => $sumex,
                 'userinv' => $userinv,

@@ -1,109 +1,222 @@
-function parsedata(data) {             
-             if (!data) return {};
-             if (typeof data === 'object') return data;
-             if (typeof data === 'string') return JSON.parse(data);
-             return {};
-};
+(function () {
+    "use strict";
 
-$(function () {
+    // Safe JSON parse helper (mirrors original parsedata)
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try { return JSON.parse(data); } catch (e) { return {}; }
+        }
+        return {};
+    }
 
+    // Hide already-selected tasks (based on .item-task-id values)
+    function hideSelectedTasks() {
         var selectedTasks = [];
-        $('.item-task-id').each(function () {
-            var currentVal = $(this).val();
-            if (currentVal.length) {
-                selectedTasks.push(parseInt(currentVal));
-            }
+        document.querySelectorAll('.item-task-id').forEach(function (el) {
+            var currentVal = el.value || "";
+            if (currentVal.length) selectedTasks.push(parseInt(currentVal, 10));
         });
 
         var hiddenTasks = 0;
-        $('.modal-task-id').each(function () {
-            var currentId = parseInt($(this).attr('id').replace('task-id-', ''));
-            if (selectedTasks.indexOf(currentId) !== -1) {
-            //  $('#task-id-' + currentId).prop('disabled', true);
-                $('#task-id-' + currentId).parent().parent().hide();
+        document.querySelectorAll('.modal-task-id').forEach(function (el) {
+            var idAttr = el.id || "";
+            var idNum = parseInt(idAttr.replace('task-id-', ''), 10);
+            if (!Number.isNaN(idNum) && selectedTasks.indexOf(idNum) !== -1) {
+                // hide the row containing this modal-task-id
+                var row = el.closest('tr') || el.parentElement && el.parentElement.parentElement;
+                if (row) row.style.display = 'none';
                 hiddenTasks++;
             }
         });
 
-        if (hiddenTasks >= $('.task-row').length) {
-            $('#task-modal-submit').hide();
+        var taskRows = document.querySelectorAll('.task-row');
+        if (hiddenTasks >= taskRows.length) {
+            var submitBtn = document.getElementById('task-modal-submit');
+            if (submitBtn) submitBtn.style.display = 'none';
         }
-    
-        $('#tasks_table tr').click(function (event) {
-            if (event.target.type !== 'checkbox') {
-                $(':checkbox', this).trigger('click');
+    }
+
+    // Toggle checkbox when clicking on row (unless click was on checkbox)
+    function rowClickToggle(event) {
+        var row = event.target.closest('#tasks_table tr, .task-row, .task');
+        if (!row) return;
+        if (event.target.type !== 'checkbox') {
+            var checkbox = row.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                // Toggle and dispatch change
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
             }
-        });
-        
-        $("input[name='task_ids[]']").click(function() {
-            var at_least_one_checked;
-            if ($("input[name='task_ids[]']").is(':checked')) {at_least_one_checked = true; } else {at_least_one_checked = false;}
-            if ((at_least_one_checked)){                
-                $('.select-items-confirm-task').removeAttr('disabled');
+        }
+    }
+
+    // Enable/disable select button based on checked tasks
+    function updateSelectTaskButtonState(root) {
+        var ctx = root || document;
+        var anyChecked = ctx.querySelectorAll("input[name='task_ids[]']:checked").length > 0;
+        document.querySelectorAll('.select-items-confirm-task').forEach(function (btn) {
+            if (anyChecked) {
+                btn.removeAttribute('disabled');
+                btn.removeAttribute('aria-disabled');
+                btn.disabled = false;
             } else {
-                $('.select-items-confirm-task').attr('disabled', true);
+                btn.setAttribute('disabled', 'true');
+                btn.setAttribute('aria-disabled', 'true');
+                btn.disabled = true;
             }
         });
-        
-        $(document).on('click', '.select-items-confirm-task', function () {
-            var absolute_url = new URL($(location).attr('href'));
-            var btn = $('.select-items-confirm-task');
-            btn.html('<h2 class="text-center" ><i class="fa fa-spin fa-spinner"></i></h2>');
-            var task_ids = [];
-            inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-            $("input[name='task_ids[]']:checked").each(function () {
-                task_ids.push(parseInt($(this).val()));
-            });
-            $.ajax({ type: 'GET',
-                     contentType: "application/json; charset=utf-8",
-                     data: {
-                            task_ids: task_ids,
-                            inv_id: inv_id
-                           },
-                     url: '/invoice/task/selection_inv',
-                     cache: false,
-                     dataType: 'json',
-                     success: function(data){
-                        var tasks = parsedata(data);
-                        var taskDefaultTaxRateId = new Object(null);
-                        var currentTaxRateId = new Object(null);
-                        for (var key in tasks) {
-                            /**
-                             * @see resources\views\invoice\task\modal_task_lookups_inv.php
-                             * Only Completed Tasks (not in-progress Tasks) are only included on invoices and not quotes
-                             * @see App\Invoice\Entity\Task 
-                             * #[Column(type: 'integer(11)', nullable: false)]
-                             * private ?int $tax_rate_id = null;
-                             * Every task must have a tax rate id even if it represents a 0 percentage
-                             * Previously:
-                             * if (!tasks[key].tax_rate_id) {tasks[key].tax_rate_id = $("#default_item_tax_rate").attr('value');}                            
-                             * 
-                             * @see https://cwe.mitre.org/data/definitions/1321.html
-                             * Prevent 'prototype pollution' by setting  the prototype of the created object 
-                             * directly via the first argument passed to Object.create(). If we pass null, the
-                             * created object will not have a prototype and therefore cannot be polluted. i.e. new Object(null)
-                             * Courtesy of Snyk
-                             */
-                            currentTaxRateId = tasks[key].tax_rate_id;
-                            if (!currentTaxRateId) {
-                                taskDefaultTaxRateId = $("#default_item_tax_rate").attr('value');
-                            } else {
-                                taskDefaultTaxRateId = currentTaxRateId;
-                            }
-                            var last_item_row = $('#item_table tbody:last');                           
-                            var last_item_row = $('#item_table tbody:last');
-                            last_item_row.find('input[name=item_name]').val(tasks[key].name);
-                            last_item_row.find('textarea[name=item_description]').val(tasks[key].description);
-                            last_item_row.find('input[name=item_price]').val(tasks[key].price);
-                            last_item_row.find('input[name=item_quantity]').val('1');
-                            
-                            last_item_row.find('select[name=item_tax_rate_id]').val(taskDefaultTaxRateId);
-                            
-                            last_item_row.find('input[name=item_task_id]').val(tasks[key].id);
-                            btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                        }
-                        location.reload(true);
+    }
+
+    // Handle confirm click: collect selected task ids and send to server, then populate items and reload
+    function handleSelectItemsConfirmTask(btn) {
+        var absolute_url = new URL(location.href);
+        var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
+
+        var task_ids = Array.from(document.querySelectorAll("input[name='task_ids[]']:checked"))
+            .map(function (el) { return parseInt(el.value, 10); })
+            .filter(Boolean);
+
+        if (task_ids.length === 0) return;
+
+        var originalHtml = btn.innerHTML;
+        btn.innerHTML = '<h2 class="text-center" ><i class="fa fa-spin fa-spinner"></i></h2>';
+        btn.disabled = true;
+
+        var params = new URLSearchParams();
+        task_ids.forEach(function (id) { params.append('task_ids[]', id); });
+        params.append('inv_id', inv_id);
+
+        fetch('/invoice/task/selection_inv?' + params.toString(), {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+                return res.text();
+            })
+            .then(function (text) {
+                var data;
+                try { data = JSON.parse(text); } catch (e) { data = text; }
+                var tasks = parsedata(data);
+
+                var productDefaultTaxRateId = null;
+                var currentTaxRateId = null;
+
+                for (var key in tasks) {
+                    if (!Object.prototype.hasOwnProperty.call(tasks, key)) continue;
+                    currentTaxRateId = tasks[key].tax_rate_id;
+                    if (!currentTaxRateId) {
+                        var defaultTaxEl = document.getElementById('default_item_tax_rate') || document.querySelector('#default_item_tax_rate');
+                        productDefaultTaxRateId = defaultTaxEl ? defaultTaxEl.getAttribute('value') : '';
+                    } else {
+                        productDefaultTaxRateId = currentTaxRateId;
                     }
+
+                    // Find last item row (matching original behaviour)
+                    var last_tbody = document.querySelector('#item_table tbody:last-of-type') || document.querySelector('#item_table tbody');
+                    if (!last_tbody) continue;
+
+                    var nameEl = last_tbody.querySelector('input[name="item_name"]');
+                    var descEl = last_tbody.querySelector('textarea[name="item_description"]');
+                    var priceEl = last_tbody.querySelector('input[name="item_price"]');
+                    var qtyEl = last_tbody.querySelector('input[name="item_quantity"]');
+                    var taxEl = last_tbody.querySelector('select[name="item_tax_rate_id"]');
+                    var taskIdEl = last_tbody.querySelector('input[name="item_task_id"]');
+
+                    if (nameEl) nameEl.value = tasks[key].name || '';
+                    if (descEl) descEl.value = tasks[key].description || '';
+                    if (priceEl) priceEl.value = tasks[key].price || '';
+                    if (qtyEl) qtyEl.value = '1';
+                    if (taxEl) taxEl.value = productDefaultTaxRateId || '';
+                    if (taskIdEl) taskIdEl.value = tasks[key].id || '';
+
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                }
+
+                // Reload as original code does to sync state
+                location.reload(true);
+            })
+            .catch(function (err) {
+                console.error('selection_inv failed', err);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                alert('An error occurred while adding tasks to invoice. See console for details.');
             });
-        });
-});
+    }
+
+    // Delegated event handling
+    document.addEventListener('click', function (e) {
+        var el = e.target;
+
+        // Row toggle
+        if (el.closest('#tasks_table tr, .task, .task-row')) {
+            rowClickToggle(e);
+            return;
+        }
+
+        // Confirm select tasks
+        var confirmTask = el.closest('.select-items-confirm-task');
+        if (confirmTask) {
+            handleSelectItemsConfirmTask(confirmTask);
+            return;
+        }
+
+        // Reset / load actions: these can be adapted if project loads the table via URL
+        if (el.closest('#task-reset-button-inv')) {
+            var product_table = document.querySelector('#tasks_table');
+            if (product_table) {
+                var lookup_url = location.origin + "/invoice/task/lookup";
+                product_table.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                lookup_url += "?rt=true";
+                setTimeout(function () {
+                    // inline replacement for $.load: fetch and insert
+                    fetch(lookup_url, { cache: 'no-store', credentials: 'same-origin' })
+                        .then(function (r) { return r.text(); })
+                        .then(function (html) { product_table.innerHTML = html; updateSelectTaskButtonState(product_table); })
+                        .catch(function (err) { console.error('task lookup load failed', err); });
+                }, 50);
+            }
+            // enable button after reset
+            document.querySelectorAll('.select-items-confirm-task').forEach(function (b) { b.removeAttribute('disabled'); });
+            return;
+        }
+    }, true);
+
+    // Delegated change handling (checkboxes / family selects)
+    document.addEventListener('change', function (e) {
+        var target = e.target;
+        if (!target) return;
+
+        if (target.matches("input[name='task_ids[]']")) {
+            updateSelectTaskButtonState(target.closest('#tasks_table') || document);
+            return;
+        }
+    }, true);
+
+    // Bind Enter to search if needed (mirrors original keypress)
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            var active = document.activeElement;
+            if (active && active.id === 'filter_task_inv') {
+                var btn = document.getElementById('filter-button-inv');
+                if (btn) btn.click();
+                e.preventDefault();
+            }
+        }
+    }, true);
+
+    // Initial run on DOM ready
+    document.addEventListener('DOMContentLoaded', function () {
+        hideSelectedTasks();
+        updateSelectTaskButtonState();
+    });
+
+    // In case script is loaded after DOMContentLoaded
+    hideSelectedTasks();
+    updateSelectTaskButtonState();
+
+})();

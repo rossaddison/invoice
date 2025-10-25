@@ -591,7 +591,7 @@ final class SalesOrderController extends BaseController
                         // Get the standard extra custom fields built for EVERY quote.
                         'customFields' => $cfR->repoTablequery('salesorder_custom'),
                         'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
-                        'cvH' => new CVH($settingRepository),
+                        'cvH' => new CVH($settingRepository, $cvR),
                         'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
                         'soStatuses' => $soR->getStatuses($this->translator),
                         'salesOrderCustomValues' => $salesorder_custom_values,
@@ -619,7 +619,7 @@ final class SalesOrderController extends BaseController
                             'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
                             'form' => $form,
                             'salesOrderCustomValues' => $salesorder_custom_values,
-                            'cvH' => new CVH($settingRepository),
+                            'cvH' => new CVH($settingRepository, $cvR),
                         ]),
                     ];
                     return $this->viewRenderer->render('view', $parameters);

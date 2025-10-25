@@ -1,93 +1,167 @@
-$(function () {
-    function parsedata(data) {             
-     if (!data) return {};
-     if (typeof data === 'object') return data;
-     if (typeof data === 'string') return JSON.parse(data);
-     return {};
+(function () {
+    "use strict";
+
+    // Safe parse helper (mirrors original parsedata)
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try { return JSON.parse(data); } catch (e) { return {}; }
+        }
+        return {};
     }
-    
-    toggle_smtp_settings();
 
-    $('#email_send_method').change(function () {
-        toggle_smtp_settings();
-    });
-
+    // Toggle visibility of SMTP settings based on #email_send_method value
     function toggle_smtp_settings() {
-        email_send_method = $('#email_send_method').val();
-
-        if (email_send_method === 'smtp') {
-            $('#div-smtp-settings').show();
+        var emailSendMethodEl = document.getElementById('email_send_method');
+        var div = document.getElementById('div-smtp-settings');
+        if (!div || !emailSendMethodEl) return;
+        if (emailSendMethodEl.value === 'smtp') {
+            div.style.display = '';
         } else {
-            $('#div-smtp-settings').hide();
+            div.style.display = 'none';
         }
     }
-    
-    $(document).on('click', '#btn_fph_generate', function () {
-        var url = $(location).attr('origin') + "/invoice/setting/fphgenerate";
-        var userAgent = navigator.userAgent;
-        $.ajax({
-            type: 'GET',
-            data: {
-                userAgent: userAgent,
-                width: window.screen.width,
-                height: window.screen.height,
-                scalingFactor: Math.round(window.devicePixelRatio * 100) / 100,  
-                colourDepth: window.screen.colorDepth,
-                // window size: width x height
-                windowInnerWidth: window.innerWidth,
-                windowInnerHeight: window.innerHeight
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
+
+    // Generate fingerprint / client metrics for FPH
+    function handleFphGenerateClick() {
+        var url = location.origin + "/invoice/setting/fphgenerate";
+        var params = new URLSearchParams({
+            userAgent: navigator.userAgent,
+            width: window.screen.width,
+            height: window.screen.height,
+            scalingFactor: Math.round(window.devicePixelRatio * 100) / 100,
+            colourDepth: window.screen.colorDepth,
+            windowInnerWidth: window.innerWidth,
+            windowInnerHeight: window.innerHeight
+        });
+
+        fetch(url + '?' + params.toString(), {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+                return res.json().catch(function () { return {}; });
+            })
+            .then(function (data) {
                 var response = parsedata(data);
                 if (response.success === 1) {
-                    $('#settings\\[fph_client_browser_js_user_agent\\]').val(response.userAgent);
-                    $('#settings\\[fph_client_device_id\\]').val(response.deviceId);
-                    $('#settings\\[fph_screen_width\\]').val(response.width);
-                    $('#settings\\[fph_screen_height\\]').val(response.height);
-                    $('#settings\\[fph_screen_scaling_factor\\]').val(response.scalingFactor);
-                    $('#settings\\[fph_screen_colour_depth\\]').val(response.colourDepth);
-                    $('#settings\\[fph_timestamp\\]').val(response.timestamp);
-                    $('#settings\\[fph_window_size\\]').val(response.windowSize);
-                    $('#settings\\[fph_gov_client_user_id\\]').val(response.userUuid);
+                    // IDs in original jQuery have brackets, use getElementById for them
+                    var el;
+                    el = document.getElementById('settings[fph_client_browser_js_user_agent]');
+                    if (el) el.value = response.userAgent || '';
+                    el = document.getElementById('settings[fph_client_device_id]');
+                    if (el) el.value = response.deviceId || '';
+                    el = document.getElementById('settings[fph_screen_width]');
+                    if (el) el.value = response.width || '';
+                    el = document.getElementById('settings[fph_screen_height]');
+                    if (el) el.value = response.height || '';
+                    el = document.getElementById('settings[fph_screen_scaling_factor]');
+                    if (el) el.value = response.scalingFactor || '';
+                    el = document.getElementById('settings[fph_screen_colour_depth]');
+                    if (el) el.value = response.colourDepth || '';
+                    el = document.getElementById('settings[fph_timestamp]');
+                    if (el) el.value = response.timestamp || '';
+                    el = document.getElementById('settings[fph_window_size]');
+                    if (el) el.value = response.windowSize || '';
+                    el = document.getElementById('settings[fph_gov_client_user_id]');
+                    if (el) el.value = response.userUuid || '';
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error:", error);
-            }
+            })
+            .catch(function (err) {
+                console.error('FPH generate failed', err);
+            });
+    }
+
+    // Generate cron key
+    function handleGenerateCronKeyClick() {
+        var btns = Array.from(document.querySelectorAll('.btn_generate_cron_key'));
+        btns.forEach(function (b) {
+            b.innerHTML = '<i class="fa fa-spin fa-spinner fa-margin"></i>';
         });
-    });
-        
-    $(document).on('click', '#btn_generate_cron_key', function () {
-        var btn = $('.btn_generate_cron_key');      
-        btn.html('<i class="fa fa-spin fa-spinner fa-margin"></i>');
-        var url = $(location).attr('origin') + "/invoice/setting/get_cron_key";
-        $.ajax({ type: 'GET',
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                       var response = parsedata(data);           
-                       if (response.success === 1) {                           
-                          $('.cron_key').val(response.cronkey);
-                          btn.html('<i class="fa fa-recycle fa-margin"></i>');
-                       }
-            }
+
+        var url = location.origin + "/invoice/setting/get_cron_key";
+        fetch(url, { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+                return res.json().catch(function () { return {}; });
+            })
+            .then(function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    // class .cron_key may appear on multiple elements
+                    Array.from(document.querySelectorAll('.cron_key')).forEach(function (el) {
+                        if ('value' in el) el.value = response.cronkey || '';
+                    });
+                    btns.forEach(function (b) {
+                        b.innerHTML = '<i class="fa fa-recycle fa-margin"></i>';
+                    });
+                } else {
+                    // restore UI if not successful
+                    btns.forEach(function (b) {
+                        b.innerHTML = '<i class="fa fa-recycle fa-margin"></i>';
+                    });
+                }
+            })
+            .catch(function (err) {
+                console.error('get_cron_key failed', err);
+                btns.forEach(function (b) {
+                    b.innerHTML = '<i class="fa fa-recycle fa-margin"></i>';
+                });
+            });
+    }
+
+    // Submit settings form
+    function handleSettingsSubmitClick() {
+        var form = document.getElementById('form-settings');
+        if (form) form.submit();
+    }
+
+    // Online payment select change handler (show/hide gateway settings)
+    function handleOnlinePaymentSelectChange() {
+        var sel = document.getElementById('online-payment-select');
+        if (!sel) return;
+        var driver = sel.value;
+        Array.from(document.querySelectorAll('.gateway-settings')).forEach(function (el) {
+            if (!el.classList.contains('active-gateway')) el.classList.add('hidden');
         });
-    });    
-    
-    $(document).ready(function() {
-        $('#btn-submit').click(function () {
-            $('#form-settings').submit();
-        });
+        var target = document.getElementById('gateway-settings-' + driver);
+        if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('active-gateway');
+        }
+    }
+
+    // Wire up handlers on DOMContentLoaded (and initialise state)
+    document.addEventListener('DOMContentLoaded', function () {
+        // initialise SMTP toggle
+        toggle_smtp_settings();
+
+        // email_send_method change
+        var emailSendMethodEl = document.getElementById('email_send_method');
+        if (emailSendMethodEl) emailSendMethodEl.addEventListener('change', toggle_smtp_settings);
+
+        // FPH generate button
+        var fphBtn = document.getElementById('btn_fph_generate');
+        if (fphBtn) fphBtn.addEventListener('click', function (e) { e.preventDefault(); handleFphGenerateClick(); });
+
+        // Generate cron key
+        var cronBtn = document.getElementById('btn_generate_cron_key');
+        if (cronBtn) cronBtn.addEventListener('click', function (e) { e.preventDefault(); handleGenerateCronKeyClick(); });
+
+        // Submit
+        var submitBtn = document.getElementById('btn-submit');
+        if (submitBtn) submitBtn.addEventListener('click', function (e) { e.preventDefault(); handleSettingsSubmitClick(); });
+
+        // Online payment select
+        var onlineSel = document.getElementById('online-payment-select');
+        if (onlineSel) onlineSel.addEventListener('change', function () { handleOnlinePaymentSelectChange(); });
+
+        // Run online payment handler once to ensure initial state
+        handleOnlinePaymentSelectChange();
     });
-    
-    $(document).on('change', '#online-payment-select', function () {
-        var online_payment_select = $('#online-payment-select');
-        var driver = online_payment_select.val();           
-        $('.gateway-settings:not(.active-gateway)').addClass('hidden');
-        $('#gateway-settings-' + driver).removeClass('hidden').addClass('active-gateway');
-    });
-});
+
+})();

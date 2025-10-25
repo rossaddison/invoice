@@ -256,28 +256,50 @@ final class CustomFieldController extends BaseController
     }
 
     /**
-     * @return string
+     * @return array<string, list<string>>
+     *
+     * @psalm-return array<string, list<string>>
      */
-    private function positions(): string
+    private function positions(): array
     {
-        // The default position on the form is custom fields so if none of the other options are chosen then the new field
-        // will appear under the default custom field section. The client form has five areas where the new field can appear.
-        $positions = [
-            'client' => ['custom.fields', 'address', 'contact.information', 'personal.information', 'tax.information'],
-            'product' => ['custom.fields'],
-            // A custom field created with "properties" will appear in the address section
-            'invoice' => ['custom.fields','properties'],
-            'payment' => ['custom.fields'],
-            'quote' => ['custom.fields','properties'],
-            'user' => ['custom.fields', 'account.information', 'address', 'tax.information', 'contact.information'],
-        ];
-        foreach ($positions as $key => $val) {
-            foreach ($val as $key2 => $val2) {
-                $val[$key2] = $this->translator->translate($val2);
-            }
-            $positions[$key] = $val;
+        // Retrieve raw positions from settings. The settings API may be untyped/mixed,
+        // so validate and normalise into the expected array<string, list<string>> shape.
+        /** @psalm-var mixed $positionsRaw */
+        $positionsRaw = $this->sR->viewPositionsArray();
+
+        /** @psalm-var array<string, list<string>> $positions */
+        $positions = [];
+
+        if (!is_array($positionsRaw)) {
+            // If settings do not provide an array, return an empty typed array.
+            return $positions;
         }
-        return Json::encode($positions);
+
+        foreach ($positionsRaw as $rawKey => $rawList) {
+            // Key should be a string; cast to string for safety.
+            $key = (string) $rawKey;
+
+            // Expect each entry to be an array/list of label keys.
+            if (!is_array($rawList)) {
+                continue;
+            }
+
+            $translatedList = [];
+            /**
+             * @var string $entry
+             */
+            foreach ($rawList as $entry) {
+                // Translate each label key. Cast to string to satisfy TranslatorInterface and Psalm.
+                $labelKey = $entry;
+                // Translator::translate accepts string|Stringable; we pass string.
+                $translatedList[] = $this->translator->translate($labelKey);
+            }
+
+            // Ensure the list is a non-empty list<string> or an empty list.
+            $positions[$key] = $translatedList;
+        }
+
+        return $positions;
     }
 
     /**

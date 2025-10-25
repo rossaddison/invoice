@@ -1,109 +1,135 @@
-$(function () {
-    function parsedata(data) {             
-     if (!data) return {};
-     if (typeof data === 'object') return data;
-     if (typeof data === 'string') return JSON.parse(data);
-     return {};
-    };
-    
-    // CHANGING THE FIRST DROPDOWN 'CATEGORY PRIMARY' TO LOAD THE SECOND DROPDOWN 'CATEGORY SECONDARY'
-    
-    $(document).on('change', '#family-category-primary-id', function () {
-        // Get the selected primary category ID
-        var primaryCategoryId = $('#family-category-primary-id').val();
-        
-        // Define the URL for the AJAX request
-        var url = $(location).attr('origin') + "/invoice/family/secondaries/"+primaryCategoryId; 
+(function () {
+    "use strict";
 
-        // Make the AJAX request to get the secondary categories
-        $.ajax({
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            url: url,
-            data: { category_primary_id: primaryCategoryId },
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                
-                var response = parsedata(data);
-                
-                if (response.success === 1) {
-                    
-                    var secondaryCategories = response.secondary_categories;
-
-                    // Find the secondary category dropdown element on family\_search.php
-                    var secondaryDropdown = $('#family-category-secondary-id');
-                    
-                    // Clear the existing options
-                    secondaryDropdown.empty();
-
-                    // Add a prompt option
-                    secondaryDropdown.append('<option value="">' + "None" + '</option>');
-
-                    // Populate the secondary dropdown with new options
-                    $.each(secondaryCategories, function(key, value) {
-                        secondaryDropdown.append('<option value="' + key + '">' + value + '</option>');
-                    });
-                }
+    // Robust parse helper (matches original parsedata behaviour)
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try {
+                return JSON.parse(data);
+            } catch (e) {
+                return {};
             }
-        });    
-    });
+        }
+        return {};
+    }
 
-    // If the document loads
-    $(document).ready(function() {
-        $('#family-category-primary-id').change('#family-category-primary-id');
-    });
-    
-    // CHANGING THE SECOND DROPDOWN TO LOAD THE THIRD DROPDOWN FAMILY NAMES
-    
-    $(document).on('change', '#family-category-secondary-id', function () {
-        // Get the selected secondary category ID
-        var secondaryCategoryId = $('#family-category-secondary-id').val();
-        
-        // Define the URL for the AJAX request
-        var url = $(location).attr('origin') + "/invoice/family/names/"+secondaryCategoryId; 
+    // Populate a <select> element with options from an object { key: value, ... }
+    function populateSelect(selectEl, items, promptText) {
+        if (!selectEl) return;
+        // Clear existing options
+        selectEl.innerHTML = '';
+        // Add prompt/none option
+        var opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = promptText || 'None';
+        selectEl.appendChild(opt);
 
-        // Make the AJAX request to get the secondary categories
-        $.ajax({
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            url: url,
-            data: { category_secondary_id: secondaryCategoryId },
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                
-                var response = parsedata(data);
-                
-                if (response.success === 1) {
-                    
-                    var familyNames = response.family_names;
+        if (!items) return;
 
-                    // Find the family name dropdown element on family\_search.php
-                    var familyNameDropdown = $('#family-name');
-                    
-                    // Clear the existing options
-                    familyNameDropdown.empty();
+        // items may be an array or object. Prefer object/associative.
+        if (Array.isArray(items)) {
+            items.forEach(function (v, i) {
+                var o = document.createElement('option');
+                o.value = i;
+                o.textContent = v;
+                selectEl.appendChild(o);
+            });
+        } else {
+            Object.keys(items).forEach(function (key) {
+                var o = document.createElement('option');
+                o.value = key;
+                o.textContent = items[key];
+                selectEl.appendChild(o);
+            });
+        }
+    }
 
-                    // Add a prompt option
-                    familyNameDropdown.append('<option value="">' + "None" + '</option>');
+    // Request helper: GET with query params, returns parsed response (object or {})
+    function getJson(url, params) {
+        var u = url;
+        if (params && Object.keys(params).length > 0) {
+            u += (url.indexOf('?') === -1 ? '?' : '&') + new URLSearchParams(params).toString();
+        }
+        return fetch(u, {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        })
+            .then(function (res) { return res.text(); })
+            .then(function (text) { return parsedata(text); });
+    }
 
-                    // Populate the family name dropdown with new options
-                    $.each(familyNames, function(key, value) {
-                        familyNameDropdown.append('<option value="' + key + '">' + value + '</option>');
-                    });
+    // Handler: when primary category changes, load secondary categories
+    function onPrimaryChange() {
+        var primarySelect = document.getElementById('family-category-primary-id');
+        if (!primarySelect) return;
+        var primaryCategoryId = primarySelect.value || '';
+        var url = location.origin + "/invoice/family/secondaries/" + encodeURIComponent(primaryCategoryId);
+
+        getJson(url, { category_primary_id: primaryCategoryId })
+            .then(function (response) {
+                if (response && response.success === 1) {
+                    var secondaryCategories = response.secondary_categories || {};
+                    var secondaryDropdown = document.getElementById('family-category-secondary-id');
+                    populateSelect(secondaryDropdown, secondaryCategories, 'None');
+
+                    // Optionally, trigger change on secondary to cascade populate family names
+                    if (secondaryDropdown) {
+                        var evt = new Event('change', { bubbles: true });
+                        secondaryDropdown.dispatchEvent(evt);
+                    }
+                } else {
+                    // In failure case, clear secondary and family name selects
+                    populateSelect(document.getElementById('family-category-secondary-id'), {}, 'None');
+                    populateSelect(document.getElementById('family-name'), {}, 'None');
                 }
-            }
-        });    
+            })
+            .catch(function (err) {
+                console.error('Error loading secondary categories', err);
+            });
+    }
+
+    // Handler: when secondary category changes, load family names
+    function onSecondaryChange() {
+        var secondarySelect = document.getElementById('family-category-secondary-id');
+        if (!secondarySelect) return;
+        var secondaryCategoryId = secondarySelect.value || '';
+        var url = location.origin + "/invoice/family/names/" + encodeURIComponent(secondaryCategoryId);
+
+        getJson(url, { category_secondary_id: secondaryCategoryId })
+            .then(function (response) {
+                if (response && response.success === 1) {
+                    var familyNames = response.family_names || {};
+                    var familyNameDropdown = document.getElementById('family-name');
+                    populateSelect(familyNameDropdown, familyNames, 'None');
+                } else {
+                    populateSelect(document.getElementById('family-name'), {}, 'None');
+                }
+            })
+            .catch(function (err) {
+                console.error('Error loading family names', err);
+            });
+    }
+
+    // Wire up listeners on DOMContentLoaded and trigger initial population
+    document.addEventListener('DOMContentLoaded', function () {
+        var primarySelect = document.getElementById('family-category-primary-id');
+        var secondarySelect = document.getElementById('family-category-secondary-id');
+
+        if (primarySelect) {
+            primarySelect.addEventListener('change', onPrimaryChange, false);
+            // Trigger initial change to populate secondaries on load (if selection exists)
+            // Use a microtask to ensure other scripts have run if necessary
+            Promise.resolve().then(function () { onPrimaryChange(); });
+        }
+
+        if (secondarySelect) {
+            secondarySelect.addEventListener('change', onSecondaryChange, false);
+            // Trigger initial load of family names if secondary already has a value
+            Promise.resolve().then(function () { onSecondaryChange(); });
+        }
     });
-
-    // If the document loads
-    $(document).ready(function() {
-        $('#family-category-secondary-id').change('#family-category-secondary-id');
-    });
-});
-
-        
-    
-
-
+})();

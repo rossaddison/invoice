@@ -1,533 +1,407 @@
-$(function () {
-    function parsedata(data) {             
-     if (!data) return {};
-     if (typeof data === 'object') return data;
-     if (typeof data === 'string') return JSON.parse(data);
-     return {};
-    };
-    
-    // Used in userclient/new
-    $('#user_all_clients').click(function () {
-        all_client_check();
-    });
-    
-    function all_client_check() {
-        if ($('#user_all_clients').is(':checked')) {
-            $('#list_client').hide();
-        } else {
-            $('#list_client').show();
+(function () {
+    "use strict";
+
+    // Safe parse helper (mirrors original parsedata)
+    function parsedata(data) {
+        if (!data) return {};
+        if (typeof data === 'object' && data !== null) return data;
+        if (typeof data === 'string') {
+            try { return JSON.parse(data); } catch (e) { return {}; }
         }
+        return {};
     }
-        
-    all_client_check();
-            
-    // class="btn_delete_item" on views/product/partial_item_table.php
-    $('.btn_delete_item').click(function () {
-            var id = $(this).attr('data-id');  
-            if (typeof id === 'undefined') {
-                $(this).parents('.item').remove();
-            } else {
-                var url = $(location).attr('origin') + "/invoice/inv/delete_item/"+id;
-                $.ajax({ type: 'GET',
-                         contentType: "application/json; charset=utf-8",
-                         data: {
-                            id: id
-                         },
-                         url: url,
-                         cache: false,
-                         dataType: 'json',
-                         success: function (data) {
-                                    var response = parsedata(data);
-                                    if (response.success === 1) {
-                                        location.reload(true);
-                                        $(this).parents('.item').remove();
-                                        alert("Deleted");
-                                    }
-                        }
-                });
-            }        
-    });
-    
-    $(document).on('click', '.delete-items-confirm-inv', function () {
-        var btn = $('.delete-items-confirm-inv');
-        btn.html('<h2 class="text-center" ><i class="fa fa-spin fa-spinner"></i></h2>');
-        var item_ids = [];
-        $("input[name='item_ids[]']:checked").each(function () {
-            item_ids.push(parseInt($(this).val()));
+
+    // Global GET helper that serialises arrays as bracketed keys (key[]=v1&key[]=v2)
+    function getJson(url, params) {
+        var u = url;
+        if (params) {
+            var sp = new URLSearchParams();
+            Object.keys(params).forEach(function (k) {
+                var v = params[k];
+                if (Array.isArray(v)) {
+                    // Append as key[] so server parses it as an array (matches jQuery behavior)
+                    v.forEach(function (x) { sp.append(k + '[]', x); });
+                } else if (v !== undefined && v !== null) {
+                    sp.append(k, v);
+                }
+            });
+            u = url + (url.indexOf('?') === -1 ? '?' + sp.toString() : '&' + sp.toString());
+        }
+        return fetch(u, { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+                return res.text();
+            })
+            .then(function (text) {
+                try { return JSON.parse(text); } catch (e) { return text; }
+            });
+    }
+
+    // Small helper: safe closest wrapper (some nodes may not have closest or be SVG)
+    function closestSafe(el, selector) {
+        try {
+            if (!el) return null;
+            if (typeof el.closest === 'function') return el.closest(selector);
+            // fallback: walk up parents
+            var node = el;
+            while (node) {
+                if (node.matches && node.matches(selector)) return node;
+                node = node.parentElement;
+            }
+        } catch (e) {
+            return null;
+        }
+        return null;
+    }
+
+    // Find checked ids in #table-invoice
+    function getCheckedInvoiceIds() {
+        var selected = [];
+        var table = document.getElementById('table-invoice');
+        if (!table) return selected;
+        table.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
+            if (cb.id) selected.push(cb.id);
         });
-        $.ajax({ type: 'GET',
-                 contentType: "application/json; charset=utf-8",
-                 data: {
-                        item_ids: item_ids
-                       },
-                 url: '/invoice/invitem/multiple',
-                 cache: false,
-                 dataType: 'json',
-                 success: function (data) {
+        return selected;
+    }
+
+    // Delegated click handler for many inv actions
+    document.addEventListener('click', function (e) {
+        var el = e.target;
+
+        // btn-mark-as-sent
+        var markAsSent = closestSafe(el, '#btn-mark-as-sent');
+        if (markAsSent) {
+            var btn = document.getElementById('btn-mark-as-sent');
+            var originalHtml = btn ? btn.innerHTML : null;
+            if (btn) { btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btn.disabled = true; }
+
+            var selected = getCheckedInvoiceIds();
+
+            getJson(location.origin + "/invoice/inv/mark_as_sent", { keylist: selected })
+                .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                        location.reload(true);
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location.reload(true);
+                    } else {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location.reload(true);
                     }
-                 }
-        });
-    });
-    
-    $(document).on('click', '[name="checkbox-selection-all"]', function () {
-        var c = this.checked;
-        $(':checkbox').prop('checked', c);
-    });
-    
-    // Used in inv/index to select checkboxed invoices that are to be marked as recurring instead of individually marking them as recurring
-    // The invoices will appear in the invrecurring/index
-    // search class(.)create_recurring_confirm_multiple on inv/modal_create_recurring_multiple.php
-    $(document).on('click', '.create_recurring_confirm_multiple', function () {
-        /**
-         * Purpose: To rotate the recycle/recurring symbol on create_recurring_confirm_multiple until below url completed
-         * search 'create_recurring_confirm_multiple' on inv/modal_create_recurring_multiple.php
-         * # => use id=...
-         */
-        var btn = $('#create_recurring_confirm_multiple');
-        var selected = [];
-        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
-        /**
-         * Purpose: To retrieve all the checked checkboxes
-         * @see inv/index GridView::widget()->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
-         */
-        $('#table-invoice input[type="checkbox"]:checked').each(function() {
-            selected.push($(this).attr('id'));
-        });
-        recur_frequency = $('#recur_frequency').val();
-        recur_start_date = $('#recur_start_date').val();
-        recur_end_date = $('#recur_end_date').val();
-        var url = $(location).attr('origin') + "/invoice/invrecurring/multiple";
-        $.ajax({ type: "GET",
-            contentType: "application/json; charset=utf-8",
-            data: {
+                })
+                .catch(function (err) {
+                    console.error('mark_as_sent error', err);
+                    if (btn) { btn.innerHTML = originalHtml || ''; btn.disabled = false; }
+                    alert('An error occurred. See console for details.');
+                });
+            return;
+        }
+
+        // btn-mark-sent-as-draft
+        var markDraft = closestSafe(el, '#btn-mark-sent-as-draft');
+        if (markDraft) {
+            var btnD = document.getElementById('btn-mark-sent-as-draft');
+            var originalHtmlD = btnD ? btnD.innerHTML : null;
+            if (btnD) { btnD.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btnD.disabled = true; }
+
+            var selectedD = getCheckedInvoiceIds();
+            getJson(location.origin + "/invoice/inv/mark_sent_as_draft", { keylist: selectedD })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btnD) btnD.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location.reload(true);
+                    } else {
+                        if (btnD) btnD.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location.reload(true);
+                    }
+                })
+                .catch(function (err) {
+                    console.error('mark_sent_as_draft error', err);
+                    if (btnD) { btnD.innerHTML = originalHtmlD || ''; btnD.disabled = false; }
+                    alert('An error occurred. See console for details.');
+                });
+            return;
+        }
+
+        // create_recurring_confirm_multiple (class)
+        var createRecurring = closestSafe(el, '.create_recurring_confirm_multiple');
+        if (createRecurring) {
+            var btn = document.getElementById('create_recurring_confirm_multiple') || createRecurring;
+            var orig = btn ? btn.innerHTML : null;
+            if (btn) { btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btn.disabled = true; }
+
+            var selected = getCheckedInvoiceIds();
+            var recur_frequency = (document.getElementById('recur_frequency') || {}).value || '';
+            var recur_start_date = (document.getElementById('recur_start_date') || {}).value || '';
+            var recur_end_date = (document.getElementById('recur_end_date') || {}).value || '';
+
+            getJson(location.origin + "/invoice/invrecurring/multiple", {
                 keylist: selected,
                 recur_start_date: recur_start_date,
                 recur_end_date: recur_end_date,
                 recur_frequency: recur_frequency
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                    window.location.reload(true);
-                }    
-                if (response.success === 0) { 
-                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
-                    window.location.reload(true);
-                }
-            }
-        });
-    });
-    
-    // Used in inv/index to select invoices that are to be marked as sent instead of literally sending them by email
-    // The invoices will not be in the email log but they will be on the clients guest index
-    // 
-    // Refer to: resources/views/invoice/inv/index.php 
-    // $markAsSent = A::tag()
-    //    ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('i.sent')])
-    //    ->addClass('btn btn-success')
-    //    ->content($iR->getSpecificStatusArrayEmoji(2))
-    //    -> NO HREF i.e ->href($urlGenerator etc..) necessary here because the javascript url below will handle this
-    //    ->id('btn-mark-as-sent')
-    //    ->render();
-    $(document).on('click', '#btn-mark-as-sent', function () {
-        var btn = $('#btn-mark-as-sent');
-        var selected = [];
-        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
-        // see inv/index GridView::widget()->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
-        $('#table-invoice input[type="checkbox"]:checked').each(function() {
-            selected.push($(this).attr('id'));
-        });
-        var url = $(location).attr('origin') + "/invoice/inv/mark_as_sent";
-        $.ajax({ type: "GET",
-            contentType: "application/json; charset=utf-8",
-            data: {
-                keylist: selected
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                    window.location.reload(true);
-                }    
-                if (response.success === 0) { 
-                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
-                    window.location.reload(true);                                                
-                }
-            }
-        });
-    });
-    
-    $(document).on('click', '#btn-mark-sent-as-draft', function () {
-        var btn = $('#btn-mark-sent-as-draft');
-        var selected = [];
-        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
-        $('#table-invoice input[type="checkbox"]:checked').each(function() {
-            selected.push($(this).attr('id'));
-        });
-        var url = $(location).attr('origin') + "/invoice/inv/mark_sent_as_draft";
-        $.ajax({ type: "GET",
-            contentType: "application/json; charset=utf-8",
-            data: {
-                keylist: selected
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                    window.location.reload(true);
-                }    
-                if (response.success === 0) { 
-                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
-                    window.location.reload(true);                                                
-                }
-            }
-        });
-    });
-    
-    $(document).on('click', '.modal_copy_inv_multiple_confirm', function () {
-        /**
-         * Purpose: To rotate the symbol on modal_copy_inv_multiple_confirm.php until below url completed
-         */
-        var btn = $('.modal_copy_inv_multiple_confirm');
-        var modal_created_date = $('#modal_created_date').val();
-        var selected = [];
-        btn.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
-        /**
-         * Purpose: To retrieve all the checked checkboxes
-         * @see inv/index GridView::widget()->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
-         */
-        $('#table-invoice input[type="checkbox"]:checked').each(function() {
-            selected.push($(this).attr('id'));
-        });
-        var url = $(location).attr('origin') + "/invoice/inv/multiplecopy";
-        $.ajax({ type: "GET",
-            contentType: "application/json; charset=utf-8",
-            data: {
-                keylist: selected,
-                modal_created_date: modal_created_date
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');
-                    window.location.reload(true);
-                }    
-                if (response.success === 0) { 
-                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');
-                    window.location.reload(true);
-                }
-            }
-        });
-    });
-    
-    $(document).ready(function() {
-       $("[required]").after("<span class='required'>*</span>");
-    });
-     
-    $('.btn_add_row_modal').click(function () {
-    var absolute_url = new URL($(location).attr('href'));
-    inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1); 
-    var url = $(location).attr('origin') + "/invoice/invitem/add/"+inv_id;
-    $('#modal-placeholder-invitem').on("load",url);  
-    });
+            })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location.reload(true);
+                    } else {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location.reload(true);
+                    }
+                })
+                .catch(function (err) {
+                    console.error('invrecurring/multiple error', err);
+                    if (btn) { btn.innerHTML = orig || ''; btn.disabled = false; }
+                    alert('An error occurred. See console for details.');
+                });
+            return;
+        }
 
-    $('.btn_inv_item_add_row').click(function () {
-    $('#new_inv_item_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();            
-    });
-    
-    // class="btn_add_row" on views/inv/partial_item_table.php
-    $('.btn_add_row').click(function () {
-    $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();            
-    });
-    
-    // id="inv_tax_submit" in drop down menu on views/inv/modal_add_inv_tax.php
-    $(document).on('click', '#inv_tax_submit', function () {
-    var url = $(location).attr('origin') + "/invoice/inv/save_inv_tax_rate";
-    var btn = $('.inv_tax_submit');
-    var absolute_url = new URL($(location).attr('href'));
-    btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-    //take the inv id from the public url
-    inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                   inv_id: inv_id,
-                   inv_tax_rate_id: $('#inv_tax_rate_id').val(),
-                   include_inv_item_tax: $('#include_inv_item_tax').val()
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                       var response = parsedata(data);
-                       if (response.success === 1) {                                   
-                          window.location = absolute_url;
-                          btn.html('<h6 class="text-center"><i class="fa fa-check"></i></h6>');
-                          window.location.reload();                                                
-                       }
-                       if (response.success === 0) {                                   
-                          window.location = absolute_url;
-                          btn.html('<h6 class="text-center"><i class="fa fa-times"></i></h6>');
-                          window.location.reload();                                                
-                       }
-            },
-            error: function() {
-                alert('Incomplete fields: You must include a tax rate. Tip: Include a zero tax rate.');
-            }
-    });
-    });
-    
-    // id="create_credit_confirm button on views/inv/modal_create_credit.php
-    $(document).on('click', '#create-credit-confirm', function () {
-    var url = $(location).attr('origin') + "/invoice/inv/create_credit_confirm";
-    var btn = $('.create-credit-confirm');
-    var absolute_url = new URL($(location).attr('href'));
-    btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-    //take the inv id from the public url
-    inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                    inv_id: inv_id,
-                    client_id: $('#client_id').val(),
-                    inv_date_created: $('#inv_date_created').val(),
-                    group_id: $('#inv_group_id').val(),
-                    password: $('#inv_password').val(),
-                    user_id: $('#user_id').val()
-            },                
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                var response =  parsedata(data);
-                if (response.success === 1) {
-                    // The validation was successful and inv was created
-                    btn.html('<h2 class="text-center"><i class="bi bi-check2-square">                                                                                                                                                                                                                                                                                                                                                                                                                           "></i></h2>');                        
-                    window.location = absolute_url;
-                    window.location.reload();
-                    alert(response.flash_message);
-                }
-                if (response.success === 0) {
-                    btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');                        
-                    window.location = absolute_url;
-                    window.location.reload();
-                    // Display the 'unsuccessful' message
-                    alert(response.flash_message);
-                }    
-            },
-            error: function(xhr, status, error) {                         
-                console.warn(xhr.responseText);
-                alert('Status: ' + status + ' An error: ' + error.toString());
-            }
-        });
-    });  
+        // modal_copy_inv_multiple_confirm
+        var copyMultiple = closestSafe(el, '.modal_copy_inv_multiple_confirm');
+        if (copyMultiple) {
+            var btn = document.querySelector('.modal_copy_inv_multiple_confirm') || copyMultiple;
+            var orig = btn ? btn.innerHTML : null;
+            if (btn) { btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btn.disabled = true; }
+            var modal_created_date = (document.getElementById('modal_created_date') || {}).value || '';
+            var selected = getCheckedInvoiceIds();
+            getJson(location.origin + "/invoice/inv/multiplecopy", { keylist: selected, modal_created_date: modal_created_date })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location.reload(true);
+                    } else {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location.reload(true);
+                    }
+                })
+                .catch(function (err) {
+                    console.error('multiplecopy error', err);
+                    if (btn) { btn.innerHTML = orig || ''; btn.disabled = false; }
+                    alert('An error occurred. See console for details.');
+                });
+            return;
+        }
 
-    // Copies the invoice to a specific client
-    $(document).on('click', '#inv_to_inv_confirm', function () {        
-        var url = $(location).attr('origin') + "/invoice/inv/inv_to_inv_confirm";
-        var btn = $('.inv_to_inv_confirm');
-        var absolute_url = new URL($(location).attr('href'));
-        btn.html('<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');
-        //take the inv id from the public url
-        inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);        
-        $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
+        // Copy invoice confirm (inv_to_inv_confirm)
+        var invToInv = closestSafe(el, '#inv_to_inv_confirm') || closestSafe(el, '.inv_to_inv_confirm');
+        if (invToInv) {
+            var url = location.origin + "/invoice/inv/inv_to_inv_confirm";
+            var btn = document.querySelector('.inv_to_inv_confirm') || invToInv;
+            var absolute_url = new URL(location.href);
+            if (btn) { btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>'; btn.disabled = true; }
+            var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
+            var payload = {
                 inv_id: inv_id,
-                client_id: $('#create_inv_client_id').val(),
-                user_id: $('#user_id').val()
-            },                            
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                        var response =  parsedata(data);
-                        if (response.success === 1) {
-                            // The validation was successful and inv was created
-                            btn.html('<h2 class="text-center"><i class="fa fa-check"></i></h2>');                        
-                            window.location = absolute_url;
-                            window.location.reload();
-                        }
-                        if (response.success === 0) {
-                            // The validation was unsuccessful
-                            btn.html('<h2 class="text-center"><i class="fa fa-times"></i></h2>');                        
-                            window.location = absolute_url;
-                            window.location.reload();
-                        }
-            },
-            error: function(xhr, status, error) {                         
-                        console.warn(xhr.responseText);
-                        alert('Status: ' + status + ' An error: ' + error.toString());
-            }
-        });
-    });
-    
-    // id="inv_to_pdf_confirm_with_custom_fields button on views/inv/modal_inv_to_pdf.php
-    $(document).on('click', '#inv_to_pdf_confirm_with_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/inv/pdf/1";    
-            window.location.reload;
-            window.open(url, '_blank');            
-    }); 
+                client_id: (document.getElementById('create_inv_client_id') || {}).value || '',
+                user_id: (document.getElementById('user_id') || {}).value || ''
+            };
+            getJson(url, payload)
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absolute_url;
+                        window.location.reload();
+                    } else {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location = absolute_url;
+                        window.location.reload();
+                    }
+                })
+                .catch(function (err) {
+                    console.error('inv_to_inv_confirm error', err);
+                    if (btn) { btn.innerHTML = ''; btn.disabled = false; }
+                    alert('An error occurred. See console for details.');
+                });
+            return;
+        }
 
-    // id="inv_to_pdf_confirm_without_custom_fields button on views/inv/modal_inv_to_pdf.php
-    $(document).on('click', '#inv_to_pdf_confirm_without_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/inv/pdf/0";    
-            window.location.reload;
+        // inv to pdf / html and modal iframe handlers
+        if (closestSafe(el, '#inv_to_pdf_confirm_with_custom_fields')) {
+            var url = location.origin + "/invoice/inv/pdf/1";
             window.open(url, '_blank');
-    });    
-    
-    // id="inv_to_modal_pdf_confirm_with_custom_fields button on views/inv/modal_view_inv_pdf.php
-    $(document).on('click', '#inv_to_modal_pdf_confirm_with_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/inv/pdf/1";    
-            
-            // Set the iframe src to the URL of the PDF
-            $('#modal-view-inv-pdf').attr('src', url);
+            return;
+        }
+        if (closestSafe(el, '#inv_to_pdf_confirm_without_custom_fields')) {
+            var url0 = location.origin + "/invoice/inv/pdf/0";
+            window.open(url0, '_blank');
+            return;
+        }
+        if (closestSafe(el, '#inv_to_modal_pdf_confirm_with_custom_fields')) {
+            var url1 = location.origin + "/invoice/inv/pdf/1";
+            var iframe = document.getElementById('modal-view-inv-pdf');
+            if (iframe) iframe.setAttribute('src', url1);
+            try { if (typeof bootstrap !== 'undefined' && bootstrap.Modal) { var m = document.getElementById('modal-layout-modal-pdf-inv'); if (m) new bootstrap.Modal(m).show(); } } catch (e) {}
+            return;
+        }
+        if (closestSafe(el, '#inv_to_modal_pdf_confirm_without_custom_fields')) {
+            var url2 = location.origin + "/invoice/inv/pdf/0";
+            var iframe2 = document.getElementById('modal-view-inv-pdf');
+            if (iframe2) iframe2.setAttribute('src', url2);
+            try { if (typeof bootstrap !== 'undefined' && bootstrap.Modal) { var m2 = document.getElementById('modal-layout-modal-pdf-inv'); if (m2) new bootstrap.Modal(m2).show(); } } catch (e) {}
+            return;
+        }
+        if (closestSafe(el, '#inv_to_html_confirm_with_custom_fields')) {
+            var url3 = location.origin + "/invoice/inv/html/1";
+            window.open(url3, '_blank');
+            return;
+        }
+        if (closestSafe(el, '#inv_to_html_confirm_without_custom_fields')) {
+            var url4 = location.origin + "/invoice/inv/html/0";
+            window.open(url4, '_blank');
+            return;
+        }
 
-            // Open the modal
-            $('#modal-layout-modal-pdf-inv').modal('show');            
-    }); 
-    
-    // id="inv_to_html_confirm_with_custom_fields button on views/inv/modal_inv_to_html.php
-    $(document).on('click', '#inv_to_html_confirm_with_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/inv/html/1";    
-            window.location.reload;
-            window.open(url, '_blank');            
-    }); 
-    
-    // id="inv_to_modal_pdf_confirm_without_custom_fields button on views/inv/modal_view_inv_pdf.php
-    $(document).on('click', '#inv_to_modal_pdf_confirm_without_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/inv/pdf/0";    
-            
-            // Set the iframe src to the URL of the PDF
-            $('#modal-view-inv-pdf').attr('src', url);
+        // Payment modal submit (button with id btn_modal_payment_submit)
+        var btnPayment = closestSafe(el, '#btn_modal_payment_submit');
+        if (btnPayment) {
+            var url = location.origin + "/invoice/payment/add_with_ajax";
+            var payload = {
+                invoice_id: (document.getElementById('inv_id') || {}).value || '',
+                payment_amount: (document.getElementById('amount') || {}).value || '',
+                payment_method_id: (document.getElementById('payment_method_id') || {}).value || '',
+                payment_date: (document.getElementById('date') || {}).value || '',
+                payment_note: (document.getElementById('note') || {}).value || ''
+            };
+            getJson(url, payload)
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if ((document.getElementById('payment_cf_exist') || {}).value === 'yes') {
+                            window.location = location.origin + "/invoice/customfields/add_with_ajax" + (response.payment_id || '');
+                        } else {
+                            try {
+                                if (document.referrer) window.location = document.referrer;
+                            } catch (e) { window.location.reload(); }
+                        }
+                    } else {
+                        // show validation errors
+                        Array.from(document.querySelectorAll('.control-group')).forEach(function (g) { g.classList.remove('has-error'); });
+                        if (response.validation_errors) {
+                            Object.keys(response.validation_errors).forEach(function (key) {
+                                var elKey = document.getElementById(key);
+                                if (elKey && elKey.parentElement && elKey.parentElement.parentElement) {
+                                    elKey.parentElement.parentElement.classList.add('has-error');
+                                }
+                            });
+                        }
+                    }
+                })
+                .catch(function (err) {
+                    console.error('payment add error', err);
+                    alert('An error occurred while adding payment. See console for details.');
+                });
+            return;
+        }
 
-            // Open the modal
-            $('#modal-layout-modal-pdf-inv').modal('show');            
-    }); 
+    }, true);
 
-    // id="inv_to_html_confirm_without_custom_fields button on views/inv/modal_inv_to_html.php
-    $(document).on('click', '#inv_to_html_confirm_without_custom_fields', function () {
-            var url = $(location).attr('origin') + "/invoice/inv/html/0";    
-            window.location.reload;
-            window.open(url, '_blank');
-    });
-
-    $('#inv_discount_amount').keyup(function () {
-    if (this.value.length > 0) {
-        $('#inv_discount_percent').prop('value', 0.00);
-        $('#inv_discount_percent').prop('disabled', true);
-    } else {
-        $('#inv_discount_percent').prop('disabled', false);
-    }
-    });
-    
-    $('#inv_discount_percent').keyup(function () {
-    if (this.value.length > 0) {
-        $('#inv_discount_amount').prop('value', 0.00);
-        $('#inv_discount_amount').prop('disabled', true);
-    } else {
-        $('#inv_discount_amount').prop('disabled', false);
-    }
-    });
-
-    $('#datepicker').on('focus', function () {
-            $(this).datepicker({               
-                changeMonth: true,
-                changeYear: true,
-                showButtonPanel: true,
-                dateFormat: 'dd-mm-yy'
-            });
-    });
-
-    $('body').on('focus', '.datepicker', function () {
-            $(this).datepicker({
-                beforeShow: function() {
-                    setTimeout(function(){
-                    $('.datepicker').css('z-index','9999');
-                    }, );
-                }      
-            });
-    });
-
-    // Keep track of the last "taggable" input/textarea
-    $('.taggable').on('focus', function () {
-    window.lastTaggableClicked = this;
-    });
-    
-    $('[data-bs-toggle="tooltip"]').tooltip();
-
-    // Template Tag handling
-    $('.tag-select').select2().on('change', function (event) {
-    var select = $(event.currentTarget);
-    // Add the tag to the field
-    if (typeof window.lastTaggableClicked !== 'undefined') {
-        insert_at_caret(window.lastTaggableClicked.id, select.val());
-    }
-    // Reset the select and exit
-    select.val([]);
-    return false;
-    });
-});
-
-$('#btn_modal_payment_submit').click(function () {
-    var url = $(location).attr('origin') + "/invoice/payment/add_with_ajax";
-    $.ajax({type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            data: {
-                invoice_id: $('#inv_id').val(),
-                payment_amount: $('#amount').val(),
-                payment_method_id: $('#payment_method_id').val(),
-                payment_date: $('#date').val(),
-                payment_note: $('#note').val()
-            },
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {   
-                var response =  parsedata(data);
+    // Delegated handler for saving client notes etc.
+    document.addEventListener('click', function (e) {
+        var el = e.target;
+        var saveBtn = closestSafe(el, '#save_client_note');
+        if (!saveBtn) return;
+        var url = location.origin + "/invoice/client/save_client_note";
+        var loadUrl = location.origin + "/invoice/client/load_client_notes";
+        var client_id = (document.getElementById('client_id') || {}).value || '';
+        var client_note = (document.getElementById('client_note') || {}).value || '';
+        getJson(url, { client_id: client_id, client_note: client_note })
+            .then(function (data) {
+                var response = parsedata(data);
                 if (response.success === 1) {
-                    // The validation was successful and payment was added
-                    if ($('#payment_cf_exist').val() === 'yes') {
-                        // There are payment custom fields, display the payment form
-                        // to allow completing the custom fields
-                        window.location = $(location).attr('origin') + "/invoice/customfields/add_with_ajax" + response.payment_id;
+                    Array.from(document.querySelectorAll('.control-group')).forEach(function (g) { g.classList.remove('error'); });
+                    var noteEl = document.getElementById('client_note');
+                    if (noteEl) noteEl.value = '';
+                    var notesList = document.getElementById('notes_list');
+                    if (notesList) {
+                        var u = loadUrl + '?client_id=' + encodeURIComponent(client_id);
+                        fetch(u, { cache: 'no-store', credentials: 'same-origin' })
+                            .then(function (r) { return r.text(); })
+                            .then(function (html) { notesList.innerHTML = html; })
+                            .catch(function (err) { console.error('load_client_notes failed', err); });
                     }
-                    else {
-                        // There are no payment custom fields, return to invoice view
-                        window.location = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                } else {
+                    Array.from(document.querySelectorAll('.control-group')).forEach(function (g) { g.classList.remove('error'); });
+                    if (response.validation_errors) {
+                        Object.keys(response.validation_errors).forEach(function (key) {
+                            var elm = document.getElementById(key);
+                            if (elm && elm.parentElement) elm.parentElement.classList.add('has-error');
+                        });
                     }
                 }
-                else {
-                    // The validation was not successful
-                    $('.control-group').removeClass('has-error');
-                    for (var key in response.validation_errors) {
-                        if(response.validation_errors.hasOwnProperty(key)) {
-                            $('#' + key).parent().parent().addClass('has-error');
-                        }
-                    }
-                }
+            })
+            .catch(function (err) {
+                console.error('save_client_note error', err);
+                alert('Status: error An error occurred');
+            });
+    }, true);
+
+    // Input listeners for discount fields (mirrors original interlock behavior)
+    document.addEventListener('input', function (e) {
+        var el = e.target;
+        if (!el) return;
+        if (el.id === 'inv_discount_amount') {
+            var percent = document.getElementById('inv_discount_percent');
+            if (percent) {
+                if (el.value.length > 0) { percent.value = '0.00'; percent.disabled = true; } else { percent.disabled = false; }
             }
-        });
-});
+        } else if (el.id === 'inv_discount_percent') {
+            var amount = document.getElementById('inv_discount_amount');
+            if (amount) {
+                if (el.value.length > 0) { amount.value = '0.00'; amount.disabled = true; } else { amount.disabled = false; }
+            }
+        }
+    }, true);
 
-        
-    
+    // Datepicker focus handlers: call jQuery UI datepicker if available (keeps original behaviour)
+    document.addEventListener('focus', function (e) {
+        var el = e.target;
+        if (!el) return;
+        if (el.id === 'datepicker') {
+            if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.datepicker === 'function') {
+                window.jQuery(el).datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true,
+                    dateFormat: 'dd-mm-yy'
+                });
+            }
+        }
+        if (el.classList && el.classList.contains('datepicker')) {
+            if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.datepicker === 'function') {
+                window.jQuery(el).datepicker({
+                    beforeShow: function () {
+                        setTimeout(function () {
+                            Array.from(document.querySelectorAll('.datepicker')).forEach(function (d) {
+                                d.style.zIndex = '9999';
+                            });
+                        }, 0);
+                    }
+                });
+            }
+        }
+    }, true);
 
+    // Keep track of last taggable focused element
+    document.addEventListener('focus', function (e) {
+        var el = e.target;
+        if (el && el.classList && el.classList.contains('taggable')) {
+            window.lastTaggableClicked = el;
+        }
+    }, true);
 
+    // Initialize tooltips (bootstrap)
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (t) {
+                try { new bootstrap.Tooltip(t); } catch (err) { /* ignore */ }
+            });
+        }
+    });
+
+})();

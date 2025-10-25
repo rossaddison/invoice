@@ -14,6 +14,7 @@ use Yiisoft\Html\Tag\A;
  * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
  * @var App\Invoice\InvItemAmount\InvItemAmountRepository $invItemAmountR
  * @var App\Invoice\ProductImage\ProductImageRepository $piR
+ * @var Yiisoft\Session\SessionInterface $session
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -173,14 +174,20 @@ $vat = $s->getSetting('enable_vat_registration');
 foreach ($invItems as $item) {
     $productId = $item->getProduct_id();
     $taskId = $item->getTask_id();
-    $productRef = A::tag()
-           ->href($urlGenerator->generate('product/view', ['id' => $productId]))
-           ->content($productId ?? '')
-            ->render();
-    $taskRef = A::tag()
-           ->href($urlGenerator->generate('task/view', ['id' => $productId]))
-           ->content($taskId ?? '')
+    $productRef = '';
+    $taskRef = '';
+    if ($productId !== null) {
+        $productRef = A::tag()
+           ->href($urlGenerator->generate('product/view', ['_language' => (string) $session->get('_language'), 'id' => $productId]))
+           ->content($productId)
            ->render();
+    }
+    if ($taskId !== null) {
+        $taskRef = A::tag()
+           ->href($urlGenerator->generate('task/view', ['_language' => (string) $session->get('_language'), 'id' => $taskId]))
+           ->content($taskId)
+           ->render();
+    }
     ?>
                 <tbody class="item">
                 <tr>

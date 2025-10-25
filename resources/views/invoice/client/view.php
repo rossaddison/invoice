@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Invoice\ClientCustom\ClientCustomForm;
 use App\Invoice\Entity\ClientCustom;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 
 /**
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
@@ -51,22 +52,6 @@ use Yiisoft\Html\Html;
  * @var string $partial_notes
  * @var string $title
  */
-
-$locations = [];
-
-/**
- * @var App\Invoice\Entity\CustomField $custom_field
- */
-foreach ($custom_fields as $custom_field) {
-    $customFieldLocation = $custom_field->getLocation();
-    if (null !== $customFieldLocation) {
-        if (array_key_exists($customFieldLocation, $locations)) {
-            $locations[$customFieldLocation] += 1;
-        } else {
-            $locations[$customFieldLocation] = 1;
-        }
-    }
-}
 ?>
 
 <h1><?= Html::encode($title)?></h1>
@@ -178,7 +163,25 @@ foreach ($custom_fields as $custom_field) {
                     <p>
                         <?= $partial_client_address; ?>
                     </p>
-
+                    <p>
+                        <?php
+                            /**
+                             * @var App\Invoice\Entity\CustomField $custom_field
+                             */
+                            foreach ($custom_fields as $custom_field) : ?>
+                            <?php if ($custom_field->getLocation() != 1) {
+                                continue;
+                            } ?>
+                            <tr>
+                                <?php
+                                    $column = $custom_field->getLabel();
+                                $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+                                ?>
+                                <th><?= Html::encode($column); ?></th>
+                                <td><?= Html::encode($value); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </p>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6">
 
@@ -268,22 +271,24 @@ foreach ($custom_fields as $custom_field) {
                                 <?php if (strlen(($client->getClient_web() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('web'); ?></th>
-                                        <td><?= Html::link($client->getClient_web()); ?></td>
+                                        <td><?= A::tag()->content($client->getClient_web() ?? 'https://no_web_page.com')->href($client->getClient_web() ?? 'https://no_web_page.com')->addAttributes(['target' => '_blank'])->render(); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php
-                        /**
-                         * @var App\Invoice\Entity\CustomField $custom_field
-                         */
-                        foreach ($custom_fields as $custom_field) : ?>
-                                    <?php if ($custom_field->getLocation() !== 2) {
+                                    /**
+                                     * @var App\Invoice\Entity\CustomField $custom_field
+                                     */
+                                    foreach ($custom_fields as $custom_field) : ?>
+                                    <?php if ($custom_field->getLocation() != 2) {
                                         continue;
                                     } ?>
                                     <tr>
                                         <?php
-                                            $clientCustomForm = new App\Invoice\ClientCustom\ClientCustomForm(new App\Invoice\Entity\ClientCustom());
-                            $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);
-                            ?>
+                                            $column = $custom_field->getLabel();
+                                        $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+                                        ?>
+                                        <th><?= Html::encode($column); ?></th>
+                                        <td><?= Html::encode($value); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </table>
@@ -329,10 +334,9 @@ foreach ($custom_fields as $custom_field) {
                                 <?php endforeach; ?>
                             </table>
                         </div>
-
-        </div>
-    </div>
-</div>
+                    </div>
+                </div>
+            </div>
 
             <?php if ($client->getClient_surname() !== ""): ?>
                 <hr>
@@ -377,22 +381,15 @@ foreach ($custom_fields as $custom_field) {
                                     <?php endif; ?>
 
                                     <?php
-                                        /**
-                                         * @var App\Invoice\Entity\CustomField $custom_field
-                                         */
-                                        foreach ($custom_fields as $custom_field) : ?>
-                                        <?php if ($custom_field->getLocation() != 3) {
-                                            continue;
-                                        } ?>
-                                        <tr>
-                                            <?php
-                                                $column = $custom_field->getLabel();
-                                            $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
-                                            ?>
-                                            <th><?= Html::encode($column); ?></th>
-                                            <td><?= Html::encode($value); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
+                                            /**
+                                             * @var App\Invoice\Entity\CustomField $custom_field
+                                             */
+                                            foreach ($custom_fields as $custom_field): ?>
+                                                <?php if ($custom_field->getLocation() !== 3) {
+                                                    continue;
+                                                } ?>
+                                                <?php $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues); ?>
+                                         <?php endforeach; ?>   
                                 </table>
                             </div>
                         </div>

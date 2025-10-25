@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  */
-
+$inv_id = $inv->getId();
 ?>
    
 <div id="inv-to-pdf" class="modal" tabindex="-1">
@@ -25,7 +25,7 @@ declare(strict_types=1);
                     <div class="control-label">
                         <?= $translator->translate('custom.fields'); ?>?                
                     </div>
-                    <input type="hidden" name="inv_id" id="inv_id" value="<?php $inv->getId(); ?>">
+                    <input type="hidden" name="inv_id-" . <?php $inv_id; ?> id="inv_id-" . <?php $inv_id; ?> value="<?php $inv_id; ?>">
                 </form>    
             </div>
             <div class="modal-footer">
