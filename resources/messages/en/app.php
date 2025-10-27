@@ -289,6 +289,7 @@ return [
   'contract.period.start' => 'Period Start',
   'contract.reference' => 'Reference',
   'contracts' => 'Contracts',
+  'converted.to.invoice' => 'Converted to Invoice',
   'copy.invoice' => 'Copy Invoice',
   'copy.quote' => 'Copy Quote',
   'count' => 'Invoice Count',

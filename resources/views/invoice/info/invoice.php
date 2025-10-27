@@ -51,6 +51,12 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>26h October 2025</b></p>
+<p>Bugfix: Length annotation: include skipOnEmpty = true</p>
+<p>Bugfix: Delete invoice items. src\Invoice\Asset\rebuild\js\inv.js</p> 
+<p>Use vs code to increase test coverage from 18.3 to approx. 40%</p>
+<p>New invoices, and quotes redirect to the new invoice and quote respectively and not the index.</p>
+<p>Inv to inv copy redirects to the new invoice's view</p>
 <p><b>25th October 2025</b></p>
 <p>I am now using VS Code and integrating it with SonarQube Cloud using the Connection Method</p>
 <p>This is to bring code replication down</p>

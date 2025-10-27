@@ -22,8 +22,8 @@ use Yiisoft\Html\Html;
             <div class="modal-header">
                <h5 class="modal-title"><?php echo $translator->translate('copy.invoice'); ?></h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             </div>
-             <div class="modal-body">
+            </div>
+            <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUser_id(); ?>">
@@ -45,11 +45,11 @@ use Yiisoft\Html\Html;
                 </form>    
             </div>
             <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
-                 <!-- inv.js inv_to_inv_confirm, InvController function inv_to_inv_confirm -->
-                 <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
+                <!-- inv.js inv_to_inv_confirm, InvController function inv_to_inv_confirm -->
+                <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
                     <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
-                 </button>
+                </button>
             </div>
         </div>
     </div>

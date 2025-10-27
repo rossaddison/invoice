@@ -104,6 +104,7 @@ use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserRepository as UR;
 // App Helpers
 use App\Invoice\Helpers\ClientHelper;
+use App\Invoice\Quote\QuoteCustomFieldProcessor;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Helpers\DateHelper;
@@ -112,6 +113,7 @@ use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\PdfHelper;
 use App\Invoice\Helpers\TemplateHelper;
 use App\Widget\Bootstrap5ModalQuote;
+use App\Widget\QuoteToolbar;
 // Yii
 use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
@@ -185,6 +187,8 @@ final class QuoteController extends BaseController
         private readonly QuoteItemService $quote_item_service,
         private readonly QuoteService $quote_service,
         private readonly QuoteTaxRateService $quote_tax_rate_service,
+        private readonly QuoteCustomFieldProcessor $quoteCustomFieldProcessor,
+        private readonly QuoteToolbar $quoteToolbar,
         private readonly UrlGenerator $url_generator,
         Session $session,
         SR $sR,
@@ -343,10 +347,10 @@ final class QuoteController extends BaseController
                         } //$model_id
                         $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         if ($origin == 'main' || $origin == 'quote') {
-                            return $this->webService->getRedirectResponse('quote/index');
+                            return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
                         }
                         if ($origin == 'dashboard') {
-                            return $this->webService->getRedirectResponse('invoice/dashboard');
+                            return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
                         }
                     }
                 }
@@ -442,7 +446,7 @@ final class QuoteController extends BaseController
                             'quote_id' => $quote_id,
                             'inv_id' => 0,
                             'client_id' => $quote->getClient_id(),
-                            'group_id' => $this->sR->getSetting('default_sales_order_group'),
+                            'group_id' => (int) $this->sR->getSetting('default_sales_order_group'),
                             'status_id' => 4,
                             'client_po_number' => $purchase_order_number,
                             'client_po_person' => $purchase_order_person,
@@ -639,60 +643,7 @@ final class QuoteController extends BaseController
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param array $array
-     * @param int $quote_id
-     * @param QCR $qcR
-     */
-    public function custom_fields(FormHydrator $formHydrator, array $array, int $quote_id, QCR $qcR): void
-    {
-        if (!empty($array['custom'])) {
-            $db_array = [];
-            $values = [];
-            /**
-             * @var array $custom
-             * @var string $custom['value']
-             * @var string $custom['name']
-             */
-            foreach ($array['custom'] as $custom) {
-                if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
-                    $values[$matches[1]][] = $custom['value'] ;
-                } else {
-                    $values[$custom['name']] = $custom['value'];
-                }
-            }
-            /**
-             * @var string $value
-             */
-            foreach ($values as $key => $value) {
-                preg_match("/^custom\[(.*?)\](?:\[\]|)$/", $key, $matches);
-                if ($matches) {
-                    // Reduce eg.  customview[4] to 4
-                    $key_value = preg_match('/\d+/', $key, $m) ? $m[0] : '';
-                    $db_array[$key_value] = $value;
-                }
-            }
-            foreach ($db_array as $key => $value) {
-                if ($value !== '') {
-                    $quoteCustom = new QuoteCustom();
-                    $ajax_custom = new QuoteCustomForm($quoteCustom);
-                    $quote_custom = [];
-                    $quote_custom['quote_id'] = $quote_id;
-                    $quote_custom['custom_field_id'] = $key;
-                    $quote_custom['value'] = $value;
-                    if ($qcR->repoQuoteCustomCount((string) $quote_id, $key) > 0) {
-                        $model = $qcR->repoFormValuequery((string) $quote_id, $key);
-                    } else {
-                        $model = new QuoteCustom();
-                    }
-                    if (null !== $model && $formHydrator->populate($ajax_custom, $quote_custom) && $ajax_custom->isValid()) {
-                        $this->quote_custom_service->saveQuoteCustom($model, $quote_custom);
-                    }
-                }
-            }
-        }
-    }
+
 
     /**
      * @param Quote $quote
@@ -894,9 +845,9 @@ final class QuoteController extends BaseController
                 'numberhelper' => new NumberHelper($this->sR),
                 'quote_statuses' => $quoteRepo->getStatuses($this->translator),
                 'cvH' => new CVH($this->sR, $cvR),
-                'customFields' => $cfR->repoTablequery('quote_custom'),
+                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'quote_custom')['customFields'],
                 // Applicable to normally building up permanent selection lists eg. dropdowns
-                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
+                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'quote_custom')['customValues'],
                 // There will initially be no custom_values attached to this quote until they are filled in the field on the form
                 'quoteCustomValues' => null !== $quote_id ? $this->quote_custom_values($quote_id, $qcR) : null,
                 'quote' => $quote,
@@ -916,7 +867,7 @@ final class QuoteController extends BaseController
                     if (null !== $user) {
                         if ($formHydrator->populateAndValidate($form, $body)) {
                             $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $groupRepo);
-                            $this->edit_save_custom_fields($body, $formHydrator, $qcR, $quote_id);
+                            $this->processCustomFields($body, $formHydrator, $this->quoteCustomFieldProcessor, (string) $quote_id);
                             $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                         }
@@ -931,45 +882,7 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param array|object|null $parse
-     * @param string|null $quote_id
-     */
-    public function edit_save_custom_fields(array|object|null $parse, FormHydrator $formHydrator, QCR $qcR, string|null $quote_id): void
-    {
-        /**
-         * @var array $custom
-         */
-        $custom = $parse['custom'] ?? [];
-        /** @var array|string $value */
-        foreach ($custom as $custom_field_id => $value) {
-            if ($qcR->repoQuoteCustomCount((string) $quote_id, (string) $custom_field_id) == 0) {
-                $quoteCustom = new QuoteCustom();
-                $quote_custom_input = [
-                    'quote_id' => (int) $quote_id,
-                    'custom_field_id' => (int) $custom_field_id,
-                    'value' => is_array($value) ? serialize($value) : $value,
-                ];
-                $form = new QuoteCustomForm($quoteCustom);
-                if ($formHydrator->populateAndValidate($form, $quote_custom_input)) {
-                    $this->quote_custom_service->saveQuoteCustom($quoteCustom, $quote_custom_input);
-                }
-            } else {
-                $quote_custom = $qcR->repoFormValuequery((string) $quote_id, (string) $custom_field_id);
-                if ($quote_custom) {
-                    $quote_custom_input = [
-                        'quote_id' => (int) $quote_id,
-                        'custom_field_id' => (int) $custom_field_id,
-                        'value' => is_array($value) ? serialize($value) : $value,
-                    ];
-                    $form = new QuoteCustomForm($quote_custom);
-                    if ($formHydrator->populateAndValidate($form, $quote_custom_input)) {
-                        $this->quote_custom_service->saveQuoteCustom($quote_custom, $quote_custom_input);
-                    }
-                }
-            }
-        }
-    }
+
 
     /**
      * @psalm-param 'pdf' $type
@@ -1035,7 +948,7 @@ final class QuoteController extends BaseController
                 }
                 if ($template_helper->select_email_quote_template() == '') {
                     $this->flashMessage('warning', $this->translator->translate('quote.email.templates.not.configured'));
-                    return $this->webService->getRedirectResponse('setting/tab_index');
+                    return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'quotes'], 'settings[email_quote_template]');
                 }
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_quote_template())
                                                ?: null;
@@ -2018,6 +1931,7 @@ final class QuoteController extends BaseController
                                 $parameters = [
                                     'success' => 1,
                                     'flash_message' => $this->translator->translate('quote.copied.to.invoice'),
+                                    'new_invoice_id' => $inv_id,
                                 ];
                                 return $this->factory->createResponse(Json::encode($parameters));
                             } //null!==$inv_id
@@ -2661,7 +2575,7 @@ final class QuoteController extends BaseController
         $custom_field_body = [
             'custom' => $js_data['custom'] ?: '',
         ];
-        $this->custom_fields($formHydrator, $custom_field_body, $quote_id, $qcR);
+        $this->processCustomFields($custom_field_body, $formHydrator, $this->quoteCustomFieldProcessor, (string) $quote_id);
         $parameters['success'] = 1;
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -2683,7 +2597,7 @@ final class QuoteController extends BaseController
         ];
         $quoteTaxRate = new QuoteTaxRate();
         $ajax_content = new QuoteTaxRateForm($quoteTaxRate);
-        if ($formHydrator->populate($ajax_content, $ajax_body) && $ajax_content->isValid()) {
+        if ($formHydrator->populateAndValidate($ajax_content, $ajax_body)) {
             $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate, $ajax_body);
             $parameters = [
                 'success' => 1,
@@ -2842,14 +2756,19 @@ final class QuoteController extends BaseController
                 $quote_amount = (($qaR->repoQuoteAmountCount((string) $this->session->get('quote_id')) > 0) ? $qaR->repoQuotequery((string) $this->session->get('quote_id')) : null);
                 if ($quote_amount) {
                     $quote_custom_values = $this->quote_custom_values((string) $this->session->get('quote_id'), $qcR);
+                    $quoteEdit = $this->userService->hasPermission('editInv') ? true : false;
+                    $vat = $this->sR->getSetting('enable_vat_registration');
+                    $quoteAmountTotal = $quote_amount->getTotal();
+
                     $parameters = [
                         'body' => $this->body($quote),
                         'alert' => $this->alert(),
                         // Hide buttons on the view if a 'viewInv' user does not have 'editInv' permission
-                        'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
+                        'invEdit' => $quoteEdit,
                         // if the quote amount total is greater than zero show the buttons eg. Send email
-                        'quote_amount_total' => $quote_amount->getTotal(),
+                        'quote_amount_total' => $quoteAmountTotal,
                         'sales_order_number' => $sales_order_number,
+                        'quoteToolbar' => $this->quoteToolbar->renderWithStatus($quote, $quoteEdit, $vat, $quoteAmountTotal),
                         'clientHelper' => new ClientHelper($this->sR),
                         'countryHelper' => new CountryHelper(),
                         'dateHelper' => new DateHelper($this->sR),
@@ -2908,6 +2827,9 @@ final class QuoteController extends BaseController
                             '//invoice/quote/modal_add_quote_tax',
                             [
                                 'taxRates' => $trR->findAllPreloaded(),
+                                's' => $this->sR,
+                                'numberHelper' => $this->number_helper,
+                                'translator' => $this->translator,
                             ],
                         ),
                         'modal_copy_quote' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_copy_quote', [ 's' => $this->sR,

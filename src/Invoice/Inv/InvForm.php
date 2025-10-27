@@ -7,12 +7,14 @@ namespace App\Invoice\Inv;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\Client;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
 
 final class InvForm extends FormModel
 {
     private ?string $id = '';
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $number = '';
     private mixed $date_created = '';
     // Countries with VAT systems will need these fields
@@ -22,6 +24,7 @@ final class InvForm extends FormModel
     private mixed $date_tax_point = '';
     private mixed $date_due = '';
     // stand_in_code/description_code
+    #[Length(min: 0, max: 3, skipOnEmpty: true)]
     private ?string $stand_in_code = '';
     private ?string $quote_id = '';
     private ?Client $client = null;
@@ -41,11 +44,14 @@ final class InvForm extends FormModel
     private ?int $status_id = 1;
     private ?float $discount_amount = 0.00;
     private ?float $discount_percent = 0.00;
+    #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $url_key = '';
+    #[Length(min: 0, max: 90, skipOnEmpty: true)]
     private ?string $password = '';
     private ?int $payment_method = 0;
     private ?string $terms = '';
     private ?string $note = '';
+    #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $document_description = '';
     private readonly bool $is_read_only;
     private mixed $time_created = '';

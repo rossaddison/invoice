@@ -14,7 +14,7 @@ use DateTimeImmutable;
 
 final class SalesOrderForm extends FormModel
 {
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $number = '';
 
     private mixed $date_created = '';
@@ -32,13 +32,13 @@ final class SalesOrderForm extends FormModel
     #[Integer(min: 1)]
     private ?int $client_id = null;
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $client_po_number = null;
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $client_po_line_number = null;
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $client_po_person = null;
 
     #[Integer(min: 1, max: 9)]
@@ -50,10 +50,10 @@ final class SalesOrderForm extends FormModel
     #[Number(min: 0, max: 100)]
     private ?float $discount_percent = 0;
 
-    #[Length(min: 0, max: 32)]
+    #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $url_key = '';
 
-    #[Length(min: 0, max: 90)]
+    #[Length(min: 0, max: 90, skipOnEmpty: true)]
     private ?string $password = '';
 
     private ?string $notes = '';

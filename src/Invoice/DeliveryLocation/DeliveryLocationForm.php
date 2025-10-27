@@ -18,36 +18,36 @@ final class DeliveryLocationForm extends FormModel
     #[Required]
     private ?string $client_id = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $name = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $building_number = '';
 
     #[Required]
-    #[Length(min: 1, max: 255)]
+    #[Length(min: 1, max: 100)]
     private ?string $address_1 = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $address_2 = '';
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $city = '';
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $state = '';
 
     #[Required]
-    #[Length(min: 1, max: 20)]
+    #[Length(min: 1, max: 10)]
     private ?string $zip = '';
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $country = '';
 
-    #[Length(min: 0, max: 13)]
+    #[Length(min: 0, max: 13, skipOnEmpty: true)]
     private ?string $global_location_number = '';
 
-    #[Length(min: 0, max: 4)]
+    #[Length(min: 0, max: 4, skipOnEmpty: true)]
     private ?string $electronic_address_scheme = '';
 
     public function __construct(DeliveryLocation $del)

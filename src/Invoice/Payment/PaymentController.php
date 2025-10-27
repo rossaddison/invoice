@@ -46,6 +46,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use App\Invoice\Payment\PaymentCustomFieldProcessor;
 
 final class PaymentController extends BaseController
 {
@@ -54,6 +55,7 @@ final class PaymentController extends BaseController
     public function __construct(
         private PaymentService $paymentService,
         private PaymentCustomService $paymentCustomService,
+        private PaymentCustomFieldProcessor $paymentCustomFieldProcessor,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
         sR $sR,
@@ -139,9 +141,9 @@ final class PaymentController extends BaseController
             'cR' => $cR,
             'iaR' => $iaR,
             'cvH' => new CustomValuesHelper($this->sR, $cvR),
-            'customFields' => $cfR->repoTablequery('payment_custom'),
+            'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'payment_custom')['customFields'],
             // Applicable to normally building up permanent selection lists eg. dropdowns
-            'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
+            'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'payment_custom')['customValues'],
             // There will initially be no custom_values attached to this payment until they are filled in the field on the form
             //'payment_custom_values' => $this->payment_custom_values($payment_id,$pcR),
             'paymentCustomValues' => [],
@@ -359,9 +361,9 @@ final class PaymentController extends BaseController
                 'cR' => $cR,
                 'iaR' => $iaR,
                 'cvH' => new CustomValuesHelper($this->sR, $cvR),
-                'customFields' => $cfR->repoTablequery('payment_custom'),
+                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'payment_custom')['customFields'],
                 // Applicable to normally building up permanent selection lists eg. dropdowns
-                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('payment_custom')),
+                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'payment_custom')['customValues'],
                 // There will initially be no custom_values attached to this payment until they are filled in the field on the form
                 //'payment_custom_values' => $this->payment_custom_values($payment_id,$pcR),
                 'paymentCustomValues' => $this->payment_custom_values($payment_id, $pcR),
@@ -378,16 +380,7 @@ final class PaymentController extends BaseController
                             /** @var array $body['custom'] */
                             $custom = $body['custom'];
                             if ($pcR->repoPaymentCount($payment_id) > 0) {
-                                $formCustom = $this->save_custom_fields($custom, $formHydrator, $pcR, $payment_id);
-                                if (null !== $formCustom) {
-                                    // $parameters['errorsCustom'] can be used to provide customized labels if ->required(true) not used
-                                    // currently not used
-                                    $parameters['errorsCustom'] = $formCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
-                                    $parameters['formCustom'] = $formCustom;
-                                    if (count($parameters['errorsCustom']) > 0) {
-                                        return $this->viewRenderer->render('_form', $parameters);
-                                    }
-                                }
+                                $this->processCustomFields(['custom' => $custom], $formHydrator, $this->paymentCustomFieldProcessor, $payment_id);
                             }
                         }
                         $number_helper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $invRepository, $pmtR);
@@ -429,39 +422,7 @@ final class PaymentController extends BaseController
         return null;
     }
 
-    /**
-     * @param array $custom
-     * @param FormHydrator $formHydrator
-     * @param PaymentCustomRepository $pcR
-     * @param string $payment_id
-     * @return PaymentCustomForm|null
-     */
-    public function save_custom_fields(array $custom, FormHydrator $formHydrator, PaymentCustomRepository $pcR, string $payment_id): null|PaymentCustomForm
-    {
-        /**
-         * @var array|string $value
-         */
-        foreach ($custom as $custom_field_id => $value) {
-            $paymentCustom = $pcR->repoFormValuequery($payment_id, (string) $custom_field_id);
-            if ($paymentCustom) {
-                $form = new PaymentCustomForm($paymentCustom);
-                $payment_custom_input = [
-                    'payment_id' => (int) $payment_id,
-                    'custom_field_id' => (int) $custom_field_id,
-                    'value' => is_array($value) ? serialize($value) : $value,
-                ];
-                if ($formHydrator->populateAndValidate($form, $payment_custom_input)) {
-                    $this->paymentCustomService->savePaymentCustom($paymentCustom, $payment_custom_input);
-                } else {
-                    // return the form early with the errors
-                    return $form;
-                }
-                return null;
-            }
-            return null;
-        }
-        return null;
-    }
+
 
     /**
      * @param Request $request

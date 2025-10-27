@@ -64,7 +64,12 @@ final readonly class QuoteService
         if ($model->isNewRecord()) {
             $model->setInv_id(0);
             $model->setSo_id(0);
-            isset($array['number']) ? $model->setNumber((string) $array['number']) : '';
+            // if draft quotes must get quote numbers
+            if ($s->getSetting('generate_quote_number_for_draft') === '1') {
+                $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
+            } else {
+                isset($array['number']) ? $model->setNumber((string) $array['number']) : '';
+            }
             $model->setStatus_id(1);
             $model->setUser($user);
             $model->setUser_id((int) $user->getId());

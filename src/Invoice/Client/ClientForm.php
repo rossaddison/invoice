@@ -15,44 +15,58 @@ use DateTimeImmutable;
 
 final class ClientForm extends FormModel
 {
-    #[Length(min: 0, max: 10)]
+    #[Length(min: 0, max: 10, skipOnEmpty: true)]
     private ?string $client_title = '';
+    #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $client_name = '';
-    #[Length(min: 0, max: 3)]
+    #[Length(min: 0, max: 3, skipOnEmpty: true)]
     private ?string $client_group = '';
+    #[Length(min: 0, max: 15, skipOnEmpty: true)]
     private ?string $client_frequency = '';
+    #[Length(min: 0, max: 12, skipOnEmpty: true)]
     private ?string $client_number = '';
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $client_address_1 = '';
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $client_address_2 = '';
+    #[Length(min: 0, max: 10, skipOnEmpty: true)]
     private ?string $client_building_number = '';
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $client_city = '';
-    #[Length(min: 0, max: 30)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $client_state = '';
-    #[Length(min: 0, max: 10)]
+    #[Length(min: 0, max: 10, skipOnEmpty: true)]
     private ?string $client_zip = '';
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $client_country = '';
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $client_phone = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $client_fax = '';
-    #[Length(min: 0, max: 11)]
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $client_mobile = '';
+    #[Required]
     #[Email()]
+    #[Length(min: 0, max: 254)]
     private ?string $client_email = '';
     #[Url()]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $client_web = '';
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $client_vat_id = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $client_tax_code = '';
+    #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $client_language = '';
     private ?bool $client_active = false;
-    #[Length(min: 0, max: 151)]
+    #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $client_surname = '';
-    #[Length(min: 0, max: 16)]
+    #[Length(min: 0, max: 16, skipOnEmpty: true)]
     private ?string $client_avs = '';
+    #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $client_insurednumber = '';
-    #[Length(min: 0, max: 30)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $client_veka = '';
     private readonly mixed $client_birthdate;
 

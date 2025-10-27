@@ -99,7 +99,8 @@ class CustomValuesHelper
         array $entity_custom_values,
         array $custom_value,
     ): void {
-        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? gettype($this->form_value($entity_custom_values, $custom_field->getId()));
+
+        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? '';
 
         switch ($custom_field->getType()) {
             case 'DATE':
@@ -346,7 +347,7 @@ class CustomValuesHelper
              ->content($content)
              ->render();
 
-        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? gettype($this->form_value($entity_custom_values, $custom_field->getId()));
+        $fieldValue = $this->form_value($entity_custom_values, $custom_field->getId()) ?? '';
 
         echo Html::openTag('div');
         switch ($custom_field->getType()) {

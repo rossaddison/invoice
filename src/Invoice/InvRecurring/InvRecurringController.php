@@ -138,7 +138,7 @@ final class InvRecurringController extends BaseController
                     }
                     return $this->viewRenderer->render('_form', $parameters);
                 }
-                $this->flashMessage('danger', $this->translator->translate('recurring.sent.only') . '❗');
+                $this->flashMessage('danger', $this->translator->translate('recurring.status.sent.only') . '❗');
             }
         }
         return $this->webService->getNotFoundResponse();

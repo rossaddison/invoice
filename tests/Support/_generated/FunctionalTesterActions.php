@@ -30,7 +30,7 @@ trait FunctionalTesterActions
      * Authenticates user for HTTP_AUTH
      * @see \Codeception\Module\PhpBrowser::amHttpAuthenticated()
      */
-    public function amHttpAuthenticated($username, $password): void {
+    public function amHttpAuthenticated(string $username, string $password): void {
         $this->getScenario()->runStep(new \Codeception\Step\Condition('amHttpAuthenticated', func_get_args()));
     }
 
@@ -47,7 +47,7 @@ trait FunctionalTesterActions
      * ```
      * @see \Codeception\Module\PhpBrowser::amOnUrl()
      */
-    public function amOnUrl($url): void {
+    public function amOnUrl(string $url): void {
         $this->getScenario()->runStep(new \Codeception\Step\Condition('amOnUrl', func_get_args()));
     }
 
@@ -71,7 +71,7 @@ trait FunctionalTesterActions
      *
      * @see \Codeception\Module\PhpBrowser::amOnSubdomain()
      */
-    public function amOnSubdomain($subdomain): void {
+    public function amOnSubdomain(string $subdomain): void {
         $this->getScenario()->runStep(new \Codeception\Step\Condition('amOnSubdomain', func_get_args()));
     }
 
@@ -93,11 +93,9 @@ trait FunctionalTesterActions
      *
      * It is not recommended to use this command on a regular basis.
      * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
-     *
-     * @return mixed
      * @see \Codeception\Module\PhpBrowser::executeInGuzzle()
      */
-    public function executeInGuzzle(\Closure $function) {
+    public function executeInGuzzle(\Closure $function): mixed {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('executeInGuzzle', func_get_args()));
     }
 

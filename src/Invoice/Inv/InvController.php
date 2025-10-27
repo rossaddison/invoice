@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\BaseController;
+use App\Invoice\Inv\InvCustomFieldProcessor;
 use App\Widget\FormFields;
+use App\Widget\ButtonsToolbarFull;
 // Entity's
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Contract;
@@ -173,6 +175,7 @@ final class InvController extends BaseController
         private readonly Crypt $crypt,
         private readonly DataResponseFactoryInterface $factory,
         private readonly FormFields $formFields,
+        private readonly ButtonsToolbarFull $buttonsToolbarFull,
         private readonly DelRepo $delRepo,
         private readonly InvAllowanceChargeService $inv_allowance_charge_service,
         private readonly InvAmountService $inv_amount_service,
@@ -184,6 +187,7 @@ final class InvController extends BaseController
         private readonly LoggerInterface $logger,
         private readonly MailerInterface $mailer,
         private readonly UrlGenerator $url_generator,
+        private readonly InvCustomFieldProcessor $customFieldProcessor,
         SessionInterface $session,
         SR $sR,
         TranslatorInterface $translator,
@@ -565,10 +569,10 @@ final class InvController extends BaseController
                         } //$model_id
                         $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                         if (($origin == 'main') || ($origin == 'inv')) {
-                            return $this->webService->getRedirectResponse('inv/index');
+                            return $this->webService->getRedirectResponse('inv/view', ['id' => $model_id]);
                         }
                         if ($origin == 'dashboard') {
-                            return $this->webService->getRedirectResponse('invoice/dashboard');
+                            return $this->webService->getRedirectResponse('inv/view', ['id' => $model_id]);
                         }
                         // otherwise return to client
                         return $this->webService->getRedirectResponse('client/view', ['id' => $origin]);
@@ -652,7 +656,7 @@ final class InvController extends BaseController
         $inv = new Inv();
         $form = new InvForm($inv);
         $invAmount = new InvAmount();
-        $defaultGroupId = $this->sR->getSetting('default_invoice_group');
+        $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
         $groups = $gR->findAllPreloaded();
         /**
@@ -1241,7 +1245,7 @@ final class InvController extends BaseController
             $client_id = $inv->getClient_id();
             $peppol_array = new PeppolArrays();
             $note_on_tax_point = '';
-            $defaultGroupId = $this->sR->getSetting('default_invoice_group');
+            $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
             if (($this->sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
                 $note_on_tax_point = $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint');
             }
@@ -1249,10 +1253,10 @@ final class InvController extends BaseController
                 'actionName' => 'inv/edit',
                 'actionArguments' => ['id' => $inv_id],
                 'contractCount' => $contractRepo->repoClientCount($inv->getClient_id()),
-                'customFields' => $cfR->repoTablequery('inv_custom'),
+                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'inv_custom')['customFields'],
                 'cvH' => new CVH($this->sR, $cvR),
                 // Applicable to normally building up permanent selection lists eg. dropdowns
-                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
+                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'inv_custom')['customValues'],
                 // There will initially be no custom_values attached to this invoice until they are filled in the field on the form
                 'defaultGroupId' => $defaultGroupId,
                 'delCount' => $delRepo->repoClientCount($inv->getClient_id()),
@@ -1308,7 +1312,7 @@ final class InvController extends BaseController
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->viewRenderer->render('_form_edit', $parameters);
                         }
-                        $this->edit_save_custom_fields($body, $formHydrator, $icR, $inv_id);
+                        $this->processCustomFields($body, $formHydrator, $this->customFieldProcessor, (string) $inv_id);
                         $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                     }
@@ -1366,47 +1370,7 @@ final class InvController extends BaseController
         return null;
     }
 
-    /**
-     * @param array|object|null $parse
-     * @param FormHydrator $formHydrator
-     * @param ICR $icR
-     * @param string|null $inv_id
-     */
-    public function edit_save_custom_fields(array|object|null $parse, FormHydrator $formHydrator, ICR $icR, string|null $inv_id): void
-    {
-        /**
-         * @var array $parse['custom']
-         */
-        $custom = $parse['custom'] ?? [];
-        /** @var array|string $value */
-        foreach ($custom as $custom_field_id => $value) {
-            if ($icR->repoInvCustomCount((string) $inv_id, (string) $custom_field_id) == 0) {
-                $inv_custom = new InvCustom();
-                $inv_custom_input = [
-                    'inv_id' => (int) $inv_id,
-                    'custom_field_id' => (int) $custom_field_id,
-                    'value' => is_array($value) ? serialize($value) : $value,
-                ];
-                $form = new InvCustomForm($inv_custom);
-                if ($formHydrator->populateAndValidate($form, $inv_custom_input)) {
-                    $this->inv_custom_service->saveInvCustom($inv_custom, $inv_custom_input);
-                }
-            } else {
-                $inv_custom = $icR->repoFormValuequery((string) $inv_id, (string) $custom_field_id);
-                if ($inv_custom) {
-                    $inv_custom_input = [
-                        'inv_id' => (int) $inv_id,
-                        'custom_field_id' => (int) $custom_field_id,
-                        'value' => is_array($value) ? serialize($value) : $value,
-                    ];
-                    $form = new InvCustomForm($inv_custom);
-                    if ($formHydrator->populateAndValidate($form, $inv_custom_input)) {
-                        $this->inv_custom_service->saveInvCustom($inv_custom, $inv_custom_input);
-                    }
-                } // inv_custom
-            } // count
-        } // custom
-    }
+
 
     /**
      * @param string $type
@@ -2880,8 +2844,8 @@ final class InvController extends BaseController
                         $this->inv_to_inv_inv_allowance_charges($inv_id, $copy_id, $aciR, $formHydrator);
                         $this->inv_to_inv_inv_amount((int) $inv_id, (int) $copy_id, $iaR);
                         $iR->save($copy);
-                        $parameters = ['success' => 1];
-                        //return response to inv.js to reload page at location
+                        $parameters = ['success' => 1, 'new_invoice_id' => $copy_id];
+                        //return response to inv.js to redirect to newly created invoice
                         $this->flashMessage('info', $this->translator->translate('draft.guest'));
                         return $this->factory->createResponse(Json::encode($parameters));
                     }
@@ -3330,65 +3294,12 @@ final class InvController extends BaseController
         $custom_field_body = [
             'custom' => $js_data_custom,
         ];
-        $this->save_custom_fields($formHydrator, $custom_field_body, $inv_id, $icR);
+        $this->processCustomFields($custom_field_body, $formHydrator, $this->customFieldProcessor, $inv_id);
         $parameters['success'] = 1;
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param array $array
-     * @param string $inv_id
-     * @param ICR $icR
-     */
-    public function save_custom_fields(FormHydrator $formHydrator, array $array, string $inv_id, ICR $icR): void
-    {
-        if (!empty($array['custom'])) {
-            $db_array = [];
-            $values = [];
-            /**
-             * @var array $custom
-             * @var string $custom['name']
-             */
-            foreach ($array['custom'] as $custom) {
-                if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
-                    /**
-                     * @var string $custom['value']
-                     */
-                    $values[$matches[1]][] = $custom['value'];
-                } else {
-                    /**
-                     * @var string $custom['value']
-                     */
-                    $values[$custom['name']] = $custom['value'];
-                }
-            }
-            /**
-             * @var string $value
-             */
-            foreach ($values as $key => $value) {
-                preg_match("/^custom\[(.*?)\](?:\[\]|)$/", $key, $matches);
-                if ($matches) {
-                    $key_value = preg_match('/\d+/', $key, $m) ? $m[0] : '';
-                    $db_array[$key_value] = $value;
-                }
-            }
-            foreach ($db_array as $key => $value) {
-                if ($value !== '') {
-                    $invCustom = new InvCustom();
-                    $invCustomForm = new InvCustomForm($invCustom);
-                    $inv_custom = [];
-                    $inv_custom['inv_id'] = $inv_id;
-                    $inv_custom['custom_field_id'] = $key;
-                    $inv_custom['value'] = $value;
-                    $model = ($icR->repoInvCustomCount($inv_id, $key) == 1 ? $icR->repoFormValuequery($inv_id, $key) : $invCustom);
-                    if ($model && $formHydrator->populate($invCustomForm, $inv_custom) && $invCustomForm->isValid()) {
-                        $this->inv_custom_service->saveInvCustom($model, $inv_custom);
-                    }
-                }
-            } // foreach
-        } //!empty array custom
-    }
+
 
     /**
      * Related logic: see src/Invoice/Asset/rebuild-1.13/js/inv.js
@@ -4196,6 +4107,18 @@ final class InvController extends BaseController
                             $this->translator->translate('payment.information.payment.method.required'),
                             'inv',
                         ),
+                    'buttonsToolbarFull' => $this->buttonsToolbarFull->render(
+                        $inv,
+                        $iaR,
+                        $sumex,
+                        $this->userService->hasPermission('editInv'),
+                        $this->userService->hasPermission('viewPayment'),
+                        $read_only,
+                        $enabled_gateways,
+                        $this->sR->getSetting('enable_vat_registration'),
+                        $is_recurring,
+                        $cfR->repoTableCountquery('payment_custom') > 0,
+                    ),
                 ];
                 return $this->viewRenderer->render('view', $parameters);
             } // if $inv_amount

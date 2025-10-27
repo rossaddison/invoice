@@ -79,12 +79,18 @@
                     var response = parsedata(data);
 
                     if (response.success === 1) {
-                        // set check UI and reload like original
+                        // set check UI and redirect to newly created invoice
                         btns.forEach(function (b) {
                             b.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
                         });
-                        window.location = absolute_url;
-                        window.location.reload();
+                        // Redirect to the newly created invoice
+                        if (response.new_invoice_id) {
+                            window.location = location.origin + "/invoice/inv/view/" + response.new_invoice_id;
+                        } else {
+                            // Fallback to reload current page if new_invoice_id not provided
+                            window.location = absolute_url;
+                            window.location.reload();
+                        }
                     } else if (response.success === 0) {
                         btns.forEach(function (b) {
                             b.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';

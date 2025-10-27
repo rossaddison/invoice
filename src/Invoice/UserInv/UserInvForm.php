@@ -7,6 +7,7 @@ namespace App\Invoice\UserInv;
 use App\User\User;
 use App\Invoice\Entity\UserInv;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class UserInvForm extends FormModel
@@ -28,23 +29,39 @@ final class UserInvForm extends FormModel
     #[Required]
     private ?string $name = '';
 
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $company = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $address_1 = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $address_2 = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $city = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $state = '';
+    #[Length(min: 0, max: 10, skipOnEmpty: true)]
     private ?string $zip = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $country = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $phone = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $fax = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $mobile = '';
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $web = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $vat_id = '';
+    #[Length(min: 0, max: 15, skipOnEmpty: true)]
     private ?string $tax_code = '';
     private ?bool $all_clients = false;
+    #[Length(min: 0, max: 40, skipOnEmpty: true)]
     private ?string $subscribernumber = '';
+    #[Length(min: 0, max: 34, skipOnEmpty: true)]
     private ?string $iban = '';
     private ?int $gln = null;
+    #[Length(min: 0, max: 7, skipOnEmpty: true)]
     private ?string $rcc = '';
     private ?int $listLimit = 10;
 

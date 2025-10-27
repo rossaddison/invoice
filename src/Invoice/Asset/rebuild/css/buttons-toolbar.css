@@ -1,0 +1,212 @@
+/*!
+ * ButtonsToolbar Widget CSS Styles
+ * Modern, responsive invoice action toolbars
+ * Author: Generated for Invoice Application
+ * Date: October 26, 2025
+ */
+
+/* ===============================================
+   ButtonsToolbar Full - Desktop/Admin Interface
+   =============================================== */
+.invoice-actions-toolbar-full {
+    margin: 8px 0;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Horizontal layout - no separate sections needed */
+
+.invoice-actions-toolbar-full .btn {
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.invoice-actions-toolbar-full .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.invoice-actions-toolbar-full .badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+/* ===============================================
+   ButtonsToolbar Compact - Balanced Interface
+   =============================================== */
+.invoice-actions-toolbar-compact {
+    margin: 10px 0;
+    padding: 12px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.invoice-actions-toolbar-compact .compact-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.invoice-actions-toolbar-compact .btn {
+    transition: all 0.15s ease;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.invoice-actions-toolbar-compact .btn:hover {
+    transform: translateY(-0.5px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.invoice-actions-toolbar-compact .dropdown {
+    margin-left: auto;
+}
+
+.invoice-actions-toolbar-compact .dropdown-menu {
+    min-width: 280px;
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.invoice-actions-toolbar-compact .dropdown-header {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #495057;
+    background: #f8f9fa;
+}
+
+.invoice-actions-toolbar-compact .dropdown-item {
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+}
+
+/* ===============================================
+   ButtonsToolbar Minimal - Mobile Optimized
+   =============================================== */
+.invoice-actions-toolbar-minimal {
+    margin: 8px 0;
+    padding: 8px 12px;
+    background: rgba(248, 249, 250, 0.8);
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: space-between;
+}
+
+.invoice-actions-toolbar-minimal .core-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.invoice-actions-toolbar-minimal .btn {
+    padding: 4px 8px;
+    border-radius: 3px;
+    transition: all 0.1s ease;
+    font-size: 0.8rem;
+}
+
+.invoice-actions-toolbar-minimal .btn:hover {
+    transform: scale(1.05);
+}
+
+.invoice-actions-toolbar-minimal .dropdown-menu {
+    min-width: 220px;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* ===============================================
+   Dark Mode Support
+   =============================================== */
+@media (prefers-color-scheme: dark) {
+    .invoice-actions-toolbar-full,
+}
+
+/* ===============================================
+   Responsive Design
+   =============================================== */
+@media (max-width: 768px) {
+    .invoice-actions-toolbar-full {
+        padding: 10px;
+        margin: 10px 0;
+    }
+    
+    .invoice-actions-toolbar-full .primary-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* ===============================================
+   Print Styles
+   =============================================== */
+@media print {
+    .invoice-actions-toolbar-full,
+}
+
+/* ===============================================
+   Accessibility Enhancements
+   =============================================== */
+.invoice-actions-toolbar-full .btn:focus,
+
+.invoice-actions-toolbar-full .btn[disabled],
+
+/* ===============================================
+   Animation Classes
+   =============================================== */
+.buttons-toolbar-fade-in {
+    animation: buttonsToolbarFadeIn 0.3s ease-in-out;
+}
+
+@keyframes buttonsToolbarFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===============================================
+   Utility Classes
+   =============================================== */
+.buttons-toolbar-hidden {
+    display: none !important;
+}
+
+.buttons-toolbar-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.invoice-actions-toolbar-full {
+    transform: scale(0.9);
+    margin: 10px 0;
+}

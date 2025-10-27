@@ -11,9 +11,7 @@ use Yiisoft\Validator\Rule\Required;
 final class CustomFieldForm extends FormModel
 {
     private ?int $id = null;
-    #[Required]
     private ?string $table = '';
-    #[Required]
     private ?string $label = '';
     #[Required]
     private ?string $type = '';

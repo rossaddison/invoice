@@ -19,62 +19,60 @@ final class CompanyForm extends FormModel
     #[Integer(min: 0, max: 1)]
     private ?int $current = 0;
 
-    #[Required]
-    #[Length(min: 1, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $name = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $address_1 = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $address_2 = '';
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $city = '';
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $state = '';
 
-    #[Length(min: 0, max: 20)]
+    #[Length(min: 0, max: 10, skipOnEmpty: true)]
     private ?string $zip = '';
 
-    #[Length(min: 0, max: 100)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $country = '';
 
-    #[Length(min: 0, max: 20)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $phone = '';
 
-    #[Length(min: 0, max: 20)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $fax = '';
 
-    #[Required]
     #[Email()]
-    #[Length(min: 1, max: 255)]
+    #[Length(min: 0, max: 254, skipOnEmpty: true)]
     private ?string $email = '';
 
     #[Url()]
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 255, skipOnEmpty: true)]
     private ?string $web = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $slack = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $facebook = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $twitter = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $linkedin = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $whatsapp = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $arbitrationBody = '';
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $arbitrationJurisdiction = '';
 
     public function __construct(Company $company)

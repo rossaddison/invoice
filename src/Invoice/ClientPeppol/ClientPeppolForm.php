@@ -6,6 +6,7 @@ namespace App\Invoice\ClientPeppol;
 
 use App\Invoice\Entity\ClientPeppol;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class ClientPeppolForm extends FormModel
@@ -13,32 +14,46 @@ final class ClientPeppolForm extends FormModel
     private ?int $id = null;
     private ?int $client_id = null;
     #[Required]
+    #[Length(min: 0, max: 30)]
     private ?string $accounting_cost = '';
     #[Required]
+    #[Length(min: 0, max: 20)]
     private ?string $buyer_reference = '';
     #[Required]
+    #[Length(min: 0, max: 100)]
     private ?string $endpointid = '';
     #[Required]
+    #[Length(min: 0, max: 4)]
     private ?string $endpointid_schemeid = '';
     #[Required]
+    #[Length(min: 0, max: 20)]
     private ?string $financial_institution_branchid = '';
     #[Required]
+    #[Length(min: 0, max: 100)]
     private ?string $identificationid = '';
     #[Required]
+    #[Length(min: 0, max: 4)]
     private ?string $identificationid_schemeid = '';
     #[Required]
+    #[Length(min: 0, max: 100)]
     private ?string $legal_entity_registration_name = '';
     #[Required]
+    #[Length(min: 0, max: 100)]
     private ?string $legal_entity_companyid = '';
     #[Required]
+    #[Length(min: 0, max: 5)]
     private ?string $legal_entity_companyid_schemeid = '';
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $legal_entity_company_legal_form = '';
     #[Required]
+    #[Length(min: 0, max: 100)]
     private ?string $taxschemecompanyid = '';
     #[Required]
+    #[Length(min: 0, max: 7)]
     private ?string $taxschemeid = '';
     #[Required]
+    #[Length(min: 0, max: 20)]
     private ?string $supplier_assigned_accountid = '';
 
     public function __construct(ClientPeppol $client_peppol)

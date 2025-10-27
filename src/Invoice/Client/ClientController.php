@@ -44,6 +44,7 @@ use App\Invoice\UserInv\UserInvRepository as uiR;
 // Helpers
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\DateHelper;
+use App\Invoice\Client\ClientCustomFieldProcessor;
 // Psr\\Http
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -78,6 +79,7 @@ final class ClientController extends BaseController
     public function __construct(
         private ClientService $clientService,
         private ClientCustomService $clientCustomService,
+        private ClientCustomFieldProcessor $clientCustomFieldProcessor,
         private \App\Widget\FormFields $formFields,
         private DataResponseFactoryInterface $factory,
         SessionInterface $session,
@@ -162,6 +164,8 @@ final class ClientController extends BaseController
         $form = new ClientForm($new_client);
         $clientCustom = new ClientCustom();
         $clientCustomForm = new ClientCustomForm($clientCustom);
+        $custom = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'client_custom');
+
         $parameters = [
             'title' => $this->translator->translate('add'),
             'alert' => $this->alert(),
@@ -180,13 +184,13 @@ final class ClientController extends BaseController
             'postal_address_count' => 0,
             'postaladdresses' => null,
             /**
-             * Default to en so that all country names are in English if route language not found
-             * TODO: rebuild country list to match currently available languages
-             * Related logic: see src\Invoice\Helpers\Country-list\en
-             */
+                 * Default to en so that all country names are in English if route language not found
+                 * TODO: rebuild country list to match currently available languages
+                 * Related logic: see src\Invoice\Helpers\Country-list\en
+                 */
             'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
-            'customFields' => $cfR->repoTablequery('client_custom'),
-            'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+            'customFields' => $custom['customFields'],
+            'customValues' => $custom['customValues'],
             'clientCustomValues' => [],
             'clientCustomForm' => $clientCustomForm,
             'formFields' => $this->formFields,
@@ -285,8 +289,9 @@ final class ClientController extends BaseController
                     * Related logic: see src\Invoice\Helpers\Country-list\en
                     */
                     'countries' => $countries->get_country_list($currentRoute->getArgument('_language') ?? 'en'),
-                    'customFields' => $cfR->repoTablequery('client_custom'),
-                    'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('client_custom')),
+                    // Prepare custom fields and values
+                    'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'client_custom')['customFields'],
+                    'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'client_custom')['customValues'],
                     'clientCustomValues' => $this->client_custom_values((string) $client_id, $ccR),
                     'clientCustomForm' => $clientCustomForm,
                     'formFields' => $this->formFields,
@@ -301,12 +306,7 @@ final class ClientController extends BaseController
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->viewRenderer->render('_form', $parameters);
                         }
-                        $clientCustomForm = $this->edit_save_custom_fields($body, $formHydrator, $ccR, (string) $client_id);
-                        if ($clientCustomForm instanceof ClientCustomForm) {
-                            $parameters['errorsCustom'] = $clientCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-                            $this->flashMessage('warning', $this->translator->translate('errors'));
-                            return $this->viewRenderer->render('_form', $parameters);
-                        }
+                        $this->processCustomFields($body, $formHydrator, $this->clientCustomFieldProcessor, (string) $client_id);
                     } // is_array
                     $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                     if ($origin  == 'edit') {
@@ -319,56 +319,7 @@ final class ClientController extends BaseController
         return $this->webService->getRedirectResponse('client/index');
     }
 
-    /**
-     * Note: ClientCustomForm is returned only if there are errors
-     *       These errors will be revealed when it is validated
-     *       A successful save returns null
-     * @param array|object|null $parse
-     * @param FormHydrator $formHydrator
-     * @param ccR $ccR
-     * @param string|null $client_id
-     * @return ClientCustomForm|null
-     */
-    public function edit_save_custom_fields(array|object|null $parse, FormHydrator $formHydrator, ccR $ccR, string|null $client_id): ClientCustomForm|null
-    {
-        /**
-         * @var array $parse['custom']
-         */
-        $custom = $parse['custom'] ?? [];
-        /** @var array|string $value */
-        foreach ($custom as $custom_field_id => $value) {
-            if ($ccR->repoClientCustomCount((string) $client_id, (string) $custom_field_id) == 0) {
-                $client_custom = new ClientCustom();
-                $client_custom_input = [
-                    'client_id' => (int) $client_id,
-                    'custom_field_id' => (int) $custom_field_id,
-                    'value' => is_array($value) ? serialize($value) : $value,
-                ];
-                $form = new ClientCustomForm($client_custom);
-                if ($formHydrator->populateAndValidate($form, $client_custom_input)) {
-                    $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);
-                } else {
-                    return $form;
-                }
-            } else {
-                $client_custom = $ccR->repoFormValuequery((string) $client_id, (string) $custom_field_id);
-                if ($client_custom) {
-                    $client_custom_input = [
-                        'client_id' => (int) $client_id,
-                        'custom_field_id' => (int) $custom_field_id,
-                        'value' => is_array($value) ? serialize($value) : $value,
-                    ];
-                    $form = new ClientCustomForm($client_custom);
-                    if ($formHydrator->populateAndValidate($form, $client_custom_input)) {
-                        $this->clientCustomService->saveClientCustom($client_custom, $client_custom_input);
-                    } else {
-                        return $form;
-                    }
-                } // inv_custom
-            } // count
-        } // custom
-        return null;
-    }
+
 
     /**
      * @param FormHydrator $formHydrator

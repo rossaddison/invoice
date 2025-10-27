@@ -7,24 +7,32 @@ namespace App\Invoice\PostalAddress;
 use App\Invoice\Entity\PostalAddress;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class PostalAddressForm extends FormModel
 {
     private ?int    $id = null;
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $street_name = '';
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $additional_street_name = '';
 
+    #[Length(min: 0, max: 4, skipOnEmpty: true)]
     private ?string $building_number = '';
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $city_name = '';
     #[Required]
+    #[Length(min: 0, max: 7)]
     private ?string $postalzone = '';
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $countrysubentity = '';
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $country = '';
 
     public function __construct(private readonly Translator $translator, PostalAddress $postalAddress, #[Required]

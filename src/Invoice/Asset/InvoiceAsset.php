@@ -25,6 +25,12 @@ class InvoiceAsset extends AssetBundle
 
         // Automatic asterisk * for required form fields
         'rebuild/css/form.css',
+
+        // ButtonsToolbar Widget styles
+        'rebuild/css/buttons-toolbar.css',
+
+        // QuoteToolbar Widget styles
+        'rebuild/css/quote-toolbar.css',
     ];
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

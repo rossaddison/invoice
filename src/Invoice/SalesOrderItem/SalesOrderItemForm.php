@@ -6,13 +6,16 @@ namespace App\Invoice\SalesOrderItem;
 
 use App\Invoice\Entity\SalesOrderItem as SoItem;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderItemForm extends FormModel
 {
     private ?string $id = '';
     private ?string $so_id = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $peppol_po_itemid = '';
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $peppol_po_lineid = '';
 
     #[Required]
@@ -21,7 +24,9 @@ final class SalesOrderItemForm extends FormModel
     #[Required]
     private ?string $product_id = '';
     private mixed $date_added = '';
+    #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $name = '';
+    #[Length(min: 0, max: 1000, skipOnEmpty: true)]
     private ?string $description = '';
 
     #[Required]
@@ -37,6 +42,7 @@ final class SalesOrderItemForm extends FormModel
     private ?float $charge_amount = null;
 
     private ?int $order = null;
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $product_unit = '';
 
     #[Required]

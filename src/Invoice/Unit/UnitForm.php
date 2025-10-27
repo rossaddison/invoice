@@ -6,6 +6,7 @@ namespace App\Invoice\Unit;
 
 use App\Invoice\Entity\Unit;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class UnitForm extends FormModel
@@ -13,8 +14,10 @@ final class UnitForm extends FormModel
     private ?int $unit_id = null;
 
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $unit_name = null;
     #[Required]
+    #[Length(min: 0, max: 50)]
     private ?string $unit_name_plrl = null;
 
     public function __construct(Unit $unit)

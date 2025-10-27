@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
@@ -39,6 +40,7 @@ use App\Widget\LabelSwitch;
  * @var string $modal_copy_quote
  * @var string $modal_delete_items
  * @var string $partial_item_table
+ * @var string $quoteToolbar
  * @var string $sales_order_number
  * @var string $view_custom_fields
  */
@@ -146,83 +148,7 @@ if (null !== ($number) && null !== $id) {
             '16',
         ) : '';
 ?>    
-        <div class="options btn-group">
-            <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
-                <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-right">
-                <?php
-if ($invEdit) { ?> 
-                <li>
-                    <a href="<?= $urlGenerator->generate('quote/edit', ['id' => $quote->getId()]) ?>" style="text-decoration:none">
-                        <i class="fa fa-edit fa-margin"></i>
-                        <?= $translator->translate('edit'); ?>
-                    </a>
-                </li>
-                <li>
-                    <?php if ($vat === '0') { ?>
-                    <a href="#add-quote-tax" data-bs-toggle="modal"  style="text-decoration:none">
-                        <i class="fa fa-plus fa-margin"></i>
-                        <?= $translator->translate('add.quote.tax'); ?>
-                    </a>
-                    <?php }?>
-                </li>
-                <?php } ?>
-                <li>
-                    <a href="#quote-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
-                        <i class="fa fa-print fa-margin"></i>
-                        <!-- 
-                            views/invoice/quote/modal_quote_to_pdf   ... include custom fields or not on pdf
-                            src/Invoice/Quote/QuoteController/pdf ... calls the src/Invoice/Helpers/PdfHelper->generate_quote_pdf
-                            src/Invoice/Helpers/PdfHelper ... calls the src/Invoice/Helpers/MpdfHelper
-                            src/Invoice/Helpers/MpdfHelper ... saves folder in src/Invoice/Uploads/Archive
-                            using 'pdf_quote_template' setting or 'default' views/invoice/template/quote/quote.pdf
-                        -->
-                        <?= $translator->translate('download.pdf'); ?>
-                    </a>
-                </li>
-                <?php if ($invEdit  && $quote->getStatus_id() === 1 && ($quote_amount_total > 0)) { ?>
-                <li>
-                    <a href="<?= $urlGenerator->generate('quote/email_stage_0', ['id' => $quote->getId()]); ?>" style="text-decoration:none">
-                        <i class="fa fa-send fa-margin"></i>
-                        <?= $translator->translate('send.email'); ?>
-                    </a>
-                </li>
-                <?php // if quote has been approved (ie status 4) by the client without po number do not show quote to sales order again
-     if ($quote->getSo_id() === '0' && $quote->getStatus_id() === 4) { ?>
-                <li>
-                    <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
-                        <i class="fa fa-refresh fa-margin"></i>
-                        <?= $translator->translate('quote.to.so'); ?>
-                    </a>
-                </li>
-                <?php } ?>
-                <li>
-                    <a href="#quote-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
-                        <i class="fa fa-refresh fa-margin"></i>
-                        <?= $translator->translate('quote.to.invoice'); ?>
-                    </a>
-                </li>
-                <li>                    
-                    <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none">
-                        <i class="fa fa-copy fa-margin"></i>
-                         <?= $translator->translate('copy.quote'); ?>
-                    </a>
-                </li>
-                <li>
-                    <a href="#delete-quote" data-bs-toggle="modal"  style="text-decoration:none">
-                        <i class="fa fa-trash fa-margin"></i> <?= $translator->translate('delete.quote'); ?>
-                    </a>
-                </li>
-                <li>      
-                    <a href="#delete-items"  data-bs-toggle="modal" style="text-decoration:none">
-                        <i class="fa fa-trash fa-margin"></i>
-                        <?= $translator->translate('delete') . " " . $translator->translate('item'); ?>
-                    </a>
-                </li>
-                <?php } ?>
-            </ul>
-        </div>        
+        <?= $quoteToolbar; ?>        
     </div>
 </div>
 

@@ -6,27 +6,32 @@ namespace App\Invoice\EmailTemplate;
 
 use App\Invoice\Entity\EmailTemplate;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Email;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class EmailTemplateForm extends FormModel
 {
-    #[Required]
+    #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $email_template_title = null;
-    #[Required]
+    #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $email_template_type = null;
     #[Required]
     private ?string $email_template_body = null;
-    #[Required]
+    #[Length(min: 0, max: 998, skipOnEmpty: true)]
     private ?string $email_template_subject = null;
-    #[Required]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $email_template_from_name = null;
-    #[Required]
+    #[Email()]
+    #[Length(min: 0, max: 254, skipOnEmpty: true)]
     private ?string $email_template_from_email = null;
 
+    #[Length(min: 0, max: 500, skipOnEmpty: true)]
     private ?string $email_template_cc = null;
 
+    #[Length(min: 0, max: 500, skipOnEmpty: true)]
     private ?string $email_template_bcc = null;
-    #[Required]
+    #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $email_template_pdf_template = null;
 
     public function __construct(EmailTemplate $emailtemplate)

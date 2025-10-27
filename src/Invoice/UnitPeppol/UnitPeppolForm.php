@@ -6,6 +6,7 @@ namespace App\Invoice\UnitPeppol;
 
 use App\Invoice\Entity\UnitPeppol;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class UnitPeppolForm extends FormModel
@@ -14,8 +15,10 @@ final class UnitPeppolForm extends FormModel
     #[Required]
     private ?string $unit_id = '';
     #[Required]
+    #[Length(min: 0, max: 3)]
     private ?string $code = '';
     #[Required]
+    #[Length(min: 0, max: 120)]
     private ?string $name = '';
     #[Required]
     private ?string $description = '';

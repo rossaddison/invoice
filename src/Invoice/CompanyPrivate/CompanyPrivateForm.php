@@ -20,13 +20,18 @@ final class CompanyPrivateForm extends FormModel
     // use the cycle company relation to get the name of the company
     private ?string $company_public_name = '';
 
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $vat_id = '';
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     private ?string $tax_code = '';
+    #[Length(min: 0, max: 34, skipOnEmpty: true)]
     private ?string $iban = '';
+    #[Length(min: 0, max: 14, skipOnEmpty: true)]
     private ?string $gln = '';
+    #[Length(min: 0, max: 7, skipOnEmpty: true)]
     private ?string $rcc = '';
 
-    #[Required, Length(exactly: null, min: 1, max: 150)]
+    #[Length(min: 0, max: 150, skipOnEmpty: true)]
     private ?string $logo_filename = '';
 
     private ?string $logo_width = '';

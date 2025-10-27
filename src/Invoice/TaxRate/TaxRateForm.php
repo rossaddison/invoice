@@ -6,11 +6,13 @@ namespace App\Invoice\TaxRate;
 
 use App\Invoice\Entity\TaxRate;
 use Yiisoft\FormModel\FormModel;
+use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class TaxRateForm extends FormModel
 {
     #[Required]
+    #[Length(min: 1, max: 100)]
     private ?string $tax_rate_name = '';
 
     #[Required]
@@ -18,10 +20,13 @@ final class TaxRateForm extends FormModel
 
     private ?bool $tax_rate_default = false;
 
+    #[Length(min: 0, max: 2, skipOnEmpty: true)]
     private ?string $tax_rate_code = '';
 
+    #[Length(min: 0, max: 2, skipOnEmpty: true)]
     private ?string $peppol_tax_rate_code = '';
 
+    #[Length(min: 0, max: 30, skipOnEmpty: true)]
     private ?string $storecove_tax_type = '';
 
     public function __construct(TaxRate $taxRate)

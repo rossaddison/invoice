@@ -12,37 +12,37 @@ use Yiisoft\Validator\Rule\Required;
 
 final class ProductForm extends FormModel
 {
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     public ?string $product_sku = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     public ?string $product_sii_schemeid = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     public ?string $product_sii_id = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     public ?string $product_icc_listid = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 20, skipOnEmpty: true)]
     public ?string $product_icc_listversionid = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     public ?string $product_icc_id = null;
 
-    #[Length(min: 0, max: 2)]
+    #[Length(min: 0, max: 2, skipOnEmpty: true)]
     public ?string $product_country_of_origin_code = null;
 
-    #[Required]
-    #[Length(min: 1, max: 255)]
+    #[Length(min: 0, max: 200, skipOnEmpty: true)]
     public ?string $product_name = null;
 
+    #[Required]
     public ?string $product_description = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 100, skipOnEmpty: true)]
     public ?string $product_additional_item_property_name = null;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 200, skipOnEmpty: true)]
     public ?string $product_additional_item_property_value = null;
 
     #[Required]
@@ -57,7 +57,7 @@ final class ProductForm extends FormModel
     #[Number(min: 0, max: 999999999999999999)]
     public ?float  $purchase_price = 0.00;
 
-    #[Length(min: 0, max: 255)]
+    #[Length(min: 0, max: 255, skipOnEmpty: true)]
     public ?string $provider_name = null;
 
     #[Required]

@@ -38,6 +38,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $csrf
  * @var string $add_inv_item_product
  * @var string $add_inv_item_task
+ * @var string $buttonsToolbarFull
  * @var string $modal_add_inv_tax
  * @var string $modal_add_allowance_charge
  * @var string $modal_change_client
@@ -219,6 +220,9 @@ echo Html::encode($translator->translate('invoice')) . ' ';
 echo(Html::encode(strlen($inv->getNumber() ?? '') > 0 ? ' #' . ($inv->getNumber() ?? ' #') : $inv->getId()));
 ?>
         </h1>        
+        
+        <?= $buttonsToolbarFull; ?>
+        
         <div class="headerbar-item pull-right <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>btn-group<?php } ?>">
             <div class="options btn-group">
                 <a class="btn btn-default" data-bs-toggle="dropdown" href="#">

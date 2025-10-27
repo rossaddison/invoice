@@ -76,6 +76,7 @@ final readonly class Button
                 '',
                 'type' => 'submit',
                 'class' => 'btn btn-success bi bi-save pull-right',
+                'id' => 'btn-submit',
                 'value' => '1',
             ],
         ];

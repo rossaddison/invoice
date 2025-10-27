@@ -261,7 +261,7 @@ final class QuoteItemController extends BaseController
         $select_items = $request->getQueryParams();
         $result = false;
         /** @var array $item_ids */
-        $item_ids = ($select_items['item_ids'] ?: []);
+        $item_ids = ($select_items['item_ids'] ? (array) $select_items['item_ids'] : []);
         $items = $qiR->findinQuoteItems($item_ids);
         // If one item is deleted, the result is positive
         /** @var QuoteItem $item */

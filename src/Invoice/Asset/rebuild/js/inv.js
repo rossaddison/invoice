@@ -124,17 +124,40 @@
             return;
         }
 
-        // create_recurring_confirm_multiple (class)
+        // Create recurring invoice functionality - matching the successful patterns
         var createRecurring = closestSafe(el, '.create_recurring_confirm_multiple');
         if (createRecurring) {
-            var btn = document.getElementById('create_recurring_confirm_multiple') || createRecurring;
+            var btn = document.querySelector('.create_recurring_confirm_multiple') || createRecurring;
             var orig = btn ? btn.innerHTML : null;
-            if (btn) { btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btn.disabled = true; }
+            if (btn) { 
+                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>'; 
+                btn.disabled = true; 
+            }
 
+            // Get selected invoice checkboxes
             var selected = getCheckedInvoiceIds();
+            if (selected.length === 0) {
+                alert('Please select invoices to create recurring invoices.');
+                if (btn) { 
+                    btn.innerHTML = orig || ''; 
+                    btn.disabled = false; 
+                }
+                return;
+            }
+
             var recur_frequency = (document.getElementById('recur_frequency') || {}).value || '';
             var recur_start_date = (document.getElementById('recur_start_date') || {}).value || '';
             var recur_end_date = (document.getElementById('recur_end_date') || {}).value || '';
+
+            // Validate required fields
+            if (!recur_frequency || !recur_start_date) {
+                alert('Please select frequency and start date.');
+                if (btn) { 
+                    btn.innerHTML = orig || ''; 
+                    btn.disabled = false; 
+                }
+                return;
+            }
 
             getJson(location.origin + "/invoice/invrecurring/multiple", {
                 keylist: selected,
@@ -146,16 +169,35 @@
                     var response = parsedata(data);
                     if (response.success === 1) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location.reload(true);
+                        // Close modal and reload page
+                        try {
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                                var modalEl = document.getElementById('create-recurring-multiple');
+                                if (modalEl) {
+                                    var modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                    if (modalInstance) modalInstance.hide();
+                                }
+                            }
+                        } catch (e) {}
+                        setTimeout(function() {
+                            window.location.reload(true);
+                        }, 500);
                     } else {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location.reload(true);
+                        alert('Failed to create recurring invoices. Please try again.');
+                        if (btn) { 
+                            btn.innerHTML = orig || ''; 
+                            btn.disabled = false; 
+                        }
                     }
                 })
                 .catch(function (err) {
                     console.error('invrecurring/multiple error', err);
-                    if (btn) { btn.innerHTML = orig || ''; btn.disabled = false; }
-                    alert('An error occurred. See console for details.');
+                    if (btn) { 
+                        btn.innerHTML = orig || ''; 
+                        btn.disabled = false; 
+                    }
+                    alert('An error occurred while creating recurring invoices. See console for details.');
                 });
             return;
         }
@@ -205,8 +247,14 @@
                     var response = parsedata(data);
                     if (response.success === 1) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url;
-                        window.location.reload();
+                        // Redirect to the newly created invoice
+                        if (response.new_invoice_id) {
+                            window.location = location.origin + "/invoice/inv/view/" + response.new_invoice_id;
+                        } else {
+                            // Fallback to reload current page if new_invoice_id not provided
+                            window.location = absolute_url;
+                            window.location.reload();
+                        }
                     } else {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
                         window.location = absolute_url;
@@ -296,6 +344,127 @@
                     console.error('payment add error', err);
                     alert('An error occurred while adding payment. See console for details.');
                 });
+            return;
+        }
+
+        // Add Invoice Tax functionality - matching the quote.js pattern
+        var invTaxSubmit = el.closest('#inv_tax_submit');
+        if (invTaxSubmit) {
+            e.preventDefault();
+            
+            var url = location.origin + "/invoice/inv/save_inv_tax_rate";
+            var btn = invTaxSubmit;
+            var absolute_url = new URL(location.href);
+            
+            if (btn) {
+                var origTax = btn.innerHTML;
+                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                btn.disabled = true;
+            }
+            
+            // Get invoice id from URL
+            var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
+            
+            var payloadTax = {
+                inv_id: inv_id,
+                inv_tax_rate_id: (document.getElementById('inv_tax_rate_id') || {}).value || '',
+                include_inv_item_tax: (document.getElementById('include_inv_item_tax') || {}).value || ''
+            };
+            
+            getJson(url, payloadTax)
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location.reload();
+                        if (response.flash_message) alert(response.flash_message);
+                    } else {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location.reload();
+                        if (response.flash_message) alert(response.flash_message);
+                    }
+                })
+                .catch(function (err) {
+                    console.error('inv_tax_submit error', err);
+                    if (btn) {
+                        btn.innerHTML = origTax || '';
+                        btn.disabled = false;
+                    }
+                    alert('An error occurred while adding invoice tax. Please try again.');
+                });
+            return;
+        }
+
+        // delete-items-confirm-inv (modal confirm button for deleting items)
+        var deleteItemsConfirm = closestSafe(el, '.delete-items-confirm-inv') || closestSafe(el, '#delete-items-confirm-inv');
+        if (deleteItemsConfirm) {
+            var btn = document.querySelector('.delete-items-confirm-inv') || deleteItemsConfirm;
+            var orig = btn ? btn.innerHTML : null;
+            if (btn) { 
+                btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>'; 
+                btn.disabled = true; 
+            }
+
+            // Get selected item checkboxes from the modal table
+            var selected = [];
+            var modal = document.getElementById('delete-items');
+            if (modal) {
+                modal.querySelectorAll('input[type="checkbox"]:checked').forEach(function(cb) {
+                    if (cb.value) selected.push(cb.value);
+                });
+            }
+
+            // Get invoice ID from current URL
+            var currentUrl = new URL(location.href);
+            var inv_id = currentUrl.pathname.split('/').pop();
+
+            if (selected.length === 0) {
+                alert('Please select items to delete.');
+                if (btn) { 
+                    btn.innerHTML = orig || ''; 
+                    btn.disabled = false; 
+                }
+                return;
+            }
+
+            getJson(location.origin + "/invoice/invitem/multiple", { 
+                item_ids: selected,
+                inv_id: inv_id 
+            })
+            .then(function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+                    // Close modal and reload page
+                    try {
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                            var modalEl = document.getElementById('delete-items');
+                            if (modalEl) {
+                                var modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                if (modalInstance) modalInstance.hide();
+                            }
+                        }
+                    } catch (e) {}
+                    setTimeout(function() {
+                        window.location.reload(true);
+                    }, 500);
+                } else {
+                    if (btn) btn.innerHTML = '<i class="fa fa-times"></i>';
+                    alert('Failed to delete items. Please try again.');
+                    if (btn) { 
+                        btn.innerHTML = orig || ''; 
+                        btn.disabled = false; 
+                    }
+                }
+            })
+            .catch(function (err) {
+                console.error('delete items error', err);
+                if (btn) { 
+                    btn.innerHTML = orig || ''; 
+                    btn.disabled = false; 
+                }
+                alert('An error occurred while deleting items. See console for details.');
+            });
             return;
         }
 
@@ -403,5 +572,65 @@
             });
         }
     });
+
+    // Handle create credit confirm button - id="create_credit_confirm" on views/inv/modal_create_credit.php
+    document.addEventListener('click', function (e) {
+        var el = e.target;
+        if (el && el.id === 'create-credit-confirm') {
+            e.preventDefault();
+            
+            var url = location.origin + "/invoice/inv/create_credit_confirm";
+            var btn = document.querySelector('.create-credit-confirm');
+            var absolute_url = new URL(location.href);
+            
+            if (btn) {
+                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+            }
+            
+            // Take the inv id from the public url
+            var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
+            
+            // Get form values
+            var client_id = (document.getElementById('client_id') || {}).value || '';
+            var inv_date_created = (document.getElementById('inv_date_created') || {}).value || '';
+            var group_id = (document.getElementById('inv_group_id') || {}).value || '';
+            var password = (document.getElementById('inv_password') || {}).value || '';
+            var user_id = (document.getElementById('user_id') || {}).value || '';
+            
+            getJson(url, {
+                inv_id: inv_id,
+                client_id: client_id,
+                inv_date_created: inv_date_created,
+                group_id: group_id,
+                password: password,
+                user_id: user_id
+            })
+            .then(function (data) {
+                var response = parsedata(data);
+                if (response.success === 1) {
+                    // The validation was successful and inv was created
+                    if (btn) {
+                        btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check2-square"></i></h2>';
+                    }
+                    location.href = absolute_url.href;
+                    location.reload();
+                    alert(response.flash_message);
+                }
+                if (response.success === 0) {
+                    if (btn) {
+                        btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                    }
+                    location.href = absolute_url.href;
+                    location.reload();
+                    // Display the 'unsuccessful' message
+                    alert(response.flash_message);
+                }
+            })
+            .catch(function (error) {
+                console.warn('Create credit error:', error);
+                alert('Status: error - An error: ' + error.toString());
+            });
+        }
+    }, true);
 
 })();

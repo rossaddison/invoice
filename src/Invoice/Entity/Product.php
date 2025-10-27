@@ -24,27 +24,48 @@ class Product
     #[BelongsTo(target: Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
 
-    public function __construct(#[Column(type: 'text', nullable: true)]
-        private ?string $product_sku = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_sii_schemeid = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_sii_id = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_icc_listid = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_icc_listversionid = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_icc_id = '', #[Column(type: 'string(2)', nullable: true)]
-        private ?string $product_country_of_origin_code = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_name = '', #[Column(type: 'longText', nullable: false)]
-        private ?string $product_description = '', #[Column(type: 'decimal(20,2)', nullable: true)]
-        private ?float $product_price = 0.00, #[Column(type: 'decimal(20,2)', nullable: true)]
-        private ?float $purchase_price = 0.00, #[Column(type: 'integer(11)', nullable: false, default: 1)]
-        private float $product_price_base_quantity = 1.00, #[Column(type: 'text', nullable: true)]
-        private ?string $provider_name = '', #[Column(type: 'decimal(20,2)', nullable: true)]
-        private ?float $product_tariff = 0.00, #[Column(type: 'text', nullable: true)]
-        private ?string $product_additional_item_property_name = '', #[Column(type: 'text', nullable: true)]
-        private ?string $product_additional_item_property_value = '', #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $unit_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $unit_peppol_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $family_id = null) {}
+    public function __construct(
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_sku = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_sii_schemeid = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_sii_id = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_icc_listid = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_icc_listversionid = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_icc_id = '',
+        #[Column(type: 'string(2)', nullable: true)]
+        private ?string $product_country_of_origin_code = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_name = '',
+        #[Column(type: 'longText', nullable: false)]
+        private ?string $product_description = '',
+        #[Column(type: 'longText', nullable: true)]
+        private ?float $product_price = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: true)]
+        private ?float $purchase_price = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: true)]
+        private float $product_price_base_quantity = 1.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 1)]
+        private ?string $provider_name = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?float $product_tariff = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: true)]
+        private ?string $product_additional_item_property_name = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $product_additional_item_property_value = '',
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $unit_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $unit_peppol_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $family_id = null,
+    ) {}
 
     //get relation $family
     public function getFamily(): ?Family
@@ -102,7 +123,7 @@ class Product
         return $this->product_sku;
     }
 
-    public function setProduct_sku(string $product_sku): void
+    public function setProduct_sku(?string $product_sku): void
     {
         $this->product_sku = $product_sku;
     }
@@ -124,7 +145,7 @@ class Product
      * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
      * @param string $product_sii_schemeid
      */
-    public function setProduct_sii_schemeid(string $product_sii_schemeid): void
+    public function setProduct_sii_schemeid(?string $product_sii_schemeid): void
     {
         $this->product_sii_schemeid = $product_sii_schemeid;
     }
@@ -138,7 +159,7 @@ class Product
         return $this->product_sii_id;
     }
 
-    public function setProduct_sii_id(string $product_sii_id): void
+    public function setProduct_sii_id(?string $product_sii_id): void
     {
         $this->product_sii_id = $product_sii_id;
     }
@@ -153,7 +174,7 @@ class Product
         return $this->product_icc_listid;
     }
 
-    public function setProduct_icc_listid(string $product_icc_listid): void
+    public function setProduct_icc_listid(?string $product_icc_listid): void
     {
         $this->product_icc_listid = $product_icc_listid;
     }
@@ -163,7 +184,7 @@ class Product
         return $this->product_icc_listversionid;
     }
 
-    public function setProduct_icc_listversionid(string $product_icc_listversionid): void
+    public function setProduct_icc_listversionid(?string $product_icc_listversionid): void
     {
         $this->product_icc_listversionid = $product_icc_listversionid;
     }
@@ -173,12 +194,12 @@ class Product
         return $this->product_icc_id;
     }
 
-    public function setProduct_icc_id(string $product_icc_id): void
+    public function setProduct_icc_id(?string $product_icc_id): void
     {
         $this->product_icc_id = $product_icc_id;
     }
 
-    public function setProduct_country_of_origin_code(string $product_country_of_origin_code): void
+    public function setProduct_country_of_origin_code(?string $product_country_of_origin_code): void
     {
         $this->product_country_of_origin_code = $product_country_of_origin_code;
     }
@@ -203,7 +224,7 @@ class Product
         return $this->product_description;
     }
 
-    public function setProduct_description(string $product_description): void
+    public function setProduct_description(?string $product_description): void
     {
         $this->product_description = $product_description;
     }
@@ -243,7 +264,7 @@ class Product
         return $this->provider_name;
     }
 
-    public function setProvider_name(string $provider_name): void
+    public function setProvider_name(?string $provider_name): void
     {
         $this->provider_name = $provider_name;
     }
@@ -258,7 +279,7 @@ class Product
         return $this->product_additional_item_property_name;
     }
 
-    public function setProduct_additional_item_property_name(string $product_additional_item_property_name): void
+    public function setProduct_additional_item_property_name(?string $product_additional_item_property_name): void
     {
         $this->product_additional_item_property_name = $product_additional_item_property_name;
     }
@@ -273,7 +294,7 @@ class Product
         return $this->product_additional_item_property_value;
     }
 
-    public function setProduct_additional_item_property_value(string $product_additional_item_property_value): void
+    public function setProduct_additional_item_property_value(?string $product_additional_item_property_value): void
     {
         $this->product_additional_item_property_value = $product_additional_item_property_value;
     }

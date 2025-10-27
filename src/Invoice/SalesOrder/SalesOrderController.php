@@ -589,8 +589,8 @@ final class SalesOrderController extends BaseController
                         // Get all the fields that have been setup for this SPECIFIC salesorder in salesorder_custom.
                         'fields' => $socR->repoFields((string) $this->session->get('quote_id')),
                         // Get the standard extra custom fields built for EVERY quote.
-                        'customFields' => $cfR->repoTablequery('salesorder_custom'),
-                        'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
+                        'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customFields'],
+                        'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customValues'],
                         'cvH' => new CVH($settingRepository, $cvR),
                         'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
                         'soStatuses' => $soR->getStatuses($this->translator),
@@ -615,8 +615,8 @@ final class SalesOrderController extends BaseController
                             'gR' => $gR,
                         ]),
                         'view_custom_fields' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/view_custom_fields', [
-                            'customFields' => $cfR->repoTablequery('salesorder_custom'),
-                            'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
+                            'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customFields'],
+                            'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customValues'],
                             'form' => $form,
                             'salesOrderCustomValues' => $salesorder_custom_values,
                             'cvH' => new CVH($settingRepository, $cvR),

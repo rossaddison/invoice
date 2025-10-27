@@ -114,10 +114,52 @@
             });
     }
 
-    // Submit settings form
+    // Submit settings form - ensure all tab elements are included
     function handleSettingsSubmitClick() {
         var form = document.getElementById('form-settings');
-        if (form) form.submit();
+        if (!form) return;
+        
+        // Before submitting, temporarily make all tab panes visible
+        // to ensure all form elements are included in the submission
+        var tabPanes = Array.from(form.querySelectorAll('.tab-pane'));
+        var originalDisplayStyles = {};
+        var originalDisabledStates = {};
+        
+        tabPanes.forEach(function(pane) {
+            if (pane.id) {
+                // Make tab pane visible
+                originalDisplayStyles[pane.id] = pane.style.display;
+                pane.style.display = 'block';
+                
+                // Temporarily enable any disabled form elements in hidden tabs
+                var disabledElements = Array.from(pane.querySelectorAll('input:disabled, select:disabled, textarea:disabled'));
+                disabledElements.forEach(function(element, index) {
+                    var key = pane.id + '_' + index;
+                    originalDisabledStates[key] = {element: element, disabled: true};
+                    element.disabled = false;
+                });
+            }
+        });
+        
+        // Small delay to ensure DOM updates, then submit
+        setTimeout(function() {
+            form.submit();
+            
+            // Restore original states after submission
+            tabPanes.forEach(function(pane) {
+                if (pane.id && originalDisplayStyles[pane.id] !== undefined) {
+                    pane.style.display = originalDisplayStyles[pane.id];
+                }
+            });
+            
+            // Restore disabled states
+            Object.keys(originalDisabledStates).forEach(function(key) {
+                var state = originalDisabledStates[key];
+                if (state.element && state.disabled) {
+                    state.element.disabled = true;
+                }
+            });
+        }, 10);
     }
 
     // Online payment select change handler (show/hide gateway settings)
