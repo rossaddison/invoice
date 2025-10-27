@@ -1204,7 +1204,629 @@ define("invoice", ["require", "exports", "utils"], function (require, exports, u
     }
     exports.InvoiceHandler = InvoiceHandler;
 });
-define("index", ["require", "exports", "create-credit", "quote", "client", "invoice"], function (require, exports, create_credit_js_1, quote_js_1, client_js_1, invoice_js_1) {
+define("product", ["require", "exports", "utils"], function (require, exports, utils_js_5) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ProductHandler = void 0;
+    // Helper to set button loading state
+    function setButtonLoading(buttons, isLoading) {
+        buttons.forEach(button => {
+            if (isLoading) {
+                button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+            }
+            else {
+                button.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+            }
+        });
+    }
+    function setButtonError(buttons) {
+        buttons.forEach(button => {
+            button.innerHTML = '<h6 class="text-center"><i class="fa fa-error"></i></h6>';
+        });
+    }
+    // Product handler class
+    class ProductHandler {
+        constructor() {
+            this.bindEventListeners();
+            this.exposeGlobalFunctions();
+        }
+        bindEventListeners() {
+            document.addEventListener('click', this.handleClick.bind(this), true);
+        }
+        handleClick(event) {
+            const target = event.target;
+            const trigger = target.closest('#product_filters_submit');
+            if (trigger) {
+                this.submitProductFilters(event);
+            }
+        }
+        /**
+         * Filter table rows by SKU (mirrors original tableFunction)
+         */
+        filterTableBySku() {
+            const inputEl = document.getElementById('filter_product_sku');
+            if (!inputEl)
+                return;
+            const input = inputEl.value || '';
+            const filter = input.toUpperCase();
+            const table = document.getElementById('table-product');
+            if (!table)
+                return;
+            const rows = table.getElementsByTagName('tr');
+            // Loop through all table rows, and hide those who don't match the search query
+            for (let i = 0; i < rows.length; i++) {
+                // product_sku is 3rd column or index 2
+                const cell = rows[i].getElementsByTagName('td')[2];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText || '';
+                    if (textValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = '';
+                    }
+                    else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+        /**
+         * Perform the product search request and update UI
+         */
+        async submitProductFilters(event) {
+            if (event?.preventDefault) {
+                event.preventDefault();
+            }
+            const url = `${location.origin}/invoice/product/search`;
+            const buttons = document.querySelectorAll('.product_filters_submit');
+            // Show spinner on all matching buttons
+            setButtonLoading(buttons, true);
+            try {
+                const productSkuInput = document.getElementById('filter_product_sku');
+                const productSku = productSkuInput?.value || '';
+                const payload = {
+                    product_sku: productSku
+                };
+                const response = await (0, utils_js_5.getJson)(url, payload);
+                const data = (0, utils_js_5.parsedata)(response);
+                if (data.success === 1) {
+                    this.filterTableBySku();
+                    this.hideSummaryBar();
+                    setButtonLoading(buttons, false);
+                }
+                else {
+                    setButtonError(buttons);
+                    if (data.message) {
+                        alert(data.message);
+                    }
+                }
+            }
+            catch (error) {
+                console.error('product search failed', error);
+                setButtonError(buttons);
+                alert('An error occurred while searching products. See console for details.');
+            }
+        }
+        /**
+         * Hide the summary bar after filtering
+         */
+        hideSummaryBar() {
+            const summary = document.querySelector('.mt-3.me-3.summary.text-end');
+            if (summary) {
+                summary.style.visibility = 'hidden';
+            }
+        }
+        /**
+         * Expose global functions for compatibility with existing code
+         */
+        exposeGlobalFunctions() {
+            // Export tableFunction to global scope in case other scripts call it
+            window.productTableFilter = this.filterTableBySku.bind(this);
+        }
+    }
+    exports.ProductHandler = ProductHandler;
+});
+define("salesorder", ["require", "exports", "utils"], function (require, exports, utils_js_6) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SalesOrderHandler = void 0;
+    // SalesOrder uses global TomSelect and Bootstrap defined in types.ts
+    // SalesOrder handler class
+    class SalesOrderHandler {
+        constructor() {
+            this.bindEventListeners();
+            this.initializeOnLoad();
+        }
+        bindEventListeners() {
+            document.addEventListener('click', this.handleClick.bind(this), true);
+        }
+        initializeOnLoad() {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    this.initSelects();
+                });
+            }
+            else {
+                this.initSelects();
+            }
+        }
+        handleClick(event) {
+            const target = event.target;
+            // Open sales order modal
+            const openModalBtn = target.closest('.open-salesorder-modal');
+            if (openModalBtn) {
+                this.handleOpenModal(openModalBtn);
+                return;
+            }
+            // Save sales order via AJAX
+            const saveBtn = target.closest('.salesorder-save');
+            if (saveBtn) {
+                this.handleSaveSalesOrder();
+                return;
+            }
+        }
+        /**
+         * Initialize Tom Select if present for salesorder selects
+         */
+        initSelects() {
+            if (typeof window.TomSelect === 'undefined')
+                return;
+            const selects = document.querySelectorAll('.simple-select');
+            selects.forEach(element => {
+                // Check if already initialized
+                if (!element._tomselect) {
+                    try {
+                        new window.TomSelect(element, {});
+                        element._tomselect = true;
+                    }
+                    catch (error) {
+                        console.warn('Failed to initialize TomSelect:', error);
+                    }
+                }
+            });
+        }
+        /**
+         * Handle opening the sales order modal
+         */
+        async handleOpenModal(openBtn) {
+            const url = openBtn.dataset.url || `${location.origin}/invoice/salesorder/modal`;
+            const targetId = openBtn.dataset.target || 'modal-placeholder-salesorder';
+            const target = document.getElementById(targetId);
+            if (!target) {
+                console.error(`Modal target element not found: ${targetId}`);
+                return;
+            }
+            try {
+                const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
+                const html = await response.text();
+                target.innerHTML = html;
+                // Show modal using Bootstrap if available
+                const modalEl = target.querySelector('.modal');
+                if (modalEl && window.bootstrap?.Modal) {
+                    const modalInstance = new window.bootstrap.Modal(modalEl);
+                    modalInstance.show();
+                }
+                // Initialize selects in the new modal content
+                this.initSelects();
+            }
+            catch (error) {
+                console.error('Failed to load sales order modal:', error);
+                alert('Failed to load modal. Please try again.');
+            }
+        }
+        /**
+         * Handle saving the sales order form
+         */
+        async handleSaveSalesOrder() {
+            const form = document.querySelector('#salesorder_form');
+            if (!form) {
+                console.error('Sales order form not found');
+                return;
+            }
+            try {
+                const action = form.getAttribute('action') || `${location.origin}/invoice/salesorder/save`;
+                const formData = new FormData(form);
+                // Convert FormData to URLSearchParams for GET request
+                const params = new URLSearchParams();
+                formData.forEach((value, key) => {
+                    params.append(key, value.toString());
+                });
+                const url = `${action}?${params.toString()}`;
+                const response = await fetch(url, {
+                    cache: 'no-store',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                const parsedResponse = (0, utils_js_6.parsedata)(data);
+                if (parsedResponse.success === 1) {
+                    // Reload page on successful save
+                    window.location.reload();
+                }
+                else {
+                    const message = parsedResponse.message || 'Save failed';
+                    alert(message);
+                }
+            }
+            catch (error) {
+                console.error('Sales order save failed:', error);
+                alert('An error occurred while saving. Please try again.');
+            }
+        }
+    }
+    exports.SalesOrderHandler = SalesOrderHandler;
+});
+define("family", ["require", "exports", "utils"], function (require, exports, utils_js_7) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FamilyHandler = void 0;
+    // Family handler class
+    class FamilyHandler {
+        constructor() {
+            this.bindEventListeners();
+        }
+        bindEventListeners() {
+            document.addEventListener('DOMContentLoaded', this.initializeSelectors.bind(this));
+        }
+        initializeSelectors() {
+            const primarySelect = document.getElementById('family-category-primary-id');
+            const secondarySelect = document.getElementById('family-category-secondary-id');
+            if (primarySelect) {
+                primarySelect.addEventListener('change', this.onPrimaryChange.bind(this), false);
+                // Trigger initial change to populate secondaries on load (if selection exists)
+                Promise.resolve().then(() => this.onPrimaryChange());
+            }
+            if (secondarySelect) {
+                secondarySelect.addEventListener('change', this.onSecondaryChange.bind(this), false);
+                // Trigger initial load of family names if secondary already has a value
+                Promise.resolve().then(() => this.onSecondaryChange());
+            }
+        }
+        /**
+         * Populate a <select> element with options from an object { key: value, ... }
+         */
+        populateSelect(selectEl, items, promptText) {
+            if (!selectEl)
+                return;
+            // Clear existing options
+            selectEl.innerHTML = '';
+            // Add prompt/none option
+            const promptOption = document.createElement('option');
+            promptOption.value = '';
+            promptOption.textContent = promptText || 'None';
+            selectEl.appendChild(promptOption);
+            if (!items)
+                return;
+            // Handle both array and object formats
+            if (Array.isArray(items)) {
+                items.forEach((value, index) => {
+                    const option = document.createElement('option');
+                    option.value = index.toString();
+                    option.textContent = value;
+                    selectEl.appendChild(option);
+                });
+            }
+            else {
+                Object.entries(items).forEach(([key, value]) => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = value;
+                    selectEl.appendChild(option);
+                });
+            }
+        }
+        /**
+         * Handler: when primary category changes, load secondary categories
+         */
+        async onPrimaryChange() {
+            const primarySelect = document.getElementById('family-category-primary-id');
+            if (!primarySelect)
+                return;
+            const primaryCategoryId = primarySelect.value || '';
+            const url = `${location.origin}/invoice/family/secondaries/${encodeURIComponent(primaryCategoryId)}`;
+            try {
+                const payload = {
+                    category_primary_id: primaryCategoryId
+                };
+                const response = await (0, utils_js_7.getJson)(url, payload);
+                const data = (0, utils_js_7.parsedata)(response);
+                if (data.success === 1) {
+                    const secondaryCategories = data.secondary_categories || {};
+                    const secondaryDropdown = document.getElementById('family-category-secondary-id');
+                    this.populateSelect(secondaryDropdown, secondaryCategories, 'None');
+                    // Trigger change on secondary to cascade populate family names
+                    if (secondaryDropdown) {
+                        const changeEvent = new Event('change', { bubbles: true });
+                        secondaryDropdown.dispatchEvent(changeEvent);
+                    }
+                }
+                else {
+                    // In failure case, clear secondary and family name selects
+                    this.populateSelect(document.getElementById('family-category-secondary-id'), {}, 'None');
+                    this.populateSelect(document.getElementById('family-name'), {}, 'None');
+                }
+            }
+            catch (error) {
+                console.error('Error loading secondary categories', error);
+                // Clear selects on error
+                this.populateSelect(document.getElementById('family-category-secondary-id'), {}, 'None');
+                this.populateSelect(document.getElementById('family-name'), {}, 'None');
+            }
+        }
+        /**
+         * Handler: when secondary category changes, load family names
+         */
+        async onSecondaryChange() {
+            const secondarySelect = document.getElementById('family-category-secondary-id');
+            if (!secondarySelect)
+                return;
+            const secondaryCategoryId = secondarySelect.value || '';
+            const url = `${location.origin}/invoice/family/names/${encodeURIComponent(secondaryCategoryId)}`;
+            try {
+                const payload = {
+                    category_secondary_id: secondaryCategoryId
+                };
+                const response = await (0, utils_js_7.getJson)(url, payload);
+                const data = (0, utils_js_7.parsedata)(response);
+                if (data.success === 1) {
+                    const familyNames = data.family_names || {};
+                    const familyNameDropdown = document.getElementById('family-name');
+                    this.populateSelect(familyNameDropdown, familyNames, 'None');
+                }
+                else {
+                    this.populateSelect(document.getElementById('family-name'), {}, 'None');
+                }
+            }
+            catch (error) {
+                console.error('Error loading family names', error);
+                // Clear family names select on error
+                this.populateSelect(document.getElementById('family-name'), {}, 'None');
+            }
+        }
+    }
+    exports.FamilyHandler = FamilyHandler;
+});
+define("settings", ["require", "exports", "utils"], function (require, exports, utils_js_8) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SettingsHandler = void 0;
+    // Settings handler class
+    class SettingsHandler {
+        constructor() {
+            this.originalDisplayStyles = {};
+            this.originalDisabledStates = {};
+            this.bindEventListeners();
+        }
+        bindEventListeners() {
+            document.addEventListener('DOMContentLoaded', this.initialize.bind(this));
+        }
+        initialize() {
+            // Initialize SMTP toggle
+            this.toggleSmtpSettings();
+            // Email send method change handler
+            const emailSendMethodEl = document.getElementById('email_send_method');
+            if (emailSendMethodEl) {
+                emailSendMethodEl.addEventListener('change', this.toggleSmtpSettings.bind(this));
+            }
+            // FPH generate button
+            const fphBtn = document.getElementById('btn_fph_generate');
+            if (fphBtn) {
+                fphBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleFphGenerateClick();
+                });
+            }
+            // Generate cron key button
+            const cronBtn = document.getElementById('btn_generate_cron_key');
+            if (cronBtn) {
+                cronBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleGenerateCronKeyClick();
+                });
+            }
+            // Submit button
+            const submitBtn = document.getElementById('btn-submit');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleSettingsSubmitClick();
+                });
+            }
+            // Online payment select
+            const onlineSelect = document.getElementById('online-payment-select');
+            if (onlineSelect) {
+                onlineSelect.addEventListener('change', this.handleOnlinePaymentSelectChange.bind(this));
+            }
+            // Run online payment handler once to ensure initial state
+            this.handleOnlinePaymentSelectChange();
+        }
+        /**
+         * Toggle visibility of SMTP settings based on email_send_method value
+         */
+        toggleSmtpSettings() {
+            const emailSendMethodEl = document.getElementById('email_send_method');
+            const div = document.getElementById('div-smtp-settings');
+            if (!div || !emailSendMethodEl)
+                return;
+            if (emailSendMethodEl.value === 'smtp') {
+                div.style.display = '';
+            }
+            else {
+                div.style.display = 'none';
+            }
+        }
+        /**
+         * Generate fingerprint / client metrics for FPH
+         */
+        async handleFphGenerateClick() {
+            const url = `${location.origin}/invoice/setting/fphgenerate`;
+            const requestData = {
+                userAgent: navigator.userAgent,
+                width: window.screen.width,
+                height: window.screen.height,
+                scalingFactor: Math.round(window.devicePixelRatio * 100) / 100,
+                colourDepth: window.screen.colorDepth,
+                windowInnerWidth: window.innerWidth,
+                windowInnerHeight: window.innerHeight
+            };
+            const params = new URLSearchParams();
+            Object.entries(requestData).forEach(([key, value]) => {
+                params.append(key, value.toString());
+            });
+            try {
+                const response = await fetch(`${url}?${params.toString()}`, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) {
+                    throw new Error(`Network response not ok: ${response.status}`);
+                }
+                const data = await response.json().catch(() => ({}));
+                const parsedResponse = (0, utils_js_8.parsedata)(data);
+                if (parsedResponse.success === 1) {
+                    this.updateSettingField('settings[fph_client_browser_js_user_agent]', parsedResponse.userAgent);
+                    this.updateSettingField('settings[fph_client_device_id]', parsedResponse.deviceId);
+                    this.updateSettingField('settings[fph_screen_width]', parsedResponse.width);
+                    this.updateSettingField('settings[fph_screen_height]', parsedResponse.height);
+                    this.updateSettingField('settings[fph_screen_scaling_factor]', parsedResponse.scalingFactor);
+                    this.updateSettingField('settings[fph_screen_colour_depth]', parsedResponse.colourDepth);
+                    this.updateSettingField('settings[fph_timestamp]', parsedResponse.timestamp);
+                    this.updateSettingField('settings[fph_window_size]', parsedResponse.windowSize);
+                    this.updateSettingField('settings[fph_gov_client_user_id]', parsedResponse.userUuid);
+                }
+            }
+            catch (error) {
+                console.error('FPH generate failed', error);
+            }
+        }
+        /**
+         * Helper to update a settings field value
+         */
+        updateSettingField(fieldId, value) {
+            const element = document.getElementById(fieldId);
+            if (element && value !== undefined) {
+                element.value = value;
+            }
+        }
+        /**
+         * Generate cron key
+         */
+        async handleGenerateCronKeyClick() {
+            const buttons = document.querySelectorAll('.btn_generate_cron_key');
+            // Set loading state
+            buttons.forEach(button => {
+                button.innerHTML = '<i class="fa fa-spin fa-spinner fa-margin"></i>';
+            });
+            try {
+                const url = `${location.origin}/invoice/setting/get_cron_key`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) {
+                    throw new Error(`Network response not ok: ${response.status}`);
+                }
+                const data = await response.json().catch(() => ({}));
+                const parsedResponse = (0, utils_js_8.parsedata)(data);
+                if (parsedResponse.success === 1 && parsedResponse.cronkey) {
+                    // Update all elements with .cron_key class
+                    const cronKeyElements = document.querySelectorAll('.cron_key');
+                    cronKeyElements.forEach(element => {
+                        element.value = parsedResponse.cronkey || '';
+                    });
+                }
+                // Restore button state
+                buttons.forEach(button => {
+                    button.innerHTML = '<i class="fa fa-recycle fa-margin"></i>';
+                });
+            }
+            catch (error) {
+                console.error('get_cron_key failed', error);
+                // Restore button state on error
+                buttons.forEach(button => {
+                    button.innerHTML = '<i class="fa fa-recycle fa-margin"></i>';
+                });
+            }
+        }
+        /**
+         * Submit settings form - ensure all tab elements are included
+         */
+        handleSettingsSubmitClick() {
+            const form = document.getElementById('form-settings');
+            if (!form)
+                return;
+            // Before submitting, temporarily make all tab panes visible
+            // to ensure all form elements are included in the submission
+            const tabPanes = form.querySelectorAll('.tab-pane');
+            this.originalDisplayStyles = {};
+            this.originalDisabledStates = {};
+            tabPanes.forEach(pane => {
+                if (pane.id) {
+                    // Store and modify display style
+                    this.originalDisplayStyles[pane.id] = pane.style.display;
+                    pane.style.display = 'block';
+                    // Temporarily enable any disabled form elements in hidden tabs
+                    const disabledElements = pane.querySelectorAll('input:disabled, select:disabled, textarea:disabled');
+                    disabledElements.forEach((element, index) => {
+                        const key = `${pane.id}_${index}`;
+                        this.originalDisabledStates[key] = { element, disabled: true };
+                        element.disabled = false;
+                    });
+                }
+            });
+            // Small delay to ensure DOM updates, then submit
+            setTimeout(() => {
+                form.submit();
+                this.restoreFormState(tabPanes);
+            }, 10);
+        }
+        /**
+         * Restore form state after submission
+         */
+        restoreFormState(tabPanes) {
+            // Restore original display styles
+            tabPanes.forEach(pane => {
+                if (pane.id && this.originalDisplayStyles[pane.id] !== undefined) {
+                    pane.style.display = this.originalDisplayStyles[pane.id];
+                }
+            });
+            // Restore disabled states
+            Object.entries(this.originalDisabledStates).forEach(([_, state]) => {
+                if (state.element && state.disabled) {
+                    state.element.disabled = true;
+                }
+            });
+        }
+        /**
+         * Online payment select change handler (show/hide gateway settings)
+         */
+        handleOnlinePaymentSelectChange() {
+            const select = document.getElementById('online-payment-select');
+            if (!select)
+                return;
+            const driver = select.value;
+            // Hide all gateway settings
+            const gatewaySettings = document.querySelectorAll('.gateway-settings');
+            gatewaySettings.forEach(element => {
+                if (!element.classList.contains('active-gateway')) {
+                    element.classList.add('hidden');
+                }
+            });
+            // Show selected gateway settings
+            const target = document.getElementById(`gateway-settings-${driver}`);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('active-gateway');
+            }
+        }
+    }
+    exports.SettingsHandler = SettingsHandler;
+});
+define("index", ["require", "exports", "create-credit", "quote", "client", "invoice", "product", "salesorder", "family", "settings"], function (require, exports, create_credit_js_1, quote_js_1, client_js_1, invoice_js_1, product_js_1, salesorder_js_1, family_js_1, settings_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.InvoiceApp = void 0;
@@ -1218,9 +1840,13 @@ define("index", ["require", "exports", "create-credit", "quote", "client", "invo
             this._quoteHandler = new quote_js_1.QuoteHandler();
             this._clientHandler = new client_js_1.ClientHandler();
             this._invoiceHandler = new invoice_js_1.InvoiceHandler();
+            this._productHandler = new product_js_1.ProductHandler();
+            this._salesOrderHandler = new salesorder_js_1.SalesOrderHandler();
+            this._familyHandler = new family_js_1.FamilyHandler();
+            this._settingsHandler = new settings_js_1.SettingsHandler();
             this.initializeTooltips();
             this.initializeTaggableFocus();
-            console.log('Invoice TypeScript App initialized with Quote, Client, and Invoice handlers');
+            console.log('Invoice TypeScript App initialized with all core handlers: Quote, Client, Invoice, Product, SalesOrder, Family, and Settings');
         }
         /**
          * Initialize Bootstrap tooltips

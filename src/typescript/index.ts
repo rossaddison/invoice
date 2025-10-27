@@ -3,6 +3,10 @@ import { CreateCreditHandler } from './create-credit.js';
 import { QuoteHandler } from './quote.js';
 import { ClientHandler } from './client.js';
 import { InvoiceHandler } from './invoice.js';
+import { ProductHandler } from './product.js';
+import { SalesOrderHandler } from './salesorder.js';
+import { FamilyHandler } from './family.js';
+import { SettingsHandler } from './settings.js';
 
 /**
  * Initialize Invoice Application
@@ -12,6 +16,10 @@ class InvoiceApp {
   private readonly _quoteHandler: QuoteHandler;
   private readonly _clientHandler: ClientHandler;
   private readonly _invoiceHandler: InvoiceHandler;
+  private readonly _productHandler: ProductHandler;
+  private readonly _salesOrderHandler: SalesOrderHandler;
+  private readonly _familyHandler: FamilyHandler;
+  private readonly _settingsHandler: SettingsHandler;
 
   constructor() {
     // Initialize handlers (stored as properties to keep event listeners active)
@@ -19,11 +27,15 @@ class InvoiceApp {
     this._quoteHandler = new QuoteHandler();
     this._clientHandler = new ClientHandler();
     this._invoiceHandler = new InvoiceHandler();
+    this._productHandler = new ProductHandler();
+    this._salesOrderHandler = new SalesOrderHandler();
+    this._familyHandler = new FamilyHandler();
+    this._settingsHandler = new SettingsHandler();
     
     this.initializeTooltips();
     this.initializeTaggableFocus();
     
-    console.log('Invoice TypeScript App initialized with Quote, Client, and Invoice handlers');
+    console.log('Invoice TypeScript App initialized with all core handlers: Quote, Client, Invoice, Product, SalesOrder, Family, and Settings');
   }
 
   /**

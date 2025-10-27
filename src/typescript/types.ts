@@ -5,11 +5,20 @@ declare global {
   interface Window {
     bootstrap?: {
       Tooltip: new (element: Element, options?: any) => any;
+      Modal: new (element: Element, options?: any) => {
+        show(): void;
+        hide(): void;
+      };
     };
     lastTaggableClicked?: Element;
+    TomSelect?: any;
   }
   const bootstrap: {
     Tooltip: new (element: Element, options?: any) => any;
+    Modal: new (element: Element, options?: any) => {
+      show(): void;
+      hide(): void;
+    };
   } | undefined;
 }
 
