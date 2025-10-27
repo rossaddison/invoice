@@ -1,5 +1,8 @@
 import type { ApiResponse, RequestParams, FetchOptions, SafeElement } from './types.js';
 
+// Re-export types for convenience
+export type { ApiResponse, RequestParams, FetchOptions, SafeElement } from './types.js';
+
 /**
  * Safe JSON parser that always returns an object
  * @param data - Data to parse (can be string, object, or any type)
@@ -25,11 +28,11 @@ export function parsedata(data: unknown): ApiResponse | Record<string, any> {
  * @param options - Additional fetch options
  * @returns Promise resolving to parsed JSON or text
  */
-export async function getJson(
+export async function getJson<T = unknown>(
   url: string, 
   params?: RequestParams, 
   options: FetchOptions = {}
-): Promise<unknown> {
+): Promise<T> {
   let requestUrl = url;
   
   if (params) {
@@ -69,9 +72,9 @@ export async function getJson(
   const text = await response.text();
   
   try {
-    return JSON.parse(text);
+    return JSON.parse(text) as T;
   } catch (e) {
-    return text;
+    return text as T;
   }
 }
 

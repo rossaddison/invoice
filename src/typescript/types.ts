@@ -16,8 +16,10 @@ declare global {
 export interface ApiResponse {
   success: 0 | 1;
   flash_message?: string;
+  message?: string;
   data?: any;
   errors?: Record<string, string[]>;
+  validation_errors?: Record<string, string[]>;
 }
 
 export interface RequestParams {

@@ -8,7 +8,7 @@ node -p "require('typescript').version" 2>nul || (
 )
 
 echo Compiling TypeScript files...
-node_modules\.bin\tsc.cmd --project tsconfig.json --outDir temp_build
+node_modules\.bin\tsc.cmd --project tsconfig.json --outDir temp_build --noUnusedLocals false --noUnusedParameters false
 
 echo Bundling with simple concatenation...
 type temp_build\types.js > src\Invoice\Asset\rebuild\js\invoice-typescript-compiled.js
