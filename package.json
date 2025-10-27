@@ -7,8 +7,25 @@
         "govuk-frontend": "^5.13.0"
     },
     "devDependencies": {
+        "@types/node": "^22.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@typescript-eslint/parser": "^8.0.0",
+        "esbuild": "^0.24.0",
+        "eslint": "^9.0.0",
         "jest": "^30.2.0",
+        "prettier": "^3.0.0",
         "typescript": "^5.9.3"
+    },
+    "scripts": {
+        "build": "npm run build:prod",
+        "build:dev": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript.js --target=es2020 --format=iife --global-name=Invoice --sourcemap",
+        "build:prod": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript.js --target=es2020 --format=iife --global-name=Invoice --minify",
+        "build:watch": "npm run build:dev -- --watch",
+        "type-check": "tsc --noEmit",
+        "type-check:watch": "tsc --noEmit --watch",
+        "lint": "eslint src/typescript/**/*.ts",
+        "format": "prettier --write src/typescript/**/*.ts",
+        "test": "jest"
     },
     "license": "BSD-3-Clause"
 }
