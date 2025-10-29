@@ -139,6 +139,8 @@ final class InvRecurringController extends BaseController
                     return $this->viewRenderer->render('_form', $parameters);
                 }
                 $this->flashMessage('danger', $this->translator->translate('recurring.status.sent.only') . '❗');
+                // Redirect back to the invoice view instead of showing 404
+                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
             }
         }
         return $this->webService->getNotFoundResponse();

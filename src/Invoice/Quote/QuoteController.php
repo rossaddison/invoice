@@ -352,6 +352,8 @@ final class QuoteController extends BaseController
                         if ($origin == 'dashboard') {
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
                         }
+                        // otherwise return to new quote view (client origin)
+                        return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
                     }
                 }
             }

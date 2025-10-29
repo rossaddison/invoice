@@ -51,6 +51,18 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>28th October 2025</b></p>
+<p>The following files have been consolidated into one IIFE Typescript file invoice-typescript-iife.js: 
+    'rebuild/js/quote.js',
+    'rebuild/js/inv.js',
+    'rebuild/js/salesorder.js',
+    'rebuild/js/client.js',
+    'rebuild/js/family.js',
+    'rebuild/js/product.js',
+    'rebuild/js/setting.js',</p>
+<p>Class and id selector list under FAQS - Javascript Analysis - Future codeception tests to be based on these.</p>
+<p>The compiled typescript has been compiled compared to the pre-jquery-deletion branch ensuring that no javascript was missed</p>
+<p>Separate vanilla cron.js created.</p>
 <p><b>26h October 2025</b></p>
 <p>Bugfix: Length annotation: include skipOnEmpty = true</p>
 <p>Bugfix: Delete invoice items. src\Invoice\Asset\rebuild\js\inv.js</p> 

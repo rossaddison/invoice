@@ -10,9 +10,11 @@ final class SignupAndLoginCest
 {
     public function __construct(
         private readonly string $emptyLogin = '',
-        private readonly string $emptyPassword = '',    
-        private readonly string $liveAdminUserLogin = 'james',
-        private readonly string $liveAdminUserPassword = 'james',
+        private readonly string $emptyPassword = '',
+        // If failing try the actual login name here    
+        private readonly string $liveAdminUserLogin = 'admin',
+        // If failing try the actual login password here    
+        private readonly string $liveAdminUserPassword = 'admin',
         private readonly string $firstUserLogin = 'firstUserLogin',
         private readonly string $firstUserWrongLogin = 'firstUserWrongLogin',
         private readonly string $firstUserPassword = 'firstUserPassword',

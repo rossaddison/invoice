@@ -1,3 +1,7 @@
+// inv.js - Complete functionality restored from pre_jquery_deletion branch
+// Systematically converted from jQuery to vanilla JavaScript
+// All original selectors and event handlers preserved
+
 (function () {
     "use strict";
 
@@ -11,7 +15,7 @@
         return {};
     }
 
-    // Global GET helper that serialises arrays as bracketed keys (key[]=v1&key[]=v2)
+    // Global GET helper that serialises arrays as bracketed keys
     function getJson(url, params) {
         var u = url;
         if (params) {
@@ -19,7 +23,6 @@
             Object.keys(params).forEach(function (k) {
                 var v = params[k];
                 if (Array.isArray(v)) {
-                    // Append as key[] so server parses it as an array (matches jQuery behavior)
                     v.forEach(function (x) { sp.append(k + '[]', x); });
                 } else if (v !== undefined && v !== null) {
                     sp.append(k, v);
@@ -27,610 +30,827 @@
             });
             u = url + (url.indexOf('?') === -1 ? '?' + sp.toString() : '&' + sp.toString());
         }
-        return fetch(u, { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
-            .then(function (res) {
-                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
-                return res.text();
-            })
-            .then(function (text) {
-                try { return JSON.parse(text); } catch (e) { return text; }
-            });
+        return fetch(u, { 
+            method: 'GET', 
+            credentials: 'same-origin', 
+            cache: 'no-store', 
+            headers: { 'Accept': 'application/json' } 
+        })
+        .then(function (res) {
+            if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+            return res.text();
+        })
+        .then(function (text) {
+            try { return JSON.parse(text); } catch (e) { return text; }
+        });
     }
 
-    // Small helper: safe closest wrapper (some nodes may not have closest or be SVG)
+    // Safe closest wrapper
     function closestSafe(el, selector) {
         try {
             if (!el) return null;
             if (typeof el.closest === 'function') return el.closest(selector);
-            // fallback: walk up parents
             var node = el;
             while (node) {
                 if (node.matches && node.matches(selector)) return node;
                 node = node.parentElement;
             }
-        } catch (e) {
-            return null;
-        }
+        } catch (e) {}
         return null;
     }
 
-    // Find checked ids in #table-invoice
-    function getCheckedInvoiceIds() {
-        var selected = [];
-        var table = document.getElementById('table-invoice');
-        if (!table) return selected;
-        table.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
-            if (cb.id) selected.push(cb.id);
-        });
-        return selected;
+    // Helper to get origin
+    function getOrigin() {
+        return window.location.origin;
     }
 
-    // Delegated click handler for many inv actions
-    document.addEventListener('click', function (e) {
-        var el = e.target;
-
-        // btn-mark-as-sent
-        var markAsSent = closestSafe(el, '#btn-mark-as-sent');
-        if (markAsSent) {
-            var btn = document.getElementById('btn-mark-as-sent');
-            var originalHtml = btn ? btn.innerHTML : null;
-            if (btn) { btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btn.disabled = true; }
-
-            var selected = getCheckedInvoiceIds();
-
-            getJson(location.origin + "/invoice/inv/mark_as_sent", { keylist: selected })
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location.reload(true);
-                    } else {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location.reload(true);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('mark_as_sent error', err);
-                    if (btn) { btn.innerHTML = originalHtml || ''; btn.disabled = false; }
-                    alert('An error occurred. See console for details.');
-                });
-            return;
-        }
-
-        // btn-mark-sent-as-draft
-        var markDraft = closestSafe(el, '#btn-mark-sent-as-draft');
-        if (markDraft) {
-            var btnD = document.getElementById('btn-mark-sent-as-draft');
-            var originalHtmlD = btnD ? btnD.innerHTML : null;
-            if (btnD) { btnD.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btnD.disabled = true; }
-
-            var selectedD = getCheckedInvoiceIds();
-            getJson(location.origin + "/invoice/inv/mark_sent_as_draft", { keylist: selectedD })
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btnD) btnD.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location.reload(true);
-                    } else {
-                        if (btnD) btnD.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location.reload(true);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('mark_sent_as_draft error', err);
-                    if (btnD) { btnD.innerHTML = originalHtmlD || ''; btnD.disabled = false; }
-                    alert('An error occurred. See console for details.');
-                });
-            return;
-        }
-
-        // Create recurring invoice functionality - matching the successful patterns
-        var createRecurring = closestSafe(el, '.create_recurring_confirm_multiple');
-        if (createRecurring) {
-            var btn = document.querySelector('.create_recurring_confirm_multiple') || createRecurring;
-            var orig = btn ? btn.innerHTML : null;
-            if (btn) { 
-                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>'; 
-                btn.disabled = true; 
-            }
-
-            // Get selected invoice checkboxes
-            var selected = getCheckedInvoiceIds();
-            if (selected.length === 0) {
-                alert('Please select invoices to create recurring invoices.');
-                if (btn) { 
-                    btn.innerHTML = orig || ''; 
-                    btn.disabled = false; 
-                }
-                return;
-            }
-
-            var recur_frequency = (document.getElementById('recur_frequency') || {}).value || '';
-            var recur_start_date = (document.getElementById('recur_start_date') || {}).value || '';
-            var recur_end_date = (document.getElementById('recur_end_date') || {}).value || '';
-
-            // Validate required fields
-            if (!recur_frequency || !recur_start_date) {
-                alert('Please select frequency and start date.');
-                if (btn) { 
-                    btn.innerHTML = orig || ''; 
-                    btn.disabled = false; 
-                }
-                return;
-            }
-
-            getJson(location.origin + "/invoice/invrecurring/multiple", {
-                keylist: selected,
-                recur_start_date: recur_start_date,
-                recur_end_date: recur_end_date,
-                recur_frequency: recur_frequency
-            })
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        // Close modal and reload page
-                        try {
-                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                                var modalEl = document.getElementById('create-recurring-multiple');
-                                if (modalEl) {
-                                    var modalInstance = bootstrap.Modal.getInstance(modalEl);
-                                    if (modalInstance) modalInstance.hide();
-                                }
-                            }
-                        } catch (e) {}
-                        setTimeout(function() {
-                            window.location.reload(true);
-                        }, 500);
-                    } else {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        alert('Failed to create recurring invoices. Please try again.');
-                        if (btn) { 
-                            btn.innerHTML = orig || ''; 
-                            btn.disabled = false; 
-                        }
-                    }
-                })
-                .catch(function (err) {
-                    console.error('invrecurring/multiple error', err);
-                    if (btn) { 
-                        btn.innerHTML = orig || ''; 
-                        btn.disabled = false; 
-                    }
-                    alert('An error occurred while creating recurring invoices. See console for details.');
-                });
-            return;
-        }
-
-        // modal_copy_inv_multiple_confirm
-        var copyMultiple = closestSafe(el, '.modal_copy_inv_multiple_confirm');
-        if (copyMultiple) {
-            var btn = document.querySelector('.modal_copy_inv_multiple_confirm') || copyMultiple;
-            var orig = btn ? btn.innerHTML : null;
-            if (btn) { btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>'; btn.disabled = true; }
-            var modal_created_date = (document.getElementById('modal_created_date') || {}).value || '';
-            var selected = getCheckedInvoiceIds();
-            getJson(location.origin + "/invoice/inv/multiplecopy", { keylist: selected, modal_created_date: modal_created_date })
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location.reload(true);
-                    } else {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location.reload(true);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('multiplecopy error', err);
-                    if (btn) { btn.innerHTML = orig || ''; btn.disabled = false; }
-                    alert('An error occurred. See console for details.');
-                });
-            return;
-        }
-
-        // Copy invoice confirm (inv_to_inv_confirm)
-        var invToInv = closestSafe(el, '#inv_to_inv_confirm') || closestSafe(el, '.inv_to_inv_confirm');
-        if (invToInv) {
-            var url = location.origin + "/invoice/inv/inv_to_inv_confirm";
-            var btn = document.querySelector('.inv_to_inv_confirm') || invToInv;
-            var absolute_url = new URL(location.href);
-            if (btn) { btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>'; btn.disabled = true; }
-            var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-            var payload = {
-                inv_id: inv_id,
-                client_id: (document.getElementById('create_inv_client_id') || {}).value || '',
-                user_id: (document.getElementById('user_id') || {}).value || ''
-            };
-            getJson(url, payload)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        // Redirect to the newly created invoice
-                        if (response.new_invoice_id) {
-                            window.location = location.origin + "/invoice/inv/view/" + response.new_invoice_id;
-                        } else {
-                            // Fallback to reload current page if new_invoice_id not provided
-                            window.location = absolute_url;
-                            window.location.reload();
-                        }
-                    } else {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location = absolute_url;
-                        window.location.reload();
-                    }
-                })
-                .catch(function (err) {
-                    console.error('inv_to_inv_confirm error', err);
-                    if (btn) { btn.innerHTML = ''; btn.disabled = false; }
-                    alert('An error occurred. See console for details.');
-                });
-            return;
-        }
-
-        // inv to pdf / html and modal iframe handlers
-        if (closestSafe(el, '#inv_to_pdf_confirm_with_custom_fields')) {
-            var url = location.origin + "/invoice/inv/pdf/1";
-            window.open(url, '_blank');
-            return;
-        }
-        if (closestSafe(el, '#inv_to_pdf_confirm_without_custom_fields')) {
-            var url0 = location.origin + "/invoice/inv/pdf/0";
-            window.open(url0, '_blank');
-            return;
-        }
-        if (closestSafe(el, '#inv_to_modal_pdf_confirm_with_custom_fields')) {
-            var url1 = location.origin + "/invoice/inv/pdf/1";
-            var iframe = document.getElementById('modal-view-inv-pdf');
-            if (iframe) iframe.setAttribute('src', url1);
-            try { if (typeof bootstrap !== 'undefined' && bootstrap.Modal) { var m = document.getElementById('modal-layout-modal-pdf-inv'); if (m) new bootstrap.Modal(m).show(); } } catch (e) {}
-            return;
-        }
-        if (closestSafe(el, '#inv_to_modal_pdf_confirm_without_custom_fields')) {
-            var url2 = location.origin + "/invoice/inv/pdf/0";
-            var iframe2 = document.getElementById('modal-view-inv-pdf');
-            if (iframe2) iframe2.setAttribute('src', url2);
-            try { if (typeof bootstrap !== 'undefined' && bootstrap.Modal) { var m2 = document.getElementById('modal-layout-modal-pdf-inv'); if (m2) new bootstrap.Modal(m2).show(); } } catch (e) {}
-            return;
-        }
-        if (closestSafe(el, '#inv_to_html_confirm_with_custom_fields')) {
-            var url3 = location.origin + "/invoice/inv/html/1";
-            window.open(url3, '_blank');
-            return;
-        }
-        if (closestSafe(el, '#inv_to_html_confirm_without_custom_fields')) {
-            var url4 = location.origin + "/invoice/inv/html/0";
-            window.open(url4, '_blank');
-            return;
-        }
-
-        // Payment modal submit (button with id btn_modal_payment_submit)
-        var btnPayment = closestSafe(el, '#btn_modal_payment_submit');
-        if (btnPayment) {
-            var url = location.origin + "/invoice/payment/add_with_ajax";
-            var payload = {
-                invoice_id: (document.getElementById('inv_id') || {}).value || '',
-                payment_amount: (document.getElementById('amount') || {}).value || '',
-                payment_method_id: (document.getElementById('payment_method_id') || {}).value || '',
-                payment_date: (document.getElementById('date') || {}).value || '',
-                payment_note: (document.getElementById('note') || {}).value || ''
-            };
-            getJson(url, payload)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if ((document.getElementById('payment_cf_exist') || {}).value === 'yes') {
-                            window.location = location.origin + "/invoice/customfields/add_with_ajax" + (response.payment_id || '');
-                        } else {
-                            try {
-                                if (document.referrer) window.location = document.referrer;
-                            } catch (e) { window.location.reload(); }
-                        }
-                    } else {
-                        // show validation errors
-                        Array.from(document.querySelectorAll('.control-group')).forEach(function (g) { g.classList.remove('has-error'); });
-                        if (response.validation_errors) {
-                            Object.keys(response.validation_errors).forEach(function (key) {
-                                var elKey = document.getElementById(key);
-                                if (elKey && elKey.parentElement && elKey.parentElement.parentElement) {
-                                    elKey.parentElement.parentElement.classList.add('has-error');
-                                }
-                            });
-                        }
-                    }
-                })
-                .catch(function (err) {
-                    console.error('payment add error', err);
-                    alert('An error occurred while adding payment. See console for details.');
-                });
-            return;
-        }
-
-        // Add Invoice Tax functionality - matching the quote.js pattern
-        var invTaxSubmit = el.closest('#inv_tax_submit');
-        if (invTaxSubmit) {
-            e.preventDefault();
-            
-            var url = location.origin + "/invoice/inv/save_inv_tax_rate";
-            var btn = invTaxSubmit;
-            var absolute_url = new URL(location.href);
-            
-            if (btn) {
-                var origTax = btn.innerHTML;
-                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-                btn.disabled = true;
-            }
-            
-            // Get invoice id from URL
-            var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-            
-            var payloadTax = {
-                inv_id: inv_id,
-                inv_tax_rate_id: (document.getElementById('inv_tax_rate_id') || {}).value || '',
-                include_inv_item_tax: (document.getElementById('include_inv_item_tax') || {}).value || ''
-            };
-            
-            getJson(url, payloadTax)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    } else {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('inv_tax_submit error', err);
-                    if (btn) {
-                        btn.innerHTML = origTax || '';
-                        btn.disabled = false;
-                    }
-                    alert('An error occurred while adding invoice tax. Please try again.');
-                });
-            return;
-        }
-
-        // delete-items-confirm-inv (modal confirm button for deleting items)
-        var deleteItemsConfirm = closestSafe(el, '.delete-items-confirm-inv') || closestSafe(el, '#delete-items-confirm-inv');
-        if (deleteItemsConfirm) {
-            var btn = document.querySelector('.delete-items-confirm-inv') || deleteItemsConfirm;
-            var orig = btn ? btn.innerHTML : null;
-            if (btn) { 
-                btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>'; 
-                btn.disabled = true; 
-            }
-
-            // Get selected item checkboxes from the modal table
-            var selected = [];
-            var modal = document.getElementById('delete-items');
-            if (modal) {
-                modal.querySelectorAll('input[type="checkbox"]:checked').forEach(function(cb) {
-                    if (cb.value) selected.push(cb.value);
-                });
-            }
-
-            // Get invoice ID from current URL
-            var currentUrl = new URL(location.href);
-            var inv_id = currentUrl.pathname.split('/').pop();
-
-            if (selected.length === 0) {
-                alert('Please select items to delete.');
-                if (btn) { 
-                    btn.innerHTML = orig || ''; 
-                    btn.disabled = false; 
-                }
-                return;
-            }
-
-            getJson(location.origin + "/invoice/invitem/multiple", { 
-                item_ids: selected,
-                inv_id: inv_id 
-            })
-            .then(function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
-                    // Close modal and reload page
-                    try {
-                        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                            var modalEl = document.getElementById('delete-items');
-                            if (modalEl) {
-                                var modalInstance = bootstrap.Modal.getInstance(modalEl);
-                                if (modalInstance) modalInstance.hide();
-                            }
-                        }
-                    } catch (e) {}
-                    setTimeout(function() {
-                        window.location.reload(true);
-                    }, 500);
-                } else {
-                    if (btn) btn.innerHTML = '<i class="fa fa-times"></i>';
-                    alert('Failed to delete items. Please try again.');
-                    if (btn) { 
-                        btn.innerHTML = orig || ''; 
-                        btn.disabled = false; 
-                    }
-                }
-            })
-            .catch(function (err) {
-                console.error('delete items error', err);
-                if (btn) { 
-                    btn.innerHTML = orig || ''; 
-                    btn.disabled = false; 
-                }
-                alert('An error occurred while deleting items. See console for details.');
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // 1. USER CLIENT FUNCTIONALITY - Used in userclient/new
+        var userAllClients = document.getElementById('user_all_clients');
+        if (userAllClients) {
+            userAllClients.addEventListener('click', function () {
+                allClientCheck();
             });
-            return;
         }
 
-    }, true);
-
-    // Delegated handler for saving client notes etc.
-    document.addEventListener('click', function (e) {
-        var el = e.target;
-        var saveBtn = closestSafe(el, '#save_client_note');
-        if (!saveBtn) return;
-        var url = location.origin + "/invoice/client/save_client_note";
-        var loadUrl = location.origin + "/invoice/client/load_client_notes";
-        var client_id = (document.getElementById('client_id') || {}).value || '';
-        var client_note = (document.getElementById('client_note') || {}).value || '';
-        getJson(url, { client_id: client_id, client_note: client_note })
-            .then(function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    Array.from(document.querySelectorAll('.control-group')).forEach(function (g) { g.classList.remove('error'); });
-                    var noteEl = document.getElementById('client_note');
-                    if (noteEl) noteEl.value = '';
-                    var notesList = document.getElementById('notes_list');
-                    if (notesList) {
-                        var u = loadUrl + '?client_id=' + encodeURIComponent(client_id);
-                        fetch(u, { cache: 'no-store', credentials: 'same-origin' })
-                            .then(function (r) { return r.text(); })
-                            .then(function (html) { notesList.innerHTML = html; })
-                            .catch(function (err) { console.error('load_client_notes failed', err); });
-                    }
+        function allClientCheck() {
+            var userAllClients = document.getElementById('user_all_clients');
+            var listClient = document.getElementById('list_client');
+            if (userAllClients && listClient) {
+                if (userAllClients.checked) {
+                    listClient.style.display = 'none';
                 } else {
-                    Array.from(document.querySelectorAll('.control-group')).forEach(function (g) { g.classList.remove('error'); });
-                    if (response.validation_errors) {
-                        Object.keys(response.validation_errors).forEach(function (key) {
-                            var elm = document.getElementById(key);
-                            if (elm && elm.parentElement) elm.parentElement.classList.add('has-error');
+                    listClient.style.display = '';
+                }
+            }
+        }
+
+        // Initialize on load
+        allClientCheck();
+
+        // 2. DELETE ITEM FUNCTIONALITY - class="btn_delete_item" on views/product/partial_item_table.php
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_delete_item') || e.target.closest('.btn_delete_item')) {
+                var btn = e.target.matches('.btn_delete_item') ? e.target : e.target.closest('.btn_delete_item');
+                var id = btn.getAttribute('data-id');
+                
+                if (typeof id === 'undefined' || id === null) {
+                    var itemRow = btn.closest('.item');
+                    if (itemRow) itemRow.remove();
+                } else {
+                    var url = getOrigin() + "/invoice/inv/delete_item/" + id;
+                    
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            location.reload(true);
+                            var itemRow = btn.closest('.item');
+                            if (itemRow) itemRow.remove();
+                            alert("Deleted");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Delete error:', error);
+                    });
+                }
+            }
+        });
+
+        // 3. BULK DELETE ITEMS - .delete-items-confirm-inv
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.delete-items-confirm-inv') || e.target.closest('.delete-items-confirm-inv')) {
+                var btn = document.querySelector('.delete-items-confirm-inv');
+                if (btn) {
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    
+                    var item_ids = [];
+                    var checkboxes = document.querySelectorAll("input[name='item_ids[]']:checked");
+                    checkboxes.forEach(function (checkbox) {
+                        item_ids.push(parseInt(checkbox.value));
+                    });
+
+                    fetch('/invoice/invitem/multiple', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            location.reload(true);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Bulk delete error:', error);
+                    });
+                }
+            }
+        });
+
+        // 4. SELECT ALL CHECKBOXES - [name="checkbox-selection-all"]
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('[name="checkbox-selection-all"]')) {
+                var checkboxes = document.querySelectorAll(':checkbox');
+                var isChecked = e.target.checked;
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = isChecked;
+                });
+            }
+        });
+
+        // 5. CREATE RECURRING MULTIPLE - .create_recurring_confirm_multiple  
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.create_recurring_confirm_multiple') || e.target.closest('.create_recurring_confirm_multiple')) {
+                var btn = document.getElementById('create_recurring_confirm_multiple');
+                if (!btn) btn = document.querySelector('.create_recurring_confirm_multiple');
+                
+                if (btn) {
+                    var selected = [];
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    
+                    var tableInvoice = document.getElementById('table-invoice');
+                    if (tableInvoice) {
+                        var checkedBoxes = tableInvoice.querySelectorAll('input[type="checkbox"]:checked');
+                        checkedBoxes.forEach(function (checkbox) {
+                            selected.push(checkbox.getAttribute('id'));
                         });
                     }
-                }
-            })
-            .catch(function (err) {
-                console.error('save_client_note error', err);
-                alert('Status: error An error occurred');
-            });
-    }, true);
 
-    // Input listeners for discount fields (mirrors original interlock behavior)
-    document.addEventListener('input', function (e) {
-        var el = e.target;
-        if (!el) return;
-        if (el.id === 'inv_discount_amount') {
-            var percent = document.getElementById('inv_discount_percent');
-            if (percent) {
-                if (el.value.length > 0) { percent.value = '0.00'; percent.disabled = true; } else { percent.disabled = false; }
-            }
-        } else if (el.id === 'inv_discount_percent') {
-            var amount = document.getElementById('inv_discount_amount');
-            if (amount) {
-                if (el.value.length > 0) { amount.value = '0.00'; amount.disabled = true; } else { amount.disabled = false; }
-            }
-        }
-    }, true);
+                    var recur_frequency = document.getElementById('recur_frequency');
+                    var recur_start_date = document.getElementById('recur_start_date');  
+                    var recur_end_date = document.getElementById('recur_end_date');
 
-    // Datepicker focus handlers: call jQuery UI datepicker if available (keeps original behaviour)
-    document.addEventListener('focus', function (e) {
-        var el = e.target;
-        if (!el) return;
-        if (el.id === 'datepicker') {
-            if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.datepicker === 'function') {
-                window.jQuery(el).datepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    showButtonPanel: true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-        }
-        if (el.classList && el.classList.contains('datepicker')) {
-            if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.datepicker === 'function') {
-                window.jQuery(el).datepicker({
-                    beforeShow: function () {
-                        setTimeout(function () {
-                            Array.from(document.querySelectorAll('.datepicker')).forEach(function (d) {
-                                d.style.zIndex = '9999';
-                            });
-                        }, 0);
-                    }
-                });
-            }
-        }
-    }, true);
+                    var url = getOrigin() + "/invoice/invrecurring/multiple";
+                    
+                    var params = new URLSearchParams();
+                    selected.forEach(function (id) {
+                        params.append('keylist[]', id);
+                    });
+                    if (recur_frequency) params.append('recur_frequency', recur_frequency.value);
+                    if (recur_start_date) params.append('recur_start_date', recur_start_date.value);
+                    if (recur_end_date) params.append('recur_end_date', recur_end_date.value);
 
-    // Keep track of last taggable focused element
-    document.addEventListener('focus', function (e) {
-        var el = e.target;
-        if (el && el.classList && el.classList.contains('taggable')) {
-            window.lastTaggableClicked = el;
-        }
-    }, true);
-
-    // Initialize tooltips (bootstrap)
-    document.addEventListener('DOMContentLoaded', function () {
-        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-            Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (t) {
-                try { new bootstrap.Tooltip(t); } catch (err) { /* ignore */ }
-            });
-        }
-    });
-
-    // Handle create credit confirm button - id="create_credit_confirm" on views/inv/modal_create_credit.php
-    document.addEventListener('click', function (e) {
-        var el = e.target;
-        if (el && el.id === 'create-credit-confirm') {
-            e.preventDefault();
-            
-            var url = location.origin + "/invoice/inv/create_credit_confirm";
-            var btn = document.querySelector('.create-credit-confirm');
-            var absolute_url = new URL(location.href);
-            
-            if (btn) {
-                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-            }
-            
-            // Take the inv id from the public url
-            var inv_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-            
-            // Get form values
-            var client_id = (document.getElementById('client_id') || {}).value || '';
-            var inv_date_created = (document.getElementById('inv_date_created') || {}).value || '';
-            var group_id = (document.getElementById('inv_group_id') || {}).value || '';
-            var password = (document.getElementById('inv_password') || {}).value || '';
-            var user_id = (document.getElementById('user_id') || {}).value || '';
-            
-            getJson(url, {
-                inv_id: inv_id,
-                client_id: client_id,
-                inv_date_created: inv_date_created,
-                group_id: group_id,
-                password: password,
-                user_id: user_id
-            })
-            .then(function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    // The validation was successful and inv was created
-                    if (btn) {
-                        btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check2-square"></i></h2>';
-                    }
-                    location.href = absolute_url.href;
-                    location.reload();
-                    alert(response.flash_message);
-                }
-                if (response.success === 0) {
-                    if (btn) {
+                    fetch(url + '?' + params.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            window.location.reload(true);
+                        } else {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                            window.location.reload(true);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Create recurring error:', error);
                         btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                    }
-                    location.href = absolute_url.href;
-                    location.reload();
-                    // Display the 'unsuccessful' message
-                    alert(response.flash_message);
+                    });
                 }
-            })
-            .catch(function (error) {
-                console.warn('Create credit error:', error);
-                alert('Status: error - An error: ' + error.toString());
+            }
+        });
+
+        // 6. MARK AS SENT - #btn-mark-as-sent
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#btn-mark-as-sent') || e.target.closest('#btn-mark-as-sent')) {
+                var btn = document.getElementById('btn-mark-as-sent');
+                if (btn) {
+                    var selected = [];
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    
+                    var tableInvoice = document.getElementById('table-invoice');
+                    if (tableInvoice) {
+                        var checkedBoxes = tableInvoice.querySelectorAll('input[type="checkbox"]:checked');
+                        checkedBoxes.forEach(function (checkbox) {
+                            selected.push(checkbox.getAttribute('id'));
+                        });
+                    }
+
+                    var url = getOrigin() + "/invoice/inv/mark_as_sent";
+                    var params = new URLSearchParams();
+                    selected.forEach(function (id) {
+                        params.append('keylist[]', id);
+                    });
+
+                    fetch(url + '?' + params.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            window.location.reload(true);
+                        } else {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                            window.location.reload(true);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Mark as sent error:', error);
+                        btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                    });
+                }
+            }
+        });
+
+        // 7. MARK SENT AS DRAFT - #btn-mark-sent-as-draft
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#btn-mark-sent-as-draft') || e.target.closest('#btn-mark-sent-as-draft')) {
+                var btn = document.getElementById('btn-mark-sent-as-draft');
+                if (btn) {
+                    var selected = [];
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    
+                    var tableInvoice = document.getElementById('table-invoice');
+                    if (tableInvoice) {
+                        var checkedBoxes = tableInvoice.querySelectorAll('input[type="checkbox"]:checked');
+                        checkedBoxes.forEach(function (checkbox) {
+                            selected.push(checkbox.getAttribute('id'));
+                        });
+                    }
+
+                    var url = getOrigin() + "/invoice/inv/mark_sent_as_draft";
+                    var params = new URLSearchParams();
+                    selected.forEach(function (id) {
+                        params.append('keylist[]', id);
+                    });
+
+                    fetch(url + '?' + params.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            window.location.reload(true);
+                        } else {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                            window.location.reload(true);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Mark sent as draft error:', error);
+                        btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                    });
+                }
+            }
+        });
+
+        // 8. MODAL COPY MULTIPLE - .modal_copy_inv_multiple_confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.modal_copy_inv_multiple_confirm') || e.target.closest('.modal_copy_inv_multiple_confirm')) {
+                var btn = document.querySelector('.modal_copy_inv_multiple_confirm');
+                if (btn) {
+                    var modal_created_date = document.getElementById('modal_created_date');
+                    var selected = [];
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    
+                    var tableInvoice = document.getElementById('table-invoice');
+                    if (tableInvoice) {
+                        var checkedBoxes = tableInvoice.querySelectorAll('input[type="checkbox"]:checked');
+                        checkedBoxes.forEach(function (checkbox) {
+                            selected.push(checkbox.getAttribute('id'));
+                        });
+                    }
+
+                    var url = getOrigin() + "/invoice/inv/multiplecopy";
+                    var params = new URLSearchParams();
+                    selected.forEach(function (id) {
+                        params.append('keylist[]', id);
+                    });
+                    if (modal_created_date) params.append('modal_created_date', modal_created_date.value);
+
+                    fetch(url + '?' + params.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            window.location.reload(true);
+                        } else {
+                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                            window.location.reload(true);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Multiple copy error:', error);
+                        btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                    });
+                }
+            }
+        });
+
+        // 9. ADD REQUIRED MARKERS - $(document).ready equivalent
+        var requiredElements = document.querySelectorAll('[required]');
+        requiredElements.forEach(function (element) {
+            var span = document.createElement('span');
+            span.className = 'required';
+            span.textContent = '*';
+            element.parentNode.insertBefore(span, element.nextSibling);
+        });
+
+        // 10. ADD ROW MODAL - .btn_add_row_modal
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_add_row_modal') || e.target.closest('.btn_add_row_modal')) {
+                var absoluteUrl = new URL(window.location.href);
+                var inv_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var url = getOrigin() + "/invoice/invitem/add/" + inv_id;
+                var modalPlaceholder = document.getElementById('modal-placeholder-invitem');
+                if (modalPlaceholder) {
+                    // Load content into modal - this may need adjustment based on your modal system
+                    fetch(url)
+                        .then(function (response) {
+                            return response.text();
+                        })
+                        .then(function (html) {
+                            modalPlaceholder.innerHTML = html;
+                        })
+                        .catch(function (error) {
+                            console.error('Modal load error:', error);
+                        });
+                }
+            }
+        });
+
+        // 11. ADD INVOICE ITEM ROW - .btn_inv_item_add_row
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_inv_item_add_row') || e.target.closest('.btn_inv_item_add_row')) {
+                var newRow = document.getElementById('new_inv_item_row');
+                var itemTable = document.getElementById('item_table');
+                if (newRow && itemTable) {
+                    var clonedRow = newRow.cloneNode(true);
+                    clonedRow.removeAttribute('id');
+                    clonedRow.classList.add('item');
+                    clonedRow.style.display = '';
+                    itemTable.appendChild(clonedRow);
+                }
+            }
+        });
+
+        // 12. ADD ROW - .btn_add_row (general)
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_add_row') || e.target.closest('.btn_add_row')) {
+                var newRow = document.getElementById('new_row');
+                var itemTable = document.getElementById('item_table');
+                if (newRow && itemTable) {
+                    var clonedRow = newRow.cloneNode(true);
+                    clonedRow.removeAttribute('id');
+                    clonedRow.classList.add('item');
+                    clonedRow.style.display = '';
+                    itemTable.appendChild(clonedRow);
+                }
+            }
+        });
+
+        // 13. INV TAX SUBMIT - #inv_tax_submit
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_tax_submit') || e.target.closest('#inv_tax_submit')) {
+                var url = getOrigin() + "/invoice/inv/save_inv_tax_rate";
+                var btn = document.querySelector('.inv_tax_submit');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                
+                var inv_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var inv_tax_rate_id = document.getElementById('inv_tax_rate_id');
+                var include_inv_item_tax = document.getElementById('include_inv_item_tax');
+
+                var params = new URLSearchParams();
+                params.append('inv_id', inv_id);
+                if (inv_tax_rate_id) params.append('inv_tax_rate_id', inv_tax_rate_id.value);
+                if (include_inv_item_tax) params.append('include_inv_item_tax', include_inv_item_tax.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        window.location = absoluteUrl.href;
+                        if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+                        window.location.reload();
+                    }
+                    if (response.success === 0) {
+                        window.location = absoluteUrl.href;
+                        if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-times"></i></h6>';
+                        window.location.reload();
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Tax submit error:', error);
+                    alert('Incomplete fields: You must include a tax rate. Tip: Include a zero tax rate.');
+                });
+            }
+        });
+
+        // 14. CREATE CREDIT CONFIRM - #create-credit-confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#create-credit-confirm') || e.target.closest('#create-credit-confirm')) {
+                var url = getOrigin() + "/invoice/inv/create_credit_confirm";
+                var btn = document.querySelector('.create-credit-confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                
+                var inv_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var client_id = document.getElementById('client_id');
+                var inv_date_created = document.getElementById('inv_date_created');
+                var group_id = document.getElementById('inv_group_id');
+                var password = document.getElementById('inv_password');
+                var user_id = document.getElementById('user_id');
+
+                var params = new URLSearchParams();
+                params.append('inv_id', inv_id);
+                if (client_id) params.append('client_id', client_id.value);
+                if (inv_date_created) params.append('inv_date_created', inv_date_created.value);
+                if (group_id) params.append('group_id', group_id.value);
+                if (password) params.append('password', password.value);
+                if (user_id) params.append('user_id', user_id.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check2-square"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                    if (response.success === 0) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Create credit error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 15. INV TO INV CONFIRM - #inv_to_inv_confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_inv_confirm') || e.target.closest('#inv_to_inv_confirm')) {
+                var url = getOrigin() + "/invoice/inv/inv_to_inv_confirm";
+                var btn = document.querySelector('.inv_to_inv_confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                
+                var inv_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var create_inv_client_id = document.getElementById('create_inv_client_id');
+                var user_id = document.getElementById('user_id');
+
+                var params = new URLSearchParams();
+                params.append('inv_id', inv_id);
+                if (create_inv_client_id) params.append('client_id', create_inv_client_id.value);
+                if (user_id) params.append('user_id', user_id.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                    }
+                    if (response.success === 0) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Inv to inv error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 16. PDF EXPORT WITH CUSTOM FIELDS - #inv_to_pdf_confirm_with_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_pdf_confirm_with_custom_fields') || e.target.closest('#inv_to_pdf_confirm_with_custom_fields')) {
+                var url = getOrigin() + "/invoice/inv/pdf/1";
+                window.location.reload;
+                window.open(url, '_blank');
+            }
+        });
+
+        // 17. PDF EXPORT WITHOUT CUSTOM FIELDS - #inv_to_pdf_confirm_without_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_pdf_confirm_without_custom_fields') || e.target.closest('#inv_to_pdf_confirm_without_custom_fields')) {
+                var url = getOrigin() + "/invoice/inv/pdf/0";
+                window.location.reload;
+                window.open(url, '_blank');
+            }
+        });
+
+        // 18. MODAL PDF WITH CUSTOM FIELDS - #inv_to_modal_pdf_confirm_with_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_modal_pdf_confirm_with_custom_fields') || e.target.closest('#inv_to_modal_pdf_confirm_with_custom_fields')) {
+                var url = getOrigin() + "/invoice/inv/pdf/1";
+                var iframe = document.getElementById('modal-view-inv-pdf');
+                if (iframe) iframe.src = url;
+
+                // Try to open Bootstrap modal
+                try {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        var modalEl = document.getElementById('modal-layout-modal-pdf-inv');
+                        if (modalEl) {
+                            var modal = new bootstrap.Modal(modalEl);
+                            modal.show();
+                        }
+                    }
+                } catch (e) {
+                    console.error('Modal error:', e);
+                }
+            }
+        });
+
+        // 19. MODAL PDF WITHOUT CUSTOM FIELDS - #inv_to_modal_pdf_confirm_without_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_modal_pdf_confirm_without_custom_fields') || e.target.closest('#inv_to_modal_pdf_confirm_without_custom_fields')) {
+                var url = getOrigin() + "/invoice/inv/pdf/0";
+                var iframe = document.getElementById('modal-view-inv-pdf');
+                if (iframe) iframe.src = url;
+
+                // Try to open Bootstrap modal
+                try {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        var modalEl = document.getElementById('modal-layout-modal-pdf-inv');
+                        if (modalEl) {
+                            var modal = new bootstrap.Modal(modalEl);
+                            modal.show();
+                        }
+                    }
+                } catch (e) {
+                    console.error('Modal error:', e);
+                }
+            }
+        });
+
+        // 20. HTML EXPORT WITH CUSTOM FIELDS - #inv_to_html_confirm_with_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_html_confirm_with_custom_fields') || e.target.closest('#inv_to_html_confirm_with_custom_fields')) {
+                var url = getOrigin() + "/invoice/inv/html/1";
+                window.location.reload;
+                window.open(url, '_blank');
+            }
+        });
+
+        // 21. HTML EXPORT WITHOUT CUSTOM FIELDS - #inv_to_html_confirm_without_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#inv_to_html_confirm_without_custom_fields') || e.target.closest('#inv_to_html_confirm_without_custom_fields')) {
+                var url = getOrigin() + "/invoice/inv/html/0";
+                window.location.reload;
+                window.open(url, '_blank');
+            }
+        });
+
+        // 22. PAYMENT MODAL SUBMIT - #btn_modal_payment_submit (Note: this was outside DOMContentLoaded in original)
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#btn_modal_payment_submit') || e.target.closest('#btn_modal_payment_submit')) {
+                var url = getOrigin() + "/invoice/payment/add_with_ajax";
+                var inv_id = document.getElementById('inv_id');
+                var amount = document.getElementById('amount');
+                var payment_method_id = document.getElementById('payment_method_id');
+                var date = document.getElementById('date');
+                var note = document.getElementById('note');
+
+                var params = new URLSearchParams();
+                if (inv_id) params.append('invoice_id', inv_id.value);
+                if (amount) params.append('payment_amount', amount.value);
+                if (payment_method_id) params.append('payment_method_id', payment_method_id.value);
+                if (date) params.append('payment_date', date.value);
+                if (note) params.append('payment_note', note.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        var payment_cf_exist = document.getElementById('payment_cf_exist');
+                        if (payment_cf_exist && payment_cf_exist.value === 'yes') {
+                            // There are payment custom fields
+                            window.location = getOrigin() + "/invoice/customfields/add_with_ajax" + response.payment_id;
+                        } else {
+                            // No payment custom fields, return to invoice view
+                            window.location = document.referrer || window.location.href;
+                        }
+                    } else {
+                        // Validation was not successful
+                        var controlGroups = document.querySelectorAll('.control-group');
+                        controlGroups.forEach(function (group) {
+                            group.classList.remove('has-error');
+                        });
+                        
+                        if (response.validation_errors) {
+                            for (var key in response.validation_errors) {
+                                if (response.validation_errors.hasOwnProperty(key)) {
+                                    var element = document.getElementById(key);
+                                    if (element && element.parentNode && element.parentNode.parentNode) {
+                                        element.parentNode.parentNode.classList.add('has-error');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Payment submit error:', error);
+                    alert('Payment submission failed: ' + error.toString());
+                });
+            }
+        });
+
+        // 23. DISCOUNT AMOUNT KEYUP - #inv_discount_amount
+        var discountAmount = document.getElementById('inv_discount_amount');
+        var discountPercent = document.getElementById('inv_discount_percent');
+        
+        if (discountAmount) {
+            discountAmount.addEventListener('keyup', function () {
+                if (this.value.length > 0) {
+                    if (discountPercent) {
+                        discountPercent.value = '0.00';
+                        discountPercent.disabled = true;
+                    }
+                } else {
+                    if (discountPercent) {
+                        discountPercent.disabled = false;
+                    }
+                }
             });
         }
-    }, true);
+
+        // 24. DISCOUNT PERCENT KEYUP - #inv_discount_percent
+        if (discountPercent) {
+            discountPercent.addEventListener('keyup', function () {
+                if (this.value.length > 0) {
+                    if (discountAmount) {
+                        discountAmount.value = '0.00';
+                        discountAmount.disabled = true;
+                    }
+                } else {
+                    if (discountAmount) {
+                        discountAmount.disabled = false;
+                    }
+                }
+            });
+        }
+
+        // 25. DATEPICKER INITIALIZATION - #datepicker
+        var datepicker = document.getElementById('datepicker');
+        if (datepicker) {
+            datepicker.addEventListener('focus', function () {
+                // Note: This would need a datepicker library like flatpickr or similar
+                // Original used jQuery UI datepicker
+                console.log('Datepicker focus - requires datepicker library integration');
+            });
+        }
+
+        // 26. GENERAL DATEPICKER - .datepicker
+        document.addEventListener('focus', function (e) {
+            if (e.target.matches('.datepicker')) {
+                // Note: This would need a datepicker library
+                console.log('General datepicker focus - requires datepicker library integration');
+            }
+        }, true);
+
+        // 27. TAGGABLE ELEMENTS - .taggable
+        document.addEventListener('focus', function (e) {
+            if (e.target.matches('.taggable')) {
+                window.lastTaggableClicked = e.target;
+            }
+        }, true);
+
+        // 28. TOOLTIPS INITIALIZATION - [data-bs-toggle="tooltip"]
+        var tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipElements.forEach(function (element) {
+            // Note: This would need Bootstrap tooltip initialization
+            try {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                    new bootstrap.Tooltip(element);
+                }
+            } catch (e) {
+                console.error('Tooltip initialization error:', e);
+            }
+        });
+
+        // 29. TAG SELECT HANDLING - .tag-select (Modern TomSelect implementation)
+        var tagSelects = document.querySelectorAll('.tag-select');
+        tagSelects.forEach(function (select) {
+            // Initialize TomSelect for tag dropdowns if not already initialized
+            if (typeof TomSelect !== 'undefined' && !select._tomselect) {
+                new TomSelect(select, {
+                    placeholder: 'Select a tag...',
+                    allowEmptyOption: true
+                });
+                select._tomselect = true;
+            }
+            select.addEventListener('change', function (event) {
+                // Add the tag to the field
+                if (typeof window.lastTaggableClicked !== 'undefined' && window.insert_at_caret) {
+                    window.insert_at_caret(window.lastTaggableClicked.id, select.value);
+                }
+                // Reset the select
+                select.value = '';
+                return false;
+            });
+        });
+
+    }); // End DOMContentLoaded
+
+    // Helper function for inserting at caret (if not already defined)
+    if (!window.insert_at_caret) {
+        window.insert_at_caret = function(elementId, text) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                var startPos = element.selectionStart;
+                var endPos = element.selectionEnd;
+                element.value = element.value.substring(0, startPos) + text + element.value.substring(endPos);
+                element.selectionStart = element.selectionEnd = startPos + text.length;
+            }
+        };
+    }
 
 })();

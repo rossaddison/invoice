@@ -41,7 +41,7 @@ export class ProductHandler {
     private handleClick(event: Event): void {
         const target = event.target as HTMLElement;
         const trigger = target.closest('#product_filters_submit');
-        
+
         if (trigger) {
             this.submitProductFilters(event);
         }
@@ -57,19 +57,19 @@ export class ProductHandler {
         const input = inputEl.value || '';
         const filter = input.toUpperCase();
         const table = document.getElementById('table-product') as HTMLTableElement;
-        
+
         if (!table) return;
-        
+
         const rows = table.getElementsByTagName('tr');
 
         // Loop through all table rows, and hide those who don't match the search query
         for (let i = 0; i < rows.length; i++) {
             // product_sku is 3rd column or index 2
             const cell = rows[i].getElementsByTagName('td')[2] as HTMLTableCellElement;
-            
+
             if (cell) {
                 const textValue = cell.textContent || cell.innerText || '';
-                
+
                 if (textValue.toUpperCase().indexOf(filter) > -1) {
                     (rows[i] as HTMLTableRowElement).style.display = '';
                 } else {
@@ -88,17 +88,21 @@ export class ProductHandler {
         }
 
         const url = `${location.origin}/invoice/product/search`;
-        const buttons = document.querySelectorAll('.product_filters_submit') as NodeListOf<HTMLElement>;
-        
+        const buttons = document.querySelectorAll(
+            '.product_filters_submit'
+        ) as NodeListOf<HTMLElement>;
+
         // Show spinner on all matching buttons
         setButtonLoading(buttons, true);
 
         try {
-            const productSkuInput = document.getElementById('filter_product_sku') as HTMLInputElement;
+            const productSkuInput = document.getElementById(
+                'filter_product_sku'
+            ) as HTMLInputElement;
             const productSku = productSkuInput?.value || '';
-            
+
             const payload: ProductSearchData = {
-                product_sku: productSku
+                product_sku: productSku,
             };
 
             const response = await getJson<ProductSearchResponse>(url, payload);

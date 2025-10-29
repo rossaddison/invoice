@@ -43,7 +43,8 @@ function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?
         button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
         (button as HTMLButtonElement).disabled = true;
     } else {
-        button.innerHTML = originalHtml || '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+        button.innerHTML =
+            originalHtml || '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
         (button as HTMLButtonElement).disabled = false;
     }
 }
@@ -58,23 +59,23 @@ export class QuoteHandler {
     private bindEventListeners(): void {
         // Main click handler with delegation
         document.addEventListener('click', this.handleClick.bind(this), true);
-        
+
         // Input handlers
         document.addEventListener('input', this.handleInput.bind(this), true);
-        
+
         // Focus handlers
         document.addEventListener('focus', this.handleFocus.bind(this), true);
-        
+
         // Client note save handler
         document.addEventListener('click', this.handleClientNoteSave.bind(this), true);
-        
+
         // Quote tax submit handler
         document.addEventListener('click', this.handleQuoteTaxSubmit.bind(this), true);
     }
 
     private handleClick(event: Event): void {
         const target = event.target as HTMLElement;
-        
+
         // Delete single item
         const deleteBtn = target.closest('.btn_delete_item') as HTMLElement;
         if (deleteBtn) {
@@ -118,21 +119,27 @@ export class QuoteHandler {
         }
 
         // Quote create confirm
-        const createConfirm = target.closest('#quote_create_confirm, .quote_create_confirm') as HTMLElement;
+        const createConfirm = target.closest(
+            '#quote_create_confirm, .quote_create_confirm'
+        ) as HTMLElement;
         if (createConfirm) {
             this.handleQuoteCreateConfirm();
             return;
         }
 
         // Quote with purchase order confirm
-        const poConfirm = target.closest('#quote_with_purchase_order_number_confirm, .quote_with_purchase_order_number_confirm') as HTMLElement;
+        const poConfirm = target.closest(
+            '#quote_with_purchase_order_number_confirm, .quote_with_purchase_order_number_confirm'
+        ) as HTMLElement;
         if (poConfirm) {
             this.handleQuotePurchaseOrderConfirm(poConfirm);
             return;
         }
 
         // Quote to invoice confirm
-        const toInvoice = target.closest('#quote_to_invoice_confirm, .quote_to_invoice_confirm') as HTMLElement;
+        const toInvoice = target.closest(
+            '#quote_to_invoice_confirm, .quote_to_invoice_confirm'
+        ) as HTMLElement;
         if (toInvoice) {
             this.handleQuoteToInvoiceConfirm(toInvoice);
             return;
@@ -146,7 +153,9 @@ export class QuoteHandler {
         }
 
         // Quote to quote confirm (copy)
-        const toQuote = target.closest('#quote_to_quote_confirm, .quote_to_quote_confirm') as HTMLElement;
+        const toQuote = target.closest(
+            '#quote_to_quote_confirm, .quote_to_quote_confirm'
+        ) as HTMLElement;
         if (toQuote) {
             this.handleQuoteToQuoteConfirm(toQuote);
             return;
@@ -158,7 +167,7 @@ export class QuoteHandler {
 
     private async handleDeleteItem(deleteBtn: HTMLElement): Promise<void> {
         const id = deleteBtn.getAttribute('data-id');
-        
+
         if (!id) {
             // Remove from DOM if no ID
             const parentItem = deleteBtn.closest('.item') as HTMLElement;
@@ -175,7 +184,7 @@ export class QuoteHandler {
                 location.reload();
                 const parentItem = deleteBtn.closest('.item') as HTMLElement;
                 parentItem?.remove();
-                alert("Deleted");
+                alert('Deleted');
             } else {
                 console.warn('delete_item failed', data);
             }
@@ -190,12 +199,16 @@ export class QuoteHandler {
         setButtonLoading(delMulti, true);
 
         try {
-            const itemCheckboxes = document.querySelectorAll("input[name='item_ids[]']:checked") as NodeListOf<HTMLInputElement>;
+            const itemCheckboxes = document.querySelectorAll(
+                "input[name='item_ids[]']:checked"
+            ) as NodeListOf<HTMLInputElement>;
             const item_ids = Array.from(itemCheckboxes)
                 .map(input => parseInt(input.value, 10))
                 .filter(Boolean);
 
-            const response = await getJson<ApiResponse>('/invoice/quoteitem/multiple', { item_ids });
+            const response = await getJson<ApiResponse>('/invoice/quoteitem/multiple', {
+                item_ids,
+            });
             const data = parsedata(response);
 
             if (data.success === 1) {
@@ -216,11 +229,12 @@ export class QuoteHandler {
         const quoteId = getQuoteIdFromUrl();
         const url = `${location.origin}/invoice/quoteitem/add/${encodeURIComponent(quoteId)}`;
         const placeholder = document.getElementById('modal-placeholder-quoteitem');
-        
+
         if (!placeholder) return;
 
         try {
-            placeholder.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+            placeholder.innerHTML =
+                '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
             placeholder.innerHTML = html;
@@ -232,7 +246,7 @@ export class QuoteHandler {
     private handleAddQuoteItemRow(): void {
         const template = document.getElementById('new_quote_item_row') as HTMLElement;
         const table = document.getElementById('item_table') as HTMLElement;
-        
+
         if (template && table) {
             const clone = template.cloneNode(true) as HTMLElement;
             clone.removeAttribute('id');
@@ -245,7 +259,7 @@ export class QuoteHandler {
     private handleAddGenericRow(): void {
         const template = document.getElementById('new_row') as HTMLElement;
         const table = document.getElementById('item_table') as HTMLElement;
-        
+
         if (template && table) {
             const clone = template.cloneNode(true) as HTMLElement;
             clone.removeAttribute('id');
@@ -258,11 +272,12 @@ export class QuoteHandler {
     private async handleAddClientModal(): Promise<void> {
         const url = `${location.origin}/invoice/add-a-client`;
         const placeholder = document.getElementById('modal-placeholder-client');
-        
+
         if (!placeholder) return;
 
         try {
-            placeholder.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+            placeholder.innerHTML =
+                '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
             placeholder.innerHTML = html;
@@ -275,7 +290,7 @@ export class QuoteHandler {
         const url = `${location.origin}/invoice/quote/create_confirm`;
         const btn = document.querySelector('.quote_create_confirm') as HTMLElement;
         const originalHtml = btn?.innerHTML || '';
-        
+
         if (btn) {
             setButtonLoading(btn, true);
         }
@@ -284,7 +299,7 @@ export class QuoteHandler {
             const payload: QuoteFormData = {
                 client_id: getFieldValue('create_quote_client_id'),
                 quote_group_id: getFieldValue('quote_group_id'),
-                quote_password: getFieldValue('quote_password')
+                quote_password: getFieldValue('quote_password'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -312,8 +327,10 @@ export class QuoteHandler {
 
     private async handleQuotePurchaseOrderConfirm(poConfirm: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/quote/approve`;
-        const btn = document.querySelector('.quote_with_purchase_order_number_confirm') as HTMLElement || poConfirm;
-        
+        const btn =
+            (document.querySelector('.quote_with_purchase_order_number_confirm') as HTMLElement) ||
+            poConfirm;
+
         if (btn) {
             setButtonLoading(btn, true);
         }
@@ -322,7 +339,7 @@ export class QuoteHandler {
             const payload: QuoteFormData = {
                 url_key: getFieldValue('url_key'),
                 client_po_number: getFieldValue('quote_with_purchase_order_number'),
-                client_po_person: getFieldValue('quote_with_purchase_order_person')
+                client_po_person: getFieldValue('quote_with_purchase_order_person'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -345,9 +362,10 @@ export class QuoteHandler {
 
     private async handleQuoteToInvoiceConfirm(toInvoice: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/quote/quote_to_invoice_confirm`;
-        const btn = document.querySelector('.quote_to_invoice_confirm') as HTMLElement || toInvoice;
+        const btn =
+            (document.querySelector('.quote_to_invoice_confirm') as HTMLElement) || toInvoice;
         const originalHtml = btn?.innerHTML || '';
-        
+
         if (btn) {
             setButtonLoading(btn, true);
         }
@@ -358,7 +376,7 @@ export class QuoteHandler {
                 quote_id: quoteId,
                 client_id: getFieldValue('client_id'),
                 group_id: getFieldValue('group_id'),
-                password: getFieldValue('password')
+                password: getFieldValue('password'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -380,9 +398,9 @@ export class QuoteHandler {
 
     private async handleQuoteToSalesOrderConfirm(toSo: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/quote/quote_to_so_confirm`;
-        const btn = document.querySelector('.quote_to_so_confirm') as HTMLElement || toSo;
+        const btn = (document.querySelector('.quote_to_so_confirm') as HTMLElement) || toSo;
         const originalHtml = btn?.innerHTML || '';
-        
+
         if (btn) {
             setButtonLoading(btn, true);
         }
@@ -395,7 +413,7 @@ export class QuoteHandler {
                 group_id: getFieldValue('so_group_id'),
                 po_number: getFieldValue('po_number'),
                 po_person: getFieldValue('po_person'),
-                password: getFieldValue('password')
+                password: getFieldValue('password'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -417,9 +435,9 @@ export class QuoteHandler {
 
     private async handleQuoteToQuoteConfirm(toQuote: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/quote/quote_to_quote_confirm`;
-        const btn = document.querySelector('.quote_to_quote_confirm') as HTMLElement || toQuote;
+        const btn = (document.querySelector('.quote_to_quote_confirm') as HTMLElement) || toQuote;
         const originalHtml = btn?.innerHTML || '';
-        
+
         if (btn) {
             setButtonLoading(btn, true);
         }
@@ -429,7 +447,7 @@ export class QuoteHandler {
             const payload: QuoteFormData = {
                 quote_id: quoteId,
                 client_id: getFieldValue('create_quote_client_id'),
-                user_id: getFieldValue('user_id')
+                user_id: getFieldValue('user_id'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -474,11 +492,11 @@ export class QuoteHandler {
 
         const url = `${location.origin}/invoice/client/save_client_note`;
         const loadUrl = `${location.origin}/invoice/client/load_client_notes`;
-        
+
         try {
             const payload: ClientNoteData = {
                 client_id: getFieldValue('client_id'),
-                client_note: getFieldValue('client_note')
+                client_note: getFieldValue('client_note'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -498,9 +516,9 @@ export class QuoteHandler {
                 const notesList = document.getElementById('notes_list');
                 if (notesList) {
                     const loadUrlWithParams = `${loadUrl}?client_id=${encodeURIComponent(payload.client_id)}`;
-                    const notesResponse = await fetch(loadUrlWithParams, { 
-                        cache: 'no-store', 
-                        credentials: 'same-origin' 
+                    const notesResponse = await fetch(loadUrlWithParams, {
+                        cache: 'no-store',
+                        credentials: 'same-origin',
                     });
                     const html = await notesResponse.text();
                     notesList.innerHTML = html;
@@ -510,7 +528,7 @@ export class QuoteHandler {
                 document.querySelectorAll('.control-group').forEach(group => {
                     group.classList.remove('error');
                 });
-                
+
                 if (data.validation_errors) {
                     Object.keys(data.validation_errors).forEach(key => {
                         const elm = document.getElementById(key);
@@ -532,8 +550,9 @@ export class QuoteHandler {
         if (!submit) return;
 
         const url = `${location.origin}/invoice/quote/save_quote_tax_rate`;
-        const btn = document.querySelector('.quote_tax_submit') as HTMLElement || (submit as HTMLElement);
-        
+        const btn =
+            (document.querySelector('.quote_tax_submit') as HTMLElement) || (submit as HTMLElement);
+
         if (btn) {
             setButtonLoading(btn, true);
         }
@@ -543,7 +562,7 @@ export class QuoteHandler {
             const payload: QuoteFormData = {
                 quote_id: quoteId,
                 tax_rate_id: getFieldValue('tax_rate_id'),
-                include_item_tax: getFieldValue('include_item_tax')
+                include_item_tax: getFieldValue('include_item_tax'),
             };
 
             const response = await getJson<ApiResponse>(url, payload);
@@ -614,17 +633,17 @@ export class QuoteHandler {
                     changeMonth: true,
                     changeYear: true,
                     showButtonPanel: true,
-                    dateFormat: 'dd-mm-yy'
+                    dateFormat: 'dd-mm-yy',
                 });
             } else {
                 (window as any).jQuery(element).datepicker({
                     beforeShow: () => {
                         setTimeout(() => {
-                            document.querySelectorAll('.datepicker').forEach((d) => {
+                            document.querySelectorAll('.datepicker').forEach(d => {
                                 (d as HTMLElement).style.zIndex = '9999';
                             });
                         }, 0);
-                    }
+                    },
                 });
             }
         }
@@ -650,15 +669,15 @@ export class QuoteHandler {
     }
 
     private initializeTagSelect(): void {
-        document.querySelectorAll('.tag-select').forEach((select) => {
+        document.querySelectorAll('.tag-select').forEach(select => {
             const selectElement = select as HTMLSelectElement;
-            selectElement.addEventListener('change', (event) => {
+            selectElement.addEventListener('change', event => {
                 const currentTarget = event.currentTarget as HTMLSelectElement;
-                
+
                 if ((window as any).lastTaggableClicked) {
                     this.insertAtCaret((window as any).lastTaggableClicked.id, currentTarget.value);
                 }
-                
+
                 // Reset select value
                 if ((currentTarget as any)._tomselect?.clear) {
                     (currentTarget as any)._tomselect.clear();
@@ -671,7 +690,7 @@ export class QuoteHandler {
                 } else {
                     currentTarget.value = '';
                 }
-                
+
                 event.preventDefault();
                 return false;
             });
@@ -679,13 +698,15 @@ export class QuoteHandler {
     }
 
     private insertAtCaret(elementId: string, text: string): void {
-        const element = document.getElementById(elementId) as HTMLInputElement | HTMLTextAreaElement;
+        const element = document.getElementById(elementId) as
+            | HTMLInputElement
+            | HTMLTextAreaElement;
         if (!element) return;
 
         const startPos = element.selectionStart || 0;
         const endPos = element.selectionEnd || 0;
         const value = element.value;
-        
+
         element.value = value.substring(0, startPos) + text + value.substring(endPos);
         element.setSelectionRange(startPos + text.length, startPos + text.length);
         element.focus();

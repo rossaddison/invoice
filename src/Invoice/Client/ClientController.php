@@ -711,6 +711,35 @@ final class ClientController extends BaseController
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
+    public function delete_client_note(Request $request, cnR $cnR, cnS $cnS): \Yiisoft\DataResponse\DataResponse
+    {
+        $body = $request->getQueryParams();
+        /**
+         * @var string $body['note_id']
+         */
+        $note_id = $body['note_id'] ?? '';
+
+        if (empty($note_id)) {
+            return $this->factory->createResponse(Json::encode([
+                'success' => 0,
+                'message' => 'Note ID is required',
+            ]));
+        }
+
+        $clientNote = $cnR->repoClientNotequery($note_id);
+        if ($clientNote) {
+            $cnS->deleteClientNote($clientNote);
+            return $this->factory->createResponse(Json::encode([
+                'success' => 1,
+            ]));
+        } else {
+            return $this->factory->createResponse(Json::encode([
+                'success' => 0,
+                'message' => 'Note not found',
+            ]));
+        }
+    }
+
     /**
      * @return array
      */

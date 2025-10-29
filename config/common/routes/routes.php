@@ -468,6 +468,10 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
                 ->action([ClientController::class, 'save_client_note_new'])
                 ->name('client/save_client_note_new'),
+            Route::methods([Method::GET, Method::POST], '/client/delete_client_note')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+                ->action([ClientController::class, 'delete_client_note'])
+                ->name('client/delete_client_note'),
             Route::methods([Method::GET, Method::POST], '/client/view/{id}[/page/{page:\d+}[/status/{status}]]')
                 ->name('client/view')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))

@@ -19,6 +19,20 @@
         });
     }
 
+    function initTagSelects(root) {
+        if (typeof TomSelect === 'undefined') return;
+        (root || document).querySelectorAll('.tag-select').forEach(function (el) {
+            if (!el._tomselect) {
+                // eslint-disable-next-line no-new
+                new TomSelect(el, {
+                    placeholder: 'Select a tag...',
+                    allowEmptyOption: true
+                });
+                el._tomselect = true;
+            }
+        });
+    }
+
     // Loader helpers (simple show/hide with a fallback to the original UX)
     function showFullpageLoader() {
         var loader = document.getElementById('fullpage-loader');
@@ -108,6 +122,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         initTooltips();
         initSimpleSelects();
+        initTagSelects();
         initPasswordMeters();
         // ensure initial loader state is hidden
         hideFullpageLoader();
@@ -118,7 +133,14 @@
         // run init synchronously
         initTooltips();
         initSimpleSelects();
+        initTagSelects();
         initPasswordMeters();
     }
+
+    // Make functions globally available for other scripts
+    window.initSimpleSelects = initSimpleSelects;
+    window.initTagSelects = initTagSelects;
+    window.showFullpageLoader = showFullpageLoader;
+    window.hideFullpageLoader = hideFullpageLoader;
 
 })();

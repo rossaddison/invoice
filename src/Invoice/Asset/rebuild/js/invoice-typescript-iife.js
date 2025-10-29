@@ -1,1 +1,2376 @@
-"use strict";var InvoiceApp=(()=>{var A=Object.defineProperty;var D=Object.getOwnPropertyDescriptor;var O=Object.getOwnPropertyNames;var $=Object.prototype.hasOwnProperty;var N=(s,n)=>{for(var e in n)A(s,e,{get:n[e],enumerable:!0})},U=(s,n,e,t)=>{if(n&&typeof n=="object"||typeof n=="function")for(let o of O(n))!$.call(s,o)&&o!==e&&A(s,o,{get:()=>n[o],enumerable:!(t=D(n,o))||t.enumerable});return s};var Q=s=>U(A({},"__esModule",{value:!0}),s);var j={};N(j,{InvoiceApp:()=>w});function l(s){if(!s)return{};if(typeof s=="object"&&s!==null)return s;if(typeof s=="string")try{return JSON.parse(s)}catch{return{}}return{}}async function u(s,n,e={}){let t=s;if(n){let a=new URLSearchParams;Object.entries(n).forEach(([d,m])=>{Array.isArray(m)?m.forEach(h=>{h!=null&&a.append(`${d}[]`,String(h))}):m!=null&&a.append(d,String(m))});let c=s.includes("?")?"&":"?";t=`${s}${c}${a.toString()}`}let o={method:"GET",credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json"},...e},i=await fetch(t,o);if(!i.ok)throw new Error(`Network response not ok: ${i.status}`);let r=await i.text();try{return JSON.parse(r)}catch{return r}}function T(s,n){try{if(!s)return null;if(typeof s.closest=="function")return s.closest(n);let e=s;for(;e;){if(e.matches&&e.matches(n))return e;e=e.parentElement}}catch(e){return console.warn("closestSafe error:",e),null}return null}function z(s){return document.getElementById(s)}function B(s){return document.querySelector(s)}function y(s){return z(s)?.value||""}var H=class{constructor(){this.confirmButtonSelector=".create-credit-confirm";this.initialize()}initialize(){document.addEventListener("click",this.handleClick.bind(this),!0)}async handleClick(n){let e=n.target;if(!(!e||e.id!=="create-credit-confirm")){n.preventDefault();try{await this.processCreateCredit()}catch(t){console.error("Create credit error:",t),alert(`Error: ${t instanceof Error?t.message:"Unknown error"}`)}}}async processCreateCredit(){let n=`${location.origin}/invoice/inv/create_credit_confirm`,e=B(this.confirmButtonSelector),t=new URL(location.href);e&&(e.innerHTML='<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>');let i={inv_id:t.href.substring(t.href.lastIndexOf("/")+1),client_id:y("client_id"),inv_date_created:y("inv_date_created"),group_id:y("inv_group_id"),password:y("inv_password"),user_id:y("user_id")},r=await u(n,i),a=l(r);a.success===1?(e&&(e.innerHTML='<h2 class="text-center"><i class="bi bi-check2-square"></i></h2>'),a.flash_message&&alert(a.flash_message),location.href=t.href,location.reload()):(e&&(e.innerHTML='<h2 class="text-center"><i class="fa fa-times"></i></h2>'),a.flash_message&&alert(a.flash_message),location.href=t.href,location.reload())}};function E(){let s=new URL(location.href);return s.href.substring(s.href.lastIndexOf("/")+1)}function f(s){return document.getElementById(s)?.value||""}function p(s,n,e){n?(s.innerHTML='<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>',s.disabled=!0):(s.innerHTML=e||'<h6 class="text-center"><i class="fa fa-check"></i></h6>',s.disabled=!1)}var S=class{constructor(){this.bindEventListeners(),this.initializeComponents()}bindEventListeners(){document.addEventListener("click",this.handleClick.bind(this),!0),document.addEventListener("input",this.handleInput.bind(this),!0),document.addEventListener("focus",this.handleFocus.bind(this),!0),document.addEventListener("click",this.handleClientNoteSave.bind(this),!0),document.addEventListener("click",this.handleQuoteTaxSubmit.bind(this),!0)}handleClick(n){let e=n.target,t=e.closest(".btn_delete_item");if(t){this.handleDeleteItem(t);return}let o=e.closest(".delete-items-confirm-quote");if(o){this.handleDeleteMultipleItems(o);return}if(e.closest(".btn_add_row_modal")){this.handleAddRowModal();return}if(e.closest(".btn_quote_item_add_row")){this.handleAddQuoteItemRow();return}if(e.closest(".btn_add_row")){this.handleAddGenericRow();return}if(e.closest(".quote_add_client")){this.handleAddClientModal();return}if(e.closest("#quote_create_confirm, .quote_create_confirm")){this.handleQuoteCreateConfirm();return}let m=e.closest("#quote_with_purchase_order_number_confirm, .quote_with_purchase_order_number_confirm");if(m){this.handleQuotePurchaseOrderConfirm(m);return}let h=e.closest("#quote_to_invoice_confirm, .quote_to_invoice_confirm");if(h){this.handleQuoteToInvoiceConfirm(h);return}let _=e.closest("#quote_to_so_confirm, .quote_to_so_confirm");if(_){this.handleQuoteToSalesOrderConfirm(_);return}let g=e.closest("#quote_to_quote_confirm, .quote_to_quote_confirm");if(g){this.handleQuoteToQuoteConfirm(g);return}this.handlePdfGeneration(e)}async handleDeleteItem(n){let e=n.getAttribute("data-id");if(!e){n.closest(".item")?.remove();return}try{let t=`${location.origin}/invoice/quote/delete_item/${encodeURIComponent(e)}`,o=await u(t,{id:e}),i=l(o);i.success===1?(location.reload(),n.closest(".item")?.remove(),alert("Deleted")):console.warn("delete_item failed",i)}catch(t){console.error("delete_item error",t),alert("An error occurred while deleting item. See console for details.")}}async handleDeleteMultipleItems(n){let e=n.innerHTML;p(n,!0);try{let t=document.querySelectorAll("input[name='item_ids[]']:checked"),o=Array.from(t).map(a=>parseInt(a.value,10)).filter(Boolean),i=await u("/invoice/quoteitem/multiple",{item_ids:o}),r=l(i);r.success===1?(n.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>',location.reload()):(console.warn("quoteitem/multiple failed",r),p(n,!1,e))}catch(t){console.error("quoteitem/multiple error",t),p(n,!1,e),alert("An error occurred while deleting items. See console for details.")}}async handleAddRowModal(){let n=E(),e=`${location.origin}/invoice/quoteitem/add/${encodeURIComponent(n)}`,t=document.getElementById("modal-placeholder-quoteitem");if(t)try{t.innerHTML='<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';let i=await(await fetch(e,{cache:"no-store",credentials:"same-origin"})).text();t.innerHTML=i}catch(o){console.error("Failed to load quoteitem modal",o)}}handleAddQuoteItemRow(){let n=document.getElementById("new_quote_item_row"),e=document.getElementById("item_table");if(n&&e){let t=n.cloneNode(!0);t.removeAttribute("id"),t.classList.add("item"),t.style.display="",e.appendChild(t)}}handleAddGenericRow(){let n=document.getElementById("new_row"),e=document.getElementById("item_table");if(n&&e){let t=n.cloneNode(!0);t.removeAttribute("id"),t.classList.add("item"),t.style.display="",e.appendChild(t)}}async handleAddClientModal(){let n=`${location.origin}/invoice/add-a-client`,e=document.getElementById("modal-placeholder-client");if(e)try{e.innerHTML='<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';let o=await(await fetch(n,{cache:"no-store",credentials:"same-origin"})).text();e.innerHTML=o}catch(t){console.error("Failed to load add-a-client modal",t)}}async handleQuoteCreateConfirm(){let n=`${location.origin}/invoice/quote/create_confirm`,e=document.querySelector(".quote_create_confirm"),t=e?.innerHTML||"";e&&p(e,!0);try{let o={client_id:f("create_quote_client_id"),quote_group_id:f("quote_group_id"),quote_password:f("quote_password")},i=await u(n,o),r=l(i),a=new URL(location.href);r.success===1?(e&&(e.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.href=a.href,window.location.reload()):r.success===0&&(e&&(e.innerHTML='<h6 class="text-center"><i class="fa fa-check"></i></h6>'),window.location.href=a.href,window.location.reload(),r.message&&alert(r.message))}catch(o){console.error("create_confirm error",o),e&&p(e,!1,t),alert("An error occurred while creating quote. See console for details.")}}async handleQuotePurchaseOrderConfirm(n){let e=`${location.origin}/invoice/quote/approve`,t=document.querySelector(".quote_with_purchase_order_number_confirm")||n;t&&p(t,!0);try{let o={url_key:f("url_key"),client_po_number:f("quote_with_purchase_order_number"),client_po_person:f("quote_with_purchase_order_person")},i=await u(e,o),r=l(i),a=new URL(location.href);r.success===1&&(t&&(t.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.href=a.href,window.location.reload())}catch(o){console.error("approve error",o),t&&p(t,!1),alert("An error occurred while approving quote. See console for details.")}}async handleQuoteToInvoiceConfirm(n){let e=`${location.origin}/invoice/quote/quote_to_invoice_confirm`,t=document.querySelector(".quote_to_invoice_confirm")||n,o=t?.innerHTML||"";t&&p(t,!0);try{let r={quote_id:E(),client_id:f("client_id"),group_id:f("group_id"),password:f("password")},a=await u(e,r),c=l(a),d=new URL(location.href);t&&(t.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.href=d.href,window.location.reload(),c.flash_message&&alert(c.flash_message)}catch(i){console.error("quote_to_invoice_confirm error",i),t&&p(t,!1,o),alert("An error occurred while converting quote to invoice. See console for details.")}}async handleQuoteToSalesOrderConfirm(n){let e=`${location.origin}/invoice/quote/quote_to_so_confirm`,t=document.querySelector(".quote_to_so_confirm")||n,o=t?.innerHTML||"";t&&p(t,!0);try{let r={quote_id:E(),client_id:f("client_id"),group_id:f("so_group_id"),po_number:f("po_number"),po_person:f("po_person"),password:f("password")},a=await u(e,r),c=l(a),d=new URL(location.href);t&&(t.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.href=d.href,window.location.reload(),c.flash_message&&alert(c.flash_message)}catch(i){console.error("quote_to_so_confirm error",i),t&&p(t,!1,o),alert("An error occurred while converting quote to SO. See console for details.")}}async handleQuoteToQuoteConfirm(n){let e=`${location.origin}/invoice/quote/quote_to_quote_confirm`,t=document.querySelector(".quote_to_quote_confirm")||n,o=t?.innerHTML||"";t&&p(t,!0);try{let r={quote_id:E(),client_id:f("create_quote_client_id"),user_id:f("user_id")},a=await u(e,r),c=l(a),d=new URL(location.href);c.success===1&&(t&&(t.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.href=d.href,window.location.reload(),c.flash_message&&alert(c.flash_message))}catch(i){console.error("quote_to_quote_confirm error",i),t&&p(t,!1,o),alert("An error occurred while copying quote. See console for details.")}}handlePdfGeneration(n){if(n.closest("#quote_to_pdf_confirm_with_custom_fields")){let e=`${location.origin}/invoice/quote/pdf/1`;window.open(e,"_blank");return}if(n.closest("#quote_to_pdf_confirm_without_custom_fields")){let e=`${location.origin}/invoice/quote/pdf/0`;window.open(e,"_blank");return}}async handleClientNoteSave(n){if(!n.target.closest("#save_client_note"))return;let o=`${location.origin}/invoice/client/save_client_note`,i=`${location.origin}/invoice/client/load_client_notes`;try{let r={client_id:f("client_id"),client_note:f("client_note")},a=await u(o,r),c=l(a);if(c.success===1){document.querySelectorAll(".control-group").forEach(h=>{h.classList.remove("error")});let d=document.getElementById("client_note");d&&(d.value="");let m=document.getElementById("notes_list");if(m){let h=`${i}?client_id=${encodeURIComponent(r.client_id)}`,g=await(await fetch(h,{cache:"no-store",credentials:"same-origin"})).text();m.innerHTML=g}}else document.querySelectorAll(".control-group").forEach(d=>{d.classList.remove("error")}),c.validation_errors&&Object.keys(c.validation_errors).forEach(d=>{let m=document.getElementById(d);m?.parentElement&&m.parentElement.classList.add("has-error")})}catch(r){console.error("save_client_note error",r),alert("Status: error An error occurred")}}async handleQuoteTaxSubmit(n){let t=n.target.closest("#quote_tax_submit");if(!t)return;let o=`${location.origin}/invoice/quote/save_quote_tax_rate`,i=document.querySelector(".quote_tax_submit")||t;i&&p(i,!0);try{let a={quote_id:E(),tax_rate_id:f("tax_rate_id"),include_item_tax:f("include_item_tax")},c=await u(o,a),d=l(c),m=new URL(location.href);window.location.href=m.href,window.location.reload(),d.flash_message&&alert(d.flash_message)}catch(r){console.error("save_quote_tax_rate error",r),alert("An error occurred while saving quote tax rate. See console for details.")}}handleInput(n){let e=n.target;if(e.id==="quote_discount_amount"){let t=document.getElementById("quote_discount_percent");e.value.length>0?t&&(t.value="0.00",t.disabled=!0):t&&(t.disabled=!1)}if(e.id==="quote_discount_percent"){let t=document.getElementById("quote_discount_amount");e.value.length>0?t&&(t.value="0.00",t.disabled=!0):t&&(t.disabled=!1)}}handleFocus(n){let e=n.target;e.id==="datepicker"&&this.initializeDatepicker(e),e.classList?.contains("datepicker")&&this.initializeDatepicker(e),e.classList?.contains("taggable")&&(window.lastTaggableClicked=e)}initializeDatepicker(n){window.jQuery?.fn?.datepicker&&(n.id==="datepicker"?window.jQuery(n).datepicker({changeMonth:!0,changeYear:!0,showButtonPanel:!0,dateFormat:"dd-mm-yy"}):window.jQuery(n).datepicker({beforeShow:()=>{setTimeout(()=>{document.querySelectorAll(".datepicker").forEach(e=>{e.style.zIndex="9999"})},0)}}))}initializeComponents(){document.addEventListener("DOMContentLoaded",()=>{this.initializeTooltips(),this.initializeTagSelect()})}initializeTooltips(){typeof window.bootstrap?.Tooltip<"u"&&document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(n=>{try{new window.bootstrap.Tooltip(n)}catch{}})}initializeTagSelect(){document.querySelectorAll(".tag-select").forEach(n=>{n.addEventListener("change",t=>{let o=t.currentTarget;return window.lastTaggableClicked&&this.insertAtCaret(window.lastTaggableClicked.id,o.value),o._tomselect?.clear?o._tomselect.clear():o.tomselect?.clear?o.tomselect.clear():o.multiple?Array.from(o.options).forEach(i=>{i.selected=!1}):o.value="",t.preventDefault(),!1})})}insertAtCaret(n,e){let t=document.getElementById(n);if(!t)return;let o=t.selectionStart||0,i=t.selectionEnd||0,r=t.value;t.value=r.substring(0,o)+e+r.substring(i),t.setSelectionRange(o+e.length,o+e.length),t.focus()}};function L(s){return document.getElementById(s)?.value||""}function v(s,n,e){n?(s.innerHTML='<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>',s.disabled=!0):(s.innerHTML=e||'<h6 class="text-center"><i class="fa fa-check"></i></h6>',s.disabled=!1)}var M=class{constructor(){this.bindEventListeners()}bindEventListeners(){document.addEventListener("click",this.handleClick.bind(this),!0)}handleClick(n){let e=n.target,t=e.closest("#client_create_confirm");if(t){this.handleClientCreateConfirm(t);return}let o=e.closest("#save_client_note_new");if(o){this.handleSaveClientNote(o);return}}async handleClientCreateConfirm(n){let e=`${location.origin}/invoice/client/create_confirm`,t=document.querySelector(".client_create_confirm")||n,o=new URL(location.href);t&&v(t,!0);try{let i={client_name:L("client_name"),client_surname:L("client_surname"),client_email:L("client_email")},r=await u(e,i),a=l(r);a.success===1?(t&&(t.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.href=o.href,window.location.reload()):(t&&v(t,!1),console.warn("create_confirm response",a))}catch(i){console.warn(i),t&&v(t,!1),alert("An error occurred while creating client. See console for details.")}}async handleSaveClientNote(n){let e=`${location.origin}/invoice/client/save_client_note_new`,t=`${location.origin}/invoice/client/load_client_notes`,o=document.querySelector(".save_client_note")||n,i=new URL(location.href);o&&v(o,!0);try{let r={client_id:L("client_id"),client_note:L("client_note")},a=await u(e,r),c=l(a);if(c.success===1){o&&(o.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>');let d=document.getElementById("client_note");d&&(d.value="");let m=document.getElementById("notes_list");if(m){let h=`${t}?client_id=${encodeURIComponent(r.client_id)}`;try{let g=await(await fetch(h,{cache:"no-store",credentials:"same-origin"})).text();m.innerHTML=g,console.log(g)}catch(_){console.error("load_client_notes failed",_)}}window.location.href=i.href,window.location.reload()}else this.clearValidationErrors(),c.validation_errors&&this.showValidationErrors(c.validation_errors),o&&v(o,!1)}catch(r){console.warn(r),o&&v(o,!1),alert("An error occurred while saving client note. See console for details.")}}clearValidationErrors(){document.querySelectorAll(".control-group").forEach(n=>{n.classList.remove("error")})}showValidationErrors(n){Object.keys(n).forEach(e=>{let t=document.getElementById(e);t?.parentElement&&t.parentElement.classList.add("has-error")})}};function b(s,n,e){n?(s.innerHTML='<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>',s.disabled=!0):(s.innerHTML=e||'<h2 class="text-center"><i class="fa fa-check"></i></h2>',s.disabled=!1)}function x(s){return document.getElementById(s)?.value||""}var q=class{constructor(){this.bindEventListeners()}bindEventListeners(){document.addEventListener("click",this.handleClick.bind(this),!0)}handleClick(n){let e=n.target;if(T(e,"#btn-mark-as-sent")){this.handleMarkAsSent();return}if(T(e,"#btn-mark-sent-as-draft")){this.handleMarkSentAsDraft();return}let i=T(e,".create_recurring_confirm_multiple");if(i){this.handleCreateRecurringMultiple(i);return}}getCheckedInvoiceIds(){let n=[],e=document.getElementById("table-invoice");return e&&e.querySelectorAll('input[type="checkbox"]:checked').forEach(o=>{o.id&&n.push(o.id)}),n}async handleMarkAsSent(){let n=document.getElementById("btn-mark-as-sent"),e=n?.innerHTML;n&&b(n,!0);try{let t=this.getCheckedInvoiceIds(),o=`${location.origin}/invoice/inv/mark_as_sent`,i=await u(o,{keylist:t});l(i).success===1?(n&&(n.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.reload()):(n&&(n.innerHTML='<h2 class="text-center"><i class="fa fa-times"></i></h2>'),window.location.reload())}catch(t){console.error("mark_as_sent error",t),n&&e&&b(n,!1,e),alert("An error occurred. See console for details.")}}async handleMarkSentAsDraft(){let n=document.getElementById("btn-mark-sent-as-draft"),e=n?.innerHTML;n&&b(n,!0);try{let t=this.getCheckedInvoiceIds(),o=`${location.origin}/invoice/inv/mark_sent_as_draft`,i=await u(o,{keylist:t});l(i).success===1?(n&&(n.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),window.location.reload()):(n&&(n.innerHTML='<h2 class="text-center"><i class="fa fa-times"></i></h2>'),window.location.reload())}catch(t){console.error("mark_sent_as_draft error",t),n&&e&&b(n,!1,e),alert("An error occurred. See console for details.")}}async handleCreateRecurringMultiple(n){let e=document.querySelector(".create_recurring_confirm_multiple")||n,t=e?.innerHTML;e&&(e.innerHTML='<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>',e.disabled=!0);try{let o=this.getCheckedInvoiceIds();if(o.length===0){alert("Please select invoices to create recurring invoices."),e&&t&&(e.innerHTML=t,e.disabled=!1);return}let i={keylist:o,recur_frequency:x("recur_frequency"),recur_start_date:x("recur_start_date"),recur_end_date:x("recur_end_date")};if(!i.recur_frequency||!i.recur_start_date){alert("Please select frequency and start date."),e&&t&&(e.innerHTML=t,e.disabled=!1);return}let r=`${location.origin}/invoice/invrecurring/multiple`,a=await u(r,i);l(a).success===1?(e&&(e.innerHTML='<h2 class="text-center"><i class="fa fa-check"></i></h2>'),this.closeModal("create-recurring-multiple"),setTimeout(()=>{window.location.reload()},500)):(e&&(e.innerHTML='<h2 class="text-center"><i class="fa fa-times"></i></h2>'),alert("Failed to create recurring invoices. Please try again."),e&&t&&(e.innerHTML=t,e.disabled=!1))}catch(o){console.error("invrecurring/multiple error",o),e&&t&&(e.innerHTML=t,e.disabled=!1),alert("An error occurred while creating recurring invoices. See console for details.")}}closeModal(n){try{if(typeof window.bootstrap?.Modal<"u"){let e=document.getElementById(n);if(e){let t=window.bootstrap.Modal.getInstance(e);t&&t.hide()}}}catch(e){console.warn("Failed to close modal:",e)}}};function P(s,n){s.forEach(e=>{n?e.innerHTML='<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>':e.innerHTML='<h6 class="text-center"><i class="fa fa-check"></i></h6>'})}function F(s){s.forEach(n=>{n.innerHTML='<h6 class="text-center"><i class="fa fa-error"></i></h6>'})}var I=class{constructor(){this.bindEventListeners(),this.exposeGlobalFunctions()}bindEventListeners(){document.addEventListener("click",this.handleClick.bind(this),!0)}handleClick(n){n.target.closest("#product_filters_submit")&&this.submitProductFilters(n)}filterTableBySku(){let n=document.getElementById("filter_product_sku");if(!n)return;let t=(n.value||"").toUpperCase(),o=document.getElementById("table-product");if(!o)return;let i=o.getElementsByTagName("tr");for(let r=0;r<i.length;r++){let a=i[r].getElementsByTagName("td")[2];a&&((a.textContent||a.innerText||"").toUpperCase().indexOf(t)>-1?i[r].style.display="":i[r].style.display="none")}}async submitProductFilters(n){n?.preventDefault&&n.preventDefault();let e=`${location.origin}/invoice/product/search`,t=document.querySelectorAll(".product_filters_submit");P(t,!0);try{let r={product_sku:document.getElementById("filter_product_sku")?.value||""},a=await u(e,r),c=l(a);c.success===1?(this.filterTableBySku(),this.hideSummaryBar(),P(t,!1)):(F(t),c.message&&alert(c.message))}catch(o){console.error("product search failed",o),F(t),alert("An error occurred while searching products. See console for details.")}}hideSummaryBar(){let n=document.querySelector(".mt-3.me-3.summary.text-end");n&&(n.style.visibility="hidden")}exposeGlobalFunctions(){window.productTableFilter=this.filterTableBySku.bind(this)}};var k=class{constructor(){this.bindEventListeners(),this.initializeOnLoad()}bindEventListeners(){document.addEventListener("click",this.handleClick.bind(this),!0)}initializeOnLoad(){document.readyState==="loading"?document.addEventListener("DOMContentLoaded",()=>{this.initSelects()}):this.initSelects()}handleClick(n){let e=n.target,t=e.closest(".open-salesorder-modal");if(t){this.handleOpenModal(t);return}if(e.closest(".salesorder-save")){this.handleSaveSalesOrder();return}}initSelects(){if(typeof window.TomSelect>"u")return;document.querySelectorAll(".simple-select").forEach(e=>{if(!e._tomselect)try{new window.TomSelect(e,{}),e._tomselect=!0}catch(t){console.warn("Failed to initialize TomSelect:",t)}})}async handleOpenModal(n){let e=n.dataset.url||`${location.origin}/invoice/salesorder/modal`,t=n.dataset.target||"modal-placeholder-salesorder",o=document.getElementById(t);if(!o){console.error(`Modal target element not found: ${t}`);return}try{let r=await(await fetch(e,{cache:"no-store",credentials:"same-origin"})).text();o.innerHTML=r;let a=o.querySelector(".modal");a&&window.bootstrap?.Modal&&new window.bootstrap.Modal(a).show(),this.initSelects()}catch(i){console.error("Failed to load sales order modal:",i),alert("Failed to load modal. Please try again.")}}async handleSaveSalesOrder(){let n=document.querySelector("#salesorder_form");if(!n){console.error("Sales order form not found");return}try{let e=n.getAttribute("action")||`${location.origin}/invoice/salesorder/save`,t=new FormData(n),o=new URLSearchParams;t.forEach((d,m)=>{o.append(m,d.toString())});let i=`${e}?${o.toString()}`,a=await(await fetch(i,{cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}})).json(),c=l(a);if(c.success===1)window.location.reload();else{let d=c.message||"Save failed";alert(d)}}catch(e){console.error("Sales order save failed:",e),alert("An error occurred while saving. Please try again.")}}};var R=class{constructor(){this.bindEventListeners()}bindEventListeners(){document.addEventListener("DOMContentLoaded",this.initializeSelectors.bind(this))}initializeSelectors(){let n=document.getElementById("family-category-primary-id"),e=document.getElementById("family-category-secondary-id");n&&(n.addEventListener("change",this.onPrimaryChange.bind(this),!1),Promise.resolve().then(()=>this.onPrimaryChange())),e&&(e.addEventListener("change",this.onSecondaryChange.bind(this),!1),Promise.resolve().then(()=>this.onSecondaryChange()))}populateSelect(n,e,t){if(!n)return;n.innerHTML="";let o=document.createElement("option");o.value="",o.textContent=t||"None",n.appendChild(o),e&&(Array.isArray(e)?e.forEach((i,r)=>{let a=document.createElement("option");a.value=r.toString(),a.textContent=i,n.appendChild(a)}):Object.entries(e).forEach(([i,r])=>{let a=document.createElement("option");a.value=i,a.textContent=r,n.appendChild(a)}))}async onPrimaryChange(){let n=document.getElementById("family-category-primary-id");if(!n)return;let e=n.value||"",t=`${location.origin}/invoice/family/secondaries/${encodeURIComponent(e)}`;try{let i=await u(t,{category_primary_id:e}),r=l(i);if(r.success===1){let a=r.secondary_categories||{},c=document.getElementById("family-category-secondary-id");if(this.populateSelect(c,a,"None"),c){let d=new Event("change",{bubbles:!0});c.dispatchEvent(d)}}else this.populateSelect(document.getElementById("family-category-secondary-id"),{},"None"),this.populateSelect(document.getElementById("family-name"),{},"None")}catch(o){console.error("Error loading secondary categories",o),this.populateSelect(document.getElementById("family-category-secondary-id"),{},"None"),this.populateSelect(document.getElementById("family-name"),{},"None")}}async onSecondaryChange(){let n=document.getElementById("family-category-secondary-id");if(!n)return;let e=n.value||"",t=`${location.origin}/invoice/family/names/${encodeURIComponent(e)}`;try{let i=await u(t,{category_secondary_id:e}),r=l(i);if(r.success===1){let a=r.family_names||{},c=document.getElementById("family-name");this.populateSelect(c,a,"None")}else this.populateSelect(document.getElementById("family-name"),{},"None")}catch(o){console.error("Error loading family names",o),this.populateSelect(document.getElementById("family-name"),{},"None")}}};var C=class{constructor(){this.originalDisplayStyles={};this.originalDisabledStates={};this.bindEventListeners()}bindEventListeners(){document.addEventListener("DOMContentLoaded",this.initialize.bind(this))}initialize(){this.toggleSmtpSettings();let n=document.getElementById("email_send_method");n&&n.addEventListener("change",this.toggleSmtpSettings.bind(this));let e=document.getElementById("btn_fph_generate");e&&e.addEventListener("click",r=>{r.preventDefault(),this.handleFphGenerateClick()});let t=document.getElementById("btn_generate_cron_key");t&&t.addEventListener("click",r=>{r.preventDefault(),this.handleGenerateCronKeyClick()});let o=document.getElementById("btn-submit");o&&o.addEventListener("click",r=>{r.preventDefault(),this.handleSettingsSubmitClick()});let i=document.getElementById("online-payment-select");i&&i.addEventListener("change",this.handleOnlinePaymentSelectChange.bind(this)),this.handleOnlinePaymentSelectChange()}toggleSmtpSettings(){let n=document.getElementById("email_send_method"),e=document.getElementById("div-smtp-settings");!e||!n||(n.value==="smtp"?e.style.display="":e.style.display="none")}async handleFphGenerateClick(){let n=`${location.origin}/invoice/setting/fphgenerate`,e={userAgent:navigator.userAgent,width:window.screen.width,height:window.screen.height,scalingFactor:Math.round(window.devicePixelRatio*100)/100,colourDepth:window.screen.colorDepth,windowInnerWidth:window.innerWidth,windowInnerHeight:window.innerHeight},t=new URLSearchParams;Object.entries(e).forEach(([o,i])=>{t.append(o,i.toString())});try{let o=await fetch(`${n}?${t.toString()}`,{method:"GET",credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json"}});if(!o.ok)throw new Error(`Network response not ok: ${o.status}`);let i=await o.json().catch(()=>({})),r=l(i);r.success===1&&(this.updateSettingField("settings[fph_client_browser_js_user_agent]",r.userAgent),this.updateSettingField("settings[fph_client_device_id]",r.deviceId),this.updateSettingField("settings[fph_screen_width]",r.width),this.updateSettingField("settings[fph_screen_height]",r.height),this.updateSettingField("settings[fph_screen_scaling_factor]",r.scalingFactor),this.updateSettingField("settings[fph_screen_colour_depth]",r.colourDepth),this.updateSettingField("settings[fph_timestamp]",r.timestamp),this.updateSettingField("settings[fph_window_size]",r.windowSize),this.updateSettingField("settings[fph_gov_client_user_id]",r.userUuid))}catch(o){console.error("FPH generate failed",o)}}updateSettingField(n,e){let t=document.getElementById(n);t&&e!==void 0&&(t.value=e)}async handleGenerateCronKeyClick(){let n=document.querySelectorAll(".btn_generate_cron_key");n.forEach(e=>{e.innerHTML='<i class="fa fa-spin fa-spinner fa-margin"></i>'});try{let e=`${location.origin}/invoice/setting/get_cron_key`,t=await fetch(e,{method:"GET",credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json"}});if(!t.ok)throw new Error(`Network response not ok: ${t.status}`);let o=await t.json().catch(()=>({})),i=l(o);i.success===1&&i.cronkey&&document.querySelectorAll(".cron_key").forEach(a=>{a.value=i.cronkey||""}),n.forEach(r=>{r.innerHTML='<i class="fa fa-recycle fa-margin"></i>'})}catch(e){console.error("get_cron_key failed",e),n.forEach(t=>{t.innerHTML='<i class="fa fa-recycle fa-margin"></i>'})}}handleSettingsSubmitClick(){let n=document.getElementById("form-settings");if(!n)return;let e=n.querySelectorAll(".tab-pane");this.originalDisplayStyles={},this.originalDisabledStates={},e.forEach(t=>{t.id&&(this.originalDisplayStyles[t.id]=t.style.display,t.style.display="block",t.querySelectorAll("input:disabled, select:disabled, textarea:disabled").forEach((i,r)=>{let a=`${t.id}_${r}`;this.originalDisabledStates[a]={element:i,disabled:!0},i.disabled=!1}))}),setTimeout(()=>{n.submit(),this.restoreFormState(e)},10)}restoreFormState(n){n.forEach(e=>{e.id&&this.originalDisplayStyles[e.id]!==void 0&&(e.style.display=this.originalDisplayStyles[e.id])}),Object.entries(this.originalDisabledStates).forEach(([e,t])=>{t.element&&t.disabled&&(t.element.disabled=!0)})}handleOnlinePaymentSelectChange(){let n=document.getElementById("online-payment-select");if(!n)return;let e=n.value;document.querySelectorAll(".gateway-settings").forEach(i=>{i.classList.contains("active-gateway")||i.classList.add("hidden")});let o=document.getElementById(`gateway-settings-${e}`);o&&(o.classList.remove("hidden"),o.classList.add("active-gateway"))}};var w=class{constructor(){this._createCreditHandler=new H,this._quoteHandler=new S,this._clientHandler=new M,this._invoiceHandler=new q,this._productHandler=new I,this._salesOrderHandler=new k,this._familyHandler=new R,this._settingsHandler=new C,this.initializeTooltips(),this.initializeTaggableFocus(),console.log("Invoice TypeScript App initialized with all core handlers: Quote, Client, Invoice, Product, SalesOrder, Family, and Settings")}initializeTooltips(){document.addEventListener("DOMContentLoaded",()=>{typeof bootstrap<"u"&&bootstrap.Tooltip&&document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(e=>{try{new bootstrap.Tooltip(e)}catch(t){console.warn("Tooltip initialization failed:",t)}})})}initializeTaggableFocus(){document.addEventListener("focus",n=>{let e=n.target;e?.classList?.contains("taggable")&&(window.lastTaggableClicked=e)},!0)}};document.readyState==="loading"?document.addEventListener("DOMContentLoaded",()=>new w):new w;return Q(j);})();
+"use strict";
+var InvoiceApp = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/typescript/index.ts
+  var index_exports = {};
+  __export(index_exports, {
+    InvoiceApp: () => InvoiceApp
+  });
+
+  // src/typescript/utils.ts
+  function parsedata(data) {
+    if (!data) return {};
+    if (typeof data === "object" && data !== null) return data;
+    if (typeof data === "string") {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        return {};
+      }
+    }
+    return {};
+  }
+  async function getJson(url, params, options = {}) {
+    let requestUrl = url;
+    if (params) {
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((item) => {
+            if (item !== null && item !== void 0) {
+              searchParams.append(`${key}[]`, String(item));
+            }
+          });
+        } else if (value !== void 0 && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      });
+      const separator = url.includes("?") ? "&" : "?";
+      requestUrl = `${url}${separator}${searchParams.toString()}`;
+    }
+    const defaultOptions = {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+      ...options
+    };
+    const response = await fetch(requestUrl, defaultOptions);
+    if (!response.ok) {
+      throw new Error(`Network response not ok: ${response.status}`);
+    }
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      return text;
+    }
+  }
+  function closestSafe(element, selector) {
+    try {
+      if (!element) return null;
+      if (typeof element.closest === "function") {
+        return element.closest(selector);
+      }
+      let node = element;
+      while (node) {
+        if (node.matches && node.matches(selector)) {
+          return node;
+        }
+        node = node.parentElement;
+      }
+    } catch (e) {
+      console.warn("closestSafe error:", e);
+      return null;
+    }
+    return null;
+  }
+  function getElementById(id) {
+    return document.getElementById(id);
+  }
+  function querySelector(selector) {
+    return document.querySelector(selector);
+  }
+  function getInputValue(id) {
+    const element = getElementById(id);
+    return element?.value || "";
+  }
+
+  // src/typescript/create-credit.ts
+  var CreateCreditHandler = class {
+    constructor() {
+      this.confirmButtonSelector = ".create-credit-confirm";
+      this.initialize();
+    }
+    initialize() {
+      document.addEventListener("click", this.handleClick.bind(this), true);
+    }
+    async handleClick(event) {
+      const target = event.target;
+      if (!target || target.id !== "create-credit-confirm") {
+        return;
+      }
+      event.preventDefault();
+      try {
+        await this.processCreateCredit();
+      } catch (error) {
+        console.error("Create credit error:", error);
+        alert(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
+      }
+    }
+    async processCreateCredit() {
+      const url = `${location.origin}/invoice/inv/create_credit_confirm`;
+      const btn = querySelector(this.confirmButtonSelector);
+      const absoluteUrl = new URL(location.href);
+      if (btn) {
+        btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+      }
+      const invId = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf("/") + 1);
+      const formData = {
+        inv_id: invId,
+        client_id: getInputValue("client_id"),
+        inv_date_created: getInputValue("inv_date_created"),
+        group_id: getInputValue("inv_group_id"),
+        password: getInputValue("inv_password"),
+        user_id: getInputValue("user_id")
+      };
+      const data = await getJson(url, formData);
+      const response = parsedata(data);
+      if (response.success === 1) {
+        if (btn) {
+          btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check2-square"></i></h2>';
+        }
+        if (response.flash_message) {
+          alert(response.flash_message);
+        }
+        location.href = absoluteUrl.href;
+        location.reload();
+      } else {
+        if (btn) {
+          btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+        }
+        if (response.flash_message) {
+          alert(response.flash_message);
+        }
+        location.href = absoluteUrl.href;
+        location.reload();
+      }
+    }
+  };
+
+  // src/typescript/quote.ts
+  function getQuoteIdFromUrl() {
+    const url = new URL(location.href);
+    return url.href.substring(url.href.lastIndexOf("/") + 1);
+  }
+  function getFieldValue(id) {
+    const element = document.getElementById(id);
+    return element?.value || "";
+  }
+  function setButtonLoading(button, isLoading, originalHtml) {
+    if (isLoading) {
+      button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+      button.disabled = true;
+    } else {
+      button.innerHTML = originalHtml || '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+      button.disabled = false;
+    }
+  }
+  var QuoteHandler = class {
+    constructor() {
+      this.bindEventListeners();
+      this.initializeComponents();
+    }
+    bindEventListeners() {
+      document.addEventListener("click", this.handleClick.bind(this), true);
+      document.addEventListener("input", this.handleInput.bind(this), true);
+      document.addEventListener("focus", this.handleFocus.bind(this), true);
+      document.addEventListener("click", this.handleClientNoteSave.bind(this), true);
+      document.addEventListener("click", this.handleQuoteTaxSubmit.bind(this), true);
+    }
+    handleClick(event) {
+      const target = event.target;
+      const deleteBtn = target.closest(".btn_delete_item");
+      if (deleteBtn) {
+        this.handleDeleteItem(deleteBtn);
+        return;
+      }
+      const delMulti = target.closest(".delete-items-confirm-quote");
+      if (delMulti) {
+        this.handleDeleteMultipleItems(delMulti);
+        return;
+      }
+      const addRowModalBtn = target.closest(".btn_add_row_modal");
+      if (addRowModalBtn) {
+        this.handleAddRowModal();
+        return;
+      }
+      const btnQuoteItemAddRow = target.closest(".btn_quote_item_add_row");
+      if (btnQuoteItemAddRow) {
+        this.handleAddQuoteItemRow();
+        return;
+      }
+      const addRowBtn = target.closest(".btn_add_row");
+      if (addRowBtn) {
+        this.handleAddGenericRow();
+        return;
+      }
+      const addClientBtn = target.closest(".quote_add_client");
+      if (addClientBtn) {
+        this.handleAddClientModal();
+        return;
+      }
+      const createConfirm = target.closest(
+        "#quote_create_confirm, .quote_create_confirm"
+      );
+      if (createConfirm) {
+        this.handleQuoteCreateConfirm();
+        return;
+      }
+      const poConfirm = target.closest(
+        "#quote_with_purchase_order_number_confirm, .quote_with_purchase_order_number_confirm"
+      );
+      if (poConfirm) {
+        this.handleQuotePurchaseOrderConfirm(poConfirm);
+        return;
+      }
+      const toInvoice = target.closest(
+        "#quote_to_invoice_confirm, .quote_to_invoice_confirm"
+      );
+      if (toInvoice) {
+        this.handleQuoteToInvoiceConfirm(toInvoice);
+        return;
+      }
+      const toSo = target.closest("#quote_to_so_confirm, .quote_to_so_confirm");
+      if (toSo) {
+        this.handleQuoteToSalesOrderConfirm(toSo);
+        return;
+      }
+      const toQuote = target.closest(
+        "#quote_to_quote_confirm, .quote_to_quote_confirm"
+      );
+      if (toQuote) {
+        this.handleQuoteToQuoteConfirm(toQuote);
+        return;
+      }
+      this.handlePdfGeneration(target);
+    }
+    async handleDeleteItem(deleteBtn) {
+      const id = deleteBtn.getAttribute("data-id");
+      if (!id) {
+        const parentItem = deleteBtn.closest(".item");
+        parentItem?.remove();
+        return;
+      }
+      try {
+        const url = `${location.origin}/invoice/quote/delete_item/${encodeURIComponent(id)}`;
+        const response = await getJson(url, { id });
+        const data = parsedata(response);
+        if (data.success === 1) {
+          location.reload();
+          const parentItem = deleteBtn.closest(".item");
+          parentItem?.remove();
+          alert("Deleted");
+        } else {
+          console.warn("delete_item failed", data);
+        }
+      } catch (error) {
+        console.error("delete_item error", error);
+        alert("An error occurred while deleting item. See console for details.");
+      }
+    }
+    async handleDeleteMultipleItems(delMulti) {
+      const originalHtml = delMulti.innerHTML;
+      setButtonLoading(delMulti, true);
+      try {
+        const itemCheckboxes = document.querySelectorAll(
+          "input[name='item_ids[]']:checked"
+        );
+        const item_ids = Array.from(itemCheckboxes).map((input) => parseInt(input.value, 10)).filter(Boolean);
+        const response = await getJson("/invoice/quoteitem/multiple", {
+          item_ids
+        });
+        const data = parsedata(response);
+        if (data.success === 1) {
+          delMulti.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          location.reload();
+        } else {
+          console.warn("quoteitem/multiple failed", data);
+          setButtonLoading(delMulti, false, originalHtml);
+        }
+      } catch (error) {
+        console.error("quoteitem/multiple error", error);
+        setButtonLoading(delMulti, false, originalHtml);
+        alert("An error occurred while deleting items. See console for details.");
+      }
+    }
+    async handleAddRowModal() {
+      const quoteId = getQuoteIdFromUrl();
+      const url = `${location.origin}/invoice/quoteitem/add/${encodeURIComponent(quoteId)}`;
+      const placeholder = document.getElementById("modal-placeholder-quoteitem");
+      if (!placeholder) return;
+      try {
+        placeholder.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        const response = await fetch(url, { cache: "no-store", credentials: "same-origin" });
+        const html = await response.text();
+        placeholder.innerHTML = html;
+      } catch (error) {
+        console.error("Failed to load quoteitem modal", error);
+      }
+    }
+    handleAddQuoteItemRow() {
+      const template = document.getElementById("new_quote_item_row");
+      const table = document.getElementById("item_table");
+      if (template && table) {
+        const clone = template.cloneNode(true);
+        clone.removeAttribute("id");
+        clone.classList.add("item");
+        clone.style.display = "";
+        table.appendChild(clone);
+      }
+    }
+    handleAddGenericRow() {
+      const template = document.getElementById("new_row");
+      const table = document.getElementById("item_table");
+      if (template && table) {
+        const clone = template.cloneNode(true);
+        clone.removeAttribute("id");
+        clone.classList.add("item");
+        clone.style.display = "";
+        table.appendChild(clone);
+      }
+    }
+    async handleAddClientModal() {
+      const url = `${location.origin}/invoice/add-a-client`;
+      const placeholder = document.getElementById("modal-placeholder-client");
+      if (!placeholder) return;
+      try {
+        placeholder.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        const response = await fetch(url, { cache: "no-store", credentials: "same-origin" });
+        const html = await response.text();
+        placeholder.innerHTML = html;
+      } catch (error) {
+        console.error("Failed to load add-a-client modal", error);
+      }
+    }
+    async handleQuoteCreateConfirm() {
+      const url = `${location.origin}/invoice/quote/create_confirm`;
+      const btn = document.querySelector(".quote_create_confirm");
+      const originalHtml = btn?.innerHTML || "";
+      if (btn) {
+        setButtonLoading(btn, true);
+      }
+      try {
+        const payload = {
+          client_id: getFieldValue("create_quote_client_id"),
+          quote_group_id: getFieldValue("quote_group_id"),
+          quote_password: getFieldValue("quote_password")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        const currentUrl = new URL(location.href);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          window.location.href = currentUrl.href;
+          window.location.reload();
+        } else if (data.success === 0) {
+          if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+          window.location.href = currentUrl.href;
+          window.location.reload();
+          if (data.message) alert(data.message);
+        }
+      } catch (error) {
+        console.error("create_confirm error", error);
+        if (btn) {
+          setButtonLoading(btn, false, originalHtml);
+        }
+        alert("An error occurred while creating quote. See console for details.");
+      }
+    }
+    async handleQuotePurchaseOrderConfirm(poConfirm) {
+      const url = `${location.origin}/invoice/quote/approve`;
+      const btn = document.querySelector(".quote_with_purchase_order_number_confirm") || poConfirm;
+      if (btn) {
+        setButtonLoading(btn, true);
+      }
+      try {
+        const payload = {
+          url_key: getFieldValue("url_key"),
+          client_po_number: getFieldValue("quote_with_purchase_order_number"),
+          client_po_person: getFieldValue("quote_with_purchase_order_person")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        const currentUrl = new URL(location.href);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          window.location.href = currentUrl.href;
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("approve error", error);
+        if (btn) {
+          setButtonLoading(btn, false);
+        }
+        alert("An error occurred while approving quote. See console for details.");
+      }
+    }
+    async handleQuoteToInvoiceConfirm(toInvoice) {
+      const url = `${location.origin}/invoice/quote/quote_to_invoice_confirm`;
+      const btn = document.querySelector(".quote_to_invoice_confirm") || toInvoice;
+      const originalHtml = btn?.innerHTML || "";
+      if (btn) {
+        setButtonLoading(btn, true);
+      }
+      try {
+        const quoteId = getQuoteIdFromUrl();
+        const payload = {
+          quote_id: quoteId,
+          client_id: getFieldValue("client_id"),
+          group_id: getFieldValue("group_id"),
+          password: getFieldValue("password")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        const currentUrl = new URL(location.href);
+        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+        window.location.href = currentUrl.href;
+        window.location.reload();
+        if (data.flash_message) alert(data.flash_message);
+      } catch (error) {
+        console.error("quote_to_invoice_confirm error", error);
+        if (btn) {
+          setButtonLoading(btn, false, originalHtml);
+        }
+        alert("An error occurred while converting quote to invoice. See console for details.");
+      }
+    }
+    async handleQuoteToSalesOrderConfirm(toSo) {
+      const url = `${location.origin}/invoice/quote/quote_to_so_confirm`;
+      const btn = document.querySelector(".quote_to_so_confirm") || toSo;
+      const originalHtml = btn?.innerHTML || "";
+      if (btn) {
+        setButtonLoading(btn, true);
+      }
+      try {
+        const quoteId = getQuoteIdFromUrl();
+        const payload = {
+          quote_id: quoteId,
+          client_id: getFieldValue("client_id"),
+          group_id: getFieldValue("so_group_id"),
+          po_number: getFieldValue("po_number"),
+          po_person: getFieldValue("po_person"),
+          password: getFieldValue("password")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        const currentUrl = new URL(location.href);
+        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+        window.location.href = currentUrl.href;
+        window.location.reload();
+        if (data.flash_message) alert(data.flash_message);
+      } catch (error) {
+        console.error("quote_to_so_confirm error", error);
+        if (btn) {
+          setButtonLoading(btn, false, originalHtml);
+        }
+        alert("An error occurred while converting quote to SO. See console for details.");
+      }
+    }
+    async handleQuoteToQuoteConfirm(toQuote) {
+      const url = `${location.origin}/invoice/quote/quote_to_quote_confirm`;
+      const btn = document.querySelector(".quote_to_quote_confirm") || toQuote;
+      const originalHtml = btn?.innerHTML || "";
+      if (btn) {
+        setButtonLoading(btn, true);
+      }
+      try {
+        const quoteId = getQuoteIdFromUrl();
+        const payload = {
+          quote_id: quoteId,
+          client_id: getFieldValue("create_quote_client_id"),
+          user_id: getFieldValue("user_id")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        const currentUrl = new URL(location.href);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          window.location.href = currentUrl.href;
+          window.location.reload();
+          if (data.flash_message) alert(data.flash_message);
+        }
+      } catch (error) {
+        console.error("quote_to_quote_confirm error", error);
+        if (btn) {
+          setButtonLoading(btn, false, originalHtml);
+        }
+        alert("An error occurred while copying quote. See console for details.");
+      }
+    }
+    handlePdfGeneration(target) {
+      if (target.closest("#quote_to_pdf_confirm_with_custom_fields")) {
+        const url = `${location.origin}/invoice/quote/pdf/1`;
+        window.open(url, "_blank");
+        return;
+      }
+      if (target.closest("#quote_to_pdf_confirm_without_custom_fields")) {
+        const url = `${location.origin}/invoice/quote/pdf/0`;
+        window.open(url, "_blank");
+        return;
+      }
+    }
+    async handleClientNoteSave(event) {
+      const target = event.target;
+      const saveBtn = target.closest("#save_client_note");
+      if (!saveBtn) return;
+      const url = `${location.origin}/invoice/client/save_client_note`;
+      const loadUrl = `${location.origin}/invoice/client/load_client_notes`;
+      try {
+        const payload = {
+          client_id: getFieldValue("client_id"),
+          client_note: getFieldValue("client_note")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          document.querySelectorAll(".control-group").forEach((group) => {
+            group.classList.remove("error");
+          });
+          const noteEl = document.getElementById("client_note");
+          if (noteEl) noteEl.value = "";
+          const notesList = document.getElementById("notes_list");
+          if (notesList) {
+            const loadUrlWithParams = `${loadUrl}?client_id=${encodeURIComponent(payload.client_id)}`;
+            const notesResponse = await fetch(loadUrlWithParams, {
+              cache: "no-store",
+              credentials: "same-origin"
+            });
+            const html = await notesResponse.text();
+            notesList.innerHTML = html;
+          }
+        } else {
+          document.querySelectorAll(".control-group").forEach((group) => {
+            group.classList.remove("error");
+          });
+          if (data.validation_errors) {
+            Object.keys(data.validation_errors).forEach((key) => {
+              const elm = document.getElementById(key);
+              if (elm?.parentElement) {
+                elm.parentElement.classList.add("has-error");
+              }
+            });
+          }
+        }
+      } catch (error) {
+        console.error("save_client_note error", error);
+        alert("Status: error An error occurred");
+      }
+    }
+    async handleQuoteTaxSubmit(event) {
+      const target = event.target;
+      const submit = target.closest("#quote_tax_submit");
+      if (!submit) return;
+      const url = `${location.origin}/invoice/quote/save_quote_tax_rate`;
+      const btn = document.querySelector(".quote_tax_submit") || submit;
+      if (btn) {
+        setButtonLoading(btn, true);
+      }
+      try {
+        const quoteId = getQuoteIdFromUrl();
+        const payload = {
+          quote_id: quoteId,
+          tax_rate_id: getFieldValue("tax_rate_id"),
+          include_item_tax: getFieldValue("include_item_tax")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        const currentUrl = new URL(location.href);
+        window.location.href = currentUrl.href;
+        window.location.reload();
+        if (data.flash_message) alert(data.flash_message);
+      } catch (error) {
+        console.error("save_quote_tax_rate error", error);
+        alert("An error occurred while saving quote tax rate. See console for details.");
+      }
+    }
+    handleInput(event) {
+      const target = event.target;
+      if (target.id === "quote_discount_amount") {
+        const percentEl = document.getElementById("quote_discount_percent");
+        if (target.value.length > 0) {
+          if (percentEl) {
+            percentEl.value = "0.00";
+            percentEl.disabled = true;
+          }
+        } else {
+          if (percentEl) percentEl.disabled = false;
+        }
+      }
+      if (target.id === "quote_discount_percent") {
+        const amountEl = document.getElementById("quote_discount_amount");
+        if (target.value.length > 0) {
+          if (amountEl) {
+            amountEl.value = "0.00";
+            amountEl.disabled = true;
+          }
+        } else {
+          if (amountEl) amountEl.disabled = false;
+        }
+      }
+    }
+    handleFocus(event) {
+      const target = event.target;
+      if (target.id === "datepicker") {
+        this.initializeDatepicker(target);
+      }
+      if (target.classList?.contains("datepicker")) {
+        this.initializeDatepicker(target);
+      }
+      if (target.classList?.contains("taggable")) {
+        window.lastTaggableClicked = target;
+      }
+    }
+    initializeDatepicker(element) {
+      if (window.jQuery?.fn?.datepicker) {
+        if (element.id === "datepicker") {
+          window.jQuery(element).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "dd-mm-yy"
+          });
+        } else {
+          window.jQuery(element).datepicker({
+            beforeShow: () => {
+              setTimeout(() => {
+                document.querySelectorAll(".datepicker").forEach((d) => {
+                  d.style.zIndex = "9999";
+                });
+              }, 0);
+            }
+          });
+        }
+      }
+    }
+    initializeComponents() {
+      document.addEventListener("DOMContentLoaded", () => {
+        this.initializeTooltips();
+        this.initializeTagSelect();
+      });
+    }
+    initializeTooltips() {
+      if (typeof window.bootstrap?.Tooltip !== "undefined") {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
+          try {
+            new window.bootstrap.Tooltip(element);
+          } catch (error) {
+          }
+        });
+      }
+    }
+    initializeTagSelect() {
+      document.querySelectorAll(".tag-select").forEach((select) => {
+        const selectElement = select;
+        selectElement.addEventListener("change", (event) => {
+          const currentTarget = event.currentTarget;
+          if (window.lastTaggableClicked) {
+            this.insertAtCaret(window.lastTaggableClicked.id, currentTarget.value);
+          }
+          if (currentTarget._tomselect?.clear) {
+            currentTarget._tomselect.clear();
+          } else if (currentTarget.tomselect?.clear) {
+            currentTarget.tomselect.clear();
+          } else if (currentTarget.multiple) {
+            Array.from(currentTarget.options).forEach((option) => {
+              option.selected = false;
+            });
+          } else {
+            currentTarget.value = "";
+          }
+          event.preventDefault();
+          return false;
+        });
+      });
+    }
+    insertAtCaret(elementId, text) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      const startPos = element.selectionStart || 0;
+      const endPos = element.selectionEnd || 0;
+      const value = element.value;
+      element.value = value.substring(0, startPos) + text + value.substring(endPos);
+      element.setSelectionRange(startPos + text.length, startPos + text.length);
+      element.focus();
+    }
+  };
+
+  // src/typescript/client.ts
+  function getFieldValue2(id) {
+    const element = document.getElementById(id);
+    return element?.value || "";
+  }
+  function setButtonLoading2(button, isLoading, originalHtml) {
+    if (isLoading) {
+      button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+      button.disabled = true;
+    } else {
+      button.innerHTML = originalHtml || '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+      button.disabled = false;
+    }
+  }
+  var ClientHandler = class {
+    constructor() {
+      this.bindEventListeners();
+    }
+    bindEventListeners() {
+      document.addEventListener("click", this.handleClick.bind(this), true);
+      document.addEventListener("submit", this.handleSubmit.bind(this), true);
+    }
+    handleClick(event) {
+      const target = event.target;
+      const createBtn = target.closest("#client_create_confirm");
+      if (createBtn) {
+        this.handleClientCreateConfirm(createBtn);
+        return;
+      }
+      const saveNoteBtn = target.closest("#save_client_note_new");
+      if (saveNoteBtn) {
+        this.handleSaveClientNote(saveNoteBtn);
+        return;
+      }
+      const deleteNoteBtn = target.closest(".client-note-delete-btn");
+      if (deleteNoteBtn) {
+        this.handleDeleteClientNote(deleteNoteBtn);
+        return;
+      }
+    }
+    handleSubmit(event) {
+      const target = event.target;
+      if (target.id === "QuoteForm") {
+        this.handleQuoteFormSubmit(event);
+        return;
+      }
+      if (target.id === "InvForm") {
+        this.handleInvoiceFormSubmit(event);
+        return;
+      }
+    }
+    async handleClientCreateConfirm(createBtn) {
+      const url = `${location.origin}/invoice/client/create_confirm`;
+      const btn = document.querySelector(".client_create_confirm") || createBtn;
+      const currentUrl = new URL(location.href);
+      if (btn) {
+        setButtonLoading2(btn, true);
+      }
+      try {
+        const payload = {
+          client_name: getFieldValue2("client_name"),
+          client_surname: getFieldValue2("client_surname"),
+          client_email: getFieldValue2("client_email")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) {
+            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          }
+          window.location.href = currentUrl.href;
+          window.location.reload();
+        } else {
+          if (btn) {
+            setButtonLoading2(btn, false);
+          }
+          console.warn("create_confirm response", data);
+        }
+      } catch (error) {
+        console.warn(error);
+        if (btn) {
+          setButtonLoading2(btn, false);
+        }
+        alert("An error occurred while creating client. See console for details.");
+      }
+    }
+    async handleSaveClientNote(saveNoteBtn) {
+      const url = `${location.origin}/invoice/client/save_client_note_new`;
+      const loadNotesUrl = `${location.origin}/invoice/client/load_client_notes`;
+      const btn = document.querySelector(".save_client_note") || saveNoteBtn;
+      const currentUrl = new URL(location.href);
+      if (btn) {
+        setButtonLoading2(btn, true);
+      }
+      try {
+        const payload = {
+          client_id: getFieldValue2("client_id"),
+          client_note: getFieldValue2("client_note")
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) {
+            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          }
+          const noteEl = document.getElementById("client_note");
+          if (noteEl) noteEl.value = "";
+          const notesList = document.getElementById("notes_list");
+          if (notesList) {
+            const loadUrl = `${loadNotesUrl}?client_id=${encodeURIComponent(payload.client_id)}`;
+            try {
+              const notesResponse = await fetch(loadUrl, {
+                cache: "no-store",
+                credentials: "same-origin"
+              });
+              const html = await notesResponse.text();
+              if (html && !html.includes("<!DOCTYPE") && !html.includes("<html")) {
+                notesList.innerHTML = html;
+              } else {
+                console.warn("Received full page HTML instead of notes fragment, reloading page");
+                window.location.reload();
+                return;
+              }
+            } catch (loadError) {
+              console.error("load_client_notes failed", loadError);
+              window.location.reload();
+              return;
+            }
+          }
+          setTimeout(() => {
+            if (btn) {
+              setButtonLoading2(btn, false, '<h6 class="text-center"><i class="fa fa-save"></i></h6>');
+            }
+          }, 1e3);
+        } else {
+          this.clearValidationErrors();
+          if (data.validation_errors) {
+            this.showValidationErrors(data.validation_errors);
+          }
+          if (btn) {
+            setButtonLoading2(btn, false);
+          }
+        }
+      } catch (error) {
+        console.warn(error);
+        if (btn) {
+          setButtonLoading2(btn, false);
+        }
+        alert("An error occurred while saving client note. See console for details.");
+      }
+    }
+    async handleDeleteClientNote(deleteBtn) {
+      const noteId = deleteBtn.getAttribute("data-note-id");
+      if (!noteId) {
+        console.error("No note ID found on delete button");
+        return;
+      }
+      if (!confirm("Are you sure you want to delete this note?")) {
+        return;
+      }
+      const url = `${location.origin}/invoice/client/delete_client_note`;
+      const originalHtml = deleteBtn.innerHTML;
+      try {
+        deleteBtn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+        deleteBtn.disabled = true;
+        const response = await fetch(`${url}?note_id=${encodeURIComponent(noteId)}`, {
+          method: "GET",
+          credentials: "same-origin"
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success === 1) {
+            const notePanel = deleteBtn.closest(".panel");
+            if (notePanel) {
+              notePanel.remove();
+            }
+          } else {
+            deleteBtn.innerHTML = originalHtml;
+            deleteBtn.disabled = false;
+            alert(data.message || "Failed to delete note. Please try again.");
+          }
+        } else {
+          const responseText = await response.text();
+          console.error("Delete client note HTTP error:", {
+            status: response.status,
+            statusText: response.statusText,
+            body: responseText.substring(0, 500)
+          });
+          deleteBtn.innerHTML = originalHtml;
+          deleteBtn.disabled = false;
+          alert("Failed to delete note. Please try again.");
+        }
+      } catch (error) {
+        console.error("Delete client note error:", error);
+        deleteBtn.innerHTML = originalHtml;
+        deleteBtn.disabled = false;
+        alert("An error occurred while deleting the note. Please try again.");
+      }
+    }
+    clearValidationErrors() {
+      document.querySelectorAll(".control-group").forEach((group) => {
+        group.classList.remove("error");
+      });
+    }
+    showValidationErrors(validationErrors) {
+      Object.keys(validationErrors).forEach((key) => {
+        const element = document.getElementById(key);
+        if (element?.parentElement) {
+          element.parentElement.classList.add("has-error");
+        }
+      });
+    }
+    async handleQuoteFormSubmit(event) {
+      event.preventDefault();
+      const form = event.target;
+      const submitButton = form.querySelector('button[type="submit"]');
+      const originalHtml = submitButton?.innerHTML;
+      if (submitButton) {
+        setButtonLoading2(submitButton, true);
+      }
+      if (submitButton) {
+        submitButton.innerHTML = '<i class="fa fa-check"></i>';
+      }
+      const modal = document.getElementById("modal-add-quote") || document.getElementById("modal-add-client");
+      if (modal) {
+        const bootstrapModal = window.bootstrap?.Modal?.getInstance(modal);
+        if (bootstrapModal) {
+          bootstrapModal.hide();
+        }
+      }
+      setTimeout(() => {
+        form.submit();
+      }, 300);
+    }
+    async handleInvoiceFormSubmit(event) {
+      event.preventDefault();
+      const form = event.target;
+      const submitButton = form.querySelector('button[type="submit"]');
+      const originalHtml = submitButton?.innerHTML;
+      if (submitButton) {
+        setButtonLoading2(submitButton, true);
+      }
+      if (submitButton) {
+        submitButton.innerHTML = '<i class="fa fa-check"></i>';
+      }
+      const modal = document.getElementById("modal-add-inv") || document.getElementById("modal-add-client");
+      if (modal) {
+        const bootstrapModal = window.bootstrap?.Modal?.getInstance(modal);
+        if (bootstrapModal) {
+          bootstrapModal.hide();
+        }
+      }
+      setTimeout(() => {
+        form.submit();
+      }, 300);
+    }
+  };
+
+  // src/typescript/invoice.ts
+  function setButtonLoading3(button, isLoading, originalHtml) {
+    if (isLoading) {
+      button.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+      button.disabled = true;
+    } else {
+      button.innerHTML = originalHtml || '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+      button.disabled = false;
+    }
+  }
+  function getFieldValue3(id) {
+    const element = document.getElementById(id);
+    return element?.value || "";
+  }
+  var InvoiceHandler = class {
+    constructor() {
+      this.bindEventListeners();
+    }
+    bindEventListeners() {
+      document.addEventListener("click", this.handleClick.bind(this), true);
+      document.addEventListener("change", this.handleChange.bind(this), true);
+      this.initializeAllClientsCheck();
+    }
+    handleChange(event) {
+      const target = event.target;
+      const selectAll = target.closest('[name="checkbox-selection-all"]');
+      if (selectAll) {
+        this.handleSelectAllCheckboxes(selectAll.checked);
+        return;
+      }
+      const userAllClients = target.closest("#user_all_clients");
+      if (userAllClients) {
+        this.handleAllClientsCheck();
+        return;
+      }
+    }
+    handleClick(event) {
+      const target = event.target;
+      const markAsSent = closestSafe(target, "#btn-mark-as-sent");
+      if (markAsSent) {
+        this.handleMarkAsSent();
+        return;
+      }
+      const markDraft = closestSafe(target, "#btn-mark-sent-as-draft");
+      if (markDraft) {
+        this.handleMarkSentAsDraft();
+        return;
+      }
+      const createRecurring = closestSafe(
+        target,
+        ".create_recurring_confirm_multiple"
+      );
+      if (createRecurring) {
+        this.handleCreateRecurringMultiple(createRecurring);
+        return;
+      }
+      const deleteItemsConfirm = closestSafe(target, ".delete-items-confirm-inv") || closestSafe(target, "#delete-items-confirm-inv");
+      if (deleteItemsConfirm) {
+        this.handleDeleteInvoiceItems(deleteItemsConfirm);
+        return;
+      }
+      const copyMultiple = closestSafe(target, ".modal_copy_inv_multiple_confirm");
+      if (copyMultiple) {
+        this.handleCopyMultipleInvoices(copyMultiple);
+        return;
+      }
+      const invToInv = closestSafe(target, "#inv_to_inv_confirm") || closestSafe(target, ".inv_to_inv_confirm");
+      if (invToInv) {
+        this.handleCopySingleInvoice(invToInv);
+        return;
+      }
+      const invTaxSubmit = closestSafe(target, "#inv_tax_submit");
+      if (invTaxSubmit) {
+        event.preventDefault();
+        this.handleAddInvoiceTax(invTaxSubmit);
+        return;
+      }
+      const pdfWithCustom = closestSafe(target, "#inv_to_pdf_confirm_with_custom_fields");
+      if (pdfWithCustom) {
+        this.handlePdfExport(true);
+        return;
+      }
+      const pdfWithoutCustom = closestSafe(target, "#inv_to_pdf_confirm_without_custom_fields");
+      if (pdfWithoutCustom) {
+        this.handlePdfExport(false);
+        return;
+      }
+      const modalPdfWithCustom = closestSafe(target, "#inv_to_modal_pdf_confirm_with_custom_fields");
+      if (modalPdfWithCustom) {
+        this.handleModalPdfView(true);
+        return;
+      }
+      const modalPdfWithoutCustom = closestSafe(target, "#inv_to_modal_pdf_confirm_without_custom_fields");
+      if (modalPdfWithoutCustom) {
+        this.handleModalPdfView(false);
+        return;
+      }
+      const htmlWithCustom = closestSafe(target, "#inv_to_html_confirm_with_custom_fields");
+      if (htmlWithCustom) {
+        this.handleHtmlExport(true);
+        return;
+      }
+      const htmlWithoutCustom = closestSafe(target, "#inv_to_html_confirm_without_custom_fields");
+      if (htmlWithoutCustom) {
+        this.handleHtmlExport(false);
+        return;
+      }
+      const paymentSubmit = closestSafe(target, "#btn_modal_payment_submit");
+      if (paymentSubmit) {
+        this.handlePaymentSubmit();
+        return;
+      }
+      const addRowModal = closestSafe(target, ".btn_add_row_modal");
+      if (addRowModal) {
+        this.handleAddRowModal();
+        return;
+      }
+      const addItemRow = closestSafe(target, ".btn_inv_item_add_row");
+      if (addItemRow) {
+        this.handleAddInvoiceItemRow();
+        return;
+      }
+      const deleteItem = closestSafe(target, ".btn_delete_item");
+      if (deleteItem) {
+        this.handleDeleteSingleItem(deleteItem);
+        return;
+      }
+    }
+    getCheckedInvoiceIds() {
+      const selected = [];
+      const table = document.getElementById("table-invoice");
+      if (!table) return selected;
+      const checkboxes = table.querySelectorAll(
+        'input[type="checkbox"]:checked'
+      );
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.id) {
+          selected.push(checkbox.id);
+        }
+      });
+      return selected;
+    }
+    async handleMarkAsSent() {
+      const btn = document.getElementById("btn-mark-as-sent");
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        setButtonLoading3(btn, true);
+      }
+      try {
+        const selected = this.getCheckedInvoiceIds();
+        const url = `${location.origin}/invoice/inv/mark_as_sent`;
+        const response = await getJson(url, { keylist: selected });
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          window.location.reload();
+        } else {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("mark_as_sent error", error);
+        if (btn && originalHtml) {
+          setButtonLoading3(btn, false, originalHtml);
+        }
+        alert("An error occurred. See console for details.");
+      }
+    }
+    async handleMarkSentAsDraft() {
+      const btn = document.getElementById("btn-mark-sent-as-draft");
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        setButtonLoading3(btn, true);
+      }
+      try {
+        const selected = this.getCheckedInvoiceIds();
+        const url = `${location.origin}/invoice/inv/mark_sent_as_draft`;
+        const response = await getJson(url, { keylist: selected });
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          window.location.reload();
+        } else {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("mark_sent_as_draft error", error);
+        if (btn && originalHtml) {
+          setButtonLoading3(btn, false, originalHtml);
+        }
+        alert("An error occurred. See console for details.");
+      }
+    }
+    async handleCreateRecurringMultiple(createRecurring) {
+      const btn = document.querySelector(".create_recurring_confirm_multiple") || createRecurring;
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+        btn.disabled = true;
+      }
+      try {
+        const selected = this.getCheckedInvoiceIds();
+        if (selected.length === 0) {
+          alert("Please select invoices to create recurring invoices.");
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+          return;
+        }
+        const payload = {
+          keylist: selected,
+          recur_frequency: getFieldValue3("recur_frequency"),
+          recur_start_date: getFieldValue3("recur_start_date"),
+          recur_end_date: getFieldValue3("recur_end_date")
+        };
+        if (!payload.recur_frequency || !payload.recur_start_date) {
+          alert("Please select frequency and start date.");
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+          return;
+        }
+        const url = `${location.origin}/invoice/invrecurring/multiple`;
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          this.closeModal("create-recurring-multiple");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        } else {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+          const errorMessage = data.message || "Failed to create recurring invoices. Please try again.";
+          alert(errorMessage);
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+        }
+      } catch (error) {
+        console.error("invrecurring/multiple error", error);
+        if (btn && originalHtml) {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+        alert("An error occurred while creating recurring invoices. See console for details.");
+      }
+    }
+    async handleCopyMultipleInvoices(copyMultiple) {
+      const btn = document.querySelector(".modal_copy_inv_multiple_confirm") || copyMultiple;
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        btn.disabled = true;
+      }
+      try {
+        const modalCreatedDate = getFieldValue3("modal_created_date");
+        const selected = this.getCheckedInvoiceIds();
+        if (selected.length === 0) {
+          alert("Please select invoices to copy.");
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+          return;
+        }
+        const payload = {
+          keylist: selected,
+          modal_created_date: modalCreatedDate
+        };
+        const url = `${location.origin}/invoice/inv/multiplecopy`;
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          window.location.reload();
+        } else {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("multiplecopy error", error);
+        if (btn && originalHtml) {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+        alert("An error occurred. See console for details.");
+      }
+    }
+    async handleAddInvoiceTax(invTaxSubmit) {
+      const btn = document.getElementById("inv_tax_submit");
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+        btn.disabled = true;
+      }
+      try {
+        const currentUrl = new URL(location.href);
+        const inv_id = currentUrl.pathname.split("/").pop() || "";
+        const payload = {
+          inv_id,
+          inv_tax_rate_id: getFieldValue3("inv_tax_rate_id"),
+          include_inv_item_tax: getFieldValue3("include_inv_item_tax")
+        };
+        const url = `${location.origin}/invoice/inv/save_inv_tax_rate`;
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+          this.closeModal("add-inv-tax");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        } else {
+          if (btn) btn.innerHTML = '<i class="fa fa-times"></i>';
+          alert("Failed to add invoice tax. Please try again.");
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+        }
+      } catch (error) {
+        console.error("invoice tax add error", error);
+        if (btn && originalHtml) {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+        alert("An error occurred while adding invoice tax. See console for details.");
+      }
+    }
+    async handleCopySingleInvoice(invToInv) {
+      const btn = document.querySelector(".inv_to_inv_confirm") || invToInv;
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+        btn.disabled = true;
+      }
+      try {
+        const absoluteUrl = new URL(location.href);
+        const inv_id = absoluteUrl.pathname.split("/").pop() || "";
+        const payload = {
+          inv_id,
+          client_id: getFieldValue3("create_inv_client_id"),
+          user_id: getFieldValue3("user_id")
+        };
+        const url = `${location.origin}/invoice/inv/inv_to_inv_confirm`;
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          if (data.new_invoice_id) {
+            window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
+          } else {
+            window.location.href = absoluteUrl.href;
+            window.location.reload();
+          }
+        } else {
+          if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
+          window.location.href = absoluteUrl.href;
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("inv_to_inv_confirm error", error);
+        if (btn && originalHtml) {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+        alert("An error occurred. See console for details.");
+      }
+    }
+    async handleDeleteInvoiceItems(deleteItemsConfirm) {
+      const btn = document.querySelector(".delete-items-confirm-inv") || deleteItemsConfirm;
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+        btn.disabled = true;
+      }
+      try {
+        const selected = [];
+        const modal = document.getElementById("delete-items");
+        if (modal) {
+          const checkboxes = modal.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          checkboxes.forEach((checkbox) => {
+            if (checkbox.value) {
+              selected.push(checkbox.value);
+            }
+          });
+        }
+        const currentUrl = new URL(location.href);
+        const inv_id = currentUrl.pathname.split("/").pop() || "";
+        if (selected.length === 0) {
+          alert("Please select items to delete.");
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+          return;
+        }
+        const payload = {
+          item_ids: selected,
+          inv_id
+        };
+        const url = `${location.origin}/invoice/invitem/multiple`;
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+          this.closeModal("delete-items");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        } else {
+          if (btn) btn.innerHTML = '<i class="fa fa-times"></i>';
+          alert("Failed to delete items. Please try again.");
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+        }
+      } catch (error) {
+        console.error("delete items error", error);
+        if (btn && originalHtml) {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+        alert("An error occurred while deleting items. See console for details.");
+      }
+    }
+    handlePdfExport(withCustomFields) {
+      const endpoint = withCustomFields ? "1" : "0";
+      const url = `${location.origin}/invoice/inv/pdf/${endpoint}`;
+      window.open(url, "_blank");
+    }
+    handleModalPdfView(withCustomFields) {
+      const endpoint = withCustomFields ? "1" : "0";
+      const url = `${location.origin}/invoice/inv/pdf/${endpoint}`;
+      const iframe = document.getElementById("modal-view-inv-pdf");
+      if (iframe) {
+        iframe.src = url;
+      }
+      try {
+        if (typeof window.bootstrap?.Modal !== "undefined") {
+          const modalEl = document.getElementById("modal-layout-modal-pdf-inv");
+          if (modalEl) {
+            const modal = new window.bootstrap.Modal(modalEl);
+            modal.show();
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to open PDF modal:", e);
+      }
+    }
+    handleHtmlExport(withCustomFields) {
+      const endpoint = withCustomFields ? "1" : "0";
+      const url = `${location.origin}/invoice/inv/html/${endpoint}`;
+      window.open(url, "_blank");
+    }
+    async handlePaymentSubmit() {
+      const url = `${location.origin}/invoice/payment/add_with_ajax`;
+      const btn = document.getElementById("btn_modal_payment_submit");
+      const originalHtml = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+        btn.disabled = true;
+      }
+      try {
+        const payload = {
+          // Add payment form fields here based on the actual form structure
+          // This is a placeholder - you'll need to adjust based on the actual payment form
+          amount: getFieldValue3("payment_amount"),
+          payment_method: getFieldValue3("payment_method"),
+          payment_date: getFieldValue3("payment_date")
+          // Add other payment fields as needed
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          if (btn) btn.innerHTML = '<i class="fa fa-check"></i>';
+          this.closeModal("payment-modal");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        } else {
+          if (btn && originalHtml) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }
+          alert("Failed to process payment. Please try again.");
+        }
+      } catch (error) {
+        console.error("Payment submission error:", error);
+        if (btn && originalHtml) {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+        alert("An error occurred while processing payment. See console for details.");
+      }
+    }
+    handleAddRowModal() {
+      const currentUrl = new URL(location.href);
+      const inv_id = currentUrl.pathname.split("/").pop() || "";
+      const url = `${location.origin}/invoice/invitem/add/${inv_id}`;
+      const modalPlaceholder = document.getElementById("modal-placeholder-invitem");
+      if (modalPlaceholder) {
+        fetch(url, { credentials: "same-origin" }).then((response) => response.text()).then((html) => {
+          modalPlaceholder.innerHTML = html;
+        }).catch((error) => {
+          console.error("Failed to load modal content:", error);
+          alert("Failed to load item form. Please try again.");
+        });
+      }
+    }
+    handleAddInvoiceItemRow() {
+      const newRow = document.getElementById("new_row");
+      const itemTable = document.getElementById("item_table");
+      if (newRow && itemTable) {
+        const clonedRow = newRow.cloneNode(true);
+        clonedRow.removeAttribute("id");
+        clonedRow.classList.add("item");
+        clonedRow.style.display = "block";
+        itemTable.appendChild(clonedRow);
+      }
+    }
+    async handleDeleteSingleItem(deleteItem) {
+      const itemId = deleteItem.getAttribute("data-id");
+      if (!itemId) {
+        const itemRow = deleteItem.closest(".item");
+        if (itemRow) {
+          itemRow.remove();
+        }
+        return;
+      }
+      try {
+        const url = `${location.origin}/invoice/inv/delete_item/${itemId}`;
+        const response = await getJson(url, { id: itemId });
+        const data = parsedata(response);
+        if (data.success === 1) {
+          const itemRow = deleteItem.closest(".item");
+          if (itemRow) {
+            itemRow.remove();
+          }
+          alert("Deleted");
+          window.location.reload();
+        } else {
+          alert("Failed to delete item. Please try again.");
+        }
+      } catch (error) {
+        console.error("Delete item error:", error);
+        alert("An error occurred while deleting the item. Please try again.");
+      }
+    }
+    handleSelectAllCheckboxes(checked) {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = checked;
+      });
+    }
+    initializeAllClientsCheck() {
+      this.handleAllClientsCheck();
+    }
+    handleAllClientsCheck() {
+      const userAllClientsCheckbox = document.getElementById("user_all_clients");
+      const listClientElement = document.getElementById("list_client");
+      if (userAllClientsCheckbox && listClientElement) {
+        if (userAllClientsCheckbox.checked) {
+          listClientElement.style.display = "none";
+        } else {
+          listClientElement.style.display = "block";
+        }
+      }
+    }
+    closeModal(modalId) {
+      try {
+        if (typeof window.bootstrap?.Modal !== "undefined") {
+          const modalEl = document.getElementById(modalId);
+          if (modalEl) {
+            const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) {
+              modalInstance.hide();
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to close modal:", e);
+      }
+    }
+  };
+
+  // src/typescript/product.ts
+  function setButtonLoading4(buttons, isLoading) {
+    buttons.forEach((button) => {
+      if (isLoading) {
+        button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+      } else {
+        button.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+      }
+    });
+  }
+  function setButtonError(buttons) {
+    buttons.forEach((button) => {
+      button.innerHTML = '<h6 class="text-center"><i class="fa fa-error"></i></h6>';
+    });
+  }
+  var ProductHandler = class {
+    constructor() {
+      this.bindEventListeners();
+      this.exposeGlobalFunctions();
+    }
+    bindEventListeners() {
+      document.addEventListener("click", this.handleClick.bind(this), true);
+    }
+    handleClick(event) {
+      const target = event.target;
+      const trigger = target.closest("#product_filters_submit");
+      if (trigger) {
+        this.submitProductFilters(event);
+      }
+    }
+    /**
+     * Filter table rows by SKU (mirrors original tableFunction)
+     */
+    filterTableBySku() {
+      const inputEl = document.getElementById("filter_product_sku");
+      if (!inputEl) return;
+      const input = inputEl.value || "";
+      const filter = input.toUpperCase();
+      const table = document.getElementById("table-product");
+      if (!table) return;
+      const rows = table.getElementsByTagName("tr");
+      for (let i = 0; i < rows.length; i++) {
+        const cell = rows[i].getElementsByTagName("td")[2];
+        if (cell) {
+          const textValue = cell.textContent || cell.innerText || "";
+          if (textValue.toUpperCase().indexOf(filter) > -1) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+    }
+    /**
+     * Perform the product search request and update UI
+     */
+    async submitProductFilters(event) {
+      if (event?.preventDefault) {
+        event.preventDefault();
+      }
+      const url = `${location.origin}/invoice/product/search`;
+      const buttons = document.querySelectorAll(
+        ".product_filters_submit"
+      );
+      setButtonLoading4(buttons, true);
+      try {
+        const productSkuInput = document.getElementById(
+          "filter_product_sku"
+        );
+        const productSku = productSkuInput?.value || "";
+        const payload = {
+          product_sku: productSku
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          this.filterTableBySku();
+          this.hideSummaryBar();
+          setButtonLoading4(buttons, false);
+        } else {
+          setButtonError(buttons);
+          if (data.message) {
+            alert(data.message);
+          }
+        }
+      } catch (error) {
+        console.error("product search failed", error);
+        setButtonError(buttons);
+        alert("An error occurred while searching products. See console for details.");
+      }
+    }
+    /**
+     * Hide the summary bar after filtering
+     */
+    hideSummaryBar() {
+      const summary = document.querySelector(".mt-3.me-3.summary.text-end");
+      if (summary) {
+        summary.style.visibility = "hidden";
+      }
+    }
+    /**
+     * Expose global functions for compatibility with existing code
+     */
+    exposeGlobalFunctions() {
+      window.productTableFilter = this.filterTableBySku.bind(this);
+    }
+  };
+
+  // src/typescript/salesorder.ts
+  var SalesOrderHandler = class {
+    constructor() {
+      this.bindEventListeners();
+      this.initializeOnLoad();
+    }
+    bindEventListeners() {
+      document.addEventListener("click", this.handleClick.bind(this), true);
+    }
+    initializeOnLoad() {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          this.initSelects();
+        });
+      } else {
+        this.initSelects();
+      }
+    }
+    handleClick(event) {
+      const target = event.target;
+      if (target.matches("#salesorder_to_pdf_confirm_with_custom_fields") || target.closest("#salesorder_to_pdf_confirm_with_custom_fields")) {
+        this.handlePdfExport(true);
+        return;
+      }
+      if (target.matches("#salesorder_to_pdf_confirm_without_custom_fields") || target.closest("#salesorder_to_pdf_confirm_without_custom_fields")) {
+        this.handlePdfExport(false);
+        return;
+      }
+      if (target.matches("#so_to_invoice_confirm") || target.closest("#so_to_invoice_confirm")) {
+        this.handleSoToInvoiceConversion();
+        return;
+      }
+      const openModalBtn = target.closest(".open-salesorder-modal");
+      if (openModalBtn) {
+        this.handleOpenModal(openModalBtn);
+        return;
+      }
+      const saveBtn = target.closest(".salesorder-save");
+      if (saveBtn) {
+        this.handleSaveSalesOrder();
+        return;
+      }
+    }
+    /**
+     * Initialize Tom Select if present for salesorder selects
+     */
+    initSelects() {
+      if (typeof window.TomSelect === "undefined") return;
+      const selects = document.querySelectorAll(
+        ".simple-select"
+      );
+      selects.forEach((element) => {
+        if (!element._tomselect) {
+          try {
+            new window.TomSelect(element, {});
+            element._tomselect = true;
+          } catch (error) {
+            console.warn("Failed to initialize TomSelect:", error);
+          }
+        }
+      });
+    }
+    /**
+     * Handle opening the sales order modal
+     */
+    async handleOpenModal(openBtn) {
+      const url = openBtn.dataset.url || `${location.origin}/invoice/salesorder/modal`;
+      const targetId = openBtn.dataset.target || "modal-placeholder-salesorder";
+      const target = document.getElementById(targetId);
+      if (!target) {
+        console.error(`Modal target element not found: ${targetId}`);
+        return;
+      }
+      try {
+        const response = await fetch(url, { cache: "no-store", credentials: "same-origin" });
+        const html = await response.text();
+        target.innerHTML = html;
+        const modalEl = target.querySelector(".modal");
+        if (modalEl && window.bootstrap?.Modal) {
+          const modalInstance = new window.bootstrap.Modal(modalEl);
+          modalInstance.show();
+        }
+        this.initSelects();
+      } catch (error) {
+        console.error("Failed to load sales order modal:", error);
+        alert("Failed to load modal. Please try again.");
+      }
+    }
+    /**
+     * Handle PDF export with or without custom fields
+     */
+    handlePdfExport(withCustomFields) {
+      const url = location.origin + "/invoice/salesorder/pdf/" + (withCustomFields ? "1" : "0");
+      window.location.reload();
+      window.open(url, "_blank");
+    }
+    /**
+     * Handle Sales Order to Invoice conversion
+     */
+    async handleSoToInvoiceConversion() {
+      const btn = document.querySelector(".so_to_invoice_confirm");
+      if (btn) {
+        btn.innerHTML = '<i class="fa fa-spin fa-spinner fa-margin"></i>';
+      }
+      const soIdEl = document.getElementById("so_id");
+      const clientIdEl = document.getElementById("client_id");
+      const groupIdEl = document.getElementById("group_id");
+      const passwordEl = document.getElementById("password");
+      if (!soIdEl?.value || !clientIdEl?.value || !groupIdEl?.value) {
+        console.error("Required fields missing for SO to Invoice conversion");
+        alert("Missing required data for conversion");
+        return;
+      }
+      const payload = {
+        so_id: soIdEl.value,
+        client_id: clientIdEl.value,
+        group_id: groupIdEl.value,
+        password: passwordEl?.value || ""
+      };
+      try {
+        const url = location.origin + "/invoice/salesorder/so_to_invoice_confirm";
+        const response = await getJson(url, payload);
+        if (response && response.success === 1) {
+          if (btn) {
+            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+          }
+          const absolute_url = new URL(location.href);
+          window.location.href = absolute_url.toString();
+          window.location.reload();
+        } else {
+          if (response?.validation_errors) {
+            document.querySelectorAll(".control-group").forEach((group) => {
+              group.classList.remove("error");
+            });
+            Object.keys(response.validation_errors).forEach((key) => {
+              const field = document.getElementById(key);
+              if (field?.parentElement) {
+                field.parentElement.classList.add("has-error");
+              }
+            });
+          }
+          if (btn) {
+            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+          }
+        }
+      } catch (error) {
+        console.error("SO to Invoice conversion failed:", error);
+        if (btn) {
+          btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+        }
+        alert("An error occurred during conversion. Please try again.");
+      }
+    }
+    /**
+     * Handle saving the sales order form
+     */
+    async handleSaveSalesOrder() {
+      const form = document.querySelector("#salesorder_form");
+      if (!form) {
+        console.error("Sales order form not found");
+        return;
+      }
+      try {
+        const action = form.getAttribute("action") || `${location.origin}/invoice/salesorder/save`;
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => {
+          params.append(key, value.toString());
+        });
+        const url = `${action}?${params.toString()}`;
+        const response = await fetch(url, {
+          cache: "no-store",
+          credentials: "same-origin",
+          headers: {
+            Accept: "application/json"
+          }
+        });
+        const data = await response.json();
+        const parsedResponse = parsedata(data);
+        if (parsedResponse.success === 1) {
+          window.location.reload();
+        } else {
+          const message = parsedResponse.message || "Save failed";
+          alert(message);
+        }
+      } catch (error) {
+        console.error("Sales order save failed:", error);
+        alert("An error occurred while saving. Please try again.");
+      }
+    }
+  };
+
+  // src/typescript/family.ts
+  var FamilyHandler = class {
+    constructor() {
+      this.bindEventListeners();
+    }
+    bindEventListeners() {
+      document.addEventListener("DOMContentLoaded", this.initializeSelectors.bind(this));
+    }
+    initializeSelectors() {
+      const primarySelect = document.getElementById(
+        "family-category-primary-id"
+      );
+      const secondarySelect = document.getElementById(
+        "family-category-secondary-id"
+      );
+      if (primarySelect) {
+        primarySelect.addEventListener("change", this.onPrimaryChange.bind(this), false);
+        Promise.resolve().then(() => this.onPrimaryChange());
+      }
+      if (secondarySelect) {
+        secondarySelect.addEventListener("change", this.onSecondaryChange.bind(this), false);
+        Promise.resolve().then(() => this.onSecondaryChange());
+      }
+    }
+    /**
+     * Populate a <select> element with options from an object { key: value, ... }
+     */
+    populateSelect(selectEl, items, promptText) {
+      if (!selectEl) return;
+      selectEl.innerHTML = "";
+      const promptOption = document.createElement("option");
+      promptOption.value = "";
+      promptOption.textContent = promptText || "None";
+      selectEl.appendChild(promptOption);
+      if (!items) return;
+      if (Array.isArray(items)) {
+        items.forEach((value, index) => {
+          const option = document.createElement("option");
+          option.value = index.toString();
+          option.textContent = value;
+          selectEl.appendChild(option);
+        });
+      } else {
+        Object.entries(items).forEach(([key, value]) => {
+          const option = document.createElement("option");
+          option.value = key;
+          option.textContent = value;
+          selectEl.appendChild(option);
+        });
+      }
+    }
+    /**
+     * Handler: when primary category changes, load secondary categories
+     */
+    async onPrimaryChange() {
+      const primarySelect = document.getElementById(
+        "family-category-primary-id"
+      );
+      if (!primarySelect) return;
+      const primaryCategoryId = primarySelect.value || "";
+      const url = `${location.origin}/invoice/family/secondaries/${encodeURIComponent(primaryCategoryId)}`;
+      try {
+        const payload = {
+          category_primary_id: primaryCategoryId
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          const secondaryCategories = data.secondary_categories || {};
+          const secondaryDropdown = document.getElementById(
+            "family-category-secondary-id"
+          );
+          this.populateSelect(secondaryDropdown, secondaryCategories, "None");
+          if (secondaryDropdown) {
+            const changeEvent = new Event("change", { bubbles: true });
+            secondaryDropdown.dispatchEvent(changeEvent);
+          }
+        } else {
+          this.populateSelect(
+            document.getElementById("family-category-secondary-id"),
+            {},
+            "None"
+          );
+          this.populateSelect(
+            document.getElementById("family-name"),
+            {},
+            "None"
+          );
+        }
+      } catch (error) {
+        console.error("Error loading secondary categories", error);
+        this.populateSelect(
+          document.getElementById("family-category-secondary-id"),
+          {},
+          "None"
+        );
+        this.populateSelect(
+          document.getElementById("family-name"),
+          {},
+          "None"
+        );
+      }
+    }
+    /**
+     * Handler: when secondary category changes, load family names
+     */
+    async onSecondaryChange() {
+      const secondarySelect = document.getElementById(
+        "family-category-secondary-id"
+      );
+      if (!secondarySelect) return;
+      const secondaryCategoryId = secondarySelect.value || "";
+      const url = `${location.origin}/invoice/family/names/${encodeURIComponent(secondaryCategoryId)}`;
+      try {
+        const payload = {
+          category_secondary_id: secondaryCategoryId
+        };
+        const response = await getJson(url, payload);
+        const data = parsedata(response);
+        if (data.success === 1) {
+          const familyNames = data.family_names || {};
+          const familyNameDropdown = document.getElementById(
+            "family-name"
+          );
+          this.populateSelect(familyNameDropdown, familyNames, "None");
+        } else {
+          this.populateSelect(
+            document.getElementById("family-name"),
+            {},
+            "None"
+          );
+        }
+      } catch (error) {
+        console.error("Error loading family names", error);
+        this.populateSelect(
+          document.getElementById("family-name"),
+          {},
+          "None"
+        );
+      }
+    }
+  };
+
+  // src/typescript/settings.ts
+  var SettingsHandler = class {
+    constructor() {
+      this.originalDisplayStyles = {};
+      this.originalDisabledStates = {};
+      this.bindEventListeners();
+    }
+    bindEventListeners() {
+      document.addEventListener("DOMContentLoaded", this.initialize.bind(this));
+    }
+    initialize() {
+      this.toggleSmtpSettings();
+      const emailSendMethodEl = document.getElementById("email_send_method");
+      if (emailSendMethodEl) {
+        emailSendMethodEl.addEventListener("change", this.toggleSmtpSettings.bind(this));
+      }
+      const fphBtn = document.getElementById("btn_fph_generate");
+      if (fphBtn) {
+        fphBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.handleFphGenerateClick();
+        });
+      }
+      const cronBtn = document.getElementById("btn_generate_cron_key");
+      if (cronBtn) {
+        cronBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.handleGenerateCronKeyClick();
+        });
+      }
+      const submitBtn = document.getElementById("btn-submit");
+      if (submitBtn) {
+        submitBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.handleSettingsSubmitClick();
+        });
+      }
+      const onlineSelect = document.getElementById("online-payment-select");
+      if (onlineSelect) {
+        onlineSelect.addEventListener(
+          "change",
+          this.handleOnlinePaymentSelectChange.bind(this)
+        );
+      }
+      this.handleOnlinePaymentSelectChange();
+    }
+    /**
+     * Toggle visibility of SMTP settings based on email_send_method value
+     */
+    toggleSmtpSettings() {
+      const emailSendMethodEl = document.getElementById("email_send_method");
+      const div = document.getElementById("div-smtp-settings");
+      if (!div || !emailSendMethodEl) return;
+      if (emailSendMethodEl.value === "smtp") {
+        div.style.display = "";
+      } else {
+        div.style.display = "none";
+      }
+    }
+    /**
+     * Generate fingerprint / client metrics for FPH
+     */
+    async handleFphGenerateClick() {
+      const url = `${location.origin}/invoice/setting/fphgenerate`;
+      const requestData = {
+        userAgent: navigator.userAgent,
+        width: window.screen.width,
+        height: window.screen.height,
+        scalingFactor: Math.round(window.devicePixelRatio * 100) / 100,
+        colourDepth: window.screen.colorDepth,
+        windowInnerWidth: window.innerWidth,
+        windowInnerHeight: window.innerHeight
+      };
+      const params = new URLSearchParams();
+      Object.entries(requestData).forEach(([key, value]) => {
+        params.append(key, value.toString());
+      });
+      try {
+        const response = await fetch(`${url}?${params.toString()}`, {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store",
+          headers: { Accept: "application/json" }
+        });
+        if (!response.ok) {
+          throw new Error(`Network response not ok: ${response.status}`);
+        }
+        const data = await response.json().catch(() => ({}));
+        const parsedResponse = parsedata(data);
+        if (parsedResponse.success === 1) {
+          this.updateSettingField(
+            "settings[fph_client_browser_js_user_agent]",
+            parsedResponse.userAgent
+          );
+          this.updateSettingField("settings[fph_client_device_id]", parsedResponse.deviceId);
+          this.updateSettingField("settings[fph_screen_width]", parsedResponse.width);
+          this.updateSettingField("settings[fph_screen_height]", parsedResponse.height);
+          this.updateSettingField(
+            "settings[fph_screen_scaling_factor]",
+            parsedResponse.scalingFactor
+          );
+          this.updateSettingField(
+            "settings[fph_screen_colour_depth]",
+            parsedResponse.colourDepth
+          );
+          this.updateSettingField("settings[fph_timestamp]", parsedResponse.timestamp);
+          this.updateSettingField("settings[fph_window_size]", parsedResponse.windowSize);
+          this.updateSettingField(
+            "settings[fph_gov_client_user_id]",
+            parsedResponse.userUuid
+          );
+        }
+      } catch (error) {
+        console.error("FPH generate failed", error);
+      }
+    }
+    /**
+     * Helper to update a settings field value
+     */
+    updateSettingField(fieldId, value) {
+      const element = document.getElementById(fieldId);
+      if (element && value !== void 0) {
+        element.value = value;
+      }
+    }
+    /**
+     * Submit settings form - ensure all tab elements are included
+     */
+    handleSettingsSubmitClick() {
+      const form = document.getElementById("form-settings");
+      if (!form) return;
+      const tabPanes = form.querySelectorAll(".tab-pane");
+      this.originalDisplayStyles = {};
+      this.originalDisabledStates = {};
+      tabPanes.forEach((pane) => {
+        if (pane.id) {
+          this.originalDisplayStyles[pane.id] = pane.style.display;
+          pane.style.display = "block";
+          const disabledElements = pane.querySelectorAll(
+            "input:disabled, select:disabled, textarea:disabled"
+          );
+          disabledElements.forEach((element, index) => {
+            const key = `${pane.id}_${index}`;
+            this.originalDisabledStates[key] = { element, disabled: true };
+            element.disabled = false;
+          });
+        }
+      });
+      setTimeout(() => {
+        form.submit();
+        this.restoreFormState(tabPanes);
+      }, 10);
+    }
+    /**
+     * Restore form state after submission
+     */
+    restoreFormState(tabPanes) {
+      tabPanes.forEach((pane) => {
+        if (pane.id && this.originalDisplayStyles[pane.id] !== void 0) {
+          pane.style.display = this.originalDisplayStyles[pane.id];
+        }
+      });
+      Object.entries(this.originalDisabledStates).forEach(([_, state]) => {
+        if (state.element && state.disabled) {
+          state.element.disabled = true;
+        }
+      });
+    }
+    /**
+     * Online payment select change handler (show/hide gateway settings)
+     */
+    handleOnlinePaymentSelectChange() {
+      const select = document.getElementById("online-payment-select");
+      if (!select) return;
+      const driver = select.value;
+      const gatewaySettings = document.querySelectorAll(
+        ".gateway-settings"
+      );
+      gatewaySettings.forEach((element) => {
+        if (!element.classList.contains("active-gateway")) {
+          element.classList.add("hidden");
+        }
+      });
+      const target = document.getElementById(`gateway-settings-${driver}`);
+      if (target) {
+        target.classList.remove("hidden");
+        target.classList.add("active-gateway");
+      }
+    }
+  };
+
+  // src/typescript/scripts.ts
+  function initTooltips() {
+    const bootstrap2 = window.bootstrap;
+    if (typeof bootstrap2 === "undefined" || !bootstrap2.Tooltip) return;
+    const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipElements.forEach((el) => {
+      try {
+        new bootstrap2.Tooltip(el);
+      } catch (e) {
+      }
+    });
+  }
+  function initSimpleSelects(root) {
+    const TomSelect = window.TomSelect;
+    if (typeof TomSelect === "undefined") return;
+    const container = root || document;
+    const selectElements = container.querySelectorAll(".simple-select");
+    selectElements.forEach((el) => {
+      if (!el._tomselect) {
+        new TomSelect(el, {});
+        el._tomselect = true;
+      }
+    });
+  }
+  function showFullpageLoader() {
+    const loader = document.getElementById("fullpage-loader");
+    const loaderError = document.getElementById("loader-error");
+    const loaderIcon = document.getElementById("loader-icon");
+    if (loader) loader.style.display = "block";
+    if (loaderError) loaderError.style.display = "none";
+    if (loaderIcon) {
+      loaderIcon.classList.add("fa-spin");
+      loaderIcon.classList.remove("text-danger");
+    }
+    setTimeout(() => {
+      if (loaderError) loaderError.style.display = "block";
+      if (loaderIcon) {
+        loaderIcon.classList.remove("fa-spin");
+        loaderIcon.classList.add("text-danger");
+      }
+    }, 1e4);
+  }
+  function hideFullpageLoader() {
+    const loader = document.getElementById("fullpage-loader");
+    const loaderError = document.getElementById("loader-error");
+    const loaderIcon = document.getElementById("loader-icon");
+    if (loader) loader.style.display = "none";
+    if (loaderError) loaderError.style.display = "none";
+    if (loaderIcon) {
+      loaderIcon.classList.add("fa-spin");
+      loaderIcon.classList.remove("text-danger");
+    }
+  }
+  function initPasswordMeter() {
+    const passwordInput = document.querySelector(".passwordmeter-input");
+    if (!passwordInput) return;
+    passwordInput.addEventListener("input", () => {
+      const password = passwordInput.value;
+      const strength = calculatePasswordStrength(password);
+      const meter2 = document.querySelector(".passmeter-2");
+      const meter3 = document.querySelector(".passmeter-3");
+      if (meter2 && meter3) {
+        meter2.style.display = "none";
+        meter3.style.display = "none";
+        if (strength >= 4) {
+          meter2.style.display = "block";
+          meter3.style.display = "block";
+        } else if (strength >= 3) {
+          meter2.style.display = "block";
+        }
+      }
+    });
+  }
+  function calculatePasswordStrength(password) {
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+  }
+  function initializeScripts() {
+    document.addEventListener("DOMContentLoaded", () => {
+      initTooltips();
+      initSimpleSelects();
+      initPasswordMeter();
+      document.addEventListener("click", (e) => {
+        const target = e.target;
+        if (target.classList.contains("ajax-loader")) {
+          showFullpageLoader();
+        }
+        if (target.classList.contains("fullpage-loader-close")) {
+          hideFullpageLoader();
+        }
+      });
+    });
+  }
+  initializeScripts();
+
+  // src/typescript/index.ts
+  var InvoiceApp = class {
+    constructor() {
+      this._createCreditHandler = new CreateCreditHandler();
+      this._quoteHandler = new QuoteHandler();
+      this._clientHandler = new ClientHandler();
+      this._invoiceHandler = new InvoiceHandler();
+      this._productHandler = new ProductHandler();
+      this._salesOrderHandler = new SalesOrderHandler();
+      this._familyHandler = new FamilyHandler();
+      this._settingsHandler = new SettingsHandler();
+      this.initializeTooltips();
+      this.initializeTaggableFocus();
+      initTooltips();
+      initSimpleSelects();
+      initPasswordMeter();
+      this.initializeFullpageLoader();
+      console.log(
+        "Invoice TypeScript App initialized with all core handlers: Quote, Client, Invoice, Product, SalesOrder, Family, and Settings"
+      );
+    }
+    /**
+     * Initialize Bootstrap tooltips
+     */
+    initializeTooltips() {
+      document.addEventListener("DOMContentLoaded", () => {
+        if (typeof bootstrap !== "undefined" && bootstrap.Tooltip) {
+          const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+          tooltipElements.forEach((element) => {
+            try {
+              new bootstrap.Tooltip(element);
+            } catch (error) {
+              console.warn("Tooltip initialization failed:", error);
+            }
+          });
+        }
+      });
+    }
+    /**
+     * Keep track of last taggable focused element
+     */
+    initializeTaggableFocus() {
+      document.addEventListener(
+        "focus",
+        (event) => {
+          const target = event.target;
+          if (target?.classList?.contains("taggable")) {
+            window.lastTaggableClicked = target;
+          }
+        },
+        true
+      );
+    }
+    /**
+     * Initialize fullpage loader functionality
+     */
+    initializeFullpageLoader() {
+      document.addEventListener("click", (e) => {
+        const target = e.target;
+        if (target.classList.contains("ajax-loader")) {
+          showFullpageLoader();
+        }
+        if (target.classList.contains("fullpage-loader-close")) {
+          hideFullpageLoader();
+        }
+      });
+    }
+  };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => new InvoiceApp());
+  } else {
+    new InvoiceApp();
+  }
+  return __toCommonJS(index_exports);
+})();
+//# sourceMappingURL=invoice-typescript-iife.js.map

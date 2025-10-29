@@ -78,6 +78,39 @@ $columns = [
         withSorting: false,
     ),
     new DataColumn(
+        header: $translator->translate('view'),
+        content: static function (Client $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClient_id()]), []);
+        },
+        encodeContent: false,
+    ),
+    new DataColumn(
+        header: $translator->translate('edit'),
+        content: static function (Client $model) use ($urlGenerator): A {
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'edit']), []);
+        },
+        encodeContent: false,
+    ),
+    new DataColumn(
+        header: $translator->translate('delete'),
+        content: static function (Client $model) use ($translator, $urlGenerator): A {
+            return Html::a(
+                Html::tag(
+                    'button',
+                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    [
+                        'type' => 'submit',
+                        'class' => 'dropdown-button',
+                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    ],
+                ),
+                $urlGenerator->generate('client/delete', ['id' => $model->getClient_id()]),
+                [],
+            );
+        },
+        encodeContent: false,
+    ),
+    new DataColumn(
         'client_email',
         header: $translator->translate('email'),
         content: static function (Client $model): string {
@@ -220,39 +253,6 @@ $columns = [
             $equal = ($cpR->repoClientCount((string) $model->getClient_id()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('client.peppol.add') : $translator->translate('client.peppol.edit'));
             return Html::a(Html::tag('i', $heading, ['class' => 'fa fa-' . ($equal ? 'plus' : 'edit') . 'fa-margin']), ($equal ? $addUrl : $editUrl), []);
-        },
-        encodeContent: false,
-    ),
-    new DataColumn(
-        header: $translator->translate('view'),
-        content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClient_id()]), []);
-        },
-        encodeContent: false,
-    ),
-    new DataColumn(
-        header: $translator->translate('edit'),
-        content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'edit']), []);
-        },
-        encodeContent: false,
-    ),
-    new DataColumn(
-        header: $translator->translate('delete'),
-        content: static function (Client $model) use ($translator, $urlGenerator): A {
-            return Html::a(
-                Html::tag(
-                    'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                    [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                    ],
-                ),
-                $urlGenerator->generate('client/delete', ['id' => $model->getClient_id()]),
-                [],
-            );
         },
         encodeContent: false,
     ),

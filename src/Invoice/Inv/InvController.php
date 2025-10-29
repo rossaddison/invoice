@@ -574,8 +574,8 @@ final class InvController extends BaseController
                         if ($origin == 'dashboard') {
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $model_id]);
                         }
-                        // otherwise return to client
-                        return $this->webService->getRedirectResponse('client/view', ['id' => $origin]);
+                        // otherwise return to new invoice view (client origin)
+                        return $this->webService->getRedirectResponse('inv/view', ['id' => $model_id]);
                     }
                     $this->flashMessage('warning', $this->translator->translate('user.client.active.no'));
                 }
