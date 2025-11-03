@@ -73,7 +73,7 @@
         "setasign/fpdf": "^1.8.6",
         "spomky-labs/otphp": "^11.4",
         "stripe/stripe-php": "^17.6.0",
-        "symfony/console": "^7.4.0",
+        "symfony/console": "^7.4.0-BETA2",
         "symfony/process": "^7.4.0",
         "vjik/telegram-bot-api": "^0.9.3",
         "vlucas/phpdotenv": "^5.6.2",
