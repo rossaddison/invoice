@@ -35,7 +35,8 @@ function escapeIdForQuerySelector(id: string): string {
     if ((window as any).CSS && typeof (window as any).CSS.escape === 'function') {
         return (window as any).CSS.escape(id);
     }
-    return id.replace(/([\[\]#;.])/g, '\\$1');
+    // First escape backslash, then escape brackets and other CSS selector special chars
+    return id.replace(/\\/g, '\\\\').replace(/([\[\]#;.])/g, '\\$1');
 }
 
 function setButtonWorkingState(button: HTMLElement, working: boolean) {
