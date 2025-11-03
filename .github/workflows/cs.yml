@@ -1,26 +1,8 @@
 name: Code Style
 
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-      - 'fixer-output.txt'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-      - 'fixer-output.txt'
+  workflow_dispatch:
+
 jobs:
   cs-fix:
     timeout-minutes: 30
@@ -85,4 +67,4 @@ jobs:
           body: |
             This pull request contains automated code style fixes as detected by PHP CS Fixer.
           labels: style, automated
-          delete-branch: false   
+          delete-branch: false
