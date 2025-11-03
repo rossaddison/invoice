@@ -8,6 +8,13 @@ use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 ini_set('memory_limit', '512M');
 
+// Ensure PHP CS Fixer runs only on PHP 8.3
+if (PHP_MAJOR_VERSION !== 8 || PHP_MINOR_VERSION !== 3) {
+    echo "PHP CS Fixer should be run on PHP 8.3 only. Current version: " . PHP_VERSION . "\n";
+    echo "Please switch to PHP 8.3 to run PHP CS Fixer.\n";
+    exit(1);
+}
+
 $root = __DIR__;
 $finder = (new Finder())
     ->in([
@@ -38,4 +45,6 @@ return (new Config())
     ->setRules([
         '@PER-CS2x0' => true,
     ])
+    ->setRiskyAllowed(false)
+    ->setUsingCache(true)
     ->setFinder($finder);
