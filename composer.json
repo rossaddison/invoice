@@ -28,6 +28,7 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
+        "ext-sodium": "*",
         "ext-zend-opcache": "*",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
         "braintree/braintree_php": "^6.30",
