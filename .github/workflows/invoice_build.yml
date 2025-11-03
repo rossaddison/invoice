@@ -44,18 +44,18 @@ jobs:
           - windows-latest
 
         php:
-          - 8.3.27
+          - 8.3
           - 8.4
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Composer GitHub auth
         run: composer config --global --auth github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
       
       - name: Install PHP with extensions
-        uses: shivammathur/setup-php@v2.35.5
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
