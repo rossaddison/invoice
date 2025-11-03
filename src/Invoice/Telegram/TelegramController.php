@@ -13,10 +13,10 @@ use App\Widget\Button;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface as Logger;
-use Vjik\TelegramBot\Api\FailResult;
-use Vjik\TelegramBot\Api\ParseResult\TelegramParseResultException;
-use Vjik\TelegramBot\Api\TelegramBotApi;
-use Vjik\TelegramBot\Api\Type\Update\Update;
+use Phptg\BotApi\FailResult;
+use Phptg\BotApi\ParseResult\TelegramParseResultException;
+use Phptg\BotApi\TelegramBotApi;
+use Phptg\BotApi\Type\Update\Update;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -92,7 +92,7 @@ final class TelegramController extends BaseController
                     if (strlen($chatId) > 1) {
                         if (!$failResult instanceof FailResult) {
                             $user = $this->telegramBotApi->getMe();
-                            if (($user instanceof \Vjik\TelegramBot\Api\Type\User) &&
+                            if (($user instanceof \Phptg\BotApi\Type\User) &&
                                 ($this->sR->getSetting('telegram_test_message_use') == '1')) {
                                 $text = $this->translator->translate('telegram.bot.api.hello.world.test.message');
                                 $sendMessageResult = $this->telegramBotApi->sendMessage(

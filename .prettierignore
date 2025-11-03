@@ -1,0 +1,19 @@
+# Build outputs
+src/Invoice/Asset/rebuild/js/
+temp_build/
+dist/
+
+# Dependencies
+node_modules/
+vendor/
+
+# Cache directories
+runtime/
+private/cache/
+
+# Test outputs
+Tests/_output/
+
+# Generated files
+*.min.js
+*.bundle.js

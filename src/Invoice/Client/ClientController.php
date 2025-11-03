@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Client;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entity's
 use App\Invoice\Entity\Client;
@@ -563,7 +564,7 @@ final class ClientController extends BaseController
                             'alert' => $this->alert(),
                             'iR' => $iR,
                             'iaR' => $iaR,
-                            'editInv' => $this->userService->hasPermission('editInv'),
+                            'editInv' => $this->userService->hasPermission(Permissions::EDIT_INV),
                             'active' => $active,
                             'cpR' => $cpR,
                             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
@@ -600,7 +601,7 @@ final class ClientController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('client/index');
@@ -709,6 +710,35 @@ final class ClientController extends BaseController
             ];
         }
         return $this->factory->createResponse(Json::encode($parameters));
+    }
+
+    public function delete_client_note(Request $request, cnR $cnR, cnS $cnS): \Yiisoft\DataResponse\DataResponse
+    {
+        $body = $request->getQueryParams();
+        /**
+         * @var string $body['note_id']
+         */
+        $note_id = $body['note_id'] ?? '';
+
+        if (empty($note_id)) {
+            return $this->factory->createResponse(Json::encode([
+                'success' => 0,
+                'message' => 'Note ID is required',
+            ]));
+        }
+
+        $clientNote = $cnR->repoClientNotequery($note_id);
+        if ($clientNote) {
+            $cnS->deleteClientNote($clientNote);
+            return $this->factory->createResponse(Json::encode([
+                'success' => 1,
+            ]));
+        } else {
+            return $this->factory->createResponse(Json::encode([
+                'success' => 0,
+                'message' => 'Note not found',
+            ]));
+        }
     }
 
     /**

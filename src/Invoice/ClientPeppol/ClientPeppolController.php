@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\ClientPeppol;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -85,9 +86,9 @@ final class ClientPeppolController extends BaseController
                             $this->viewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
                                 [
-                                    'url' => $this->userService->hasPermission('editClientPeppol')
-                                             && $this->userService->hasPermission('viewInv')
-                                             && !$this->userService->hasPermission('editInv')
+                                    'url' => $this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL)
+                                             && $this->userService->hasPermission(Permissions::VIEW_INV)
+                                             && !$this->userService->hasPermission(Permissions::EDIT_INV)
                                              ? 'client/guest'
                                              : 'client/index',
                                     'heading' => $this->translator->translate('client.peppol'),
@@ -247,14 +248,14 @@ final class ClientPeppolController extends BaseController
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->clientPeppolService->saveClientPeppol($clientpeppol, $body);
                         // Guest user's return url to see user's clients
-                        if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+                        if ($this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL) && $this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
                             return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
                                 ['url' => 'client/guest', 'heading' => $this->translator->translate('client.peppol'), 'message' => $this->translator->translate('record.successfully.updated')],
                             ));
                         }
                         // Administrator's return url to see all clients
-                        if ($this->userService->hasPermission('editClientPeppol') && $this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
+                        if ($this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL) && $this->userService->hasPermission(Permissions::VIEW_INV) && $this->userService->hasPermission(Permissions::EDIT_INV)) {
                             return $this->webService->getRedirectResponse('client/index');
                         }
                     }

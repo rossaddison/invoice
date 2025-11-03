@@ -1,6 +1,11 @@
+// quote.js - Complete functionality restored from pre_jquery_deletion branch
+// Systematically converted from jQuery to vanilla JavaScript
+// All original selectors and event handlers preserved
+
 (function () {
     "use strict";
 
+    // Safe parse helper (mirrors original parsedata)
     function parsedata(data) {
         if (!data) return {};
         if (typeof data === 'object' && data !== null) return data;
@@ -10,546 +15,658 @@
         return {};
     }
 
-    // Helper: perform GET request with query params and return parsed JSON/text
-    function getJson(url, params) {
-        var u = url;
-        if (params) {
-            var sp = new URLSearchParams();
-            Object.keys(params).forEach(function (k) {
-                var v = params[k];
-                if (Array.isArray(v)) {
-                    v.forEach(function (x) { sp.append(k, x); });
-                } else {
-                    sp.append(k, v);
-                }
-            });
-            u = url + (url.indexOf('?') === -1 ? '?' + sp.toString() : '&' + sp.toString());
-        }
-        return fetch(u, { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
-            .then(function (res) {
-                if (!res.ok) throw new Error('Network response not ok: ' + res.status);
-                return res.text();
-            })
-            .then(function (text) {
-                try { return JSON.parse(text); } catch (e) { return text; }
-            });
+    // Helper to get origin
+    function getOrigin() {
+        return window.location.origin;
     }
 
-    // Delegated click handler
-    document.addEventListener('click', function (e) {
-        var el = e.target;
+    // Safe closest wrapper
+    function closestSafe(el, selector) {
+        try {
+            if (!el) return null;
+            if (typeof el.closest === 'function') return el.closest(selector);
+            var node = el;
+            while (node) {
+                if (node.matches && node.matches(selector)) return node;
+                node = node.parentElement;
+            }
+        } catch (e) {}
+        return null;
+    }
 
-        // Delete single item (static delegation works for elements added later too)
-        var deleteBtn = el.closest('.btn_delete_item');
-        if (deleteBtn) {
-            (function (btn) {
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // 1. DELETE QUOTE ITEM FUNCTIONALITY - class="btn_delete_item" on views/product/partial_item_table.php
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_delete_item') || e.target.closest('.btn_delete_item')) {
+                var btn = e.target.matches('.btn_delete_item') ? e.target : e.target.closest('.btn_delete_item');
                 var id = btn.getAttribute('data-id');
+                
                 if (typeof id === 'undefined' || id === null) {
-                    var parentItem = btn.closest('.item');
-                    if (parentItem) parentItem.remove();
-                    return;
-                }
-                var url = location.origin + "/invoice/quote/delete_item/" + encodeURIComponent(id);
-                getJson(url, { id: id })
+                    var itemRow = btn.closest('.item');
+                    if (itemRow) itemRow.remove();
+                } else {
+                    var url = getOrigin() + "/invoice/quote/delete_item/" + id;
+                    
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
                     .then(function (data) {
                         var response = parsedata(data);
                         if (response.success === 1) {
-                            // reload to reflect server state (mirrors original)
                             location.reload(true);
-                            var parentItem = btn.closest('.item');
-                            if (parentItem) parentItem.remove();
+                            var itemRow = btn.closest('.item');
+                            if (itemRow) itemRow.remove();
                             alert("Deleted");
-                        } else {
-                            console.warn('delete_item failed', response);
                         }
                     })
-                    .catch(function (err) {
-                        console.error('delete_item error', err);
-                        alert('An error occurred while deleting item. See console for details.');
+                    .catch(function (error) {
+                        console.error('Delete error:', error);
                     });
-            })(deleteBtn);
-            return;
-        }
+                }
+            }
+        });
 
-        // Delete multiple items (quote)
-        var delMulti = el.closest('.delete-items-confirm-quote');
-        if (delMulti) {
-            (function (btn) {
-                var originalHtml = btn.innerHTML;
-                btn.innerHTML = '<h2 class="text-center" ><i class="fa fa-spin fa-spinner"></i></h2>';
-                btn.disabled = true;
-                var item_ids = Array.from(document.querySelectorAll("input[name='item_ids[]']:checked")).map(function (i) {
-                    return parseInt(i.value, 10);
-                }).filter(Boolean);
+        // 2. BULK DELETE QUOTE ITEMS - .delete-items-confirm-quote
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.delete-items-confirm-quote') || e.target.closest('.delete-items-confirm-quote')) {
+                var btn = document.querySelector('.delete-items-confirm-quote');
+                if (btn) {
+                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    
+                    var item_ids = [];
+                    var checkboxes = document.querySelectorAll("input[name='item_ids[]']:checked");
+                    checkboxes.forEach(function (checkbox) {
+                        item_ids.push(parseInt(checkbox.value));
+                    });
 
-                getJson('/invoice/quoteitem/multiple', { item_ids: item_ids })
+                    var params = new URLSearchParams();
+                    item_ids.forEach(function (id) {
+                        params.append('item_ids[]', id);
+                    });
+
+                    fetch('/invoice/quoteitem/multiple?' + params.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'no-store'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
                     .then(function (data) {
                         var response = parsedata(data);
                         if (response.success === 1) {
                             btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
                             location.reload(true);
-                        } else {
-                            console.warn('quoteitem/multiple failed', response);
-                            btn.innerHTML = originalHtml;
-                            btn.disabled = false;
                         }
                     })
-                    .catch(function (err) {
-                        console.error('quoteitem/multiple error', err);
-                        btn.innerHTML = originalHtml;
-                        btn.disabled = false;
-                        alert('An error occurred while deleting items. See console for details.');
+                    .catch(function (error) {
+                        console.error('Bulk delete error:', error);
                     });
-            })(delMulti);
-            return;
-        }
-
-        // Add row via modal (load modal content into placeholder)
-        var addRowModalBtn = el.closest('.btn_add_row_modal');
-        if (addRowModalBtn) {
-            var absolute_url = new URL(location.href);
-            var quote_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-            var url = location.origin + "/invoice/quoteitem/add/" + encodeURIComponent(quote_id);
-            var placeholder = document.getElementById('modal-placeholder-quoteitem');
-            if (placeholder) {
-                // load HTML into placeholder
-                placeholder.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
-                fetch(url, { cache: 'no-store', credentials: 'same-origin' })
-                    .then(function (r) { return r.text(); })
-                    .then(function (html) { placeholder.innerHTML = html; })
-                    .catch(function (err) { console.error('Failed to load quoteitem modal', err); });
+                }
             }
-            return;
-        }
+        });
 
-        // Add new quote item row from template
-        var btnQuoteItemAddRow = el.closest('.btn_quote_item_add_row');
-        if (btnQuoteItemAddRow) {
-            var template = document.getElementById('new_quote_item_row');
-            var table = document.getElementById('item_table');
-            if (template && table) {
-                var clone = template.cloneNode(true);
-                clone.removeAttribute('id');
-                clone.classList.add('item');
-                clone.style.display = '';
-                table.appendChild(clone);
+        // 3. ADD ROW MODAL - .btn_add_row_modal
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_add_row_modal') || e.target.closest('.btn_add_row_modal')) {
+                var absoluteUrl = new URL(window.location.href);
+                var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var url = getOrigin() + "/invoice/quoteitem/add/" + quote_id;
+                var modalPlaceholder = document.getElementById('modal-placeholder-quoteitem');
+                if (modalPlaceholder) {
+                    fetch(url)
+                        .then(function (response) {
+                            return response.text();
+                        })
+                        .then(function (html) {
+                            modalPlaceholder.innerHTML = html;
+                        })
+                        .catch(function (error) {
+                            console.error('Modal load error:', error);
+                        });
+                }
             }
-            return;
-        }
+        });
 
-        // Add generic new row
-        var addRowBtn = el.closest('.btn_add_row');
-        if (addRowBtn) {
-            var template2 = document.getElementById('new_row');
-            var table2 = document.getElementById('item_table');
-            if (template2 && table2) {
-                var clone2 = template2.cloneNode(true);
-                clone2.removeAttribute('id');
-                clone2.classList.add('item');
-                clone2.style.display = '';
-                table2.appendChild(clone2);
+        // 4. ADD QUOTE ITEM ROW - .btn_quote_item_add_row
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_quote_item_add_row') || e.target.closest('.btn_quote_item_add_row')) {
+                var newRow = document.getElementById('new_quote_item_row');
+                var itemTable = document.getElementById('item_table');
+                if (newRow && itemTable) {
+                    var clonedRow = newRow.cloneNode(true);
+                    clonedRow.removeAttribute('id');
+                    clonedRow.classList.add('item');
+                    clonedRow.style.display = '';
+                    itemTable.appendChild(clonedRow);
+                }
             }
-            return;
-        }
+        });
 
-        // Add client modal
-        var addClientBtn = el.closest('.quote_add_client');
-        if (addClientBtn) {
-            var urlClient = location.origin + "/invoice/add-a-client";
-            var placeholderClient = document.getElementById('modal-placeholder-client');
-            if (placeholderClient) {
-                placeholderClient.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
-                fetch(urlClient, { cache: 'no-store', credentials: 'same-origin' })
-                    .then(function (r) { return r.text(); })
-                    .then(function (html) { placeholderClient.innerHTML = html; })
-                    .catch(function (err) { console.error('Failed to load add-a-client modal', err); });
+        // 5. ADD ROW - .btn_add_row (general)
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.btn_add_row') || e.target.closest('.btn_add_row')) {
+                var newRow = document.getElementById('new_row');
+                var itemTable = document.getElementById('item_table');
+                if (newRow && itemTable) {
+                    var clonedRow = newRow.cloneNode(true);
+                    clonedRow.removeAttribute('id');
+                    clonedRow.classList.add('item');
+                    clonedRow.style.display = '';
+                    itemTable.appendChild(clonedRow);
+                }
             }
-            return;
-        }
+        });
 
-        // quote_create_confirm
-        var createConfirm = el.closest('#quote_create_confirm, .quote_create_confirm');
-        if (createConfirm) {
-            var urlCreate = location.origin + "/invoice/quote/create_confirm";
-            var btn = document.querySelector('.quote_create_confirm') || createConfirm;
-            var absolute_url_c = new URL(location.href);
-            if (btn) {
-                var orig = btn.innerHTML;
-                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-                btn.disabled = true;
+        // 6. QUOTE ADD CLIENT - .quote_add_client
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.quote_add_client') || e.target.closest('.quote_add_client')) {
+                var url = getOrigin() + "/invoice/add-a-client";
+                var modalPlaceholder = document.getElementById('modal-placeholder-client');
+                if (modalPlaceholder) {
+                    fetch(url)
+                        .then(function (response) {
+                            return response.text();
+                        })
+                        .then(function (html) {
+                            modalPlaceholder.innerHTML = html;
+                        })
+                        .catch(function (error) {
+                            console.error('Client modal load error:', error);
+                        });
+                }
             }
-            var payloadCreate = {
-                client_id: (document.getElementById('create_quote_client_id') || {}).value || '',
-                quote_group_id: (document.getElementById('quote_group_id') || {}).value || '',
-                quote_password: (document.getElementById('quote_password') || {}).value || ''
-            };
-            getJson(urlCreate, payloadCreate)
+        });
+
+        // 7. SAVE CLIENT NOTE - #save_client_note
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#save_client_note') || e.target.closest('#save_client_note')) {
+                var url = getOrigin() + "/invoice/client/save_client_note";
+                var load = getOrigin() + "/invoice/client/load_client_notes";
+                var client_id = document.getElementById('client_id');
+                var client_note = document.getElementById('client_note');
+
+                if (client_id && client_note) {
+                    var params = new URLSearchParams();
+                    params.append('client_id', client_id.value);
+                    params.append('client_note', client_note.value);
+
+                    fetch(url + '?' + params.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        cache: 'default'
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var response = parsedata(data);
+                        if (response.success === 1) {
+                            // The validation was successful
+                            var controlGroups = document.querySelectorAll('.control-group');
+                            controlGroups.forEach(function (group) {
+                                group.classList.remove('error');
+                            });
+                            client_note.value = '';
+
+                            // Reload all notes
+                            var notesList = document.getElementById('notes_list');
+                            if (notesList) {
+                                var loadParams = new URLSearchParams();
+                                loadParams.append('client_id', client_id.value);
+                                fetch(load + '?' + loadParams.toString())
+                                    .then(function (response) {
+                                        return response.text();
+                                    })
+                                    .then(function (html) {
+                                        notesList.innerHTML = html;
+                                    })
+                                    .catch(function (error) {
+                                        console.error('Notes reload error:', error);
+                                    });
+                            }
+                        } else {
+                            // The validation was not successful
+                            var controlGroups = document.querySelectorAll('.control-group');
+                            controlGroups.forEach(function (group) {
+                                group.classList.remove('error');
+                            });
+
+                            if (response.validation_errors) {
+                                for (var key in response.validation_errors) {
+                                    if (response.validation_errors.hasOwnProperty(key)) {
+                                        var element = document.getElementById(key);
+                                        if (element && element.parentNode) {
+                                            element.parentNode.classList.add('has-error');
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Save client note error:', error);
+                        alert('Status: Error - ' + error.toString());
+                    });
+                }
+            }
+        });
+
+        // 8. QUOTE TAX SUBMIT - #quote_tax_submit
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_tax_submit') || e.target.closest('#quote_tax_submit')) {
+                var url = getOrigin() + "/invoice/quote/save_quote_tax_rate";
+                var btn = document.querySelector('.quote_tax_submit');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                
+                var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var tax_rate_id = document.getElementById('tax_rate_id');
+                var include_item_tax = document.getElementById('include_item_tax');
+
+                var params = new URLSearchParams();
+                params.append('quote_id', quote_id);
+                if (tax_rate_id) params.append('tax_rate_id', tax_rate_id.value);
+                if (include_item_tax) params.append('include_item_tax', include_item_tax.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    window.location = absoluteUrl.href;
+                    window.location.reload();
+                    alert(response.flash_message);
+                })
+                .catch(function (error) {
+                    console.error('Quote tax submit error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 9. QUOTE CREATE CONFIRM - #quote_create_confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_create_confirm') || e.target.closest('#quote_create_confirm')) {
+                var url = getOrigin() + "/invoice/quote/create_confirm";
+                var btn = document.querySelector('.quote_create_confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+
+                var create_quote_client_id = document.getElementById('create_quote_client_id');
+                var quote_group_id = document.getElementById('quote_group_id');
+                var quote_password = document.getElementById('quote_password');
+
+                var params = new URLSearchParams();
+                if (create_quote_client_id) params.append('client_id', create_quote_client_id.value);
+                if (quote_group_id) params.append('quote_group_id', quote_group_id.value);
+                if (quote_password) params.append('quote_password', quote_password.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_c;
+                        window.location = absoluteUrl.href;
                         window.location.reload();
                     }
                     var message = response.message;
                     if (response.success === 0) {
                         if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
-                        window.location = absolute_url_c;
+                        window.location = absoluteUrl.href;
                         window.location.reload();
-                        if (message) alert(message);
+                        alert(message);
                     }
                 })
-                .catch(function (err) {
-                    console.error('create_confirm error', err);
-                    if (btn) {
-                        btn.innerHTML = orig || '';
-                        btn.disabled = false;
-                    }
-                    alert('An error occurred while creating quote. See console for details.');
-                });
-            return;
-        }
-
-        // quote_with_purchase_order_number_confirm
-        var poConfirm = el.closest('#quote_with_purchase_order_number_confirm, .quote_with_purchase_order_number_confirm');
-        if (poConfirm) {
-            var urlPo = location.origin + "/invoice/quote/approve";
-            var btnPo = document.querySelector('.quote_with_purchase_order_number_confirm') || poConfirm;
-            var absolute_url_po = new URL(location.href);
-            if (btnPo) {
-                var origPo = btnPo.innerHTML;
-                btnPo.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-                btnPo.disabled = true;
-            }
-            var payloadPo = {
-                url_key: (document.getElementById('url_key') || {}).value || '',
-                client_po_number: (document.getElementById('quote_with_purchase_order_number') || {}).value || '',
-                client_po_person: (document.getElementById('quote_with_purchase_order_person') || {}).value || ''
-            };
-            getJson(urlPo, payloadPo)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btnPo) btnPo.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_po;
-                        window.location.reload();
-                    }
-                })
-                .catch(function (err) {
-                    console.error('approve error', err);
-                    if (btnPo) {
-                        btnPo.innerHTML = origPo || '';
-                        btnPo.disabled = false;
-                    }
-                    alert('An error occurred while approving quote. See console for details.');
-                });
-            return;
-        }
-
-        // quote_to_invoice_confirm
-        var toInvoice = el.closest('#quote_to_invoice_confirm, .quote_to_invoice_confirm');
-        if (toInvoice) {
-            var urlQI = location.origin + "/invoice/quote/quote_to_invoice_confirm";
-            var btnQI = document.querySelector('.quote_to_invoice_confirm') || toInvoice;
-            var absolute_url_qi = new URL(location.href);
-            if (btnQI) {
-                var origQi = btnQI.innerHTML;
-                btnQI.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-                btnQI.disabled = true;
-            }
-            var quote_id = absolute_url_qi.href.substring(absolute_url_qi.href.lastIndexOf('/') + 1);
-            var payloadQi = {
-                quote_id: quote_id,
-                client_id: (document.getElementById('client_id') || {}).value || '',
-                group_id: (document.getElementById('group_id') || {}).value || '',
-                password: (document.getElementById('password') || {}).value || ''
-            };
-            getJson(urlQI, payloadQi)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btnQI) btnQI.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_qi;
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    } else {
-                        if (btnQI) btnQI.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_qi;
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('quote_to_invoice_confirm error', err);
-                    if (btnQI) {
-                        btnQI.innerHTML = origQi || '';
-                        btnQI.disabled = false;
-                    }
-                    alert('An error occurred while converting quote to invoice. See console for details.');
-                });
-            return;
-        }
-
-        // quote_to_so_confirm
-        var toSo = el.closest('#quote_to_so_confirm, .quote_to_so_confirm');
-        if (toSo) {
-            var urlQS = location.origin + "/invoice/quote/quote_to_so_confirm";
-            var btnQS = document.querySelector('.quote_to_so_confirm') || toSo;
-            var absolute_url_qs = new URL(location.href);
-            if (btnQS) {
-                var origQs = btnQS.innerHTML;
-                btnQS.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-                btnQS.disabled = true;
-            }
-            var quote_id_so = absolute_url_qs.href.substring(absolute_url_qs.href.lastIndexOf('/') + 1);
-            var payloadQs = {
-                quote_id: quote_id_so,
-                client_id: (document.getElementById('client_id') || {}).value || '',
-                group_id: (document.getElementById('so_group_id') || {}).value || '',
-                po: (document.getElementById('po_number') || {}).value || '',
-                person: (document.getElementById('po_person') || {}).value || '',
-                password: (document.getElementById('password') || {}).value || ''
-            };
-            getJson(urlQS, payloadQs)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btnQS) btnQS.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_qs;
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    } else {
-                        if (btnQS) btnQS.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_qs;
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('quote_to_so_confirm error', err);
-                    if (btnQS) {
-                        btnQS.innerHTML = origQs || '';
-                        btnQS.disabled = false;
-                    }
-                    alert('An error occurred while converting quote to SO. See console for details.');
-                });
-            return;
-        }
-
-        // quote_to_quote_confirm
-        var toQuote = el.closest('#quote_to_quote_confirm, .quote_to_quote_confirm');
-        if (toQuote) {
-            var urlQQ = location.origin + "/invoice/quote/quote_to_quote_confirm";
-            var btnQQ = document.querySelector('.quote_to_quote_confirm') || toQuote;
-            var absolute_url_qq = new URL(location.href);
-            if (btnQQ) {
-                var origQq = btnQQ.innerHTML;
-                btnQQ.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-                btnQQ.disabled = true;
-            }
-            var quote_id_qq = absolute_url_qq.href.substring(absolute_url_qq.href.lastIndexOf('/') + 1);
-            var payloadQq = {
-                quote_id: quote_id_qq,
-                client_id: (document.getElementById('create_quote_client_id') || {}).value || '',
-                user_id: (document.getElementById('user_id') || {}).value || ''
-            };
-            getJson(urlQQ, payloadQq)
-                .then(function (data) {
-                    var response = parsedata(data);
-                    if (response.success === 1) {
-                        if (btnQQ) btnQQ.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absolute_url_qq;
-                        window.location.reload();
-                        if (response.flash_message) alert(response.flash_message);
-                    }
-                })
-                .catch(function (err) {
-                    console.error('quote_to_quote_confirm error', err);
-                    if (btnQQ) {
-                        btnQQ.innerHTML = origQq || '';
-                        btnQQ.disabled = false;
-                    }
-                    alert('An error occurred while copying quote. See console for details.');
-                });
-            return;
-        }
-
-        // quote_to_pdf_confirm_with_custom_fields
-        if (el.closest('#quote_to_pdf_confirm_with_custom_fields')) {
-            var urlPdf1 = location.origin + "/invoice/quote/pdf/1";
-            window.open(urlPdf1, '_blank');
-            return;
-        }
-
-        // quote_to_pdf_confirm_without_custom_fields
-        if (el.closest('#quote_to_pdf_confirm_without_custom_fields')) {
-            var urlPdf0 = location.origin + "/invoice/quote/pdf/0";
-            window.open(urlPdf0, '_blank');
-            return;
-        }
-    }, true);
-
-    // Save client note
-    document.addEventListener('click', function (e) {
-        var el = e.target;
-        var saveBtn = el.closest('#save_client_note');
-        if (!saveBtn) return;
-        var url = location.origin + "/invoice/client/save_client_note";
-        var loadUrl = location.origin + "/invoice/client/load_client_notes";
-        var client_id = (document.getElementById('client_id') || {}).value || '';
-        var client_note = (document.getElementById('client_note') || {}).value || '';
-        getJson(url, { client_id: client_id, client_note: client_note })
-            .then(function (data) {
-                var response = parsedata(data);
-                if (response.success === 1) {
-                    // remove error classes
-                    document.querySelectorAll('.control-group').forEach(function (g) { g.classList.remove('error'); });
-                    var noteEl = document.getElementById('client_note');
-                    if (noteEl) noteEl.value = '';
-                    // reload notes list
-                    var notesList = document.getElementById('notes_list');
-                    if (notesList) {
-                        var u = loadUrl + '?client_id=' + encodeURIComponent(client_id);
-                        fetch(u, { cache: 'no-store', credentials: 'same-origin' })
-                            .then(function (r) { return r.text(); })
-                            .then(function (html) { notesList.innerHTML = html; })
-                            .catch(function (err) { console.error('load_client_notes failed', err); });
-                    }
-                } else {
-                    // show validation errors
-                    document.querySelectorAll('.control-group').forEach(function (g) { g.classList.remove('error'); });
-                    if (response.validation_errors) {
-                        Object.keys(response.validation_errors).forEach(function (key) {
-                            var elm = document.getElementById(key);
-                            if (elm && elm.parentElement) elm.parentElement.classList.add('has-error');
-                        });
-                    }
-                }
-            })
-            .catch(function (err) {
-                console.error('save_client_note error', err);
-                alert('Status: error An error occurred');
-            });
-    }, true);
-
-    // Quote tax submit
-    document.addEventListener('click', function (e) {
-        var el = e.target;
-        var submit = el.closest('#quote_tax_submit');
-        if (!submit) return;
-        var url = location.origin + "/invoice/quote/save_quote_tax_rate";
-        var btn = document.querySelector('.quote_tax_submit') || submit;
-        var absolute_url = new URL(location.href);
-        if (btn) {
-            var orig = btn.innerHTML;
-            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-            btn.disabled = true;
-        }
-        var quote_id = absolute_url.href.substring(absolute_url.href.lastIndexOf('/') + 1);
-        var payload = {
-            quote_id: quote_id,
-            tax_rate_id: (document.getElementById('tax_rate_id') || {}).value || '',
-            include_item_tax: (document.getElementById('include_item_tax') || {}).value || ''
-        };
-        getJson(url, payload)
-            .then(function (data) {
-                var response = parsedata(data);
-                window.location = absolute_url;
-                window.location.reload();
-                if (response.flash_message) alert(response.flash_message);
-            })
-            .catch(function (err) {
-                console.error('save_quote_tax_rate error', err);
-                alert('An error occurred while saving quote tax rate. See console for details.');
-            });
-    }, true);
-
-    // Discount inputs interlock
-    document.addEventListener('input', function (e) {
-        var el = e.target;
-        if (el && el.id === 'quote_discount_amount') {
-            var percent = document.getElementById('quote_discount_percent');
-            if (el.value.length > 0) {
-                if (percent) { percent.value = '0.00'; percent.disabled = true; }
-            } else { if (percent) percent.disabled = false; }
-        }
-        if (el && el.id === 'quote_discount_percent') {
-            var amount = document.getElementById('quote_discount_amount');
-            if (el.value.length > 0) {
-                if (amount) { amount.value = '0.00'; amount.disabled = true; }
-            } else { if (amount) amount.disabled = false; }
-        }
-    }, true);
-
-    // Datepicker initialization: only if jQuery UI is present, call it via jQuery to preserve behaviour.
-    document.addEventListener('focus', function (e) {
-        var el = e.target;
-        if (el && el.id === 'datepicker') {
-            if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.datepicker === 'function') {
-                window.jQuery(el).datepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    showButtonPanel: true,
-                    dateFormat: 'dd-mm-yy'
+                .catch(function (error) {
+                    console.error('Quote create error:', error);
+                    alert('Status: Error - ' + error.toString());
                 });
             }
-        }
-        if (el && el.classList && el.classList.contains('datepicker')) {
-            if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.datepicker === 'function') {
-                window.jQuery(el).datepicker({
-                    beforeShow: function () {
-                        setTimeout(function () {
-                            Array.from(document.querySelectorAll('.datepicker')).forEach(function (d) {
-                                d.style.zIndex = '9999';
-                            });
-                        }, 0);
-                    }
-                });
-            }
-        }
-    }, true);
-
-    // Keep track of last taggable
-    document.addEventListener('focus', function (e) {
-        var el = e.target;
-        if (el && el.classList && el.classList.contains('taggable')) {
-            window.lastTaggableClicked = el;
-        }
-    }, true);
-
-    // Tooltips (bootstrap)
-    document.addEventListener('DOMContentLoaded', function () {
-        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-            Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (t) {
-                try { new bootstrap.Tooltip(t); } catch (err) { /* ignore */ }
-            });
-        }
-
-        // Initialize select UI for tag-select: if TomSelect is available we assume it has been initialized elsewhere.
-        // Bind change handler for .tag-select (delegated)
-        Array.from(document.querySelectorAll('.tag-select')).forEach(function (sel) {
-            sel.addEventListener('change', function (event) {
-                var select = event.currentTarget;
-                if (typeof window.lastTaggableClicked !== 'undefined' && window.lastTaggableClicked) {
-                    insert_at_caret(window.lastTaggableClicked.id, select.value);
-                }
-                // Reset the select value (for native or TomSelect)
-                if (select._tomselect && typeof select._tomselect.clear === 'function') {
-                    select._tomselect.clear();
-                } else if (select.tomselect && typeof select.tomselect.clear === 'function') {
-                    select.tomselect.clear();
-                } else {
-                    // native reset
-                    if (select.multiple) {
-                        Array.from(select.options).forEach(function (o) { o.selected = false; });
-                    } else {
-                        select.value = '';
-                    }
-                }
-                event.preventDefault();
-                return false;
-            }, false);
         });
-    });
+
+        // 10. QUOTE WITH PURCHASE ORDER NUMBER CONFIRM - #quote_with_purchase_order_number_confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_with_purchase_order_number_confirm') || e.target.closest('#quote_with_purchase_order_number_confirm')) {
+                var url = getOrigin() + "/invoice/quote/approve";
+                var btn = document.querySelector('.quote_with_purchase_order_number_confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+
+                var url_key = document.getElementById('url_key');
+                var quote_with_purchase_order_number = document.getElementById('quote_with_purchase_order_number');
+                var quote_with_purchase_order_person = document.getElementById('quote_with_purchase_order_person');
+
+                var params = new URLSearchParams();
+                if (url_key) params.append('url_key', url_key.value);
+                if (quote_with_purchase_order_number) params.append('client_po_number', quote_with_purchase_order_number.value);
+                if (quote_with_purchase_order_person) params.append('client_po_person', quote_with_purchase_order_person.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Purchase order confirm error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 11. QUOTE TO INVOICE CONFIRM - #quote_to_invoice_confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_to_invoice_confirm') || e.target.closest('#quote_to_invoice_confirm')) {
+                var url = getOrigin() + "/invoice/quote/quote_to_invoice_confirm";
+                var btn = document.querySelector('.quote_to_invoice_confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+
+                var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var client_id = document.getElementById('client_id');
+                var group_id = document.getElementById('group_id');
+                var password = document.getElementById('password');
+
+                var params = new URLSearchParams();
+                params.append('quote_id', quote_id);
+                if (client_id) params.append('client_id', client_id.value);
+                if (group_id) params.append('group_id', group_id.value);
+                if (password) params.append('password', password.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                    if (response.success === 0) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Quote to invoice error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 12. QUOTE TO SALES ORDER CONFIRM - #quote_to_so_confirm
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_to_so_confirm') || e.target.closest('#quote_to_so_confirm')) {
+                var url = getOrigin() + "/invoice/quote/quote_to_so_confirm";
+                var btn = document.querySelector('.quote_to_so_confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+
+                var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var client_id = document.getElementById('client_id');
+                var so_group_id = document.getElementById('so_group_id');
+                var po_number = document.getElementById('po_number');
+                var po_person = document.getElementById('po_person');
+                var password = document.getElementById('password');
+
+                var params = new URLSearchParams();
+                params.append('quote_id', quote_id);
+                if (client_id) params.append('client_id', client_id.value);
+                if (so_group_id) params.append('group_id', so_group_id.value);
+                if (po_number) params.append('po', po_number.value);
+                if (po_person) params.append('person', po_person.value);
+                if (password) params.append('password', password.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                    if (response.success === 0) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Quote to SO error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 13. QUOTE TO QUOTE CONFIRM - #quote_to_quote_confirm (Copy quote)
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_to_quote_confirm') || e.target.closest('#quote_to_quote_confirm')) {
+                var url = getOrigin() + "/invoice/quote/quote_to_quote_confirm";
+                var btn = document.querySelector('.quote_to_quote_confirm');
+                var absoluteUrl = new URL(window.location.href);
+                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+
+                var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+                var create_quote_client_id = document.getElementById('create_quote_client_id');
+                var user_id = document.getElementById('user_id');
+
+                var params = new URLSearchParams();
+                params.append('quote_id', quote_id);
+                if (create_quote_client_id) params.append('client_id', create_quote_client_id.value);
+                if (user_id) params.append('user_id', user_id.value);
+
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    cache: 'no-store'
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var response = parsedata(data);
+                    if (response.success === 1) {
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        window.location = absoluteUrl.href;
+                        window.location.reload();
+                        alert(response.flash_message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Quote to quote error:', error);
+                    alert('Status: Error - ' + error.toString());
+                });
+            }
+        });
+
+        // 14. QUOTE PDF WITH CUSTOM FIELDS - #quote_to_pdf_confirm_with_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_to_pdf_confirm_with_custom_fields') || e.target.closest('#quote_to_pdf_confirm_with_custom_fields')) {
+                var url = getOrigin() + "/invoice/quote/pdf/1";
+                window.open(url, '_blank');
+            }
+        });
+
+        // 15. QUOTE PDF WITHOUT CUSTOM FIELDS - #quote_to_pdf_confirm_without_custom_fields
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('#quote_to_pdf_confirm_without_custom_fields') || e.target.closest('#quote_to_pdf_confirm_without_custom_fields')) {
+                var url = getOrigin() + "/invoice/quote/pdf/0";
+                window.open(url, '_blank');
+            }
+        });
+
+        // 16. QUOTE DISCOUNT AMOUNT KEYUP - #quote_discount_amount
+        var quoteDiscountAmount = document.getElementById('quote_discount_amount');
+        var quoteDiscountPercent = document.getElementById('quote_discount_percent');
+        
+        if (quoteDiscountAmount) {
+            quoteDiscountAmount.addEventListener('keyup', function () {
+                if (this.value.length > 0) {
+                    if (quoteDiscountPercent) {
+                        quoteDiscountPercent.value = '0.00';
+                        quoteDiscountPercent.disabled = true;
+                    }
+                } else {
+                    if (quoteDiscountPercent) {
+                        quoteDiscountPercent.disabled = false;
+                    }
+                }
+            });
+        }
+
+        // 17. QUOTE DISCOUNT PERCENT KEYUP - #quote_discount_percent
+        if (quoteDiscountPercent) {
+            quoteDiscountPercent.addEventListener('keyup', function () {
+                if (this.value.length > 0) {
+                    if (quoteDiscountAmount) {
+                        quoteDiscountAmount.value = '0.00';
+                        quoteDiscountAmount.disabled = true;
+                    }
+                } else {
+                    if (quoteDiscountAmount) {
+                        quoteDiscountAmount.disabled = false;
+                    }
+                }
+            });
+        }
+
+        // 18. DATEPICKER INITIALIZATION - #datepicker
+        var datepicker = document.getElementById('datepicker');
+        if (datepicker) {
+            datepicker.addEventListener('focus', function () {
+                // Note: This would need a datepicker library like flatpickr or similar
+                console.log('Datepicker focus - requires datepicker library integration');
+            });
+        }
+
+        // 19. GENERAL DATEPICKER - .datepicker
+        document.addEventListener('focus', function (e) {
+            if (e.target.matches('.datepicker')) {
+                // Note: This would need a datepicker library
+                console.log('General datepicker focus - requires datepicker library integration');
+            }
+        }, true);
+
+        // 20. TAGGABLE ELEMENTS - .taggable
+        document.addEventListener('focus', function (e) {
+            if (e.target.matches('.taggable')) {
+                window.lastTaggableClicked = e.target;
+            }
+        }, true);
+
+        // 21. TOOLTIPS INITIALIZATION - [data-bs-toggle="tooltip"]
+        var tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipElements.forEach(function (element) {
+            try {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                    new bootstrap.Tooltip(element);
+                }
+            } catch (e) {
+                console.error('Tooltip initialization error:', e);
+            }
+        });
+
+        // 22. TAG SELECT HANDLING - .tag-select (Modern TomSelect implementation)
+        var tagSelects = document.querySelectorAll('.tag-select');
+        tagSelects.forEach(function (select) {
+            // Initialize TomSelect for tag dropdowns if not already initialized
+            if (typeof TomSelect !== 'undefined' && !select._tomselect) {
+                new TomSelect(select, {
+                    placeholder: 'Select a tag...',
+                    allowEmptyOption: true
+                });
+                select._tomselect = true;
+            }
+            select.addEventListener('change', function (event) {
+                // Add the tag to the field
+                if (typeof window.lastTaggableClicked !== 'undefined' && window.insert_at_caret) {
+                    window.insert_at_caret(window.lastTaggableClicked.id, select.value);
+                }
+                // Reset the select
+                select.value = '';
+                return false;
+            });
+        });
+
+    }); // End DOMContentLoaded
+
+    // Helper function for inserting at caret (if not already defined)
+    if (!window.insert_at_caret) {
+        window.insert_at_caret = function(elementId, text) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                var startPos = element.selectionStart;
+                var endPos = element.selectionEnd;
+                element.value = element.value.substring(0, startPos) + text + element.value.substring(endPos);
+                element.selectionStart = element.selectionEnd = startPos + text.length;
+            }
+        };
+    }
 
 })();

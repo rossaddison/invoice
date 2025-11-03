@@ -15,7 +15,7 @@ class StripePaymentService
     public function __construct(
         private readonly SettingRepository $settings,
         private readonly Crypt $crypt,
-        private readonly string $salt,
+        private string $salt,
     ) {
         $this->salt = (new Crypt())->salt();
         $this->setApiKey();

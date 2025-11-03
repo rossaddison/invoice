@@ -45,6 +45,33 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
+     * Get products with non-zero prices for invoice/quote selection
+     *
+     * @psalm-return EntityReader
+     */
+    public function findAllPreloadedWithPrice(): EntityReader
+    {
+        $query = $this->select()
+            ->load('family')
+            ->load('tax_rate')
+            ->load('unit')
+            ->where(['product_price' => ['>' => 0]]);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
+     * Check if there are any products with zero prices
+     * @return bool
+     */
+    public function hasZeroPricedProducts(): bool
+    {
+        $count = $this->select()
+            ->where(['product_price' => 0])
+            ->count();
+        return $count > 0;
+    }
+
+    /**
      * @psalm-return EntityReader
      */
     public function getReader(): EntityReader
@@ -166,6 +193,7 @@ final class ProductRepository extends Select\Repository
 
     /**
      * Get products with filter using views/invoice/product/modal_product_lookups_inv or ...quote
+     * Excludes zero-valued products for invoice/quote selection
      *
      * @psalm-return EntityReader
      */
@@ -175,25 +203,27 @@ final class ProductRepository extends Select\Repository
             ->select()
             ->load('family')
             ->load('tax_rate')
-            ->load('unit');
+            ->load('unit')
+            ->where(['product_price' => ['>' => 0]]);
 
         //lookup without filters eg. product/lookup
         if (empty($product_name) && (empty($family_id))) {
+            // Base query already excludes zero prices
         }
 
         //eg. product/lookup?fp=Cleaning%20Services
         if ((!empty($product_name)) && (empty($family_id))) {
-            $query = $query->where(['product_name' => ltrim(rtrim($product_name))]);
+            $query = $query->andWhere(['product_name' => ltrim(rtrim($product_name))]);
         }
 
         //eg. product/lookup?Cleaning%20Services&ff=4
         if (!empty($product_name) && ($family_id > (string) 0)) {
-            $query = $query->where(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+            $query = $query->andWhere(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
         }
 
         //eg. product/lookup?ff=4
         if (empty($product_name) && ($family_id > (string) 0)) {
-            $query = $query->where(['family_id' => $family_id]);
+            $query = $query->andWhere(['family_id' => $family_id]);
         }
 
         return $this->prepareDataReader($query);

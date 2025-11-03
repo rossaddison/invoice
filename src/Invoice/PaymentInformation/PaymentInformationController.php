@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation;
 
+use App\Auth\Permissions;
 use App\Invoice\Client\ClientRepository as cR;
 // Helpers
 use App\Invoice\Company\CompanyRepository as compR;
@@ -62,6 +63,10 @@ final class PaymentInformationController
 
     use OpenBankingProviders;
 
+    private string $salt;
+
+    private string $telegramToken;
+
     public function __construct(
         private DataResponseFactoryInterface $factory,
         private Flash $flash,
@@ -85,8 +90,6 @@ final class PaymentInformationController
         private cPR $cPR,
         private Logger $logger,
         private Crypt $crypt,
-        private string $salt,
-        private string $telegramToken,
     ) {
         $this->factory                   = $factory;
         $this->flash                     = $flash;
@@ -105,11 +108,11 @@ final class PaymentInformationController
         $this->userService               = $userService;
         $this->translator                = $translator;
         $this->viewRenderer              = $viewRenderer;
-        if ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+        if ($this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/guest.php');
         }
-        if ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) {
+        if ($this->userService->hasPermission(Permissions::VIEW_INV) && $this->userService->hasPermission(Permissions::EDIT_INV)) {
             $this->viewRenderer = $viewRenderer->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/invoice.php');
         }

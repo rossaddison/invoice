@@ -68,7 +68,6 @@ final class SignupController
         private readonly CurrentRoute $currentRoute,
         private readonly LoggerInterface $logger,
     ) {
-        // Related logic: see yiisoft/rbac-php
         $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
         $this->flash = new Flash($this->session);

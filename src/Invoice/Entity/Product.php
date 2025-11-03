@@ -43,17 +43,17 @@ class Product
         private ?string $product_name = '',
         #[Column(type: 'longText', nullable: false)]
         private ?string $product_description = '',
-        #[Column(type: 'longText', nullable: true)]
+        #[Column(type: 'decimal(20,2)', nullable: true)]
         private ?float $product_price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: true)]
         private ?float $purchase_price = 0.00,
-        #[Column(type: 'decimal(20,2)', nullable: true)]
-        private float $product_price_base_quantity = 1.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 1)]
-        private ?string $provider_name = '',
+        private float $product_price_base_quantity = 1.00,
         #[Column(type: 'text', nullable: true)]
-        private ?float $product_tariff = 0.00,
+        private ?string $provider_name = '',
         #[Column(type: 'decimal(20,2)', nullable: true)]
+        private ?float $product_tariff = 0.00,
+        #[Column(type: 'text', nullable: true)]
         private ?string $product_additional_item_property_name = '',
         #[Column(type: 'text', nullable: true)]
         private ?string $product_additional_item_property_value = '',

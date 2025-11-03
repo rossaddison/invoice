@@ -52,6 +52,7 @@ echo [5b] Rector See Changes
 echo [5c] Rector Make Changes
 echo [5d] PHP-CS-Fixer Dry Run
 echo [5e] PHP-CS-Fixer Fix
+echo [5f] Clear Assets Cache (Safe)
 echo [99] System Info / Diagnostics
 echo =================================
 set /p choice="Enter your choice [0-21,99]: "
@@ -79,6 +80,7 @@ if "%choice%"=="5b" goto rector_see_changes
 if "%choice%"=="5c" goto rector_make_changes
 if "%choice%"=="5d" goto code_style_suggest_changes
 if "%choice%"=="5e" goto code_style_make_changes
+if "%choice%"=="5f" goto clear_assets_safe
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="8" goto user_assignRole
@@ -379,6 +381,13 @@ goto menu
 
 :invoice_autoincrementsettooneafter_truncate6
 php yii invoice/autoincrementsettooneafter/truncate6
+pause
+goto menu
+
+:clear_assets_safe
+echo Clearing assets cache while preserving .gitignore...
+powershell -Command "Get-ChildItem -Path 'public\assets' -Exclude '.gitignore' | Remove-Item -Recurse -Force"
+echo Assets cache cleared successfully (preserved .gitignore)
 pause
 goto menu
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
@@ -68,6 +69,7 @@ final class PaymentController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->paymentService = $paymentService;
         $this->paymentCustomService = $paymentCustomService;
+        $this->paymentCustomFieldProcessor = $paymentCustomFieldProcessor;
         $this->factory = $factory;
     }
 
@@ -489,8 +491,8 @@ final class PaymentController extends BaseController
                  ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
                  ->withCurrentPage($currentPageNeverZero)
                  ->withToken(PageToken::next((string) $page));
-                $canEdit = $this->userService->hasPermission('editPayment');
-                $canView = $this->userService->hasPermission('viewPayment');
+                $canEdit = $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
+                $canView = $this->userService->hasPermission(Permissions::VIEW_PAYMENT);
                 $parameters = [
                     'alert' => $this->alert(),
                     'canEdit' => $canEdit,
@@ -615,8 +617,8 @@ final class PaymentController extends BaseController
          ->withCurrentPage($currentPageNeverZero)
          ->withSort($sort)
          ->withToken(PageToken::next((string) $page));
-        $canEdit = $this->userService->hasPermission('editPayment');
-        $canView = $this->userService->hasPermission('viewPayment');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
+        $canView = $this->userService->hasPermission(Permissions::VIEW_PAYMENT);
         $parameters = [
             'alert' => $this->alert(),
             'canEdit' => $canEdit,

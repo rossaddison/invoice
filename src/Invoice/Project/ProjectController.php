@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Project;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Project;
@@ -179,7 +180,7 @@ final class ProjectController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('project/index');

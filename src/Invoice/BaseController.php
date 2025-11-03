@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice;
 
+use App\Auth\Permissions;
 use App\Invoice\Traits\FlashMessage;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
@@ -42,15 +43,15 @@ abstract class BaseController
      */
     protected function initializeViewRenderer(): void
     {
-        if (!$this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv')) {
+        if (!$this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/templates/soletrader/main.php');
-        } elseif ($this->userService->hasPermission('viewInv') && !$this->userService->hasPermission('editInv') && !$this->userService->hasPermission('noEntryToBaseController') && $this->userService->hasPermission('entryToBaseController')) {
+        } elseif ($this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV) && !$this->userService->hasPermission(Permissions::NO_ENTRY_TO_BASE_CONTROLLER) && $this->userService->hasPermission(Permissions::ENTRY_TO_BASE_CONTROLLER)) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/guest.php');
-        } elseif ($this->userService->hasPermission('editInv') && !$this->userService->hasPermission('noEntryToBaseController') && $this->userService->hasPermission('entryToBaseController')) {
+        } elseif ($this->userService->hasPermission(Permissions::EDIT_INV) && !$this->userService->hasPermission(Permissions::NO_ENTRY_TO_BASE_CONTROLLER) && $this->userService->hasPermission(Permissions::ENTRY_TO_BASE_CONTROLLER)) {
             $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
                                                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                                                      ->withLayout('@views/layout/invoice.php');

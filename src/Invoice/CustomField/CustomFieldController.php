@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\CustomField;
 use App\Invoice\CustomValue\CustomValueRepository;
@@ -18,7 +19,6 @@ use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
-use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -112,8 +112,8 @@ final class CustomFieldController extends BaseController
             'errors' => [],
             'form' => $form,
             'tables' => $this->custom_tables(),
-            'user_input_types' => ['NUMBER','TEXT','DATE','BOOLEAN'],
-            'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
+            'user_input_types' => $this->user_input_types(),
+            'custom_value_fields' => $this->custom_value_fields(),
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
             'positions' => $this->positions(),
@@ -155,8 +155,8 @@ final class CustomFieldController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'tables' => $this->custom_tables(),
-                'user_input_types' => ['NUMBER','TEXT','DATE','BOOLEAN'],
-                'custom_value_fields' => ['SINGLE-CHOICE','MULTIPLE-CHOICE'],
+                'user_input_types' => $this->user_input_types(),
+                'custom_value_fields' => $this->custom_value_fields(),
                 'positions' => $this->positions(),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -223,7 +223,7 @@ final class CustomFieldController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('customfield/index');
@@ -321,13 +321,40 @@ final class CustomFieldController extends BaseController
     /**
      * @return string[]
      *
-     * @psalm-return list{'SINGLE-CHOICE', 'MULTIPLE-CHOICE'}
+     * @psalm-return list{'SINGLE-CHOICE', 'MULTIPLE-CHOICE', 'RADIOLIST-CHOICE'}
      */
     public static function custom_value_fields(): array
     {
         return [
             'SINGLE-CHOICE',
             'MULTIPLE-CHOICE',
+            'RADIOLIST-CHOICE',
+        ];
+    }
+
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{
+            'BOOLEAN',
+            'DATE',
+            'EMAIL',
+            'NUMBER',
+            'TEXT',
+            'TEXTAREA',
+            'URL'
+        }
+     */
+    public function user_input_types(): array
+    {
+        return [
+            'BOOLEAN',
+            'DATE',
+            'EMAIL',
+            'NUMBER',
+            'TEXT',
+            'TEXTAREA',
+            'URL',
         ];
     }
 }

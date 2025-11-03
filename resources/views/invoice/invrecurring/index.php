@@ -53,17 +53,20 @@ $columns = [
         content: static fn(InvRecurring $model) =>
             Span::tag()
             ->addClass(null !== $model->getNext() ? 'btn btn-success' : 'btn btn-danger')
-            ->content(null !== $model->getNext() ? $translator->translate('active') : $translator->translate('inactive')),
+            ->content(null !== $model->getNext() ? $translator->translate('active') : $translator->translate('inactive'))
+            ->render(),
+        encodeContent: false,
     ),
     new DataColumn(
         'inv_id',
         header: $translator->translate('base.invoice'),
-        content: static function (InvRecurring $model) use ($urlGenerator): string {
-            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate(
-                'inv/view',
-                ['id' => $model->getInv_id()],
-            ), ['style' => 'text-decoration:none'])->render();
+        content: static function (InvRecurring $model) use ($urlGenerator): A {
+            return A::tag()
+                    ->addClass('style', 'text-decoration:none')
+                    ->content($model->getInv()?->getNumber() ?? '#')
+                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]));
         },
+        encodeContent: false,
     ),
     new DataColumn(
         'id',

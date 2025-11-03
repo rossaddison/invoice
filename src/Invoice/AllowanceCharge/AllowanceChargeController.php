@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\AllowanceCharge;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
@@ -173,7 +174,7 @@ final class AllowanceChargeController extends BaseController
         $allowanceCharges = $allowanceChargeRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($allowanceCharges));
         $parameters = [
-            'canEdit' => $this->userService->hasPermission('editInv') ? true : false,
+            'canEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
             'allowanceCharges' => $this->allowanceCharges($allowanceChargeRepository),
             'alert' => $this->alert(),
             'paginator' => $paginator,

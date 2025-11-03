@@ -225,34 +225,8 @@
         }
         toggle_smtp_settings();
 
-        // Generate cron key
-        var btnGenerate = document.getElementById('btn_generate_cron_key');
-        if (btnGenerate) {
-            btnGenerate.addEventListener('click', function () {
-                var btns = Array.from(document.querySelectorAll('.btn_generate_cron_key'));
-                btns.forEach(function (b) { b.innerHTML = '<i class="fa fa-spin fa-spinner fa-margin"></i>'; });
-                var url = location.origin + "/invoice/setting/get_cron_key";
-                fetch(url, { method: 'GET', cache: 'no-store', credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
-                    .then(function (res) {
-                        if (!res.ok) throw new Error('Network response was not ok');
-                        return res.json().catch(function () { return {}; });
-                    })
-                    .then(function (data) {
-                        var response = parsedata(data);
-                        if (response && response.success === 1) {
-                            var cronEl = document.getElementById('cron_key');
-                            if (cronEl) cronEl.value = response.cron_key || '';
-                            btns.forEach(function (b) { b.innerHTML = '<i class="fa fa-recycle fa-margin"></i>'; });
-                        } else {
-                            btns.forEach(function (b) { b.innerHTML = '<i class="fa fa-recycle fa-margin"></i>'; });
-                        }
-                    })
-                    .catch(function (err) {
-                        console.error('get_cron_key failed', err);
-                        btns.forEach(function (b) { b.innerHTML = '<i class="fa fa-recycle fa-margin"></i>'; });
-                    });
-            }, { passive: true });
-        }
+        // NOTE: Cron key generation is now handled by TypeScript (SettingsHandler)
+        // in src/typescript/settings.ts and compiled into invoice-typescript-iife.js
 
         // Initial radio checked handling and radio click binding
         var checkedRadio = document.querySelector('input[type="radio"]:checked');

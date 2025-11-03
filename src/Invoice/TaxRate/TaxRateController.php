@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\TaxRate;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\TaxRate;
 use App\Invoice\Enum\StoreCoveTaxType;
@@ -184,7 +185,7 @@ final class TaxRateController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('taxrate/index');

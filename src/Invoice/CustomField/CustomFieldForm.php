@@ -21,7 +21,20 @@ final class CustomFieldForm extends FormModel
     private ?int $order = null;
     #[Required]
     private ?bool $required = false;
-
+    private ?int $email_min_length = null;
+    private ?int $email_max_length = null;
+    private ?bool $email_multiple = false;
+    private ?int $url_min_length = null;
+    private ?int $url_max_length = null;
+    private ?int $text_min_length = null;
+    private ?int $text_max_length = null;
+    private ?int $text_area_min_length = null;
+    private ?int $text_area_max_length = null;
+    private ?int $text_area_cols = null;
+    private ?int $text_area_rows = null;
+    private ?string $text_area_wrap = '';
+    private ?int $number_min = null;
+    private ?int $number_max = null;
     public function __construct(CustomField $custom_field)
     {
         $this->id = (int) $custom_field->getId();
@@ -31,6 +44,20 @@ final class CustomFieldForm extends FormModel
         $this->location = $custom_field->getLocation();
         $this->order = $custom_field->getOrder();
         $this->required = $custom_field->getRequired();
+        $this->email_min_length = $custom_field->getEmailMinLength();
+        $this->email_max_length = $custom_field->getEmailMaxLength();
+        $this->email_multiple = $custom_field->getEmailMultiple();
+        $this->url_min_length = $custom_field->getUrlMinLength();
+        $this->url_max_length = $custom_field->getUrlMaxLength();
+        $this->text_min_length = $custom_field->getTextMinLength();
+        $this->text_max_length = $custom_field->getTextMaxLength();
+        $this->text_area_min_length = $custom_field->getTextAreaMinLength();
+        $this->text_area_max_length = $custom_field->getTextAreaMaxLength();
+        $this->text_area_cols = $custom_field->getTextAreaCols();
+        $this->text_area_rows = $custom_field->getTextAreaRows();
+        $this->text_area_wrap = $custom_field->getTextAreaWrap();
+        $this->number_min = $custom_field->getNumberMin();
+        $this->number_max = $custom_field->getNumberMax();
     }
 
     public function getId(): int|null
@@ -66,6 +93,76 @@ final class CustomFieldForm extends FormModel
     public function getRequired(): bool|null
     {
         return $this->required;
+    }
+
+    public function getEmailMinLength(): int|null
+    {
+        return $this->email_min_length;
+    }
+
+    public function getEmailMaxLength(): int|null
+    {
+        return $this->email_max_length;
+    }
+
+    public function getEmailMultiple(): bool|null
+    {
+        return $this->email_multiple;
+    }
+
+    public function getTextMinLength(): int|null
+    {
+        return $this->text_min_length;
+    }
+
+    public function getTextMaxLength(): int|null
+    {
+        return $this->text_max_length;
+    }
+
+    public function getTextAreaMinLength(): int|null
+    {
+        return $this->text_area_min_length;
+    }
+
+    public function getTextAreaMaxLength(): int|null
+    {
+        return $this->text_area_max_length;
+    }
+
+    public function getTextAreaCols(): int|null
+    {
+        return $this->text_area_cols;
+    }
+
+    public function getTextAreaRows(): int|null
+    {
+        return $this->text_area_rows;
+    }
+
+    public function getTextAreaWrap(): string|null
+    {
+        return $this->text_area_wrap;
+    }
+
+    public function getNumberMin(): int|null
+    {
+        return $this->number_min;
+    }
+
+    public function getNumberMax(): int|null
+    {
+        return $this->number_max;
+    }
+
+    public function getUrlMinLength(): int|null
+    {
+        return $this->url_min_length;
+    }
+
+    public function getUrlMaxLength(): int|null
+    {
+        return $this->url_max_length;
     }
 
     /**

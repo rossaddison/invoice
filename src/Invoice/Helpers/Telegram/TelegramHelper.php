@@ -6,12 +6,12 @@ namespace App\Invoice\Helpers\Telegram;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
-use Vjik\TelegramBot\Api\FailResult;
-use Vjik\TelegramBot\Api\Transport\CurlTransport;
-use Vjik\TelegramBot\Api\LogType;
-use Vjik\TelegramBot\Api\TelegramBotApi;
-use Vjik\TelegramBot\Api\Type\Update\Update;
-use Vjik\TelegramBot\Api\Type\Update\WebhookInfo;
+use Phptg\BotApi\FailResult;
+use Phptg\BotApi\Transport\CurlTransport;
+use Phptg\BotApi\LogType;
+use Phptg\BotApi\TelegramBotApi;
+use Phptg\BotApi\Type\Update\Update;
+use Phptg\BotApi\Type\Update\WebhookInfo;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 
 /**

@@ -253,6 +253,8 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link($translator->translate('faq.shared.hosting'), $urlGenerator->generate('invoice/faq', ['topic' => 'shared', 'selection' => ''])),
                 DropdownItem::link($translator->translate('faq.payment.provider'), $urlGenerator->generate('invoice/faq', ['topic' => 'paymentprovider', 'selection' => ''])),
                 DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'), $urlGenerator, $subMenuPhpInfo)),
+                DropdownItem::link('JavaScript Analysis', $urlGenerator->generate('invoice/faq', ['topic' => 'javascript_analysis', 'selection' => ''])),
+                DropdownItem::link('Codeception Selectors Checklist', $urlGenerator->generate('invoice/faq', ['topic' => 'codeception_selectors_checklist', 'selection' => ''])),
                 DropdownItem::link($translator->translate('faq.oauth2'), $urlGenerator->generate('invoice/faq', ['topic' => 'oauth2', 'selection' => ''])),
                 DropdownItem::link($translator->translate('faq.ai.callback.session'), $urlGenerator->generate('invoice/faq', ['topic' => 'ai_callback_session', 'selection' => ''])),
             ),

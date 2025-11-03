@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Profile;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Entity\Profile;
@@ -194,7 +195,7 @@ final class ProfileController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('profile/index');

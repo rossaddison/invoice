@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
@@ -621,7 +622,7 @@ final class UserInvController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('userinv/index');
