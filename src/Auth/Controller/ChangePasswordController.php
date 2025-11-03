@@ -74,11 +74,6 @@ final class ChangePasswordController
                 return $this->viewRenderer->render('change', [
                     'formModel' => $changePasswordForm,
                     'login' => $login,
-                    /**
-                     * Related logic: see resources\rbac\items.php
-                     * Related logic: see https://github.com/yiisoft/demo/pull/602
-                     */
-                    'changePasswordForAnyUser' => $this->currentUser->can('changePasswordForAnyUser'),
                 ]);
             } // identity
         } // identityId

@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
     
     <?= Html::openTag('div', ['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
-            <?= $translator->translate('custom.values.new'); ?>
+            <?= $translator->translate('custom.values.new'); ?>            
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
 
@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
                     ->onlyCommonErrors()
 ?>
 
-                <?php $alpha = str_replace("-", "_", strtolower($custom_field->getType())); ?>
+                <?php $alpha = str_replace("-", ".", strtolower($custom_field->getType())); ?>
                 <?php  // Type eg. Boolean, Single Choice, Multiple Choice and Label eg. My new Field,
        //belong to the Field Entity?> 
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -56,11 +56,11 @@ use Yiisoft\Html\Tag\Form;
                         <?= $translator->translate('field'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
-                        'class' => 'form-control',
-                        'disabled' => 'disabled',
-                        'id' => 'label',
-                        'value' => Html::encode($custom_field->getLabel() ?? ''),
-                    ]);
+        'class' => 'form-control',
+        'disabled' => 'disabled',
+        'id' => 'label',
+        'value' => Html::encode($custom_field->getLabel() ?? ''),
+    ]);
 ?>
                 <?= Html::closeTag('div'); ?>
     
@@ -69,16 +69,16 @@ use Yiisoft\Html\Tag\Form;
                         <?= $translator->translate('type'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
-                        'class' => 'form-control',
-                        'disabled' => 'disabled',
-                        'id' => 'type',
-                        'value' => Html::encode($translator->translate('' . $alpha . '')),
-                    ]);
+    'class' => 'form-control',
+    'disabled' => 'disabled',
+    'id' => 'type',
+    'value' => Html::encode($translator->translate('' . $alpha . '')),
+]);
 ?>
                 <?= Html::closeTag('div'); ?>
     
                 <?php // Custom Value Form: (1) The two hidden fields
-  //                    (2) The value field where new data will be entered?>
+  // (2) The value field where new data will be entered?>
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Field::hidden($form, 'custom_field_id')
     ->addInputAttributes([
@@ -109,8 +109,10 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getValue() ??  ''));
 ?>
                 <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'form-group']); ?>
+                    <?= $button->backSave(); ?>
+                <?= Html::closeTag('div'); ?>                
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= $button::backSave(); ?>
 <?= Form::tag()->close(); ?>

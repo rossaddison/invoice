@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;

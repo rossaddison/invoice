@@ -10,7 +10,6 @@ use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\Rule\Url;
 use DateTimeImmutable;
 
 final class ClientForm extends FormModel
@@ -48,9 +47,8 @@ final class ClientForm extends FormModel
     private ?string $client_mobile = '';
     #[Required]
     #[Email()]
-    #[Length(min: 0, max: 254)]
+    #[Length(min: 0, max: 254, skipOnEmpty: true)]
     private ?string $client_email = '';
-    #[Url()]
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $client_web = '';
     #[Length(min: 0, max: 30, skipOnEmpty: true)]

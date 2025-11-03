@@ -36,20 +36,13 @@ $this->setTitle($translator->translate('password.change'));
                         ->csrf($csrf)
                         ->id('changePasswordForm')
                         ->open() ?>
-                    <?= $changePasswordForAnyUser
-                            ? Field::text($formModel, 'login')
-                                ->label($translator->translate('layout.login'))
-                                ->addInputAttributes([
-                                    'autocomplete' => 'username',
-                                    'value' => $login ?? '',
-                                ])
-                            : Field::text($formModel, 'login')
-                                ->label($translator->translate('layout.login'))
-                                ->addInputAttributes([
-                                    'autocomplete' => 'username',
-                                    'value' => $login ?? '',
-                                    'readonly' => 'readonly',
-                                ]);
+                    <?= Field::text($formModel, 'login')
+                        ->label($translator->translate('layout.login'))
+                        ->addInputAttributes([
+                            'autocomplete' => 'username',
+                            'value' => $login ?? '',
+                            'readonly' => 'readonly',
+                        ]);
 ?>
                     <?= Field::password($formModel, 'password')
     ->addInputAttributes(['autocomplete' => 'current-password'])

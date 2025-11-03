@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvRecurring;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entities
 use App\Invoice\Entity\InvRecurring;
@@ -316,7 +317,7 @@ final class InvRecurringController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('invrecurring/index');

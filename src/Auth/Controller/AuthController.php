@@ -12,6 +12,7 @@ use App\Auth\Form\TwoFactorAuthenticationSetupForm;
 use App\Auth\Form\TwoFactorAuthenticationVerifyLoginForm;
 use App\Auth\Trait\Callback;
 use App\Auth\Trait\Oauth2;
+use App\Auth\Permissions;
 use App\Auth\TokenRepository;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Setting\SettingRepository;
@@ -553,8 +554,8 @@ final class AuthController
         $this->session->remove('verified_2fa_user_id');
         $roles = $this->manager->getRolesByUserId($verifiedUserId);
         foreach ($roles as $role) {
-            $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
-            $this->manager->addChild($role->getName(), 'entryToBaseController');
+            $this->manager->removeChild($role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
+            $this->manager->addChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
         }
     }
 
@@ -721,10 +722,10 @@ final class AuthController
         }
 
         if (null !== $userId) {
-            if ($this->manager->userHasPermission($userId, 'entryToBaseController')) {
+            if ($this->manager->userHasPermission($userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
                 $roles = $this->manager->getRolesByUserId($userId);
                 foreach ($roles as $role) {
-                    $this->manager->removeChild($role->getName(), 'entryToBaseController');
+                    $this->manager->removeChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
                 }
             }
         }
@@ -747,38 +748,38 @@ final class AuthController
 
     private function tfaIsEnabledBlockBaseController(string $userId): void
     {
-        // see config/common/routes.php 'entryToBaseController'
-        // Prevent access to the BaseController during tfa with an additional permission 'noEntryToBaseController'
+        // see config/common/routes.php Permissions::ENTRY_TO_BASE_CONTROLLER
+        // Prevent access to the BaseController during tfa with an additional permission Permissions::NO_ENTRY_TO_BASE_CONTROLLER
         // which has been incorporated in the BaseController
-        // Replace this permission with 'entryToBaseController' on completion
-        if (!$this->manager->userHasPermission($userId, 'noEntryToBaseController')) {
+        // Replace this permission with Permissions::ENTRY_TO_BASE_CONTROLLER on completion
+        if (!$this->manager->userHasPermission($userId, Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
             $roles = $this->manager->getRolesByUserId($userId);
             foreach ($roles as $role) {
-                $this->manager->addChild($role->getName(), 'noEntryToBaseController');
+                $this->manager->addChild($role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
             }
         }
-        if ($this->manager->userHasPermission($userId, 'entryToBaseController')) {
+        if ($this->manager->userHasPermission($userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
             $roles = $this->manager->getRolesByUserId($userId);
             foreach ($roles as $role) {
-                $this->manager->removeChild($role->getName(), 'entryToBaseController');
+                $this->manager->removeChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
             }
         }
     }
 
     private function tfaNotEnabledUnblockBaseController(string $userId): void
     {
-        // If tfa is not being used, the 'noEntryToBaseController' must be removed
-        if ($this->manager->userHasPermission($userId, 'noEntryToBaseController')) {
+        // If tfa is not being used, the Permissions::NO_ENTRY_TO_BASE_CONTROLLER must be removed
+        if ($this->manager->userHasPermission($userId, Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
             $roles = $this->manager->getRolesByUserId($userId);
             foreach ($roles as $role) {
-                $this->manager->removeChild($role->getName(), 'noEntryToBaseController');
+                $this->manager->removeChild($role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
             }
         }
-        // If tfa is not being used, the 'entryToBaseController' permission can be added now
-        if (!$this->manager->userHasPermission($userId, 'entryToBaseController')) {
+        // If tfa is not being used, the Permissions::ENTRY_TO_BASE_CONTROLLER permission can be added now
+        if (!$this->manager->userHasPermission($userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
             $roles = $this->manager->getRolesByUserId($userId);
             foreach ($roles as $role) {
-                $this->manager->addChild($role->getName(), 'entryToBaseController');
+                $this->manager->addChild($role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
             }
         }
     }

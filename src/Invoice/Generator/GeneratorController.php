@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Generator;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\Gentor;
 use App\Invoice\GeneratorRelation\GeneratorRelationRepository;
@@ -515,7 +516,7 @@ class GeneratorController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('generator/index');

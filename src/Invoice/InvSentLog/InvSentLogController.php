@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvSentLog;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\InvSentLog;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
@@ -89,7 +90,7 @@ final class InvSentLogController extends BaseController
                 $parameters = [
                     'paginator' => $paginator,
                     'alert' => $this->alert(),
-                    'viewInv' => $this->userService->hasPermission('viewInv'),
+                    'viewInv' => $this->userService->hasPermission(Permissions::VIEW_INV),
                     'userInv' => $userinv,
                     'defaultPageSizeOffsetPaginator' => $userinv->getListLimit() ?? 10,
                     'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int) $userId),

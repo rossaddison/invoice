@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomValue;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\CustomValue;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -221,7 +222,7 @@ final class CustomValueController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('customvalue/index');

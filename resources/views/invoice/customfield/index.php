@@ -60,7 +60,7 @@ $columns = [
         'type',
         header: $translator->translate('type'),
         content: static function (CustomField $model) use ($translator): string {
-            $alpha = str_replace("-", "_", strtolower($model->getType()));
+            $alpha = str_replace("-", ".", strtolower($model->getType()));
             return Html::encode($translator->translate('' . $alpha . ''));
         },
     ),
@@ -79,12 +79,10 @@ $columns = [
                 return A::tag()
                        ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
                        ->addClass('btn btn-default')
-                       ->addAttributes(['style' => 'text-decoration:none'])
-                       ->content(
-                           I::tag()
-                            ->addClass('fa fa-list fa-margin')
-                            ->content(' ' . $translator->translate('values')),
-                       );
+                       ->addAttributes([
+                           'style' => 'text-decoration:none; background:lightblue',
+                       ])
+                       ->content('| | |');
             }
             return '';
         },

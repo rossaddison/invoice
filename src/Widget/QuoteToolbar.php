@@ -34,6 +34,17 @@ final readonly class QuoteToolbar
         $quoteId = $quote->getId();
         $buttons = [];
 
+        // View created invoice (if exists)
+        if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
+            $buttons[] = $this->createLinkButton(
+                'view-invoice',
+                $this->urlGenerator->generate('inv/view', ['id' => $quote->getInv_id()]),
+                'fa-file-text',
+                'btn-outline-success',
+                $this->translator->translate('view') . ' ' . $this->translator->translate('invoice'),
+            );
+        }
+
         // Edit button
         if ($quoteEdit) {
             $buttons[] = $this->createLinkButton(
@@ -78,26 +89,50 @@ final readonly class QuoteToolbar
             }
         }
 
-        // Quote to SO button (only if quote is approved and no SO exists)
-        if ($quoteEdit && $quote->getSo_id() === '0' && $quote->getStatus_id() === 4) {
-            $buttons[] = $this->createModalButton(
-                'quote-to-so',
-                '#quote-to-so',
-                'fa-refresh',
-                'btn-outline-warning',
-                $this->translator->translate('quote.to.so'),
-            );
+        // Quote to SO button - show enabled if approved, disabled if not approved
+        if ($quoteEdit && $quote->getSo_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->getStatus_id() === 4) {
+                // Quote is approved - show enabled button
+                $buttons[] = $this->createModalButton(
+                    'quote-to-so',
+                    '#quote-to-so',
+                    'fa-refresh',
+                    'btn-outline-warning',
+                    $this->translator->translate('quote.to.so'),
+                );
+            } else {
+                // Quote not approved - show disabled button with indicator
+                $buttons[] = $this->createDisabledButton(
+                    'quote-to-so-disabled',
+                    'fa-refresh',
+                    'btn-outline-secondary',
+                    $this->translator->translate('quote.to.so') . ' (' . $this->translator->translate('approval.required') . ')',
+                    $this->translator->translate('quote.must.be.approved.first'),
+                );
+            }
         }
 
-        // Quote to Invoice button
-        if ($quoteEdit && $quote->getStatus_id() === 1 && $quoteAmountTotal > 0) {
-            $buttons[] = $this->createModalButton(
-                'quote-to-invoice',
-                '#quote-to-invoice',
-                'fa-refresh',
-                'btn-outline-primary',
-                $this->translator->translate('quote.to.invoice'),
-            );
+        // Quote to Invoice button - show enabled if approved, disabled if not approved (but don't show if already converted)
+        if ($quoteEdit && $quote->getInv_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->getStatus_id() === 4) {
+                // Quote is approved - show enabled button
+                $buttons[] = $this->createModalButton(
+                    'quote-to-invoice',
+                    '#quote-to-invoice',
+                    'fa-refresh',
+                    'btn-outline-primary',
+                    $this->translator->translate('quote.to.invoice'),
+                );
+            } else {
+                // Quote not approved - show disabled button with indicator
+                $buttons[] = $this->createDisabledButton(
+                    'quote-to-invoice-disabled',
+                    'fa-refresh',
+                    'btn-outline-secondary',
+                    $this->translator->translate('quote.to.invoice') . ' (' . $this->translator->translate('approval.required') . ')',
+                    $this->translator->translate('quote.must.be.approved.first'),
+                );
+            }
         }
 
         // Copy Quote button
@@ -160,6 +195,19 @@ final readonly class QuoteToolbar
         ];
     }
 
+    private function createDisabledButton(string $id, string $icon, string $class, string $title, string $tooltip): array
+    {
+        return [
+            'type' => 'disabled',
+            'id' => $id,
+            'href' => '#',
+            'icon' => $icon,
+            'class' => $class,
+            'title' => $title,
+            'tooltip' => $tooltip,
+        ];
+    }
+
     private function renderToolbar(array $buttons): string
     {
         return Html::openTag('div', [
@@ -194,6 +242,20 @@ final readonly class QuoteToolbar
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
+                ->content($iconHtml . ' ' . (string) $button['title'])
+                ->encode(false)
+                ->render();
+        } elseif ((string) $button['type'] === 'disabled') {
+            // Disabled button with tooltip
+            return A::tag()
+                ->href('#')
+                ->addClass($baseClasses . ' disabled')
+                ->id($this->getButtonId($button))
+                ->attribute('disabled', 'disabled')
+                ->attribute('title', (string) $button['tooltip'])
+                ->attribute('data-bs-toggle', 'tooltip')
+                ->attribute('style', 'text-decoration: none; cursor: not-allowed; opacity: 0.6;')
+                ->attribute('onclick', 'event.preventDefault(); return false;')
                 ->content($iconHtml . ' ' . (string) $button['title'])
                 ->encode(false)
                 ->render();

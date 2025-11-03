@@ -45,6 +45,17 @@ final readonly class ButtonsToolbarFull
         $primaryButtons = [];
         $advancedButtons = [];
 
+        // View originating quote (if exists)
+        if (!empty($inv->getQuote_id()) && $inv->getQuote_id() !== '0') {
+            $primaryButtons[] = $this->createButton(
+                'view-quote',
+                $this->urlGenerator->generate('quote/view', ['id' => $inv->getQuote_id()]),
+                'fa-file-text-o',
+                'btn-info',
+                $this->translator->translate('view') . ' ' . $this->translator->translate('quote'),
+            );
+        }
+
         // Core primary actions
         if ($invEdit) {
             $primaryButtons[] = $this->createButton(

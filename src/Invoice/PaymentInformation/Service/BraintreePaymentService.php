@@ -23,7 +23,7 @@ class BraintreePaymentService
         private readonly SettingRepository $settings,
         private readonly Crypt $crypt,
         private readonly LoggerInterface $logger,
-        private readonly string $salt,
+        private string $salt,
     ) {
         $this->salt = (new Crypt())->salt();
     }

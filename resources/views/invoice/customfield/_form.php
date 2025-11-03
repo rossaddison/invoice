@@ -33,22 +33,19 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
     <?= Html::openTag('div'); ?>
-    <?= Html::openTag('h1');?>
-    <?= Html::encode($title); ?>
-    <?=Html::closeTag('h1'); ?>
     <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
     <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
     <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
     <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
     <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-    <?= $translator->translate('custom.field.form'); ?>
+    <?= '➕' . $translator->translate('custom.field.form'); ?>
     <?= Html::closeTag('h1'); ?>
         <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
 
-    <?= Html::Tag('br'); ?>
-    <?= Html::Tag('br'); ?>
+    <?= Html::tag('br'); ?>
+    <?= Html::tag('br'); ?>
     <?= Html::openTag('div'); ?>    
         <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>    
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -56,8 +53,16 @@ use Yiisoft\Html\Tag\Form;
                 Field::errorSummary($form)
                 ->errors($errors)
                 ->header($translator->translate('custom.field.error.summary'))
-                ->onlyProperties(...['table', 'label', 'location', 'type'])
+                ->onlyProperties(...[
+                    'table', 'label', 'location', 'type',
+                    'email_min_length', 'email_max_length', 'email_multiple',
+                    'text_min_length', 'text_max_length',
+                    'text_area_min_length', 'text_area_max_length', 'text_area_cols', 'text_area_rows', 'text_area_wrap',
+                    'number_min', 'number_max',
+                    'url_min_length', 'url_max_length',
+                ])
                 ->onlyCommonErrors()
+                ->render();
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -81,11 +86,12 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'label',
     ])
     ->value(Html::encode($form->getLabel() ?? ''))
+    ->render();
 ?>
             <?= Html::closeTag('div'); ?>
 
             <?php
-                $arrays = [$user_input_types, $custom_value_fields];
+$arrays = [$user_input_types, $custom_value_fields];
 $types = array_merge(...$arrays);
 $optionsDataType = [];
 /**
@@ -97,26 +103,29 @@ foreach ($types as $type) {
     if ($translated === '' || $translated === '#') {
         continue;
     }
-    $optionsDataType[$type] = $translated;
+    $optionsDataType[$type] = ucFirst($translated);
 }
-?>    
+?>   
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::select($form, 'type')
-->label($translator->translate('type'))
-->addInputAttributes([
-    'placeholder' => $translator->translate('type'),
-    'class' => 'form-control',
-    'id' => 'type',
-])
-->value(Html::encode($form->getType() ?? ''))
-->optionsData($optionsDataType);
+        ->label($translator->translate('type'))
+        ->addInputAttributes([
+            'placeholder' => $translator->translate('type'),
+            'class' => 'form-control',
+            'id' => 'type',
+        ])
+        ->value(Html::encode($form->getType() ?? ''))
+        ->optionsData($optionsDataType)
+        ->render();
 ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>   
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::checkbox($form, 'required')
+    ->label($translator->translate('custom.field.required'))
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('custom.field.required'));
+    ->ariaDescribedBy($translator->translate('custom.field.required'))
+    ->render();
 ?>
             <?= Html::closeTag('div'); ?>    
 
@@ -128,10 +137,175 @@ foreach ($types as $type) {
         'min' => 1,
         'max' => 20,
         'value' => Html::encode($form->getOrder() ?? ''),
-        'class' => 'form-control form-range',
+        'class' => 'form-range',
         'id' => 'order',
     ])
+    ->render();
 ?>
+            <?= Html::closeTag('div'); ?>
+
+            <!-- Compact numeric inputs grouped side-by-side -->
+            <?= Html::openTag('div', ['class' => 'row g-2 mb-3']); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'email_min_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'email_min_length',
+        ])
+        ->value($form->getEmailMinLength() ?? 0)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'email_max_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'email_max_length',
+        ])
+        ->value($form->getEmailMaxLength() ?? 150)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::checkbox($form, 'email_multiple')
+        ->inputLabelAttributes(['class' => 'form-check-label'])
+        ->inputClass('form-check-input')
+        ->value($form->getEmailMultiple() ?? false)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+            <?= Html::closeTag('div'); ?>
+
+            <?= Html::openTag('div', ['class' => 'row g-2 mb-3']); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'number_min')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'number_min',
+        ])
+        ->value($form->getNumberMin() ?? 0)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'number_max')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'number_max',
+        ])
+        ->value($form->getNumberMax() ?? 100)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+            <?= Html::closeTag('div'); ?>
+
+            <?= Html::openTag('div', ['class' => 'row g-2 mb-3']); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'text_min_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'text_min_length',
+        ])
+        ->value($form->getTextMinLength() ?? 0)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'text_max_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'text_max_length',
+        ])
+        ->value($form->getTextMaxLength() ?? 100)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+            <?= Html::closeTag('div'); ?>
+
+            <?= Html::openTag('div', ['class' => 'row g-2 mb-3']); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'text_area_min_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'text_area_min_length',
+        ])
+        ->value($form->getTextAreaMinLength() ?? 0)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'text_area_max_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'text_area_max_length',
+        ])
+        ->value($form->getTextAreaMaxLength() ?? 150)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+            <?= Html::closeTag('div'); ?>
+
+            <?= Html::openTag('div', ['class' => 'row g-2 mb-3']); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'text_area_cols')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'text_area_cols',
+        ])
+        ->value($form->getTextAreaCols() ?? 10)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'text_area_rows')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'text_area_rows',
+        ])
+        ->value($form->getTextAreaRows() ?? 10)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+            <?= Html::closeTag('div'); ?>
+
+            <?= Html::openTag('div', ['class' => 'row g-2 mb-3']); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'url_min_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'url_min_length',
+        ])
+        ->value($form->getUrlMinLength() ?? 0)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
+
+                <?= Html::openTag('div', ['class' => 'col-auto']); ?>
+                    <?= Field::number($form, 'url_max_length')
+        ->addInputAttributes([
+            'class' => 'form-control form-control-sm',
+            'style' => 'width:110px',
+            'id' => 'url_max_length',
+        ])
+        ->value($form->getUrlMaxLength() ?? 150)
+        ->render(); ?>
+                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -144,8 +318,7 @@ foreach ($types as $type) {
 
         <?= Html::closeTag('div'); ?>
         <?php
-            // Normalize $positions into an array for use in the view
-            // Normalize $positions into an array for use in the view
+
 /**
  * The view may receive:
  *  - $positions as a JSON-encoded string,

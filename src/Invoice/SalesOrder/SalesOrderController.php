@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entity
 use App\Invoice\Entity\CustomField;
@@ -579,7 +580,7 @@ final class SalesOrderController extends BaseController
                     $parameters = [
                         'alert' => $this->alert(),
                         'title' => $this->translator->translate('view'),
-                        'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
+                        'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
                         'errors' => [],
                         'form' => $form,
                         'so' => $so,
@@ -596,8 +597,8 @@ final class SalesOrderController extends BaseController
                         'soStatuses' => $soR->getStatuses($this->translator),
                         'salesOrderCustomValues' => $salesorder_custom_values,
                         'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/partial_item_table', [
-                            'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
-                            'invView' => $this->userService->hasPermission('viewInv') ? true : false,
+                            'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
+                            'invView' => $this->userService->hasPermission(Permissions::VIEW_INV) ? true : false,
                             'numberhelper' => new NumberHelper($settingRepository),
                             'soItems' => $soiR->repoSalesOrderquery((string) $this->session->get('so_id')),
                             'soiaR' => $soiaR,

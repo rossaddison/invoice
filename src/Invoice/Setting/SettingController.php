@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // App
 use App\Invoice\Entity\Setting;
@@ -676,7 +677,7 @@ final class SettingController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('setting/index');

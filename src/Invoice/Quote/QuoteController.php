@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
 // Entity's
@@ -146,7 +147,9 @@ final class QuoteController extends BaseController
     private readonly PdfHelper $pdf_helper;
 
     /**
+     *
      * @param DataResponseFactoryInterface $factory
+     * @param FormFields $formFields
      * @param InvAmountService $inv_amount_service
      * @param InvService $inv_service
      * @param InvCustomService $inv_custom_service
@@ -154,18 +157,26 @@ final class QuoteController extends BaseController
      * @param InvTaxRateService $inv_tax_rate_service
      * @param LoggerInterface $logger
      * @param MailerInterface $mailer
+     * @param soAS $so_amount_service
+     * @param soCS $so_custom_service
+     * @param soIS $so_item_service
+     * @param soS $so_service
+     * @param soTRS $so_tax_rate_service
      * @param QuoteAmountService $quote_amount_service
      * @param QuoteCustomService $quote_custom_service
      * @param QuoteItemService $quote_item_service
      * @param QuoteService $quote_service
      * @param QuoteTaxRateService $quote_tax_rate_service
+     * @param QuoteCustomFieldProcessor $quoteCustomFieldProcessor
+     * @param QuoteToolbar $quoteToolbar
+     * @param UrlGenerator $url_generator
      * @param Session $session
      * @param SR $sR
      * @param Translator $translator
      * @param UserService $userService
-     * @param UrlGenerator $url_generator
      * @param ViewRenderer $viewRenderer
      * @param WebControllerService $webService
+     * @param Flash $flash
      */
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
@@ -1357,7 +1368,7 @@ final class QuoteController extends BaseController
                         'qaR' => $qaR,
                         'quotes' => $quotes,
                         // guests will not have access to the pageListLimiter
-                        'editInv' => $this->userService->hasPermission('editInv'),
+                        'editInv' => $this->userService->hasPermission(Permissions::EDIT_INV),
                         'grid_summary' => $this->sR->grid_summary(
                             $paginator,
                             $this->translator,
@@ -2758,7 +2769,7 @@ final class QuoteController extends BaseController
                 $quote_amount = (($qaR->repoQuoteAmountCount((string) $this->session->get('quote_id')) > 0) ? $qaR->repoQuotequery((string) $this->session->get('quote_id')) : null);
                 if ($quote_amount) {
                     $quote_custom_values = $this->quote_custom_values((string) $this->session->get('quote_id'), $qcR);
-                    $quoteEdit = $this->userService->hasPermission('editInv') ? true : false;
+                    $quoteEdit = $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false;
                     $vat = $this->sR->getSetting('enable_vat_registration');
                     $quoteAmountTotal = $quote_amount->getTotal();
 
@@ -2799,7 +2810,7 @@ final class QuoteController extends BaseController
                         'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_item_table', [
                             'included' => $this->translator->translate('item.tax.included'),
                             'excluded' => $this->translator->translate('item.tax.excluded'),
-                            'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
+                            'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
                             'piR' => $piR,
                             'products' => $pR->findAllPreloaded(),
                             'quoteItems' => $qiR->repoQuotequery((string) $this->session->get('quote_id')),

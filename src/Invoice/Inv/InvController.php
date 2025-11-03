@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Inv\InvCustomFieldProcessor;
 use App\Widget\FormFields;
@@ -1246,7 +1247,7 @@ final class InvController extends BaseController
             $peppol_array = new PeppolArrays();
             $note_on_tax_point = '';
             $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
-            if (($this->sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
+            if (($this->sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission(Permissions::EDIT_INV)) {
                 $note_on_tax_point = $this->viewRenderer->renderPartialAsString('//invoice/info/taxpoint');
             }
             $parameters = [
@@ -1926,7 +1927,7 @@ final class InvController extends BaseController
                         'invs' => $invs,
                         'label' => $label,
                         // the guest will not have access to the pageSizeLimiter
-                        'viewInv' => $this->userService->hasPermission('viewInv'),
+                        'viewInv' => $this->userService->hasPermission(Permissions::VIEW_INV),
                         // update userinv with the user's listlimit preference
                         'userInv' => $userInv,
                         'userInvListLimit' => $userInvListLimit,
@@ -3972,7 +3973,7 @@ final class InvController extends BaseController
                     'iaR' => $iaR,
                     'inv' => $inv,
                     // Determine if a 'viewInv' user has 'editInv' permission
-                    'invEdit' => $this->userService->hasPermission('editInv') ? true : false,
+                    'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
                     'inv_custom_values' => $inv_custom_values,
                     'isRecurring' => $is_recurring,
                     'inv_statuses' => $iR->getStatuses($this->translator),
@@ -3980,7 +3981,7 @@ final class InvController extends BaseController
                     // This permission is necessary for a guest viewing a read-only view to go to the Pay now section
                     // If a custom field exists for payments, use it/them on the payment form.
                     'paymentCfExist' => $cfR->repoTableCountquery('payment_custom') > 0 ? true : false,
-                    'paymentView' => $this->userService->hasPermission('viewPayment') ? true : false,
+                    'paymentView' => $this->userService->hasPermission(Permissions::VIEW_PAYMENT) ? true : false,
                     'payment_methods' => $pmR->findAllWithActive(1),
                     'payments' => $pymR->repoCount((string) $this->session->get('inv_id')) > 0 ? $pymR->repoInvquery((string) $this->session->get('inv_id')) : null,
                     'peppol_stream_toggle' => $this->sR->getSetting('peppol_xml_stream'),
@@ -4027,9 +4028,9 @@ final class InvController extends BaseController
                             'filter_product' => '',
                             'filter_family' => '',
                             'reset_table' => '',
-                            'products' => $pR->findAllPreloaded(),
+                            'products' => $pR->findAllPreloadedWithPrice(),
                             'partial_product_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/product/_partial_product_table_modal', [
-                                'products' => $pR->findAllPreloaded(),
+                                'products' => $pR->findAllPreloadedWithPrice(),
                             ]),
                         ],
                     ),
@@ -4111,8 +4112,8 @@ final class InvController extends BaseController
                         $inv,
                         $iaR,
                         $sumex,
-                        $this->userService->hasPermission('editInv'),
-                        $this->userService->hasPermission('viewPayment'),
+                        $this->userService->hasPermission(Permissions::EDIT_INV),
+                        $this->userService->hasPermission(Permissions::VIEW_PAYMENT),
                         $read_only,
                         $enabled_gateways,
                         $this->sR->getSetting('enable_vat_registration'),
@@ -4263,8 +4264,8 @@ final class InvController extends BaseController
     {
         $uploads = $upR->repoUploadUrlClientquery($url_key, $client_id);
         $paginator = new OffsetPaginator($uploads);
-        $invEdit = $this->userService->hasPermission('editPayment');
-        $invView = $this->userService->hasPermission('viewPayment');
+        $invEdit = $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
+        $invView = $this->userService->hasPermission(Permissions::VIEW_PAYMENT);
         return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_attachments', [
             'form' => new InvAttachmentsForm(),
             'invEdit' => $invEdit,
@@ -4337,6 +4338,11 @@ final class InvController extends BaseController
             // Allowances or Charges: ITEM Level using $aciiR
             ////$inv_item_allowances_charges=$aciiR->repoACIquery((string)$inv->getId());
             ////$inv_item_allowances_charges_count=$aciiR->repoCount((string)$inv->getId());
+
+            // Add flash message about zero-priced product exclusion only if zero-priced products exist
+            if ($pR->hasZeroPricedProducts()) {
+                $this->flashMessage('info', $this->translator->translate('product.zero.price.excluded'));
+            }
             return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_item_table', [
                 'packHandleShipTotal' => $packHandleShipTotal,
                 'aciiR' => $aciiR,
@@ -4346,10 +4352,10 @@ final class InvController extends BaseController
                 'showButtons' => $show_buttons,
                 'included' => $this->translator->translate('item.tax.included'),
                 'excluded' => $this->translator->translate('item.tax.excluded'),
-                'products' => $pR->findAllPreloaded(),
+                'products' => $pR->findAllPreloadedWithPrice(),
                 // Only tasks with complete or status of 3 are made available for selection
                 'tasks' => $taskR->repoTaskStatusquery(3),
-                'userCanEdit' => $this->userService->hasPermission('editInv') ? true : false,
+                'userCanEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
                 'invItems' => $iiR->repoInvquery((string) $this->session->get('inv_id')),
                 'invItemAmountR' => $iiaR,
                 'invTaxRates' => $inv_tax_rates,

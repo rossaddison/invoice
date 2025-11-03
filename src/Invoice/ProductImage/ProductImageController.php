@@ -50,7 +50,7 @@ final class ProductImageController extends BaseController
      *
      * Route::methods([Method::GET, Method::POST], '/productimage/view/{id}')
       ->name('upload/view')
-      ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+      ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
       ->middleware(Authentication::class)
       ->action([UploadController::class, 'view']),
      */

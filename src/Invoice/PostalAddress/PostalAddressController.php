@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Client\ClientRepository;
@@ -66,7 +67,7 @@ final class PostalAddressController extends BaseController
         $postalAddress = new PostalAddress();
         $form = new PostalAddressForm($this->translator, $postalAddress, (int) $client_id);
         $parameters = [
-            'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
+            'canEdit' => ($this->userService->hasPermission(Permissions::VIEW_INV) && $this->userService->hasPermission(Permissions::EDIT_INV)) ? true : false,
             'client_id' => $client_id,
             'title' => $this->translator->translate('add'),
             'actionName' => 'postaladdress/add',
@@ -129,7 +130,7 @@ final class PostalAddressController extends BaseController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next($page));
         $parameters = [
-            'canEdit' => ($this->userService->hasPermission('viewInv') && $this->userService->hasPermission('editInv')) ? true : false,
+            'canEdit' => ($this->userService->hasPermission(Permissions::VIEW_INV) && $this->userService->hasPermission(Permissions::EDIT_INV)) ? true : false,
             'postaladdresses' => $postaladdresses,
             'alert' => $this->alert(),
             'paginator' => $paginator,

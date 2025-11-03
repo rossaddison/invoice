@@ -64,7 +64,6 @@ final readonly class Button
         $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
-                //$translator->translate('back'),
                 '',
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
@@ -72,7 +71,6 @@ final readonly class Button
                 'value' => 'main',
             ],
             [
-                //$translator->translate('save'),
                 '',
                 'type' => 'submit',
                 'class' => 'btn btn-success bi bi-save pull-right',

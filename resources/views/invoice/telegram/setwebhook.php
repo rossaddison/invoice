@@ -9,12 +9,12 @@ use Yiisoft\Html\Tag\I;
 
 /**
  * @var string $alert
- * @var Vjik\TelegramBot\Api\Type\Update\WebhookInfo|Vjik\TelegramBot\Api\FailResult $webhookinfo
+ * @var Phptg\BotApi\Type\Update\WebhookInfo|Phptg\BotApi\FailResult $webhookinfo
  */
 
 echo $alert;
 
-if (!$webhookinfo instanceof \Vjik\TelegramBot\Api\FailResult) {
+if (!$webhookinfo instanceof \Phptg\BotApi\FailResult) {
     echo I::tag()->content('')->addClass('bi bi-info-circle')->addAttributes(['data-bs-toggle' => 'tooltip','title' => '.../resources/views/telegram/webhook.php'])->render();
     echo Html::opentag('pre');
     echo Label::tag()->content(empty($webhookinfo->url)

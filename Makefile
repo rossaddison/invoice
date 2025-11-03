@@ -18,7 +18,8 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make p                 - Run PHP Psalm"
 	@echo "make pf FILE=src/Foo.php     - Run PHP Psalm on specific file"
 	@echo "make pd DIR=src/           - Run PHP Psalm on directory"
-	@echo "make pc                - Clear Psalm's cache"
+	@echo "make pc                - Clear Psalm's cache"    
+        @echo "make cas               - Clear Assets Cache (Safe - preserves .gitignore)"
 	@echo "make pi                - Psalm: Show Config/Plugins"
 	@echo "make co                - Composer outdated"
 	@echo "make cwn REPO=vendor/package VERSION=1.0.0  - Composer why-not"
@@ -317,6 +318,21 @@ iait6: ## invoice/autoincrementsettooneafter/truncate6
 endif
 
 #
+# Assets Management
+#
+
+ifeq ($(PRIMARY_GOAL),cas)
+cas: ## Clear Assets Cache (Safe - preserves .gitignore)
+	@echo "Clearing assets cache while preserving .gitignore..."
+ifeq ($(OS),Windows_NT)
+	powershell -Command "Get-ChildItem -Path 'public/assets' -Exclude '.gitignore' | Remove-Item -Recurse -Force"
+else
+	find public/assets -mindepth 1 -not -name '.gitignore' -exec rm -rf {} +
+endif
+	@echo "Assets cache cleared successfully (preserved .gitignore)"
+endif
+
+#
 # Diagnostics
 #
 
@@ -333,4 +349,4 @@ info: ## System Info / Diagnostics
 	npm list --depth=0
 endif
 
-.PHONY: menu help install p pf pd pc pi co cwn ccl cv cda cu nu nvm na crc ct cb rdr rmc csd csf serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info
+.PHONY: menu help install p pf pd pc cas pi co cwn ccl cv cda cu nu nvm na crc ct cb rdr rmc csd csf serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info

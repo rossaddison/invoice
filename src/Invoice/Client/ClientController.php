@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Client;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entity's
 use App\Invoice\Entity\Client;
@@ -563,7 +564,7 @@ final class ClientController extends BaseController
                             'alert' => $this->alert(),
                             'iR' => $iR,
                             'iaR' => $iaR,
-                            'editInv' => $this->userService->hasPermission('editInv'),
+                            'editInv' => $this->userService->hasPermission(Permissions::EDIT_INV),
                             'active' => $active,
                             'cpR' => $cpR,
                             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
@@ -600,7 +601,7 @@ final class ClientController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('client/index');

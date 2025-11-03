@@ -9,14 +9,14 @@ use Yiisoft\Html\Tag\I;
 
 /**
  * @var string $alert
- * @var Vjik\TelegramBot\Api\FailResult|array $updates
+ * @var Phptg\BotApi\FailResult|array $updates
  */
 
 echo $alert;
 echo I::tag()->content('')->addClass('bi bi-info-circle')->addAttributes(['data-bs-toggle' => 'tooltip','title' => '.../resources/views/telegram/updates.php'])->render();
-if (!$updates instanceof \Vjik\TelegramBot\Api\FailResult) {
+if (!$updates instanceof \Phptg\BotApi\FailResult) {
     /**
-     * @var Vjik\TelegramBot\Api\Type\Update\Update $update
+     * @var Phptg\BotApi\Type\Update\Update $update
      */
     foreach ($updates as $update) {
         echo $update->getRaw();

@@ -381,11 +381,19 @@ export class QuoteHandler {
 
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
-            const currentUrl = new URL(location.href);
 
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-            window.location.href = currentUrl.href;
-            window.location.reload();
+            
+            // Redirect to the created invoice if successful
+            if (data.success && data.new_invoice_id) {
+                window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
+            } else {
+                // Fallback to reload if no invoice ID is provided
+                const currentUrl = new URL(location.href);
+                window.location.href = currentUrl.href;
+                window.location.reload();
+            }
+            
             if (data.flash_message) alert(data.flash_message);
         } catch (error) {
             console.error('quote_to_invoice_confirm error', error);

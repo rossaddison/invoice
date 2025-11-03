@@ -38,7 +38,7 @@ final class ResetPasswordController
 
     /**
      * Note: After the user has clicked on their inbox link, the returned masked token will be unmasked. Only once the
-     * 32bit randdom string has been compared with the unmasked request-password-reset token is the resetPasswordForm presented to the user
+     * 32bit random string has been compared with the unmasked request-password-reset token is the resetPasswordForm presented to the user
      * @param string $maskedToken
      * @param FormHydrator $formHydrator
      * @param ServerRequestInterface $request

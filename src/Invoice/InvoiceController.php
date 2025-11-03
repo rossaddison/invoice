@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice;
 
+use App\Auth\Permissions;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\Group;
@@ -875,10 +876,10 @@ final class InvoiceController extends BaseController
         ClientRepository $cR,
         GroupRepository $gR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        if ($this->userService->hasPermission('noEntryToBaseController')) {
+        if ($this->userService->hasPermission(Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
             return $this->webService->getNotFoundResponse();
         }
-        if (($sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission('editInv')) {
+        if (($sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission(Permissions::EDIT_INV)) {
             $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
         }
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
@@ -910,18 +911,21 @@ final class InvoiceController extends BaseController
         ClientRepository $cR,
     ): void {
         // The setting install_test_data exists
-        if ($sR->repoCount('install_test_data') === 1
+        if ($sR->repoCount('install_test_data') == 1
+                // The test data does not exist yet
                 && $fR->repoTestDataCount() == 0
                 && $uR->repoTestDataCount() == 0
                 && $pR->repoTestDataCount() == 0
                 // The setting install_test_data has been set to Yes in Settings...View
-                && $sR->getSetting('install_test_data') === '1') {
+                && $sR->getSetting('install_test_data') == '1') {
+            // The user wants the test data to be installed
             $this->install_test_data($trR, $uR, $fR, $pR, $cR);
         } else {
             // Test Data Already exists => Settings...View install_test_data must be set back to No
-            $this->flashMessage('warning', $this->translator->translate('install.test.data.exists.already'));
+            // Only show this message if we are in Non-production debug mode
+            $sR->getSetting('debug_mode') == '1' ? $this->flashMessage('warning', $this->translator->translate('install.test.data.exists.already')) : '';
             $setting = $sR->withKey('install_test_data');
-            if ($setting) {
+            if (null !== $setting) {
                 $setting->setSetting_value('0');
                 $sR->save($setting);
             }
@@ -1219,7 +1223,7 @@ final class InvoiceController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('viewInv');
+        $canEdit = $this->userService->hasPermission(Permissions::VIEW_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('invoice/index');
@@ -1246,7 +1250,7 @@ final class InvoiceController extends BaseController
      */
     public function setting_reset(SettingRepository $sR): Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if ($canEdit) {
             $this->remove_all_settings($sR);
         }

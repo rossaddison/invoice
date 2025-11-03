@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Product;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
 use App\Invoice\Entity\Family;
@@ -729,7 +730,7 @@ final class ProductController extends BaseController
      */
     private function rbac(): bool|Response
     {
-        $canEdit = $this->userService->hasPermission('editInv');
+        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
             $this->flashMessage('warning', $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('product/index');
@@ -812,8 +813,8 @@ final class ProductController extends BaseController
                 'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
                     'product' => $product,
                     'productImages' => $product_images,
-                    'invEdit' => $this->userService->hasPermission('editInv'),
-                    'invView' => $this->userService->hasPermission('viewInv'),
+                    'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV),
+                    'invView' => $this->userService->hasPermission(Permissions::VIEW_INV),
                 ]),
             ];
             return $this->viewRenderer->render('_view', $parameters);
@@ -912,8 +913,8 @@ final class ProductController extends BaseController
     {
         $productimages = $piR->repoProductImageProductquery($product_id);
         $paginator = new OffsetPaginator($productimages);
-        $invEdit = $this->userService->hasPermission('editInv');
-        $invView = $this->userService->hasPermission('viewInv');
+        $invEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
+        $invView = $this->userService->hasPermission(Permissions::VIEW_INV);
         return $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image', [
             'form' => new ImageAttachForm(),
             'invEdit' => $invEdit,

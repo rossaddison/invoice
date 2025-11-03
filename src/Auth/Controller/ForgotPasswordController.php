@@ -10,6 +10,7 @@ use App\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\RequestPasswordResetTokenForm;
+use App\Auth\Permissions;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 use App\Service\WebControllerService;

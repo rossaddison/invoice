@@ -43,7 +43,7 @@ use Yiisoft\Html\Html;
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <p><b>Further reading: </b><a href="https://core.telegram.org/bots/api">Telegram Bot Api</a><p>
-                            <p><b>Further reading: </b><a href="https://github.com/vjik/telegram-bot-api">Vjik Telegram Bot Api</a><p>
+                            <p><b>Further reading: </b><a href="https://github.com/vjik/telegram-bot-api">Phptg Bot Api</a><p>
                             <p><b>1. Inside the Telegram App (mobile/desktop) search with .... </b><pre>botfather</pre></p>
                             <p><b>2. Click on the .... <pre>/newbot - create a new bot</pre>  link</b></p>
                             <p><b>3. Record the token here ...</b>
