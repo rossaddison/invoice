@@ -13174,12 +13174,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "1b1f6df6a9338c42006841164923d2489d360a71"
+                "reference": "7904d11924a265276f32a5c62e1c93d7c6cd86c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/1b1f6df6a9338c42006841164923d2489d360a71",
-                "reference": "1b1f6df6a9338c42006841164923d2489d360a71",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/7904d11924a265276f32a5c62e1c93d7c6cd86c2",
+                "reference": "7904d11924a265276f32a5c62e1c93d7c6cd86c2",
                 "shasum": ""
             },
             "require": {
@@ -13252,7 +13252,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-11-02T10:02:31+00:00"
+            "time": "2025-11-03T15:32:01+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -21697,12 +21697,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "4b6f0c12f5efc5283107b3dabb634abb4ded21e1"
+                "reference": "88a898d838c34d21634e4b5d8ea0afa8760e47ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/4b6f0c12f5efc5283107b3dabb634abb4ded21e1",
-                "reference": "4b6f0c12f5efc5283107b3dabb634abb4ded21e1",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/88a898d838c34d21634e4b5d8ea0afa8760e47ad",
+                "reference": "88a898d838c34d21634e4b5d8ea0afa8760e47ad",
                 "shasum": ""
             },
             "require": {
@@ -21746,7 +21746,7 @@
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
                 "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.40.x"
             },
-            "time": "2025-10-30T01:35:09+00:00"
+            "time": "2025-11-03T01:54:37+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -21754,12 +21754,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "d2e1583e5f89f53f7882861c1639c14c9a154585"
+                "reference": "a9c2212e5dd9e6ad9aba0413e53484f49284e4b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d2e1583e5f89f53f7882861c1639c14c9a154585",
-                "reference": "d2e1583e5f89f53f7882861c1639c14c9a154585",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a9c2212e5dd9e6ad9aba0413e53484f49284e4b3",
+                "reference": "a9c2212e5dd9e6ad9aba0413e53484f49284e4b3",
                 "shasum": ""
             },
             "conflict": {
@@ -22194,7 +22194,7 @@
                 "maikuolan/phpmussel": ">=1,<1.6",
                 "mainwp/mainwp": "<=4.4.3.3",
                 "manogi/nova-tiptap": "<=3.2.6",
-                "mantisbt/mantisbt": "<=2.26.3",
+                "mantisbt/mantisbt": "<2.27.2",
                 "marcwillmann/turn": "<0.3.3",
                 "marshmallow/nova-tiptap": "<5.7",
                 "matomo/matomo": "<1.11",
@@ -22737,7 +22737,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-30T18:07:16+00:00"
+            "time": "2025-11-03T18:07:28+00:00"
         },
         {
             "name": "sanmai/later",

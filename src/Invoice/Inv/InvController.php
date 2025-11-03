@@ -4339,10 +4339,6 @@ final class InvController extends BaseController
             ////$inv_item_allowances_charges=$aciiR->repoACIquery((string)$inv->getId());
             ////$inv_item_allowances_charges_count=$aciiR->repoCount((string)$inv->getId());
 
-            // Add flash message about zero-priced product exclusion only if zero-priced products exist
-            if ($pR->hasZeroPricedProducts()) {
-                $this->flashMessage('info', $this->translator->translate('product.zero.price.excluded'));
-            }
             return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_item_table', [
                 'packHandleShipTotal' => $packHandleShipTotal,
                 'aciiR' => $aciiR,
