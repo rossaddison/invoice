@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a591651cc29c6463aebb10ca9d0eea8",
+    "content-hash": "5064b7c834d36586f9f11ff6837447b7",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -918,16 +918,16 @@
         },
         {
             "name": "azjezz/psl",
-            "version": "3.3.0",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "78078f2c505473d2a28319ffe426b2a82ac76790"
+                "reference": "15153a64c9824335ce11654522e7d88de762d39e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/78078f2c505473d2a28319ffe426b2a82ac76790",
-                "reference": "78078f2c505473d2a28319ffe426b2a82ac76790",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/15153a64c9824335ce11654522e7d88de762d39e",
+                "reference": "15153a64c9824335ce11654522e7d88de762d39e",
                 "shasum": ""
             },
             "require": {
@@ -936,17 +936,15 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
-                "revolt/event-loop": "^1.0.6"
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
+                "revolt/event-loop": "^1.0.7"
             },
             "require-dev": {
-                "carthage-software/mago": "~0.13.1",
+                "carthage-software/mago": "^1.0.0-beta.32",
+                "infection/infection": "^0.31.2",
                 "php-coveralls/php-coveralls": "^2.7.0",
-                "php-standard-library/psalm-plugin": "^2.3.0",
-                "phpbench/phpbench": "^1.2.15",
-                "phpunit/phpunit": "^9.6.18",
-                "roave/infection-static-analysis-plugin": "^1.36.0",
-                "vimeo/psalm": "^6.0.0"
+                "phpbench/phpbench": "^1.4.0",
+                "phpunit/phpunit": "^9.6.22"
             },
             "suggest": {
                 "php-standard-library/phpstan-extension": "PHPStan integration",
@@ -980,15 +978,19 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/3.3.0"
+                "source": "https://github.com/azjezz/psl/tree/4.2.0"
             },
             "funding": [
                 {
                     "url": "https://github.com/azjezz",
                     "type": "github"
+                },
+                {
+                    "url": "https://github.com/veewee",
+                    "type": "github"
                 }
             ],
-            "time": "2025-03-03T00:07:00+00:00"
+            "time": "2025-10-25T08:31:40+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -5049,24 +5051,24 @@
         },
         {
             "name": "maglnet/composer-require-checker",
-            "version": "4.18.0",
+            "version": "4.19.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maglnet/ComposerRequireChecker.git",
-                "reference": "de930e82bb61e0161d909696950692523b8eaa3f"
+                "reference": "6ab22d98f84b3c27b0d0dcfa0f84bcb50913c92e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maglnet/ComposerRequireChecker/zipball/de930e82bb61e0161d909696950692523b8eaa3f",
-                "reference": "de930e82bb61e0161d909696950692523b8eaa3f",
+                "url": "https://api.github.com/repos/maglnet/ComposerRequireChecker/zipball/6ab22d98f84b3c27b0d0dcfa0f84bcb50913c92e",
+                "reference": "6ab22d98f84b3c27b0d0dcfa0f84bcb50913c92e",
                 "shasum": ""
             },
             "require": {
-                "azjezz/psl": "^3.2.0",
+                "azjezz/psl": "^4.2.0",
                 "composer-runtime-api": "^2.0.0",
                 "ext-phar": "*",
                 "nikic/php-parser": "^5.4.0",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
                 "symfony/console": "^7.2.1",
                 "webmozart/glob": "^4.7.0"
             },
@@ -5083,6 +5085,7 @@
                 "spatie/temporary-directory": "^2.3.0",
                 "vimeo/psalm": "^6.13.0"
             },
+            "default-branch": true,
             "bin": [
                 "bin/composer-require-checker"
             ],
@@ -5126,9 +5129,9 @@
             ],
             "support": {
                 "issues": "https://github.com/maglnet/ComposerRequireChecker/issues",
-                "source": "https://github.com/maglnet/ComposerRequireChecker/tree/4.18.0"
+                "source": "https://github.com/maglnet/ComposerRequireChecker/tree/4.19.x"
             },
-            "time": "2025-10-30T11:58:39+00:00"
+            "time": "2025-10-30T16:45:22+00:00"
         },
         {
             "name": "mollie/mollie-api-php",
