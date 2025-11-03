@@ -41,15 +41,16 @@ function escapeIdForQuerySelector(id: string): string {
 function setButtonWorkingState(button: HTMLElement, working: boolean) {
     if (working) {
         // Replace content with spinner
-        button.setAttribute('data-original-html', button.innerHTML);
+        // Store the original HTML markup on a property, not as an attribute to avoid XSS risk
+        (button as any).__originalHTML = button.innerHTML;
         button.setAttribute('aria-busy', 'true');
         button.setAttribute('disabled', 'true');
         button.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
     } else {
-        const original = button.getAttribute('data-original-html');
+        const original = (button as any).__originalHTML;
         if (original) {
             button.innerHTML = original;
-            button.removeAttribute('data-original-html');
+            delete (button as any).__originalHTML;
         }
         button.removeAttribute('aria-busy');
         button.removeAttribute('disabled');
