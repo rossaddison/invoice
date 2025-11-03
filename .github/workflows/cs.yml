@@ -1,26 +1,7 @@
 name: Code Style
 
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-      - 'fixer-output.txt'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-      - 'fixer-output.txt'
+  workflow_dispatch:
 jobs:
   cs-fix:
     timeout-minutes: 30
