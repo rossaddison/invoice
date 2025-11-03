@@ -62,7 +62,7 @@
         } else {
             var original = button.getAttribute('data-original-html');
             if (original) {
-                button.innerHTML = original;
+                button.textContent = original;
                 button.removeAttribute('data-original-html');
             }
             button.removeAttribute('aria-busy');
