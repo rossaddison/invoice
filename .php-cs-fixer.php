@@ -36,6 +36,6 @@ return (new Config())
         10
     ))
     ->setRules([
-        '@PER-CS2.0' => true,
+        '@PER-CS2x0' => true,
     ])
     ->setFinder($finder);
