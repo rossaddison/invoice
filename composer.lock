@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d790daabad2680be76c7f907e6742ed1",
+    "content-hash": "16bb5e5392ac7403307f83f9f0ab743d",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -1743,16 +1743,16 @@
         },
         {
             "name": "cycle/annotated",
-            "version": "v4.3.1",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/annotated.git",
-                "reference": "f996d3ee0c22aa8f2c03dca5d693408f8b7fdbbe"
+                "reference": "7564927e04449eeec22b3cf94af2d406f129d931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/annotated/zipball/f996d3ee0c22aa8f2c03dca5d693408f8b7fdbbe",
-                "reference": "f996d3ee0c22aa8f2c03dca5d693408f8b7fdbbe",
+                "url": "https://api.github.com/repos/cycle/annotated/zipball/7564927e04449eeec22b3cf94af2d406f129d931",
+                "reference": "7564927e04449eeec22b3cf94af2d406f129d931",
                 "shasum": ""
             },
             "require": {
@@ -1813,7 +1813,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-22T06:19:06+00:00"
+            "time": "2025-11-04T08:20:33+00:00"
         },
         {
             "name": "cycle/database",
