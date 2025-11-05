@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d790daabad2680be76c7f907e6742ed1",
+    "content-hash": "40ed385fd7dec12b64c1581e4e1f9628",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -14773,16 +14773,16 @@
         },
         {
             "name": "yiisoft/form",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form.git",
-                "reference": "3d7a887b481e80388253e91bd7f435efedcc8fc8"
+                "reference": "3e6410245af751b237174b819eb0d7d70ea2415c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form/zipball/3d7a887b481e80388253e91bd7f435efedcc8fc8",
-                "reference": "3d7a887b481e80388253e91bd7f435efedcc8fc8",
+                "url": "https://api.github.com/repos/yiisoft/form/zipball/3e6410245af751b237174b819eb0d7d70ea2415c",
+                "reference": "3e6410245af751b237174b819eb0d7d70ea2415c",
                 "shasum": ""
             },
             "require": {
@@ -14842,7 +14842,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-03-27T12:12:06+00:00"
+            "time": "2025-11-05T06:03:21+00:00"
         },
         {
             "name": "yiisoft/form-model",
