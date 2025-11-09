@@ -12,7 +12,7 @@
         "@types/node": "^22.0.0",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
-        "esbuild": "^0.25.0",
+        "esbuild": "^0.27.0",
         "eslint": "^8.57.0",
         "eslint-plugin-deprecation": "^3.0.0",
         "jest": "^30.2.0",
