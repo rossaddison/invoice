@@ -500,10 +500,15 @@ final class InvItemController extends BaseController
      */
     public function multiple(Request $request, IIR $iiR): \Yiisoft\DataResponse\DataResponse
     {
-        //jQuery parameters from inv.js function delete-items-confirm-inv 'item_ids' and 'inv_id'
         $select_items = $request->getQueryParams();
         $result = false;
-        $item_ids = ($select_items['item_ids'] ? (array) $select_items['item_ids'] : []);
+        $item_ids = (array) ($select_items['item_ids'] ?? []);
+
+        // Early return if no items selected
+        if (empty($item_ids)) {
+            return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => 'No items selected']));
+        }
+
         $items = $iiR->findinInvItems($item_ids);
         // If one item is deleted, the result is positive
         /** @var InvItem $item */

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
@@ -6,10 +7,11 @@ use Yiisoft\Html\Html;
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
- * @var App\Invoice\Project\ProjectRepository $prjctR
+ * @var App\Invoice\Project\ProjectRepository $projectR
  * @var App\Invoice\Task\TaskRepository $taskR
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var DateTimeImmutable|string|null $fDate
+ * @var array $tasks
  */
 ?>
 
@@ -29,17 +31,17 @@ use Yiisoft\Html\Html;
             /**
              * @var App\Invoice\Entity\Task $task
              */
-            foreach ($taskR->repoTaskStatusquery(3) as $task) { ?>
+            foreach ($tasks as $task) { ?>
             <tr class="task-row">
                 <td class="text-left">
                     <input type="checkbox" class="modal-task-id" name="task_ids[]"
                            id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= ($prjctR->count($task->getProject_id()) > 0 ? $prjctR->repoProjectquery($task->getProject_id())?->getName() : '') ?></b>
+                    <b><?php echo ($projectR->count($task->getProject_id()) > 0 ? $projectR->repoProjectquery($task->getProject_id())?->getName() : '') ?></b>
                 </td>
                 <td>
-                    <b><?= Html::encode($task->getName()); ?></b>
+                    <b><?php echo Html::encode($task->getName()); ?></b>
                 </td>
                 <td>
                     <?php

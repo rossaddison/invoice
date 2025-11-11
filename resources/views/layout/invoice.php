@@ -719,7 +719,7 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
     }
 ?>
             <main class="container py-4">
-                <?php echo $content; ?>
+                                    <?php echo $content; ?>
             </main>
 
             <div id="fullpage-loader" style="display: none">
@@ -741,7 +741,7 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
             </div>
         </div>
         <footer class="container py-4">
-            <?= PerformanceMetrics::widget(); ?>           
+                            <?= PerformanceMetrics::widget(); ?>
         </footer>
         <?php
             echo Html::script('NProgress.done();')->type('module');

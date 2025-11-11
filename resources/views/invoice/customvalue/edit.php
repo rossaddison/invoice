@@ -56,11 +56,11 @@ use Yiisoft\Html\Tag\Form;
                         <?= $translator->translate('field'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
-        'class' => 'form-control',
-        'disabled' => 'disabled',
-        'id' => 'label',
-        'value' => Html::encode($custom_field->getLabel() ?? ''),
-    ]);
+                        'class' => 'form-control',
+                        'disabled' => 'disabled',
+                        'id' => 'label',
+                        'value' => Html::encode($custom_field->getLabel() ?? ''),
+                    ]);
 ?>
                 <?= Html::closeTag('div'); ?>
     
@@ -69,11 +69,11 @@ use Yiisoft\Html\Tag\Form;
                         <?= $translator->translate('type'); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= Html::openTag('input', [
-    'class' => 'form-control',
-    'disabled' => 'disabled',
-    'id' => 'type',
-    'value' => Html::encode($translator->translate('' . $alpha . '')),
-]);
+                        'class' => 'form-control',
+                        'disabled' => 'disabled',
+                        'id' => 'type',
+                        'value' => Html::encode($translator->translate('' . $alpha . '')),
+                    ]);
 ?>
                 <?= Html::closeTag('div'); ?>
     

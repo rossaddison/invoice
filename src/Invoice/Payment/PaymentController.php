@@ -554,7 +554,7 @@ final class PaymentController extends BaseController
              ->withCurrentPage($currentPageNeverZero)
              ->withToken(PageToken::next((string) $page));
             // No need for rbac here since the route accessChecker for payment/online_log
-            // includes 'viewPayment' Related logic: see config/routes.php
+            // includes Permissions::VIEW_PAYMENT Related logic: see config/routes.php
             $parameters = [
                 'alert' => $this->alert(),
                 'page' => $page,
@@ -711,7 +711,7 @@ final class PaymentController extends BaseController
          ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log
-        // includes 'viewPayment' Related logic: see config/routes.php
+        // includes Permissions::VIEW_PAYMENT Related logic: see config/routes.php
         $parameters = [
             'alert' => $this->alert(),
             'page' => $page,

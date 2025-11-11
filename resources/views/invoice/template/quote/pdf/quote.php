@@ -136,7 +136,7 @@ if ($items) {
      * @var App\Invoice\Entity\InvItem $item
      */
     foreach ($items as $item) {
-        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $item->getId());
+        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $item->getId());
         ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>

@@ -11,11 +11,14 @@ use Yiisoft\Validator\Rule\GreaterThan;
 
 final class QuoteItemForm extends FormModel
 {
+    private ?string $id = '';
+
     #[Required]
     private ?string $tax_rate_id = '';
 
-    #[Required]
     private ?string $product_id = '';
+
+    private ?string $task_id = '';
     private ?string $name = '';
 
     private ?string $description = '';
@@ -23,10 +26,8 @@ final class QuoteItemForm extends FormModel
     #[GreaterThan(0.00)]
     private ?float $quantity = null;
 
-    #[GreaterThan(0.00)]
     private ?float $price = null;
 
-    #[Required]
     private ?float $discount_amount = null;
 
     #[Required]
@@ -36,8 +37,10 @@ final class QuoteItemForm extends FormModel
 
     public function __construct(QuoteItem $quoteItem, private readonly ?string $quote_id)
     {
+        $this->id = $quoteItem->getId();
         $this->tax_rate_id = $quoteItem->getTax_rate_id();
         $this->product_id = $quoteItem->getProduct_id();
+        $this->task_id = $quoteItem->getTask_id();
         $this->name = $quoteItem->getName();
         $this->description = $quoteItem->getDescription();
         $this->quantity = $quoteItem->getQuantity();
@@ -46,6 +49,11 @@ final class QuoteItemForm extends FormModel
         $this->order = $quoteItem->getOrder();
         $this->product_unit = $quoteItem->getProduct_unit();
         $this->product_unit_id = (int) $quoteItem->getProduct_unit_id();
+    }
+
+    public function getId(): string|null
+    {
+        return $this->id;
     }
 
     public function getQuote_id(): string|null
@@ -61,6 +69,11 @@ final class QuoteItemForm extends FormModel
     public function getProduct_id(): string|null
     {
         return $this->product_id;
+    }
+
+    public function getTask_id(): string|null
+    {
+        return $this->task_id;
     }
 
     public function getName(): string|null

@@ -1,0 +1,12 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  # False positive: Country code data flagged as hardcoded password
+  SNYK-CODE-09045b5d-96a4-401a-87d4-95b6ac56af1a:
+    - src/Invoice/Helpers/Country-list/ar/country.php:
+        reason: False positive - ISO 3166-1 alpha-2 country codes in legitimate country reference data, not actual passwords
+        expires: '2026-11-05T00:00:00.000Z'
+
+# patches apply the minimum changes required to fix a vulnerability
+patch: {}

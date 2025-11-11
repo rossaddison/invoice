@@ -559,7 +559,7 @@ final class ProductController extends BaseController
             'product_unit_id' => $product->getUnit_id(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->quoteitemService->addQuoteItem($quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
+            $this->quoteitemService->addQuoteItemProduct($quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
         }
     }
 

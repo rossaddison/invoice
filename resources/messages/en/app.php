@@ -1228,7 +1228,6 @@ There should be no existing data in these tables prior to importing and no exist
   'product.view.tab.gallery' => 'Product Gallery',
   'product.view.tab.images' => 'Product Images',
   'product.view.tab.properties' => 'Product Properties',
-  'product.zero.price.excluded' => 'Note: Products with zero prices have been excluded from the selection list.',
   'productimage.add' => 'Add a Product Image',
   'productimage.deleted.from' => 'The image has been successfully deleted from the following directory: ',
   'productimage.form' => 'Product Image Form',

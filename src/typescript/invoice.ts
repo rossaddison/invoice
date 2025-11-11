@@ -437,7 +437,7 @@ export class InvoiceHandler {
         try {
             // Get invoice ID from current URL
             const currentUrl = new URL(location.href);
-            const inv_id = currentUrl.pathname.split('/').pop() || '';
+            const inv_id = currentUrl.pathname.split('/').at(-1) || '';
 
             const payload: AddInvoiceTaxData = {
                 inv_id: inv_id,
@@ -488,7 +488,7 @@ export class InvoiceHandler {
 
         try {
             const absoluteUrl = new URL(location.href);
-            const inv_id = absoluteUrl.pathname.split('/').pop() || '';
+            const inv_id = absoluteUrl.pathname.split('/').at(-1) || '';
 
             const payload: CopySingleInvoiceData = {
                 inv_id: inv_id,
@@ -508,12 +508,10 @@ export class InvoiceHandler {
                     window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
                 } else {
                     // Fallback to reload current page if new_invoice_id not provided
-                    window.location.href = absoluteUrl.href;
                     window.location.reload();
                 }
             } else {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                window.location.href = absoluteUrl.href;
                 window.location.reload();
             }
         } catch (error) {
@@ -540,22 +538,21 @@ export class InvoiceHandler {
         try {
             // Get selected item checkboxes from the modal table
             const selected: string[] = [];
-            const modal = document.getElementById('delete-items');
-
-            if (modal) {
-                const checkboxes = modal.querySelectorAll(
-                    'input[type="checkbox"]:checked'
-                ) as NodeListOf<HTMLInputElement>;
-                checkboxes.forEach(checkbox => {
-                    if (checkbox.value) {
-                        selected.push(checkbox.value);
-                    }
-                });
-            }
+            
+            // Use the same selector pattern as quote for consistency
+            const checkboxes = document.querySelectorAll(
+                "input[name='item_ids[]']:checked"
+            ) as NodeListOf<HTMLInputElement>;
+            
+            checkboxes.forEach(checkbox => {
+                if (checkbox.value) {
+                    selected.push(checkbox.value);
+                }
+            });
 
             // Get invoice ID from current URL
             const currentUrl = new URL(location.href);
-            const inv_id = currentUrl.pathname.split('/').pop() || '';
+            const inv_id = currentUrl.pathname.split('/').at(-1) || '';
 
             if (selected.length === 0) {
                 alert('Please select items to delete.');
@@ -688,7 +685,7 @@ export class InvoiceHandler {
 
     private handleAddRowModal(): void {
         const currentUrl = new URL(location.href);
-        const inv_id = currentUrl.pathname.split('/').pop() || '';
+        const inv_id = currentUrl.pathname.split('/').at(-1) || '';
         const url = `${location.origin}/invoice/invitem/add/${inv_id}`;
         
         // Load content into modal placeholder
@@ -698,11 +695,30 @@ export class InvoiceHandler {
             fetch(url, { credentials: 'same-origin' })
                 .then(response => response.text())
                 .then(html => {
-                    modalPlaceholder.innerHTML = html;
+                    // Sanitize HTML content to prevent XSS attacks
+                    modalPlaceholder.textContent = '';
+                    const tempDiv = document.createElement('div');
+                    tempDiv.textContent = html;
+                    // For trusted server content, use createDocumentFragment for better security
+                    const fragment = document.createDocumentFragment();
+                    const parser = new DOMParser();
+                    try {
+                        const doc = parser.parseFromString(html, 'text/html');
+                        // Only append if parsing was successful and content is from trusted source
+                        if (doc && doc.body) {
+                            while (doc.body.firstChild) {
+                                fragment.appendChild(doc.body.firstChild);
+                            }
+                            modalPlaceholder.appendChild(fragment);
+                        }
+                    } catch (e) {
+                        console.error('HTML parsing error:', e);
+                        modalPlaceholder.textContent = 'Error loading content';
+                    }
                 })
                 .catch(error => {
                     console.error('Failed to load modal content:', error);
-                    alert('Failed to load item form. Please try again.');
+                    modalPlaceholder.textContent = 'Failed to load item form. Please try again.';
                 });
         }
     }

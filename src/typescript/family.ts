@@ -40,14 +40,47 @@ export class FamilyHandler {
         if (primarySelect) {
             primarySelect.addEventListener('change', this.onPrimaryChange.bind(this), false);
             // Trigger initial change to populate secondaries on load (if selection exists)
-            Promise.resolve().then(() => this.onPrimaryChange());
+            this.initializeSelector(() => this.onPrimaryChange());
         }
 
         if (secondarySelect) {
             secondarySelect.addEventListener('change', this.onSecondaryChange.bind(this), false);
             // Trigger initial load of family names if secondary already has a value
-            Promise.resolve().then(() => this.onSecondaryChange());
+            this.initializeSelector(() => this.onSecondaryChange());
         }
+    }
+
+    /**
+     * Initialize selector with deferred execution using ES2024 Promise.withResolvers
+     * Enhanced with error handling and timeout protection
+     */
+    private initializeSelector(callback: () => void): void {
+        const { promise, resolve, reject } = Promise.withResolvers<void>();
+        
+        // Schedule callback with timeout protection
+        const timeoutId = setTimeout(() => {
+            reject(new Error('Selector initialization timeout', { 
+                cause: 'DOM not ready within expected timeframe' 
+            }));
+        }, 5000);
+        
+        // Schedule callback to run after current execution stack
+        setTimeout(() => {
+            clearTimeout(timeoutId);
+            resolve();
+        }, 0);
+        
+        promise
+            .then(() => callback())
+            .catch(error => {
+                console.error('Selector initialization failed:', error);
+                // Fallback: try to execute callback anyway
+                try {
+                    callback();
+                } catch (callbackError) {
+                    console.error('Callback execution failed:', callbackError);
+                }
+            });
     }
 
     /**

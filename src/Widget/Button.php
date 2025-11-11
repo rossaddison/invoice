@@ -65,7 +65,7 @@ final readonly class Button
         $buttonsDataArray = [
             [
                 '',
-                'type' => 'reset',
+                'type' => 'button',
                 'onclick' => 'window.history.back()',
                 'class' => 'btn btn-danger bi bi-arrow-left',
                 'value' => 'main',

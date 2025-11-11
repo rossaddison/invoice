@@ -39,7 +39,7 @@ class SalesOrder
     private DateTimeImmutable $date_expires;
 
     public function __construct(
-        // The purchase order is derived from the quote =>quote_id
+        // The purchase order is derived from the quote => quote_id
         // If a contract has been established between the supplier and the client, use the contract reference
         #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $quote_id = null,

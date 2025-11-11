@@ -60,18 +60,6 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * Check if there are any products with zero prices
-     * @return bool
-     */
-    public function hasZeroPricedProducts(): bool
-    {
-        $count = $this->select()
-            ->where(['product_price' => 0])
-            ->count();
-        return $count > 0;
-    }
-
-    /**
      * @psalm-return EntityReader
      */
     public function getReader(): EntityReader

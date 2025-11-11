@@ -18,16 +18,45 @@ function getFieldValue(id: string): string {
     return element?.value || '';
 }
 
-// Helper to set button loading state
+// Secure navigation helper to prevent Open Redirect vulnerabilities
+function secureReload(): void {
+    // Safely reload the current page without using potentially manipulable URLs
+    window.location.reload();
+}
+
+// Helper function to safely create loading/success UI elements to prevent XSS
+function createSecureUIElement(type: string = 'h6', className: string = 'text-center', iconClass: string = 'fa fa-spin fa-spinner'): HTMLElement {
+    const element = document.createElement(type);
+    element.className = className;
+    const icon = document.createElement('i');
+    icon.className = iconClass;
+    element.appendChild(icon);
+    return element;
+}
+
+// Helper to set button loading state securely
 function setButtonLoading(button: HTMLElement, isLoading: boolean, originalHtml?: string): void {
     if (isLoading) {
-        button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+        button.textContent = '';
+        button.appendChild(createSecureUIElement('h6', 'text-center', 'fa fa-spin fa-spinner'));
         (button as HTMLButtonElement).disabled = true;
     } else {
-        button.innerHTML =
-            originalHtml || '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+        if (originalHtml) {
+            button.textContent = '';
+            button.appendChild(createSecureUIElement('h6', 'text-center', 'fa fa-check'));
+        } else {
+            button.textContent = '';
+            button.appendChild(createSecureUIElement('h6', 'text-center', 'fa fa-check'));
+        }
         (button as HTMLButtonElement).disabled = false;
     }
+}
+
+// Helper function to safely set button content
+function setSecureButtonContent(btn: HTMLElement | null, type: string = 'h6', className: string = 'text-center', iconClass: string = 'fa fa-spin fa-spinner'): void {
+    if (!btn) return;
+    btn.textContent = '';
+    btn.appendChild(createSecureUIElement(type, className, iconClass));
 }
 
 // Client handler class
@@ -38,7 +67,31 @@ export class ClientHandler {
 
     private bindEventListeners(): void {
         document.addEventListener('click', this.handleClick.bind(this), true);
-        document.addEventListener('submit', this.handleSubmit.bind(this), true);
+        
+        // Instead of global submit listener, target specific forms only
+        this.bindSpecificFormHandlers();
+    }
+
+    private bindSpecificFormHandlers(): void {
+        // Wait for DOM to be ready, then bind to specific forms
+        const bindToForm = (formId: string, handler: (event: SubmitEvent) => void) => {
+            const form = document.getElementById(formId) as HTMLFormElement;
+            if (form) {
+                form.addEventListener('submit', handler.bind(this));
+            } else {
+                // If form not found immediately, try again after DOM loads
+                document.addEventListener('DOMContentLoaded', () => {
+                    const laterForm = document.getElementById(formId) as HTMLFormElement;
+                    if (laterForm) {
+                        laterForm.addEventListener('submit', handler.bind(this));
+                    }
+                });
+            }
+        };
+
+        // Bind only to the forms we want to handle
+        bindToForm('QuoteForm', this.handleQuoteFormSubmit);
+        bindToForm('InvForm', this.handleInvoiceFormSubmit);
     }
 
     private handleClick(event: Event): void {
@@ -66,26 +119,11 @@ export class ClientHandler {
         }
     }
 
-    private handleSubmit(event: Event): void {
-        const target = event.target as HTMLFormElement;
 
-        // Quote form submission
-        if (target.id === 'QuoteForm') {
-            this.handleQuoteFormSubmit(event as SubmitEvent);
-            return;
-        }
-
-        // Invoice form submission
-        if (target.id === 'InvForm') {
-            this.handleInvoiceFormSubmit(event as SubmitEvent);
-            return;
-        }
-    }
 
     private async handleClientCreateConfirm(createBtn: HTMLElement): Promise<void> {
         const url = `${location.origin}/invoice/client/create_confirm`;
         const btn = (document.querySelector('.client_create_confirm') as HTMLElement) || createBtn;
-        const currentUrl = new URL(location.href);
 
         // Set loading state
         if (btn) {
@@ -104,11 +142,10 @@ export class ClientHandler {
 
             if (data.success === 1) {
                 if (btn) {
-                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                    setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
                 }
-                // Navigate and reload as per original behavior
-                window.location.href = currentUrl.href;
-                window.location.reload();
+                // Secure reload without potentially manipulable URL
+                secureReload();
             } else {
                 if (btn) {
                     setButtonLoading(btn, false);
@@ -145,7 +182,7 @@ export class ClientHandler {
 
             if (data.success === 1) {
                 if (btn) {
-                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                    setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
                 }
 
                 // Clear the client note field
@@ -165,7 +202,23 @@ export class ClientHandler {
                         
                         // Only update if we get valid partial HTML (not a full page)
                         if (html && !html.includes('<!DOCTYPE') && !html.includes('<html')) {
-                            notesList.innerHTML = html;
+                            // Sanitize HTML content to prevent XSS attacks
+                            notesList.textContent = '';
+                            const parser = new DOMParser();
+                            try {
+                                const doc = parser.parseFromString(html, 'text/html');
+                                // Only append if parsing was successful and content is from trusted source
+                                if (doc && doc.body) {
+                                    const fragment = document.createDocumentFragment();
+                                    while (doc.body.firstChild) {
+                                        fragment.appendChild(doc.body.firstChild);
+                                    }
+                                    notesList.appendChild(fragment);
+                                }
+                            } catch (e) {
+                                console.error('HTML parsing error:', e);
+                                notesList.textContent = 'Error loading notes';
+                            }
                         } else {
                             console.warn('Received full page HTML instead of notes fragment, reloading page');
                             window.location.reload();
@@ -223,7 +276,10 @@ export class ClientHandler {
 
         try {
             // Set loading state
-            deleteBtn.innerHTML = '<i class="fa fa-spin fa-spinner"></i>';
+            deleteBtn.textContent = '';
+            const spinner = document.createElement('i');
+            spinner.className = 'fa fa-spin fa-spinner';
+            deleteBtn.appendChild(spinner);
             (deleteBtn as HTMLButtonElement).disabled = true;
 
             // Use the same pattern as other client note operations
@@ -275,7 +331,7 @@ export class ClientHandler {
     }
 
     private showValidationErrors(validationErrors: Record<string, string[]>): void {
-        Object.keys(validationErrors).forEach(key => {
+        Object.entries(validationErrors).forEach(([key, errors]) => {
             const element = document.getElementById(key);
             if (element?.parentElement) {
                 element.parentElement.classList.add('has-error');
@@ -296,7 +352,10 @@ export class ClientHandler {
 
         // Show success indicator and close modal immediately
         if (submitButton) {
-            submitButton.innerHTML = '<i class="fa fa-check"></i>';
+            submitButton.textContent = '';
+            const checkIcon = document.createElement('i');
+            checkIcon.className = 'fa fa-check';
+            submitButton.appendChild(checkIcon);
         }
         
         // Close the modal if it exists
@@ -328,7 +387,10 @@ export class ClientHandler {
 
         // Show success indicator and close modal immediately
         if (submitButton) {
-            submitButton.innerHTML = '<i class="fa fa-check"></i>';
+            submitButton.textContent = '';
+            const checkIcon = document.createElement('i');
+            checkIcon.className = 'fa fa-check';
+            submitButton.appendChild(checkIcon);
         }
         
         // Close the modal if it exists

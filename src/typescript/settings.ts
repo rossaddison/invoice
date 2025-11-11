@@ -62,13 +62,17 @@ export class SettingsHandler {
             });
         }
 
-        // Submit button
+        // Submit button - only for settings form
+        const settingsForm = document.getElementById('form-settings');
         const submitBtn = document.getElementById('btn-submit') as HTMLButtonElement;
-        if (submitBtn) {
-            submitBtn.addEventListener('click', e => {
-                e.preventDefault();
-                this.handleSettingsSubmitClick();
-            });
+        if (submitBtn && settingsForm) {
+            // Only intercept if the button is inside the settings form
+            if (settingsForm.contains(submitBtn)) {
+                submitBtn.addEventListener('click', e => {
+                    e.preventDefault();
+                    this.handleSettingsSubmitClick();
+                });
+            }
         }
 
         // Online payment select
@@ -189,7 +193,8 @@ export class SettingsHandler {
         this.originalDisplayStyles = {};
         this.originalDisabledStates = {};
 
-        tabPanes.forEach(pane => {
+        // ES2024: Process tabs in reverse order for proper layering
+        Array.from(tabPanes).toReversed().forEach(pane => {
             if (pane.id) {
                 // Store and modify display style
                 this.originalDisplayStyles[pane.id] = pane.style.display;

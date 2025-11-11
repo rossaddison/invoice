@@ -1549,10 +1549,6 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([QuoteController::class, 'pdf_dashboard_exclude_cf'])
                 ->name('quote/pdf_dashboard_exclude_cf'),
-            Route::methods([Method::GET, Method::POST], '/quote/save_quote_item')
-                ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
-                ->action([QuoteController::class, 'save_quote_item'])
-                ->name('quote/save_quote_item'),
             Route::methods([Method::GET, Method::POST], '/quote/modalcreate')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([QuoteController::class, 'modalcreate'])
@@ -1627,14 +1623,22 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([QuoteItemController::class, 'index'])
                 ->name('quoteitem/index'),
-            Route::methods([Method::POST], '/quoteitem/add')
+            Route::methods([Method::POST], '/quoteitem/add_product')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
-                ->action([QuoteItemController::class, 'add'])
-                ->name('quoteitem/add'),
-            Route::methods([Method::GET, Method::POST], '/quoteitem/edit/{id}')
-                ->name('quoteitem/edit')
+                ->action([QuoteItemController::class, 'add_product'])
+                ->name('quoteitem/add_product'),
+            Route::methods([Method::POST], '/quoteitem/add_task')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
-                ->action([QuoteItemController::class, 'edit']),
+                ->action([QuoteItemController::class, 'add_task'])
+                ->name('quoteitem/add_task'),
+            Route::methods([Method::GET, Method::POST], '/quoteitem/edit_product/{id}')
+                ->name('quoteitem/edit_product')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
+                ->action([QuoteItemController::class, 'edit_product']),
+            Route::methods([Method::GET, Method::POST], '/quoteitem/edit_task/{id}')
+                ->name('quoteitem/edit_task')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
+                ->action([QuoteItemController::class, 'edit_task']),
             Route::methods([Method::GET, Method::POST], '/quoteitem/delete/{id}')
                 ->name('quoteitem/delete')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
@@ -1827,6 +1831,10 @@ return [
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([TaskController::class, 'selection_inv'])
                 ->name('task/selection_inv'),
+            Route::methods([Method::GET, Method::POST], '/task/selection_quote')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
+                ->action([TaskController::class, 'selection_quote'])
+                ->name('task/selection_quote'),
             Route::methods([Method::GET, Method::POST], '/task/edit/{id}')
                 ->name('task/edit')
                 ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))

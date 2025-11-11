@@ -2139,15 +2139,19 @@ final class SettingRepository extends Select\Repository
             //12
             $common_quote . 'quoteitem/_item_edit_form',
             //13
-            $common_quote . 'quoteitem/_item_form',
+            $common_quote . 'quoteitem/_item_form_product',
             //14
-            $common_invoice . 'invitem/_item_edit_product',
+            $common_quote . 'quoteitem/_item_form_task',
             //15
-            $common_invoice . 'inv/modal_message_layout',
+            $common_invoice . 'invitem/_item_edit_product',
             //16
-            $common_invoice . 'inv/modal_message',
+            $common_invoice . 'inv/modal_message_layout',
             //17
+            $common_invoice . 'inv/modal_message',
+            //18
             $common_invoice . 'inv/modal_message_action',
+            //19
+            $common_quote . 'quoteitem/partial_item_table',
         ];
         return $array[$key];
     }

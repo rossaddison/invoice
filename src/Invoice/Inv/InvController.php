@@ -4038,14 +4038,13 @@ final class InvController extends BaseController
                         '//invoice/task/modal_task_lookups_inv',
                         [
                             'partial_task_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/task/partial_task_table_modal', [
-                                // Only tasks with complete or status of 3 are made available for selection
-                                'taskR' => $taskR,
-                                'prjctR' => $prjctR,
+                                'tasks' => $taskR->repoTaskStatusquery(3),
+                                'projectR' => $prjctR,
                                 'dateHelper' => $this->date_helper,
                                 'numberHelper' => $this->number_helper,
                             ]),
                             'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
-                            'tasks' => $pR->findAllPreloaded(),
+                            'tasks' => $taskR->findAllPreloaded(),
                             'head' => $head,
                         ],
                     ),

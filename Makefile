@@ -18,9 +18,9 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make p                 - Run PHP Psalm"
 	@echo "make pf FILE=src/Foo.php     - Run PHP Psalm on specific file"
 	@echo "make pd DIR=src/           - Run PHP Psalm on directory"
-	@echo "make pc                - Clear Psalm's cache"    
-        @echo "make cas               - Clear Assets Cache (Safe - preserves .gitignore)"
+	@echo "make pc                - Clear Psalm's cache"
 	@echo "make pi                - Psalm: Show Config/Plugins"
+	@echo "make cas               - Clear Assets Cache (Safe - preserves .gitignore)"
 	@echo "make co                - Composer outdated"
 	@echo "make cwn REPO=vendor/package VERSION=1.0.0  - Composer why-not"
 	@echo "make ccl               - Composer clear-cache & update --lock"
@@ -28,8 +28,20 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make cda               - Composer dump-autoload"
 	@echo "make cu                - Composer update"
 	@echo "make nu                - Update Node modules"
+	@echo "make nco               - npm: Check Outdated"
+	@echo "make nsu               - npm: Safe Update (patch only)"
+	@echo "make nmu               - npm: Minor Update (minor versions)"
+	@echo "make nma               - npm: Major Update (interactive)"
+	@echo "make nes2024           - npm: ES2024 Feature Verification"
 	@echo "make nvm               - Install/Update nvm-windows"
 	@echo "make na                - Node: Audit, Clean, List"
+	@echo "make tsb               - TypeScript Build (Production)"
+	@echo "make tsd               - TypeScript Build (Development)"
+	@echo "make tsw               - TypeScript Watch Mode"
+	@echo "make tst               - TypeScript Type Check"
+	@echo "make tsl               - TypeScript Lint"
+	@echo "make tsf               - TypeScript Format"
+	@echo "make nb                - npm run build"
 	@echo "make crc               - Composer Require Checker"
 	@echo "make ct                - Codeception Tests"
 	@echo "make cb                - Codeception Build"
@@ -37,6 +49,13 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make rmc               - Rector Make Changes"
 	@echo "make csd               - PHP-CS-Fixer Dry Run"
 	@echo "make csf               - PHP-CS-Fixer Fix"
+	@echo "make sq                - Snyk Security Check (Quick - High Severity Only)"
+	@echo "make sf                - Snyk Security Check (Full - Code + Dependencies)"
+	@echo "make sd                - Snyk Security Check (Dependencies Only)"
+	@echo "make sc FILE=path/to/file      - Snyk Security Code Check on Specific File"
+	@echo "make ss                - Snyk Security Summary (Total Issues Count Only)"
+	@echo "make sj                - Snyk Security JSON Output (Machine Readable)"
+	@echo "make sh                - Snyk Security High Severity Only"
 	@echo "make serve             - PHP Built-in serve"
 	@echo "make ucr USERNAME= user PASSWORD= pass      - user/create"
 	@echo "make uar ROLE=admin USERID=1                - user/assignRole"
@@ -114,6 +133,21 @@ pi: ## Psalm: Show Config/Plugins
 endif
 
 #
+# Assets Management
+#
+
+ifeq ($(PRIMARY_GOAL),cas)
+cas: ## Clear Assets Cache (Safe - preserves .gitignore)
+	@echo "Clearing assets cache while preserving .gitignore..."
+ifeq ($(OS),Windows_NT)
+	powershell -Command "Get-ChildItem -Path 'public/assets' -Exclude '.gitignore' | Remove-Item -Recurse -Force"
+else
+	find public/assets -mindepth 1 -not -name '.gitignore' -exec rm -rf {} +
+endif
+	@echo "Assets cache cleared successfully (preserved .gitignore)"
+endif
+
+#
 # Composer
 #
 
@@ -164,6 +198,31 @@ nu: ## Update Node modules
 	npm install
 endif
 
+ifeq ($(PRIMARY_GOAL),nco)
+nco: ## npm: Check Outdated (like 'composer outdated')
+	npm run upgrade:check
+endif
+
+ifeq ($(PRIMARY_GOAL),nsu)
+nsu: ## npm: Safe Update (patch only)
+	npm run upgrade:safe
+endif
+
+ifeq ($(PRIMARY_GOAL),nmu)
+nmu: ## npm: Minor Update (minor versions)
+	npm run upgrade:minor
+endif
+
+ifeq ($(PRIMARY_GOAL),nma)
+nma: ## npm: Major Update (interactive)
+	npm run upgrade:major
+endif
+
+ifeq ($(PRIMARY_GOAL),nes2024)
+nes2024: ## npm: ES2024 Feature Verification
+	npm run es2024:verify
+endif
+
 ifeq ($(PRIMARY_GOAL),nvm)
 nvm: ## Install/Update nvm-windows
 	powershell -Command "Invoke-WebRequest -Uri https://github.com/coreybutler/nvm-windows/releases/latest/download/nvm-setup.exe -OutFile nvm-setup.exe"
@@ -176,6 +235,45 @@ na: ## Node: Audit, Clean, List
 	npm audit
 	npm cache clean --force
 	npm list --depth=0
+endif
+
+#
+# TypeScript Build System
+#
+
+ifeq ($(PRIMARY_GOAL),tsb)
+tsb: ## TypeScript Build (Production)
+	npm run build:prod
+endif
+
+ifeq ($(PRIMARY_GOAL),tsd)
+tsd: ## TypeScript Build (Development)
+	npm run build:dev
+endif
+
+ifeq ($(PRIMARY_GOAL),tsw)
+tsw: ## TypeScript Watch Mode (Development)
+	npm run build:watch
+endif
+
+ifeq ($(PRIMARY_GOAL),tst)
+tst: ## TypeScript Type Check
+	npm run type-check
+endif
+
+ifeq ($(PRIMARY_GOAL),tsl)
+tsl: ## TypeScript Lint
+	npm run lint
+endif
+
+ifeq ($(PRIMARY_GOAL),tsf)
+tsf: ## TypeScript Format
+	npm run format
+endif
+
+ifeq ($(PRIMARY_GOAL),nb)
+nb: ## npm run build
+	npm run build
 endif
 
 #
@@ -223,6 +321,48 @@ endif
 ifeq ($(PRIMARY_GOAL),csf)
 csf: ## PHP-CS-Fixer Fix
 	php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
+endif
+
+#
+# Security Analysis
+#
+
+ifeq ($(PRIMARY_GOAL),sq)
+sq: ## Snyk Security Check (Quick - High Severity Only)
+	npm run security:quick
+endif
+
+ifeq ($(PRIMARY_GOAL),sf)
+sf: ## Snyk Security Check (Full - Code + Dependencies)
+	npm run security:full
+endif
+
+ifeq ($(PRIMARY_GOAL),sd)
+sd: ## Snyk Security Check (Dependencies Only)
+	npm run security:deps
+endif
+
+ifeq ($(PRIMARY_GOAL),sc)
+sc: ## Snyk Security Code Check on Specific File
+ifndef FILE
+	$(error Please provide FILE, e.g. 'make sc FILE=src/Invoice/Inv/InvController.php')
+endif
+	snyk code test --file="$(FILE)"
+endif
+
+ifeq ($(PRIMARY_GOAL),ss)
+ss: ## Snyk Security Summary (Total Issues Count Only)
+	snyk code test | findstr /C:"Total issues"
+endif
+
+ifeq ($(PRIMARY_GOAL),sj)
+sj: ## Snyk Security JSON Output (Machine Readable)
+	snyk code test --json
+endif
+
+ifeq ($(PRIMARY_GOAL),sh)
+sh: ## Snyk Security High Severity Only
+	snyk code test --severity-threshold=high
 endif
 
 #
@@ -318,21 +458,6 @@ iait6: ## invoice/autoincrementsettooneafter/truncate6
 endif
 
 #
-# Assets Management
-#
-
-ifeq ($(PRIMARY_GOAL),cas)
-cas: ## Clear Assets Cache (Safe - preserves .gitignore)
-	@echo "Clearing assets cache while preserving .gitignore..."
-ifeq ($(OS),Windows_NT)
-	powershell -Command "Get-ChildItem -Path 'public/assets' -Exclude '.gitignore' | Remove-Item -Recurse -Force"
-else
-	find public/assets -mindepth 1 -not -name '.gitignore' -exec rm -rf {} +
-endif
-	@echo "Assets cache cleared successfully (preserved .gitignore)"
-endif
-
-#
 # Diagnostics
 #
 
@@ -343,10 +468,11 @@ info: ## System Info / Diagnostics
 	composer --version
 	npm -v
 	node -v
+	npx tsc --version
 	@echo "------------ Composer Platform Check ------------"
 	composer check-platform-reqs
 	@echo "------------ Node List ------------"
 	npm list --depth=0
 endif
 
-.PHONY: menu help install p pf pd pc cas pi co cwn ccl cv cda cu nu nvm na crc ct cb rdr rmc csd csf serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info
+.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb

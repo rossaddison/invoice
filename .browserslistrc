@@ -1,0 +1,14 @@
+# Modern browsers only - last 2 versions of each major browser
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+last 2 ChromeAndroid versions
+last 2 FirefoxAndroid versions
+last 2 iOS versions
+
+# Exclude outdated browsers
+not IE 11
+not op_mini all
+not android < 5
+not kaios < 3

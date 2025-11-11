@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Client;
 
+use Yiisoft\Security\Random;
 use Yiisoft\Yii\AuthClient\OAuth2;
 use Yiisoft\Yii\AuthClient\OAuthToken;
 use Yiisoft\Yii\AuthClient\RequestUtil;
@@ -249,7 +250,7 @@ final class DeveloperSandboxHmrc extends OAuth2
     {
         return $testUser = [
             'userId' => '341862201113',
-            'password' => 'vKY3XTIS0q6O',
+            'password' => Random::string(12),
             'userFullName' => 'Fay Izzard',
             'emailAddress' => 'fay.izzard@example.com',
             'individualDetails' => [

@@ -176,7 +176,16 @@
                     // inline replacement for $.load: fetch and insert
                     fetch(lookup_url, { cache: 'no-store', credentials: 'same-origin' })
                         .then(function (r) { return r.text(); })
-                        .then(function (html) { product_table.innerHTML = html; updateSelectTaskButtonState(product_table); })
+                        .then(function (html) { 
+                            // Secure HTML insertion using DOMParser to prevent XSS
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const fragment = document.createDocumentFragment();
+                            Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+                            product_table.innerHTML = '';
+                            product_table.appendChild(fragment);
+                            updateSelectTaskButtonState(product_table); 
+                        })
                         .catch(function (err) { console.error('task lookup load failed', err); });
                 }, 50);
             }

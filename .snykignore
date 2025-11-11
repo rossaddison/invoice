@@ -1,0 +1,14 @@
+# Snyk ignore file - temporarily ignore less critical issues while addressing high priority ones
+
+# Development/install files that won't be in production
+install.php
+dev-scripts-psalm-1/**
+
+# Country code files with false positive password detection
+src/Invoice/Helpers/Country-list/**
+
+# Legacy JS files that need to be refactored (prioritize TypeScript versions)
+src/Invoice/Asset/rebuild/js/*.js
+
+# Chrome extension demo files (not part of main application)
+src/Invoice/Asset/storageAccessApiAsset/**

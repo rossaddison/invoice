@@ -28,11 +28,13 @@ use App\Widget\LabelSwitch;
  * @var array $quoteStatuses
  * @var bool $invEdit
  * @var int $quote_amount_total
- * @var string $add_quote_item
+ * @var string $add_quote_product
+ * @var string $add_quote_task
  * @var string $alert
  * @var string $csrf
  * @var string $modal_add_quote_tax
- * @var string $modal_choose_items
+ * @var string $modal_choose_products
+ * @var string $modal_choose_tasks
  * @var string $modal_delete_quote
  * @var string $modal_quote_to_invoice
  * @var string $modal_quote_to_so
@@ -40,9 +42,11 @@ use App\Widget\LabelSwitch;
  * @var string $modal_copy_quote
  * @var string $modal_delete_items
  * @var string $partial_item_table
+ * @var string $partial_quote_delivery_location
  * @var string $quoteToolbar
  * @var string $sales_order_number
  * @var string $view_custom_fields
+ * @var string $_language
  */
 
 $this->setTitle($translator->translate('quote'));
@@ -58,8 +62,9 @@ $vat = $s->getSetting('enable_vat_registration');
 if ($vat === '0') {
     echo $modal_add_quote_tax;
 }
-// modal_product_lookups is performed using below $modal_choose_items
-echo $modal_choose_items;
+// modal_product_lookups is performed using below $modal_choose_products
+echo $modal_choose_products;
+echo $modal_choose_tasks;
 echo $modal_quote_to_invoice;
 echo $modal_quote_to_so;
 echo $modal_quote_to_pdf;
@@ -71,57 +76,97 @@ echo $modal_delete_items;
 <br>
 </div>
 <div>
-    <?php if ($invEdit && $quote->getStatus_id() === 1) { ?>
-        <br>
-        <br>
-        <div class="panel-heading">
-            <?= Html::openTag('div'); ?>
-                <?= Html::openTag(
-                    'button',
-                    [
-                        'class' => 'btn btn-primary',
-                        'href' => '#modal-choose-items',
-                        'id' => 'modal-choose-items',
-                        'data-bs-toggle' => 'modal',
-                    ],
-                );
-        ?>
-                    <?= A::tag()
-                ->addAttributes([
-                    'type' => 'reset',
-                    'onclick' => 'window.history.back()',
-                    'value' => '1',
-                    'data-bs-toggle' => 'tab',
-                    'style' => 'text-decoration:none',
-                ])
-                ->addClass('btn btn-danger bi bi-arrow-left')
-                ->id('back')
-                ->render(); ?>
-                <?= Html::closeTag('button'); ?>
-                <?= Html::openTag(
-                    'button',
-                    [
-                        'class' => 'btn btn-primary',
-                        'href' => '#modal-choose-items',
-                        'id' => 'modal-choose-items',
-                        'data-bs-toggle' => 'modal',
-                    ],
-                );
-        ?>
+<!-- comment --> 
+<?php if ($invEdit && $quote->getStatus_id() === 1) { ?>
+<?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
+    <?= Html::openTag('li', ['class' => 'active']); ?>
+        <?= A::tag()
+        ->addAttributes([
+            'data-bs-toggle' => 'tab',
+            'style' => 'text-decoration:none',
+        ])
+        ->addClass('btn btn-info me-1')
+        ->content(Html::b($translator->translate('add.product')))
+        ->href('#add-product-tab')
+        ->id('btn-reset')
+        ->render();
+    ?>
+    <?= Html::closeTag('li'); ?>
+    <?= Html::openTag('li'); ?>
+        <?= A::tag()
+        ->addAttributes([
+            'data-bs-toggle' => 'tab',
+            'style' => 'text-decoration:none',
+        ])
+        ->addClass('btn btn-info me-1')
+        ->content(Html::b($translator->translate('add.task')))
+        ->href('#add-task-tab')
+        ->id('btn-reset')
+        ->render();
+    ?>
+    <?= Html::closeTag('li'); ?> 
+    <?= Html::openTag('li', ['id' => 'back', 'class' => 'tab-pane']); ?>
+        <?= A::tag()
+        ->addAttributes([
+            'type' => 'reset',
+            'onclick' => 'window.history.back()',
+            'value' => '1',
+            'data-bs-toggle' => 'tab',
+            'style' => 'text-decoration:none',
+        ])
+        ->addClass('btn btn-danger bi bi-arrow-left')
+        ->id('back')
+        ->render(); ?>
+    <?= Html::closeTag('li'); ?>    
+<?= Html::closeTag('ul'); ?>
+    
+<?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
+    <?= Html::openTag('div', ['class' => 'tab-content']); ?>
+        <?= Html::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane']); ?>
+            <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+                <?= Html::openTag('div'); ?>
+                    <?= Html::openTag(
+                        'button',
+                        [
+                            'class' => 'btn btn-primary',
+                            'href' => '#modal-choose-items',
+                            'id' => '#modal-choose-items',
+                            'data-bs-toggle' => 'modal',
+                        ],
+                    );
+    ?>
                     <?= I::tag()
-                ->addClass('fa fa-list')
-                ->addAttributes([
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('add.product'),
-                ]);
-        ?>
+        ->addClass('fa fa-list')
+        ->addAttributes([
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('add.product'),
+        ]);
+    ?>
                     <?= $translator->translate('add.product'); ?>
-                <?= Html::closeTag('button'); ?>
+                    <?= Html::closeTag('button'); ?>
+                <?= Html::closeTag('div'); ?>
+                <?= $add_quote_product; ?>
             <?= Html::closeTag('div'); ?>
-            <?= $add_quote_item; ?>
-        </div>
-    <?php } ?>
-</div> 
+        <?= Html::closeTag('div'); ?>
+        <?= Html::openTag('div', ['id' => 'add-task-tab', 'class' => 'tab-pane']); ?>
+            <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
+                <?= Html::openTag('div'); ?>
+                    <?= Html::openTag('button', [
+                        'class' => 'btn btn-primary bi bi-ui-checks w-100',
+                        'data-bs-target' => '#modal-choose-tasks-quote',
+                        'id' => 'btn-choose-tasks-quote',
+                        'data-bs-toggle' => 'modal']);
+    ?>
+                    <?= $translator->translate('add.task'); ?>
+                    <?= Html::closeTag('button'); ?>
+                <?= Html::closeTag('div'); ?>           
+                <?= $add_quote_task; ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<!-- comment -->
+<?php } ?>
 <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
 <div id="headerbar">
     <h1 class="headerbar-title">
@@ -137,16 +182,16 @@ if (null !== ($number) && null !== $id) {
         <div class="headerbar-item pull-right">
 
         <?php
-        // Purpose: To remind the user that VAT is enabled
-        $s->getSetting('display_vat_enabled_message') === '1' ?
-        LabelSwitch::checkbox(
-            'quote-view-label-switch',
-            $s->getSetting('enable_vat_registration'),
-            $translator->translate('quote.label.switch.on'),
-            $translator->translate('quote.label.switch.off'),
-            'quote-view-label-switch-id',
-            '16',
-        ) : '';
+    // Purpose: To remind the user that VAT is enabled
+    $s->getSetting('display_vat_enabled_message') === '1' ?
+    LabelSwitch::checkbox(
+        'quote-view-label-switch',
+        $s->getSetting('enable_vat_registration'),
+        $translator->translate('quote.label.switch.on'),
+        $translator->translate('quote.label.switch.off'),
+        'quote-view-label-switch-id',
+        '16',
+    ) : '';
 ?>    
         <?= $quoteToolbar; ?>        
     </div>
@@ -159,7 +204,7 @@ if (null !== ($number) && null !== $id) {
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div class="col-xs-12 col-sm-6 col-md-5">
                     <h3>
-                        <a href="<?= $urlGenerator->generate('client/view', ['id' => $quote->getClient()?->getClient_id()]); ?>">
+                        <a href="<?= $urlGenerator->generate('client/view', ['_language' => $_language, 'id' => (int) $quote->getClient()?->getClient_id()]); ?>">
                             <?= Html::encode($clientHelper->format_client($quote->getClient())); ?>
                         </a>
                     </h3>
@@ -179,7 +224,7 @@ if (null !== ($number) && null !== $id) {
                         </span>
                         <span class="client-address-country-line">
                             <?php
-                $countryName = $quote->getClient()?->getClient_country();
+                                $countryName = $quote->getClient()?->getClient_country();
 if (null !== $countryName) {
     echo '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), $countryName);
 } ?>
@@ -294,14 +339,11 @@ if (null !== $countryName) {
                                 </div>
 
                                 <?php
-                                    // show the guest url which the customer will click on to gain access to the site and this quote
-                                    // there is no need to show it if it has not been sent yet ie. 1 => draft, 2 => sent
-                                    // Update: This button has been replaced with the below button
-                                    if ($quote->getStatus_id() !== 1) { ?>
+                                    if ($quote->getStatus_id() == 1) { ?>
                                     <div class="quote-properties">
                                         <label for="quote_guest_url" hidden><?php echo $translator->translate('guest.url'); ?></label>
                                         <div class="input-group" hidden>
-                                            <input type="text" id="quote_guest_url" readonly class="form-control" value="<?=  'quote/url_key/' . $quote->getUrl_key(); ?>" hidden>
+                                            <input type="text" id="quote_guest_url" disabled class="form-control" value="<?= $quote->getUrl_key(); ?>">
                                             <span class="input-group-text to-clipboard cursor-pointer"
                                                   data-clipboard-target="#quote_guest_url">
                                                 <i class="fa fa-clipboard fa-fw"></i>
@@ -331,7 +373,7 @@ if (null !== $countryName) {
                                     <div class="quote-properties">
                                         <label for="quote_guest_url"><?php echo $translator->translate('guest.url'); ?></label>
                                         <div class="input-group">
-                                            <input type="text" id="quote_guest_url" readonly  class="form-control" value="">                                            
+                                            <input type="text" id="quote_guest_url" readonly  class="form-control" value="<?= $translator->translate('approve.this.quote'); ?>">                                            
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -372,7 +414,9 @@ if (null !== $countryName) {
 
                 <div class="col-xs-12 visible-xs visible-sm"><br></div>
 
-            </div>
+            </div> <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
+                <?= $partial_quote_delivery_location; ?>
+            </div> 
             <div id="view_custom_fields" class="col-xs-12 col-md-6">
                 <?php //echo $dropzone_quote_html;?>
                 <?php echo $view_custom_fields; ?>

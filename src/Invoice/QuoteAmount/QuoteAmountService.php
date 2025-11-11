@@ -26,24 +26,6 @@ final readonly class QuoteAmountService
 
     /**
      * @param QuoteAmount $model
-     * @param string $basis_quote_id
-     * @param string|null $new_quote_id
-     */
-    public function initializeCopyQuoteAmount(QuoteAmount $model, string $basis_quote_id, string|null $new_quote_id): void
-    {
-        $basis_quote = $this->repository->repoQuotequery($basis_quote_id);
-        if ($basis_quote) {
-            $model->setQuote_id((int) $new_quote_id);
-            $model->setItem_subtotal($basis_quote->getItem_subtotal() ?? 0.00);
-            $model->setItem_tax_total($basis_quote->getItem_tax_total() ?? 0.00);
-            $model->setTax_total($basis_quote->getTax_total() ?? 0.00);
-            $model->setTotal($basis_quote->getTotal() ?? 0.00);
-            $this->repository->save($model);
-        }
-    }
-
-    /**
-     * @param QuoteAmount $model
      * @param QuoteAmountForm $form
      */
     public function saveQuoteAmount(QuoteAmount $model, QuoteAmountForm $form): void

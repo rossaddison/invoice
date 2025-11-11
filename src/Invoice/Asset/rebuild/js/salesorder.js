@@ -118,7 +118,13 @@
                 fetch(url, { cache: 'no-store' })
                     .then(r => r.text())
                     .then(html => {
-                        target.innerHTML = html;
+                        // Secure HTML insertion using DOMParser to prevent XSS
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const fragment = document.createDocumentFragment();
+                        Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+                        target.innerHTML = '';
+                        target.appendChild(fragment);
                         const modalEl = target.querySelector('.modal');
                         if (modalEl && window.bootstrap && window.bootstrap.Modal) {
                             new bootstrap.Modal(modalEl).show();

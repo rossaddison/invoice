@@ -12,7 +12,7 @@ use Yiisoft\Html\Tag\Button;
 
 ?>
 
-<div id="modal-choose-tasks" class="modal" tabindex="-1">
+<div id="modal-choose-tasks-inv" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Button;
                         <?php
 echo Button::tag()
 ->id('task-modal-submit')
-->addClass('select-items-confirm-task btn-success')
+->addClass('select-items-confirm-task-inv btn-success')
 ->content($translator->translate('submit'))
 ->disabled(true)
 ->render();

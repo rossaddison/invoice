@@ -298,8 +298,11 @@ final readonly class NumberHelper
              */
             foreach ($item as $key => $value) {
                 if ($key === 'id') {
-                    /** @var QuoteItemAmount $quote_item_amount */
-                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $value);
+                    /**
+                     * @var QuoteItemAmount $quote_item_amount
+                     * @psalm-suppress RedundantCastGivenDocblockType $value
+                     */
+                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $value);
                     $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
                     $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?? 0.00);
                     $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?? 0.00);

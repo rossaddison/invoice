@@ -217,14 +217,18 @@ try {
                 echo "   ✅ Database '{$database}' created successfully!\n\n";
             }
         } catch (PDOException $e) {
-            echo '   ❌ Database operation failed: ' . $e->getMessage() . "\n";
+            echo "   ❌ Database operation failed: Connection or permission error\n";
             echo "   💡 Please ensure MySQL is running and credentials are correct.\n\n";
+            // Log detailed error for debugging (not exposed to user)
+            error_log('Database setup error: ' . $e->getMessage());
         }
     } else {
         echo "   ⚠️  Database creation skipped.\n\n";
     }
 } catch (Exception $e) {
-    echo '   ❌ Database setup failed: ' . $e->getMessage() . "\n\n";
+    echo "   ❌ Database setup failed: Configuration error\n\n";
+    // Log detailed error for debugging (not exposed to user)
+    error_log('Database setup error: ' . $e->getMessage());
 }
 
 // Step 4: Manual checklist

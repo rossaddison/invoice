@@ -30,30 +30,38 @@ cls
 echo ======================================================================================
 echo                               INVOICE SYSTEM MAIN MENU
 echo ======================================================================================
-echo [0]  Installation Menu             [6]   PHP Built-in 'serve'
-echo [1]  Run PHP Psalm (Full)          [7]   user/create username password
-echo [2]  Psalm on File                 [8]   user/assignRole role userId
-echo [2a] Psalm on Directory            [9]   router/list
-echo [2b] Clear Psalm's Cache           [10]  translator/translate
-echo [2c] Psalm: Show Config/Plugins    [11]  invoice/items
-echo [3]  Composer Outdated             [12]  invoice/setting/truncate
-echo [3a] Composer why-not              [13]  invoice/generator/truncate
-echo [3b] Composer Cache with Lock      [14]  invoice/inv/truncate1
-echo [3c] Composer Validate             [15]  invoice/quote/truncate2
-echo [3d] Composer Dump Autoload        [16]  invoice/salesorder/truncate3
-echo [4]  Composer Update               [17]  invoice/nonuserrelated/truncate4
-echo [4a] Node Modules Update           [18]  invoice/userrelated/truncate5
-echo [4b] nvm-windows Install/Update    [19]  invoice/autoincrementsettooneafter/truncate6
-echo [4c] Node: Audit, Clean, List      [20]  Exit
-echo [5]  Require Checker               [21]  Exit to Current Directory
-echo [5a] Codeception Tests
-echo [5aa] Codeception Build
-echo [5b] Rector See Changes
-echo [5c] Rector Make Changes
-echo [5d] PHP-CS-Fixer Dry Run
-echo [5e] PHP-CS-Fixer Fix
-echo [5f] Clear Assets Cache (Safe)
-echo [99] System Info / Diagnostics
+echo [0]  Installation Menu                         [5a]  Codeception Tests
+echo [1]  Run PHP Psalm (Full)                      [5aa] Codeception Build
+echo [2]  Psalm on File                             [5b]  Rector See Changes
+echo [2a] Psalm on Directory                        [5c]  Rector Make Changes
+echo [2b] Clear Psalm's Cache                       [5d]  PHP-CS-Fixer Dry Run
+echo [2c] Psalm: Show Config/Plugins                [5e]  PHP-CS-Fixer Fix
+echo [2d] Public Assets Clear (Safe)                [5f]  Snyk Security Check (Quick)
+echo [3]  Composer Outdated                         [5g]  Snyk Security Check (Full)
+echo [3a] Composer why-not                          [5h]  Snyk Security Dependencies
+echo [3b] Composer Cache with Lock                  [5i]  Snyk Security Code File Check
+echo [3c] Composer Validate                         [5j]  Snyk Security Summary (Issues Count)
+echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output
+echo [4]  Composer Update                           [6]   PHP Built-in 'serve'
+echo [4a] Node Modules Update                       [7]   user/create username password
+echo [4b] nvm-windows Install/Update                [8]   user/assignRole role userId
+echo [4c] Node: Audit, Clean, List                  [9]   router/list
+echo [4d] npm: Check Outdated                       [10]  translator/translate
+echo [4e] npm: Safe Update (patch only)             [11]  invoice/items
+echo [4f] npm: Minor Update (minor versions)        [12]  invoice/setting/truncate
+echo [4g] npm: Major Update (interactive)           [13]  invoice/generator/truncate
+echo [4h] npm: ES2024 Feature Verification          [13]  invoice/generator/truncate
+echo [4i] TypeScript Build (Production)             [14]  invoice/inv/truncate1
+echo [4j] TypeScript Build (Development)            [15]  invoice/quote/truncate2
+echo [4k] TypeScript Watch Mode                     [16]  invoice/salesorder/truncate3
+echo [4l] TypeScript Type Check                     [17]  invoice/nonuserrelated/truncate4
+echo [4m] TypeScript Lint                           [18]  invoice/userrelated/truncate5
+echo [4n] TypeScript Format                         [19]  invoice/autoincrementsettooneafter/truncate6
+echo [4o] npm run build                             [4p]  Angular: Install Dependencies
+echo [4q] Angular: Serve Development                [4r]  Angular: Build Production
+echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
+echo [5]  Require Checker                           [20]  Exit
+echo [99] System Info / Diagnostics                 [21]  Exit to Current Directory
 echo =================================
 set /p choice="Enter your choice [0-21,99]: "
 
@@ -64,7 +72,8 @@ if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_directory
 if "%choice%"=="2b" goto psalm_clear_cache
 if "%choice%"=="2c" goto psalm_config
-if "%choice%"=="3" goto outdated
+if "%choice%"=="2d" goto public_assets_clear
+if "%choice%"=="3" goto composer_outdated
 if "%choice%"=="3a" goto composer_whynot
 if "%choice%"=="3b" goto composer_clear_cache_and_resolve_lock_conflicts
 if "%choice%"=="3c" goto composer_validate
@@ -73,6 +82,23 @@ if "%choice%"=="4" goto composer_update
 if "%choice%"=="4a" goto node_modules_update
 if "%choice%"=="4b" goto nvm_install_or_update
 if "%choice%"=="4c" goto node_audit
+if "%choice%"=="4d" goto npm_check_outdated
+if "%choice%"=="4e" goto npm_safe_update
+if "%choice%"=="4f" goto npm_minor_update
+if "%choice%"=="4g" goto npm_major_update
+if "%choice%"=="4h" goto npm_es2024_verify
+if "%choice%"=="4i" goto typescript_build_prod
+if "%choice%"=="4j" goto typescript_build_dev
+if "%choice%"=="4k" goto typescript_watch
+if "%choice%"=="4l" goto typescript_type_check
+if "%choice%"=="4m" goto typescript_lint
+if "%choice%"=="4n" goto typescript_format
+if "%choice%"=="4o" goto npm_run_build
+if "%choice%"=="4p" goto angular_install_deps
+if "%choice%"=="4q" goto angular_serve
+if "%choice%"=="4r" goto angular_build
+if "%choice%"=="4s" goto angular_generate_component
+if "%choice%"=="4t" goto angular_lint
 if "%choice%"=="5" goto require_checker
 if "%choice%"=="5a" goto codeception_tests
 if "%choice%"=="5aa" goto codeception_build
@@ -80,7 +106,12 @@ if "%choice%"=="5b" goto rector_see_changes
 if "%choice%"=="5c" goto rector_make_changes
 if "%choice%"=="5d" goto code_style_suggest_changes
 if "%choice%"=="5e" goto code_style_make_changes
-if "%choice%"=="5f" goto clear_assets_safe
+if "%choice%"=="5f" goto security_quick
+if "%choice%"=="5g" goto security_full
+if "%choice%"=="5h" goto security_deps
+if "%choice%"=="5i" goto security_code_file
+if "%choice%"=="5j" goto security_summary
+if "%choice%"=="5k" goto security_json
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="8" goto user_assignRole
@@ -102,71 +133,6 @@ echo Invalid choice. Please try again.
 pause
 goto menu
 
-:diagnostics
-echo .......... SYSTEM DIAGNOSTICS ..........
-php -v
-composer --version
-npm -v
-node -v
-echo ------------ Composer Platform Check ------------
-composer check-platform-reqs
-echo ------------ Node List ------------
-npm list --depth=0
-pause
-goto menu
-
-:installation_menu
-echo Installation menu...
-if exist install.bat (
-    call install.bat
-) else (
-    echo [INFO] No install.bat found. Running 'composer install' and 'npm install'.
-    composer install
-    npm install
-)
-pause
-goto menu
-
-:psalm
-echo Running PHP Psalm...
-php vendor/bin/psalm
-pause
-goto menu
-
-:psalm_file
-echo Running PHP Psalm on a specific file...
-set /p file="File path (relative to root): "
-if "%file%"=="" (echo No file specified.& pause& goto menu)
-php vendor/bin/psalm "%file%"
-pause
-goto menu
-
-:psalm_directory
-echo Running PHP Psalm on a directory...
-set /p DIR="Directory path (relative to root): "
-if "%DIR%"=="" (echo No directory specified.& pause& goto menu)
-php vendor/bin/psalm "%DIR%"
-pause
-goto menu
-
-:psalm_clear_cache
-echo Clearing Psalm's cache...
-php vendor/bin/psalm --clear-cache
-pause
-goto menu
-
-:psalm_config
-echo Psalm Config & Plugins:
-php vendor/bin/psalm --show-info || echo Psalm version does not support --show-info
-pause
-goto menu
-
-:outdated
-echo Checking Composer Outdated...
-composer outdated
-pause
-goto menu
-
 :composer_clear_cache_and_resolve_lock_conflicts
 echo Clearing Composer cache and resolving lock file conflicts...
 composer clear-cache
@@ -177,6 +143,12 @@ goto menu
 :composer_dumpautoload
 echo Regenerating Composer autoload files...
 composer dump-autoload -o
+pause
+goto menu
+
+:composer_outdated
+echo Checking Composer Outdated...
+composer outdated
 pause
 goto menu
 
@@ -199,6 +171,41 @@ composer why-not %repo% %version%
 pause
 goto menu
 
+:diagnostics
+echo .......... VERSIONS - PHP, COMPOSER, NODE, TYPESCRIPT ..........
+php -v
+composer --version
+npm -v
+node -v
+npx tsc --version
+echo ------------ Composer Platform Check ------------
+composer check-platform-reqs
+echo ------------ Node List ------------
+npm list --depth=0
+pause
+goto menu
+
+:installation_menu
+echo Installation menu...
+if exist install.bat (
+    call install.bat
+) else (
+    echo [INFO] No install.bat found. Running 'composer install' and 'npm install'.
+    composer install
+    npm install
+)
+pause
+goto menu
+
+:node_audit
+echo Running npm audit...
+npm audit
+echo Running npm cache clean...
+npm cache clean --force
+echo Listing top-level npm packages...
+npm list --depth=0
+pause
+goto menu
 
 :node_modules_update
 echo Updating Node modules...
@@ -216,13 +223,175 @@ echo nvm-windows install/update complete.
 pause
 goto menu
 
-:node_audit
-echo Running npm audit...
-npm audit
-echo Running npm cache clean...
-npm cache clean --force
-echo Listing top-level npm packages...
-npm list --depth=0
+:npm_check_outdated
+echo Checking npm packages for updates (like 'composer outdated')...
+npm run upgrade:check
+pause
+goto menu
+
+:npm_safe_update
+echo Running safe npm update (patch versions only)...
+npm run upgrade:safe
+pause
+goto menu
+
+:npm_minor_update
+echo Running npm minor version updates...
+npm run upgrade:minor
+pause
+goto menu
+
+:npm_major_update
+echo Running npm major version updates (interactive)...
+npm run upgrade:major
+pause
+goto menu
+
+:npm_es2024_verify
+echo Verifying ES2024 features are available...
+npm run es2024:verify
+pause
+goto menu
+
+:psalm
+echo Running PHP Psalm...
+php vendor/bin/psalm
+pause
+goto menu
+
+:public_assets_clear
+echo Clearing Assets Cache (Safe - preserves .gitignore)...
+if exist "public\assets" (
+    echo Clearing assets cache while preserving .gitignore...
+    powershell -Command "Get-ChildItem -Path 'public/assets' -Exclude '.gitignore' | Remove-Item -Recurse -Force"
+    echo Assets cache cleared successfully (preserved .gitignore)
+) else (
+    echo No assets directory found to clear.
+)
+pause
+goto menu
+
+:psalm_clear_cache
+echo Clearing Psalm's cache...
+php vendor/bin/psalm --clear-cache
+pause
+goto menu
+
+:psalm_config
+echo Psalm Config & Plugins:
+php vendor/bin/psalm --show-info || echo Psalm version does not support --show-info
+pause
+goto menu
+
+:psalm_directory
+echo Running PHP Psalm on a directory...
+set /p DIR="Directory path (relative to root): "
+if "%DIR%"=="" (echo No directory specified.& pause& goto menu)
+php vendor/bin/psalm "%DIR%"
+pause
+goto menu
+
+:psalm_file
+echo Running PHP Psalm on a specific file...
+set /p file="File path (relative to root): "
+if "%file%"=="" (echo No file specified.& pause& goto menu)
+php vendor/bin/psalm "%file%"
+pause
+goto menu
+
+:typescript_build_prod
+echo Building TypeScript (Production - Minified)...
+npm run build:prod
+pause
+goto menu
+
+:typescript_build_dev
+echo Building TypeScript (Development - with Source Maps)...
+npm run build:dev
+pause
+goto menu
+
+:typescript_watch
+echo Starting TypeScript Watch Mode (Development)...
+echo Press Ctrl+C to stop watching...
+npm run build:watch
+pause
+goto menu
+
+:typescript_type_check
+echo Running TypeScript Type Check...
+npm run type-check
+pause
+goto menu
+
+:typescript_lint
+echo Running TypeScript Lint Check...
+npm run lint
+pause
+goto menu
+
+:typescript_format
+echo Running TypeScript Format Check...
+npm run format:check
+echo.
+echo Running TypeScript Format Fix...
+npm run format
+pause
+goto menu
+
+:npm_run_build
+echo Running npm run build...
+npm run build
+pause
+goto menu
+
+:angular_install_deps
+echo ======== ANGULAR DEPENDENCY INSTALLATION WARNING ========
+echo ⚠️  WARNING: This will install Angular dependencies!
+echo 📝 This may modify existing TypeScript/ESLint configuration
+echo 🔄 Ensure you have reviewed package.json and tsconfig files
+echo 🚨 BACKUP your current setup before proceeding!
+echo ==========================================================
+set /p confirm="Continue with Angular dependency installation? (Y/N): "
+if /i "%confirm%"=="Y" (
+    echo Installing Angular dependencies...
+    npm install
+    echo Angular dependencies installed. Check for any conflicts.
+) else (
+    echo Angular installation cancelled.
+)
+pause
+goto menu
+
+:angular_serve
+echo Starting Angular development server...
+echo ⚠️  This runs Angular in development mode
+echo 📝 Angular components will be available at http://localhost:4200
+echo 🔄 In production, Angular integrates with Yii3 PHP layout
+npm run ng:serve
+pause
+goto menu
+
+:angular_build
+echo Building Angular for production...
+echo 📝 This builds Angular components for integration with Yii3
+npm run ng:build
+pause
+goto menu
+
+:angular_generate_component
+echo Generating Angular component...
+set /p componentName="Component name (e.g. dashboard, user-profile): "
+if "%componentName%"=="" (echo No component name specified.& pause& goto menu)
+echo Generating component: %componentName%
+npm run angular:generate-component %componentName%
+pause
+goto menu
+
+:angular_lint
+echo Running Angular-specific linting...
+echo 📝 This checks Angular components and templates
+npm run lint:angular
 pause
 goto menu
 
@@ -265,6 +434,44 @@ goto menu
 :rector_make_changes
 echo Rector Make Changes (apply changes)...
 php vendor/bin/rector
+pause
+goto menu
+
+:security_quick
+echo Running Snyk Security Check (High Severity Issues Only)...
+npm run security:quick
+pause
+goto menu
+
+:security_full
+echo Running Snyk Full Security Analysis (Code + Dependencies)...
+npm run security:full
+pause
+goto menu
+
+:security_deps
+echo Running Snyk Security Check on Dependencies...
+npm run security:deps
+pause
+goto menu
+
+:security_code_file
+echo Running Snyk Code Security Check on Specific File...
+set /p file="File path (relative to root, e.g. src/Invoice/Inv/InvController.php): "
+if "%file%"=="" (echo No file specified.& pause& goto menu)
+snyk code test --file="%file%"
+pause
+goto menu
+
+:security_summary
+echo Running Snyk Security Summary (Total Issues Count Only)...
+snyk code test | findstr /C:"Total issues"
+pause
+goto menu
+
+:security_json
+echo Running Snyk Security Analysis with JSON Output...
+snyk code test --json
 pause
 goto menu
 
@@ -381,13 +588,6 @@ goto menu
 
 :invoice_autoincrementsettooneafter_truncate6
 php yii invoice/autoincrementsettooneafter/truncate6
-pause
-goto menu
-
-:clear_assets_safe
-echo Clearing assets cache while preserving .gitignore...
-powershell -Command "Get-ChildItem -Path 'public\assets' -Exclude '.gitignore' | Remove-Item -Recurse -Force"
-echo Assets cache cleared successfully (preserved .gitignore)
 pause
 goto menu
 

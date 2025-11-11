@@ -1,0 +1,3 @@
+@echo off
+echo Opening NetBeans with Invoice project...
+"C:\Program Files\NetBeans-25\netbeans\bin\netbeans64.exe" --open "C:\wamp64\www\invoice"

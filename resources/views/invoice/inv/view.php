@@ -196,16 +196,15 @@ echo $modal_pdf;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['id' => 'add-task-tab', 'class' => 'tab-pane']); ?>
                     <div class="panel-heading">
-                        <?= Html::openTag('td'); ?>
+                        <?= Html::openTag('div'); ?>
                             <?= Html::openTag('button', [
-                                'class' => 'btn btn-primary bi bi-ui-checks',
-                                'href' => '#modal-choose-tasks',
-                                'id' => 'modal-choose-tasks',
-                                'data-bs-toggle' => 'modal']);
+        'class' => 'btn btn-primary bi bi-ui-checks w-100',
+        'data-bs-target' => '#modal-choose-tasks-inv',
+        'data-bs-toggle' => 'modal']);
     ?>
                             <?= $translator->translate('add.task'); ?>
                             <?= Html::closeTag('button'); ?>
-                        <?= Html::closeTag('td'); ?>           
+                        <?= Html::closeTag('div'); ?>           
                 <?= $add_inv_item_task; ?>
                     </div>
             <?= Html::closeTag('div'); ?>
