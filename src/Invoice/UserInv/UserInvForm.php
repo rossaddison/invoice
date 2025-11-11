@@ -96,7 +96,7 @@ final class UserInvForm extends FormModel
         $this->user = $userinv->getUser();
     }
 
-    public function getUser_id(): int|null
+    public function getUser_id(): ?int
     {
         return $this->user_id;
     }
@@ -106,112 +106,112 @@ final class UserInvForm extends FormModel
         return $this->user;
     }
 
-    public function getType(): int|null
+    public function getType(): ?int
     {
         return $this->type;
     }
 
-    public function getActive(): bool|null
+    public function getActive(): ?bool
     {
         return $this->active;
     }
 
-    public function getLanguage(): string|null
+    public function getLanguage(): ?string
     {
         return $this->language;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getCompany(): string|null
+    public function getCompany(): ?string
     {
         return $this->company;
     }
 
-    public function getAddress_1(): string|null
+    public function getAddress_1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): string|null
+    public function getAddress_2(): ?string
     {
         return $this->address_2;
     }
 
-    public function getCity(): string|null
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function getState(): string|null
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    public function getZip(): string|null
+    public function getZip(): ?string
     {
         return $this->zip;
     }
 
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    public function getPhone(): string|null
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function getFax(): string|null
+    public function getFax(): ?string
     {
         return $this->fax;
     }
 
-    public function getMobile(): string|null
+    public function getMobile(): ?string
     {
         return $this->mobile;
     }
 
-    public function getWeb(): string|null
+    public function getWeb(): ?string
     {
         return $this->web;
     }
 
-    public function getVat_id(): string|null
+    public function getVat_id(): ?string
     {
         return $this->vat_id;
     }
 
-    public function getTax_code(): string|null
+    public function getTax_code(): ?string
     {
         return $this->tax_code;
     }
 
-    public function getAll_clients(): bool|null
+    public function getAll_clients(): ?bool
     {
         return $this->all_clients;
     }
 
-    public function getSubscribernumber(): string|null
+    public function getSubscribernumber(): ?string
     {
         return $this->subscribernumber;
     }
 
-    public function getIban(): string|null
+    public function getIban(): ?string
     {
         return $this->iban;
     }
 
-    public function getGln(): int|null
+    public function getGln(): ?int
     {
         return $this->gln;
     }
 
-    public function getRcc(): string|null
+    public function getRcc(): ?string
     {
         return $this->rcc;
     }

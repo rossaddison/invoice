@@ -131,9 +131,9 @@ $columns = [
     ]),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));

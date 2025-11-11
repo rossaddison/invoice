@@ -32,12 +32,12 @@ final class CustomValueForm extends FormModel
         $this->customfield = $custom_value->getCustomField();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCustom_field_id(): int|null
+    public function getCustom_field_id(): ?int
     {
         return $this->custom_field_id;
     }
@@ -47,12 +47,12 @@ final class CustomValueForm extends FormModel
      * Related logic: see resources/views/invoice/customvalue/_view.php search Field::text($form, 'custom_field_id')
      * Related logic: see Use this function as a relation to get to the Custom Field label value
      */
-    public function getCustomField(): CustomField|null
+    public function getCustomField(): ?CustomField
     {
         return $this->customfield;
     }
 
-    public function getValue(): string|null
+    public function getValue(): ?string
     {
         return $this->value;
     }

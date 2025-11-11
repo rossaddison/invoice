@@ -286,7 +286,7 @@ final class FamilyController extends BaseController
      * @param FamilyRepository $familyRepository
      * @return Family|null
      */
-    private function family(#[RouteArgument('id')] string $id, fR $familyRepository): Family|null
+    private function family(#[RouteArgument('id')] string $id, fR $familyRepository): ?Family
     {
         return $familyRepository->repoFamilyquery($id);
     }

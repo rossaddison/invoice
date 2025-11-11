@@ -79,57 +79,57 @@ final class DeliveryLocationForm extends FormModel
         return $this->date_modified;
     }
 
-    public function getClient_id(): string|null
+    public function getClient_id(): ?string
     {
         return $this->client_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getBuildingNumber(): string|null
+    public function getBuildingNumber(): ?string
     {
         return $this->building_number;
     }
 
-    public function getAddress_1(): string|null
+    public function getAddress_1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): string|null
+    public function getAddress_2(): ?string
     {
         return $this->address_2;
     }
 
-    public function getCity(): string|null
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function getState(): string|null
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    public function getZip(): string|null
+    public function getZip(): ?string
     {
         return $this->zip;
     }
 
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    public function getGlobal_location_number(): string|null
+    public function getGlobal_location_number(): ?string
     {
         return $this->global_location_number;
     }
 
-    public function getElectronic_address_scheme(): string|null
+    public function getElectronic_address_scheme(): ?string
     {
         return $this->electronic_address_scheme;
     }

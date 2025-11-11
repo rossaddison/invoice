@@ -48,10 +48,10 @@ use Yiisoft\Html\Tag\A;
         <h2 class="fw-normal h3 text-center">
             <?php echo Html::tag('br');
     echo $companyLogo; ?><?= $translator->translate('online.payment.for.invoice'); ?> #
-                <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
-             Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
-             Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
-             $numberHelper->format_currency($balance); ?>
+                <?= Html::encode($invoice->getNumber() ?? '') . ' => '
+             . Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' '
+             . Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' '
+             . $numberHelper->format_currency($balance); ?>
             
         </h2>
         <a href="<?= $urlGenerator->generate('inv/pdf_download_include_cf', ['url_key' => $inv_url_key]); ?>" class="btn btn-sm btn-primary fw-normal h3 text-center" style="text-decoration:none">

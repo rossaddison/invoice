@@ -93,7 +93,7 @@ final class FromDropDownRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return FromDropDown|null
      */
-    public function repoFromDropDownLoadedquery(string $id): FromDropDown|null
+    public function repoFromDropDownLoadedquery(string $id): ?FromDropDown
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -105,7 +105,7 @@ final class FromDropDownRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return FromDropDown|null
      */
-    public function getDefault(): FromDropDown|null
+    public function getDefault(): ?FromDropDown
     {
         $query = $this->select()
                       ->where(['default_email' => 1])

@@ -65,7 +65,7 @@ class InvRecurring
         $this->start = $start;
     }
 
-    public function getEnd(): string|null|DateTimeImmutable
+    public function getEnd(): string|DateTimeImmutable|null
     {
         /** @var DateTimeImmutable|string|null $this->end */
         return $this->end;
@@ -76,7 +76,7 @@ class InvRecurring
         $this->end = $end;
     }
 
-    public function getNext(): string|null|DateTimeImmutable
+    public function getNext(): string|DateTimeImmutable|null
     {
         /** @var DateTimeImmutable|string|null $this->next */
         return $this->next;

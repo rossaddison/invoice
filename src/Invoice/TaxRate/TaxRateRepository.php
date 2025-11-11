@@ -73,7 +73,7 @@ final class TaxRateRepository extends Select\Repository
      * @param string $tax_rate_id
      * @return TaxRate|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): null|TaxRate
+    public function repoTaxRatequery(string $tax_rate_id): ?TaxRate
     {
         $query = $this
             ->select()
@@ -85,7 +85,7 @@ final class TaxRateRepository extends Select\Repository
      * @param string $tax_rate_name
      * @return TaxRate|null
      */
-    public function withName(string $tax_rate_name): TaxRate|null
+    public function withName(string $tax_rate_name): ?TaxRate
     {
         $query = $this
             ->select()

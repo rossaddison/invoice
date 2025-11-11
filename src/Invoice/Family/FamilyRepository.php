@@ -74,7 +74,7 @@ final class FamilyRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoFamilyquery(string $family_id): Family|null
+    public function repoFamilyquery(string $family_id): ?Family
     {
         $query = $this
             ->select()
@@ -128,7 +128,7 @@ final class FamilyRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function withName(string $family_name): Family|null
+    public function withName(string $family_name): ?Family
     {
         $query = $this
             ->select()

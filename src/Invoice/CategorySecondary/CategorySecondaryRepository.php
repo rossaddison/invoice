@@ -101,7 +101,7 @@ final class CategorySecondaryRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryQuery(string $id): CategorySecondary|null
+    public function repoCategorySecondaryQuery(string $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -113,7 +113,7 @@ final class CategorySecondaryRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryLoadedQuery(string $id): CategorySecondary|null
+    public function repoCategorySecondaryLoadedQuery(string $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->load('category_primary')

@@ -208,7 +208,7 @@ class Inv
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id === null ? null : (string) $this->id;
     }
@@ -298,7 +298,7 @@ class Inv
         $this->contract_id = $contract_id;
     }
 
-    public function getStatus_id(): int|null
+    public function getStatus_id(): ?int
     {
         return $this->status_id;
     }
@@ -430,7 +430,7 @@ class Inv
         return $this->terms;
     }
 
-    public function getNote(): string|null
+    public function getNote(): ?string
     {
         return $this->note;
     }
@@ -440,7 +440,7 @@ class Inv
         $this->note = $note;
     }
 
-    public function getDocumentDescription(): string|null
+    public function getDocumentDescription(): ?string
     {
         return $this->document_description;
     }
@@ -465,7 +465,7 @@ class Inv
         $this->url_key = $url_key;
     }
 
-    public function getPayment_method(): int|null
+    public function getPayment_method(): ?int
     {
         return $this->payment_method;
     }
@@ -490,7 +490,7 @@ class Inv
         return (string) $this->creditinvoice_parent_id;
     }
 
-    public function setCreditinvoice_parent_id(int|null $creditinvoice_parent_id): void
+    public function setCreditinvoice_parent_id(?int $creditinvoice_parent_id): void
     {
         $this->creditinvoice_parent_id = $creditinvoice_parent_id;
     }

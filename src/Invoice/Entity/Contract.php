@@ -51,7 +51,7 @@ class Contract
         $this->client_id = $client_id;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         return $this->client;
     }
@@ -61,7 +61,7 @@ class Contract
         $this->client = $client;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -71,7 +71,7 @@ class Contract
         $this->name = $name;
     }
 
-    public function getReference(): string|null
+    public function getReference(): ?string
     {
         return $this->reference;
     }

@@ -108,7 +108,7 @@ final class SalesOrderItemController extends BaseController
      * @param SalesOrderItemRepository $salesorderitemRepository
      * @return SalesOrderItem|null
      */
-    private function salesorderitem(CurrentRoute $currentRoute, SOIR $salesorderitemRepository): SalesOrderItem|null
+    private function salesorderitem(CurrentRoute $currentRoute, SOIR $salesorderitemRepository): ?SalesOrderItem
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -117,7 +117,7 @@ final class SalesOrderItemController extends BaseController
         return null;
     }
 
-    public function taxrate_percentage(int $id, TRR $trr): float|null
+    public function taxrate_percentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {

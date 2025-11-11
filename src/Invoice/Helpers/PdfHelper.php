@@ -32,7 +32,7 @@ class PdfHelper
     /**
      * @return string|null
      */
-    private function locale_to_language(): string|null
+    private function locale_to_language(): ?string
     {
         $dropdown_locale = (string) $this->session->get('_language');
         /** @var array $session_list */
@@ -49,8 +49,8 @@ class PdfHelper
     {
         $locale_lang = $this->locale_to_language();
         // Get the client language if set : otherwise use the locale as basis
-        if ($quote_or_inv instanceof \App\Invoice\Entity\Quote ||
-            $quote_or_inv instanceof Inv) {
+        if ($quote_or_inv instanceof \App\Invoice\Entity\Quote
+            || $quote_or_inv instanceof Inv) {
             return $quote_or_inv->getClient()?->getClient_language() ?? $locale_lang;
         }
         return '';
@@ -75,11 +75,11 @@ class PdfHelper
      * @return string
      */
     public function generate_quote_pdf(
-        string|null $quote_id,
+        ?string $quote_id,
         string $user_id,
         bool $stream,
         bool $custom,
-        object|null $quote_amount,
+        ?object $quote_amount,
         array $quote_custom_values,
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
@@ -199,11 +199,11 @@ class PdfHelper
      * @return string
      */
     public function generate_salesorder_pdf(
-        string|null $so_id,
+        ?string $so_id,
         string $user_id,
         bool $stream,
         bool $custom,
-        object|null $so_amount,
+        ?object $so_amount,
         array $so_custom_values,
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
@@ -324,11 +324,11 @@ class PdfHelper
      * @return string
      */
     public function generate_inv_html(
-        string|null $inv_id,
+        ?string $inv_id,
         string $user_id,
         bool $custom,
-        SalesOrder|null $so,
-        InvAmount|null $inv_amount,
+        ?SalesOrder $so,
+        ?InvAmount $inv_amount,
         array $inv_custom_values,
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,
@@ -452,12 +452,12 @@ class PdfHelper
      * @return string
      */
     public function generate_inv_pdf(
-        string|null $inv_id,
+        ?string $inv_id,
         string $user_id,
         bool $stream,
         bool $custom,
-        SalesOrder|null $so,
-        InvAmount|null $inv_amount,
+        ?SalesOrder $so,
+        ?InvAmount $inv_amount,
         array $inv_custom_values,
         \App\Invoice\Client\ClientRepository $cR,
         \App\Invoice\CustomValue\CustomValueRepository $cvR,

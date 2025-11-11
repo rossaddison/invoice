@@ -33,7 +33,7 @@ class Group
         $this->id = $id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }

@@ -691,7 +691,7 @@ final class SettingController extends BaseController
      */
     private function setting(
         CurrentRoute $currentRoute,
-    ): Setting|null {
+    ): ?Setting {
         $setting_id = $currentRoute->getArgument('setting_id');
         if (null !== $setting_id) {
             return $this->sR->repoSettingquery($setting_id);

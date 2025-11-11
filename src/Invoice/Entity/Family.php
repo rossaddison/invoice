@@ -27,7 +27,7 @@ class Family
         return $this->id;
     }
 
-    public function getFamily_name(): string|null
+    public function getFamily_name(): ?string
     {
         return $this->family_name;
     }

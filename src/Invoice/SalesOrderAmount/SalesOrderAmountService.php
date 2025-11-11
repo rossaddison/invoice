@@ -34,7 +34,7 @@ final readonly class SalesOrderAmountService
      * @param string $basis_quote_id
      * @param string|null $new_so_id
      */
-    public function initializeCopyQuoteAmount(SoAmount $model, QAR $qaR, SOAR $soaR, string $basis_quote_id, string|null $new_so_id): void
+    public function initializeCopyQuoteAmount(SoAmount $model, QAR $qaR, SOAR $soaR, string $basis_quote_id, ?string $new_so_id): void
     {
         $basis_quote = $qaR->repoQuotequery($basis_quote_id);
         if ($basis_quote) {
@@ -71,7 +71,7 @@ final readonly class SalesOrderAmountService
     /**
      * @param SoAmount|null $model
      */
-    public function deleteSalesOrderAmount(SoAmount|null $model): void
+    public function deleteSalesOrderAmount(?SoAmount $model): void
     {
         $this->repository->delete($model);
     }

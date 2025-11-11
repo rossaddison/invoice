@@ -84,7 +84,7 @@ final class ProfileRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoProfilequery(string $id): Profile|null
+    public function repoProfilequery(string $id): ?Profile
     {
         $query = $this->select()->load('company')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

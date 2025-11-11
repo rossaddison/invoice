@@ -34,32 +34,32 @@ final class ProfileForm extends FormModel
         $this->date_modified = $profile->getDate_modified();
     }
 
-    public function getCompany_id(): int|null
+    public function getCompany_id(): ?int
     {
         return $this->company_id;
     }
 
-    public function getCurrent(): int|null
+    public function getCurrent(): ?int
     {
         return $this->current;
     }
 
-    public function getMobile(): string|null
+    public function getMobile(): ?string
     {
         return $this->mobile;
     }
 
-    public function getEmail(): string|null
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getDate_created(): string|null|DateTimeImmutable
+    public function getDate_created(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -67,7 +67,7 @@ final class ProfileForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDate_modified(): string|null|DateTimeImmutable
+    public function getDate_modified(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_modified

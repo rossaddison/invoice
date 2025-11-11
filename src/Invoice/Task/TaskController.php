@@ -427,7 +427,7 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @return Task|null
      */
-    private function task(CurrentRoute $currentRoute, tR $tR): Task|null
+    private function task(CurrentRoute $currentRoute, tR $tR): ?Task
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

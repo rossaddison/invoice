@@ -156,7 +156,7 @@ final class ProductRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoProductquery(string|null $product_id): Product|null
+    public function repoProductquery(?string $product_id): ?Product
     {
         $query = $this
             ->select()
@@ -171,7 +171,7 @@ final class ProductRepository extends Select\Repository
      * @param string $product_name
      * @return Product|null
      */
-    public function withName(string $product_name): Product|null
+    public function withName(string $product_name): ?Product
     {
         $query = $this
             ->select()

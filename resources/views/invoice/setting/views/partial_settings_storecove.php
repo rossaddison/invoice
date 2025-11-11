@@ -80,16 +80,16 @@ use Yiisoft\Html\Html;
                                             $value['Region']
                                                 . str_repeat("&nbsp;", 2)
                                                 . str_repeat("-", 10)
-                                                . str_repeat("&nbsp;", 2) .
-                                                $value['Country']
+                                                . str_repeat("&nbsp;", 2)
+                                                . $value['Country']
                                                 . str_repeat("&nbsp;", 2)
                                                 . str_repeat("-", 10)
-                                                . str_repeat("&nbsp;", 2) .
-                                                (!empty($value['Legal']) ? $value['Legal'] : $translator->translate('storecove.not.available'))
+                                                . str_repeat("&nbsp;", 2)
+                                                . (!empty($value['Legal']) ? $value['Legal'] : $translator->translate('storecove.not.available'))
                                                 . str_repeat("&nbsp;", 2)
                                                 . str_repeat("-", 10)
-                                                . str_repeat("&nbsp;", 2) .
-                                                (!empty($value['Tax']) ? $value['Tax'] : $translator->translate('storecove.not.available')),
+                                                . str_repeat("&nbsp;", 2)
+                                                . (!empty($value['Tax']) ? $value['Tax'] : $translator->translate('storecove.not.available')),
                                         );
                                     ?>
                                     </option>

@@ -233,9 +233,9 @@ class BraintreePaymentService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->getMerchantId()) &&
-               !empty($this->getPublicKey()) &&
-               !empty($this->getPrivateKey());
+        return !empty($this->getMerchantId())
+               && !empty($this->getPublicKey())
+               && !empty($this->getPrivateKey());
     }
 
     /**

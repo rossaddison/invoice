@@ -66,8 +66,8 @@ use Yiisoft\Html\Tag\Form;
                                      <?= Field::date($form, 'date_created')
     ->label($translator->translate('date.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_created()) && null !== $form->getDate_created() ?
-                                    $form->getDate_created()->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($form->getDate_created()) && null !== $form->getDate_created()
+                                    ? $form->getDate_created()->format('Y-m-d') : ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                                 <?= Html::closeTag('div'); ?>
@@ -76,8 +76,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel()
     ->label($translator->translate('date.modified'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_modified()) && null !== $form->getDate_modified() ?
-                                    $form->getDate_modified()->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($form->getDate_modified()) && null !== $form->getDate_modified()
+                                    ? $form->getDate_modified()->format('Y-m-d') : ''))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -93,8 +93,8 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Field::text($form, 'time_created')
     ->label($translator->translate('time.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created()) && null !== $form->getTime_created() ?
-                                              $form->getTime_created()->getTimestamp() : null))))
+    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created()) && null !== $form->getTime_created()
+                                              ? $form->getTime_created()->getTimestamp() : null))))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -102,8 +102,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('tax.point'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_tax_point()) && null !== $form->getDate_tax_point() ?
-                                    $form->getDate_tax_point()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDate_tax_point()) && null !== $form->getDate_tax_point()
+                                    ? $form->getDate_tax_point()->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -118,8 +118,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('date.supplied'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_supplied()) && null !== $form->getDate_supplied() ?
-                                    $form->getDate_supplied()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDate_supplied()) && null !== $form->getDate_supplied()
+                                    ? $form->getDate_supplied()->format('Y-m-d') : ''));
 ?>    
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
@@ -127,8 +127,8 @@ use Yiisoft\Html\Tag\Form;
     ->hideLabel(true)
     ->label($translator->translate('date.due'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_due()) && null !== $form->getDate_due() ?
-                                    $form->getDate_due()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDate_due()) && null !== $form->getDate_due()
+                                    ? $form->getDate_due()->format('Y-m-d') : ''));
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>

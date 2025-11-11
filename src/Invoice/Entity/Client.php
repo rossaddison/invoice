@@ -428,7 +428,7 @@ class Client
         $this->client_number = $client_number;
     }
 
-    public function getClient_gender(): int|null
+    public function getClient_gender(): ?int
     {
         return $this->client_gender;
     }
@@ -443,7 +443,7 @@ class Client
         $this->postaladdress_id = $postaladdress_id;
     }
 
-    public function getPostaladdress_id(): int|null
+    public function getPostaladdress_id(): ?int
     {
         return $this->postaladdress_id;
     }

@@ -42,27 +42,27 @@ final class TaskForm extends FormModel
         $this->tax_rate_id = (int) $task->getTax_rate_id();
     }
 
-    public function getProject_id(): int|null
+    public function getProject_id(): ?int
     {
         return $this->project_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function getFinish_date(): null|string|DateTimeImmutable
+    public function getFinish_date(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->finish_date
@@ -70,12 +70,12 @@ final class TaskForm extends FormModel
         return $this->finish_date;
     }
 
-    public function getStatus(): int|null
+    public function getStatus(): ?int
     {
         return $this->status;
     }
 
-    public function getTax_rate_id(): int|null
+    public function getTax_rate_id(): ?int
     {
         return $this->tax_rate_id;
     }

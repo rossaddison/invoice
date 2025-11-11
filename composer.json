@@ -72,6 +72,7 @@
         "rossaddison/yii-auth-client": "dev-invoice",
         "rossaddison/yii-gii": "dev-phpspec-diff",
         "sabre/xml": "^4.0.6",
+        "sebastian/phpcpd" : ">=2.0.1",
         "setasign/fpdf": "^1.8.6",
         "spomky-labs/otphp": "^11.4",
         "stripe/stripe-php": "^18.2.0",

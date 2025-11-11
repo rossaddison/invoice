@@ -239,7 +239,7 @@ class GovUk extends OAuth2
     /**
      * Find the matching key in the JWKS
      */
-    protected function getPublicKeyFromJwtHeader(string $jwtHeader): null|array|string
+    protected function getPublicKeyFromJwtHeader(string $jwtHeader): array|string|null
     {
         $kid = $this->getKidFromJwtHeader($jwtHeader);
         $publicKey = null;
@@ -276,7 +276,7 @@ class GovUk extends OAuth2
      * @return string The PEM-formatted public key.
      * @psalm-return null|array<array-key, mixed>|string
      */
-    protected function createPemFromModulusAndExponent(string $modulus, string $exponent): null|array|string
+    protected function createPemFromModulusAndExponent(string $modulus, string $exponent): array|string|null
     {
         // Convert Base64URL to Base64
         $modulusForDecoding = $this->base64UrlToBase64($modulus);

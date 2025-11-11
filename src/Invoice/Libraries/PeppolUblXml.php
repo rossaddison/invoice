@@ -211,8 +211,8 @@ final readonly class PeppolUblXml
                 $taxInclusiveAmount,
                 $allowanceTotalAmount,
                 $payableAmount,
-                $this->sR->getSetting('currency_code_to') ?:
-        $this->sR->getSetting('currency_code_from'),
+                $this->sR->getSetting('currency_code_to')
+        ?: $this->sR->getSetting('currency_code_from'),
             ),
             $invoiceLines,
             $isCopyIndicator,

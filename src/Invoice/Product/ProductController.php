@@ -450,8 +450,8 @@ final class ProductController extends BaseController
         if (isset($query_params['product_price']) && !empty($query_params['product_price'])) {
             $products = $pR->filter_product_price((string) $query_params['product_price']);
         }
-        if ((isset($query_params['product_sku']) && !empty($query_params['product_sku'])) &&
-           (isset($query_params['product_price']) && !empty($query_params['product_price']))) {
+        if ((isset($query_params['product_sku']) && !empty($query_params['product_sku']))
+           && (isset($query_params['product_price']) && !empty($query_params['product_price']))) {
             $products = $pR->filter_product_sku_price((string) $query_params['product_price'], (string) $query_params['product_sku']);
         }
 
@@ -694,7 +694,7 @@ final class ProductController extends BaseController
      * @param pR $pR
      * @return Product|null
      */
-    private function product(string $id, pR $pR): Product|null
+    private function product(string $id, pR $pR): ?Product
     {
         if ($id) {
             return $pR->repoProductquery($id);

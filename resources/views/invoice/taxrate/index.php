@@ -73,9 +73,9 @@ $columns = [
     new DataColumn(
         'tax_rate_default',
         header: $translator->translate('default'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ?
-                                                          ($translator->translate('active') . ' ' . '✔️') :
-                                                           $translator->translate('inactive') . ' ' . '❌'),
+        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1'
+                                                          ? ($translator->translate('active') . ' ' . '✔️')
+                                                           : $translator->translate('inactive') . ' ' . '❌'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -124,14 +124,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('taxrate/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

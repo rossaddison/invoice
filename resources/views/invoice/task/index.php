@@ -177,14 +177,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('task/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 /**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering

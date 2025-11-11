@@ -193,7 +193,7 @@ final class GeneratorRelationController extends BaseController
      * @param GeneratorRelationRepository $generatorrelationRepository
      * @return GentorRelation|null
      */
-    private function generatorrelation(CurrentRoute $currentRoute, GeneratorRelationRepository $generatorrelationRepository): GentorRelation|null
+    private function generatorrelation(CurrentRoute $currentRoute, GeneratorRelationRepository $generatorrelationRepository): ?GentorRelation
     {
         $generatorrelation_id = $currentRoute->getArgument('id');
         if (null !== $generatorrelation_id) {

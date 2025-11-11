@@ -60,107 +60,107 @@ final class CustomFieldForm extends FormModel
         $this->number_max = $custom_field->getNumberMax();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTable(): string|null
+    public function getTable(): ?string
     {
         return $this->table;
     }
 
-    public function getLabel(): string|null
+    public function getLabel(): ?string
     {
         return $this->label;
     }
 
-    public function getType(): string|null
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function getLocation(): int|null
+    public function getLocation(): ?int
     {
         return $this->location;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }
 
-    public function getRequired(): bool|null
+    public function getRequired(): ?bool
     {
         return $this->required;
     }
 
-    public function getEmailMinLength(): int|null
+    public function getEmailMinLength(): ?int
     {
         return $this->email_min_length;
     }
 
-    public function getEmailMaxLength(): int|null
+    public function getEmailMaxLength(): ?int
     {
         return $this->email_max_length;
     }
 
-    public function getEmailMultiple(): bool|null
+    public function getEmailMultiple(): ?bool
     {
         return $this->email_multiple;
     }
 
-    public function getTextMinLength(): int|null
+    public function getTextMinLength(): ?int
     {
         return $this->text_min_length;
     }
 
-    public function getTextMaxLength(): int|null
+    public function getTextMaxLength(): ?int
     {
         return $this->text_max_length;
     }
 
-    public function getTextAreaMinLength(): int|null
+    public function getTextAreaMinLength(): ?int
     {
         return $this->text_area_min_length;
     }
 
-    public function getTextAreaMaxLength(): int|null
+    public function getTextAreaMaxLength(): ?int
     {
         return $this->text_area_max_length;
     }
 
-    public function getTextAreaCols(): int|null
+    public function getTextAreaCols(): ?int
     {
         return $this->text_area_cols;
     }
 
-    public function getTextAreaRows(): int|null
+    public function getTextAreaRows(): ?int
     {
         return $this->text_area_rows;
     }
 
-    public function getTextAreaWrap(): string|null
+    public function getTextAreaWrap(): ?string
     {
         return $this->text_area_wrap;
     }
 
-    public function getNumberMin(): int|null
+    public function getNumberMin(): ?int
     {
         return $this->number_min;
     }
 
-    public function getNumberMax(): int|null
+    public function getNumberMax(): ?int
     {
         return $this->number_max;
     }
 
-    public function getUrlMinLength(): int|null
+    public function getUrlMinLength(): ?int
     {
         return $this->url_min_length;
     }
 
-    public function getUrlMaxLength(): int|null
+    public function getUrlMaxLength(): ?int
     {
         return $this->url_max_length;
     }

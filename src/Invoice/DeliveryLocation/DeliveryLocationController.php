@@ -279,7 +279,7 @@ final class DeliveryLocationController extends BaseController
      * @param DeliveryLocationRepository $delRepository
      * @return DeliveryLocation|null
      */
-    private function del(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository): DeliveryLocation|null
+    private function del(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository): ?DeliveryLocation
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

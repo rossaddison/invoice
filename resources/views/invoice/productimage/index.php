@@ -98,9 +98,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

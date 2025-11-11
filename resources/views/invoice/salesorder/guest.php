@@ -198,8 +198,8 @@ $columns = [
     ),
 ];
 
-$grid_summary =
-    $s->grid_summary(
+$grid_summary
+    = $s->grid_summary(
         $paginator,
         $translator,
         (int) $s->getSetting('default_list_limit'),
@@ -207,11 +207,11 @@ $grid_summary =
         (string) $so_statuses[$status]['label'],
     );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open() .
-    $statusBar .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open()
+    . $statusBar
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

@@ -187,33 +187,33 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()
+$toolbarString
+    = Form::tag()
     ->post($urlGenerator->generate('client/index'))
     ->csrf($csrf)
-    ->open() .
-    Div::tag()
+    ->open()
+    . Div::tag()
         ->addClass('btn-group')
         ->content(
-            $gridComponents->toolbarReset($urlGenerator) .
-            A::tag()
+            $gridComponents->toolbarReset($urlGenerator)
+            . A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
-            ->render() .
-            A::tag()
+            ->render()
+            . A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
             ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
-            ->render() .
-            A::tag()
+            ->render()
+            . A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
             ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
             ->render(),
         )
-        ->encode(false)->render() .
-    Form::tag()->close();
+        ->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

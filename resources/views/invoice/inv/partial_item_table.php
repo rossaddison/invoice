@@ -195,9 +195,9 @@ foreach ($invItems as $item) {
                         <b>
                             <div class="input-group">
                                 
-                        <?php echo (string) $count . '-' . $item->getInv_id() . '-' . (string) $item->getId() . '-' .
-        (null !== $productId ? $productRef : '') .
-        (null !== $taskId ? $taskRef : ''); ?>
+                        <?php echo (string) $count . '-' . $item->getInv_id() . '-' . (string) $item->getId() . '-'
+        . (null !== $productId ? $productRef : '')
+        . (null !== $taskId ? $taskRef : ''); ?>
                                 
                             </div>
                         </b>                           
@@ -388,10 +388,10 @@ foreach ($invItems as $item) {
                             <td class="td-amount"><b><?= $invItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == '1'
                                                        ? $translator->translate('allowance.or.charge.charge')
                                                        : '(' . $translator->translate('allowance.or.charge.allowance') . ')'; ?></b></td>
-                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason.code') .
-                                                     ': ' . ($invItemAllowanceCharge->getAllowanceCharge()?->getReasonCode() ?? '#'); ?></b></td>
-                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason') . ': ' .
-                                                         ($invItemAllowanceCharge->getAllowanceCharge()?->getReason() ?? '#'); ?></b></td>
+                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason.code')
+                                                     . ': ' . ($invItemAllowanceCharge->getAllowanceCharge()?->getReasonCode() ?? '#'); ?></b></td>
+                            <td class="td-amount"><b><?= $translator->translate('allowance.or.charge.reason') . ': '
+                                                         . ($invItemAllowanceCharge->getAllowanceCharge()?->getReason() ?? '#'); ?></b></td>
                             <td class="td-amount"><b><?= ($isCharge ? '' : '(') . $numberHelper->format_currency($invItemAllowanceCharge->getAmount()) . ($isCharge ? '' : ')') ; ?></b></td>
                             <td class="td-amount"></td>
                             <td class="td-amount"><b><?= ($isCharge ? '' : '(') . $numberHelper->format_currency($invItemAllowanceCharge->getVatOrTax()) . ($isCharge ? '' : ')'); ?></b></td>   

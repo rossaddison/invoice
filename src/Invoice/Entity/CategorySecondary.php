@@ -23,7 +23,7 @@ class CategorySecondary
         private ?string $name = '',
     ) {}
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -33,7 +33,7 @@ class CategorySecondary
         $this->id = $id;
     }
 
-    public function getCategory_primary_id(): int|null
+    public function getCategory_primary_id(): ?int
     {
         return $this->category_primary_id;
     }

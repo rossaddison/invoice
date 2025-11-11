@@ -102,8 +102,8 @@ final class InvRepository extends Select\Repository
         $query = $select->where(
             'date_created',
             'like',
-            $dateTimeImmutable instanceof \DateTimeImmutable ?
-                                $dateTimeImmutable->format('Y-m') . '%' : '',
+            $dateTimeImmutable instanceof \DateTimeImmutable
+                                ? $dateTimeImmutable->format('Y-m') . '%' : '',
         );
         return $this->prepareDataReader($query);
     }
@@ -218,7 +218,7 @@ final class InvRepository extends Select\Repository
      * @param int $status_id
      * @return Inv|null
      */
-    public function repoInvStatusquery(int $invoice_id, int $status_id): Inv|null
+    public function repoInvStatusquery(int $invoice_id, int $status_id): ?Inv
     {
         $query = $this->select()
                       ->where(['id' => $invoice_id])
@@ -230,14 +230,14 @@ final class InvRepository extends Select\Repository
      * @param string $id
      * @return Inv|null
      */
-    public function repoInvUnLoadedquery(string $id): Inv|null
+    public function repoInvUnLoadedquery(string $id): ?Inv
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoInvLoadInvAmountquery(string $id): Inv|null
+    public function repoInvLoadInvAmountquery(string $id): ?Inv
     {
         $query = $this->select()
                       ->load('invamount')
@@ -249,7 +249,7 @@ final class InvRepository extends Select\Repository
      * @param string $id
      * @return Inv|null
      */
-    public function repoInvLoadedquery(string $id): Inv|null
+    public function repoInvLoadedquery(string $id): ?Inv
     {
         $query = $this->select()
                       ->load(['client','group','user'])
@@ -262,7 +262,7 @@ final class InvRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): Inv|null
+    public function repoUrl_key_guest_loaded(string $url_key): ?Inv
     {
         $query = $this->select()
                        ->load('client')
@@ -821,7 +821,7 @@ final class InvRepository extends Select\Repository
      * @param int|null $client_id
      * @return int
      */
-    public function repoCountByClient(int|null $client_id): int
+    public function repoCountByClient(?int $client_id): int
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
@@ -864,7 +864,7 @@ final class InvRepository extends Select\Repository
      * @param int|null $client_id
      * @return EntityReader
      */
-    public function repoClient(int|null $client_id): EntityReader
+    public function repoClient(?int $client_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -875,7 +875,7 @@ final class InvRepository extends Select\Repository
      * @param int|null $product_id
      * @return int
      */
-    public function repoCountByProduct(int|null $product_id): int
+    public function repoCountByProduct(?int $product_id): int
     {
         return $this->select()
                       ->distinct()
@@ -1002,7 +1002,7 @@ final class InvRepository extends Select\Repository
      * @param int|null $task_id
      * @return int
      */
-    public function repoCountByTask(int|null $task_id): int
+    public function repoCountByTask(?int $task_id): int
     {
         return $this->select()
                       ->distinct()

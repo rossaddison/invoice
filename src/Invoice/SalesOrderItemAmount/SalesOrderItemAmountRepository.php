@@ -85,7 +85,7 @@ final class SalesOrderItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemAmountquery(string $so_item_id): SalesOrderItemAmount|null
+    public function repoSalesOrderItemAmountquery(string $so_item_id): ?SalesOrderItemAmount
     {
         $query = $this->select()
                       ->load(['so_item'])

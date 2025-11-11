@@ -46,7 +46,7 @@ class ItemLookup
         $this->description = $description;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): ?float
     {
         return $this->price;
     }

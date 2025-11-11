@@ -52,10 +52,10 @@ use Yiisoft\Html\Html;
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #                    
-                    <?= (Html::encode($invoice->getNumber() ?? '')) . ' => ' .
-                     (Html::encode($invoice->getClient()?->getClient_name() ?? '')) . ' ' .
-                     (Html::encode($invoice->getClient()?->getClient_surname() ?? '')) . ' ' .
-                     $numberHelper->format_currency($balance); ?>
+                    <?= (Html::encode($invoice->getNumber() ?? '')) . ' => '
+                     . (Html::encode($invoice->getClient()?->getClient_name() ?? '')) . ' '
+                     . (Html::encode($invoice->getClient()?->getClient_surname() ?? '')) . ' '
+                     . $numberHelper->format_currency($balance); ?>
                 </div>
             </div>
         </h2>
@@ -133,8 +133,8 @@ use Yiisoft\Html\Html;
 </div>
 <?php } ?>
 <?php
-$js20 =
-"const amazonPayButton = amazon.Pay.renderButton('#AmazonPayButton', {"
+$js20
+= "const amazonPayButton = amazon.Pay.renderButton('#AmazonPayButton', {"
 // set checkout environment
 . 'merchantId: "' . (string) $amazonPayButton['merchantId'] . '",'
 // SANDBOX-xxxxxxxxxx

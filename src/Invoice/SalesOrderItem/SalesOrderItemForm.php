@@ -72,77 +72,77 @@ final class SalesOrderItemForm extends FormModel
         $this->product_unit_id = (int) $salesOrderItem->getProduct_unit_id();
     }
 
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getSo_id(): string|null
+    public function getSo_id(): ?string
     {
         return $this->so_id;
     }
 
-    public function getPeppol_po_itemid(): string|null
+    public function getPeppol_po_itemid(): ?string
     {
         return $this->peppol_po_itemid;
     }
 
-    public function getPeppol_po_lineid(): string|null
+    public function getPeppol_po_lineid(): ?string
     {
         return $this->peppol_po_lineid;
     }
 
-    public function getTax_rate_id(): string|null
+    public function getTax_rate_id(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): string|null
+    public function getProduct_id(): ?string
     {
         return $this->product_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getQuantity(): float|null
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function getDiscount_amount(): float|null
+    public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getCharge_amount(): float|null
+    public function getCharge_amount(): ?float
     {
         return $this->charge_amount;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }
 
-    public function getProduct_unit(): string|null
+    public function getProduct_unit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): int|null
+    public function getProduct_unit_id(): ?int
     {
         return $this->product_unit_id;
     }

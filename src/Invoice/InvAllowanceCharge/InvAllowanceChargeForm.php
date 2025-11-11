@@ -26,27 +26,27 @@ final class InvAllowanceChargeForm extends FormModel
         $this->vat_or_tax = (int) $invAllowanceCharge->getVatOrTax();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getAllowance_charge_id(): int|null
+    public function getAllowance_charge_id(): ?int
     {
         return $this->allowance_charge_id;
     }
 
-    public function getAmount(): int|null
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function getVatOrTax(): int|null
+    public function getVatOrTax(): ?int
     {
         return $this->vat_or_tax;
     }

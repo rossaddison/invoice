@@ -79,7 +79,7 @@ final class ProductCustomRepository extends Select\Repository
      * @param string $id
      * @return ProductCustom|null
      */
-    public function repoProductCustomquery(string $id): ProductCustom|null
+    public function repoProductCustomquery(string $id): ?ProductCustom
     {
         $query = $this->select()->load('custom_field')
                                 ->load('product')
@@ -92,7 +92,7 @@ final class ProductCustomRepository extends Select\Repository
      * @param string $custom_field_id
      * @return ProductCustom|null
      */
-    public function repoFormValuequery(string $product_id, string $custom_field_id): ProductCustom|null
+    public function repoFormValuequery(string $product_id, string $custom_field_id): ?ProductCustom
     {
         $query = $this->select()->where(['product_id' => $product_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);

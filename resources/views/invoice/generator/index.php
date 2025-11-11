@@ -81,10 +81,10 @@ $columns = [
 
             return
 
-            $div_open_tag .
-                $entity_name_render .
-                $relations_content_render .
-            $div_close_tag;
+            $div_open_tag
+                . $entity_name_render
+                . $relations_content_render
+            . $div_close_tag;
         },
         encodeContent: false,
     ),
@@ -246,15 +246,15 @@ $columns = [
     ),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('generator/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

@@ -27,22 +27,22 @@ final class PaymentPeppolForm extends FormModel
         $this->provider = $paymentPeppol->getProvider();
     }
 
-    public function getInv_id(): string|null
+    public function getInv_id(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getAuto_reference(): int|null
+    public function getAuto_reference(): ?int
     {
         return $this->auto_reference;
     }
 
-    public function getProvider(): string|null
+    public function getProvider(): ?string
     {
         return $this->provider;
     }

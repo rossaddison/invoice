@@ -21,12 +21,12 @@ final class PaymentMethodForm extends FormModel
         $this->active = $paymentMethod->getActive();
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getActive(): bool|null
+    public function getActive(): ?bool
     {
         return $this->active;
     }

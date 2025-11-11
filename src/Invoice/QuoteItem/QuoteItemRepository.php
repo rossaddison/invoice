@@ -86,7 +86,7 @@ final class QuoteItemRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemquery(string $id): QuoteItem|null
+    public function repoQuoteItemquery(string $id): ?QuoteItem
     {
         $query = $this->select()->load(['tax_rate','product','quote'])->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

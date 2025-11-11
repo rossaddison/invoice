@@ -57,7 +57,7 @@ class User
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id === null ? null : (string) $this->id;
     }

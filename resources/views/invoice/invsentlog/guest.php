@@ -87,9 +87,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
-                 Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-                 Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open()
+                 . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+                 . Form::tag()->close();
 
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
@@ -101,8 +101,8 @@ echo GridView::widget()
   ->id('w10463-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate(($viewInv ?
-                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '') . ' ' .
-                       $grid_summary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+  ->summaryTemplate(($viewInv
+                       ? $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '') . ' '
+                       . $grid_summary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

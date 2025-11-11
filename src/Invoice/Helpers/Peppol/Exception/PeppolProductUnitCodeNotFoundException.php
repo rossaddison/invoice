@@ -17,14 +17,13 @@ final class PeppolProductUnitCodeNotFoundException extends \RuntimeException imp
     {
         $product_id = $this->product->getProduct_id();
         $product_name = $this->product->getProduct_name();
-        return (!empty($product_id) &&
-               null !== $product_name) ?
-          'Product id: ' . $product_id .
-          str_repeat(' ', 2) . $product_name .
-          str_repeat(' ', 2) .
-          $this->translator->translate('product.unit.code.not.found')
-                                     :
-          $this->translator->translate('product.unit.code.not.found');
+        return (!empty($product_id)
+               && null !== $product_name)
+          ? 'Product id: ' . $product_id
+          . str_repeat(' ', 2) . $product_name
+          . str_repeat(' ', 2)
+          . $this->translator->translate('product.unit.code.not.found')
+          : $this->translator->translate('product.unit.code.not.found');
     }
 
     /**

@@ -213,9 +213,9 @@ final readonly class QuoteToolbar
         return Html::openTag('div', [
             'class' => 'quote-actions-toolbar d-flex flex-wrap gap-2 align-items-center',
             'style' => 'margin-bottom: 1rem;',
-        ]) .
-        $this->renderButtons($buttons) .
-        Html::closeTag('div');
+        ])
+        . $this->renderButtons($buttons)
+        . Html::closeTag('div');
     }
 
     private function renderButtons(array $buttons): string
@@ -329,14 +329,14 @@ final readonly class QuoteToolbar
         return Html::openTag('div', [
             'class' => 'quote-actions-toolbar d-flex flex-wrap justify-content-between align-items-left',
             'style' => 'margin-bottom: 1rem;',
-        ]) .
-        Html::openTag('div', ['class' => 'd-flex flex-wrap gap-2 align-items-right']) .
-        $this->renderButtons($buttons) .
-        Html::closeTag('div') .
-        Html::openTag('div', ['class' => 'd-flex align-items-center']) .
-        $statusBadges .
-        Html::closeTag('div') .
-        Html::closeTag('div');
+        ])
+        . Html::openTag('div', ['class' => 'd-flex flex-wrap gap-2 align-items-right'])
+        . $this->renderButtons($buttons)
+        . Html::closeTag('div')
+        . Html::openTag('div', ['class' => 'd-flex align-items-center'])
+        . $statusBadges
+        . Html::closeTag('div')
+        . Html::closeTag('div');
     }
 
     /**

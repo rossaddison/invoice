@@ -138,10 +138,10 @@ $columns = [
     ]),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('contract/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('contract/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

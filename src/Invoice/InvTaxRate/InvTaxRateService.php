@@ -30,7 +30,7 @@ final readonly class InvTaxRateService
     /**
      * @param string|null $new_inv_id
      */
-    public function initializeCreditInvTaxRate(int $basis_inv_id, string|null $new_inv_id): void
+    public function initializeCreditInvTaxRate(int $basis_inv_id, ?string $new_inv_id): void
     {
         $basis_invoice_tax_rates = $this->repository->repoInvquery((string) $basis_inv_id);
         /** @var InvTaxRate $basis_invoice_tax_rate */

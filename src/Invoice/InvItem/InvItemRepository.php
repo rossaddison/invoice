@@ -86,7 +86,7 @@ final class InvItemRepository extends Select\Repository
      * @return InvItem|null
      * @psalm-return TEntity|null
      */
-    public function repoInvItemquery(string $id): InvItem|null
+    public function repoInvItemquery(string $id): ?InvItem
     {
         $query = $this->select()
                       ->load(['tax_rate','product', 'task', 'inv'])

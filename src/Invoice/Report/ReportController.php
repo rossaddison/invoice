@@ -215,7 +215,7 @@ class ReportController extends BaseController
     /**
      * @psalm-param \Yiisoft\Data\Reader\DataReaderInterface<array-key, array|object> $invamounts
      */
-    private function invoice_aging_sum(\Yiisoft\Data\Reader\DataReaderInterface $invamounts, int|null $client_id): float
+    private function invoice_aging_sum(\Yiisoft\Data\Reader\DataReaderInterface $invamounts, ?int $client_id): float
     {
         $sum = 0.00;
         foreach ($invamounts as $invamount) {

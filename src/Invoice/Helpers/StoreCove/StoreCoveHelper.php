@@ -167,9 +167,9 @@ final readonly class StoreCoveHelper
                 // $inv_attachment->getId() => upload repository id
                 $attachments[$incrementor] = [
                     'filename' => $inv_attachment->getFile_name_original(),
-                    'document' =>
+                    'document'
                     // https://stackoverflow.com/questions/2236668/file-get-contents-breaks-up-utf-8-characters
-                    mb_convert_encoding($target_path_with_filename, 'HTML-ENTITIES', 'UTF-8'),
+                    => mb_convert_encoding($target_path_with_filename, 'HTML-ENTITIES', 'UTF-8'),
                     // JsonException Malformed UTF-8 characters, possibly incorrectly encoded
                     //file_get_contents($target_path_with_filename, true),
                     'mimeType' => $ctype,
@@ -406,7 +406,7 @@ final readonly class StoreCoveHelper
    * @throws PeppolSalesOrderItemNotExistException
    * @return string|null
    */
-    private function Peppol_po_itemid(InvItem $item, SOIR $soiR): string|null
+    private function Peppol_po_itemid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSo_item_id();
         if ($sales_order_item_id) {
@@ -432,7 +432,7 @@ final readonly class StoreCoveHelper
      * @throws PeppolSalesOrderItemNotExistException
      * @return string|null
      */
-    private function Peppol_po_lineid(InvItem $item, SOIR $soiR): string|null
+    private function Peppol_po_lineid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSo_item_id();
         if ($sales_order_item_id) {
@@ -455,7 +455,7 @@ final readonly class StoreCoveHelper
      * @param DelRepo $delRepo
      * @return DateTime|null
      */
-    public function ActualDeliveryDate(Inv $invoice, DelRepo $delRepo): DateTime|null
+    public function ActualDeliveryDate(Inv $invoice, DelRepo $delRepo): ?DateTime
     {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -1207,7 +1207,7 @@ final readonly class StoreCoveHelper
      * @param DelRepo $delRepo
      * @return Party|null
      */
-    public function DeliveryParty(Inv $invoice, DelRepo $delRepo, DelPartyRepo $delpartyRepo): Party|null
+    public function DeliveryParty(Inv $invoice, DelRepo $delRepo, DelPartyRepo $delpartyRepo): ?Party
     {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -1300,7 +1300,7 @@ final readonly class StoreCoveHelper
      * @param unpR $unpR
      * @return string|null
      */
-    private function UnitCode(string $unit_id, unpR $unpR): null|string
+    private function UnitCode(string $unit_id, unpR $unpR): ?string
     {
         // If the unit has an extension in unitpeppol
         if ($unpR->repoUnitCount($unit_id) == 1) {

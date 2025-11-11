@@ -54,7 +54,7 @@ class DeliveryLocation
         $this->date_modified = new DateTimeImmutable();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -64,7 +64,7 @@ class DeliveryLocation
         $this->id = $id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -75,7 +75,7 @@ class DeliveryLocation
     }
 
     // 2.1 ... not 3.0
-    public function getBuildingNumber(): string|null
+    public function getBuildingNumber(): ?string
     {
         return $this->building_number;
     }
@@ -86,7 +86,7 @@ class DeliveryLocation
     }
 
     // building number normally included in address_1 for 3.0
-    public function getAddress_1(): string|null
+    public function getAddress_1(): ?string
     {
         return $this->address_1;
     }
@@ -96,7 +96,7 @@ class DeliveryLocation
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): string|null
+    public function getAddress_2(): ?string
     {
         return $this->address_2;
     }
@@ -106,7 +106,7 @@ class DeliveryLocation
         $this->address_2 = $address_2;
     }
 
-    public function getCity(): string|null
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -116,7 +116,7 @@ class DeliveryLocation
         $this->city = $city;
     }
 
-    public function getState(): string|null
+    public function getState(): ?string
     {
         return $this->state;
     }
@@ -126,7 +126,7 @@ class DeliveryLocation
         $this->state = $state;
     }
 
-    public function getZip(): string|null
+    public function getZip(): ?string
     {
         return $this->zip;
     }
@@ -136,7 +136,7 @@ class DeliveryLocation
         $this->zip = $zip;
     }
 
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }
@@ -187,7 +187,7 @@ class DeliveryLocation
         $this->client_id = $client_id;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         return $this->client;
     }

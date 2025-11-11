@@ -84,7 +84,7 @@ final class ClientNoteRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoClientNotequery(string $id): ClientNote|null
+    public function repoClientNotequery(string $id): ?ClientNote
     {
         $query = $this->select()->load('client')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

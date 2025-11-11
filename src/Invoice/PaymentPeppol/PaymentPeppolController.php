@@ -175,7 +175,7 @@ final class PaymentPeppolController extends BaseController
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @return PaymentPeppol|null
      */
-    private function paymentpeppol(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository): PaymentPeppol|null
+    private function paymentpeppol(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository): ?PaymentPeppol
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

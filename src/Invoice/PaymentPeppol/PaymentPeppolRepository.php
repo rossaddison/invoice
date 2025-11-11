@@ -93,7 +93,7 @@ final class PaymentPeppolRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return PaymentPeppol|null
      */
-    public function repoPaymentPeppolLoadedquery(string $id): PaymentPeppol|null
+    public function repoPaymentPeppolLoadedquery(string $id): ?PaymentPeppol
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

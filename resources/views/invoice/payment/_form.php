@@ -101,12 +101,12 @@ if ($openInvsCount > 0) {
     foreach ($openInvs as $inv) {
         $invAmount = $iaR->repoInvquery((int) $inv->getId());
         if (null !== $invAmount) {
-            $optionsDataInvId[(int) $inv->getId()] =
-               ($inv->getNumber() ?? $translator->translate('number.no')) .
-               ' - ' .
-               ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id()))) .
-               ' - ' .
-               ($numberHelper->format_currency($invAmount->getBalance()));
+            $optionsDataInvId[(int) $inv->getId()]
+               = ($inv->getNumber() ?? $translator->translate('number.no'))
+               . ' - '
+               . ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id())))
+               . ' - '
+               . ($numberHelper->format_currency($invAmount->getBalance()));
         }
     }
 } else {

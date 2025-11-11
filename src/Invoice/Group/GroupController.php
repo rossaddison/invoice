@@ -204,7 +204,7 @@ final class GroupController extends BaseController
      * @param GroupRepository $groupRepository
      * @return Group|null
      */
-    private function group(CurrentRoute $currentRoute, GroupRepository $groupRepository): Group|null
+    private function group(CurrentRoute $currentRoute, GroupRepository $groupRepository): ?Group
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

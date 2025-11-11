@@ -16,10 +16,10 @@ use Yiisoft\Bootstrap5\AlertVariant;
 echo Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::DANGER)
-        ->body((string) $signupfailed['emailNotSentSuccessfully'] . ' config/common/params.php mailer senderEmail check' .
-            "\n" .
-               (string) $signupfailed['invoiceEmailException'] .
-            "\n")
+        ->body((string) $signupfailed['emailNotSentSuccessfully'] . ' config/common/params.php mailer senderEmail check'
+            . "\n"
+               . (string) $signupfailed['invoiceEmailException']
+            . "\n")
         ->dismissable(true)
         ->render();
 

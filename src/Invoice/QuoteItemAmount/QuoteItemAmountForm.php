@@ -15,27 +15,27 @@ final class QuoteItemAmountForm extends FormModel
     private ?float $discount = null;
     private ?float $total = null;
 
-    public function getQuote_item_id(): int|null
+    public function getQuote_item_id(): ?int
     {
         return $this->quote_item_id;
     }
 
-    public function getSubtotal(): float|null
+    public function getSubtotal(): ?float
     {
         return $this->subtotal;
     }
 
-    public function getTax_total(): float|null
+    public function getTax_total(): ?float
     {
         return $this->tax_total;
     }
 
-    public function getDiscount(): float|null
+    public function getDiscount(): ?float
     {
         return $this->discount;
     }
 
-    public function getTotal(): float|null
+    public function getTotal(): ?float
     {
         return $this->total;
     }

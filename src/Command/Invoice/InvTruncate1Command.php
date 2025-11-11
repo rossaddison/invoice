@@ -64,50 +64,50 @@ final class InvTruncate1Command extends Command
 
         if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvItemAllowanceCharge::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvItemAllowanceCharge::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvAllowanceCharge::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvAllowanceCharge::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(AllowanceCharge::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(AllowanceCharge::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Merchant::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(Merchant::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(PaymentCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(PaymentCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Payment::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(Payment::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(PaymentMethod::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(PaymentMethod::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(PaymentPeppol::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(PaymentPeppol::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvRecurring::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvRecurring::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvSentLog::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvSentLog::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvItem::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(InvCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(InvCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(Inv::class)->findAll()) ? $findAll : iterator_to_array($findAll))) {
             $io->success('Done');

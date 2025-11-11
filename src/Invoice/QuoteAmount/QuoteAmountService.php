@@ -62,7 +62,7 @@ final readonly class QuoteAmountService
     /**
      * @param QuoteAmount|null $model
      */
-    public function deleteQuoteAmount(QuoteAmount|null $model): void
+    public function deleteQuoteAmount(?QuoteAmount $model): void
     {
         $this->repository->delete($model);
     }

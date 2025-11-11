@@ -46,7 +46,7 @@ class Profile
         return $this->company;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -66,7 +66,7 @@ class Profile
         $this->company_id = $company_id;
     }
 
-    public function getCurrent(): int|null
+    public function getCurrent(): ?int
     {
         return $this->current;
     }
@@ -76,7 +76,7 @@ class Profile
         $this->current = $current;
     }
 
-    public function getMobile(): string|null
+    public function getMobile(): ?string
     {
         return $this->mobile;
     }
@@ -86,7 +86,7 @@ class Profile
         $this->mobile = $mobile;
     }
 
-    public function getEmail(): string|null
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -96,7 +96,7 @@ class Profile
         $this->email = $email;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }

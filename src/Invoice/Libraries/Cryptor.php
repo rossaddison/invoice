@@ -61,7 +61,7 @@ final class Cryptor
      * @throws \Exception
      * @return mixed
      */
-    public function encryptString(string $in, string $key, int|null $fmt = null): mixed
+    public function encryptString(string $in, string $key, ?int $fmt = null): mixed
     {
         if ($fmt === null) {
             $fmt = $this->format;
@@ -135,8 +135,8 @@ final class Cryptor
 
         // and do an integrity check on the size.
         if (strlen($raw) < $this->iv_num_bytes) {
-            throw new \Exception('Cryptor::decryptString() - ' .
-                'data length ' . (string) strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
+            throw new \Exception('Cryptor::decryptString() - '
+                . 'data length ' . (string) strlen($raw) . " is less than iv length {$this->iv_num_bytes}");
         }
 
         // Extract the initialisation vector and encrypted data

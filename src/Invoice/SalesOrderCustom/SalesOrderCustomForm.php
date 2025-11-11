@@ -23,17 +23,17 @@ final class SalesOrderCustomForm extends FormModel
         $this->value = $salesOrderCustom->getValue();
     }
 
-    public function getSo_id(): int|null
+    public function getSo_id(): ?int
     {
         return $this->so_id;
     }
 
-    public function getCustom_field_id(): int|null
+    public function getCustom_field_id(): ?int
     {
         return $this->custom_field_id;
     }
 
-    public function getValue(): string|null
+    public function getValue(): ?string
     {
         return $this->value;
     }

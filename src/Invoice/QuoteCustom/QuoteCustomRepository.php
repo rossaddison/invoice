@@ -81,7 +81,7 @@ final class QuoteCustomRepository extends Select\Repository
         );
     }
 
-    public function repoQuoteCustomquery(string $id): QuoteCustom|null
+    public function repoQuoteCustomquery(string $id): ?QuoteCustom
     {
         $query = $this->select()
                       ->load('custom_field')
@@ -90,7 +90,7 @@ final class QuoteCustomRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $quote_id, string $custom_field_id): QuoteCustom|null
+    public function repoFormValuequery(string $quote_id, string $custom_field_id): ?QuoteCustom
     {
         $query = $this->select()
                       ->where(['quote_id' => $quote_id])

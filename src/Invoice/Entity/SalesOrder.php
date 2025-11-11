@@ -122,7 +122,7 @@ class SalesOrder
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id === null ? null : (string) $this->id;
     }
@@ -155,7 +155,7 @@ class SalesOrder
         return (string) $this->quote_id;
     }
 
-    public function getInv_id(): string|null
+    public function getInv_id(): ?string
     {
         return (string) $this->inv_id;
     }
@@ -188,7 +188,7 @@ class SalesOrder
         $this->group_id = $group_id;
     }
 
-    public function getStatus_id(): int|null
+    public function getStatus_id(): ?int
     {
         return $this->status_id;
     }

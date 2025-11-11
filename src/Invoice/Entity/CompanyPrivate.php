@@ -81,7 +81,7 @@ class CompanyPrivate
         $this->company = $company;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -111,7 +111,7 @@ class CompanyPrivate
         $this->vat_id = $vat_id;
     }
 
-    public function getTax_code(): string|null
+    public function getTax_code(): ?string
     {
         return $this->tax_code;
     }
@@ -121,7 +121,7 @@ class CompanyPrivate
         $this->tax_code = $tax_code;
     }
 
-    public function getIban(): string|null
+    public function getIban(): ?string
     {
         return $this->iban;
     }
@@ -131,7 +131,7 @@ class CompanyPrivate
         $this->iban = $iban;
     }
 
-    public function getGln(): string|null
+    public function getGln(): ?string
     {
         return $this->gln;
     }
@@ -141,7 +141,7 @@ class CompanyPrivate
         $this->gln = $gln;
     }
 
-    public function getRcc(): string|null
+    public function getRcc(): ?string
     {
         return $this->rcc;
     }
@@ -151,7 +151,7 @@ class CompanyPrivate
         $this->rcc = $rcc;
     }
 
-    public function getLogo_filename(): string|null
+    public function getLogo_filename(): ?string
     {
         return $this->logo_filename;
     }
@@ -161,7 +161,7 @@ class CompanyPrivate
         $this->logo_filename = $logo_filename;
     }
 
-    public function getLogo_width(): int|null
+    public function getLogo_width(): ?int
     {
         return $this->logo_width;
     }
@@ -171,7 +171,7 @@ class CompanyPrivate
         $this->logo_width = $logo_width;
     }
 
-    public function getLogo_height(): int|null
+    public function getLogo_height(): ?int
     {
         return $this->logo_height;
     }
@@ -181,7 +181,7 @@ class CompanyPrivate
         $this->logo_height = $logo_height;
     }
 
-    public function getLogo_Margin(): int|null
+    public function getLogo_Margin(): ?int
     {
         return $this->logo_margin;
     }
@@ -202,7 +202,7 @@ class CompanyPrivate
     }
 
     //cycle
-    public function getStart_date(): DateTimeImmutable|null
+    public function getStart_date(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->start_date */
         return $this->start_date;
@@ -214,7 +214,7 @@ class CompanyPrivate
     }
 
     //cycle
-    public function getEnd_date(): DateTimeImmutable|null
+    public function getEnd_date(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->end_date */
         return $this->end_date;

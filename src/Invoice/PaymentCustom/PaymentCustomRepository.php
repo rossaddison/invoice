@@ -85,7 +85,7 @@ final class PaymentCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentCustomquery(string $id): PaymentCustom|null
+    public function repoPaymentCustomquery(string $id): ?PaymentCustom
     {
         $query = $this->select()->load('payment')
             ->load('custom_field')
@@ -98,7 +98,7 @@ final class PaymentCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $payment_id, string $custom_field_id): PaymentCustom|null
+    public function repoFormValuequery(string $payment_id, string $custom_field_id): ?PaymentCustom
     {
         $query = $this->select()->where(['payment_id' => $payment_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);

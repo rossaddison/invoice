@@ -84,7 +84,7 @@ final class UserCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUserCustomquery(string $id): UserCustom|null
+    public function repoUserCustomquery(string $id): ?UserCustom
     {
         $query = $this->select()->load('user')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

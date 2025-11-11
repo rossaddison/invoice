@@ -198,9 +198,9 @@ echo $modal_pdf;
                     <div class="panel-heading">
                         <?= Html::openTag('div'); ?>
                             <?= Html::openTag('button', [
-        'class' => 'btn btn-primary bi bi-ui-checks w-100',
-        'data-bs-target' => '#modal-choose-tasks-inv',
-        'data-bs-toggle' => 'modal']);
+                                'class' => 'btn btn-primary bi bi-ui-checks w-100',
+                                'data-bs-target' => '#modal-choose-tasks-inv',
+                                'data-bs-toggle' => 'modal']);
     ?>
                             <?= $translator->translate('add.task'); ?>
                             <?= Html::closeTag('button'); ?>

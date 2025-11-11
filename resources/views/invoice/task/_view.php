@@ -99,11 +99,11 @@ use Yiisoft\Html\Tag\Form;
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable ?
-                         $form->getFinish_date()->format('Y-m-d') : (is_string(
+    ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable
+                         ? $form->getFinish_date()->format('Y-m-d') : (is_string(
                              $form->getFinish_date(),
-                         ) ?
-                         $form->getFinish_date() : '')))
+                         )
+                         ? $form->getFinish_date() : '')))
 ?>    
     <?= Html::tag('br'); ?>
     <?php

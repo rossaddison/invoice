@@ -124,10 +124,10 @@ class GeneratorController extends BaseController
         }
         $arrayEnAppDotPhp = $lang;
         $messages = $this->aliases->get('@messages');
-        $targetLangFileAppPath = $messages .
-                       DIRECTORY_SEPARATOR .
-                           $targetLanguage .
-                       DIRECTORY_SEPARATOR . 'app.php';
+        $targetLangFileAppPath = $messages
+                       . DIRECTORY_SEPARATOR
+                           . $targetLanguage
+                       . DIRECTORY_SEPARATOR . 'app.php';
 
         $lang = [];
         if (($foundTargetLangFileAppPath = file_exists($targetLangFileAppPath)) === true) {
@@ -529,7 +529,7 @@ class GeneratorController extends BaseController
      * @param GeneratorRepository $generatorRepository
      * @return Gentor|null
      */
-    private function generator(CurrentRoute $currentRoute, GeneratorRepository $generatorRepository): Gentor|null
+    private function generator(CurrentRoute $currentRoute, GeneratorRepository $generatorRepository): ?Gentor
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

@@ -127,15 +127,15 @@ $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $sort = Sort::only(['id'])
         ->withOrderString($sortString);
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('family/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('family/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('family/add'))
         ->addClass('btn btn-info')
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $sortedAndPagedPaginator = (new OffsetPaginator($families))
     ->withPageSize($s->positiveListLimit())

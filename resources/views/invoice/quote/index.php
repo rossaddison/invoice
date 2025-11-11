@@ -384,16 +384,16 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open() .
-    $statusBar .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    (
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open()
+    . $statusBar
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . (
         $clientCount == 0
         ? Div::tag()->addClass('float-end m-3')->content($disabledAddQuoteButton)->encode(false)->render()
         : Div::tag()->addClass('float-end m-3')->content($enabledAddQuoteButton)->encode(false)->render()
-    ) .
-    Form::tag()->close();
+    )
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

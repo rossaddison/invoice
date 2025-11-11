@@ -22,12 +22,12 @@ final class ProjectForm extends FormModel
         $this->name = $project->getName();
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }

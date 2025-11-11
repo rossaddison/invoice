@@ -104,7 +104,7 @@ final class TaskRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaskquery(string $id): Task|null
+    public function repoTaskquery(string $id): ?Task
     {
         $query = $this->select()->load('tax_rate')
                                 ->where(['id' => $id]);

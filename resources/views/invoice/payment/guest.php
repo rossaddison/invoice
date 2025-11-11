@@ -53,8 +53,8 @@ $columns = [
         property: 'paymentAmountFilter',
         header: $translator->translate('amount'),
         content: static function (Payment $model) use ($s): string {
-            return $s->format_currency($model->getAmount() >= 0.00 ?
-                                       $model->getAmount() : 0.00);
+            return $s->format_currency($model->getAmount() >= 0.00
+                                       ? $model->getAmount() : 0.00);
         },
         encodeContent: false,
         filter: true,
@@ -109,9 +109,9 @@ $columns = [
     ),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

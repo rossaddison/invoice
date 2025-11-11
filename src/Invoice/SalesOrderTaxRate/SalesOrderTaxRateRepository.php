@@ -87,7 +87,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     /**
      * @param string|null $salesorder_id
      */
-    public function repoCount(string|null $salesorder_id): int
+    public function repoCount(?string $salesorder_id): int
     {
         return $this->select()
                       ->where(['so_id' => $salesorder_id])
@@ -100,7 +100,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderTaxRatequery(string $id): SalesOrderTaxRate|null
+    public function repoSalesOrderTaxRatequery(string $id): ?SalesOrderTaxRate
     {
         $query = $this->select()
                       ->load('salesorder')
@@ -132,7 +132,7 @@ final class SalesOrderTaxRateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): SalesOrderTaxRate|null
+    public function repoTaxRatequery(string $tax_rate_id): ?SalesOrderTaxRate
     {
         $query = $this->select()
                       ->load('tax_rate')

@@ -183,8 +183,8 @@ if (null !== ($number) && null !== $id) {
 
         <?php
     // Purpose: To remind the user that VAT is enabled
-    $s->getSetting('display_vat_enabled_message') === '1' ?
-    LabelSwitch::checkbox(
+    $s->getSetting('display_vat_enabled_message') === '1'
+    ? LabelSwitch::checkbox(
         'quote-view-label-switch',
         $s->getSetting('enable_vat_registration'),
         $translator->translate('quote.label.switch.on'),

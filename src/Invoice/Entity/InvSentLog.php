@@ -53,7 +53,7 @@ class InvSentLog
         $this->inv = $inv;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -63,7 +63,7 @@ class InvSentLog
         $this->id = $id;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
@@ -73,7 +73,7 @@ class InvSentLog
         $this->inv_id = $inv_id;
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }

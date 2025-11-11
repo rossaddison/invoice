@@ -307,7 +307,7 @@ final class QuoteItemController extends BaseController
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): float|null
+    public function taxrate_percentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -435,7 +435,7 @@ final class QuoteItemController extends BaseController
      * @param QIR $qiR
      * @return QuoteItem|null
      */
-    private function quoteitem(CurrentRoute $currentRoute, QIR $qiR): QuoteItem|null
+    private function quoteitem(CurrentRoute $currentRoute, QIR $qiR): ?QuoteItem
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

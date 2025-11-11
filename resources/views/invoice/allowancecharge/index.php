@@ -112,8 +112,8 @@ $columns = [
         'identifier',
         header: $translator->translate('allowance.or.charge.allowance'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
-            return !$model->getIdentifier() ?
-                  Html::a(
+            return !$model->getIdentifier()
+                  ? Html::a(
                       Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                       $urlGenerator->generate(
                           'allowancecharge/edit_allowance',
@@ -128,8 +128,8 @@ $columns = [
         'identifier',
         header: $translator->translate('allowance.or.charge.charge'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
-            return $model->getIdentifier() ?
-                Html::a(
+            return $model->getIdentifier()
+                ? Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                     $urlGenerator->generate(
                         'allowancecharge/edit_charge',
@@ -171,13 +171,13 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()
+$toolbarString
+    = Form::tag()
     ->post($urlGenerator->generate('allowancecharge/index'))
     ->csrf($csrf)
-    ->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
     ->columns(...$columns)

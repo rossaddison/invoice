@@ -18,7 +18,7 @@ final class CategoryPrimaryForm extends FormModel
         $this->name = $categoryPrimary->getName();
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }

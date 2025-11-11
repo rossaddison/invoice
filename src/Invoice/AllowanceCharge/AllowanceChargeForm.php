@@ -52,7 +52,7 @@ final class AllowanceChargeForm extends FormModel
         $this->tax_rate_id = (int) $allowanceCharge->getTaxRateId();
     }
 
-    public function getIdentifier(): bool|null
+    public function getIdentifier(): ?bool
     {
         return $this->identifier;
     }
@@ -62,32 +62,32 @@ final class AllowanceChargeForm extends FormModel
         return $this->level;
     }
 
-    public function getReasonCode(): string|null
+    public function getReasonCode(): ?string
     {
         return $this->reason_code;
     }
 
-    public function getReason(): string|null
+    public function getReason(): ?string
     {
         return $this->reason;
     }
 
-    public function getMultiplierFactorNumeric(): int|null
+    public function getMultiplierFactorNumeric(): ?int
     {
         return $this->multiplier_factor_numeric;
     }
 
-    public function getAmount(): int|null
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function getBaseAmount(): int|null
+    public function getBaseAmount(): ?int
     {
         return $this->base_amount;
     }
 
-    public function getTaxRateId(): int|null
+    public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
     }

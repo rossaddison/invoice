@@ -18,7 +18,7 @@ final readonly class UserService
     /**
      * @return User|null
      */
-    public function getUser(): User|null
+    public function getUser(): ?User
     {
         $userId = $this->currentUser->getId();
         if (null !== $userId) {

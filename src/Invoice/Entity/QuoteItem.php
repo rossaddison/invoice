@@ -72,7 +72,7 @@ class QuoteItem
         $this->tax_rate = $taxrate;
     }
 
-    public function getProduct(): Product|null
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -83,7 +83,7 @@ class QuoteItem
         $this->product = $product;
     }
 
-    public function getQuote(): Quote|null
+    public function getQuote(): ?Quote
     {
         return $this->quote;
     }
@@ -206,7 +206,7 @@ class QuoteItem
         $this->discount_amount = $discount_amount;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }

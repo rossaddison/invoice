@@ -24,8 +24,8 @@ $this->setTitle($translator->translate('layout.page.user-cancelled-oauth2'));
         <p class="card-text">
             <?=
                 $currentPath = $currentRoute->getUri()?->getPath();
-null !== $currentPath ?
-    $translator->translate('layout.page.user-cancelled-oauth2', [
+null !== $currentPath
+    ? $translator->translate('layout.page.user-cancelled-oauth2', [
         'url' => Html::span(
             Html::encode($currentPath),
             ['class' => 'text-muted'],

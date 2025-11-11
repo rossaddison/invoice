@@ -94,17 +94,17 @@ final class InvForm extends FormModel
         $this->client = $inv->getClient();
     }
 
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         return $this->client;
     }
 
-    public function getDate_created(): string|null|DateTimeImmutable
+    public function getDate_created(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -112,7 +112,7 @@ final class InvForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDate_modified(): string|null|DateTimeImmutable
+    public function getDate_modified(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_modified
@@ -120,7 +120,7 @@ final class InvForm extends FormModel
         return $this->date_modified;
     }
 
-    public function getDate_supplied(): string|null|DateTimeImmutable
+    public function getDate_supplied(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_supplied
@@ -128,7 +128,7 @@ final class InvForm extends FormModel
         return $this->date_supplied;
     }
 
-    public function getDate_paid_off(): string|null|DateTimeImmutable
+    public function getDate_paid_off(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_paid_off
@@ -136,7 +136,7 @@ final class InvForm extends FormModel
         return $this->date_paid_off;
     }
 
-    public function getDate_tax_point(): string|null|DateTimeImmutable
+    public function getDate_tax_point(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_tax_point
@@ -144,7 +144,7 @@ final class InvForm extends FormModel
         return $this->date_tax_point;
     }
 
-    public function getDate_due(): string|null|DateTimeImmutable
+    public function getDate_due(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_due
@@ -152,7 +152,7 @@ final class InvForm extends FormModel
         return $this->date_due;
     }
 
-    public function getTime_created(): string|null|DateTimeImmutable
+    public function getTime_created(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->time_created
@@ -160,102 +160,102 @@ final class InvForm extends FormModel
         return $this->time_created;
     }
 
-    public function getStand_in_code(): string|null
+    public function getStand_in_code(): ?string
     {
         return $this->stand_in_code;
     }
 
-    public function getQuote_id(): string|null
+    public function getQuote_id(): ?string
     {
         return $this->quote_id;
     }
 
-    public function getClient_id(): string|null
+    public function getClient_id(): ?string
     {
         return $this->client_id;
     }
 
-    public function getSo_id(): string|null
+    public function getSo_id(): ?string
     {
         return $this->so_id;
     }
 
-    public function getGroup_id(): string|null
+    public function getGroup_id(): ?string
     {
         return $this->group_id;
     }
 
-    public function getCreditinvoice_parent_id(): int|null
+    public function getCreditinvoice_parent_id(): ?int
     {
         return $this->creditinvoice_parent_id;
     }
 
-    public function getDelivery_id(): int|null
+    public function getDelivery_id(): ?int
     {
         return $this->delivery_id;
     }
 
-    public function getDelivery_location_id(): int|null
+    public function getDelivery_location_id(): ?int
     {
         return $this->delivery_location_id;
     }
 
-    public function getPostal_address_id(): int|null
+    public function getPostal_address_id(): ?int
     {
         return $this->postal_address_id;
     }
 
-    public function getContract_id(): int|null
+    public function getContract_id(): ?int
     {
         return $this->contract_id;
     }
 
-    public function getStatus_id(): int|null
+    public function getStatus_id(): ?int
     {
         return $this->status_id;
     }
 
-    public function getNumber(): string|null
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    public function getDiscount_amount(): float|null
+    public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getDiscount_percent(): float|null
+    public function getDiscount_percent(): ?float
     {
         return $this->discount_percent;
     }
 
-    public function getUrl_key(): string|null
+    public function getUrl_key(): ?string
     {
         return $this->url_key;
     }
 
-    public function getPassword(): string|null
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function getPayment_method(): int|null
+    public function getPayment_method(): ?int
     {
         return $this->payment_method;
     }
 
-    public function getTerms(): string|null
+    public function getTerms(): ?string
     {
         return $this->terms;
     }
 
-    public function getNote(): string|null
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    public function getDocumentDescription(): string|null
+    public function getDocumentDescription(): ?string
     {
         return $this->document_description;
     }

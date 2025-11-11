@@ -27,17 +27,17 @@ final class UnitForm extends FormModel
         $this->unit_name_plrl = $unit->getUnit_name_plrl();
     }
 
-    public function getUnit_id(): int|null
+    public function getUnit_id(): ?int
     {
         return $this->unit_id;
     }
 
-    public function getUnit_name(): string|null
+    public function getUnit_name(): ?string
     {
         return $this->unit_name;
     }
 
-    public function getUnit_name_plrl(): string|null
+    public function getUnit_name_plrl(): ?string
     {
         return $this->unit_name_plrl;
     }

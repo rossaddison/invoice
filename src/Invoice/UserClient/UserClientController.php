@@ -278,7 +278,7 @@ final class UserClientController extends BaseController
      * @param UIR $uiR
      * @return UserInv|null
      */
-    private function user(CurrentRoute $currentRoute, UIR $uiR): UserInv|null
+    private function user(CurrentRoute $currentRoute, UIR $uiR): ?UserInv
     {
         $user_id = $currentRoute->getArgument('user_id');
         if (null !== $user_id) {
@@ -292,7 +292,7 @@ final class UserClientController extends BaseController
      * @param UserClientRepository $userclientRepository
      * @return UserClient|null
      */
-    private function userclient(CurrentRoute $currentRoute, UserClientRepository $userclientRepository): UserClient|null
+    private function userclient(CurrentRoute $currentRoute, UserClientRepository $userclientRepository): ?UserClient
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

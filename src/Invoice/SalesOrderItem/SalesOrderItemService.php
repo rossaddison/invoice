@@ -43,9 +43,9 @@ final readonly class SalesOrderItemService
             }
             null !== $name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form => override default product description
-            $description = ((isset($array['description'])) ?
-                                   (string) $array['description'] :
-                                   (string) $array['product_description']);
+            $description = ((isset($array['description']))
+                                   ? (string) $array['description']
+                                   : (string) $array['product_description']);
 
             $model->setDescription($description ?: '');
         }
@@ -99,9 +99,9 @@ final readonly class SalesOrderItemService
             $name = (((isset($array['product_id'])) && ($pr->repoCount($product->getProduct_id()) > 0)) ? $product->getProduct_name() : '');
             $model->setName($name ?? '');
             // If the user has changed the description on the form => override default product description
-            $description = ((isset($array['description'])) ?
-                                      (string) $array['description'] :
-                                      $product->getProduct_description());
+            $description = ((isset($array['description']))
+                                      ? (string) $array['description']
+                                      : $product->getProduct_description());
             $model->setDescription($description ?? '');
         }
         isset($array['quantity']) ? $model->setQuantity((int) $array['quantity']) : '';
@@ -151,7 +151,7 @@ final readonly class SalesOrderItemService
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): float|null
+    public function taxrate_percentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -169,7 +169,7 @@ final readonly class SalesOrderItemService
      * @param SoIAR $soiar
      * @param SoIAS $soias
      */
-    public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, float|null $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
+    public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, ?float $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
     {
         $soias_array = [];
         $soias_array['so_item_id'] = $so_item_id;

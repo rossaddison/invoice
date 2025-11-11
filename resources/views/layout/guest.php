@@ -298,8 +298,8 @@ if (!$isGuest) {
     ->csrf($csrf)
     ->open()
     . '<div class="mb-1">'
-    . (string) Button::submit(null !== $user ? (string) preg_replace('/\d+/', '', $user->getLogin() . ' ' . $translator->translate('logout')) : '' . ' ' .
-        $translator->translate('logout'))->class('btn btn-primary')
+    . (string) Button::submit(null !== $user ? (string) preg_replace('/\d+/', '', $user->getLogin() . ' ' . $translator->translate('logout')) : '' . ' '
+        . $translator->translate('logout'))->class('btn btn-primary')
     . '</div>'
     . Form::tag()->close();
 }

@@ -130,12 +130,12 @@ use App\Widget\LabelSwitch;
                                     $value['region']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2) .
-                                $value['country']
+                                . str_repeat("&nbsp;", 2)
+                                . $value['country']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2) .
-                                (!empty($value['tax']) ? $value['tax'] : $translator->translate('storecove.not.available')),
+                                . str_repeat("&nbsp;", 2)
+                                . (!empty($value['tax']) ? $value['tax'] : $translator->translate('storecove.not.available')),
                                 );
                             ?>
                           </option>
@@ -166,12 +166,12 @@ use App\Widget\LabelSwitch;
                                     $value['Id']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2) .
-                                $value['Name']
+                                . str_repeat("&nbsp;", 2)
+                                . $value['Name']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2) .
-                                $value['Description'],
+                                . str_repeat("&nbsp;", 2)
+                                . $value['Description'],
                                 );
                             ?>
                           </option>
@@ -197,12 +197,12 @@ use App\Widget\LabelSwitch;
                                     $value['Id']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2) .
-                                $value['Name']
+                                . str_repeat("&nbsp;", 2)
+                                . $value['Name']
                                 . str_repeat("&nbsp;", 2)
                                 . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2) .
-                                $value['Description'],
+                                . str_repeat("&nbsp;", 2)
+                                . $value['Description'],
                                 );
                             ?>
                           </option>

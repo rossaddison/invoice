@@ -161,7 +161,7 @@ final class DeliveryPartyController extends BaseController
      * @param DeliveryPartyRepository $deliverypartyRepository
      * @return DeliveryParty|null
      */
-    private function deliveryparty(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): DeliveryParty|null
+    private function deliveryparty(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): ?DeliveryParty
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

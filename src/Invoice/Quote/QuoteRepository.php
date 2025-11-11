@@ -146,7 +146,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteUnLoadedquery(string $id): Quote|null
+    public function repoQuoteUnLoadedquery(string $id): ?Quote
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -158,7 +158,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteLoadedquery(string $id): Quote|null
+    public function repoQuoteLoadedquery(string $id): ?Quote
     {
         $query = $this->select()
                       ->load(['client','group','user'])
@@ -171,7 +171,7 @@ final class QuoteRepository extends Select\Repository
      * @param int $status_id
      * @return Quote|null
      */
-    public function repoQuoteStatusquery(string|null $quote_id, int $status_id): Quote|null
+    public function repoQuoteStatusquery(?string $quote_id, int $status_id): ?Quote
     {
         $query = $this->select()->where(['id' => $quote_id])
                                 ->where(['status_id' => $status_id]);
@@ -183,7 +183,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @param string|null $quote_id
      */
-    public function repoQuoteStatuscount(string|null $quote_id, int $status_id): int
+    public function repoQuoteStatuscount(?string $quote_id, int $status_id): int
     {
         return $this->select()->where(['id' => $quote_id])
                                 ->where(['status_id' => $status_id])
@@ -194,7 +194,7 @@ final class QuoteRepository extends Select\Repository
      * @param string $url_key
      * @return Quote|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): Quote|null
+    public function repoUrl_key_guest_loaded(string $url_key): ?Quote
     {
         $query = $this->select()
                        ->load('client')
@@ -450,7 +450,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @param string|null $quote_id
      */
-    public function repoCount(string|null $quote_id): int
+    public function repoCount(?string $quote_id): int
     {
         return $this->select()
                       ->where(['id' => $quote_id])

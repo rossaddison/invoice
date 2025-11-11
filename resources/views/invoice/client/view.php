@@ -83,8 +83,8 @@ use Yiisoft\Html\Tag\A;
                    class="btn btn-danger" style="text-decoration:none">
                     <i class="fa fa-edit"></i><?= $translator->translate('edit'); ?>
                 </a>
-                <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id()) ?
-                            $urlGenerator->generate(
+                <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id())
+                            ? $urlGenerator->generate(
                                 'postaladdress/add',
                                 // Argument parameters
                                 ['client_id' => $clientIdPostalAdd],
@@ -356,14 +356,14 @@ use Yiisoft\Html\Tag\A;
                                         
                                         <td><?=
                                               !is_string($clientBirthdate = $client->getClient_birthdate())
-                                               && null !== $clientBirthdate ?
-                                                         $clientBirthdate->format('Y-m-d') : '';
+                                               && null !== $clientBirthdate
+                                                         ? $clientBirthdate->format('Y-m-d') : '';
                 ?></td>
                                     </tr>
                                     <tr>
                                         <th><?= $translator->translate('gender'); ?></th>
-                                        <td><?= null !== ($clientGender = $client->getClient_gender()) ?
-                    $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
+                                        <td><?= null !== ($clientGender = $client->getClient_gender())
+                    ? $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
                                     </tr>
                                     <?php if ($s->getSetting('sumex') == '1'): ?>
                                         <tr>

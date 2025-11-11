@@ -65,7 +65,7 @@ class SalesOrderTaxRate
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getInclude_item_tax(): int|null
+    public function getInclude_item_tax(): ?int
     {
         return $this->include_item_tax;
     }

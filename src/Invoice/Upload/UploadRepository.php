@@ -115,7 +115,7 @@ final class UploadRepository extends Select\Repository
      * @param string $id
      * @return Upload|null
      */
-    public function repoUploadquery(string $id): Upload|null
+    public function repoUploadquery(string $id): ?Upload
     {
         $query = $this->select()
                       ->where(['id' => $id]);

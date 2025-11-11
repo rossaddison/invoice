@@ -35,7 +35,7 @@ class PaymentMethod
         $this->name = $name;
     }
 
-    public function getActive(): bool|null
+    public function getActive(): ?bool
     {
         return $this->active;
     }

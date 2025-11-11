@@ -84,14 +84,14 @@ $columns = [
     ]),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('categorysecondary/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('categorysecondary/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('categorysecondary/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');
 

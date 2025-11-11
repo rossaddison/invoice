@@ -310,7 +310,7 @@ final class AllowanceChargeController extends BaseController
      * @param AllowanceChargeRepository $allowanceChargeRepository
      * @return AllowanceCharge|null
      */
-    private function allowanceCharge(CurrentRoute $currentRoute, AllowanceChargeRepository $allowanceChargeRepository): AllowanceCharge|null
+    private function allowanceCharge(CurrentRoute $currentRoute, AllowanceChargeRepository $allowanceChargeRepository): ?AllowanceCharge
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

@@ -51,10 +51,10 @@ use Yiisoft\Html\Html;
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #
-                    <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
-                     Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
-                     Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
-                     $numberHelper->format_currency($balance); ?>
+                    <?= Html::encode($invoice->getNumber() ?? '') . ' => '
+                     . Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' '
+                     . Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' '
+                     . $numberHelper->format_currency($balance); ?>
                 </div>
             </div>    
         </h2>

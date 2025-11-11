@@ -75,7 +75,7 @@ final class InvItemForm extends FormModel
         $this->delivery_id = $invitem->getDelivery_id();
     }
 
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -85,82 +85,82 @@ final class InvItemForm extends FormModel
         return $this->date;
     }
 
-    public function getInv_id(): string|null
+    public function getInv_id(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getSo_item_id(): string|null
+    public function getSo_item_id(): ?string
     {
         return $this->so_item_id;
     }
 
-    public function getTax_rate_id(): string|null
+    public function getTax_rate_id(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): string|null
+    public function getProduct_id(): ?string
     {
         return $this->product_id;
     }
 
-    public function getTask_id(): string|null
+    public function getTask_id(): ?string
     {
         return $this->task_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getNote(): string|null
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    public function getQuantity(): float|null
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function getDiscount_amount(): float|null
+    public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getOrder(): string|null
+    public function getOrder(): ?string
     {
         return $this->order;
     }
 
-    public function getProduct_unit(): string|null
+    public function getProduct_unit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): int|null
+    public function getProduct_unit_id(): ?int
     {
         return $this->product_unit_id;
     }
 
-    public function getBelongs_to_vat_invoice(): int|null
+    public function getBelongs_to_vat_invoice(): ?int
     {
         return $this->belongs_to_vat_invoice;
     }
 
-    public function getDelivery_id(): string|null
+    public function getDelivery_id(): ?string
     {
         return $this->delivery_id;
     }

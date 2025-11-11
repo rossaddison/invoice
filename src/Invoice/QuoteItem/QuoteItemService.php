@@ -48,9 +48,9 @@ final readonly class QuoteItemService
             }
             null !== $name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form => override default product description
-            $description = (isset($array['description']) ?
-                                      (string) $array['description'] :
-                                      $product->getProduct_description());
+            $description = (isset($array['description'])
+                                      ? (string) $array['description']
+                                      : $product->getProduct_description());
 
             null !== $description ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available')) ;
         }
@@ -62,9 +62,9 @@ final readonly class QuoteItemService
             }
             null !== $name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form => override default product description
-            $description = (isset($array['description']) ?
-                                      (string) $array['description'] :
-                                      $task->getDescription());
+            $description = (isset($array['description'])
+                                      ? (string) $array['description']
+                                      : $task->getDescription());
 
             strlen($description) > 0 ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available'));
         }
@@ -115,9 +115,9 @@ final readonly class QuoteItemService
             }
             null !== $name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form => override default product description
-            $description = (isset($array['description']) ?
-                                      (string) $array['description'] :
-                                      $product->getProduct_description());
+            $description = (isset($array['description'])
+                                      ? (string) $array['description']
+                                      : $product->getProduct_description());
 
             null !== $description ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available')) ;
         }
@@ -221,9 +221,9 @@ final readonly class QuoteItemService
                 $name = ($pr->repoCount((string) $product_id) > 0 ? $product->getProduct_name() : '');
                 $model->setName($name ?? '');
                 // If the user has changed the description on the form => override default product description
-                $description = ((isset($array['description'])) ?
-                                          (string) $array['description'] :
-                                          ($product->getProduct_description() ?? $translator->translate('not.available')));
+                $description = ((isset($array['description']))
+                                          ? (string) $array['description']
+                                          : ($product->getProduct_description() ?? $translator->translate('not.available')));
                 $model->setDescription($description);
             }
         }
@@ -302,7 +302,7 @@ final readonly class QuoteItemService
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): float|null
+    public function taxrate_percentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -320,7 +320,7 @@ final readonly class QuoteItemService
      * @param QIAR $qiar
      * @param QIAS $qias
      */
-    public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, float|null $tax_rate_percentage, QIAR $qiar, QIAS $qias): void
+    public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, ?float $tax_rate_percentage, QIAR $qiar, QIAS $qias): void
     {
         $qias_array = [];
         $qias_array['quote_item_id'] = $quote_item_id;

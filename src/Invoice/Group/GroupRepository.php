@@ -134,7 +134,7 @@ final class GroupRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGroupquery(string $id): Group|null
+    public function repoGroupquery(string $id): ?Group
     {
         $query = $this->select()
                       ->where(['id' => $id]);

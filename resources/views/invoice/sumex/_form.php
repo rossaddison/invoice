@@ -80,11 +80,11 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::date($form, 'treatmentstart')
     ->label($translator->translate('treatment.start'))
-    ->value(Html::encode($form->getTreatmentstart() instanceof \DateTimeImmutable ?
-                 $form->getTreatmentstart()->format('Y-m-d') : (is_string(
+    ->value(Html::encode($form->getTreatmentstart() instanceof \DateTimeImmutable
+                 ? $form->getTreatmentstart()->format('Y-m-d') : (is_string(
                      $form->getTreatmentstart(),
-                 ) ?
-                 $form->getTreatmentstart() : '')))
+                 )
+                 ? $form->getTreatmentstart() : '')))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -92,11 +92,11 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::date($form, 'treatmentend')
     ->label($translator->translate('treatment.end'))
-    ->value(Html::encode($form->getTreatmentend() instanceof \DateTimeImmutable ?
-                 $form->getTreatmentend()->format('Y-m-d') : (is_string(
+    ->value(Html::encode($form->getTreatmentend() instanceof \DateTimeImmutable
+                 ? $form->getTreatmentend()->format('Y-m-d') : (is_string(
                      $form->getTreatmentend(),
-                 ) ?
-                 $form->getTreatmentend() : '')))
+                 )
+                 ? $form->getTreatmentend() : '')))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -104,11 +104,11 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::date($form, 'casedate')
     ->label($translator->translate('case.date'))
-    ->value(Html::encode($form->getCasedate() instanceof \DateTimeImmutable ?
-                 $form->getCasedate()->format('Y-m-d') : (is_string(
+    ->value(Html::encode($form->getCasedate() instanceof \DateTimeImmutable
+                 ? $form->getCasedate()->format('Y-m-d') : (is_string(
                      $form->getCasedate(),
-                 ) ?
-                 $form->getCasedate() : '')))
+                 )
+                 ? $form->getCasedate() : '')))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>

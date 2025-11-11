@@ -147,7 +147,7 @@ final class PaymentRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentquery(string $id): Payment|null
+    public function repoPaymentquery(string $id): ?Payment
     {
         $query = $this->select()
                       ->load('inv')

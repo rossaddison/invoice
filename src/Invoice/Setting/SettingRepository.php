@@ -79,7 +79,7 @@ final class SettingRepository extends Select\Repository
      * @param Setting|null $setting
      * @throws Throwable
      */
-    public function save(Setting|null $setting): void
+    public function save(?Setting $setting): void
     {
         if (null !== $setting) {
             $this->entityWriter->write([$setting]);
@@ -91,7 +91,7 @@ final class SettingRepository extends Select\Repository
      * @param Setting|null $setting
      * @throws Throwable
      */
-    public function delete(Setting|null $setting): void
+    public function delete(?Setting $setting): void
     {
         $this->entityWriter->delete([$setting]);
     }
@@ -108,7 +108,7 @@ final class SettingRepository extends Select\Repository
         );
     }
 
-    public function getActiveCompany(): Company|null
+    public function getActiveCompany(): ?Company
     {
         return $this->compR->repoCompanyActivequery();
     }
@@ -178,9 +178,9 @@ final class SettingRepository extends Select\Repository
         // The timestamp field must contain a T and use the 24 hour format
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
 
-        return 'type=' . $mfaType . '&' .
-               'timestamp=' . rawurlencode($timestamp) . '&' .
-               'unique-reference=' . $uniqueReference;
+        return 'type=' . $mfaType . '&'
+               . 'timestamp=' . rawurlencode($timestamp) . '&'
+               . 'unique-reference=' . $uniqueReference;
     }
 
     public function getGovClientPublicIp(): ?string
@@ -216,7 +216,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return string|null
      */
-    public function getGovClientPublicIpTimestamp(): string|null
+    public function getGovClientPublicIpTimestamp(): ?string
     {
         $ip = $this->getGovClientPublicIp();
         if (null !== $ip) {
@@ -286,10 +286,10 @@ final class SettingRepository extends Select\Repository
         $scalingFactor = $this->getSetting('fph_screen_scaling_factor');
         $colourDepth = $this->getSetting('fph_screen_colour_depth');
         if ($width > 0 && $height > 0 && $scalingFactor > 0 && $colourDepth > 0) {
-            return 'width=' . $width . '&' .
-                   'height=' . $height . '&' .
-                   'scaling-factor=' . $scalingFactor . '&' .
-                   'colour-depth=' . $colourDepth;
+            return 'width=' . $width . '&'
+                   . 'height=' . $height . '&'
+                   . 'scaling-factor=' . $scalingFactor . '&'
+                   . 'colour-depth=' . $colourDepth;
         }
         return '';
     }
@@ -382,7 +382,7 @@ final class SettingRepository extends Select\Repository
      * @param string $setting_id
      * @return Setting|null
      */
-    public function repoSettingquery(string $setting_id): Setting|null
+    public function repoSettingquery(string $setting_id): ?Setting
     {
         $query = $this
             ->select()
@@ -394,7 +394,7 @@ final class SettingRepository extends Select\Repository
      * @param string $setting_key
      * @return Setting|null
      */
-    public function withKey(string $setting_key): Setting|null
+    public function withKey(string $setting_key): ?Setting
     {
         $query = $this
             ->select()
@@ -406,7 +406,7 @@ final class SettingRepository extends Select\Repository
      * @param string $setting_value
      * @return Setting|null
      */
-    public function withValue(string $setting_value): Setting|null
+    public function withValue(string $setting_value): ?Setting
     {
         $query = $this
             ->select()
@@ -989,7 +989,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @param string|null $invoice_id
      */
-    public function invoice_mark_sent(string|null $invoice_id, IR $iR): void
+    public function invoice_mark_sent(?string $invoice_id, IR $iR): void
     {
         if (null !== $invoice_id) {
             $invoice = $iR->repoInvUnloadedquery($invoice_id);
@@ -1014,7 +1014,7 @@ final class SettingRepository extends Select\Repository
      * @param string|null $quote_id
      * @param QR $qR
      */
-    public function quote_mark_sent(string|null $quote_id, QR $qR): void
+    public function quote_mark_sent(?string $quote_id, QR $qR): void
     {
         // Quote exists and has a status of 1 ie. draft
         if ($qR->repoQuoteStatuscount($quote_id, 1) > 0) {
@@ -1133,7 +1133,7 @@ final class SettingRepository extends Select\Repository
      * @param float|null $amount
      * @return string|null
      */
-    public function format_amount(float|null $amount = null): string|null
+    public function format_amount(?float $amount = null): ?string
     {
         $this->load_settings();
         if (null !== $amount) {
@@ -1523,13 +1523,13 @@ final class SettingRepository extends Select\Repository
                 'where' => 'Refer to src\Invoice\Inv\InvService function set_tax_point. Variables used: 14 days, Date Supplied (Date Delivered), Date Created',
             ],
             'default_email_template' => [
-                'why' => 'Build your first template using Settings...Email Template. Your first email to the customer will use this template. ' .
-                       'Typically you will include various fields from the database in this template by dragging and dropping them when you build this template. ' .
-                       'Normally you will create three templates ie. Normal, Overdue, and Paid. ' .
-                       'The Normal Invoice Template that you create will be linked to the setting email_invoice_template. ' .
-                       'The Paid Invoice Template that you create will be linked to the setting email_invoice_template_paid. ' .
-                       'The Overdue Invoice Template that you create will be linked to the setting email_invoice_template_overdue. ' .
-                       'Depending on the status of the invoice, the TemplateHelper matches the appropriate email template to the status of the invoice. ',
+                'why' => 'Build your first template using Settings...Email Template. Your first email to the customer will use this template. '
+                       . 'Typically you will include various fields from the database in this template by dragging and dropping them when you build this template. '
+                       . 'Normally you will create three templates ie. Normal, Overdue, and Paid. '
+                       . 'The Normal Invoice Template that you create will be linked to the setting email_invoice_template. '
+                       . 'The Paid Invoice Template that you create will be linked to the setting email_invoice_template_paid. '
+                       . 'The Overdue Invoice Template that you create will be linked to the setting email_invoice_template_overdue. '
+                       . 'Depending on the status of the invoice, the TemplateHelper matches the appropriate email template to the status of the invoice. ',
                 'where' => 'src/Invoice/Helpers/TemplateHelper/select_email_invoice_template',
             ],
             'date_format' => [
@@ -1553,11 +1553,11 @@ final class SettingRepository extends Select\Repository
                 'where' => 'ClientController/Edit',
             ],
             'default_invoice_group' => [
-                'why' => 'When a new invoice or quote is created, the package uses invoice groups to determine the next invoice or quote number,' .
-                       'and how it should be structured. The package comes with two default invoice groups namely Invoice Default and Quote Default. ' .
-                       'Both groups will generate simple incremental IDs starting at the number 1, but the Quote Default will be prefixed with QUO. ' .
-                       'An example of an identifier tag might be eg. {{{year}}}-{{{month}}}-{{{day}}}-{{{ID}}}' .
-                       'The ID tab must be included in all identifiers, preferably towards the end of the identifier.',
+                'why' => 'When a new invoice or quote is created, the package uses invoice groups to determine the next invoice or quote number,'
+                       . 'and how it should be structured. The package comes with two default invoice groups namely Invoice Default and Quote Default. '
+                       . 'Both groups will generate simple incremental IDs starting at the number 1, but the Quote Default will be prefixed with QUO. '
+                       . 'An example of an identifier tag might be eg. {{{year}}}-{{{month}}}-{{{day}}}-{{{ID}}}'
+                       . 'The ID tab must be included in all identifiers, preferably towards the end of the identifier.',
                 'where' => 'views\invoice\group\_form.',
             ],
             'default_terms' => [
@@ -1578,33 +1578,33 @@ final class SettingRepository extends Select\Repository
                 'where' => 'views/layout/invoice and also in InvoiceController/install_default_settings_on_first_run',
             ],
             'email_send_method' => [
-                'why' => 'Symfony mailer is now the default mailer. ' .
-                'What is ESMTP? In response to the rampant spam problem on the internet, ' .
-                'an extension of SMTP was released in 1995: extended SMTP (ESMTP for short). ' .
-                'It adds additional commands to the protocol in 8-bit ASCII code, enabling many ' .
-                'new functions to save bandwidth and protect servers. These include, for example: ' .
-                'Authentication of the sender, SSL encryption of e-mails, Possibility of attaching multimedia files to e-mails ' .
-                'Restrictions on the size of e-mails according to server specifications, ' .
-                'Simultaneous transmission to several recipients, ' .
-                'Standardised error messages in case of undeliverability',
+                'why' => 'Symfony mailer is now the default mailer. '
+                . 'What is ESMTP? In response to the rampant spam problem on the internet, '
+                . 'an extension of SMTP was released in 1995: extended SMTP (ESMTP for short). '
+                . 'It adds additional commands to the protocol in 8-bit ASCII code, enabling many '
+                . 'new functions to save bandwidth and protect servers. These include, for example: '
+                . 'Authentication of the sender, SSL encryption of e-mails, Possibility of attaching multimedia files to e-mails '
+                . 'Restrictions on the size of e-mails according to server specifications, '
+                . 'Simultaneous transmission to several recipients, '
+                . 'Standardised error messages in case of undeliverability',
                 'where' => 'src/Invoice/Helpers/MailerHelper/mailer_configured function.',
             ],
             'email_pdf_attachment' => [
-                'why' => 'When an email is sent to a customer/client, the relevant invoice is automatically archived at' .
-                ' src/Invoice/Uploads/Archive/Invoice. ' .
-                'Send this archived pdf to the customer along with any attachments when using the button ' .
-                'Options...Send on the view/invoice.' .
-                'This setting is enabled by default under the InvoiceController',
-                'where' => 'src/Invoice/Helpers/MailerHelper/yii_mailer_send function variable email_attachment_with_pdf_template. ' .
-                'Run with view/invoice Options...Send  using MailerInvForm',
+                'why' => 'When an email is sent to a customer/client, the relevant invoice is automatically archived at'
+                . ' src/Invoice/Uploads/Archive/Invoice. '
+                . 'Send this archived pdf to the customer along with any attachments when using the button '
+                . 'Options...Send on the view/invoice.'
+                . 'This setting is enabled by default under the InvoiceController',
+                'where' => 'src/Invoice/Helpers/MailerHelper/yii_mailer_send function variable email_attachment_with_pdf_template. '
+                . 'Run with view/invoice Options...Send  using MailerInvForm',
             ],
             'enable_tfa' => [
                 'why' => 'Two Factor Authentication is necessary to provide an additional layer of security i.e. User logs in and then verifies  e.g. fraud prevention headers require Timed One Time Password (TOTP)',
                 'where' => 'src/Auth/Controller/AuthController function login augmenting src/Invoice/Setting/SettingRepository/function fphGeneratorMultiFactor',
             ],
             'enable_vat_registration' => [
-                'why' => 'VAT uses line item tax and applying Invoice Taxes (whether before line item or after line tax) are disabled. Hence the tax_total field in the InvAmount Entity will always equal zero if VAT is used. ' .
-                         'A new nullable field ... belongs_to_vat_invoice...has been introduced in the InvItem entity to allow for companies making this transition. '  ,
+                'why' => 'VAT uses line item tax and applying Invoice Taxes (whether before line item or after line tax) are disabled. Hence the tax_total field in the InvAmount Entity will always equal zero if VAT is used. '
+                         . 'A new nullable field ... belongs_to_vat_invoice...has been introduced in the InvItem entity to allow for companies making this transition. '  ,
                 'where' => 'This setting is used in resources/views/invoice/inv/view.php',
             ],
             'front_page_file_locations_tooltip' => [
@@ -1616,8 +1616,8 @@ final class SettingRepository extends Select\Repository
                 'where' => 'views/layout/invoice.php',
             ],
             'generate_invoice_number_for_draft' => [
-                'why' => 'Automatically generate an Invoice Number by means of the Group Identifier. ' .
-                'When an invoice is first created, it is placed in Draft status by default. Sending an invoice by email will automatically change the status from Draft to Sent. Clients cannot view any invoices when they are in Draft status. ',
+                'why' => 'Automatically generate an Invoice Number by means of the Group Identifier. '
+                . 'When an invoice is first created, it is placed in Draft status by default. Sending an invoice by email will automatically change the status from Draft to Sent. Clients cannot view any invoices when they are in Draft status. ',
                 'where' => 'InvController/generate_inv_get_number and InvRepository/get_inv_number',
             ],
             'generate_quote_number_for_draft' => [
@@ -1625,25 +1625,25 @@ final class SettingRepository extends Select\Repository
                 'where' => 'QuoteController/generate_quote_number_if_applicable and QuoteRepository/get_quote_number and GroupRepository/generate_number.',
             ],
             'google_translate_json_filename' => [
-                'why' => 'GeneratorController includes a function google_translate_lang. ' .
-                'This function takes the English app_lang array in src/Invoice/Language/English and translates it into the chosen locale (Settings...View...Google Translate) outputting it to resources/views/generator/output_overwrite' . "\r\n" .
-                '---Step--1: Download https://curl.haxx.se/ca/cacert.pem into active c:\wamp64\bin\php\php8.1.12 folder' . "\r\n" .
-                '---Step--2: Select your project that you created under https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?supportedpurview=project' . "\r\n" .
-                '---Step--3: Click on Actions icon and select Manage Keys' . "\r\n" .
-                '---Step--4: Add Key' . "\r\n" .
-                '---Step--5: Choose the Json File option and Download the file to src/Invoice/Google_translate_unique_folder' . "\r\n" .
-                '---Step--6: You will have to enable the Cloud Translation API and provide your billing details. You will be charged 0 currency. ' . "\r\n" .
-                '---Step--7: Adjust the php.ini [apache_module] by means of the wampserver icon or by clicking on the symlink in the directory.' . "\r\n" .
-                '---Step--8: Edit this symlink file manually at [curl] with eg. "c:/wamp64/bin/php/php8.1.13/cacert.pem   Note the forward slashes.' . "\r\n" .
-                '---Step--9: Reboot your server' . "\r\n" .
-                '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. resources/messages/{de}/app.php.' .
-                '---Step--11: Include your language in src/Invoice/Language/{your language}.',
+                'why' => 'GeneratorController includes a function google_translate_lang. '
+                . 'This function takes the English app_lang array in src/Invoice/Language/English and translates it into the chosen locale (Settings...View...Google Translate) outputting it to resources/views/generator/output_overwrite' . "\r\n"
+                . '---Step--1: Download https://curl.haxx.se/ca/cacert.pem into active c:\wamp64\bin\php\php8.1.12 folder' . "\r\n"
+                . '---Step--2: Select your project that you created under https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?supportedpurview=project' . "\r\n"
+                . '---Step--3: Click on Actions icon and select Manage Keys' . "\r\n"
+                . '---Step--4: Add Key' . "\r\n"
+                . '---Step--5: Choose the Json File option and Download the file to src/Invoice/Google_translate_unique_folder' . "\r\n"
+                . '---Step--6: You will have to enable the Cloud Translation API and provide your billing details. You will be charged 0 currency. ' . "\r\n"
+                . '---Step--7: Adjust the php.ini [apache_module] by means of the wampserver icon or by clicking on the symlink in the directory.' . "\r\n"
+                . '---Step--8: Edit this symlink file manually at [curl] with eg. "c:/wamp64/bin/php/php8.1.13/cacert.pem   Note the forward slashes.' . "\r\n"
+                . '---Step--9: Reboot your server' . "\r\n"
+                . '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. resources/messages/{de}/app.php.'
+                . '---Step--11: Include your language in src/Invoice/Language/{your language}.',
 
                 'where' => 'GeneratorController/google_translate_lang',
             ],
             'google_translate_en_app_php' => [
-                'why' => 'To translate resources/messages/en/app.php, make sure you have loaded a copy in the ../Language/English folder.' . "\r\n" .
-                'Note: gateway_lang and ip_lang arrays have been combined into app.php',
+                'why' => 'To translate resources/messages/en/app.php, make sure you have loaded a copy in the ../Language/English folder.' . "\r\n"
+                . 'Note: gateway_lang and ip_lang arrays have been combined into app.php',
                 'where' => 'GeneratorController/google_translate_lang',
             ],
             'google_translate_locale' => [
@@ -1655,12 +1655,12 @@ final class SettingRepository extends Select\Repository
                 'where' => 'src/Invoice/Delivery/DeliveryController',
             ],
             'include_zugferd' => [
-                'why' => 'ZUGFeRD stands for Zentraler User Guide des Forums elektronische Rechnung Deutschland ' .
-                       'It is a uniform standard for the electronic transmission of invoice data in Germany. ' .
-                       'The aim of the standard is to harmonise the exchange of information between companies and with public authorities. ' .
-                       'With the standard, the information contained in invoices can be read and processed automatically. ' .
-                       'This enables both you and the recipients of your documents to automatically transfer the invoice data to third-party systems with little effort. ' .
-                       'With the help of the standard, the entire content of the invoice can be transferred to an ERP system. ',
+                'why' => 'ZUGFeRD stands for Zentraler User Guide des Forums elektronische Rechnung Deutschland '
+                       . 'It is a uniform standard for the electronic transmission of invoice data in Germany. '
+                       . 'The aim of the standard is to harmonise the exchange of information between companies and with public authorities. '
+                       . 'With the standard, the information contained in invoices can be read and processed automatically. '
+                       . 'This enables both you and the recipients of your documents to automatically transfer the invoice data to third-party systems with little effort. '
+                       . 'With the help of the standard, the entire content of the invoice can be transferred to an ERP system. ',
                 'where' => 'src/Invoice/Libraries and src/Invoice/Helpers/ZugFerdHelper',
             ],
             'install_test_data' => [
@@ -1668,12 +1668,12 @@ final class SettingRepository extends Select\Repository
                 'where' => 'invoice/test_data_reset and invoice/test_data_remove',
             ],
             'invoice_default_payment_method' => [
-                'why' => 'Default: 1  None, 2 Cash, 3 Cheque, 4 Card/Direct Debit - Succeeded ' .
-                     '5 Card/Direct Debit - Processing 6 Card/Direct Debit - Customer Ready.',
-                'where' => 'InvoiceController/install_default_settings_on_first_run and ' .
-                       'InvController/create_confirm function which assigns the default of 1 to all invoices when created. ' .
-                       'See src/Invoice/Asset/rebuild-1.13/js/inv.js #inv_create_confirm function and ' .
-                       'resources/views/invoice/inv/modal_create_inv.php as well.',
+                'why' => 'Default: 1  None, 2 Cash, 3 Cheque, 4 Card/Direct Debit - Succeeded '
+                     . '5 Card/Direct Debit - Processing 6 Card/Direct Debit - Customer Ready.',
+                'where' => 'InvoiceController/install_default_settings_on_first_run and '
+                       . 'InvController/create_confirm function which assigns the default of 1 to all invoices when created. '
+                       . 'See src/Invoice/Asset/rebuild-1.13/js/inv.js #inv_create_confirm function and '
+                       . 'resources/views/invoice/inv/modal_create_inv.php as well.',
             ],
             'invoices_due_after' => [
                 'why' => 'The number of days after the original invoice date when invoices become due for payment.',
@@ -1692,9 +1692,9 @@ final class SettingRepository extends Select\Repository
                 'where' => 'InvController/pdf and InvController/email_stage_2 when viewing the invoice.',
             ],
             'mark_invoices_sent_copy' => [
-                'why' => 'Clients do not have access to draft invoices. Mark a copied invoice as sent so that the client can view it. Caution: Used for testing purposes only. ' .
-                       'By default copied invoices are marked as draft and therefore can not be viewed by the client online. ' .
-                       'They can only be viewed by the client once they have been sent by email or marked as sent manually in the Invoice Edit section under Inv/View/Options Dropdown Button. '  ,
+                'why' => 'Clients do not have access to draft invoices. Mark a copied invoice as sent so that the client can view it. Caution: Used for testing purposes only. '
+                       . 'By default copied invoices are marked as draft and therefore can not be viewed by the client online. '
+                       . 'They can only be viewed by the client once they have been sent by email or marked as sent manually in the Invoice Edit section under Inv/View/Options Dropdown Button. '  ,
                 'where' => 'InvController/inv_to_inv',
             ],
             'monospace_amounts' => [
@@ -1706,13 +1706,13 @@ final class SettingRepository extends Select\Repository
                 'where' => 'src/Invoice/Helpers/MpdfHelper.php function initialize_pdf',
             ],
             'number_format' => [
-                'why' => 'When the number format is chosen, the decimal point, ' . "\r\n" .
-                       'and thousands_separator settings have to be derived from' . "\r\n" .
-                       'the number_format array located in SettingsRepository using ' . "\r\n" .
-                       'the tab_index_number_format function in the SettingController.' . "\r\n" .
-                       'Note: This setting does not effect the number of decimal places: ' . "\r\n" .
-                       'Only the type of decimal point used i.e comma or dot, and the space' . "\r\n" .
-                       'between the numbers for display.',
+                'why' => 'When the number format is chosen, the decimal point, ' . "\r\n"
+                       . 'and thousands_separator settings have to be derived from' . "\r\n"
+                       . 'the number_format array located in SettingsRepository using ' . "\r\n"
+                       . 'the tab_index_number_format function in the SettingController.' . "\r\n"
+                       . 'Note: This setting does not effect the number of decimal places: ' . "\r\n"
+                       . 'Only the type of decimal point used i.e comma or dot, and the space' . "\r\n"
+                       . 'between the numbers for display.',
                 'where' => 'SettingController/tab_index_number_format',
             ],
             'oauth2' => [
@@ -1753,9 +1753,9 @@ final class SettingRepository extends Select\Repository
             ],
             'read_only_toggle' => [
                 'why' => 'To prevent an invoice from being edited ie. is read only. By default set to read only if sent. ',
-                'where' => 'Sent: src/Invoice/Setting/SettingRepository/invoice_mark_sent with InvController (several places) ' .
-                          'View: src/Invoice/Setting/SettingRepository/invoice_mark_viewed InvController/url_key (when users view their invoices online) ' .
-                          'Paid: src/Invoice/Helpers/NumberHelper/inv_balance_zero_set_to_read_only_if_fully_paid. ',
+                'where' => 'Sent: src/Invoice/Setting/SettingRepository/invoice_mark_sent with InvController (several places) '
+                          . 'View: src/Invoice/Setting/SettingRepository/invoice_mark_viewed InvController/url_key (when users view their invoices online) '
+                          . 'Paid: src/Invoice/Helpers/NumberHelper/inv_balance_zero_set_to_read_only_if_fully_paid. ',
             ],
             'stand_in_code' => [
                 'why' => 'If a tax point date cannot be determined because a Delivery Period has been setup and there is no Date Supplied (ie. Actual Delivery Date) and no subsequent Date Issued, this code mutually excludes the tax point date value on an e-invoice. If you are using Accrual Based Vat Accouning use 3 Issue date or most likely 35 Supply date, if you are using Cash Based Vat Accounting use 432. The tax point date must be excluded from an e-invoice if Delivery Periods are used. ',
@@ -1767,9 +1767,9 @@ final class SettingRepository extends Select\Repository
                 'where' => 'src/Invoice/Helpers/StoreCove/StoreCoveHelper',
             ],
             'storecove_sender_identifier' => [
-                'why' => 'Legal Identifiers - A legal identifier identifies the legal entity from a legal perspective. It can be a local chambre of commerce number, or a DUNS, GLN, etc. However, in many countries the tax identifier is also the legal identifiers. In that case you don’t need to set this up separately. ' .
-                          'Tax Identifiers - A tax identifier identifies the legal entity from a tax perspective. In the EU, all tax identifiers are VAT numbers and are prefixed with the ISO3166-2 country code, e.g. "IT12345678901". In India, the tax identifier is issued by the state in which the LegalEntity resides. ' .
-                          'It’s first two digits are always the numercial code of the state that issued it.',
+                'why' => 'Legal Identifiers - A legal identifier identifies the legal entity from a legal perspective. It can be a local chambre of commerce number, or a DUNS, GLN, etc. However, in many countries the tax identifier is also the legal identifiers. In that case you don’t need to set this up separately. '
+                          . 'Tax Identifiers - A tax identifier identifies the legal entity from a tax perspective. In the EU, all tax identifiers are VAT numbers and are prefixed with the ISO3166-2 country code, e.g. "IT12345678901". In India, the tax identifier is issued by the state in which the LegalEntity resides. '
+                          . 'It’s first two digits are always the numercial code of the state that issued it.',
                 'where' => 'src/Invoice/Helpers/StoreCove/StoreCoveHelper function maximum_pre_json_php_object_for_an_invoice()',
             ],
             'storecove_sender_identifier_basis' => [
@@ -1877,38 +1877,38 @@ final class SettingRepository extends Select\Repository
          */
 
         return [
-            'number_format_us_uk' =>
-                [
+            'number_format_us_uk'
+                => [
                     'label' => 'number.format.us.uk',
                     'decimal_point' => '.',
                     'thousands_separator' => ',',
                 ],
-            'number_format_european' =>
-                [
+            'number_format_european'
+                => [
                     'label' => 'number.format.european',
                     'decimal_point' => ',',
                     'thousands_separator' => '.',
                 ],
-            'number_format_iso80k1_point' =>
-                [
+            'number_format_iso80k1_point'
+                => [
                     'label' => 'number.format.iso80k1.point',
                     'decimal_point' => '.',
                     'thousands_separator' => ' ',
                 ],
-            'number_format_iso80k1_comma' =>
-                [
+            'number_format_iso80k1_comma'
+                => [
                     'label' => 'number.format.iso80k1.comma',
                     'decimal_point' => ',',
                     'thousands_separator' => ' ',
                 ],
-            'number_format_compact_point' =>
-                [
+            'number_format_compact_point'
+                => [
                     'label' => 'number.format.compact.point',
                     'decimal_point' => '.',
                     'thousands_separator' => '',
                 ],
-            'number_format_compact_comma' =>
-                [
+            'number_format_compact_comma'
+                => [
                     'label' => 'number.format.compact.comma',
                     'decimal_point' => ',',
                     'thousands_separator' => '',
@@ -1933,8 +1933,8 @@ final class SettingRepository extends Select\Repository
         switch ($period) {
             case 'this-month':
                 $range['upper'] = $now;
-                $range['lower'] = $oneMonth ?
-                                  $now->sub($oneMonth) : $now;
+                $range['lower'] = $oneMonth
+                                  ? $now->sub($oneMonth) : $now;
                 break;
             case 'last-month':
                 $range['upper'] = $oneMonth ? $now->sub($oneMonth) : $now;
@@ -2187,16 +2187,16 @@ final class SettingRepository extends Select\Repository
         if ($pageSize > 0) {
             return (string) Html::tag(
                 'b',
-                sprintf($translator->translate('showing.of') .
-                      $translator->translate('max') .
-                      ' ' . (string) $max . ' ' .
-                      $entity_plural .
-                      $translator->translate('per.page.total') .
-                      $entity_plural . ': ' .
-                      (string) $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
+                sprintf($translator->translate('showing.of')
+                      . $translator->translate('max')
+                      . ' ' . (string) $max . ' '
+                      . $entity_plural
+                      . $translator->translate('per.page.total')
+                      . $entity_plural . ': '
+                      . (string) $paginator->getTotalItems(), $pageSize, $paginator->getTotalItems()) . ' ',
                 ['class' => 'card-header bg-warning text-black'],
-            ) . (!empty($status_string) ?
-            (string) Html::tag('b', $status_string, ['class' => 'card-header bg-info text-black']) : '');
+            ) . (!empty($status_string)
+            ? (string) Html::tag('b', $status_string, ['class' => 'card-header bg-info text-black']) : '');
         }
         return '';
     }

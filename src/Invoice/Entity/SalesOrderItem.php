@@ -74,7 +74,7 @@ class SalesOrderItem
         $this->tax_rate = $taxrate;
     }
 
-    public function getProduct(): Product|null
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -85,7 +85,7 @@ class SalesOrderItem
         $this->product = $product;
     }
 
-    public function getSalesOrder(): SalesOrder|null
+    public function getSalesOrder(): ?SalesOrder
     {
         return $this->sales_order;
     }
@@ -226,7 +226,7 @@ class SalesOrderItem
         $this->charge_amount = $charge_amount;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }

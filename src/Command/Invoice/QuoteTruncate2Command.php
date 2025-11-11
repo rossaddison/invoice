@@ -53,17 +53,17 @@ final class QuoteTruncate2Command extends Command
 
         if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(QuoteItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(QuoteAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(QuoteItem::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(QuoteTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(QuoteTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(Quote::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {

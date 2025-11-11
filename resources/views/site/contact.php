@@ -53,11 +53,11 @@ use Yiisoft\Html\Tag\P;
                                     ->content(str_repeat(' ', 2) . (string) $contact['address'])
                                     ->render(); ?>
                                 <?= Html::openTag('address', ['class' => 'mb-0 text-secondary']); ?>    
-                                    <?= $companyAddress1 . ', ' .
-                                        $companyAddress2 . ', ' .
-                                        $companyCity . ', ' .
-                                        $companyState . ', ' .
-                                        $companyZip ?>
+                                    <?= $companyAddress1 . ', '
+                                        . $companyAddress2 . ', '
+                                        . $companyCity . ', '
+                                        . $companyState . ', '
+                                        . $companyZip ?>
                                 <?= Html::closeTag('address'); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div', ['class' => 'd-flex mb-4']); ?>

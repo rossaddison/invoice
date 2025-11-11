@@ -92,8 +92,8 @@ if (strlen($clientPhone = $quote->getClient()?->getClient_phone() ?? '') > 0) {
             <tr>
                 <!-- date issued -->
                 <td><?php echo $translator->translate('date.issued') . ':'; ?></td>
-                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDate_created()) ?
-                                               $dateCreated->format('Y-m-d') : ''); ?></td>
+                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDate_created())
+                                               ? $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
             <tr>
                 <td><?php echo $translator->translate('expires') . ': '; ?></td>

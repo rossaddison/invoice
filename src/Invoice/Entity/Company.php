@@ -81,7 +81,7 @@ class Company
         return $this->companyPrivates;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -91,7 +91,7 @@ class Company
         $this->id = $id;
     }
 
-    public function getCurrent(): int|null
+    public function getCurrent(): ?int
     {
         return $this->current;
     }
@@ -101,7 +101,7 @@ class Company
         $this->current = $current;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -111,7 +111,7 @@ class Company
         $this->name = $name;
     }
 
-    public function getAddress_1(): string|null
+    public function getAddress_1(): ?string
     {
         return $this->address_1;
     }
@@ -121,7 +121,7 @@ class Company
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): string|null
+    public function getAddress_2(): ?string
     {
         return $this->address_2;
     }
@@ -131,7 +131,7 @@ class Company
         $this->address_2 = $address_2;
     }
 
-    public function getCity(): string|null
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -141,7 +141,7 @@ class Company
         $this->city = $city;
     }
 
-    public function getState(): string|null
+    public function getState(): ?string
     {
         return $this->state;
     }
@@ -151,7 +151,7 @@ class Company
         $this->state = $state;
     }
 
-    public function getZip(): string|null
+    public function getZip(): ?string
     {
         return $this->zip;
     }
@@ -161,7 +161,7 @@ class Company
         $this->zip = $zip;
     }
 
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }
@@ -171,7 +171,7 @@ class Company
         $this->country = $country;
     }
 
-    public function getPhone(): string|null
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -181,7 +181,7 @@ class Company
         $this->phone = $phone;
     }
 
-    public function getFax(): string|null
+    public function getFax(): ?string
     {
         return $this->fax;
     }
@@ -191,7 +191,7 @@ class Company
         $this->fax = $fax;
     }
 
-    public function getEmail(): string|null
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -201,7 +201,7 @@ class Company
         $this->email = $email;
     }
 
-    public function getWeb(): string|null
+    public function getWeb(): ?string
     {
         return $this->web;
     }
@@ -211,7 +211,7 @@ class Company
         $this->web = $web;
     }
 
-    public function getSlack(): string|null
+    public function getSlack(): ?string
     {
         return $this->slack;
     }
@@ -221,7 +221,7 @@ class Company
         $this->slack = $slack;
     }
 
-    public function getTwitter(): string|null
+    public function getTwitter(): ?string
     {
         return $this->twitter;
     }
@@ -231,7 +231,7 @@ class Company
         $this->twitter = $twitter;
     }
 
-    public function getFacebook(): string|null
+    public function getFacebook(): ?string
     {
         return $this->facebook;
     }
@@ -241,7 +241,7 @@ class Company
         $this->facebook = $facebook;
     }
 
-    public function getLinkedIn(): string|null
+    public function getLinkedIn(): ?string
     {
         return $this->linkedin;
     }
@@ -251,7 +251,7 @@ class Company
         $this->linkedin = $linkedin;
     }
 
-    public function getWhatsapp(): string|null
+    public function getWhatsapp(): ?string
     {
         return $this->whatsapp;
     }
@@ -261,7 +261,7 @@ class Company
         $this->whatsapp = $whatsapp;
     }
 
-    public function getArbitrationBody(): string|null
+    public function getArbitrationBody(): ?string
     {
         return $this->arbitrationBody;
     }
@@ -271,7 +271,7 @@ class Company
         $this->arbitrationBody = $arbitrationBody;
     }
 
-    public function getArbitrationJurisdiction(): string|null
+    public function getArbitrationJurisdiction(): ?string
     {
         return $this->arbitrationJurisdiction;
     }

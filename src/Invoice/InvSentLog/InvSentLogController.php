@@ -156,7 +156,7 @@ final class InvSentLogController extends BaseController
      * @param int $id
      * @return InvSentLog|null
      */
-    private function invsentlog(ISLR $islR, int $id): InvSentLog|null
+    private function invsentlog(ISLR $islR, int $id): ?InvSentLog
     {
         if ($id) {
             /**

@@ -95,7 +95,7 @@ final class AllowanceChargeRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return AllowanceCharge|null
      */
-    public function repoAllowanceChargequery(string $id): AllowanceCharge|null
+    public function repoAllowanceChargequery(string $id): ?AllowanceCharge
     {
         $query = $this->select()
                       ->load('tax_rate')
@@ -125,10 +125,10 @@ final class AllowanceChargeRepository extends Select\Repository
             $key = $allowanceCharge->getId();
             $key ? ($optionsDataAllowanceCharges[$key] = ($allowanceCharge->getIdentifier()
             ? $this->translator->translate('allowance.or.charge.charge')
-            : $this->translator->translate('allowance.or.charge.allowance')) .
-            '  ' . $allowanceCharge->getReasonCode() .
-            ' ' .
-            $allowanceCharge->getReason()) : '';
+            : $this->translator->translate('allowance.or.charge.allowance'))
+            . '  ' . $allowanceCharge->getReasonCode()
+            . ' '
+            . $allowanceCharge->getReason()) : '';
         }
         return $optionsDataAllowanceCharges;
     }

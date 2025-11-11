@@ -226,7 +226,7 @@ final class UploadController extends BaseController
      * @param UploadRepository $uploadRepository
      * @return Upload|null
      */
-    public function upload(CurrentRoute $currentRoute, UploadRepository $uploadRepository): Upload|null
+    public function upload(CurrentRoute $currentRoute, UploadRepository $uploadRepository): ?Upload
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

@@ -92,8 +92,8 @@ final class TelegramController extends BaseController
                     if (strlen($chatId) > 1) {
                         if (!$failResult instanceof FailResult) {
                             $user = $this->telegramBotApi->getMe();
-                            if (($user instanceof \Phptg\BotApi\Type\User) &&
-                                ($this->sR->getSetting('telegram_test_message_use') == '1')) {
+                            if (($user instanceof \Phptg\BotApi\Type\User)
+                                && ($this->sR->getSetting('telegram_test_message_use') == '1')) {
                                 $text = $this->translator->translate('telegram.bot.api.hello.world.test.message');
                                 $sendMessageResult = $this->telegramBotApi->sendMessage(
                                     $chatId,
@@ -119,9 +119,9 @@ final class TelegramController extends BaseController
                                     }
                                     if (null !== $sendMessageResult->errorCode) {
                                         $match = match ($sendMessageResult->errorCode) {
-                                            403 => 'Solution: 1. Send a Message to Your Bot: Open Telegram and search for your bot by its username.' .
-                                                   'Start a chat with your bot and send any message to it. 2. Open your browser and enter the following URL,' .
-                                                   ' replacing YOUR_BOT_TOKEN with your bot token: https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates' . Button::deleteWebhook($urlGenerator, $this->translator),
+                                            403 => 'Solution: 1. Send a Message to Your Bot: Open Telegram and search for your bot by its username.'
+                                                   . 'Start a chat with your bot and send any message to it. 2. Open your browser and enter the following URL,'
+                                                   . ' replacing YOUR_BOT_TOKEN with your bot token: https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates' . Button::deleteWebhook($urlGenerator, $this->translator),
                                             409 => Button::deleteWebhook($urlGenerator, $this->translator),
                                             default => $sendMessageResult->description ?? '',
                                         };

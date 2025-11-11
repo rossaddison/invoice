@@ -94,7 +94,7 @@ final class InvAllowanceChargeRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return InvAllowanceCharge|null
      */
-    public function repoInvAllowanceChargeLoadedquery(string $id): InvAllowanceCharge|null
+    public function repoInvAllowanceChargeLoadedquery(string $id): ?InvAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')

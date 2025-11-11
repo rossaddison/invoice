@@ -87,7 +87,7 @@ final class MerchantRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoMerchantquery(string $id): Merchant|null
+    public function repoMerchantquery(string $id): ?Merchant
     {
         $query = $this->select()->load('inv')
                                 ->where(['id' => $id]);

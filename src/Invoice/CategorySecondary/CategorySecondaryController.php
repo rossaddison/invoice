@@ -150,7 +150,7 @@ final class CategorySecondaryController extends BaseController
         return $this->webService->getRedirectResponse('categorysecondary/index');
     }
 
-    private function categorysecondary(CategorySecondaryRepository $categorySecondaryRepository, int $id): CategorySecondary|null
+    private function categorysecondary(CategorySecondaryRepository $categorySecondaryRepository, int $id): ?CategorySecondary
     {
         if ($id) {
             return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery((string) $id);

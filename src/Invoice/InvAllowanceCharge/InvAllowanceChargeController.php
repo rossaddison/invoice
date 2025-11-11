@@ -227,7 +227,7 @@ final class InvAllowanceChargeController extends BaseController
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
      * @return InvAllowanceCharge|null
      */
-    private function invallowancecharge(CurrentRoute $currentRoute, InvAllowanceChargeRepository $invallowancechargeRepository): InvAllowanceCharge|null
+    private function invallowancecharge(CurrentRoute $currentRoute, InvAllowanceChargeRepository $invallowancechargeRepository): ?InvAllowanceCharge
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

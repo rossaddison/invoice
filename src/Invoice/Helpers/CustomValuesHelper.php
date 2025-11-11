@@ -43,7 +43,7 @@ class CustomValuesHelper
      * @param $txt
      * @return string
      */
-    public function format_text(string|null $txt): string
+    public function format_text(?string $txt): string
     {
         if ($txt == null) {
             return '';

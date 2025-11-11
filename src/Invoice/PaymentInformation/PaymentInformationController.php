@@ -1070,10 +1070,10 @@ final class PaymentInformationController
                     $invoice->setPayment_method(5);
                     $heading = sprintf(
                         $this->translator->translate('online.payment.payment.failed'),
-                        (string) $invoiceNumber .
-                                       ' ' .
-                                       $this->translator->translate('payment.gateway.mollie.api.payment.id') .
-                                       $paymentId,
+                        (string) $invoiceNumber
+                                       . ' '
+                                       . $this->translator->translate('payment.gateway.mollie.api.payment.id')
+                                       . $paymentId,
                     );
                     $this->iR->save($invoice);
                     $view_data = [
@@ -1180,8 +1180,8 @@ final class PaymentInformationController
                     true,
                     $sandbox_url_array,
                 );
-                $heading = 'succeeded' == $redirect_status_from_stripe ?
-                  sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber)
+                $heading = 'succeeded' == $redirect_status_from_stripe
+                  ? sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber)
                   : sprintf($this->translator->translate('online.payment.payment.failed'), (string) $invoiceNumber . ' ' . ((string) $result['message'] ?: ''));
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(

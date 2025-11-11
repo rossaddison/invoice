@@ -123,10 +123,10 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                                         $delAddress2 = $del->getAddress_2();
                                                         $delCity = $del->getCity();
                                                         $delZip = $del->getZip();
-                                                        echo (null !== $delAddress1 ? $delAddress1 : '') . ', ' .
-                                                             (null !== $delAddress2 ? $delAddress2 : '') . ', ' .
-                                                             (null !== $delCity ? $delCity : '') . ', ' .
-                                                             (null !== $delZip ? $delZip : ''); ?>
+                                                        echo (null !== $delAddress1 ? $delAddress1 : '') . ', '
+                                                             . (null !== $delAddress2 ? $delAddress2 : '') . ', '
+                                                             . (null !== $delCity ? $delCity : '') . ', '
+                                                             . (null !== $delZip ? $delZip : ''); ?>
                                                     </option>
                                                 <?php } ?>
                                             </select>
@@ -140,11 +140,11 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::date($form, 'date_created')
                                 ->label($translator->translate('date.issued'))
                                 ->value(
-                                    Html::encode($form->getDate_created() instanceof \DateTimeImmutable ?
-                                    $form->getDate_created()->format('Y-m-d') : (is_string(
+                                    Html::encode($form->getDate_created() instanceof \DateTimeImmutable
+                                    ? $form->getDate_created()->format('Y-m-d') : (is_string(
                                         $form->getDate_created(),
-                                    ) ?
-                                    $form->getDate_created() : '')),
+                                    )
+                                    ? $form->getDate_created() : '')),
                                 )
                                 ->hint($translator->translate('hint.this.field.is.required'));
 ?>

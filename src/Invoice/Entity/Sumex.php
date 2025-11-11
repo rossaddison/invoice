@@ -35,7 +35,7 @@ class Sumex
         $this->id = $id;
     }
 
-    public function getInvoice(): int|null
+    public function getInvoice(): ?int
     {
         return $this->invoice;
     }
@@ -45,7 +45,7 @@ class Sumex
         $this->invoice = $invoice;
     }
 
-    public function getReason(): int|null
+    public function getReason(): ?int
     {
         return $this->reason;
     }

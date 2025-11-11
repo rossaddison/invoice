@@ -41,7 +41,7 @@ class Project
         return $this->client_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }

@@ -130,16 +130,16 @@ $grid_summary =  $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]))
     ->addAttributes(['style' => 'text-decoration:none'])
     ->content('➕ ' . $translator->translate('allowance.or.charge.item.add'))
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

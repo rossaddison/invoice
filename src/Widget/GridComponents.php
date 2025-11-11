@@ -89,8 +89,8 @@ final readonly class GridComponents
             $invNumber = $invoice->getNumber();
             $invId = $invoice->getId();
             $invBalance = $invoice->getInvAmount()->getBalance();
-            $string .= Html::openTag('td') .
-                A::tag()
+            $string .= Html::openTag('td')
+                . A::tag()
                     ->addAttributes([
                         'style' => 'text-decoration:none',
                         'data-bs-toggle' => 'tooltip',
@@ -100,15 +100,15 @@ final readonly class GridComponents
                         ((null !== $invNumber && null !== $invId)
                               ? $invNumber
                               : $this->translator
-                                     ->translate('number.missing.therefore.use.invoice.id') .
-                                       ($invId ?? '')) .
-                                       ' ' .
-                                       (null !== $invBalance
+                                     ->translate('number.missing.therefore.use.invoice.id')
+                                       . ($invId ?? ''))
+                                       . ' '
+                                       . (null !== $invBalance
                                              ? (string) $invBalance
                                              : ''),
                     )
-                    ->render() .
-                Html::closeTag('td');
+                    ->render()
+                . Html::closeTag('td');
             $item_count++;
         }
         $string .= Html::closeTag('tr');
@@ -141,16 +141,16 @@ final readonly class GridComponents
                 $item_count = 0;
             }
             $invSentLogId = $invSentLog->getId();
-            $string .= Html::openTag('td') .
-                A::tag()
+            $string .= Html::openTag('td')
+                . A::tag()
                     ->addAttributes([
                         'style' => 'text-decoration:none',
                         'data-bs-toggle' => 'tooltip',
                         'title' => $invSentLog->getDate_sent()->format('m-d')])
                     ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
                     ->content((string) $invSentLogId)
-                    ->render() .
-                Html::closeTag('td');
+                    ->render()
+                . Html::closeTag('td');
             $item_count++;
         }
         $string .= Html::closeTag('tr');

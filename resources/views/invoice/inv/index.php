@@ -430,8 +430,8 @@ $columns = [
                            'id' => $id,
                            'name' => 'checkbox[]',
                            'data-bs-toggle' => 'tooltip',
-                           'title' => $inv->getInvAmount()->getTotal() == 0 ?
-                               $translator->translate('index.checkbox.add.some.items.to.enable') : ''])
+                           'title' => $inv->getInvAmount()->getTotal() == 0
+                               ? $translator->translate('index.checkbox.add.some.items.to.enable') : ''])
                        ->value($id)
                        ->disabled($inv->getInvAmount()->getTotal() > 0 ? false : true)
                        ->render();
@@ -943,8 +943,8 @@ $columns = [
     new DataColumn(
         header: $translator->translate('delete'),
         content: static function (Inv $model) use ($s, $translator, $urlGenerator): A|Label {
-            return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0' ?
-                    A::tag()->content(
+            return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0'
+                    ? A::tag()->content(
                         Html::tag(
                             'button',
                             Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
@@ -963,30 +963,30 @@ $columns = [
     ),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open() .
-    $statusBar .
-    Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false))->encode(false)->render() .
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open()
+    . $statusBar
+    . Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false))->encode(false)->render()
     // use the checkboxcolumn to copy multiple invoices accrding to a new date
-    Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render() .
+    . Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render()
     // use the checkboxcolumn to mark invoices as sent
-    Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render() .
+    . Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render()
     // use the checkboxcolumn to mark sent invoices as draft
-    (
+    . (
         $s->getSetting('disable_read_only') === (string) 0
         ? Div::tag()->addClass('float-end m-3')->content($disabledMarkSentAsDraft)->encode(false)->render()
         : Div::tag()->addClass('float-end m-3')->content($enabledMarkSentAsDraft)->encode(false)->render()
-    ) .
+    )
     // use the checkboxcolumn to mark invoices as recurring
-    Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render() .
-    (
+    . Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render()
+    . (
         $clientCount == 0
         ? Div::tag()->addClass('float-end m-3')->content($disabledAddInvoiceButton)->encode(false)->render()
         : Div::tag()->addClass('float-end m-3')->content($enabledAddInvoiceButton)->encode(false)->render()
-    ) .
-    Form::tag()->close();
+    )
+    . Form::tag()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));

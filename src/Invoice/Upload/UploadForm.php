@@ -36,7 +36,7 @@ final class UploadForm extends FormModel
         $this->uploaded_date = $upload->getUploaded_date();
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }

@@ -29,12 +29,12 @@ class GentorRelation
     }
 
     //relation $gentor
-    public function getGentor(): Gentor|null
+    public function getGentor(): ?Gentor
     {
         return $this->gentor;
     }
 
-    public function getLowercase_name(): string|null
+    public function getLowercase_name(): ?string
     {
         return $this->lowercasename;
     }
@@ -44,7 +44,7 @@ class GentorRelation
         $this->lowercasename = $lowercasename;
     }
 
-    public function getCamelcase_name(): string|null
+    public function getCamelcase_name(): ?string
     {
         return $this->camelcasename;
     }
@@ -54,7 +54,7 @@ class GentorRelation
         $this->camelcasename = $camelcasename;
     }
 
-    public function getView_field_name(): string|null
+    public function getView_field_name(): ?string
     {
         return $this->view_field_name;
     }
@@ -64,7 +64,7 @@ class GentorRelation
         $this->view_field_name = $view_field_name;
     }
 
-    public function getGentor_id(): int|null
+    public function getGentor_id(): ?int
     {
         return $this->gentor_id;
     }

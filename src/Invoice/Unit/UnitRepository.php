@@ -85,7 +85,7 @@ final class UnitRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUnitquery(string $unit_id): Unit|null
+    public function repoUnitquery(string $unit_id): ?Unit
     {
         $query = $this
             ->select()
@@ -97,7 +97,7 @@ final class UnitRepository extends Select\Repository
      * @param string $unit_name
      * @return Unit|null
      */
-    public function withName(string $unit_name): Unit|null
+    public function withName(string $unit_name): ?Unit
     {
         $query = $this
             ->select()

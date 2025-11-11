@@ -171,17 +171,17 @@ class MpdfHelper
         string $html,
         string $filename,
         bool $stream,
-        null|string $password,
+        ?string $password,
         SR $sR,
         // ZugferdXml is not created for a quote => null
         // but iiaR is necessary for the invoice item amounts
         // along with the entity InvAmount
-        null|iiaR $iiaR,
-        null|InvAmount $inv_amount,
+        ?iiaR $iiaR,
+        ?InvAmount $inv_amount,
         bool $isInvoice = false,
         bool $zugferd_invoice = false,
         array $associated_files = [],
-        null|object $quote_or_invoice = null,
+        ?object $quote_or_invoice = null,
     ): string {
         $sR->load_settings();
         $aliases = $this->ensure_uploads_folder_exists($sR);
@@ -277,7 +277,7 @@ class MpdfHelper
      * @param array $associated_files
      * @return \Mpdf\Mpdf
      */
-    private function initialize_pdf(string|null $password, SR $sR, string $title, object|null $quote_or_invoice, iiaR|null $iiaR, InvAmount|null $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
+    private function initialize_pdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
         $optionsArray = $this->options($sR);
         $mpdf = new \Mpdf\Mpdf($optionsArray);

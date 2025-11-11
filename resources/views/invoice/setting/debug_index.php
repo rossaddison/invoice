@@ -132,15 +132,15 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('setting/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

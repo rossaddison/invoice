@@ -189,11 +189,11 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                     <div class="input-group">
                                         <input name="salesorder_date_created" id="salesorder_date_created" disabled
                                                class="form-control"
-                                               value="<?= Html::encode($so->getDate_created() instanceof \DateTimeImmutable ?
-                                       $so->getDate_created()->format('Y-m-d') : (is_string(
+                                               value="<?= Html::encode($so->getDate_created() instanceof \DateTimeImmutable
+                                       ? $so->getDate_created()->format('Y-m-d') : (is_string(
                                            $so->getDate_created(),
-                                       ) ?
-                                       $so->getDate_created() : '')); ?>"/>
+                                       )
+                                       ? $so->getDate_created() : '')); ?>"/>
                                         <span class="input-group-text">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>

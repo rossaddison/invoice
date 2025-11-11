@@ -64,10 +64,10 @@ $divHeight = (string) 250;
 
 <?= Html::openTag('header'); ?>
     <?= ($s->getSetting('debug_mode') == '1')
-        ? Html::openTag('a', ['data-bs-toggle' => 'tooltip', 'title' => $tooltipTitle]) .
-                Html::openTag('i', ['class' => 'bi bi-info-circle']) .
-                Html::closeTag('i') .
-            Html::closeTag('a')
+        ? Html::openTag('a', ['data-bs-toggle' => 'tooltip', 'title' => $tooltipTitle])
+                . Html::openTag('i', ['class' => 'bi bi-info-circle'])
+                . Html::closeTag('i')
+            . Html::closeTag('a')
         : ''; ?>
 <?= Html::closeTag('header'); ?>
 
@@ -80,35 +80,35 @@ $divHeight = (string) 250;
 <?= Carousel::widget()
     ->items(
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/step1.jpg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
+                        ->render()
+                    . '</div>',
             active: true,
             caption: $translator->translate('home.caption.slide1'),
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/step2.jpg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
+                        ->render()
+                    . '</div>',
             caption: $translator->translate('home.caption.slide2'),
             encodeCaption: true,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/step3.jpg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
+                        ->render()
+                    . '</div>',
             caption: $translator->translate('home.caption.slide3'),
             encodeCaption: true,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],

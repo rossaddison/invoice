@@ -23,8 +23,8 @@ $this->setTitle($translator->translate('layout.not-found'));
         <p class="card-text">
             <?=
                 $currentPath = $currentRoute->getUri()?->getPath();
-null !== $currentPath ?
-    $translator->translate('layout.page.not-found', [
+null !== $currentPath
+    ? $translator->translate('layout.page.not-found', [
         'url' => Html::span(
             Html::encode($currentPath),
             ['class' => 'text-muted'],

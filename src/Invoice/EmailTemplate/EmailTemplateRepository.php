@@ -83,7 +83,7 @@ final class EmailTemplateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoEmailTemplatequery(string $email_template_id): EmailTemplate|null
+    public function repoEmailTemplatequery(string $email_template_id): ?EmailTemplate
     {
         $query = $this
             ->select()

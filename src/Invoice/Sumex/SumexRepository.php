@@ -84,7 +84,7 @@ final class SumexRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSumexquery(string $id): Sumex|null
+    public function repoSumexquery(string $id): ?Sumex
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
@@ -95,7 +95,7 @@ final class SumexRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSumexInvoicequery(string $invoice): Sumex|null
+    public function repoSumexInvoicequery(string $invoice): ?Sumex
     {
         $query = $this->select()->where(['invoice' => $invoice]);
         return  $query->fetchOne() ?: null;

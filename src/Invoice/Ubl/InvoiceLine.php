@@ -210,7 +210,7 @@ class InvoiceLine implements XmlSerializable
      * @param string|null $accountingCostCode
      * @return InvoiceLine
      */
-    public function setAccountingCostCode(null|string $accountingCostCode): self
+    public function setAccountingCostCode(?string $accountingCostCode): self
     {
         $this->accountingCostCode = $accountingCostCode;
         return $this;
@@ -219,7 +219,7 @@ class InvoiceLine implements XmlSerializable
     /**
      * @return string|null
      */
-    public function getAccountingCost(): null|string
+    public function getAccountingCost(): ?string
     {
         return $this->accountingCost;
     }
@@ -228,7 +228,7 @@ class InvoiceLine implements XmlSerializable
      * @param string|null $accountingCost
      * @return InvoiceLine
      */
-    public function setAccountingCost(null|string $accountingCost): self
+    public function setAccountingCost(?string $accountingCost): self
     {
         $this->accountingCost = $accountingCost;
         return $this;
@@ -261,8 +261,8 @@ class InvoiceLine implements XmlSerializable
 
         $writer->write([
             [
-                'name' => Schema::CBC .
-                    ($this->isCreditNoteLine ? 'CreditedQuantity' : 'InvoicedQuantity'),
+                'name' => Schema::CBC
+                    . ($this->isCreditNoteLine ? 'CreditedQuantity' : 'InvoicedQuantity'),
                 'value' => number_format($this->invoicedQuantity, 2, '.', ''),
                 'attributes' => $invoicedQuantityAttributes,
             ],

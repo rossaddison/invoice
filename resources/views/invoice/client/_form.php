@@ -256,8 +256,8 @@ echo Field::date($form, 'client_birthdate')
     'role' => 'presentation',
     'autocomplete' => 'off',
 ])
-->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate() ?
-                                $form->getClient_birthdate()->format('Y-m-d') : ''))
+->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate()
+                                ? $form->getClient_birthdate()->format('Y-m-d') : ''))
 ->required(false);
 ?>    
             <?= Field::number($form, 'client_age')

@@ -44,10 +44,10 @@ class InvoiceHelper
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
                       . 'Asset'
-                      . DIRECTORY_SEPARATOR .
-                      'core'
-                      . DIRECTORY_SEPARATOR .
-                      'img']);
+                      . DIRECTORY_SEPARATOR
+                      . 'core'
+                      . DIRECTORY_SEPARATOR
+                      . 'img']);
         if (!empty($this->s->getSetting('invoice_logo'))) {
             return '<img src="file://' . (string) getcwd() . $aliases->get('@img') . $this->s->getSetting('invoice_logo') . '" id="invoice-logo">';
         }

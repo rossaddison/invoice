@@ -433,8 +433,8 @@ class PeppolHelper
             if ($path_info_extension === 'pdf') {
                 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AdditionalDocumentReference/
                 // $inv_attachment->getId() => upload repository id
-                $attachments[$inv_attachment->getId()] = //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AdditionalDocumentReference/cac-Attachment/cac-ExternalReference/
-                  new Attachment(
+                $attachments[$inv_attachment->getId()] //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AdditionalDocumentReference/cac-Attachment/cac-ExternalReference/
+                  = new Attachment(
                       // 'filePath' used to generate file_contents
                       $target_path_with_filename,
                       // see Invoice/Ubl/Attachment
@@ -976,7 +976,7 @@ class PeppolHelper
      * @param DelRepo $delRepo
      * @return DateTime|null
      */
-    public function ActualDeliveryDate(Inv $invoice, DelRepo $delRepo): DateTime|null
+    public function ActualDeliveryDate(Inv $invoice, DelRepo $delRepo): ?DateTime
     {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -1089,18 +1089,18 @@ class PeppolHelper
                                         ['name' => "{$a}Item", 'value' => [
                                             ['name' => "{$b}Description", 'value' => $item->getDescription()],
                                             ['name' => "{$b}Name", 'value' => $item->getName()],
-                                            ['name' => "{$a}BuyersItemIdentification", 'value' =>
-                                              [
+                                            ['name' => "{$a}BuyersItemIdentification", 'value'
+                                              => [
                                                   ['name' => "{$b}ID", 'value' => $peppol_po_itemid],
                                               ],
                                             ],
-                                            ['name' => "{$a}SellersItemIdentification", 'value' =>
-                                              [
+                                            ['name' => "{$a}SellersItemIdentification", 'value'
+                                              => [
                                                   ['name' => "{$b}ID", 'value' => $item->getProduct()?->getProduct_sku()],
                                               ],
                                             ],
-                                            ['name' => "{$a}StandardItemIdentification", 'value' =>
-                                              [
+                                            ['name' => "{$a}StandardItemIdentification", 'value'
+                                              => [
                                                   ['name' => "{$b}ID", 'value' => $item->getProduct()?->getProduct_sii_id(),
                                                       'attributes' => [
                                                           'schemeID' => $item->getProduct()?->getProduct_sii_schemeid(),
@@ -1112,8 +1112,8 @@ class PeppolHelper
                                                 ['name' => "{$b}IdentificationCode", 'value' => $item->getProduct()?->getProduct_country_of_origin_code()],
                                             ],
                                             ],
-                                            ['name' => "{$a}CommodityClassification", 'value' =>
-                                              [
+                                            ['name' => "{$a}CommodityClassification", 'value'
+                                              => [
                                                   ['name' => "{$b}ItemClassificationCode", 'value' => $item->getProduct()?->getProduct_icc_id(),
                                                       'attributes' => [
                                                           'listID' => $item->getProduct()?->getProduct_icc_listid(),
@@ -1122,32 +1122,32 @@ class PeppolHelper
                                                   ],
                                               ],
                                             ],
-                                            ['name' => "{$a}ClassifiedTaxCategory", 'value' =>
-                                              [
+                                            ['name' => "{$a}ClassifiedTaxCategory", 'value'
+                                              => [
                                                   ['name' => "{$b}ID", 'value' => $item->getTaxRate()?->getPeppolTaxRateCode()],
                                                   ['name' => "{$b}Percent", 'value' => $item->getTaxRate()?->getTaxRatePercent()],
-                                                  ['name' => "{$a}TaxScheme", 'value' =>
-                                                    [
+                                                  ['name' => "{$a}TaxScheme", 'value'
+                                                    => [
                                                         ['name' => "{$b}ID", 'value' => 'VAT'],
                                                     ],
                                                   ],
                                               ],
                                             ],
                                         ],
-                                            ['name' => "{$a}AdditionalItemProperty", 'value' =>
-                                              [
+                                            ['name' => "{$a}AdditionalItemProperty", 'value'
+                                              => [
                                                   ['name' => "{$b}Name", 'value' => $item->getProduct()?->getProduct_additional_item_property_name()],
                                                   ['name' => "{$b}Value", 'value' => $item->getProduct()?->getProduct_additional_item_property_value()],
                                               ],
                                             ],
                                         ],
-                                        ['name' => "{$a}Price", 'value' =>
-                                          [
+                                        ['name' => "{$a}Price", 'value'
+                                          => [
                                               ['name' => "{$b}PriceAmount", 'value' => $this->currency_converter($price), 'attributes' => ['currencyID' => $this->s->getSetting('currency_code_to')]],
                                               ['name' => "{$b}BaseQuantity", 'value' => $item->getQuantity(), 'attributes' => ['unitCode' => $unit_peppol->getCode()]],
                                               // This is an allowance/discount that is specific to price
-                                              ['name' => "{$a}AllowanceCharge", 'value' =>
-                                                [
+                                              ['name' => "{$a}AllowanceCharge", 'value'
+                                                => [
                                                     // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Price/cac-AllowanceCharge/cbc-ChargeIndicator/
                                                     // Mandatory false:  discount on the price => An allowance or discount => ChargeIndicator = false
                                                     // If there is a reduction of the price, the discount must be shown here
@@ -1261,7 +1261,7 @@ class PeppolHelper
      * @param ContractRepo $contractRepo
      * @return string|null
      */
-    public function ContractDocumentReference(Inv $invoice, ContractRepo $contractRepo): string|null
+    public function ContractDocumentReference(Inv $invoice, ContractRepo $contractRepo): ?string
     {
         $contract_id = $invoice->getContract_id();
         $contract = $contractRepo->repoContractquery($contract_id);
@@ -1276,7 +1276,7 @@ class PeppolHelper
      * @param DelRepo $delRepo
      * @return Party|null
      */
-    public function DeliveryParty(Inv $invoice, DelRepo $delRepo, DelPartyRepo $delpartyRepo): Party|null
+    public function DeliveryParty(Inv $invoice, DelRepo $delRepo, DelPartyRepo $delpartyRepo): ?Party
     {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -1326,7 +1326,7 @@ class PeppolHelper
      * @throws PeppolSalesOrderItemNotExistException
      * @return string|null
      */
-    private function Peppol_po_itemid(InvItem $item, SOIR $soiR): string|null
+    private function Peppol_po_itemid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSo_item_id();
         if ($sales_order_item_id) {
@@ -1352,7 +1352,7 @@ class PeppolHelper
      * @throws PeppolSalesOrderItemNotExistException
      * @return string|null
      */
-    private function Peppol_po_lineid(InvItem $item, SOIR $soiR): string|null
+    private function Peppol_po_lineid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSo_item_id();
         if ($sales_order_item_id) {
@@ -1382,8 +1382,8 @@ class PeppolHelper
         $supplier_assigned_account_id = '';
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery((string) $client->getClient_id());
-            $supplier_assigned_account_id = null !== $client_peppol ? $client_peppol->getSupplierAssignedAccountId() :
-              throw new PeppolClientIdNotFoundException($this->t);
+            $supplier_assigned_account_id = null !== $client_peppol ? $client_peppol->getSupplierAssignedAccountId()
+              : throw new PeppolClientIdNotFoundException($this->t);
         } else {
             throw new PeppolClientNotFoundException($this->t);
         }

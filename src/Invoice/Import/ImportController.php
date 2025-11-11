@@ -60,7 +60,7 @@ final class ImportController extends BaseController
         $this->trR = $trR;
     }
 
-    private function invoiceplaneConnected(): Connection|null
+    private function invoiceplaneConnected(): ?Connection
     {
         $settingInvoiceplaneName = $this->sR->getSetting('invoiceplane_database_name');
         $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');

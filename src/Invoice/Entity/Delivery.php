@@ -53,12 +53,12 @@ class Delivery
         $this->end_date = new DateTimeImmutable(date('Y-m-t'));
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDelivery_location(): DeliveryLocation|null
+    public function getDelivery_location(): ?DeliveryLocation
     {
         return $this->delivery_location;
     }
@@ -68,7 +68,7 @@ class Delivery
         $this->id = $id;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
@@ -78,7 +78,7 @@ class Delivery
         $this->inv_id = $inv_id;
     }
 
-    public function getInv_item_id(): int|null
+    public function getInv_item_id(): ?int
     {
         return $this->inv_item_id;
     }
@@ -88,7 +88,7 @@ class Delivery
         $this->inv_item_id = $inv_item_id;
     }
 
-    public function getStart_date(): null|DateTimeImmutable
+    public function getStart_date(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->start_date */
         return $this->start_date;
@@ -99,7 +99,7 @@ class Delivery
         $this->start_date = $start_date;
     }
 
-    public function getActual_delivery_date(): null|DateTimeImmutable
+    public function getActual_delivery_date(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->actual_delivey_date */
         return $this->actual_delivery_date;
@@ -110,7 +110,7 @@ class Delivery
         $this->actual_delivery_date = $actual_delivery_date;
     }
 
-    public function getEnd_date(): null|DateTimeImmutable
+    public function getEnd_date(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->end_date */
         return $this->end_date;

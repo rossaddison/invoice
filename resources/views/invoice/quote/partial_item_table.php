@@ -190,9 +190,9 @@ foreach ($quoteItems as $item) {
                         <b>
                             <div class="input-group">
                                 
-                        <?php echo $count . '-' . $item->getQuote_id() . '-' . $item->getId() . '-' .
-        ($productId > 0 ? $productRef : '') .
-        ($taskId > 0 ? $taskRef : ''); ?>
+                        <?php echo $count . '-' . $item->getQuote_id() . '-' . $item->getId() . '-'
+        . ($productId > 0 ? $productRef : '')
+        . ($taskId > 0 ? $taskRef : ''); ?>
                                 
                             </div>
                         </b>                           

@@ -92,9 +92,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('sumex/index'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 /**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */

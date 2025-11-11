@@ -126,7 +126,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoClientquery_orig(string $id): Client|null
+    public function repoClientquery_orig(string $id): ?Client
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -170,7 +170,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function withName(string $client_name): Client|null
+    public function withName(string $client_name): ?Client
     {
         $query = $this
             ->select()

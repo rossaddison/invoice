@@ -97,20 +97,20 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
             <tr>
                 <td><?php echo $translator->translate('date.issued') . ':'; ?></td>
                      
-                <td><?php echo Html::encode(!is_string($dateCreated = $inv->getDate_created()) ?
-                                               $dateCreated->format('Y-m-d') : ''); ?></td>
+                <td><?php echo Html::encode(!is_string($dateCreated = $inv->getDate_created())
+                                               ? $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
             <?php if ($vat === '1') { ?>
             <tr>
                 <td><?php echo $translator->translate('date.supplied') . ':'; ?></td>
-                <td><?php echo Html::encode(!is_string($dateSupplied = $inv->getDate_supplied()) ?
-                                               $dateSupplied->format('Y-m-d') : ''); ?></td>
+                <td><?php echo Html::encode(!is_string($dateSupplied = $inv->getDate_supplied())
+                                               ? $dateSupplied->format('Y-m-d') : ''); ?></td>
             </tr>
             <?php } ?>
             <tr>
                 <td><?php echo $translator->translate('expires') . ': '; ?></td>
-                <td><?php echo Html::encode(!is_string($dateDueNext = $inv->getDate_due()) ?
-                                               $dateDueNext->format('Y-m-d') : ''); ?></td>
+                <td><?php echo Html::encode(!is_string($dateDueNext = $inv->getDate_due())
+                                               ? $dateDueNext->format('Y-m-d') : ''); ?></td>
             </tr>
             <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
         </table>
@@ -171,8 +171,8 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
                                 $quantity = $item->getQuantity();
                 $price = $item->getPrice();
                 $taxPercent = ($item->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100;
-                echo (null !== $quantity && null !== $price && $taxPercent) ?
-                    Html::encode($s->format_currency($quantity * $price * $taxPercent))
+                echo (null !== $quantity && null !== $price && $taxPercent)
+                    ? Html::encode($s->format_currency($quantity * $price * $taxPercent))
                 : Html::encode($s->format_currency(0.00));
                 ?>
                         </td>    

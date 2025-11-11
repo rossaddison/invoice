@@ -512,11 +512,11 @@ final class SalesOrderController extends BaseController
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if ($so) {
                 $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(), $stream, $custom, $salesorder_amount, $salesorder_custom_values, $cR, $cvR, $cfR, $dlR, $soiR, $soiaR, $soR, $sotrR, $uiR, $this->viewRenderer, $this->translator);
-                $parameters = ($include == '1' ?
-                [
+                $parameters = ($include == '1'
+                ? [
                     'success' => 1,
-                ] :
-                [
+                ]
+                : [
                     'success' => 0,
                 ]);
                 return $this->factory->createResponse(Json::encode($parameters));
@@ -639,7 +639,7 @@ final class SalesOrderController extends BaseController
     * @param SalesOrderRepository $salesorderRepository
     * @return SalesOrder|null
     */
-    private function salesorder(CurrentRoute $currentRoute, SoR $salesorderRepository): SalesOrder|null
+    private function salesorder(CurrentRoute $currentRoute, SoR $salesorderRepository): ?SalesOrder
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -713,9 +713,9 @@ final class SalesOrderController extends BaseController
             ];
             $inv = new Inv();
             $form = new InvForm($inv);
-            if ($formHydrator->populateAndValidate($form, $inv_body) &&
+            if ($formHydrator->populateAndValidate($form, $inv_body)
                   // Salesorder has not been copied before:  inv_id = 0
-                  ($so->getInv_id() === (string) 0)
+                  && ($so->getInv_id() === (string) 0)
             ) {
                 /**
                  * @var string $inv_body['client_id']
@@ -817,7 +817,7 @@ final class SalesOrderController extends BaseController
      * @param SOTRR $sotrR
      * @param FormHydrator $formHydrator
      */
-    private function so_to_invoice_so_tax_rates(string $so_id, string|null $inv_id, SoTRR $sotrR, FormHydrator $formHydrator): void
+    private function so_to_invoice_so_tax_rates(string $so_id, ?string $inv_id, SoTRR $sotrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the salesorder
         $so_tax_rates = $sotrR->repoSalesOrderquery($so_id);
@@ -846,7 +846,7 @@ final class SalesOrderController extends BaseController
      */
     private function so_to_invoice_so_custom(
         string $so_id,
-        string|null $inv_id,
+        ?string $inv_id,
         SoCR $socR,
         CFR $cfR,
         FormHydrator $formHydrator,
@@ -889,7 +889,7 @@ final class SalesOrderController extends BaseController
      * @param SOAR $soaR
      * @param FormHydrator $formHydrator
      */
-    private function so_to_invoice_so_amount(string $so_id, string|null $inv_id, SoAR $soaR, FormHydrator $formHydrator): void
+    private function so_to_invoice_so_amount(string $so_id, ?string $inv_id, SoAR $soaR, FormHydrator $formHydrator): void
     {
         $so_amount = $soaR->repoSalesOrderquery($so_id);
         $inv_amount = [];

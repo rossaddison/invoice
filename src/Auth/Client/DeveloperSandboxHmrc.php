@@ -37,8 +37,8 @@ final class DeveloperSandboxHmrc extends OAuth2
         ],
     ];
 
-    private array $authorizedIpAddressValidatorEndPoints =
-        [
+    private array $authorizedIpAddressValidatorEndPoints
+        = [
             'db-ip' => 'https://api.db-ip.com/v2/free/self',
             'cloudflare' => 'https://www.cloudflare.com/cdn-cgi/trace',
             'ipify' => 'https://api.ipify.org',

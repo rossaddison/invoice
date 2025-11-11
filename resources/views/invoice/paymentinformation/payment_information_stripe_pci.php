@@ -53,10 +53,10 @@ use Yiisoft\Html\Html;
                 </div>
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #
-                    <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
-                     Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
-                     Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
-                     $numberHelper->format_currency($balance); ?>
+                    <?= Html::encode($invoice->getNumber() ?? '') . ' => '
+                     . Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' '
+                     . Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' '
+                     . $numberHelper->format_currency($balance); ?>
                 </div>    
             </div>     
         </h2>
@@ -137,8 +137,8 @@ use Yiisoft\Html\Html;
 // https://stripe.com/docs/payments/quickstart
 ?>
 <?php // This is your test publishable API key.
-$js18 =
-'const stripe = Stripe("' . $pci_client_publishable_key . '");'
+$js18
+= 'const stripe = Stripe("' . $pci_client_publishable_key . '");'
 . 'let elements;'
 . 'const items = [' . $json_encoded_items . '];'
 . 'initialize();'

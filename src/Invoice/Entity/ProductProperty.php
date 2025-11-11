@@ -37,7 +37,7 @@ class ProductProperty
         $this->product_id = $product_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -47,7 +47,7 @@ class ProductProperty
         $this->name = $name;
     }
 
-    public function getValue(): string|null
+    public function getValue(): ?string
     {
         return $this->value;
     }

@@ -273,7 +273,7 @@ final class ClientPeppolController extends BaseController
      * @param ClientPeppolRepository $clientpeppolRepository
      * @return ClientPeppol|null
      */
-    private function clientpeppol(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository): ClientPeppol|null
+    private function clientpeppol(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository): ?ClientPeppol
     {
         $client_id = $currentRoute->getArgument('client_id');
         if (null !== $client_id) {

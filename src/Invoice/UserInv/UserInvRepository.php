@@ -80,7 +80,7 @@ final class UserInvRepository extends Select\Repository
         );
     }
 
-    public function repoUserInvquery(string $id): UserInv|null
+    public function repoUserInvquery(string $id): ?UserInv
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -94,7 +94,7 @@ final class UserInvRepository extends Select\Repository
         return  $query->count();
     }
 
-    public function repoUserInvUserIdquery(string $user_id): UserInv|null
+    public function repoUserInvUserIdquery(string $user_id): ?UserInv
     {
         $query = $this->select()
                       ->where(['user_id' => $user_id]);

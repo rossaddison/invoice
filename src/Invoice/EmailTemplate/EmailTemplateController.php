@@ -316,8 +316,8 @@ final class EmailTemplateController extends BaseController
         /** @var int $get_content['email_template_id'] */
         $email_template_id = $get_content['email_template_id'];
         $email_template = $etR->repoEmailTemplateCount((string) $email_template_id) > 0 ? $etR->repoEmailTemplatequery((string) $email_template_id) : null;
-        return $this->factory->createResponse(Json::htmlEncode($email_template ?
-            ['email_template' => [
+        return $this->factory->createResponse(Json::htmlEncode($email_template
+            ? ['email_template' => [
                 'email_template_body' => $email_template->getEmail_template_body(),
                 'email_template_subject' => $email_template->getEmail_template_subject(),
                 'email_template_from_name' => $email_template->getEmail_template_from_name(),
@@ -327,8 +327,7 @@ final class EmailTemplateController extends BaseController
                 'email_template_pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
             ],
                 'success' => 1]
-            :
-            ['success' => 0]));
+            : ['success' => 0]));
     }
 
     /**
@@ -388,7 +387,7 @@ final class EmailTemplateController extends BaseController
         return $canEdit;
     }
 
-    private function emailtemplate(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): EmailTemplate|null
+    private function emailtemplate(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): ?EmailTemplate
     {
         $email_template_id = $currentRoute->getArgument('email_template_id');
         if (null !== $email_template_id) {

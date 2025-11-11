@@ -53,17 +53,17 @@ final class SalesOrderTruncate3Command extends Command
 
         if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderItemAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderAmount::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderItem::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderItem::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(SalesOrderTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(SalesOrderTaxRate::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(SalesOrder::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {

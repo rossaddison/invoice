@@ -198,7 +198,7 @@ final class TaxRateController extends BaseController
      * @param TaxRateRepository $taxRateRepository
      * @return TaxRate|null
      */
-    private function taxrate(CurrentRoute $currentRoute, TaxRateRepository $taxRateRepository): TaxRate|null
+    private function taxrate(CurrentRoute $currentRoute, TaxRateRepository $taxRateRepository): ?TaxRate
     {
         $tax_rate_id = $currentRoute->getArgument('tax_rate_id');
         if (null !== $tax_rate_id) {

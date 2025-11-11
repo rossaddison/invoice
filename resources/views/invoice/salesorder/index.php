@@ -49,8 +49,8 @@ $toolbar = Div::tag();
 // see SalesOrder/SalesOrderRepository getStatuses function
 // && Invoice\Asset\invoice\css\style.css & yii3i.css
 
-$statusBar =
-    Div::tag()
+$statusBar
+    = Div::tag()
         ->addClass('btn-group index-options')
         ->content(
             Html::a(
@@ -178,16 +178,16 @@ $columns = [
     new DataColumn(
         'quote_id',
         content: static function (SalesOrder $model) use ($urlGenerator): string|A {
-            return ($model->getQuote_id() ?
-            Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']) : '');
+            return ($model->getQuote_id()
+            ? Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']) : '');
         },
     ),
     new DataColumn(
         'inv_id',
         content: static function (SalesOrder $model) use ($urlGenerator): string|A {
             $invId = $model->getInv_id();
-            return (null !== $invId ?
-            Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none']) : '');
+            return (null !== $invId
+            ? Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none']) : '');
         },
     ),
     new DataColumn(
@@ -197,8 +197,8 @@ $columns = [
             /**
              * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
              */
-            return $model->getDate_created() instanceof \DateTimeImmutable ?
-                    $model->getDate_created()->format('Y-m-d')
+            return $model->getDate_created() instanceof \DateTimeImmutable
+                    ? $model->getDate_created()->format('Y-m-d')
                     : '';
         },
         encodeContent: true,
@@ -240,10 +240,10 @@ $grid_summary =  $s->grid_summary(
     (string) $so_statuses[$status]['label'],
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open() .
-    $statusBar .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open()
+    . $statusBar
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

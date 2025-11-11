@@ -345,7 +345,7 @@ class DateHelper
      * @param mixed $input
      * @return DateTime|false|string|null
      */
-    public function get_or_set_with_style(mixed $input): string|false|null|DateTime
+    public function get_or_set_with_style(mixed $input): string|false|DateTime|null
     {
         /** @var \DateTimeImmutable|mixed|null $date */
         $date = $input ?? null;

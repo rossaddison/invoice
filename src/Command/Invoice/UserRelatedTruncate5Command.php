@@ -53,17 +53,17 @@ final class UserRelatedTruncate5Command extends Command
 
         if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(UserClient::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(UserClient::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(UserInv::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(UserInv::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Token::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(Token::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(Identity::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(Identity::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(User::class)->findAll()) ? $findAll : iterator_to_array($findAll))) {
             $io->success('Done');

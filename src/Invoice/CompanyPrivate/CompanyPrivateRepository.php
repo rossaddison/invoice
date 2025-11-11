@@ -82,7 +82,7 @@ final class CompanyPrivateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyPrivatequery(string $id): CompanyPrivate|null
+    public function repoCompanyPrivatequery(string $id): ?CompanyPrivate
     {
         $query = $this->select()->load('company')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
@@ -93,7 +93,7 @@ final class CompanyPrivateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyquery(string $id): CompanyPrivate|null
+    public function repoCompanyquery(string $id): ?CompanyPrivate
     {
         $query = $this->select()
                       ->load('company')

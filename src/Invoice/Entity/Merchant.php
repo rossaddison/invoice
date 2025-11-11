@@ -52,7 +52,7 @@ class Merchant
         $this->inv_id = $inv_id;
     }
 
-    public function getSuccessful(): bool|null
+    public function getSuccessful(): ?bool
     {
         return $this->successful;
     }
