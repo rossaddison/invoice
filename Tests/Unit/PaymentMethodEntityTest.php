@@ -9,6 +9,10 @@ use Codeception\Test\Unit;
 
 final class PaymentMethodEntityTest extends Unit
 {
+    public string $creditCard = 'Credit Card';
+    
+    public string $bankTransfer = 'Bank Transfer';
+    
     public function testConstructorWithDefaults(): void
     {
         $paymentMethod = new PaymentMethod();
@@ -20,10 +24,10 @@ final class PaymentMethodEntityTest extends Unit
 
     public function testConstructorWithAllParameters(): void
     {
-        $paymentMethod = new PaymentMethod(1, 'Credit Card', false);
+        $paymentMethod = new PaymentMethod(1, $this->creditCard, false);
         
         $this->assertSame('1', $paymentMethod->getId());
-        $this->assertSame('Credit Card', $paymentMethod->getName());
+        $this->assertSame($this->creditCard, $paymentMethod->getName());
         $this->assertFalse($paymentMethod->getActive());
     }
 
@@ -38,9 +42,9 @@ final class PaymentMethodEntityTest extends Unit
     public function testNameSetterAndGetter(): void
     {
         $paymentMethod = new PaymentMethod();
-        $paymentMethod->setName('Bank Transfer');
+        $paymentMethod->setName($this->bankTransfer);
         
-        $this->assertSame('Bank Transfer', $paymentMethod->getName());
+        $this->assertSame($this->bankTransfer, $paymentMethod->getName());
     }
 
     public function testActiveSetterAndGetter(): void
@@ -56,12 +60,12 @@ final class PaymentMethodEntityTest extends Unit
 
     public function testCommonPaymentMethods(): void
     {
-        $creditCard = new PaymentMethod(1, 'Credit Card', true);
-        $this->assertSame('Credit Card', $creditCard->getName());
+        $creditCard = new PaymentMethod(1, $this->creditCard, true);
+        $this->assertSame($this->creditCard, $creditCard->getName());
         $this->assertTrue($creditCard->getActive());
 
-        $bankTransfer = new PaymentMethod(2, 'Bank Transfer', true);
-        $this->assertSame('Bank Transfer', $bankTransfer->getName());
+        $bankTransfer = new PaymentMethod(2, $this->bankTransfer, true);
+        $this->assertSame($this->bankTransfer, $bankTransfer->getName());
         $this->assertTrue($bankTransfer->getActive());
 
         $paypal = new PaymentMethod(3, 'PayPal', true);

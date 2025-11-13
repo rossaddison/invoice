@@ -132,23 +132,26 @@ use Yiisoft\Html\Html;
 
                 <table class="table table-hover table-bordered table-condensed no-margin">
                     <?php
-                        /**
-                         * @var array $total
-                         */
-                        foreach ($invoice_status_totals as $total) { ?>
+                        $i = 1;
+/**
+ * @var array $total
+ */
+foreach ($invoice_status_totals as $total) { ?>
                         <tr>
+                            <th id="total-" . <?= $i; ?>></th>
                             <td>
                                 <a href="<?= $urlGenerator->generate('inv/index', ['page' => 1, 'status' => (int) $total['href']]); ?>">
                                     <?php echo (string) $total['label']; ?>
                                 </a>
                             </td>
                             <td class="amount">
-                        <span class="<?php echo (string) $total['class']; ?>">
-                            <?= $s->format_currency($total['sum_total']); ?>
-                        </span>
+                                <span class="<?php echo (string) $total['class']; ?>">
+                                    <?= $s->format_currency($total['sum_total']); ?>
+                                </span>
                             </td>
                         </tr>
-                    <?php } ?>
+                    <?php $i = $i + 1;
+} ?>
                 </table>
             </div>
         </div>
@@ -175,10 +178,10 @@ use Yiisoft\Html\Html;
                         </thead>
                         <tbody>
                         <?php
-                            /**
-                             * @var App\Invoice\Entity\Quote $quote
-                             */
-                            foreach ($quotes as $quote) { ?>
+    /**
+     * @var App\Invoice\Entity\Quote $quote
+     */
+    foreach ($quotes as $quote) { ?>
                             <tr>
                                 <td>
                                 <?php if (null !== $statusId = $quote->getStatus_id()) { ?>    

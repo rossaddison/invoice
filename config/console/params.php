@@ -9,6 +9,6 @@ return [
         'name' => Application::NAME,
         'version' => Application::VERSION,
         'autoExit' => false,
-        'commands' => require __DIR__ . '/commands.php',
+        'commands' => require_once __DIR__ . '/commands.php',
     ],
 ];

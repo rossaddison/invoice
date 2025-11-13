@@ -9,6 +9,8 @@ use Codeception\Test\Unit;
 
 class GentorEntityTest extends Unit
 {
+    public string $invoiceViews = 'invoice/views';
+    
     public function testConstructorWithDefaults(): void
     {
         $gentor = new Gentor();
@@ -142,8 +144,8 @@ class GentorEntityTest extends Unit
     {
         $gentor = new Gentor();
         
-        $gentor->setController_layout_dir('invoice/views');
-        $this->assertSame('invoice/views', $gentor->getController_layout_dir());
+        $gentor->setController_layout_dir($this->invoiceViews);
+        $this->assertSame($this->invoiceViews, $gentor->getController_layout_dir());
         
         $gentor->setController_layout_dir('quote/views');
         $this->assertSame('quote/views', $gentor->getController_layout_dir());
@@ -333,7 +335,7 @@ class GentorEntityTest extends Unit
         $gentor->setSmall_singular_name('invoice');
         $gentor->setSmall_plural_name('invoices');
         $gentor->setNamespace_path('App\\Invoice');
-        $gentor->setController_layout_dir('invoice/views');
+        $gentor->setController_layout_dir($this->invoiceViews);
         $gentor->setController_layout_dir_dot_path('invoice.layout.main');
         $gentor->setPre_entity_table('inv_');
         $gentor->setCreated_include(true);
@@ -348,7 +350,7 @@ class GentorEntityTest extends Unit
         $this->assertSame('invoice', $gentor->getSmall_singular_name());
         $this->assertSame('invoices', $gentor->getSmall_plural_name());
         $this->assertSame('App\\Invoice', $gentor->getNamespace_path());
-        $this->assertSame('invoice/views', $gentor->getController_layout_dir());
+        $this->assertSame($this->invoiceViews, $gentor->getController_layout_dir());
         $this->assertSame('invoice.layout.main', $gentor->getController_layout_dir_dot_path());
         $this->assertSame('inv_', $gentor->getPre_entity_table());
         $this->assertTrue($gentor->isCreated_include());

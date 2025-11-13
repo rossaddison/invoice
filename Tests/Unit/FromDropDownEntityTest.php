@@ -9,6 +9,8 @@ use Codeception\Test\Unit;
 
 final class FromDropDownEntityTest extends Unit
 {
+    public string $testExampleCom = 'test@example.com';
+    
     public function testConstructorWithDefaults(): void
     {
         $fromDropDown = new FromDropDown();
@@ -21,10 +23,10 @@ final class FromDropDownEntityTest extends Unit
 
     public function testConstructorWithAllParameters(): void
     {
-        $fromDropDown = new FromDropDown(1, 'test@example.com', true, true);
+        $fromDropDown = new FromDropDown(1, $this->testExampleCom, true, true);
         
         $this->assertSame('1', $fromDropDown->getId());
-        $this->assertSame('test@example.com', $fromDropDown->getEmail());
+        $this->assertSame($this->testExampleCom, $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
         $this->assertTrue($fromDropDown->getDefault_email());
     }
@@ -134,7 +136,7 @@ final class FromDropDownEntityTest extends Unit
 
     public function testIdStringConversion(): void
     {
-        $fromDropDown = new FromDropDown(123, 'test@example.com', false, false);
+        $fromDropDown = new FromDropDown(123, $this->testExampleCom, false, false);
         
         // Verify ID getter returns string even though setter accepts int
         $this->assertIsString($fromDropDown->getId());
@@ -143,7 +145,7 @@ final class FromDropDownEntityTest extends Unit
 
     public function testBooleanProperties(): void
     {
-        $fromDropDown = new FromDropDown(1, 'test@example.com', true, false);
+        $fromDropDown = new FromDropDown(1, $this->testExampleCom, true, false);
         
         // Verify boolean properties return actual booleans
         $this->assertIsBool($fromDropDown->getInclude());

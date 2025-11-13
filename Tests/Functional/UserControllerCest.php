@@ -8,11 +8,6 @@ use Tests\Support\FunctionalTester;
 
 class UserControllerCest
 {
-    public function _before(FunctionalTester $I): void
-    {
-        // Setup before each test if needed
-    }
-
     public function testIndexPageLoads(FunctionalTester $I): void
     {
         $I->wantTo('see the user index page loads');

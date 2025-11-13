@@ -12,6 +12,8 @@ use PHPUnit\Framework\TestCase;
 
 class CompanyPrivateEntityTest extends TestCase
 {
+    public string $atUto8 = 'AT U12345678';
+    
     public function testConstructorWithDefaults(): void
     {
         $companyPrivate = new CompanyPrivate();
@@ -377,7 +379,7 @@ class CompanyPrivateEntityTest extends TestCase
             'ES12345678Z',
             'NL123456789B01',
             'BE0123456789',
-            'AT U12345678'
+            $this->atUto8
         ];
         
         foreach ($vatFormats as $vatId) {
@@ -407,11 +409,11 @@ class CompanyPrivateEntityTest extends TestCase
     public function testSpecialCharactersInFields(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setVat_id('AT U12345678');
+        $companyPrivate->setVat_id($this->atUto8);
         $companyPrivate->setTax_code('TAX-CODE-123');
         $companyPrivate->setLogo_filename('logo-with-dashes.png');
         
-        $this->assertSame('AT U12345678', $companyPrivate->getVat_id());
+        $this->assertSame($this->atUto8, $companyPrivate->getVat_id());
         $this->assertSame('TAX-CODE-123', $companyPrivate->getTax_code());
         $this->assertSame('logo-with-dashes.png', $companyPrivate->getLogo_filename());
     }

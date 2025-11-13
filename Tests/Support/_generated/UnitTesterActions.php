@@ -234,7 +234,7 @@ trait UnitTesterActions
      * Asserts that a haystack contains only values of a given type.
      * @see \Codeception\Module\AbstractAsserts::assertContainsOnly()
      */
-    public function assertContainsOnly(string $type, iterable $haystack, ?bool $isNativeType = NULL, string $message = "") {
+    public function assertContainsOnly(string $type, iterable $haystack, ?bool $isNativeType = null, string $message = "") {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('assertContainsOnly', func_get_args()));
     }
 
@@ -1193,7 +1193,7 @@ trait UnitTesterActions
      * Asserts that a haystack does not contain only values of a given type.
      * @see \Codeception\Module\AbstractAsserts::assertNotContainsOnly()
      */
-    public function assertNotContainsOnly(string $type, iterable $haystack, ?bool $isNativeType = NULL, string $message = "") {
+    public function assertNotContainsOnly(string $type, iterable $haystack, ?bool $isNativeType = null, string $message = "") {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('assertNotContainsOnly', func_get_args()));
     }
 

@@ -11,6 +11,18 @@ use PHPUnit\Framework\TestCase;
 
 class DeliveryLocationEntityTest extends TestCase
 {
+    public string $mainWarehouse = 'Main Warehouse';
+    
+    public string $seqNumbers = '1234567890123';
+    
+    public string $unitedStates = 'United States';
+    
+    public string $testCity = 'Test City';
+    
+    public string $oneToFive = '12345';
+    
+    public string $testCountry = 'Test Country';
+    
     public function testConstructorWithDefaults(): void
     {
         $deliveryLocation = new DeliveryLocation();
@@ -37,7 +49,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation(
             id: 1,
             client_id: 123,
-            name: 'Main Warehouse',
+            name: $this->mainWarehouse,
             building_number: '10A',
             address_1: '123 Industrial Drive',
             address_2: 'Suite 200',
@@ -45,13 +57,13 @@ class DeliveryLocationEntityTest extends TestCase
             state: 'CA',
             zip: '90210',
             country: 'USA',
-            global_location_number: '1234567890123',
+            global_location_number: $this->seqNumbers,
             electronic_address_scheme: 'GLN'
         );
         
         $this->assertSame(1, $deliveryLocation->getId());
         $this->assertSame('123', $deliveryLocation->getClient_id());
-        $this->assertSame('Main Warehouse', $deliveryLocation->getName());
+        $this->assertSame($this->mainWarehouse, $deliveryLocation->getName());
         $this->assertSame('10A', $deliveryLocation->getBuildingNumber());
         $this->assertSame('123 Industrial Drive', $deliveryLocation->getAddress_1());
         $this->assertSame('Suite 200', $deliveryLocation->getAddress_2());
@@ -59,7 +71,7 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame('CA', $deliveryLocation->getState());
         $this->assertSame('90210', $deliveryLocation->getZip());
         $this->assertSame('USA', $deliveryLocation->getCountry());
-        $this->assertSame('1234567890123', $deliveryLocation->getGlobal_location_number());
+        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobal_location_number());
         $this->assertSame('GLN', $deliveryLocation->getElectronic_address_scheme());
     }
 
@@ -138,9 +150,9 @@ class DeliveryLocationEntityTest extends TestCase
     public function testCountrySetterAndGetter(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setCountry('United States');
+        $deliveryLocation->setCountry($this->unitedStates);
         
-        $this->assertSame('United States', $deliveryLocation->getCountry());
+        $this->assertSame($this->unitedStates, $deliveryLocation->getCountry());
     }
 
     public function testGlobalLocationNumberSetterAndGetter(): void
@@ -193,7 +205,7 @@ class DeliveryLocationEntityTest extends TestCase
     public function testWarehouseLocation(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $deliveryLocation->setName('Main Warehouse');
+        $deliveryLocation->setName($this->mainWarehouse);
         $deliveryLocation->setBuildingNumber('1');
         $deliveryLocation->setAddress_1('100 Industrial Way');
         $deliveryLocation->setCity('Commerce City');
@@ -201,7 +213,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setZip('80022');
         $deliveryLocation->setCountry('USA');
         
-        $this->assertSame('Main Warehouse', $deliveryLocation->getName());
+        $this->assertSame($this->mainWarehouse, $deliveryLocation->getName());
         $this->assertSame('100 Industrial Way', $deliveryLocation->getAddress_1());
         $this->assertSame('Commerce City', $deliveryLocation->getCity());
     }
@@ -215,7 +227,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setCity('Downtown');
         $deliveryLocation->setState('NY');
         $deliveryLocation->setZip('10001');
-        $deliveryLocation->setCountry('United States');
+        $deliveryLocation->setCountry($this->unitedStates);
         
         $this->assertSame('Downtown Store', $deliveryLocation->getName());
         $this->assertSame('567 Main Street', $deliveryLocation->getAddress_1());
@@ -306,11 +318,11 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setBuildingNumber('100');
         $deliveryLocation->setAddress_1('Main Business Street');
         $deliveryLocation->setAddress_2('Unit 5');
-        $deliveryLocation->setCity('Test City');
+        $deliveryLocation->setCity($this->testCity);
         $deliveryLocation->setState('Test State');
-        $deliveryLocation->setZip('12345');
-        $deliveryLocation->setCountry('Test Country');
-        $deliveryLocation->setGlobal_location_number('1234567890123');
+        $deliveryLocation->setZip($this->oneToFive);
+        $deliveryLocation->setCountry($this->testCountry);
+        $deliveryLocation->setGlobal_location_number($this->seqNumbers);
         $deliveryLocation->setElectronic_address_scheme('GLN');
         
         $this->assertSame(1, $deliveryLocation->getId());
@@ -320,11 +332,11 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame('100', $deliveryLocation->getBuildingNumber());
         $this->assertSame('Main Business Street', $deliveryLocation->getAddress_1());
         $this->assertSame('Unit 5', $deliveryLocation->getAddress_2());
-        $this->assertSame('Test City', $deliveryLocation->getCity());
+        $this->assertSame($this->testCity, $deliveryLocation->getCity());
         $this->assertSame('Test State', $deliveryLocation->getState());
-        $this->assertSame('12345', $deliveryLocation->getZip());
-        $this->assertSame('Test Country', $deliveryLocation->getCountry());
-        $this->assertSame('1234567890123', $deliveryLocation->getGlobal_location_number());
+        $this->assertSame($this->oneToFive, $deliveryLocation->getZip());
+        $this->assertSame($this->testCountry, $deliveryLocation->getCountry());
+        $this->assertSame($this->mainWarehouse, $deliveryLocation->getGlobal_location_number());
         $this->assertSame('GLN', $deliveryLocation->getElectronic_address_scheme());
         $this->assertFalse($deliveryLocation->isNewRecord());
     }
@@ -338,11 +350,11 @@ class DeliveryLocationEntityTest extends TestCase
             building_number: '5A',
             address_1: 'Test Street',
             address_2: 'Suite 1',
-            city: 'Test City',
+            city: $this->testCity,
             state: 'TS',
-            zip: '12345',
-            country: 'Test Country',
-            global_location_number: '1234567890123',
+            zip: $this->oneToFive,
+            country: $this->testCountry,
+            global_location_number: $this->seqNumbers,
             electronic_address_scheme: 'GLN'
         );
         
@@ -365,8 +377,8 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         
         // Standard 13-digit GLN
-        $deliveryLocation->setGlobal_location_number('1234567890123');
-        $this->assertSame('1234567890123', $deliveryLocation->getGlobal_location_number());
+        $deliveryLocation->setGlobal_location_number($this->seqNumbers);
+        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobal_location_number());
         
         // Empty GLN
         $deliveryLocation->setGlobal_location_number('');
@@ -423,7 +435,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setName('New Delivery Location');
         $deliveryLocation->setAddress_1('123 New Street');
         $deliveryLocation->setCity('New City');
-        $deliveryLocation->setZip('12345');
+        $deliveryLocation->setZip($this->oneToFive);
         
         // Still new until ID is set
         $this->assertTrue($deliveryLocation->isNewRecord());

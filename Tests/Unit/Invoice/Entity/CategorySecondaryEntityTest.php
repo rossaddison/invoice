@@ -10,6 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 class CategorySecondaryEntityTest extends TestCase
 {
+    public string $desktopComputers = 'Desktop Computers';
+    
+    public string $testCategory = 'Test Category';
+    
     public function testConstructorWithDefaults(): void
     {
         $categorySecondary = new CategorySecondary();
@@ -66,9 +70,9 @@ class CategorySecondaryEntityTest extends TestCase
     public function testNameSetterAndGetter(): void
     {
         $categorySecondary = new CategorySecondary();
-        $categorySecondary->setName('Desktop Computers');
+        $categorySecondary->setName($this->desktopComputers);
         
-        $this->assertSame('Desktop Computers', $categorySecondary->getName());
+        $this->assertSame($this->desktopComputers, $categorySecondary->getName());
     }
 
     public function testCategoryPrimaryRelationship(): void
@@ -146,7 +150,7 @@ class CategorySecondaryEntityTest extends TestCase
         
         $electronicsSubcategories = [
             'Laptops & Notebooks',
-            'Desktop Computers',
+            $this->desktopComputers,
             'Tablets',
             'Smartphones',
             'Computer Monitors',
@@ -362,11 +366,11 @@ class CategorySecondaryEntityTest extends TestCase
         
         $categorySecondary->setId(1);
         $categorySecondary->setCategory_primary_id(100);
-        $categorySecondary->setName('Desktop Computers');
+        $categorySecondary->setName($this->desktopComputers);
         
         $this->assertSame(1, $categorySecondary->getId());
         $this->assertSame(100, $categorySecondary->getCategory_primary_id());
-        $this->assertSame('Desktop Computers', $categorySecondary->getName());
+        $this->assertSame($this->desktopComputers, $categorySecondary->getName());
     }
 
     public function testMethodReturnTypes(): void
@@ -374,7 +378,7 @@ class CategorySecondaryEntityTest extends TestCase
         $categorySecondary = new CategorySecondary(
             id: 1,
             category_primary_id: 100,
-            name: 'Test Category'
+            name: $this->testCategory
         );
         
         $this->assertIsInt($categorySecondary->getId());
@@ -688,9 +692,9 @@ class CategorySecondaryEntityTest extends TestCase
         
         // Electronics -> Computers
         $categorySecondary->setCategory_primary_id(1);
-        $categorySecondary->setName('Desktop Computers');
+        $categorySecondary->setName($this->desktopComputers);
         $this->assertSame(1, $categorySecondary->getCategory_primary_id());
-        $this->assertSame('Desktop Computers', $categorySecondary->getName());
+        $this->assertSame($this->desktopComputers, $categorySecondary->getName());
         
         // Clothing -> Men's Wear
         $categorySecondary->setCategory_primary_id(2);
@@ -720,10 +724,10 @@ class CategorySecondaryEntityTest extends TestCase
         $this->assertSame('', $category2->getName());
         
         // ID and name
-        $category3 = new CategorySecondary(id: 3, name: 'Test Category');
+        $category3 = new CategorySecondary(id: 3, name: $this->testCategory);
         $this->assertSame(3, $category3->getId());
         $this->assertNull($category3->getCategory_primary_id());
-        $this->assertSame('Test Category', $category3->getName());
+        $this->assertSame($this->testCategory, $category3->getName());
         
         // Primary ID and name
         $category4 = new CategorySecondary(category_primary_id: 200, name: 'Another Test');

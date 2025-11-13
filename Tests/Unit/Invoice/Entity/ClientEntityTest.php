@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 final class ClientEntityTest extends TestCase
 {
+    public string $testExampleCom = 'test@example.com';
+    
     public function testConstructorWithDefaults(): void
     {
         $client = new Client();
@@ -123,8 +125,8 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $client->setClient_email('test@example.com');
-        $this->assertSame('test@example.com', $client->getClient_email());
+        $client->setClient_email($this->testExampleCom);
+        $this->assertSame($this->testExampleCom, $client->getClient_email());
         
         $client->setClient_email('');
         $this->assertSame('', $client->getClient_email());
@@ -837,7 +839,7 @@ final class ClientEntityTest extends TestCase
     public function testCompleteClientWorkflow(): void
     {
         // Start with basic client
-        $client = new Client(client_name: 'Test', client_email: 'test@example.com');
+        $client = new Client(client_name: 'Test', client_email: $this->testExampleCom);
         $this->assertTrue($client->isNewRecord());
         
         // Update client information

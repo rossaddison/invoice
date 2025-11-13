@@ -9,6 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 class CategoryPrimaryEntityTest extends TestCase
 {
+    public string $intialCategory = 'Initial Category';
+    
+    public string $updatedCategory = 'Updated Category';
+    
     public function testConstructorWithDefaults(): void
     {
         $categoryPrimary = new CategoryPrimary();
@@ -328,12 +332,12 @@ class CategoryPrimaryEntityTest extends TestCase
 
     public function testCategoryNameOverwriting(): void
     {
-        $categoryPrimary = new CategoryPrimary('Initial Category');
+        $categoryPrimary = new CategoryPrimary($this->initialCategory);
         
-        $this->assertSame('Initial Category', $categoryPrimary->getName());
+        $this->assertSame($this->initialCategory, $categoryPrimary->getName());
         
-        $categoryPrimary->setName('Updated Category');
-        $this->assertSame('Updated Category', $categoryPrimary->getName());
+        $categoryPrimary->setName($this->updatedCategory);
+        $this->assertSame($this->updatedCategory, $categoryPrimary->getName());
         
         $categoryPrimary->setName('Final Category');
         $this->assertSame('Final Category', $categoryPrimary->getName());
@@ -604,15 +608,15 @@ class CategoryPrimaryEntityTest extends TestCase
 
     public function testStateConsistency(): void
     {
-        $categoryPrimary = new CategoryPrimary('Initial Category');
+        $categoryPrimary = new CategoryPrimary($this->initialCategory);
         
         // Verify initial state
-        $this->assertSame('Initial Category', $categoryPrimary->getName());
+        $this->assertSame($this->initialCategory, $categoryPrimary->getName());
         $this->assertNull($categoryPrimary->getId());
         
         // Change name
-        $categoryPrimary->setName('Updated Category');
-        $this->assertSame('Updated Category', $categoryPrimary->getName());
+        $categoryPrimary->setName($this->updatedCategory);
+        $this->assertSame($this->updatedCategory, $categoryPrimary->getName());
         $this->assertNull($categoryPrimary->getId());
         
         // Set empty name

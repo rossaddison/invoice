@@ -9,6 +9,16 @@ use Codeception\Test\Unit;
 
 final class EmailTemplateEntityTest extends Unit
 {
+    public string $invoiceTemplate = 'Invoice Template';
+    
+    public string $quoteTemplate = 'Quote Template';
+    
+    public string $testExampleCom = 'test@example.com';
+    
+    public string $ccTestCom = 'cc@test.com';
+    
+    public string $bccTestCom = 'bcc@test.com';
+    
     public function testConstructorWithDefaults(): void
     {
         $emailTemplate = new EmailTemplate();
@@ -28,7 +38,7 @@ final class EmailTemplateEntityTest extends Unit
     public function testConstructorWithAllParameters(): void
     {
         $emailTemplate = new EmailTemplate(
-            'Invoice Template',
+            $this->invoiceTemplate,
             'invoice',
             '<p>Your invoice is ready</p>',
             'Invoice #123 from Company',
@@ -40,7 +50,7 @@ final class EmailTemplateEntityTest extends Unit
         );
         
         $this->assertNull($emailTemplate->getEmail_template_id());
-        $this->assertSame('Invoice Template', $emailTemplate->getEmail_template_title());
+        $this->assertSame($this->invoiceTemplate, $emailTemplate->getEmail_template_title());
         $this->assertSame('invoice', $emailTemplate->getEmail_template_type());
         $this->assertSame('<p>Your invoice is ready</p>', $emailTemplate->getEmail_template_body());
         $this->assertSame('Invoice #123 from Company', $emailTemplate->getEmail_template_subject());
@@ -61,9 +71,9 @@ final class EmailTemplateEntityTest extends Unit
     public function testTitleSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_title('Quote Template');
+        $emailTemplate->setEmail_template_title($this->quoteTemplate);
         
-        $this->assertSame('Quote Template', $emailTemplate->getEmail_template_title());
+        $this->assertSame($this->quoteTemplate, $emailTemplate->getEmail_template_title());
     }
 
     public function testTypeSetterAndGetter(): void
@@ -133,13 +143,13 @@ final class EmailTemplateEntityTest extends Unit
 
     public function testCommonEmailTemplateTypes(): void
     {
-        $invoiceTemplate = new EmailTemplate('Invoice Template', 'invoice', 'Invoice body', 'Invoice subject', 'Billing', 'billing@test.com', '', '', 'invoice.pdf');
+        $invoiceTemplate = new EmailTemplate($this->invoiceTemplate, 'invoice', 'Invoice body', 'Invoice subject', 'Billing', 'billing@test.com', '', '', 'invoice.pdf');
         $this->assertSame('invoice', $invoiceTemplate->getEmail_template_type());
-        $this->assertSame('Invoice Template', $invoiceTemplate->getEmail_template_title());
+        $this->assertSame($this->invoiceTemplate, $invoiceTemplate->getEmail_template_title());
 
-        $quoteTemplate = new EmailTemplate('Quote Template', 'quote', 'Quote body', 'Quote subject', 'Sales', 'sales@test.com', '', '', 'quote.pdf');
+        $quoteTemplate = new EmailTemplate($this->quoteTemplate, 'quote', 'Quote body', 'Quote subject', 'Sales', 'sales@test.com', '', '', 'quote.pdf');
         $this->assertSame('quote', $quoteTemplate->getEmail_template_type());
-        $this->assertSame('Quote Template', $quoteTemplate->getEmail_template_title());
+        $this->assertSame($this->quoteTemplate, $quoteTemplate->getEmail_template_title());
 
         $reminderTemplate = new EmailTemplate('Reminder Template', 'reminder', 'Reminder body', 'Payment reminder', 'Accounts', 'accounts@test.com', '', '', '');
         $this->assertSame('reminder', $reminderTemplate->getEmail_template_type());
@@ -151,7 +161,7 @@ final class EmailTemplateEntityTest extends Unit
         $longBody = str_repeat('<p>This is a very long email template body with lots of content. </p>', 20);
         $longSubject = 'Very Long Email Subject That Could Potentially Exceed Normal Database Limits And Still Be Valid';
         
-        $emailTemplate = new EmailTemplate('Long Template', 'long', $longBody, $longSubject, 'Sender', 'test@example.com', '', '', '');
+        $emailTemplate = new EmailTemplate('Long Template', 'long', $longBody, $longSubject, 'Sender', $this->testExampleCom, '', '', '');
         
         $this->assertSame($longBody, $emailTemplate->getEmail_template_body());
         $this->assertSame($longSubject, $emailTemplate->getEmail_template_subject());
@@ -218,8 +228,8 @@ final class EmailTemplateEntityTest extends Unit
         $emailTemplate->setEmail_template_subject('Chained Subject');
         $emailTemplate->setEmail_template_from_name('Chained Sender');
         $emailTemplate->setEmail_template_from_email('chained@test.com');
-        $emailTemplate->setEmail_template_cc('cc@test.com');
-        $emailTemplate->setEmail_template_bcc('bcc@test.com');
+        $emailTemplate->setEmail_template_cc($this->ccTestCom);
+        $emailTemplate->setEmail_template_bcc($this->bccTestCom);
         $emailTemplate->setEmail_template_pdf_template('chained.pdf');
         
         $this->assertSame('Chained Template', $emailTemplate->getEmail_template_title());
@@ -228,8 +238,8 @@ final class EmailTemplateEntityTest extends Unit
         $this->assertSame('Chained Subject', $emailTemplate->getEmail_template_subject());
         $this->assertSame('Chained Sender', $emailTemplate->getEmail_template_from_name());
         $this->assertSame('chained@test.com', $emailTemplate->getEmail_template_from_email());
-        $this->assertSame('cc@test.com', $emailTemplate->getEmail_template_cc());
-        $this->assertSame('bcc@test.com', $emailTemplate->getEmail_template_bcc());
+        $this->assertSame($this->ccTestCom, $emailTemplate->getEmail_template_cc());
+        $this->assertSame($this->bccTestCom, $emailTemplate->getEmail_template_bcc());
         $this->assertSame('chained.pdf', $emailTemplate->getEmail_template_pdf_template());
     }
 
@@ -289,10 +299,10 @@ final class EmailTemplateEntityTest extends Unit
 
     public function testPdfTemplateExtensions(): void
     {
-        $pdfTemplate = new EmailTemplate('PDF Template', 'pdf', 'Body', 'Subject', 'Sender', 'test@example.com', '', '', 'template.pdf');
+        $pdfTemplate = new EmailTemplate('PDF Template', 'pdf', 'Body', 'Subject', 'Sender', $this->testExampleCom, '', '', 'template.pdf');
         $this->assertSame('template.pdf', $pdfTemplate->getEmail_template_pdf_template());
 
-        $docxTemplate = new EmailTemplate('DOCX Template', 'docx', 'Body', 'Subject', 'Sender', 'test@example.com', '', '', 'template.docx');
+        $docxTemplate = new EmailTemplate('DOCX Template', 'docx', 'Body', 'Subject', 'Sender', $this->testExampleCom, '', '', 'template.docx');
         $this->assertSame('template.docx', $docxTemplate->getEmail_template_pdf_template());
     }
 
@@ -315,8 +325,7 @@ final class EmailTemplateEntityTest extends Unit
 
     public function testReturnTypeConsistency(): void
     {
-        $emailTemplate = new EmailTemplate('Test', 'test', 'Body', 'Subject', 'Name', 'email@test.com', 'cc@test.com', 'bcc@test.com', 'template.pdf');
-        
+        $emailTemplate = new EmailTemplate('Test', 'test', 'Body', 'Subject', 'Name', 'email@test.com', $this->ccTestCom, $this->bccTestCom, 'template.pdf');
         // Test that nullable fields can return null or string
         $this->assertTrue(is_string($emailTemplate->getEmail_template_title()) || is_null($emailTemplate->getEmail_template_title()));
         $this->assertTrue(is_string($emailTemplate->getEmail_template_type()) || is_null($emailTemplate->getEmail_template_type()));

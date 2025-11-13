@@ -8,11 +8,6 @@ use Tests\Support\FunctionalTester;
 
 class SiteControllerCest
 {
-    public function _before(FunctionalTester $I): void
-    {
-        // Setup before each test if needed
-    }
-
     public function testIndexPage(FunctionalTester $I): void
     {
         $I->wantTo('see the home page loads');

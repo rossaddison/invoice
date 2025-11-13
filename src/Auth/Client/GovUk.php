@@ -175,7 +175,7 @@ class GovUk extends OAuth2
     }
 
     /**
-     * e.g. Json Web Token $id_token eyJhbGciOiJSUzI1NiIsImtpZCI6IjE2YTI4In0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibm9uY2UiOiJhYjEyMyIsImV4cCI6MTYzNjg4MDAwMH0.SGVsbG8gdGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdl
+     * e.g. Json Web Token $id_token
      * Split the id_token string into its three parts: header, payload (user information, nonce), and signature. Each part separated by a dot.
      */
     protected function splitIdTokenIntoJwtHeader(string $id_token): string

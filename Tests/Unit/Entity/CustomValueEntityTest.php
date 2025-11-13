@@ -13,6 +13,8 @@ class CustomValueEntityTest extends Unit
 {
     private MockObject $customField;
     
+    public string $updatedData = 'Updated data';
+    
     protected function setUp(): void
     {
         parent::setUp();
@@ -421,13 +423,13 @@ class CustomValueEntityTest extends Unit
         $this->assertSame('Initial data', $customValue->getValue());
         
         // Step 2: Update value
-        $customValue->setValue('Updated data');
-        $this->assertSame('Updated data', $customValue->getValue());
+        $customValue->setValue($this->updatedData);
+        $this->assertSame($this->updatedData, $customValue->getValue());
         
         // Step 3: Change field reference
         $customValue->setCustom_field_id(2);
         $this->assertSame(2, $customValue->getCustom_field_id());
-        $this->assertSame('Updated data', $customValue->getValue()); // Value unchanged
+        $this->assertSame($this->updatedData, $customValue->getValue()); // Value unchanged
     }
 
     public function testVeryLongValues(): void

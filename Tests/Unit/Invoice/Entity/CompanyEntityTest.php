@@ -12,6 +12,8 @@ use PHPUnit\Framework\TestCase;
 
 class CompanyEntityTest extends TestCase
 {
+    public string $unitedStates = 'United States';
+    
     public function testConstructorWithDefaults(): void
     {
         $company = new Company();
@@ -156,9 +158,9 @@ class CompanyEntityTest extends TestCase
     public function testCountrySetterAndGetter(): void
     {
         $company = new Company();
-        $company->setCountry('United States');
+        $company->setCountry($this->unitedStates);
         
-        $this->assertSame('United States', $company->getCountry());
+        $this->assertSame($this->unitedStates, $company->getCountry());
     }
 
     public function testPhoneSetterAndGetter(): void
@@ -320,7 +322,7 @@ class CompanyEntityTest extends TestCase
         $company->setCity('Detroit');
         $company->setState('Michigan');
         $company->setZip('48201');
-        $company->setCountry('United States');
+        $company->setCountry($this->unitedStates);
         $company->setPhone('+1-313-555-0200');
         $company->setFax('+1-313-555-0201');
         $company->setEmail('orders@manufacturing.com');
@@ -331,7 +333,7 @@ class CompanyEntityTest extends TestCase
         $this->assertSame('Detroit', $company->getCity());
         $this->assertSame('Michigan', $company->getState());
         $this->assertSame('48201', $company->getZip());
-        $this->assertSame('United States', $company->getCountry());
+        $this->assertSame($this->unitedStates, $company->getCountry());
         $this->assertSame('+1-313-555-0200', $company->getPhone());
         $this->assertSame('+1-313-555-0201', $company->getFax());
         $this->assertSame('orders@manufacturing.com', $company->getEmail());
