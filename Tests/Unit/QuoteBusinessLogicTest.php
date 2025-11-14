@@ -19,7 +19,6 @@ final class QuoteBusinessLogicTest extends TestCase
     {
         $setting = '1'; // generate_quote_number_for_draft enabled
         $isNewRecord = true;
-        $groupId = 1;
         
         // Simulate the business logic from QuoteService
         $shouldGenerateNumber = $isNewRecord && $setting === '1';
@@ -58,8 +57,6 @@ final class QuoteBusinessLogicTest extends TestCase
      */
     public function testNewRecordInitializationPatterns(): void
     {
-        $isNewRecord = true;
-        
         // Default values for new records
         $defaultInvId = 0;
         $defaultSoId = 0;
@@ -82,7 +79,7 @@ final class QuoteBusinessLogicTest extends TestCase
      */
     public function testDataTypeConversions(): void
     {
-        // Test string to float conversion for discount_amount  
+        // Test string to float conversion for discount_amount
         $discountString = '123.45';
         $discountFloat = (float) $discountString;
         $this->assertSame(123.45, $discountFloat, 'Discount amount should convert string to float');

@@ -74,7 +74,6 @@ class ClientCustomEntityTest extends TestCase
     public function testClientRelationship(): void
     {
         $clientCustom = new ClientCustom();
-        $client = $this->createMock(Client::class);
         
         // Initially null
         $this->assertNull($clientCustom->getClient());
@@ -87,7 +86,6 @@ class ClientCustomEntityTest extends TestCase
     public function testCustomFieldRelationship(): void
     {
         $clientCustom = new ClientCustom();
-        $customField = $this->createMock(CustomField::class);
         
         // Initially null
         $this->assertNull($clientCustom->getCustomField());

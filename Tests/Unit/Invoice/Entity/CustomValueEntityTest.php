@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\CustomValue;
 use PHPUnit\Framework\TestCase;
 
@@ -697,3 +696,4 @@ class CustomValueEntityTest extends TestCase
         $this->assertSame('Special delivery instructions: Leave at front door, ring doorbell twice', $customValue->getValue());
     }
 }
+

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;

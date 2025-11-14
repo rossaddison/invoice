@@ -37,14 +37,14 @@ final class PostalAddressEntityTest extends Unit
     public function testConstructorWithAllParameters(): void
     {
         $postalAddress = new PostalAddress(
-            1, 
-            123, 
-            $this->mainStreet, 
-            'Apt 2B', 
-            '456', 
-            $this->newYork, 
-            $this->oneThousandOne, 
-            'NY', 
+            1,
+            123,
+            $this->mainStreet,
+            'Apt 2B',
+            '456',
+            $this->newYork,
+            $this->oneThousandOne,
+            'NY',
             'USA'
         );
         
