@@ -394,7 +394,7 @@ class AllowanceChargeEntityTest extends TestCase
         $discountTypes = [
             $this->earlyPaymentDiscount,
             $this->volumeDiscount,
-            'Loyalty discount', 
+            'Loyalty discount',
             'Seasonal discount',
             'New customer discount',
             'Bulk order discount',

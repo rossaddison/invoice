@@ -8,172 +8,172 @@ use Tests\Support\FunctionalTester;
 
 class SiteControllerCest
 {
-    public function testIndexPage(FunctionalTester $functionalTester): void
+    public function testIndexPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the home page loads');
-        $functionalTester->amOnPage('/');
-        $functionalTester->seeResponseCodeIs(200);
-        $functionalTester->seeInSource('Home');
+        $tester->wantTo('see the home page loads');
+        $tester->amOnPage('/');
+        $tester->seeResponseCodeIs(200);
+        $tester->seeInSource('Home');
     }
 
-    public function testAboutPage(FunctionalTester $functionalTester): void
+    public function testAboutPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the about page loads');
-        $functionalTester->amOnPage('/about');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the about page loads');
+        $tester->amOnPage('/about');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testAccreditationsPage(FunctionalTester $functionalTester): void
+    public function testAccreditationsPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the accreditations page loads');
-        $functionalTester->amOnPage('/accreditations');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the accreditations page loads');
+        $tester->amOnPage('/accreditations');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testGalleryPage(FunctionalTester $functionalTester): void
+    public function testGalleryPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the gallery page loads');
-        $functionalTester->amOnPage('/gallery');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the gallery page loads');
+        $tester->amOnPage('/gallery');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testTeamPage(FunctionalTester $functionalTester): void
+    public function testTeamPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the team page loads');
-        $functionalTester->amOnPage('/team');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the team page loads');
+        $tester->amOnPage('/team');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testPricingPage(FunctionalTester $functionalTester): void
+    public function testPricingPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the pricing page loads');
-        $functionalTester->amOnPage('/pricing');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the pricing page loads');
+        $tester->amOnPage('/pricing');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testPrivacyPolicyPage(FunctionalTester $functionalTester): void
+    public function testPrivacyPolicyPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the privacy policy page loads');
-        $functionalTester->amOnPage('/privacypolicy');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the privacy policy page loads');
+        $tester->amOnPage('/privacypolicy');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testTermsOfServicePage(FunctionalTester $functionalTester): void
+    public function testTermsOfServicePage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the terms of service page loads');
-        $functionalTester->amOnPage('/termsofservice');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the terms of service page loads');
+        $tester->amOnPage('/termsofservice');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testTestimonialPage(FunctionalTester $functionalTester): void
+    public function testTestimonialPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the testimonial page loads');
-        $functionalTester->amOnPage('/testimonial');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the testimonial page loads');
+        $tester->amOnPage('/testimonial');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testContactPage(FunctionalTester $functionalTester): void
+    public function testContactPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the contact page loads');
-        $functionalTester->amOnPage('/contact');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the contact page loads');
+        $tester->amOnPage('/contact');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testOauth2AuthErrorPage(FunctionalTester $functionalTester): void
+    public function testOauth2AuthErrorPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the oauth2 auth error page loads');
-        $functionalTester->amOnPage('/oauth2autherror/testmessage');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the oauth2 auth error page loads');
+        $tester->amOnPage('/oauth2autherror/testmessage');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testOauth2CallbackUnauthorisedPage(FunctionalTester $functionalTester): void
+    public function testOauth2CallbackUnauthorisedPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the oauth2 callback unauthorised page loads');
-        $functionalTester->amOnPage('/oauth2callbackresultunauthorised');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the oauth2 callback unauthorised page loads');
+        $tester->amOnPage('/oauth2callbackresultunauthorised');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testUserCancelledOauth2Page(FunctionalTester $functionalTester): void
+    public function testUserCancelledOauth2Page(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the user cancelled oauth2 page loads');
-        $functionalTester->amOnPage('/usercancelledoauth2');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the user cancelled oauth2 page loads');
+        $tester->amOnPage('/usercancelledoauth2');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testAdminMustMakeActivePage(FunctionalTester $functionalTester): void
+    public function testAdminMustMakeActivePage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the admin must make active page loads');
-        $functionalTester->amOnPage('/adminmustmakeactive');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the admin must make active page loads');
+        $tester->amOnPage('/adminmustmakeactive');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testForgotAlertPage(FunctionalTester $functionalTester): void
+    public function testForgotAlertPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the forgot alert page loads');
-        $functionalTester->amOnPage('/forgotalert');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the forgot alert page loads');
+        $tester->amOnPage('/forgotalert');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testForgotEmailFailedPage(FunctionalTester $functionalTester): void
+    public function testForgotEmailFailedPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the forgot email failed page loads');
-        $functionalTester->amOnPage('/forgotemailfailed');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the forgot email failed page loads');
+        $tester->amOnPage('/forgotemailfailed');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testForgotUserNotFoundPage(FunctionalTester $functionalTester): void
+    public function testForgotUserNotFoundPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the forgot user not found page loads');
-        $functionalTester->amOnPage('/forgotusernotfound');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the forgot user not found page loads');
+        $tester->amOnPage('/forgotusernotfound');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testOneTimePasswordErrorPage(FunctionalTester $functionalTester): void
+    public function testOneTimePasswordErrorPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the one time password error page loads');
-        $functionalTester->amOnPage('/onetimepassworderror');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the one time password error page loads');
+        $tester->amOnPage('/onetimepassworderror');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testOneTimePasswordFailurePage(FunctionalTester $functionalTester): void
+    public function testOneTimePasswordFailurePage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the one time password failure page loads');
-        $functionalTester->amOnPage('/onetimepasswordfailure');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the one time password failure page loads');
+        $tester->amOnPage('/onetimepasswordfailure');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testOneTimePasswordSuccessPage(FunctionalTester $functionalTester): void
+    public function testOneTimePasswordSuccessPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the one time password success page loads');
-        $functionalTester->amOnPage('/onetimepasswordsuccess');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the one time password success page loads');
+        $tester->amOnPage('/onetimepasswordsuccess');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testResetPasswordFailedPage(FunctionalTester $functionalTester): void
+    public function testResetPasswordFailedPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the reset password failed page loads');
-        $functionalTester->amOnPage('/resetpasswordfailed');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the reset password failed page loads');
+        $tester->amOnPage('/resetpasswordfailed');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testResetPasswordSuccessPage(FunctionalTester $functionalTester): void
+    public function testResetPasswordSuccessPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the reset password success page loads');
-        $functionalTester->amOnPage('/resetpasswordsuccess');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the reset password success page loads');
+        $tester->amOnPage('/resetpasswordsuccess');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testSignupFailedPage(FunctionalTester $functionalTester): void
+    public function testSignupFailedPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the signup failed page loads');
-        $functionalTester->amOnPage('/signupfailed');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the signup failed page loads');
+        $tester->amOnPage('/signupfailed');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testSignupSuccessPage(FunctionalTester $functionalTester): void
+    public function testSignupSuccessPage(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the signup success page loads');
-        $functionalTester->amOnPage('/signupsuccess');
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('see the signup success page loads');
+        $tester->amOnPage('/signupsuccess');
+        $tester->seeResponseCodeIs(200);
     }
 }

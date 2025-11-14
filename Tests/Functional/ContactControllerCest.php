@@ -12,92 +12,92 @@ class ContactControllerCest
     
     public string $testUser = 'Test User';
 
-    public function testInterestPageLoads(FunctionalTester $functionalTester): void
+    public function testInterestPageLoads(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('see the contact interest page loads');
-        $functionalTester->amOnPage($this->interest);
-        $functionalTester->seeResponseCodeIs(200);
-        $functionalTester->seeInSource('name');
-        $functionalTester->seeInSource('email');
-        $functionalTester->seeInSource('subject');
-        $functionalTester->seeInSource('body');
+        $tester->wantTo('see the contact interest page loads');
+        $tester->amOnPage($this->interest);
+        $tester->seeResponseCodeIs(200);
+        $tester->seeInSource('name');
+        $tester->seeInSource('email');
+        $tester->seeInSource('subject');
+        $tester->seeInSource('body');
     }
 
-    public function testInterestFormValidation(FunctionalTester $functionalTester): void
+    public function testInterestFormValidation(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('test contact form validation');
-        $functionalTester->amOnPage($this->interest);
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('test contact form validation');
+        $tester->amOnPage($this->interest);
+        $tester->seeResponseCodeIs(200);
         
         // Submit empty form to test validation
-        if ($functionalTester->seeElement('form')) {
-            $functionalTester->submitForm('form', []);
-            $functionalTester->seeResponseCodeIs(200);
+        if ($tester->seeElement('form')) {
+            $tester->submitForm('form', []);
+            $tester->seeResponseCodeIs(200);
             // Should stay on the same page with validation errors
         }
     }
 
-    public function testInterestFormWithValidData(FunctionalTester $functionalTester): void
+    public function testInterestFormWithValidData(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('test contact form with valid data');
-        $functionalTester->amOnPage($this->interest);
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('test contact form with valid data');
+        $tester->amOnPage($this->interest);
+        $tester->seeResponseCodeIs(200);
         
         // Try to submit form with valid data
-        if ($functionalTester->seeElement('form')) {
-            $functionalTester->submitForm('form', [
+        if ($tester->seeElement('form')) {
+            $tester->submitForm('form', [
                 'ContactForm[name]' => $this->testUser,
                 'ContactForm[email]' => 'test@example.com',
                 'ContactForm[subject]' => 'Test Subject',
                 'ContactForm[body]' => 'This is a test message'
             ]);
             // Should redirect or show success - either way not an error
-            $functionalTester->dontSeeResponseCodeIs(500);
+            $tester->dontSeeResponseCodeIs(500);
         }
     }
 
-    public function testInterestFormWithInvalidEmail(FunctionalTester $functionalTester): void
+    public function testInterestFormWithInvalidEmail(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('test contact form with invalid email');
-        $functionalTester->amOnPage($this->interest);
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('test contact form with invalid email');
+        $tester->amOnPage($this->interest);
+        $tester->seeResponseCodeIs(200);
         
         // Submit form with invalid email
-        if ($functionalTester->seeElement('form')) {
-            $functionalTester->submitForm('form', [
+        if ($tester->seeElement('form')) {
+            $tester->submitForm('form', [
                 'ContactForm[name]' => $this->testUser,
                 'ContactForm[email]' => 'invalid-email',
                 'ContactForm[subject]' => 'Test Subject',
                 'ContactForm[body]' => 'This is a test message'
             ]);
-            $functionalTester->seeResponseCodeIs(200);
+            $tester->seeResponseCodeIs(200);
             // Should stay on page with validation error
         }
     }
 
-    public function testInterestFormMissingRequiredFields(FunctionalTester $functionalTester): void
+    public function testInterestFormMissingRequiredFields(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('test contact form with missing required fields');
-        $functionalTester->amOnPage($this->interest);
-        $functionalTester->seeResponseCodeIs(200);
+        $tester->wantTo('test contact form with missing required fields');
+        $tester->amOnPage($this->interest);
+        $tester->seeResponseCodeIs(200);
         
         // Submit form with only partial data
-        if ($functionalTester->seeElement('form')) {
-            $functionalTester->submitForm('form', [
+        if ($tester->seeElement('form')) {
+            $tester->submitForm('form', [
                 'ContactForm[name]' => 'Test User',
                 'ContactForm[email]' => 'test@example.com'
                 // Missing subject and body
             ]);
-            $functionalTester->seeResponseCodeIs(200);
+            $tester->seeResponseCodeIs(200);
             // Should stay on page with validation errors
         }
     }
 
-    public function testInterestGetRequest(FunctionalTester $functionalTester): void
+    public function testInterestGetRequest(FunctionalTester $tester): void
     {
-        $functionalTester->wantTo('test GET request to interest page');
-        $functionalTester->amOnPage($this->interest);
-        $functionalTester->seeResponseCodeIs(200);
-        $functionalTester->seeInSource('contact');
+        $tester->wantTo('test GET request to interest page');
+        $tester->amOnPage($this->interest);
+        $tester->seeResponseCodeIs(200);
+        $tester->seeInSource('contact');
     }
 }

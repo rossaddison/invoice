@@ -332,7 +332,7 @@ final class CompanyPrivateFormTest extends TestCase
             
             $prop = $reflection->getProperty($property);
             
-            $wasAccessible = $prop->isPublic(); 
+            $wasAccessible = $prop->isPublic();
             
             try {
                 

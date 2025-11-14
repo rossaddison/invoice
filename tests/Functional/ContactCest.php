@@ -8,14 +8,14 @@ use Tests\Support\FunctionalTester;
 
 final class ContactCest
 {
-    public function _before(FunctionalTester $functionalTester)
+    public function _before(FunctionalTester $tester)
     {
-        $functionalTester->amOnPage('/contact');
+        $tester->amOnPage('/contact');
     }
 
-    public function openContactPage(FunctionalTester $functionalTester)
+    public function openContactPage(FunctionalTester $tester)
     {
-        $functionalTester->wantTo('ensure that contact page works');
-        $functionalTester->seeElement('section', ['id' => 'Contact']);
+        $tester->wantTo('ensure that contact page works');
+        $tester->seeElement('section', ['id' => 'Contact']);
     }
 }
