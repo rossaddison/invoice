@@ -15,9 +15,6 @@ $finder = (new Finder())
         $root.'/dev-scripts-psalm-1',
         $root.'/src',
         $root.'/resources/views',
-        $root.'/Tests/Acceptance',
-        $root.'/Tests/Functional',
-        $root.'/Tests/Unit',
     ])
     // relative not absolute paths
     ->exclude([
