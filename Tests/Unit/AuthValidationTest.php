@@ -133,11 +133,7 @@ final class AuthValidationTest extends TestCase
             return null;
         }
         
-        // Validate format
-        if ($this->isValidTotpCode($code) || $this->isValidBackupCode($code)) {
-            return $code;
-        }
-        
-        return null;
+        return ($this->isValidTotpCode($code) || $this->isValidBackupCode($code)) ? $code : null;
+
     }
 }

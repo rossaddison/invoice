@@ -237,7 +237,7 @@ class CustomValueEntityTest extends Unit
             'checkbox' => '1',
         ];
         
-        foreach ($fieldTypeValues as $type => $value) {
+        foreach ($fieldTypeValues as $value) {
             $customValue = new CustomValue(null, 1, $value);
             
             $this->assertSame('', $customValue->getId());

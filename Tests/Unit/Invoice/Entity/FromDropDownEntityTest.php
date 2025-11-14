@@ -39,13 +39,13 @@ class FromDropDownEntityTest extends TestCase
     {
         $fromDropDown = new FromDropDown(
             id: 1,
-            email: 'user@example.com',
+            email: $this->userExampleCom,
             include: true,
             default_email: true
         );
         
         $this->assertSame('1', $fromDropDown->getId());
-        $this->assertSame('user@example.com', $fromDropDown->getEmail());
+        $this->assertSame($this->userExampleCom, $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
         $this->assertTrue($fromDropDown->getDefault_email());
     }
@@ -148,7 +148,7 @@ class FromDropDownEntityTest extends TestCase
         $fromDropDown = new FromDropDown();
         
         $validEmails = [
-            'user@example.com',
+            $this->userExampleCom,
             'admin@company.co.uk',
             'support@subdomain.example.org',
             'info@123-company.com',

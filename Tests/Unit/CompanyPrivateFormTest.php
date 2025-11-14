@@ -319,16 +319,31 @@ final class CompanyPrivateFormTest extends TestCase
     private function createFormWithData(array $data): CompanyPrivateForm
     {
         $companyPrivate = $this->createMockCompanyPrivate();
+        
         $form = new CompanyPrivateForm($companyPrivate);
         
-        // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);
         
         foreach ($data as $property => $value) {
-            if ($reflection->hasProperty($property)) {
-                $prop = $reflection->getProperty($property);
+            
+            if (! $reflection->hasProperty($property)) {
+                throw new RuntimeException('Property missing');
+            }
+            
+            $prop = $reflection->getProperty($property);
+            
+            $wasAccessible = $prop->isPublic(); 
+            
+            try {
+                
                 $prop->setAccessible(true);
+                
                 $prop->setValue($form, $value);
+                
+            } finally {
+                
+                $prop->setAccessible($wasAccessible);
+                
             }
         }
         

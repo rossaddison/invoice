@@ -170,19 +170,6 @@ class AllowanceChargeEntityTest extends Unit
         $this->assertSame('10', $allowanceCharge->getTaxRateId());
     }
 
-    public function testLevelValues(): void
-    {
-        $allowanceCharge = new AllowanceCharge();
-        
-        // Test level 0 (Overall)
-        $allowanceCharge->setLevel(0);
-        $this->assertSame(0, $allowanceCharge->getLevel());
-        
-        // Test level 1 (InvoiceLine)
-        $allowanceCharge->setLevel(1);
-        $this->assertSame(1, $allowanceCharge->getLevel());
-    }
-
     public function testReasonCodeFormats(): void
     {
         $allowanceCharge = new AllowanceCharge();

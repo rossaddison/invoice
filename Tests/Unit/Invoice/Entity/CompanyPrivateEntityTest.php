@@ -14,6 +14,8 @@ class CompanyPrivateEntityTest extends TestCase
 {
     public string $atUto8 = 'AT U12345678';
     
+    public string $seqNumbers = '1234567890123';
+    
     public function testConstructorWithDefaults(): void
     {
         $companyPrivate = new CompanyPrivate();
@@ -45,7 +47,7 @@ class CompanyPrivateEntityTest extends TestCase
             vat_id: 'VAT123456789',
             tax_code: 'TAX987654321',
             iban: 'DE89370400440532013000',
-            gln: '1234567890123',
+            gln: $this->seqNumbers,
             rcc: 'RCC1234',
             logo_filename: 'company_logo.png',
             logo_width: 150,
@@ -59,7 +61,7 @@ class CompanyPrivateEntityTest extends TestCase
         $this->assertSame('VAT123456789', $companyPrivate->getVat_id());
         $this->assertSame('TAX987654321', $companyPrivate->getTax_code());
         $this->assertSame('DE89370400440532013000', $companyPrivate->getIban());
-        $this->assertSame('1234567890123', $companyPrivate->getGln());
+        $this->assertSame($this->seqNumbers, $companyPrivate->getGln());
         $this->assertSame('RCC1234', $companyPrivate->getRcc());
         $this->assertSame('company_logo.png', $companyPrivate->getLogo_filename());
         $this->assertSame(150, $companyPrivate->getLogo_width());
@@ -429,7 +431,7 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate->setVat_id('DE987654321');
         $companyPrivate->setTax_code('TAX12345');
         $companyPrivate->setIban('DE89370400440532013000');
-        $companyPrivate->setGln('1234567890123');
+        $companyPrivate->setGln($this->seqNumbers);
         $companyPrivate->setRcc('RCC9876');
         $companyPrivate->setLogo_filename('complete_logo.png');
         $companyPrivate->setLogo_width(160);
@@ -444,7 +446,7 @@ class CompanyPrivateEntityTest extends TestCase
         $this->assertSame('DE987654321', $companyPrivate->getVat_id());
         $this->assertSame('TAX12345', $companyPrivate->getTax_code());
         $this->assertSame('DE89370400440532013000', $companyPrivate->getIban());
-        $this->assertSame('1234567890123', $companyPrivate->getGln());
+        $this->assertSame($this->seqNumbers, $companyPrivate->getGln());
         $this->assertSame('RCC9876', $companyPrivate->getRcc());
         $this->assertSame('complete_logo.png', $companyPrivate->getLogo_filename());
         $this->assertSame(160, $companyPrivate->getLogo_width());
@@ -462,7 +464,7 @@ class CompanyPrivateEntityTest extends TestCase
             vat_id: 'VAT123',
             tax_code: 'TAX456',
             iban: 'DE89370400440532013000',
-            gln: '1234567890123',
+            gln: $this->seqNumbers,
             rcc: 'RCC789',
             logo_filename: 'test_logo.png',
             logo_width: 100,

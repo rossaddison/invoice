@@ -5056,12 +5056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/maglnet/ComposerRequireChecker.git",
-                "reference": "41e5c92784d1cddff5d0f25dc73a71d5ccb9cbf9"
+                "reference": "c72d0404177e667ba726406f2b747b7ff6acbe5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maglnet/ComposerRequireChecker/zipball/41e5c92784d1cddff5d0f25dc73a71d5ccb9cbf9",
-                "reference": "41e5c92784d1cddff5d0f25dc73a71d5ccb9cbf9",
+                "url": "https://api.github.com/repos/maglnet/ComposerRequireChecker/zipball/c72d0404177e667ba726406f2b747b7ff6acbe5b",
+                "reference": "c72d0404177e667ba726406f2b747b7ff6acbe5b",
                 "shasum": ""
             },
             "require": {
@@ -5132,7 +5132,7 @@
                 "issues": "https://github.com/maglnet/ComposerRequireChecker/issues",
                 "source": "https://github.com/maglnet/ComposerRequireChecker/tree/4.19.x"
             },
-            "time": "2025-11-13T03:32:39+00:00"
+            "time": "2025-11-14T01:44:43+00:00"
         },
         {
             "name": "mollie/mollie-api-php",
@@ -13430,12 +13430,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/active-record.git",
-                "reference": "216dfd5cdd9ad517ffcd8bd28140b2e3842a5782"
+                "reference": "39e6c2e886d8f10ad7abf87b4ce5413516d952a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/216dfd5cdd9ad517ffcd8bd28140b2e3842a5782",
-                "reference": "216dfd5cdd9ad517ffcd8bd28140b2e3842a5782",
+                "url": "https://api.github.com/repos/yiisoft/active-record/zipball/39e6c2e886d8f10ad7abf87b4ce5413516d952a2",
+                "reference": "39e6c2e886d8f10ad7abf87b4ce5413516d952a2",
                 "shasum": ""
             },
             "require": {
@@ -13509,7 +13509,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-11-08T04:18:46+00:00"
+            "time": "2025-11-14T06:42:56+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -14293,12 +14293,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data.git",
-                "reference": "c03c947c4459d1f41c03371ee6cb4fe9efd3ba05"
+                "reference": "06523b1011c543c2a54b6fa5143384607334eee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data/zipball/c03c947c4459d1f41c03371ee6cb4fe9efd3ba05",
-                "reference": "c03c947c4459d1f41c03371ee6cb4fe9efd3ba05",
+                "url": "https://api.github.com/repos/yiisoft/data/zipball/06523b1011c543c2a54b6fa5143384607334eee5",
+                "reference": "06523b1011c543c2a54b6fa5143384607334eee5",
                 "shasum": ""
             },
             "require": {
@@ -14307,9 +14307,10 @@
                 "yiisoft/arrays": "^3.0"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.89.2",
                 "maglnet/composer-require-checker": "^4.7.1",
                 "phpunit/phpunit": "^10.5.52",
-                "rector/rector": "^2.1.4",
+                "rector/rector": "^2.2.8",
                 "roave/infection-static-analysis-plugin": "^1.35",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.10.3"
@@ -14353,7 +14354,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-16T04:45:08+00:00"
+            "time": "2025-11-14T07:12:14+00:00"
         },
         {
             "name": "yiisoft/data-response",
