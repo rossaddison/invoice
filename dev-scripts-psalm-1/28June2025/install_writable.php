@@ -58,7 +58,7 @@ if (!file_exists($yiiPath)) {
 
 // Make sure it's executable (mainly for Unix)
 if (!is_executable($yiiPath)) {
-    @chmod($yiiPath, 0755);
+    @chmod($yiiPath, 0750);
 }
 
 $command = escapeshellarg($yiiPath) . ' install';

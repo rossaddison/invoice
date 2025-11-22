@@ -14,7 +14,7 @@ class CryptTest extends Unit
     protected function setUp(): void
     {
         parent::setUp();
-        $this->crypt = new Crypt();
+        $this->crypt = new Crypt(false);
     }
 
     public function testSaltGeneration(): void
@@ -52,13 +52,13 @@ class CryptTest extends Unit
 
     public function testGeneratePasswordWithoutSalt(): void
     {
-        $password = 'test_password_123';
-        $hash = $this->crypt->generate_password($password);
+        $pwd = 'test_password_123';
+        $hash = $this->crypt->generate_password($pwd);
         
         // Should generate a password_hash compatible hash
         $this->assertIsString($hash);
         $this->assertNotEmpty($hash);
-        $this->assertNotEquals($password, $hash);
+        $this->assertNotEquals($pwd, $hash);
         
         // Should start with $2y$ (PHP password_hash default) or similar
         $this->assertMatchesRegularExpression('/^\$\d[a-z]*\$/', $hash);
@@ -66,14 +66,14 @@ class CryptTest extends Unit
 
     public function testGeneratePasswordWithSalt(): void
     {
-        $password = 'test_password_123';
+        $pwd = 'test_password_123';
         $salt = $this->crypt->salt();
-        $hash = $this->crypt->generate_password($password, $salt);
+        $hash = $this->crypt->generate_password($pwd, $salt);
         
         // Should generate a bcrypt-style hash with provided salt
         $this->assertIsString($hash);
         $this->assertNotEmpty($hash);
-        $this->assertNotEquals($password, $hash);
+        $this->assertNotEquals($pwd, $hash);
         
         // Should start with $2y$10$ (legacy bcrypt format)
         $this->assertStringStartsWith('$2y$10$', $hash);
@@ -87,11 +87,11 @@ class CryptTest extends Unit
 
     public function testGeneratePasswordConsistencyWithSalt(): void
     {
-        $password = 'test_password_123';
+        $pwd = 'test_password_123';
         $salt = $this->crypt->salt();
         
-        $hash1 = $this->crypt->generate_password($password, $salt);
-        $hash2 = $this->crypt->generate_password($password, $salt);
+        $hash1 = $this->crypt->generate_password($pwd, $salt);
+        $hash2 = $this->crypt->generate_password($pwd, $salt);
         
         // Same password and salt should produce identical hashes
         $this->assertSame($hash1, $hash2);
@@ -99,10 +99,10 @@ class CryptTest extends Unit
 
     public function testGeneratePasswordRandomnessWithoutSalt(): void
     {
-        $password = 'test_password_123';
+        $pwd = 'test_password_123';
         
-        $hash1 = $this->crypt->generate_password($password);
-        $hash2 = $this->crypt->generate_password($password);
+        $hash1 = $this->crypt->generate_password($pwd);
+        $hash2 = $this->crypt->generate_password($pwd);
         
         // Same password without salt should produce different hashes (random salt)
         $this->assertNotEquals($hash1, $hash2);
@@ -110,11 +110,11 @@ class CryptTest extends Unit
 
     public function testCheckPasswordWithModernHash(): void
     {
-        $password = 'test_password_123';
-        $hash = $this->crypt->generate_password($password);
+        $pwd = 'test_password_123';
+        $hash = $this->crypt->generate_password($pwd);
         
         // Correct password should verify
-        $this->assertTrue($this->crypt->check_password($hash, $password));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
         
         // Wrong password should not verify
         $this->assertFalse($this->crypt->check_password($hash, 'wrong_password'));
@@ -122,12 +122,12 @@ class CryptTest extends Unit
 
     public function testCheckPasswordWithLegacyHash(): void
     {
-        $password = 'test_password_123';
+        $pwd = 'test_password_123';
         $salt = $this->crypt->salt();
-        $hash = $this->crypt->generate_password($password, $salt);
+        $hash = $this->crypt->generate_password($pwd, $salt);
         
         // Correct password should verify with legacy hash
-        $this->assertTrue($this->crypt->check_password($hash, $password));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
         
         // Wrong password should not verify
         $this->assertFalse($this->crypt->check_password($hash, 'wrong_password'));
@@ -135,11 +135,11 @@ class CryptTest extends Unit
 
     public function testCheckPasswordWithEmptyPassword(): void
     {
-        $password = '';
-        $hash = $this->crypt->generate_password($password);
+        $pwd = '';
+        $hash = $this->crypt->generate_password($pwd);
         
         // Empty password should verify against its own hash
-        $this->assertTrue($this->crypt->check_password($hash, $password));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
         
         // Non-empty password should not verify against empty password hash
         $this->assertFalse($this->crypt->check_password($hash, 'not_empty'));
@@ -147,43 +147,43 @@ class CryptTest extends Unit
 
     public function testCheckPasswordWithSpecialCharacters(): void
     {
-        $password = 'p@ssw0rd!#$%^&*()_+-=[]{}|;:,.<>?';
-        $hash = $this->crypt->generate_password($password);
+        $pwd = 'p@ssw0rd!#$%^&*()_+-=[]{}|;:,.<>?';
+        $hash = $this->crypt->generate_password($pwd);
         
-        $this->assertTrue($this->crypt->check_password($hash, $password));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
         $this->assertFalse($this->crypt->check_password($hash, 'different_password'));
     }
 
     public function testCheckPasswordWithUnicodeCharacters(): void
     {
-        $password = 'pāssωörd™€₹中文';
-        $hash = $this->crypt->generate_password($password);
+        $pwd = 'pāssωörd™€₹中文';
+        $hash = $this->crypt->generate_password($pwd);
         
-        $this->assertTrue($this->crypt->check_password($hash, $password));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
         $this->assertFalse($this->crypt->check_password($hash, 'different_password'));
     }
 
     public function testCheckPasswordWithLongPassword(): void
     {
-        $password = str_repeat('long_password_test_', 20); // 360 characters
-        $hash = $this->crypt->generate_password($password);
+        $pwd = str_repeat('long_password_test_', 20); // 360 characters
+        $hash = $this->crypt->generate_password($pwd);
         
-        $this->assertTrue($this->crypt->check_password($hash, $password));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
         $this->assertFalse($this->crypt->check_password($hash, 'different_password'));
     }
 
     public function testPasswordHashingWorkflow(): void
     {
-        $password = 'user_password_123';
+        $pwd = 'user_password_123';
         
         // Step 1: Generate hash
-        $hash = $this->crypt->generate_password($password);
+        $hash = $this->crypt->generate_password($pwd);
         
         // Step 2: Store hash (simulated)
         $storedHash = $hash;
         
         // Step 3: Verify password during login
-        $this->assertTrue($this->crypt->check_password($storedHash, $password));
+        $this->assertTrue($this->crypt->check_password($storedHash, $pwd));
         
         // Step 4: Reject wrong password
         $this->assertFalse($this->crypt->check_password($storedHash, 'wrong_password'));
@@ -191,21 +191,21 @@ class CryptTest extends Unit
 
     public function testLegacyToModernMigrationPath(): void
     {
-        $password = 'migration_test_password';
+        $pwd = 'migration_test_password';
         
         // Step 1: Create legacy hash with salt
         $salt = $this->crypt->salt();
-        $legacyHash = $this->crypt->generate_password($password, $salt);
+        $legacyHash = $this->crypt->generate_password($pwd, $salt);
         
         // Step 2: Verify legacy hash works
-        $this->assertTrue($this->crypt->check_password($legacyHash, $password));
+        $this->assertTrue($this->crypt->check_password($legacyHash, $pwd));
         
         // Step 3: Create modern hash for migration
-        $modernHash = $this->crypt->generate_password($password);
+        $modernHash = $this->crypt->generate_password($pwd);
         
         // Step 4: Both hashes should verify the same password
-        $this->assertTrue($this->crypt->check_password($legacyHash, $password));
-        $this->assertTrue($this->crypt->check_password($modernHash, $password));
+        $this->assertTrue($this->crypt->check_password($legacyHash, $pwd));
+        $this->assertTrue($this->crypt->check_password($modernHash, $pwd));
         
         // Step 5: Hashes should be different formats
         $this->assertNotEquals($legacyHash, $modernHash);
@@ -213,20 +213,20 @@ class CryptTest extends Unit
 
     public function testMultiplePasswordsWithDifferentSalts(): void
     {
-        $passwords = ['password1', 'password2', 'password3'];
+        $pwds = ['password1', 'password2', 'password3'];
         $hashes = [];
         
-        foreach ($passwords as $password) {
+        foreach ($pwds as $pwd) {
             $salt = $this->crypt->salt();
-            $hashes[] = $this->crypt->generate_password($password, $salt);
+            $hashes[] = $this->crypt->generate_password($pwd, $salt);
         }
         
         // All hashes should be different
         $this->assertSame(count($hashes), count(array_unique($hashes)));
         
         // Each password should verify against its corresponding hash
-        foreach ($passwords as $index => $password) {
-            $this->assertTrue($this->crypt->check_password($hashes[$index], $password));
+        foreach ($pwds as $index => $pwd) {
+            $this->assertTrue($this->crypt->check_password($hashes[$index], $pwd));
         }
     }
 
@@ -258,21 +258,21 @@ class CryptTest extends Unit
             str_repeat('x', 50), // Well under bcrypt max length
         ];
         
-        foreach ($testPasswords as $password) {
-            $hash = $this->crypt->generate_password($password);
+        foreach ($testPasswords as $pwd) {
+            $hash = $this->crypt->generate_password($pwd);
             
-            $this->assertTrue($this->crypt->check_password($hash, $password));
-            $this->assertFalse($this->crypt->check_password($hash, $password . '_modified'));
+            $this->assertTrue($this->crypt->check_password($hash, $pwd));
+            $this->assertFalse($this->crypt->check_password($hash, $pwd . '_modified'));
         }
     }
 
     public function testCaseSensitivity(): void
     {
-        $password = 'CaseSensitivePassword';
-        $hash = $this->crypt->generate_password($password);
+        $pwd = 'CaseSensitivePassword';
+        $hash = $this->crypt->generate_password($pwd);
         
-        $this->assertTrue($this->crypt->check_password($hash, $password));
-        $this->assertFalse($this->crypt->check_password($hash, strtolower($password)));
-        $this->assertFalse($this->crypt->check_password($hash, strtoupper($password)));
+        $this->assertTrue($this->crypt->check_password($hash, $pwd));
+        $this->assertFalse($this->crypt->check_password($hash, strtolower($pwd)));
+        $this->assertFalse($this->crypt->check_password($hash, strtoupper($pwd)));
     }
 }
