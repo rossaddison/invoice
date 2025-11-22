@@ -63,7 +63,7 @@ final class PaymentInformationController
 
     use OpenBankingProviders;
 
-    private string $salt;
+    private ?string $salt = null;
 
     private string $telegramToken;
 
@@ -118,7 +118,7 @@ final class PaymentInformationController
         }
         $this->webService    = $webService;
         $this->crypt         = $crypt;
-        $this->salt          = $crypt->salt();
+        $this->salt          = $crypt->salt() ?? null;
         $this->compR         = $compR;
         $this->cPR           = $cPR;
         $this->logger        = $logger;

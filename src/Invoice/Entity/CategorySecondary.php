@@ -21,7 +21,8 @@ class CategorySecondary
         private ?int $category_primary_id = null,
         #[Column(type: 'text', nullable: true)]
         private ?string $name = '',
-    ) {}
+    ) {
+    }
 
     public function getId(): ?int
     {

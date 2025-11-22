@@ -21,7 +21,8 @@ class Group
         private ?int $next_id = null,
         #[Column(type: 'integer', nullable: true, default: 0)]
         private ?int $left_pad = null,
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {

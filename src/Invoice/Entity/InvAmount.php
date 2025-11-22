@@ -27,7 +27,9 @@ class InvAmount
         /** Note the $total is calculated after taking into account invoice discount i.e. $inv->getDiscount */
         private ?float $total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $paid = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $balance = 0.00) {}
+        private ?float $balance = 0.00)
+    {
+    }
 
     public function getInv(): ?Inv
     {

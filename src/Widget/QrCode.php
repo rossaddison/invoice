@@ -9,7 +9,7 @@ use chillerlan\QRCode\QRCode as ChillQrCode;
 
 final class QrCode
 {
-    public static function absoluteUrl(string $absoluteUrl = null, string $directions = '', int $pixels = 40): void
+    public static function absoluteUrl(?string $absoluteUrl = null, string $directions = '', int $pixels = 40): void
     {
         /**
          * @var float|int|string $qrCode

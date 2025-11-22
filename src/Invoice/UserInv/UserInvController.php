@@ -190,11 +190,11 @@ final class UserInvController extends BaseController
         #[RouteArgument('active')]
         string $active = '2',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterUser')]
-        string $queryFilterUser = null,
+        ?string $queryFilterUser = null,
     ): \Yiisoft\DataResponse\DataResponse {
         $canEdit = $this->rbac();
         $page = $queryPage ?? $page;

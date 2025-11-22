@@ -24,9 +24,9 @@ use Yiisoft\Html\Html;
                     <?= Html::openTag(
                         'button',
                         ['class' => 'btn btn-light',
-                            'type' => 'button',
-                            'data-bs-dismiss' => 'modal',
-                        ],
+                                                            'type' => 'button',
+                                                            'data-bs-dismiss' => 'modal',
+                                                        ],
                     ); ?>
                         <?= '❌'; ?>        
                     <?= Html::closeTag('button'); ?>

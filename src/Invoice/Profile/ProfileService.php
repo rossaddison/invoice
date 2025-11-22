@@ -8,7 +8,9 @@ use App\Invoice\Entity\Profile;
 
 final readonly class ProfileService
 {
-    public function __construct(private ProfileRepository $repository) {}
+    public function __construct(private ProfileRepository $repository)
+    {
+    }
 
     /**
      * @param Profile $model

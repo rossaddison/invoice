@@ -19,7 +19,9 @@ use App\Invoice\Unit\UnitRepository as UNR;
 
 final readonly class InvItemService
 {
-    public function __construct(private InvItemRepository $repository) {}
+    public function __construct(private InvItemRepository $repository)
+    {
+    }
 
     /**
      * Related logic: see InvController function inv_to_inv_items

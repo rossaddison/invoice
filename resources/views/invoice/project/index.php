@@ -45,7 +45,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Project $model) => Html::encode($model->getId()),
+        content: static fn (Project $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'client_id',
@@ -63,7 +63,7 @@ $columns = [
     new DataColumn(
         'name',
         header: $translator->translate('project.name'),
-        content: static fn(Project $model): string => Html::encode(ucfirst($model->getName() ?? '')),
+        content: static fn (Project $model): string => Html::encode(ucfirst($model->getName() ?? '')),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

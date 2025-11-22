@@ -25,7 +25,14 @@ use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 
 final readonly class LayoutViewInjection implements LayoutParametersInjectionInterface
 {
-    public function __construct(private CurrentUser $currentUser, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator) {}
+    public function __construct(
+        private CurrentUser $currentUser,
+        private CompanyRepository $companyRepository,
+        private CompanyPrivateRepository $companyPrivateRepository,
+        private SettingRepository $settingRepository,
+        private Translator $translator,
+    ) {
+    }
 
     /**
      * @return array
@@ -35,8 +42,6 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
     #[\Override]
     public function getLayoutParameters(): array
     {
-        $bootstrap5OffcanvasEnable = false;
-        $bootstrap5OffcanvasPlacement = 'top';
         $brandLabel = '';
         $companyWeb = '';
         $companySlack = '';
@@ -73,35 +78,83 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompany_id() == (string) $company->getId()) {
-                        // site's logo: take the first logo where the current date falls within the logo's start and end dates
-                        if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                            $companyLogoFileName = $private->getLogo_filename();
-                            $companyLogoWidth = $private->getLogo_width();
-                            $companyLogoHeight = $private->getLogo_height();
-                            $companyLogoMargin = $private->getLogo_margin();
-                            //  break;
-                        }
+                    if ($private->getCompany_id() == (string) $company->getId()
+                        && (
+                            $private->getStart_date()?->format('Y-m-d')
+                           < (new \DateTimeImmutable('now'))->format('Y-m-d')
+                           && $private->getEnd_date()?->format('Y-m-d')
+                           > (new \DateTimeImmutable('now'))->format('Y-m-d')
+                        )) {
+                        $companyLogoFileName = $private->getLogo_filename();
+                        $companyLogoWidth = $private->getLogo_width();
+                        $companyLogoHeight = $private->getLogo_height();
+                        $companyLogoMargin = $private->getLogo_margin();
                     }
                 }
             }
         }
-        $bootstrap5OffcanvasPlacement = $this->settingRepository->getSetting('bootstrap5_offcanvas_placement') ?: 'top';
-        $bootstrap5OffcanvasEnable = $this->settingRepository->getSetting('bootstrap5_offcanvas_enable') == '1' ? true : false;
-        $bootstrap5LayoutInvoiceNavbarFont = $this->settingRepository->getSetting('bootstrap5_layout_invoice_navbar_font') ?: 'Arial';
-        $bootstrap5LayoutInvoiceNavbarFontSize = $this->settingRepository->getSetting('bootstrap5_layout_invoice_navbar_font_size') ?: '10';
-        $stopSigningUp = $this->settingRepository->getSetting('stop_signing_up') == '1' ? true : false;
-        $stopLoggingIn = $this->settingRepository->getSetting('stop_logging_in') == '1' ? true : false;
-        $noFrontPageAbout = $this->settingRepository->getSetting('no_front_about_page') == '1' ? true : false;
-        $noFrontPageGallery = $this->settingRepository->getSetting('no_front_gallery_page') == '1' ? true : false;
-        $noFrontPageAccreditations = $this->settingRepository->getSetting('no_front_accreditations_page') == '1' ? true : false;
-        $noFrontPageTeam = $this->settingRepository->getSetting('no_front_team_page') == '1' ? true : false;
-        $noFrontPagePricing = $this->settingRepository->getSetting('no_front_pricing_page') == '1' ? true : false;
-        $noFrontPageTestimonial = $this->settingRepository->getSetting('no_front_testimonial_page') == '1' ? true : false;
-        $noFrontPagePrivacyPolicy = $this->settingRepository->getSetting('no_front_privacy_policy_page') == '1' ? true : false;
-        $noFrontPageTermsOfService = $this->settingRepository->getSetting('no_front_terms_of_service_page') == '1' ? true : false;
-        $noFrontPageContactDetails = $this->settingRepository->getSetting('no_front_contact_details_page') == '1' ? true : false;
-        $noFrontPageContactUs = $this->settingRepository->getSetting('no_front_contact_us_page') == '1' ? true : false;
+        $bootstrap5OffcanvasPlacement =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_offcanvas_placement') ?: 'top';
+        $bootstrap5OffcanvasEnable =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_offcanvas_enable') == '1'
+                   ? true
+                   : false;
+        $bootstrap5LayoutInvoiceNavbarFont =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_layout_invoice_navbar_font')
+                   ?: 'Arial';
+        $bootstrap5LayoutInvoiceNavbarFontSize =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_layout_invoice_navbar_font_size')
+                   ?: '10';
+        $stopSigningUp =
+            $this->settingRepository->getSetting('stop_signing_up') == '1'
+                   ? true : false;
+        $stopLoggingIn =
+            $this->settingRepository->getSetting('stop_logging_in') == '1'
+                   ? true : false;
+        $noFrontPageAbout =
+            $this->settingRepository
+                 ->getSetting('no_front_about_page') == '1'
+                   ? true : false;
+        $noFrontPageGallery =
+            $this->settingRepository
+                 ->getSetting('no_front_gallery_page') == '1'
+                   ? true : false;
+        $noFrontPageAccreditations =
+            $this->settingRepository
+                 ->getSetting('no_front_accreditations_page') == '1'
+                   ? true : false;
+        $noFrontPageTeam =
+            $this->settingRepository
+                 ->getSetting('no_front_team_page') == '1'
+                   ? true : false;
+        $noFrontPagePricing =
+            $this->settingRepository
+                 ->getSetting('no_front_pricing_page') == '1'
+                   ? true : false;
+        $noFrontPageTestimonial =
+            $this->settingRepository
+                 ->getSetting('no_front_testimonial_page') == '1'
+                   ? true : false;
+        $noFrontPagePrivacyPolicy =
+            $this->settingRepository
+                 ->getSetting('no_front_privacy_policy_page') == '1'
+                   ? true : false;
+        $noFrontPageTermsOfService =
+            $this->settingRepository
+                 ->getSetting('no_front_terms_of_service_page') == '1'
+                   ? true : false;
+        $noFrontPageContactDetails =
+            $this->settingRepository
+                 ->getSetting('no_front_contact_details_page') == '1'
+                   ? true : false;
+        $noFrontPageContactUs =
+            $this->settingRepository
+                 ->getSetting('no_front_contact_us_page') == '1'
+                   ? true : false;
         /**
          * Related logic: see .env.php $_ENV['YII_DEBUG'] and $_ENV['BUILD_DATABASE'] located in the root (first) folder
          *      e.g YII_DEBUG=true
@@ -115,7 +168,10 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $isGuest = ($user === null || $user->getId() === null);
         $userLogin = (null !== $user ? $user->getLogin() : null);
         // Show the default logo if the logo applicable dates have expired under CompanyPrivate
-        $logoPath = ((isset($companyLogoFileName) && !empty($companyLogoFileName)) ? '/logo/' . $companyLogoFileName : '/site/logo.png');
+        $logoPath = ((isset($companyLogoFileName)
+                      && !empty($companyLogoFileName))
+                      ? '/logo/' . $companyLogoFileName
+                      : '/site/logo.png');
         return [
             'bootstrap5OffcanvasEnable' => $bootstrap5OffcanvasEnable,
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
@@ -140,8 +196,10 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'isGuest' => $isGuest,
             'user' => $user,
             'userLogin' => $userLogin,
-            'xdebug' => $xdebug = (extension_loaded('xdebug') ? 'php.ini zend_extension xdebug Installed : Performance compromised!'
-                                                              : 'php.ini zend_extension Commented out: Performance NOT compromised'),
+            'xdebug' =>
+                (extension_loaded('xdebug')
+                ? 'php.ini zend_extension xdebug Installed : Performance compromised!'
+                : 'php.ini zend_extension Commented out: Performance NOT compromised'),
             // 0 => fast Read and Write, // 1 => slower Write Only
             'read_write' => $this->settingRepository->getSchemaProvidersMode(),
             'brandLabel' => $brandLabel ?? 'Yii3-i',
@@ -157,7 +215,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'companyLogoHeight' => $companyLogoHeight ?? '',
             'companyLogoMargin' => $companyLogoMargin ?? '',
             /**
-             * Related logic: see Use the repository name to build a quick link to scrutinizer php and javascript code checks
+             * Related logic:
+             * see Use the repository name to build a quick link to scrutinizer php and javascript code checks
              * in invoice/layout under debug mode
              */
             'scrutinizerRepository' => 'rossaddison/invoice',

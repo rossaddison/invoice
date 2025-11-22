@@ -40,11 +40,11 @@ $columns = [
     new DataColumn(
         'company_public_name',
         header: $translator->translate('company.public'),
-        content: static fn(CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
     ),
     new DataColumn(
         'logo_filename',
-        content: static fn(CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

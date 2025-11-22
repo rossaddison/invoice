@@ -22,7 +22,9 @@ class ClientNote
     public function __construct(#[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null, #[Column(type: 'longText', nullable: false)]
         private string $note = '', #[Column(type: 'date', nullable: false)]
-        private mixed $date_note = '') {}
+        private mixed $date_note = '')
+    {
+    }
 
     public function getClient(): ?Client
     {

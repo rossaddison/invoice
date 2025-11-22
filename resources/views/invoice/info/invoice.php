@@ -51,6 +51,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>22nd November 2025</b></p>
+<p>SonarQube code reduction update - The modern approach is to rely on password_hash to generate a salt. So make it optional with $legacyExternalSaltRequired</p>
+<p>Php 8.5 preparation - explicit declaration of ?string $variable = null instead of string $variable = null</p>
+<p>Workflow cs.yml related to php-cs-fixer will be a dry-run without the --diff to reduce the time to generate the output ... for the time being. So just rely on --verbose to output the rules that have been applied</p>
+<p>Store .ini cli and phpForApache in e.g.ini for wampserver setup for 8.4.15 and 8.5.0. </p>
 <p><b>11th November 2025</b></p>
 <p>Quote can add a task now.</p>
 <p>Netbeans synced with vs code.</p>

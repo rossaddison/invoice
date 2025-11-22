@@ -10,7 +10,9 @@ use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SOAR;
 
 final readonly class SalesOrderAmountService
 {
-    public function __construct(private SOAR $repository) {}
+    public function __construct(private SOAR $repository)
+    {
+    }
 
     /**
      * @param SoAmount $model

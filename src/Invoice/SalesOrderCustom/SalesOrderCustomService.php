@@ -8,7 +8,9 @@ use App\Invoice\Entity\SalesOrderCustom;
 
 final readonly class SalesOrderCustomService
 {
-    public function __construct(private SalesOrderCustomRepository $repository) {}
+    public function __construct(private SalesOrderCustomRepository $repository)
+    {
+    }
 
     /**
      * @param SalesOrderCustom $model

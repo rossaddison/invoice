@@ -38,22 +38,22 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(ItemLookup $model) => Html::encode($model->getId()),
+        content: static fn (ItemLookup $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(ItemLookup $model): string => Html::encode($model->getName()),
+        content: static fn (ItemLookup $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(ItemLookup $model): string => Html::encode($model->getDescription()),
+        content: static fn (ItemLookup $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         'price',
         header: $translator->translate('price'),
-        content: static fn(ItemLookup $model): string => Html::encode($model->getPrice()),
+        content: static fn (ItemLookup $model): string => Html::encode($model->getPrice()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

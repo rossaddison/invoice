@@ -14,7 +14,9 @@ use App\Invoice\Unit\UnitRepository as UR;
 
 final readonly class SalesOrderItemService
 {
-    public function __construct(private SalesOrderItemRepository $repository) {}
+    public function __construct(private SalesOrderItemRepository $repository)
+    {
+    }
 
     /**
      * Used in quote/quote_to_so_quote_items subfunction in quote/quote_to_so_confirm

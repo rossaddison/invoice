@@ -17,6 +17,10 @@ final class Crypt
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
     private string $decrypt_key = self::DECRYPT_KEY;
 
+    public function __construct(private readonly bool $legacyExternalSaltRequired = false)
+    {
+    }
+
     /**
      * Generate a cryptographically secure salt suitable for legacy bcrypt-style crypt() usage.
      *
@@ -24,15 +28,18 @@ final class Crypt
      * - bcrypt salts require 22 characters from the alphabet "./A-Za-z0-9".
      * - For new password storage use password_hash() which generates its own secure salt automatically.
      *
-     * @return string 22-character bcrypt-compatible salt
+     * @return string|null 22-character bcrypt-compatible salt
      */
-    public function salt(): string
+    public function salt(): ?string
     {
-        // Use 16 bytes (128 bits) of entropy, base64-encode and adapt to bcrypt alphabet.
-        $raw = random_bytes(16);
-        // base64 encode then translate '+' -> '.' and remove '=' padding
-        $b64 = str_replace('=', '', strtr(base64_encode($raw), '+', '.'));
-        return substr($b64, 0, 22);
+        if ($this->legacyExternalSaltRequired) {
+            // Use 16 bytes (128 bits) of entropy, base64-encode and adapt to bcrypt alphabet.
+            $raw = random_bytes(16);
+            // base64 encode then translate '+' -> '.' and remove '=' padding
+            $b64 = str_replace('=', '', strtr(base64_encode($raw), '+', '.'));
+            return substr($b64, 0, 22);
+        }
+        return null;
     }
 
     /**
@@ -47,7 +54,7 @@ final class Crypt
      */
     public function generate_password(string $password, string $salt = ''): string
     {
-        if (strlen($salt) > 0) {
+        if (strlen($salt) > 0 && $this->legacyExternalSaltRequired) {
             // Legacy path: produce bcrypt hash with provided salt (preserve existing behaviour if callers pass a salt)
             // Use $2y$ to be compatible with PHP's bcrypt safe identifier.
             $prefix = '$2y$10$';

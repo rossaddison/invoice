@@ -17,7 +17,9 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class Button
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator) {}
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
+    {
+    }
 
     public static function tfaToggleSecret(): string
     {

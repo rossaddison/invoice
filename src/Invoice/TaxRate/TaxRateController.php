@@ -45,7 +45,7 @@ final class TaxRateController extends BaseController
      * @param int $page
      * @param TaxRateRepository $taxRateRepository
      */
-    public function index(TaxRateRepository $taxRateRepository, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(TaxRateRepository $taxRateRepository, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [

@@ -23,9 +23,8 @@ class BraintreePaymentService
         private readonly SettingRepository $settings,
         private readonly Crypt $crypt,
         private readonly LoggerInterface $logger,
-        private string $salt,
+        private ?string $salt = null,
     ) {
-        $this->salt = (new Crypt())->salt();
     }
 
     /**
@@ -198,8 +197,10 @@ class BraintreePaymentService
      */
     public function getMerchantId(): string
     {
-        $merchantId = $this->settings->getSetting('gateway_braintree_merchantId');
-        return (string) $this->crypt->decode($merchantId ?: '');
+        $merchantId = $this->settings
+                           ->getSetting('gateway_braintree_merchantId');
+        return (string) $this->crypt
+                             ->decode($merchantId ?: '');
     }
 
     /**
@@ -207,7 +208,9 @@ class BraintreePaymentService
      */
     public function getEnvironment(): string
     {
-        return $this->settings->getSetting('gateway_braintree_sandbox') === '1' ? 'sandbox' : 'production';
+        return $this->settings
+                    ->getSetting('gateway_braintree_sandbox') === '1'
+                      ? 'sandbox' : 'production';
     }
 
     /**
@@ -215,8 +218,10 @@ class BraintreePaymentService
      */
     private function getPublicKey(): string
     {
-        $publicKey = $this->settings->getSetting('gateway_braintree_publicKey');
-        return (string) $this->crypt->decode($publicKey ?: '');
+        $publicKey = $this->settings
+                          ->getSetting('gateway_braintree_publicKey');
+        return (string) $this->crypt
+                             ->decode($publicKey ?: '');
     }
 
     /**
@@ -224,8 +229,10 @@ class BraintreePaymentService
      */
     private function getPrivateKey(): string
     {
-        $privateKey = $this->settings->getSetting('gateway_braintree_privateKey');
-        return (string) $this->crypt->decode($privateKey ?: '');
+        $privateKey = $this->settings
+                           ->getSetting('gateway_braintree_privateKey');
+        return (string) $this->crypt
+                             ->decode($privateKey ?: '');
     }
 
     /**

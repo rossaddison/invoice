@@ -8,7 +8,9 @@ use App\Invoice\Entity\CustomField;
 
 final readonly class CustomFieldService
 {
-    public function __construct(private CustomFieldRepository $repository) {}
+    public function __construct(private CustomFieldRepository $repository)
+    {
+    }
 
     /**
      * @param CustomField $model

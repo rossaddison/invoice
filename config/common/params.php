@@ -81,7 +81,7 @@ return [
                 LogLevel::INFO,
                 //LogLevel::DEBUG,
             ],
-            'dirMode' => 0755,
+            'dirMode' => 0o755,
             'fileMode' => null,
         ],
         'fileRotator' => [

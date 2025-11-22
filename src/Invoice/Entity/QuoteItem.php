@@ -22,6 +22,7 @@ class QuoteItem
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
+    // Task relation - nullable because quote items can be either products or tasks
     #[BelongsTo(target: Product::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 

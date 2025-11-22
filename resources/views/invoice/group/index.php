@@ -41,27 +41,27 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Group $model) => Html::encode($model->getId()),
+        content: static fn (Group $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(Group $model) => Html::encode($model->getName()),
+        content: static fn (Group $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'identifier_format',
         header: $translator->translate('identifier.format'),
-        content: static fn(Group $model) => Html::encode($model->getIdentifier_format()),
+        content: static fn (Group $model) => Html::encode($model->getIdentifier_format()),
     ),
     new DataColumn(
         'left_pad',
         header: $translator->translate('left.pad'),
-        content: static fn(Group $model) => Html::encode($model->getLeft_pad()),
+        content: static fn (Group $model) => Html::encode($model->getLeft_pad()),
     ),
     new DataColumn(
         'next_id',
         header: $translator->translate('next.id'),
-        content: static fn(Group $model) => Html::encode($model->getNext_id()),
+        content: static fn (Group $model) => Html::encode($model->getNext_id()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

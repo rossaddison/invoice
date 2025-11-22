@@ -8,7 +8,9 @@ use App\Invoice\Entity\Merchant;
 
 final readonly class MerchantService
 {
-    public function __construct(private MerchantRepository $repository) {}
+    public function __construct(private MerchantRepository $repository)
+    {
+    }
 
     /**
      * @param Merchant $model

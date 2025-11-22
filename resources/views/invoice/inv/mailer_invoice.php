@@ -359,15 +359,15 @@ if (is_array($autoTemplate) && array_key_exists('body', $autoTemplate) && is_str
 $bodyJson = json_encode($body, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS);
 
 $js6 = <<<JS
-document.addEventListener('DOMContentLoaded', function () {
-    "use strict";
-    var textContent = {$bodyJson};
-    var el = document.getElementById('mailerinvform-body');
-    if (el) {
-        el.value = textContent;
-    }
-});
-JS;
+    document.addEventListener('DOMContentLoaded', function () {
+        "use strict";
+        var textContent = {$bodyJson};
+        var el = document.getElementById('mailerinvform-body');
+        if (el) {
+            el.value = textContent;
+        }
+    });
+    JS;
 
 echo Html::script($js6)->type('module');
 ?>

@@ -42,32 +42,32 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getId()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
     ),
     new DataColumn(
         'code',
         header: $translator->translate('code'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getCode()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getCode()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getName()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getDescription()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),

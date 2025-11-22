@@ -48,32 +48,32 @@ $columns = [
     new DataColumn(
         'tax_rate_id',
         header: $translator->translate('id'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateId()),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRateId()),
     ),
     new DataColumn(
         'tax_rate_name',
         header: $translator->translate('tax.rate.name'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateName()),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRateName()),
     ),
     new DataColumn(
         'tax_rate_percent',
         header: $translator->translate('tax.rate.percent'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRatePercent()),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRatePercent()),
     ),
     new DataColumn(
         'peppol_tax_rate_code',
         header: $translator->translate('peppol.tax.rate.code'),
-        content: static fn(TaxRate $model) => Html::encode($model->getPeppolTaxRateCode()),
+        content: static fn (TaxRate $model) => Html::encode($model->getPeppolTaxRateCode()),
     ),
     new DataColumn(
         'storecove_tax_type',
         header: $translator->translate('storecove.tax.rate.code'),
-        content: static fn(TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))),
+        content: static fn (TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))),
     ),
     new DataColumn(
         'tax_rate_default',
         header: $translator->translate('default'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1'
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1'
                                                           ? ($translator->translate('active') . ' ' . '✔️')
                                                            : $translator->translate('inactive') . ' ' . '❌'),
     ),

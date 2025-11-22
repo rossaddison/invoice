@@ -8,7 +8,9 @@ use App\Invoice\Entity\ItemLookup;
 
 final readonly class ItemLookupService
 {
-    public function __construct(private ItemLookupRepository $repository) {}
+    public function __construct(private ItemLookupRepository $repository)
+    {
+    }
 
     /**
      * @param ItemLookup $model

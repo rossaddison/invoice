@@ -8,7 +8,9 @@ use App\Invoice\Entity\DeliveryLocation;
 
 final readonly class DeliveryLocationService
 {
-    public function __construct(private DeliveryLocationRepository $repository) {}
+    public function __construct(private DeliveryLocationRepository $repository)
+    {
+    }
 
     /**
      * @param DeliveryLocation $model

@@ -415,7 +415,7 @@ goto menu
 
 :code_style_suggest_changes
 echo PHP-CS-Fixer Dry Run (see potential changes)...
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff 
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose
 pause
 goto menu
 

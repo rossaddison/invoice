@@ -11,8 +11,6 @@ use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
-//use Yiisoft\Yii\Sentry\SentryMiddleware;
-
 // yii3-i
 return [
     'locale' => [
@@ -55,7 +53,6 @@ return [
     'middlewares' => [
         RequestCatcherMiddleware::class,
         ErrorCatcher::class,
-        //SentryMiddleware::class,
         SessionMiddleware::class,
         CsrfTokenMiddleware::class,
         CookieMiddleware::class,

@@ -16,7 +16,9 @@ class InvoiceLine implements XmlSerializable
     // See CreditNoteLine.php
     protected bool $isCreditNoteLine = false;
 
-    public function __construct(private string $id, protected float $invoicedQuantity, private float $lineExtensionAmount, private ?string $unitCodeListId, private ?TaxTotal $taxTotal, private ?InvoicePeriod $invoicePeriod, private ?string $note, private ?Item $item, private ?Price $price, private ?string $accountingCostCode, private ?string $accountingCost) {}
+    public function __construct(private string $id, protected float $invoicedQuantity, private float $lineExtensionAmount, private ?string $unitCodeListId, private ?TaxTotal $taxTotal, private ?InvoicePeriod $invoicePeriod, private ?string $note, private ?Item $item, private ?Price $price, private ?string $accountingCostCode, private ?string $accountingCost)
+    {
+    }
 
     /**
      * @return string

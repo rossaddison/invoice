@@ -10,7 +10,9 @@ use Yiisoft\Files\FileHelper;
 
 final readonly class ProductImageService
 {
-    public function __construct(private ProductImageRepository $repository, private SettingRepository $s) {}
+    public function __construct(private ProductImageRepository $repository, private SettingRepository $s)
+    {
+    }
 
     /**
      * @param ProductImage $model

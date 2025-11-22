@@ -10,7 +10,9 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class InvAllowanceChargeService
 {
-    public function __construct(private InvAllowanceChargeRepository $repository, private ACR $acR) {}
+    public function __construct(private InvAllowanceChargeRepository $repository, private ACR $acR)
+    {
+    }
 
     /**
      * @param InvAllowanceCharge $model

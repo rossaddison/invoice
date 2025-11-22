@@ -27,7 +27,9 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class SalesOrderService
 {
-    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session) {}
+    public function __construct(private SalesOrderRepository $repository, private SessionInterface $session)
+    {
+    }
 
     /**
      * @param User $user

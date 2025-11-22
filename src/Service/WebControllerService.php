@@ -15,7 +15,8 @@ final readonly class WebControllerService
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private UrlGeneratorInterface $urlGenerator,
-    ) {}
+    ) {
+    }
 
     /** Bug: Trailing # at end of browser url if ... string $hash = '';
      *  Fix: ?string $hash = null

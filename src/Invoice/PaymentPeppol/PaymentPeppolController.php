@@ -59,7 +59,7 @@ final class PaymentPeppolController extends BaseController
             'response' => $this->viewRenderer->renderPartial(
                 '//invoice/layout/header_buttons',
                 [
-                    'hide_submit_button' => false ,
+                    'hide_submit_button' => false,
                     'hide_cancel_button' => false,
                 ],
             ),
@@ -149,7 +149,7 @@ final class PaymentPeppolController extends BaseController
                 'response' => $this->viewRenderer->renderPartial(
                     '//invoice/layout/header_buttons',
                     [
-                        'hide_submit_button' => false ,
+                        'hide_submit_button' => false,
                         'hide_cancel_button' => false,
                     ],
                 ),
@@ -213,7 +213,7 @@ final class PaymentPeppolController extends BaseController
                 'response' => $this->viewRenderer->renderPartial(
                     '//invoice/layout/header_buttons',
                     [
-                        'hide_submit_button' => false ,
+                        'hide_submit_button' => false,
                         'hide_cancel_button' => false,
                     ],
                 ),

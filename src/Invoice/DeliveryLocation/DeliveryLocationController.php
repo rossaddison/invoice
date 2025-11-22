@@ -62,9 +62,9 @@ final class DeliveryLocationController extends BaseController
         IR $iR,
         QR $qR,
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
     ): Response {
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int) $queryPage > 0 ? (int) $queryPage : 1;

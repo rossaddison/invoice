@@ -8,7 +8,9 @@ use App\Invoice\Entity\Project;
 
 final readonly class ProjectService
 {
-    public function __construct(private ProjectRepository $repository) {}
+    public function __construct(private ProjectRepository $repository)
+    {
+    }
 
     /**
      * @param Project $model

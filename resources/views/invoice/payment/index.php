@@ -52,12 +52,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Payment $model): string => $model->getId(),
+        content: static fn (Payment $model): string => $model->getId(),
     ),
     new DataColumn(
         property: 'paymentDateFilter',
         header: $translator->translate('payment.date'),
-        content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
+        content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
                                                                          ? $date->format('Y-m-d')
                                                                          : '',
         filter: true,
@@ -74,7 +74,7 @@ $columns = [
     new DataColumn(
         'note',
         header: $translator->translate('note'),
-        content: static fn(Payment $model): string => Html::encode($model->getNote()),
+        content: static fn (Payment $model): string => Html::encode($model->getNote()),
     ),
     new DataColumn(
         'inv_id',

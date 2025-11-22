@@ -19,7 +19,8 @@ final readonly class QuoteToolbar
         private SettingRepository $settingRepository,
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     public function render(Quote $quote, bool $quoteEdit, string $vat, float $quoteAmountTotal): string
     {

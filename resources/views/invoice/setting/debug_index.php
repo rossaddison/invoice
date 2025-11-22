@@ -62,20 +62,20 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_id()),
+        content: static fn (Setting $model) => Html::encode($model->getSetting_id()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'setting_key',
         header: $translator->translate('setting.key'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_key()),
+        content: static fn (Setting $model) => Html::encode($model->getSetting_key()),
         withSorting: true,
         filter: (new DropdownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
     ),
     new DataColumn(
         property: 'setting_value',
         header: $translator->translate('setting.value'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_value()),
+        content: static fn (Setting $model) => Html::encode($model->getSetting_value()),
         withSorting: true,
         filter: (new DropdownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
     ),

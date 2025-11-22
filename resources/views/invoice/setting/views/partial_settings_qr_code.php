@@ -87,7 +87,7 @@ printf(Img::tag()
 ->height($pixels)
 ->src('%s')
 ->alt($translator->translate('qr.code'))
-->render(), (string) (new QRCode())->render('http://invoice.myhost/invoice/inv/view/6'));
+->render(), (string) (new QRCode())->render('https://invoice.myhost/invoice/inv/view/6'));
 echo Table::tag()
 ->attributes([ 'class' => 'table table-info table-striped table-bordered'])
 ->rows(
@@ -129,7 +129,7 @@ echo Table::tag()
     Tr::tag()
     ->dataStrings([
         $translator->translate('qr.absolute.url'),
-        'http://invoice.myhost/invoice/inv/view/6',
+        'https://invoice.myhost/invoice/inv/view/6',
     ]),
     Tr::tag()
     ->dataStrings([

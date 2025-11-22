@@ -22,7 +22,8 @@ final readonly class FormFields
     public function __construct(
         private TranslatorInterface $translator,
         private SettingRepository $settingRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Client selection dropdown field

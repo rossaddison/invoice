@@ -50,7 +50,7 @@ $columns = [
     new DataColumn(
         'next',
         header: $translator->translate('status'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
             => Span::tag()
             ->addClass(null !== $model->getNext() ? 'btn btn-success' : 'btn btn-danger')
             ->content(null !== $model->getNext() ? $translator->translate('active') : $translator->translate('inactive'))
@@ -71,33 +71,33 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('date.created'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode(!is_string($dateCreated = $model->getInv()?->getDate_created()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
     new DataColumn(
         'start',
         header: $translator->translate('start.date'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode(!is_string($recurringStart = $model->getStart()) ? $recurringStart->format('Y-m-d') : ''),
     ),
     new DataColumn(
         'end',
         header: $translator->translate('end.date'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode(!is_string($recurringEnd = $model->getEnd()) && null !== $recurringEnd
                      ? $recurringEnd->format('Y-m-d') : ''),
     ),
     new DataColumn(
         'frequency',
         header: $translator->translate('every'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode($translator->translate((string) $recur_frequencies[$model->getFrequency()])),
     ),
     new DataColumn(
         'next',
         header: $translator->translate('next.date'),
-        content: static fn(InvRecurring $model)
+        content: static fn (InvRecurring $model)
         => Html::encode(null !== $model->getNext() ? ((!is_string($recurringNext = $model->getNext()) && null !== $recurringNext) ? $recurringNext->format('Y-m-d') : '') : ''),
     ),
     new ActionColumn(buttons: [

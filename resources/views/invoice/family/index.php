@@ -59,13 +59,13 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn(Family $model) => Html::encode($model->getFamily_id()),
+        content: static fn (Family $model) => Html::encode($model->getFamily_id()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_name',
         header: $translator->translate('family'),
-        content: static fn(Family $model) => Html::encode($model->getFamily_name() ?? ''),
+        content: static fn (Family $model) => Html::encode($model->getFamily_name() ?? ''),
         withSorting: true,
     ),
     new DataColumn(

@@ -26,7 +26,8 @@ final class ChangePasswordForm extends FormModel implements RulesProviderInterfa
         private readonly ValidatorInterface $validator,
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 
     public function change(): bool
     {

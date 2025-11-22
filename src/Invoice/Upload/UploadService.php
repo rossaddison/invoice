@@ -10,7 +10,9 @@ use Yiisoft\Files\FileHelper;
 
 final readonly class UploadService
 {
-    public function __construct(private UploadRepository $repository) {}
+    public function __construct(private UploadRepository $repository)
+    {
+    }
 
     /**
      * @param Upload $model

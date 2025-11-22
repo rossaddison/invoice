@@ -36,12 +36,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(FromDropDown $model) => $model->getId(),
+        content: static fn (FromDropDown $model) => $model->getId(),
     ),
     new DataColumn(
         'default_email',
         header: $translator->translate('email.default'),
-        content: static fn(FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
+        content: static fn (FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
     ),
     new DataColumn(
         header: $translator->translate('view'),

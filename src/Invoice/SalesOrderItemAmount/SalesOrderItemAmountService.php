@@ -8,7 +8,9 @@ use App\Invoice\Entity\SalesOrderItemAmount;
 
 final readonly class SalesOrderItemAmountService
 {
-    public function __construct(private SalesOrderItemAmountRepository $repository) {}
+    public function __construct(private SalesOrderItemAmountRepository $repository)
+    {
+    }
 
     /**
      * Used in salesorderitemservice/saveSalesOrderItemAmount

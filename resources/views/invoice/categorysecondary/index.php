@@ -40,12 +40,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(CategorySecondary $model) => Html::encode($model->getId()),
+        content: static fn (CategorySecondary $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(CategorySecondary $model) => Html::encode($model->getName() ?? ''),
+        content: static fn (CategorySecondary $model) => Html::encode($model->getName() ?? ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

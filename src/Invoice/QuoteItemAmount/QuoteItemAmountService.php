@@ -8,7 +8,9 @@ use App\Invoice\Entity\QuoteItemAmount;
 
 final readonly class QuoteItemAmountService
 {
-    public function __construct(private QuoteItemAmountRepository $repository) {}
+    public function __construct(private QuoteItemAmountRepository $repository)
+    {
+    }
 
     /**
      * @param QuoteItemAmount $model

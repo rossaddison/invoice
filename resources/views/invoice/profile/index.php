@@ -42,22 +42,22 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Profile $model) => Html::encode($model->getId()),
+        content: static fn (Profile $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'company_id',
         header: $translator->translate('company'),
-        content: static fn(Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
+        content: static fn (Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
     ),
     new DataColumn(
         'email',
         header: $translator->translate('email.address'),
-        content: static fn(Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
+        content: static fn (Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
+        content: static fn (Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

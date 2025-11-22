@@ -40,32 +40,32 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Merchant $model) => Html::encode($model->getId()),
+        content: static fn (Merchant $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'inv',
         header: $translator->translate('invoice'),
-        content: static fn(Merchant $model): string => Html::encode($model->getInv()?->getNumber()),
+        content: static fn (Merchant $model): string => Html::encode($model->getInv()?->getNumber()),
     ),
     new DataColumn(
         'date',
         header: $translator->translate('date'),
-        content: static fn(Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : ''),
+        content: static fn (Merchant $model): string => Html::encode(!is_string($date = $model->getDate()) ? $date->format('Y-m-d') : ''),
     ),
     new DataColumn(
         'driver',
         header: $translator->translate('merchant.driver'),
-        content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
+        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
     ),
     new DataColumn(
         'response',
         header: $translator->translate('merchant.response'),
-        content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
+        content: static fn (Merchant $model): string => Html::encode($model->getResponse()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('merchant.reference'),
-        content: static fn(Merchant $model): string => Html::encode($model->getReference()),
+        content: static fn (Merchant $model): string => Html::encode($model->getReference()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

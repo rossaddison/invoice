@@ -65,7 +65,8 @@ class Product
         private ?int $unit_peppol_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $family_id = null,
-    ) {}
+    ) {
+    }
 
     //get relation $family
     public function getFamily(): ?Family

@@ -150,7 +150,7 @@ $offcanvasPlacement = match ($bootstrap5OffcanvasPlacement) {
     'top' => OffcanvasPlacement::TOP,
 };
 
-echo($bootstrap5OffcanvasEnable ? Offcanvas::widget()
+echo ($bootstrap5OffcanvasEnable ? Offcanvas::widget()
         ->id('offcanvas' . ucFirst($bootstrap5OffcanvasPlacement))
         ->placement($offcanvasPlacement)
         ->title('Offcanvas')
@@ -388,14 +388,16 @@ if ((null !== $currentPath) && !$isGuest) {
             ->togglerSize(ButtonSize::LARGE)
             ->items(
                 DropdownItem::text('WAMP'),
-                DropdownItem::text($translator->translate('platform.editor') . ': Apache Netbeans IDE 23 64 bit'),
-                DropdownItem::text($translator->translate('platform.server') . ': Wampserver 3.3.6 64 bit'),
-                DropdownItem::text('Apache: 2.4.59 64 bit'),
-                DropdownItem::text($translator->translate('platform.mySqlVersion') . ': 8.3.0 '),
+                DropdownItem::text($translator->translate('platform.editor') . ': Apache Netbeans IDE 28 64 bit'),
+                DropdownItem::text($translator->translate('platform.server') . ': Wampserver 3.4.0 64 bit'),
+                DropdownItem::text('Apache: 2.4.65 64 bit'),
+                DropdownItem::text($translator->translate('platform.mySqlVersion') . ': 9.1.0 '),
                 DropdownItem::text($translator->translate('platform.windowsVersion') . ': Windows 11 Pro Edition'),
                 DropdownItem::text($translator->translate('platform.PhpVersion') . ' ' . PHP_VERSION),
                 DropdownItem::link($translator->translate('platform.PhpSupport'), 'https://php.net/supported-versions'),
                 DropdownItem::link($translator->translate('platform.update'), 'https://wampserver.aviatechno.net/'),
+                DropdownItem::link('Eclipse IDE for Php', 'https://www.eclipse.org/downloads/'),    
+                DropdownItem::link('Windows Installer Netbeans 28', 'https://installers.friendsofapachenetbeans.org/'),    
                 DropdownItem::link('Bootstrap 5 Icons with Filter', 'https://icons.getbootstrap.com/'),
                 DropdownItem::link('BootstrapBrain Free Wavelight Template', 'https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/'),
                 DropdownItem::link('Html to Markdown', 'https://convertsimple.com/convert-html-to-markdown/'),

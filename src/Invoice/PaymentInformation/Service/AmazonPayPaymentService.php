@@ -18,9 +18,7 @@ class AmazonPayPaymentService
     public function __construct(
         private readonly SettingRepository $settingRepository,
         private readonly Crypt $crypt,
-        private string $salt,
     ) {
-        $this->salt = (new Crypt())->salt();
     }
 
     /**
@@ -59,7 +57,9 @@ class AmazonPayPaymentService
 
         try {
             $amazonpayConfig = [
-                'public_key_id' => $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_publicKeyId')),
+                'public_key_id' => $this->crypt
+                                        ->decode($this->settingRepository
+                                                      ->getSetting('gateway_amazon_pay_publicKeyId')),
                 'private_key' => $this->getAmazonPrivateKeyFile(),
                 'region' => $this->getAmazonRegion(),
                 'sandbox' => $this->settingRepository->getSetting('gateway_amazon_pay_sandbox') === '1',
@@ -125,7 +125,8 @@ class AmazonPayPaymentService
         if (!file_exists($aliases->get('@pem_file_unique_folder') . '/private.pem')) {
             return [
                 'heading' => '',
-                'message' => 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem',
+                'message' => 'Amazon_Pay private.pem File Not Downloaded.'.
+                ' from Amazon and saved in Pem_unique_folder as private.pem',
                 'url' => 'inv/url_key',
                 'url_key' => '', // Set dynamically in controller
                 'gateway' => 'Amazon_Pay',
@@ -135,7 +136,9 @@ class AmazonPayPaymentService
     }
 
     /**
-     * Related logic: see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
+     * Related logic: see
+     * https://developer.amazon.com
+     * /docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
      * @param Inv $invoice
      * @param string $url_key
      * @param float $amount
@@ -155,12 +158,19 @@ class AmazonPayPaymentService
         $ledgerCurrency = $this->settingRepository->getSetting('currency_code') ?: 'GBP';
 
         // Get merchant and public key id
-        $merchantId = (string) $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_merchantId'));
-        $publicKeyId = (string) $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_publicKeyId'));
+        $merchantId = (string) $this->crypt
+                                    ->decode($this->settingRepository
+                                    ->getSetting('gateway_amazon_pay_merchantId'));
+        $publicKeyId = (string) $this->crypt
+                                     ->decode($this->settingRepository
+                                     ->getSetting('gateway_amazon_pay_publicKeyId'));
 
         // Generate the payload JSON for Amazon Pay
-        $checkoutReviewReturnUrl = $this->settingRepository->getSetting('gateway_amazon_pay_returnUrl') . '/' . $url_key;
-        $storeId = (string) $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_storeId'));
+        $checkoutReviewReturnUrl = $this->settingRepository
+                                        ->getSetting('gateway_amazon_pay_returnUrl') . '/' . $url_key;
+        $storeId = (string) $this->crypt
+                                 ->decode($this->settingRepository
+                                               ->getSetting('gateway_amazon_pay_storeId'));
 
         $payloadArray = [
             'webCheckoutDetails' => [
@@ -203,7 +213,8 @@ class AmazonPayPaymentService
     }
 
     /**
-     * Related logic: see https://developer.amazon.com/docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
+     * Related logic: see https://developer.amazon.com
+     * /docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
      * Step 3: Sign the payload
      *
      * @param string $payloadJSON
@@ -213,7 +224,10 @@ class AmazonPayPaymentService
     private function generateButtonSignature(string $payloadJSON): string
     {
         $amazonpay_config = [
-            'public_key_id' => $this->crypt->decode($this->settingRepository->getSetting('gateway_amazon_pay_publicKeyId')),
+            'public_key_id' =>
+                $this->crypt
+                     ->decode($this->settingRepository
+                                   ->getSetting('gateway_amazon_pay_publicKeyId')),
             'private_key' => $this->getAmazonPrivateKeyFile(),
             'region' => $this->getAmazonRegion(),
             'sandbox' => $this->settingRepository->getSetting('gateway_amazon_pay_sandbox') === '1',
@@ -228,7 +242,8 @@ class AmazonPayPaymentService
 
     private function getAmazonPrivateKeyFile(): string
     {
-        $aliases = $this->settingRepository->get_amazon_pem_file_folder_aliases();
+        $aliases = $this->settingRepository
+                        ->get_amazon_pem_file_folder_aliases();
         $targetPath = $aliases->get('@pem_file_unique_folder');
         $original_file_name = 'private.pem';
         return $targetPath . '/' . $original_file_name;

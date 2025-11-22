@@ -9,7 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class Item implements XmlSerializable
 {
-    public function __construct(private ?string $description, private string $name, private ?string $buyersItemIdentification, private ?string $sellersItemIdentification, private ?ClassifiedTaxCategory $classifiedTaxCategory) {}
+    public function __construct(private ?string $description, private string $name, private ?string $buyersItemIdentification, private ?string $sellersItemIdentification, private ?ClassifiedTaxCategory $classifiedTaxCategory)
+    {
+    }
 
     /**
      * @return string|null

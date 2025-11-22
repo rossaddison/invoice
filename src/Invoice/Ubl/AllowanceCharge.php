@@ -9,7 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class AllowanceCharge implements XmlSerializable
 {
-    public function __construct(private readonly bool $chargeIndicator, private readonly ?int $allowanceChargeReasonCode, private readonly ?string $allowanceChargeReason, private readonly ?int $multiplierFactorNumeric, private readonly ?float $baseAmount, private readonly float $amount, private readonly ?TaxTotal $taxTotal, private readonly ?TaxCategory $taxCategory) {}
+    public function __construct(private readonly bool $chargeIndicator, private readonly ?int $allowanceChargeReasonCode, private readonly ?string $allowanceChargeReason, private readonly ?int $multiplierFactorNumeric, private readonly ?float $baseAmount, private readonly float $amount, private readonly ?TaxTotal $taxTotal, private readonly ?TaxCategory $taxCategory)
+    {
+    }
 
     /**
      * @param Writer $writer

@@ -13,7 +13,9 @@ use App\Invoice\Setting\SettingRepository as SR;
 
 final readonly class InvItemAllowanceChargeService
 {
-    public function __construct(private ACIIR $repository) {}
+    public function __construct(private ACIIR $repository)
+    {
+    }
 
     /**
      * @param InvItemAllowanceCharge $model

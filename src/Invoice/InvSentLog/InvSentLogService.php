@@ -9,7 +9,9 @@ use DateTimeImmutable;
 
 final readonly class InvSentLogService
 {
-    public function __construct(private InvSentLogRepository $repository) {}
+    public function __construct(private InvSentLogRepository $repository)
+    {
+    }
 
     public function saveInvSentLog(InvSentLog $model, array $array): void
     {

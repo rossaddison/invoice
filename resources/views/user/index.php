@@ -77,12 +77,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'login',
-            content: static fn(User $data) => $data->getLogin(),
+            content: static fn (User $data) => $data->getLogin(),
             header: $translator->translate('gridview.login'),
         ),
         new DataColumn(
             'create_at',
-            content: static fn(User $data) => $data->getCreatedAt()->format('r'),
+            content: static fn (User $data) => $data->getCreatedAt()->format('r'),
             header: $translator->translate('gridview.create.at'),
         ),
         new DataColumn(

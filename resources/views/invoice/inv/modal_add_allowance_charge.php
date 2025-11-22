@@ -28,7 +28,7 @@ use Yiisoft\Html\Html;
                             'data-bs-dismiss' => 'modal',
                         ],
                     ); ?>
-                        <?= '❌'; ?>        
+                        <?= '❌'; ?>  
                     <?= Html::closeTag('button'); ?>
                 <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>

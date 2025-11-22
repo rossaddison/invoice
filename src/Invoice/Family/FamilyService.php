@@ -8,7 +8,9 @@ use App\Invoice\Entity\Family;
 
 final readonly class FamilyService
 {
-    public function __construct(private FamilyRepository $repository) {}
+    public function __construct(private FamilyRepository $repository)
+    {
+    }
 
     /**
      * @param Family $model

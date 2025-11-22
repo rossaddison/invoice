@@ -27,7 +27,9 @@ class InvRecurring
         private mixed $start = '', #[Column(type: 'date', nullable: true)]
         private mixed $end = '', #[Column(type: 'string(191)', nullable: false)]
         private string $frequency = '', #[Column(type: 'date', nullable: true)]
-        private mixed $next = '') {}
+        private mixed $next = '')
+    {
+    }
 
     public function getId(): string
     {

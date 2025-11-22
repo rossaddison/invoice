@@ -43,12 +43,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Sumex $model) => Html::encode($model->getId()),
+        content: static fn (Sumex $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'casenumber',
         header: $translator->translate('case.number'),
-        content: static fn(Sumex $model) => Html::encode($model->getCasenumber()),
+        content: static fn (Sumex $model) => Html::encode($model->getCasenumber()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

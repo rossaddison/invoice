@@ -272,10 +272,10 @@ final class Sumex
     public function xmlRoot(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('invoice:request');
-        $node->setAttribute('xmlns:invoice', 'http://www.forum-datenaustausch.ch/invoice');
-        $node->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $node->setAttribute('xmlns:nsxenc', 'http://www.w3.org/2001/04/xmlenc#');
-        $node->setAttribute('xsi:schemaLocation', 'http://www.forum-datenaustausch.ch/invoice generalInvoiceRequest_440.xsd');
+        $node->setAttribute('xmlns:invoice', 'https://www.forum-datenaustausch.ch/invoice');
+        $node->setAttribute('xmlns:xsi', 'https://www.w3.org/2001/XMLSchema-instance');
+        $node->setAttribute('xmlns:nsxenc', 'https://www.w3.org/2001/04/xmlenc#');
+        $node->setAttribute('xsi:schemaLocation', 'https://www.forum-datenaustausch.ch/invoice generalInvoiceRequest_440.xsd');
         $node->setAttribute('modus', $this->_mode);
         $node->setAttribute('language', $this->_lang);
         return $node;
@@ -871,7 +871,7 @@ final class Sumex
         // </invoice:insured>
 
         // <invoice:guarantor>
-        $guarantor->setAttribute('xmlns', 'http://www.forum-datenaustausch.ch/invoice');
+        $guarantor->setAttribute('xmlns', 'https://www.forum-datenaustausch.ch/invoice');
 
         $person_is_guarantor = $this->generatePerson($doc, (string) $this->_patient['street'], (string) $this->_patient['zip'], (string) $this->_patient['city'], (string) $this->_patient['phone']);
         $guarantor->appendChild($person_is_guarantor);

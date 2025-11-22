@@ -188,7 +188,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Inv $model) => (string) $model->getId(),
+        content: static fn (Inv $model) => (string) $model->getId(),
         withSorting: true,
     ),
     new ActionColumn(
@@ -263,13 +263,13 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn(Inv $model): string => $model->getClient()?->getClient_name() ?? '',
+        content: static fn (Inv $model): string => $model->getClient()?->getClient_name() ?? '',
         withSorting: false,
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
+        content: static fn (Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
     new DataColumn(

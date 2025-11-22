@@ -8,7 +8,9 @@ use App\Invoice\Entity\UserClient;
 
 final readonly class UserClientService
 {
-    public function __construct(private UserClientRepository $repository) {}
+    public function __construct(private UserClientRepository $repository)
+    {
+    }
 
     /**
      * @param UserClient $model

@@ -10,20 +10,17 @@ use App\Invoice\Libraries\Crypt;
 return [
     AmazonPayPaymentService::class => [
         '__construct()' => [
-            'crypt' => new Crypt(),
-            'salt' => (new Crypt())->salt(),
+            'crypt' => Crypt::class,
         ],
     ],
     BraintreePaymentService::class => [
         '__construct()' => [
-            'crypt' => new Crypt(),
-            'salt' => (new Crypt())->salt(),
+            'crypt' => Crypt::class,
         ],
     ],
     StripePaymentService::class => [
         '__construct()' => [
-            'crypt' => new Crypt(),
-            'salt' => (new Crypt())->salt(),
+            'crypt' => Crypt::class,
         ],
     ],
 ];

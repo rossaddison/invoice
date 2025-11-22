@@ -37,7 +37,9 @@ use DateTimeImmutable;
 
 final readonly class InvService
 {
-    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator) {}
+    public function __construct(private InvRepository $repository, private SessionInterface $session, private Translator $translator)
+    {
+    }
 
     public function saveInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
     {

@@ -30,7 +30,9 @@ use App\Invoice\Payment\PaymentRepository as PYMR;
 
 final readonly class NumberHelper
 {
-    public function __construct(private SRepo $s) {}
+    public function __construct(private SRepo $s)
+    {
+    }
 
     /**
      * @param mixed|null $amount

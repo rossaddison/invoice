@@ -1873,13 +1873,13 @@ final class InvController extends BaseController
         #[RouteArgument('status')]
         string $status = '0',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterInvAmountTotal')]
-        string $queryFilterInvAmountTotal = null,
+        ?string $queryFilterInvAmountTotal = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
@@ -2048,19 +2048,19 @@ final class InvController extends BaseController
         #[RouteArgument('status')]
         string $status = '0',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        string $queryFilterClient = null,
+        ?string $queryFilterClient = null,
         #[Query('filterInvAmountTotal')]
-        string $queryFilterInvAmountTotal = null,
+        ?string $queryFilterInvAmountTotal = null,
         #[Query('filterClientGroup')]
-        string $queryFilterClientGroup = null,
+        ?string $queryFilterClientGroup = null,
         #[Query('filterDateCreatedYearMonth')]
-        string $queryFilterDateCreatedYearMonth = null,
+        ?string $queryFilterDateCreatedYearMonth = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');

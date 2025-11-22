@@ -8,7 +8,9 @@ use App\Invoice\Entity\GentorRelation;
 
 final readonly class GeneratorRelationService
 {
-    public function __construct(private GeneratorRelationRepository $repository) {}
+    public function __construct(private GeneratorRelationRepository $repository)
+    {
+    }
 
     /**
      * @param GentorRelation $model

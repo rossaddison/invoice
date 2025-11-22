@@ -15,7 +15,9 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class CommonViewInjection implements CommonParametersInjectionInterface
 {
-    public function __construct(private UrlGeneratorInterface $url, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator) {}
+    public function __construct(private UrlGeneratorInterface $url, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator)
+    {
+    }
 
     /**
      * @return array

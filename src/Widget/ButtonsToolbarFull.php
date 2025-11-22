@@ -24,7 +24,8 @@ final readonly class ButtonsToolbarFull
         private TranslatorInterface $translator,
         private UrlGeneratorInterface $urlGenerator,
         private SettingRepository $settingRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Generate comprehensive invoice actions toolbar with all features

@@ -1604,7 +1604,7 @@ final class SettingRepository extends Select\Repository
             ],
             'enable_vat_registration' => [
                 'why' => 'VAT uses line item tax and applying Invoice Taxes (whether before line item or after line tax) are disabled. Hence the tax_total field in the InvAmount Entity will always equal zero if VAT is used. '
-                         . 'A new nullable field ... belongs_to_vat_invoice...has been introduced in the InvItem entity to allow for companies making this transition. '  ,
+                         . 'A new nullable field ... belongs_to_vat_invoice...has been introduced in the InvItem entity to allow for companies making this transition. ',
                 'where' => 'This setting is used in resources/views/invoice/inv/view.php',
             ],
             'front_page_file_locations_tooltip' => [
@@ -1694,7 +1694,7 @@ final class SettingRepository extends Select\Repository
             'mark_invoices_sent_copy' => [
                 'why' => 'Clients do not have access to draft invoices. Mark a copied invoice as sent so that the client can view it. Caution: Used for testing purposes only. '
                        . 'By default copied invoices are marked as draft and therefore can not be viewed by the client online. '
-                       . 'They can only be viewed by the client once they have been sent by email or marked as sent manually in the Invoice Edit section under Inv/View/Options Dropdown Button. '  ,
+                       . 'They can only be viewed by the client once they have been sent by email or marked as sent manually in the Invoice Edit section under Inv/View/Options Dropdown Button. ',
                 'where' => 'InvController/inv_to_inv',
             ],
             'monospace_amounts' => [
@@ -1782,7 +1782,7 @@ final class SettingRepository extends Select\Repository
             ],
             'time_zone' => [
                 'why' => 'This is used in the DateHelper function datetime_zone_style which is used in TaskForm to get an accurate Finish Date for a Task.' . '/n'
-                     . 'It is also used in paymentinformation/amazon_signature to get a region from a time zone.' ,
+                     . 'It is also used in paymentinformation/amazon_signature to get a region from a time zone.',
                 'where' => '',
             ],
         ];

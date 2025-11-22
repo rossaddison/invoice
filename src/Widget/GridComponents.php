@@ -19,7 +19,9 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 final readonly class GridComponents
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator) {}
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
+    {
+    }
 
     public function header(string $translatorString): string
     {

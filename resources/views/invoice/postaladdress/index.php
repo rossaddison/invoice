@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(PostalAddress $model) => $model->getId(),
+        content: static fn (PostalAddress $model) => $model->getId(),
     ),
     new DataColumn(
         'client_id',

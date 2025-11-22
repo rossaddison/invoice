@@ -9,7 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class TaxScheme implements XmlSerializable
 {
-    public function __construct(private readonly string $id) {}
+    public function __construct(private readonly string $id)
+    {
+    }
 
     /**
      * @return string

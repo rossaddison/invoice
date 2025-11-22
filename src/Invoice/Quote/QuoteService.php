@@ -29,7 +29,9 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class QuoteService
 {
-    public function __construct(private QuoteRepository $repository, private SessionInterface $session) {}
+    public function __construct(private QuoteRepository $repository, private SessionInterface $session)
+    {
+    }
 
     /**
      * @param User $user

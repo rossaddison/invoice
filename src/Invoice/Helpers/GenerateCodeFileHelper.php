@@ -85,7 +85,7 @@ class GenerateCodeFileHelper
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
                 $mask = @umask(0);
-                $result = @mkdir($dir, 0777, true);
+                $result = @mkdir($dir, 0o777, true);
                 @umask($mask);
                 if (!$result) {
                     return "Unable to create the directory '$dir'.";

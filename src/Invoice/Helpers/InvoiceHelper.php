@@ -11,7 +11,9 @@ use Yiisoft\Session\Flash\Flash;
 
 class InvoiceHelper
 {
-    public function __construct(private readonly SR $s, private readonly SessionInterface $session) {}
+    public function __construct(private readonly SR $s, private readonly SessionInterface $session)
+    {
+    }
 
     /**
      * @psalm-param 'danger' $level

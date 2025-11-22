@@ -30,7 +30,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(PaymentPeppol $model) => $model->getId(),
+        content: static fn (PaymentPeppol $model) => $model->getId(),
     ),
     new DataColumn(
         header: $translator->translate('view'),

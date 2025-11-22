@@ -38,7 +38,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Merchant $model) => $model->getId(),
+        content: static fn (Merchant $model) => $model->getId(),
     ),
     new DataColumn(
         property: 'filterInvNumber',
@@ -64,23 +64,23 @@ $columns = [
     new DataColumn(
         'date',
         header: $translator->translate('payment.date'),
-        content: static fn(Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
+        content: static fn (Merchant $model): string|DateTimeImmutable => !is_string($date = $model->getDate()) ? $date->format('Y-m-d') : '',
     ),
     new DataColumn(
         property: 'filterMerchantProvider',
         header: $translator->translate('payment.provider'),
-        content: static fn(Merchant $model): string => Html::encode($model->getDriver()),
+        content: static fn (Merchant $model): string => Html::encode($model->getDriver()),
         filter: true,
     ),
     new DataColumn(
         'response',
         header: $translator->translate('provider.response'),
-        content: static fn(Merchant $model): string => Html::encode($model->getResponse()),
+        content: static fn (Merchant $model): string => Html::encode($model->getResponse()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('transaction.reference'),
-        content: static fn(Merchant $model): string => Html::encode($model->getReference()),
+        content: static fn (Merchant $model): string => Html::encode($model->getReference()),
     ),
 ];
 

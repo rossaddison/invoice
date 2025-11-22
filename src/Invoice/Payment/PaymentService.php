@@ -8,7 +8,9 @@ use App\Invoice\Entity\Payment;
 
 final readonly class PaymentService
 {
-    public function __construct(private PaymentRepository $repository) {}
+    public function __construct(private PaymentRepository $repository)
+    {
+    }
 
     /**
      * @param Payment $model

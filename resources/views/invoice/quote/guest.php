@@ -136,22 +136,22 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('id'),
-        content: static fn(Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
+        content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_expires',
-        content: static fn(Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_required',
-        content: static fn(Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
     ),
     new DataColumn(
         'id',

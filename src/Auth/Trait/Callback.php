@@ -27,9 +27,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -163,11 +163,11 @@ trait Callback
      * @param UserInvRepository $uiR
      * @param UserRepository $uR
      * @param string $_language
-     * @param string $code
-     * @param string $state
-     * @param string $error
-     * @param string $errorCode
-     * @param string $errorReason
+     * @param string|null $code
+     * @param string|null $state
+     * @param string|null $error
+     * @param string|null $errorCode
+     * @param string|null $errorReason
      * @return ResponseInterface
      */
     public function callbackFacebook(
@@ -179,15 +179,15 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
         #[Query('error')]
-        string $error = null,
+        ?string $error = null,
         #[Query('error_code')]
-        string $errorCode = null,
+        ?string $errorCode = null,
         #[Query('error_reason')]
-        string $errorReason = null,
+        ?string $errorReason = null,
     ): ResponseInterface {
         // Avoid MissingRequiredArgumentException
         if ($code == null || $state == null) {
@@ -303,8 +303,8 @@ trait Callback
      * @param UserInvRepository $uiR
      * @param UserRepository $uR
      * @param string $_language
-     * @param string $code
-     * @param string $state
+     * @param string|null $code
+     * @param string|null $state
      * @return ResponseInterface
      */
     public function callbackGithub(
@@ -316,9 +316,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -436,9 +436,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -553,9 +553,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -655,9 +655,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -772,11 +772,11 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
         #[Query('session_state')]
-        string $sessionState = null,
+        ?string $sessionState = null,
     ): ResponseInterface {
         if ($code == null || $state == null || $sessionState == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -883,9 +883,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code === null || $state === null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -942,9 +942,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -1066,11 +1066,11 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
         #[Query('device_id')]
-        string $device_id = null,
+        ?string $device_id = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));
@@ -1236,9 +1236,9 @@ trait Callback
         #[RouteArgument('_language')]
         string $_language,
         #[Query('code')]
-        string $code = null,
+        ?string $code = null,
         #[Query('state')]
-        string $state = null,
+        ?string $state = null,
     ): ResponseInterface {
         if ($code == null || $state == null) {
             return $this->redirectToOauth2AuthError($translator->translate('oauth2.missing.authentication.code.or.state.parameter'));

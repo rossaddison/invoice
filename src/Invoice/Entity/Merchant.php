@@ -25,7 +25,9 @@ class Merchant
         private ?bool $successful = true, #[Column(type: 'string(35)', nullable: false)]
         private string $driver = '', #[Column(type: 'string(151)', nullable: false)]
         private string $response = '', #[Column(type: 'string(151)', nullable: false)]
-        private string $reference = '') {}
+        private string $reference = '')
+    {
+    }
 
     public function getInv(): ?Inv
     {

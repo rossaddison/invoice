@@ -32,7 +32,7 @@ echo $alert;
         <?php
             $pagination = OffsetPagination::widget()
             ->paginator($paginator)
-            ->urlGenerator(fn(string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
+            ->urlGenerator(fn (string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
 ?>
         <?php
     if ($pagination->isPaginationRequired()) {

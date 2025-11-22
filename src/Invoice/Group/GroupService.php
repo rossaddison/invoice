@@ -11,7 +11,9 @@ final readonly class GroupService
     /**
      * @param GroupRepository $repository
      */
-    public function __construct(private GroupRepository $repository) {}
+    public function __construct(private GroupRepository $repository)
+    {
+    }
 
     /**
      * @param Group $model

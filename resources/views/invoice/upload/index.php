@@ -38,27 +38,27 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Upload $model) => Html::encode($model->getId()),
+        content: static fn (Upload $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn(Upload $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
+        content: static fn (Upload $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
         header: $translator->translate('upload.filename.original'),
-        content: static fn(Upload $model): string => Html::encode($model->getFile_name_original()),
+        content: static fn (Upload $model): string => Html::encode($model->getFile_name_original()),
     ),
     new DataColumn(
         'file_name_new',
         header: $translator->translate('upload.filename.new'),
-        content: static fn(Upload $model): string => Html::encode($model->getFile_name_new()),
+        content: static fn (Upload $model): string => Html::encode($model->getFile_name_new()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('upload.filename.description'),
-        content: static fn(Upload $model): string => Html::encode($model->getDescription()),
+        content: static fn (Upload $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),

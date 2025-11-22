@@ -44,7 +44,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Contract $model) => Html::encode($model->getId()),
+        content: static fn (Contract $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'id',
@@ -87,22 +87,22 @@ $columns = [
     new DataColumn(
         'name',
         header: $translator->translate('contract.name'),
-        content: static fn(Contract $model): string => Html::encode($model->getName()),
+        content: static fn (Contract $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'reference',
         header: $translator->translate('contract.reference'),
-        content: static fn(Contract $model): string => Html::encode($model->getReference()),
+        content: static fn (Contract $model): string => Html::encode($model->getReference()),
     ),
     new DataColumn(
         'period_start',
         header: $translator->translate('contract.period.start'),
-        content: static fn(Contract $model): string => ($model->getPeriod_start())->format('Y-m-d'),
+        content: static fn (Contract $model): string => ($model->getPeriod_start())->format('Y-m-d'),
     ),
     new DataColumn(
         'period_end',
         header: $translator->translate('contract.period.end'),
-        content: static fn(Contract $model): string => ($model->getPeriod_end())->format('Y-m-d'),
+        content: static fn (Contract $model): string => ($model->getPeriod_end())->format('Y-m-d'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

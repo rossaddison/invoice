@@ -8,7 +8,9 @@ use App\Invoice\Entity\QuoteTaxRate;
 
 final readonly class QuoteTaxRateService
 {
-    public function __construct(private QuoteTaxRateRepository $repository) {}
+    public function __construct(private QuoteTaxRateRepository $repository)
+    {
+    }
 
     /**
      * @param QuoteTaxRate $model

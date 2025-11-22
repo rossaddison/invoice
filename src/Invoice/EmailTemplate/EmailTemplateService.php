@@ -8,7 +8,9 @@ use App\Invoice\Entity\EmailTemplate;
 
 final readonly class EmailTemplateService
 {
-    public function __construct(private EmailTemplateRepository $repository) {}
+    public function __construct(private EmailTemplateRepository $repository)
+    {
+    }
 
     /**
      * @param EmailTemplate $model

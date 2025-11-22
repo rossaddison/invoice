@@ -13,7 +13,8 @@ final readonly class UserService
         private CurrentUser $currentUser,
         private UserRepository $repository,
         private AccessCheckerInterface $accessChecker,
-    ) {}
+    ) {
+    }
 
     /**
      * @return User|null

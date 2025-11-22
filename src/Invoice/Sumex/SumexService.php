@@ -9,7 +9,9 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class SumexService
 {
-    public function __construct(private SumexRepository $repository) {}
+    public function __construct(private SumexRepository $repository)
+    {
+    }
 
     /**
      * @param Sumex $model

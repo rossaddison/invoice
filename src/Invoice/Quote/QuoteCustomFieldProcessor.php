@@ -21,7 +21,8 @@ final class QuoteCustomFieldProcessor implements CustomFieldProcessor
     public function __construct(
         private readonly QuoteCustomRepository $repository,
         private readonly QuoteCustomService $service,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function exists(string $entityId, string $customFieldId): bool

@@ -20,7 +20,8 @@ final class AccessChecker implements MiddlewareInterface
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private UserService $userService,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

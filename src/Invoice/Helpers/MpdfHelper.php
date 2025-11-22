@@ -224,7 +224,7 @@ class MpdfHelper
             $archive_folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '/Invoice';
             $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
             if (!is_dir($archive_folder)) {
-                FileHelper::ensureDirectory($archive_folder, 0775);
+                FileHelper::ensureDirectory($archive_folder, 0o775);
             }
             $mpdf->Output($archived_file, self::DEST_FILE);
             return $archived_file;
@@ -245,7 +245,7 @@ class MpdfHelper
 
         // Check if the Tmp directory exists, if not, create it
         if (!(is_dir($tmpFolder) || is_link($tmpFolder))) {
-            FileHelper::ensureDirectory($tmpFolder, 0775); // Ensure the Tmp directory is created with the correct permissions
+            FileHelper::ensureDirectory($tmpFolder, 0o775); // Ensure the Tmp directory is created with the correct permissions
         }
 
         return $aliases;
@@ -260,7 +260,7 @@ class MpdfHelper
         $folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl();
         // Check if the archive folder is available
         if (!(is_dir($folder) || is_link($folder))) {
-            FileHelper::ensureDirectory($folder, 0775);
+            FileHelper::ensureDirectory($folder, 0o775);
         }
         return $aliases;
     }

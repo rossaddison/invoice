@@ -42,7 +42,8 @@ class Inv
     private readonly ArrayCollection $items;
 
     /**
-     * Related logic: see Used to determine how many times an email has been sent for this specific invoice to the client
+     * Related logic: see Used to determine how many times an email
+     * has been sent for this specific invoice to the client
      * @var ArrayCollection<array-key, InvSentLog>
      */
     #[HasMany(target: InvSentLog::class)]
@@ -50,7 +51,8 @@ class Inv
 
 
     /**
-     * Related logic: see Used to determine the number of recurring invoices that have been made out for this particular invoice.
+     * Related logic: see Used to determine the number of recurring
+     * invoices that have been made out for this particular invoice.
      * @var ArrayCollection<array-key, InvRecurring>
      */
     #[HasMany(target: InvRecurring::class)]
@@ -305,7 +307,7 @@ class Inv
 
     public function setStatus_id(int $status_id): void
     {
-        $this->status_id = (!in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8 ,9, 10, 11, 12, 13]) ? 1 : $status_id);
+        $this->status_id = (!in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
     }
 
     public function getIs_read_only(): bool
@@ -340,7 +342,9 @@ class Inv
 
     public function setDate_created(string $date_created): void
     {
-        $this->date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('now');
+        $this->date_created = (new DateTimeImmutable())
+        ->createFromFormat('Y-m-d', $date_created)
+        ?: new DateTimeImmutable('now');
     }
 
     public function setTime_created(string $time_created): void

@@ -25,7 +25,8 @@ final class OpenBankingPaymentService
         private readonly SessionInterface $session,
         private readonly sR $sR,
         private readonly UrlGenerator $urlGenerator,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the Open Banking authentication URL with PKCE.

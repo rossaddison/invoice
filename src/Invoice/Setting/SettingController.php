@@ -135,7 +135,7 @@ final class SettingController extends BaseController
         PM $pm,
         TR $tR,
         #[Query('active')]
-        string $active = null,
+        ?string $active = null,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => '@invoice/Language',
@@ -143,7 +143,7 @@ final class SettingController extends BaseController
         $datehelper = new DateHelper($this->sR);
         $numberhelper = new NumberHelper($this->sR);
         $countries = new CountryHelper();
-        $crypt = new Crypt();
+        $crypt = new Crypt(false);
         $peppol_arrays = new PeppolArrays();
         $languages = $this->sR->locale_language_array();
         $body = $request->getParsedBody();

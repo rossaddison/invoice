@@ -20,7 +20,9 @@ class UnitPeppol
         private ?int $unit_id = null, #[Column(type: 'string(3)', nullable: false)]
         private string $code = '', #[Column(type: 'string(120)', nullable: false)]
         private string $name = '', #[Column(type: 'longText', nullable: false)]
-        private string $description = '') {}
+        private string $description = '')
+    {
+    }
 
     public function getUnit(): ?Unit
     {

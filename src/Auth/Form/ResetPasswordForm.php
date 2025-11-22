@@ -18,7 +18,8 @@ final class ResetPasswordForm extends FormModel implements RulesProviderInterfac
 
     public function __construct(
         private readonly TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]

@@ -116,12 +116,12 @@ class PeppolHelper
         $folder = $aliases->get('@Uploads');
         // Check if the uploads folder is available
         if (!(is_dir($folder) || is_link($folder))) {
-            FileHelper::ensureDirectory($folder, 0775);
+            FileHelper::ensureDirectory($folder, 0o775);
         }
         // Invoice/Uploads/Temp/Peppol
         $temp_peppol_folder = $aliases->get('@Uploads') . $this->s::getTempPeppolfolderRelativeUrl();
         if (!is_dir($temp_peppol_folder)) {
-            FileHelper::ensureDirectory($temp_peppol_folder, 0775);
+            FileHelper::ensureDirectory($temp_peppol_folder, 0o775);
         }
         return $aliases;
     }

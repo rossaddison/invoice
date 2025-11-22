@@ -598,7 +598,7 @@ final readonly class StoreCoveHelper
                                     'category' => $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
                                 ],
                                 //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/
-                                'orderLineReferenceLineId' => $peppol_po_lineid ?? $this->t->translate('client.') ,
+                                'orderLineReferenceLineId' => $peppol_po_lineid ?? $this->t->translate('client.'),
                                 'accountingCost' => $client_peppol->getAccountingCost(),
                                 'name' => $item->getName(),
                                 'description' => $item->getDescription(),

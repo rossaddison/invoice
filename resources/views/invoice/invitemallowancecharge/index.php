@@ -48,11 +48,11 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(InvItemAllowanceCharge $model) => $model->getId(),
+        content: static fn (InvItemAllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.reason.code'),
-        content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
+        content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
     ),
     new DataColumn(
         content: static function (InvItemAllowanceCharge $model) use ($translator): string {
@@ -65,7 +65,7 @@ $columns = [
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.reason'),
-        content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
+        content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.amount'),

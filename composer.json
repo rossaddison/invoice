@@ -106,7 +106,7 @@
         "yiisoft/http": "^1.2",
         "yiisoft/injector": "^1.2",
         "yiisoft/input-http": "^1.0.1",
-        "yiisoft/json": "^1.0",
+        "yiisoft/json": "^1.1",
         "yiisoft/log": "^2.1.1",
         "yiisoft/log-target-file": "^3.0",
         "yiisoft/mailer": "^6.0.1",
@@ -139,7 +139,7 @@
         "yiisoft/yii-runner-console": "^2.2",
         "yiisoft/yii-runner-http": "^3.2",
         "yiisoft/yii-view-renderer": "^7.3",
-        "zircote/swagger-php": "^4.11.1||^5.7.0"
+        "zircote/swagger-php": "^4.11.1||^5.7.3"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -147,8 +147,8 @@
         "codeception/module-asserts": "^3.2.1",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^3.0.2",
-        "friendsofphp/php-cs-fixer": "^3.89.2",
-        "phpunit/phpunit": "^12.4.3",
+        "friendsofphp/php-cs-fixer": "^3.90.0",
+        "phpunit/phpunit": "^12.4.4",
         "rector/rector": "^2.2.8",
         "roave/better-reflection": "^6.66",
         "roave/infection-static-analysis-plugin": ">=1.40",

@@ -250,7 +250,7 @@ trait OpenBankingProviders
                 /**
                  * @param array<string, mixed> $provider
                  */
-                fn(array $provider): bool => isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '',
+                fn (array $provider): bool => isset($provider['authUrl']) && is_string($provider['authUrl']) && $provider['authUrl'] !== '',
             ),
         );
         return $names;

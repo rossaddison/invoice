@@ -8,7 +8,9 @@ use App\Invoice\Entity\InvTaxRate;
 
 final readonly class InvTaxRateService
 {
-    public function __construct(private InvTaxRateRepository $repository) {}
+    public function __construct(private InvTaxRateRepository $repository)
+    {
+    }
 
     /**
      * Related logic: see resources/views/invoice/inv/modal_add_inv_tax.php

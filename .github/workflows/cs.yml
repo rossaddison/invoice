@@ -37,7 +37,7 @@ jobs:
       - name: Run PHP CS Fixer dry-run and capture output
         id: csfixer
         run: |
-          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff --verbose)
+          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose)
           echo "$output" | tee fixer-output.txt
           # Determine if any files were fixed based on output
           if echo "$output" | grep -qE "Fixed all files in|Fixed [1-9][0-9]* files with"; then

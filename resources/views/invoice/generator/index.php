@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Gentor $model) => Html::encode($model->getGentor_id() . '➡️' . $model->getCamelcase_capital_name()),
+        content: static fn (Gentor $model) => Html::encode($model->getGentor_id() . '➡️' . $model->getCamelcase_capital_name()),
         encodeContent: false,
     ),
     new DataColumn(

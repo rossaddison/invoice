@@ -167,7 +167,7 @@ foreach ($products as $product) {
                                             '  ' . $add,
                                             $url,
                                             ['class' => 'btn btn-primary',
-                                                'style' => 'font-family:Arial'],
+                                              'style' => 'font-family:Arial'],
                                         ),
                                         ['class' => 'btn btn-primary fa fa-item'],
                                     ); ?>

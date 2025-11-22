@@ -59,19 +59,19 @@ $columns = [
     new DataColumn(
         property: 'filterClient',
         header: $translator->translate('client'),
-        content: static fn(InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
+        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
         filter: $optionsDataClientsDropDownFilter,
         withSorting: false,
     ),
     new DataColumn(
         'inv_id',
         header: $translator->translate('setup.db.username.info'),
-        content: static fn(InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
+        content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
     ),
     new DataColumn(
         'date_sent',
         header: $translator->translate('email.date'),
-        content: static fn(InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+        content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
 $grid_summary = $s->grid_summary(

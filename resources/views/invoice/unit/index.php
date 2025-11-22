@@ -42,17 +42,17 @@ $columns = [
     new DataColumn(
         property: 'unit_id',
         header: $translator->translate('id'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
+        content: static fn (Unit $model) => Html::encode($model->getUnit_id()),
     ),
     new DataColumn(
         property: 'unit_name',
         header: $translator->translate('unit.name'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
+        content: static fn (Unit $model) => Html::encode($model->getUnit_name()),
     ),
     new DataColumn(
         property: 'unit_name_plrl',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
+        content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl()),
     ),
 
     new ActionColumn(buttons: [

@@ -29,7 +29,7 @@ return [
             ->get(ORMInterface::class)
             ->getRepository(Identity::class);
     },
-    CookieMiddleware::class => static fn(CookieLogin $cookieLogin, LoggerInterface $logger) => new CookieMiddleware(
+    CookieMiddleware::class => static fn (CookieLogin $cookieLogin, LoggerInterface $logger) => new CookieMiddleware(
         $logger,
         new CookieEncryptor($secretKey),
         new CookieSigner($secretKey),

@@ -17,7 +17,9 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class QuoteItemService
 {
-    public function __construct(private QuoteItemRepository $repository) {}
+    public function __construct(private QuoteItemRepository $repository)
+    {
+    }
 
     /**
      * Related logic: QuoteController function quote_to_quote_items

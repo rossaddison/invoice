@@ -61,7 +61,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(AllowanceCharge $model) => $model->getId(),
+        content: static fn (AllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
         property: 'level',
@@ -73,17 +73,17 @@ $columns = [
     new DataColumn(
         'reason_code',
         header: $translator->translate('allowance.or.charge.reason.code'),
-        content: static fn(AllowanceCharge $model) => $model->getReasonCode(),
+        content: static fn (AllowanceCharge $model) => $model->getReasonCode(),
     ),
     new DataColumn(
         'reason',
         header: $translator->translate('allowance.or.charge.reason'),
-        content: static fn(AllowanceCharge $model) => $model->getReason(),
+        content: static fn (AllowanceCharge $model) => $model->getReason(),
     ),
     new DataColumn(
         'base_amount',
         header: $translator->translate('allowance.or.charge.base.amount'),
-        content: static fn(AllowanceCharge $model) => $model->getBaseAmount(),
+        content: static fn (AllowanceCharge $model) => $model->getBaseAmount(),
     ),
     new DataColumn(
         'multiplier_factor_numeric',
@@ -95,7 +95,7 @@ $columns = [
     new DataColumn(
         'amount',
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static fn(AllowanceCharge $model) => $model->getAmount(),
+        content: static fn (AllowanceCharge $model) => $model->getAmount(),
     ),
     new DataColumn(
         header: $translator->translate('view'),

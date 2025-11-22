@@ -43,12 +43,12 @@ $columns = [
     new DataColumn(
         'name',
         header: $translator->translate('product.property.name'),
-        content: static fn(ProductProperty $model) => Html::encode($model->getName()),
+        content: static fn (ProductProperty $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'value',
         header: $translator->translate('product.property.value'),
-        content: static fn(ProductProperty $model) => Html::encode($model->getValue()),
+        content: static fn (ProductProperty $model) => Html::encode($model->getValue()),
     ),
     new DataColumn(
         header: $translator->translate('view'),

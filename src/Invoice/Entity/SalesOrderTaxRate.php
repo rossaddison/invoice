@@ -23,7 +23,9 @@ class SalesOrderTaxRate
         private ?int $so_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable: false, default: 0)]
         private ?int $include_item_tax = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $so_tax_rate_amount = 0.00) {}
+        private ?float $so_tax_rate_amount = 0.00)
+    {
+    }
 
     public function getSalesOrder(): ?SalesOrder
     {

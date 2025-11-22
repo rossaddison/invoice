@@ -23,7 +23,9 @@ class Sumex
         private ?string $casenumber = '', #[Column(type: 'date', nullable: true)]
         private mixed $treatmentstart = '', #[Column(type: 'date', nullable: true)]
         private mixed $treatmentend = '', #[Column(type: 'date', nullable: true)]
-        private mixed $casedate = '') {}
+        private mixed $casedate = '')
+    {
+    }
 
     public function getId(): string
     {

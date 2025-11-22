@@ -634,7 +634,7 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn(Inv $model) => (string) $model->getId(),
+        content: static fn (Inv $model) => (string) $model->getId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -758,7 +758,7 @@ $columns = [
     new DataColumn(
         property: 'filterClient',
         header: $translator->translate('client'),
-        content: static fn(Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
+        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
@@ -771,14 +771,14 @@ $columns = [
     new DataColumn(
         property: 'filterClientGroup',
         header: $translator->translate('client.group'),
-        content: static fn(Inv $model): string => $model->getClient()?->getClient_group() ?? '',
+        content: static fn (Inv $model): string => $model->getClient()?->getClient_group() ?? '',
         filter: $optionsDataClientGroupDropDownFilter,
         withSorting: false,
     ),
     new DataColumn(
         property: 'filterDateCreatedYearMonth',
         header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
-        content: static fn(Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
+        content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
         filter: $optionsDataYearMonthDropDownFilter,
         withSorting: false,
     ),
@@ -786,7 +786,7 @@ $columns = [
         'time_created',
         header: $translator->translate('datetime.immutable.time.created'),
         // Show only the time of the DateTimeImmutable
-        content: static fn(Inv $model): string => ($model->getTime_created())->format('H:i:s'),
+        content: static fn (Inv $model): string => ($model->getTime_created())->format('H:i:s'),
     ),
     new DataColumn(
         'date_modified',

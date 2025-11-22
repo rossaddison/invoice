@@ -22,12 +22,12 @@ $columns = [
     new DataColumn(
         'file_name_original',
         header: $translator->translate('name'),
-        content: static fn(Upload $model): string => ($model->getFile_name_original()),
+        content: static fn (Upload $model): string => ($model->getFile_name_original()),
     ),
     new DataColumn(
         'uploaded_date',
         header: $translator->translate('date'),
-        content: static fn(Upload $model): string => ($model->getUploaded_date())->format('Y-m-d'),
+        content: static fn (Upload $model): string => ($model->getUploaded_date())->format('Y-m-d'),
     ),
     new DataColumn(
         header: $translator->translate('download'),

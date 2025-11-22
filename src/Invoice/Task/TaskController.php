@@ -74,7 +74,7 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @param prjctR $prjctR
      */
-    public function index(tR $tR, prjctR $prjctR, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(tR $tR, prjctR $prjctR, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [

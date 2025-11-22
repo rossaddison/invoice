@@ -38,12 +38,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(DeliveryParty $model) => Html::encode($model->getId()),
+        content: static fn (DeliveryParty $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'party_name',
         header: $translator->translate('name'),
-        content: static fn(DeliveryParty $model) => Html::encode($model->getPartyName()),
+        content: static fn (DeliveryParty $model) => Html::encode($model->getPartyName()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
