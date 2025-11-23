@@ -41,57 +41,7 @@ final class Crypt
         }
         return null;
     }
-
-    /**
-     * Generate a password hash.
-     *
-     * - If $salt is provided we will produce a legacy bcrypt-style hash using crypt() to preserve backwards compatibility.
-     * - If $salt is omitted (recommended) we'll use password_hash() which produces a secure, salted hash automatically.
-     *
-     * @param string $password
-     * @param string $salt optional legacy bcrypt salt (22 chars) to keep compatibility with older hashes
-     * @return string hash suitable for storage
-     */
-    public function generate_password(string $password, string $salt = ''): string
-    {
-        if (strlen($salt) > 0 && $this->legacyExternalSaltRequired) {
-            // Legacy path: produce bcrypt hash with provided salt (preserve existing behaviour if callers pass a salt)
-            // Use $2y$ to be compatible with PHP's bcrypt safe identifier.
-            $prefix = '$2y$10$';
-            return crypt($password, $prefix . $salt);
-        }
-
-        // Recommended path: use PHP's password_hash which handles salt generation securely.
-        // PASSWORD_DEFAULT provides algorithm agility.
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    /**
-     * Verify a password against a stored hash.
-     *
-     * - First try password_verify() (covers password_hash-generated hashes).
-     * - If that fails, fall back to legacy crypt() verification to support existing stored bcrypt/crypt hashes.
-     *
-     * When migrating, after verifying a legacy hash you should re-hash the password with
-     * password_hash() and store the new value so users gradually move to the stronger default.
-     *
-     * @param string $hash stored hash
-     * @param string $password plaintext password to verify
-     * @return bool
-     */
-    public function check_password(string $hash, string $password): bool
-    {
-        // Preferred method: password_verify (covers password_hash-produced hashes)
-        if (password_verify($password, $hash)) {
-            return true;
-        }
-
-        // Fallback: legacy crypt() check (keeps compatibility with older bcrypt-style hashes)
-        $new_hash = crypt($password, $hash);
-
-        // Use hash_equals for timing-attack-safe comparison
-        return hash_equals($hash, $new_hash);
-    }
+    
 
     /**
      * @param string $data
