@@ -84,7 +84,7 @@ class GenerateCodeFileHelper
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                $mask = @umask(0);
+                $mask = @umask(0027);
                 $result = @mkdir($dir, 0o777, true);
                 @umask($mask);
                 if (!$result) {
