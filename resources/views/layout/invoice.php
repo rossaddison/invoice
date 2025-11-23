@@ -407,7 +407,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('Peppol Accounting Requirements', 'https://docs.peppol.eu/poacc/billing/3.0/bis/#accountingreq'),
                 DropdownItem::link('➡️ Peppol Billing 3.0 - Syntax', 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/'),
                 DropdownItem::link('➡️ Peppol Billing 3.0 - Tree', 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/'),
-                DropdownItem::link('Universal Business Language 2.1 (UBL)', 'http://www.datypic.com/sc/ubl21/ss.html'),
+                DropdownItem::link('Universal Business Language 2.1 (UBL)', 'https://www.datypic.com/sc/ubl21/ss.html'),
                 DropdownItem::link('StoreCove Documentation', 'https://www.storecove.com/docs'),
                 DropdownItem::link('Peppol Company Search', 'https://directory.peppol.eu/public'),
                 DropdownItem::link('ISO 3 letter currency codes - 4217 alpha-3', 'https://www.iso.org/iso-4217-currency-codes.html'),
