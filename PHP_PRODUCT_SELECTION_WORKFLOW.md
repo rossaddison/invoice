@@ -100,7 +100,7 @@ private function save_product_lookup_item_inv(int $order, Product $product, stri
         'task_id' => null,
         'description' => $product->getProduct_description(),
         // A default quantity of 1 is used to initialize the item
-        'quantity' => (float) 1,
+        'quantity' => $product->getProduct_price_base_quantity() > 1 ? $product->getProduct_price_base_quantity() : 1,
         'price' => $product->getProduct_price(),
         // Vat: Early Settlement Cash Discount subtracted before VAT is calculated
         'discount_amount' => (float) 0,
@@ -177,12 +177,12 @@ public function selection_quote(FormHydrator $formHydrator, Request $request, pR
 ```php
 // config/common/routes/routes.php
 Route::get('/product/selection_inv')
-    ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
     ->action([ProductController::class, 'selection_inv'])
     ->name('product/selection_inv'),
 
 Route::get('/product/selection_quote')
-    ->middleware(fn(AccessChecker $checker) => $checker->withPermission('editInv'))
+    ->middleware(fn(AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
     ->action([ProductController::class, 'selection_quote'])
     ->name('product/selection_quote'),
 ```
@@ -190,7 +190,7 @@ Route::get('/product/selection_quote')
 ## Security Features
 
 ### 1. Permission-Based Access Control
-- Routes protected with middleware requiring 'editInv' permission
+- Routes protected with middleware requiring 'Permissions::EDIT_INV' permission
 - User authentication verified before processing
 - RBAC (Role-Based Access Control) implementation
 

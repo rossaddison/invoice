@@ -66,12 +66,10 @@ snyk code test --json
 ## Current Security Status
 
 As of the last scan:
-- **Total Issues**: 15 (down from 54)
-- **High Severity**: 0 (eliminated all HIGH severity vulnerabilities)
-- **Medium Severity**: 15
+- **Total Issues**: 2 (down from 54)
+- **High Severity**: 1 
+- **Medium Severity**: 1
 - **Low Severity**: 0
-
-The project has achieved a 72% reduction in total security vulnerabilities, with all critical HIGH severity issues resolved.
 
 ## Integration with Existing Commands
 

@@ -579,7 +579,7 @@ final class Sumex
         // </invoice:patient>
 
         // <invoice:guarantor>
-        $guarantor->setAttribute('xmlns', 'http://www.forum-datenaustausch.ch/invoice');
+        $guarantor->setAttribute('xmlns', 'https://www.forum-datenaustausch.ch/invoice');
         $person_is_guarantor = $this->generatePerson($doc, (string) $this->_patient['street'], (string) $this->_patient['zip'], (string) $this->_patient['city'], (string) $this->_patient['phone']);
         $guarantor->appendChild($person_is_guarantor);
         // </invoice:guarantor>
@@ -759,7 +759,7 @@ final class Sumex
     protected function xmlServices(DOMDocument $doc): DOMElement
     {
         $node = $doc->createElement('services');
-        $node->setAttribute('xmlns', 'http://www.forum-datenaustausch.ch/invoice');
+        $node->setAttribute('xmlns', 'https://www.forum-datenaustausch.ch/invoice');
 
         $recordId = 1;
         /** @var InvItem $item */

@@ -9,7 +9,7 @@ use Yiisoft\Strings\Inflector;
  */
 
 echo "<?php\n";
-$random = rand(1000, 9999);
+$random = (new DateTimeImmutable())->getTimestamp();
 ?>
 
 declare(strict_types=1);

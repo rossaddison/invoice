@@ -539,8 +539,8 @@ class CompanyEntityTest extends TestCase
         $company->setWeb('https://www.company.com/');
         $this->assertSame('https://www.company.com/', $company->getWeb());
         
-        $company->setWeb('http://company.org');
-        $this->assertSame('http://company.org', $company->getWeb());
+        $company->setWeb('https://company.org');
+        $this->assertSame('https://company.org', $company->getWeb());
     }
 
     public function testPropertyTypes(): void
