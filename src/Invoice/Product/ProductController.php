@@ -548,8 +548,8 @@ final class ProductController extends BaseController
             'product_id' => $product->getProduct_id(),
             'date_added' => new \DateTimeImmutable(),
             'description' => $product->getProduct_description(),
-            // A default quantity of 1 is used to initialize the item
-            'quantity' => (float) 1,
+            // A default quantity of 1 is used to initialize the item if there is no existing product_price_base_quantity
+            'quantity' => $product->getProduct_price_base_quantity() > 0 ? $product->getProduct_price_base_quantity() : (float) 1,
             'price' => $product->getProduct_price(),
             // The user will determine how much discount to give on this item later
             'discount_amount' => (float) 0,
@@ -585,8 +585,8 @@ final class ProductController extends BaseController
             'product_id' => $product->getProduct_id(),
             'task_id' => null,
             'description' => $product->getProduct_description(),
-            // A default quantity of 1 is used to initialize the item
-            'quantity' => (float) 1,
+            // A default quantity of 1 is used to initialize the item if there is no existing product_price_base_quantity
+            'quantity' => $product->getProduct_price_base_quantity() > 0 ? $product->getProduct_price_base_quantity() : (float) 1,
             'price' => $product->getProduct_price(),
             // Vat: Early Settlement Cash Discount subtracted before VAT is calculated
             'discount_amount' => (float) 0,
