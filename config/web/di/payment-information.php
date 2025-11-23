@@ -18,7 +18,6 @@ return [
             DataResponseFactoryInterface::class => DataResponseFactory::class,
             UrlGeneratorInterface::class => UrlGenerator::class,
             TranslatorInterface::class => Translator::class,
-            'crypt' => Crypt::class,
             'telegramToken' => '',
         ],
     ],

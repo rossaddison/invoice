@@ -10,6 +10,7 @@ use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository as compR;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository as compPR;
 use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\Libraries\Cryptor;
 use App\Invoice\Libraries\Lang;
 use App\Invoice\Quote\QuoteRepository as QR;
 use Cycle\ORM\Select;
@@ -37,6 +38,10 @@ use RuntimeException;
 final class SettingRepository extends Select\Repository
 {
     public array $settings = [];
+    
+    private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/sn6nuzXKLrZVRMP3/Ak=';
+    
+    private string $decrypt_key = self::DECRYPT_KEY;
 
     /**
      * @param Select<TEntity> $select
@@ -2255,5 +2260,40 @@ final class SettingRepository extends Select\Repository
             'lv_LV',
             'lt_LT',
         ];
+    } 
+    
+    /**
+     * Related logic: resources/views/invoice/setting/views/partial_settings_online_payment
+     * @param string $data
+     * @return mixed $decrypted
+     */
+    public function decode(string $data): mixed
+    {
+        $key = '';
+        if (empty($data)) {
+            return '';
+        }
+        
+        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
+            $key = base64_decode($matches[1]);
+        }
+        
+        /** @var mixed $decrypted */
+        return Cryptor::Decrypt($data, $key);
+    }
+    
+    /**
+     * @param string $data
+     * @return mixed $encrypted
+     */
+    public function encode(string $data): mixed
+    {
+        $key = '';
+        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
+            $key = base64_decode($matches[1]);
+        }
+        
+        /** @var mixed $encrypted */
+        return Cryptor::Encrypt($data, $key);
     }
 }

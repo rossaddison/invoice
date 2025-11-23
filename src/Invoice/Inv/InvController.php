@@ -3787,7 +3787,6 @@ final class InvController extends BaseController
                             $this->sR->getSetting('currency_from_to'),
                             // one of 'to currency' converts to this of 'from currency':
                             $this->sR->getSetting('currency_to_from'),
-                            $this->crypt,
                         );
                         $storecove_array = $storecovehelper->maximum_pre_json_php_object_for_an_invoice(
                             $soR,

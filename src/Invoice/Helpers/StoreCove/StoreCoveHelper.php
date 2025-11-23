@@ -93,7 +93,6 @@ final readonly class StoreCoveHelper
         private string $to_currency,
         private string $from_to_manual_input,
         private string $to_from_manual_input,
-        private Crypt $crypt,
     ) {
         $this->datehelper = new DateHelper($this->s);
     }
@@ -1627,7 +1626,7 @@ final readonly class StoreCoveHelper
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->s->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->s->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $country_code_identifier = $this->s->getSetting('storecove_country');
         $site = curl_init();
         if ($site != false) {

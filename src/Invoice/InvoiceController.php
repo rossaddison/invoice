@@ -55,7 +55,6 @@ final class InvoiceController extends BaseController
         ViewRenderer $viewRenderer,
         SessionInterface $session,
         SettingRepository $sR,
-        protected Crypt $crypt,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
@@ -253,7 +252,7 @@ final class InvoiceController extends BaseController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->sR->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
@@ -294,7 +293,7 @@ final class InvoiceController extends BaseController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->sR->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $site = curl_init();
         if ($site != false) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
@@ -338,7 +337,7 @@ final class InvoiceController extends BaseController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->sR->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -377,7 +376,7 @@ final class InvoiceController extends BaseController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->sR->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -479,7 +478,7 @@ final class InvoiceController extends BaseController
         /**
          * @var mixed $api_key_here
          */
-        $api_key_here = $this->crypt->decode($this->sR->getSetting('gateway_storecove_apiKey'));
+        $api_key_here = $this->sR->decode($this->sR->getSetting('gateway_storecove_apiKey'));
         $parameters = [
             'result' => '',
             'message' => '',

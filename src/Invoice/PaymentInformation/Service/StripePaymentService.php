@@ -14,7 +14,6 @@ class StripePaymentService
 {
     public function __construct(
         private readonly SettingRepository $settings,
-        private readonly Crypt $crypt,
     ) {
         $this->setApiKey();
     }
@@ -23,7 +22,7 @@ class StripePaymentService
     {
         $secretKeySetting = $this->settings->getSetting('gateway_stripe_secretKey');
 
-        $skTest = (string) $this->crypt->decode($secretKeySetting);
+        $skTest = (string) $this->settings->decode($secretKeySetting);
         if (!empty($skTest)) {
             Stripe::setApiKey($skTest);
         }
@@ -33,7 +32,7 @@ class StripePaymentService
     {
         $publishableKey = $this->settings->getSetting('gateway_stripe_publishableKey');
 
-        return (string) $this->crypt->decode($publishableKey ?: '');
+        return (string) $this->settings->decode($publishableKey ?: '');
     }
 
     public function createPaymentIntent(array $invoiceData): ?string

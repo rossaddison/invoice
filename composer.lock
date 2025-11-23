@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3925af3bb8c19d7bf9bf47aacb2929bf",
+    "content-hash": "1e1f69020468e294975c1ef0e98a58bd",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5699,16 +5699,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.0.8",
+            "version": "v4.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "c930ca4e3cf4f17dcfb03037703679d2396d2ede"
+                "reference": "505a30ad386daa5211f08a318e47015b501cad30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/c930ca4e3cf4f17dcfb03037703679d2396d2ede",
-                "reference": "c930ca4e3cf4f17dcfb03037703679d2396d2ede",
+                "url": "https://api.github.com/repos/nette/utils/zipball/505a30ad386daa5211f08a318e47015b501cad30",
+                "reference": "505a30ad386daa5211f08a318e47015b501cad30",
                 "shasum": ""
             },
             "require": {
@@ -5782,9 +5782,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.0.8"
+                "source": "https://github.com/nette/utils/tree/v4.0.9"
             },
-            "time": "2025-08-06T21:43:34+00:00"
+            "time": "2025-10-31T00:45:47+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -14189,12 +14189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "8335b3f42b63f9fbdd4a09a08716420187833cf6"
+                "reference": "853feda8aadabc71b77e2060675502628484b2ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/8335b3f42b63f9fbdd4a09a08716420187833cf6",
-                "reference": "8335b3f42b63f9fbdd4a09a08716420187833cf6",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/853feda8aadabc71b77e2060675502628484b2ea",
+                "reference": "853feda8aadabc71b77e2060675502628484b2ea",
                 "shasum": ""
             },
             "require": {
@@ -14269,7 +14269,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-11-21T09:14:08+00:00"
+            "time": "2025-11-23T14:58:08+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
@@ -14277,12 +14277,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db-mysql.git",
-                "reference": "2a8683d675cdc7a0e9e0275225ce7082e5086e39"
+                "reference": "873238f983952a2950f79b3dcce1ddd9a15fea57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/2a8683d675cdc7a0e9e0275225ce7082e5086e39",
-                "reference": "2a8683d675cdc7a0e9e0275225ce7082e5086e39",
+                "url": "https://api.github.com/repos/yiisoft/db-mysql/zipball/873238f983952a2950f79b3dcce1ddd9a15fea57",
+                "reference": "873238f983952a2950f79b3dcce1ddd9a15fea57",
                 "shasum": ""
             },
             "require": {
@@ -14349,7 +14349,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-11-20T14:52:07+00:00"
+            "time": "2025-11-23T14:45:58+00:00"
         },
         {
             "name": "yiisoft/definitions",
@@ -16853,31 +16853,38 @@
         },
         {
             "name": "yiisoft/strings",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/strings.git",
-                "reference": "eeb087d96ab8ae35c5b17daafe5d8ad9522880ab"
+                "reference": "9bc7fea56374619cccd4587848029fe97f98bb33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/strings/zipball/eeb087d96ab8ae35c5b17daafe5d8ad9522880ab",
-                "reference": "eeb087d96ab8ae35c5b17daafe5d8ad9522880ab",
+                "url": "https://api.github.com/repos/yiisoft/strings/zipball/9bc7fea56374619cccd4587848029fe97f98bb33",
+                "reference": "9bc7fea56374619cccd4587848029fe97f98bb33",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
+                "php": "8.1 - 8.5"
             },
             "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.8.2",
                 "maglnet/composer-require-checker": "^4.7.1",
-                "phpunit/phpunit": "^10.5.45",
-                "rector/rector": "^2.0.8",
-                "roave/infection-static-analysis-plugin": "^1.35",
-                "spatie/phpunit-watcher": "^1.24",
-                "vimeo/psalm": "^5.26.1|^6.4.1"
+                "phpbench/phpbench": "^1.4.1",
+                "phpunit/phpunit": "^10.5.48",
+                "rector/rector": "^2.1.2",
+                "spatie/phpunit-watcher": "^1.24"
             },
             "type": "library",
+            "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true,
+                    "target-directory": "tools"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Strings\\": "src"
@@ -16912,7 +16919,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-02-09T16:30:52+00:00"
+            "time": "2025-11-23T18:00:58+00:00"
         },
         {
             "name": "yiisoft/translator",

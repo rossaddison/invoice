@@ -122,7 +122,7 @@
         "yiisoft/router-fastroute": "^4.0.2",
         "yiisoft/security": "^1.1.0",
         "yiisoft/session": "^3.0",
-        "yiisoft/strings": "^2.6",
+        "yiisoft/strings": "^2.7",
         "yiisoft/translator": "^3.2",
         "yiisoft/translator-message-php": "^1.1.1",
         "yiisoft/user": "^2.3.1",

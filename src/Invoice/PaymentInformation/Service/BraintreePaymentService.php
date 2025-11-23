@@ -21,9 +21,7 @@ class BraintreePaymentService
 {
     public function __construct(
         private readonly SettingRepository $settings,
-        private readonly Crypt $crypt,
         private readonly LoggerInterface $logger,
-        private ?string $salt = null,
     ) {
     }
 
@@ -199,7 +197,7 @@ class BraintreePaymentService
     {
         $merchantId = $this->settings
                            ->getSetting('gateway_braintree_merchantId');
-        return (string) $this->crypt
+        return (string) $this->settings
                              ->decode($merchantId ?: '');
     }
 
@@ -220,7 +218,7 @@ class BraintreePaymentService
     {
         $publicKey = $this->settings
                           ->getSetting('gateway_braintree_publicKey');
-        return (string) $this->crypt
+        return (string) $this->settings
                              ->decode($publicKey ?: '');
     }
 
@@ -231,7 +229,7 @@ class BraintreePaymentService
     {
         $privateKey = $this->settings
                            ->getSetting('gateway_braintree_privateKey');
-        return (string) $this->crypt
+        return (string) $this->settings
                              ->decode($privateKey ?: '');
     }
 

@@ -17,7 +17,6 @@ class AmazonPayPaymentService
 {
     public function __construct(
         private readonly SettingRepository $settingRepository,
-        private readonly Crypt $crypt,
     ) {
     }
 
@@ -57,7 +56,7 @@ class AmazonPayPaymentService
 
         try {
             $amazonpayConfig = [
-                'public_key_id' => $this->crypt
+                'public_key_id' => $this->settingRepository
                                         ->decode($this->settingRepository
                                                       ->getSetting('gateway_amazon_pay_publicKeyId')),
                 'private_key' => $this->getAmazonPrivateKeyFile(),
@@ -158,17 +157,17 @@ class AmazonPayPaymentService
         $ledgerCurrency = $this->settingRepository->getSetting('currency_code') ?: 'GBP';
 
         // Get merchant and public key id
-        $merchantId = (string) $this->crypt
+        $merchantId = (string) $this->settingRepository
                                     ->decode($this->settingRepository
                                     ->getSetting('gateway_amazon_pay_merchantId'));
-        $publicKeyId = (string) $this->crypt
+        $publicKeyId = (string) $this->settingRepository
                                      ->decode($this->settingRepository
                                      ->getSetting('gateway_amazon_pay_publicKeyId'));
 
         // Generate the payload JSON for Amazon Pay
         $checkoutReviewReturnUrl = $this->settingRepository
                                         ->getSetting('gateway_amazon_pay_returnUrl') . '/' . $url_key;
-        $storeId = (string) $this->crypt
+        $storeId = (string) $this->settingRepository
                                  ->decode($this->settingRepository
                                                ->getSetting('gateway_amazon_pay_storeId'));
 
@@ -225,7 +224,7 @@ class AmazonPayPaymentService
     {
         $amazonpay_config = [
             'public_key_id' =>
-                $this->crypt
+                $this->settingRepository
                      ->decode($this->settingRepository
                                    ->getSetting('gateway_amazon_pay_publicKeyId')),
             'private_key' => $this->getAmazonPrivateKeyFile(),
