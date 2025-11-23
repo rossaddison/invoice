@@ -151,7 +151,6 @@ final class InvController extends BaseController
 
     /**
      *
-     * @param Crypt $crypt
      * @param DataResponseFactoryInterface $factory
      * @param DelRepo $delRepo
      * @param InvAllowanceChargeService $inv_allowance_charge_service
@@ -173,7 +172,6 @@ final class InvController extends BaseController
      * @param Flash $flash
      */
     public function __construct(
-        private readonly Crypt $crypt,
         private readonly DataResponseFactoryInterface $factory,
         private readonly FormFields $formFields,
         private readonly ButtonsToolbarFull $buttonsToolbarFull,
