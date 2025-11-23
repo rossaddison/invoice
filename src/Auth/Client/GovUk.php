@@ -308,7 +308,7 @@ class GovUk extends OAuth2
         $rsa = PublicKeyLoader::load([
             'n' => $rsaKey['modulus'],
             'e' => $rsaKey['publicExponent'],
-        ], 'raw');
+        ], $_ENV['GOVUK_PHPSECLIB3_PUBLIC_KEY_LOADER_RAW']);
 
         // Return the PEM-formatted public key
         return $rsa->toString('PKCS8');
