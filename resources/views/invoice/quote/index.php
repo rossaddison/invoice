@@ -268,14 +268,31 @@ $columns = [
             ],
         ),
         new ActionButton(
-            content: '❌',
-            url: static function (Quote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('quote/delete', ['id' => $model->getId()]);
+            content: static function (Quote $model): string {
+                return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
+                ? '❌'
+                : '🚫';
             },
-            attributes: [
-                'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-            ],
+            url: static function (Quote $model) use ($urlGenerator): string {
+                return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
+                ? $urlGenerator->generate('quote/delete', ['id' => $model->getId()])
+                : '';
+            },
+            attributes: static function (Quote $model) use ($translator): array {
+                return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
+                ?  
+                [
+                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('delete.quote.single'),
+                ] 
+                : [
+                    'disabled' => true,
+                    'style' => 'background-color:lightblue',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('delete.quote.derived'),
+                ];        
+            },
         ),
     ]),
     new DataColumn(
@@ -295,30 +312,31 @@ $columns = [
     new DataColumn(
         'so_id',
         header: $translator->translate('salesorder.number.status'),
-        content: static function (Quote $model) use ($urlGenerator, $soR): string {
+        content: static function (Quote $model) use ($urlGenerator, $soR): A {
             $so_id = $model->getSo_id();
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if (null !== $so) {
                 $number = $so->getNumber();
                 $statusId = $so->getStatus_id();
                 if (null !== $number && ($statusId > 0)) {
-                    return (string) Html::a(
-                        $number . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId),
-                        $urlGenerator->generate('salesorder/view', ['id' => $so_id]),
-                        ['style' => 'text-decoration:none',
-                            'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)],
-                    );
+                    return  A::tag()
+                        ->addAttributes(['style' => 'text-decoration:none',
+                        'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)])
+                        ->content($number . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId))
+                        ->href($urlGenerator->generate('salesorder/view', ['id' => $so_id]));
                 }
                 if ($model->getSo_id() === '0' && $model->getStatus_id() === 7) {
                     if ($statusId > 0) {
-                        return (string) Html::a($soR->getSpecificStatusArrayLabel((string) $statusId), '', ['class' => 'btn btn-warning']);
+                        return A::tag()
+                        ->addAttributes(['class' => 'btn btn-warning'])
+                               ->content($soR->getSpecificStatusArrayLabel((string) $statusId))
+                               ->href('');
                     }
-                    return '';
                 }
-                return '';
             }
-            return '';
+            return A::tag();
         },
+        encodeContent: false
     ),
     new DataColumn(
         property: 'filterQuoteNumber',

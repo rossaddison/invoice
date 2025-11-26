@@ -9,8 +9,10 @@ use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SoIAS;
+use App\Invoice\Task\TaskRepository as taskR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class SalesOrderItemService
 {
@@ -20,38 +22,57 @@ final readonly class SalesOrderItemService
 
     /**
      * Used in quote/quote_to_so_quote_items subfunction in quote/quote_to_so_confirm
+     * Functional: 25/11/2025: Emulates the QuoteItemService function addQuoteItemProductTask
      * @param SalesOrderItem $model
      * @param array $array
      * @param string $sales_order_id
      * @param PR $pr
+     * @param taskR $taskR
      * @param SoIAR $soiar
      * @param SoIAS $soias
      * @param UR $uR
      * @param TRR $trr
+     * @param Translator $translator
      */
-    public function addSoItem(SalesOrderItem $model, array $array, string $sales_order_id, PR $pr, SoIAR $soiar, SoIAS $soias, UR $uR, TRR $trr): void
+    public function addSoItemProductTask(SalesOrderItem $model, array $array, string $sales_order_id, PR $pr, TaskR $taskR, SoIAR $soiar, SoIAS $soias, UR $uR, TRR $trr, Translator $translator): void
     {
         // This function is used in product/save_product_lookup_item_PO when adding a po using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
-        $product_id = ((isset($array['product_id'])) ? (int) $array['product_id'] : '');
-        $model->setProduct_id((int) $product_id);
+        $model->setTax_rate_id((int) $tax_rate_id);        
+        $product_id = (int) ($array['product_id'] ?? null);        
+        $task_id = (int) ($array['task_id'] ?? null);        
         $model->setSales_order_id((int) $sales_order_id);
         $product = $pr->repoProductquery((string) $array['product_id']);
         $name = '';
-        if ($product) {
-            if (isset($array['product_id']) && $pr->repoCount((string) $array['product_id']) > 0) {
+        if ($product) {            
+            $model->setProduct_id($product_id);
+            if (isset($array['product_id']) && $pr->repoCount((string) $product_id) > 0) {
                 $name = $product->getProduct_name();
             }
             null !== $name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form => override default product description
             $description = ((isset($array['description']))
                                    ? (string) $array['description']
-                                   : (string) $array['product_description']);
-
-            $model->setDescription($description ?: '');
+                                   : $product->getProduct_description());
+            null !== $description ? 
+                $model->setDescription($description) : 
+                $model->setDescription($translator->translate('not.available')) ;
         }
-        isset($array['quantity']) ? $model->setQuantity((int) $array['quantity']) : $model->setQuantity(0);
+        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        if ($task) {
+            $model->setTask_id($task_id);
+            if (isset($array['task_id']) && $taskR->repoCount((string) $task_id) > 0) {
+                $name = $task->getName();
+            }
+            null !== $name ? $model->setName($name) : $model->setName('');
+            // If the user has changed the description on the form => override default product description
+            $description = (isset($array['description'])
+                                      ? (string) $array['description']
+                                      : $task->getDescription());
+
+            strlen($description) > 0 ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available'));
+        }
+        isset($array['quantity']) ? $model->setQuantity((float) $array['quantity']) : $model->setQuantity(0);
         isset($array['price']) ? $model->setPrice((float) $array['price']) : $model->setPrice(0.00);
         isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : $model->setDiscount_amount(0.00);
         isset($array['charge_amount']) ? $model->setCharge_amount((float) $array['charge_amount']) : $model->setCharge_amount(0.00);
@@ -64,11 +85,9 @@ final readonly class SalesOrderItemService
         $model->setProduct_unit_id((int) $array['product_unit_id']);
         // Users are required to enter a tax rate even if it is zero percent.
         $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
-        if (isset($array['product_id'])) {
-            $this->repository->save($model);
-            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
-                $this->saveSalesOrderItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $soiar, $soias);
-            }
+        $this->repository->save($model);
+        if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
+            $this->saveSalesOrderItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $soiar, $soias);
         }
     }
 
@@ -88,11 +107,15 @@ final readonly class SalesOrderItemService
         $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
         $model->setTax_rate_id((int) $tax_rate_id);
 
-        isset($array['product_id']) ? $model->setProduct($model->getProduct()?->getProduct_id() == $array['product_id'] ? $model->getProduct() : null) : '';
-        $product_id = ((isset($array['product_id'])) ? (int) $array['product_id'] : '');
+        isset($array['product_id']) ? $model->setProduct($model->getProduct()?->getProduct_id() == $array['product_id'] ? $model->getProduct() : null) : null;
+        $product_id = ((isset($array['product_id'])) ? (int) $array['product_id'] : null);
         $model->setProduct_id((int) $product_id);
-
-        !empty($sales_order_id) ? $model->setSalesOrder($model->getSalesOrder()?->getId() == $sales_order_id ? $model->getSalesOrder() : null) : '';
+        
+        isset($array['task_id']) ? $model->setTask($model->getTask()?->getId() == $array['task_id'] ? $model->getTask() : null) : null;
+        $task_id = ((isset($array['task_id'])) ? (int) $array['task_id'] : null);
+        $model->setTask_id((int) $task_id);
+        
+        !empty($sales_order_id) ? $model->setSalesOrder($model->getSalesOrder()?->getId() == $sales_order_id ? $model->getSalesOrder() : null) : null;
         // The sales order is passed as a parameter
         $model->setSales_order_id((int) $sales_order_id);
 

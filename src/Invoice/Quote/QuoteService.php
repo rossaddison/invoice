@@ -44,6 +44,16 @@ final readonly class QuoteService
     public function saveQuote(User $user, Quote $model, array $array, SR $s, GR $gR): Quote
     {
         $model->nullifyRelationOnChange((int) $array['group_id'], (int) $array['client_id']);
+        
+        /**
+         * Give a legitimate quote number to a quote that currently:
+         * 1. Exists
+         * 2. Has no quote number
+         * 3. Has a status of 'draft'
+         */
+        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)  && ($array['status_id'] == 1)) {
+            $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
+        }
 
         $datetime_created = new \DateTimeImmutable();
         /**
@@ -70,7 +80,7 @@ final readonly class QuoteService
             if ($s->getSetting('generate_quote_number_for_draft') === '1') {
                 $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
             } else {
-                isset($array['number']) ? $model->setNumber((string) $array['number']) : '';
+                $model->setNumber('');
             }
             $model->setStatus_id(1);
             $model->setUser($user);
@@ -79,10 +89,6 @@ final readonly class QuoteService
             $model->setDate_created(new \DateTimeImmutable('now'));
             $model->setDate_expires($s);
             $model->setDiscount_amount(0.00);
-        }
-        // Regenerate quote numbers if the setting is changed
-        if (!$model->isNewRecord() && $s->getSetting('generate_quote_number_for_draft') === '1') {
-            null !== $array['group_id'] ? $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true)) : '';
         }
         $this->repository->save($model);
         return $model;

@@ -54,7 +54,9 @@ final readonly class QuoteItemService
                                       ? (string) $array['description']
                                       : $product->getProduct_description());
 
-            null !== $description ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available')) ;
+            null !== $description ? 
+                $model->setDescription($description) : 
+                $model->setDescription($translator->translate('not.available')) ;
         }
         $task = $taskR->repoTaskquery((string) $array['task_id']);
         if ($task) {
@@ -81,13 +83,11 @@ final readonly class QuoteItemService
         }
         $model->setProduct_unit_id((int) $array['product_unit_id']);
         // Users are required to enter a tax rate even if it is zero percent.
-        $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
-        //if ($product_id) {
+        $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);       
         $this->repository->save($model);
-        if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
+        if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
             $this->saveQuoteItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $qiar, $qias);
         }
-        //}
     }
 
     /**

@@ -159,12 +159,20 @@ $columns = [
     new DataColumn(
         'status_id',
         header: $translator->translate('status'),
-        content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
+        content: static function (SalesOrder $model) use ($soR, $urlGenerator): Yiisoft\Html\Tag\CustomTag {
             $statusId = $model->getStatus_id();
-            if (null !== $statusId) {
+            if (null !== $statusId) {                
                 $span = $soR->getSpecificStatusArrayLabel((string) $statusId);
                 $class = $soR->getSpecificStatusArrayClass($statusId);
-                return Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label ' . $class]);
+                $spanTag = Html::tag('span', $span, ['id' => '#so-to-invoice', 'class' => 'label ' . $class]);
+                if (7 !== $statusId) {
+                    return $spanTag;
+                } else {
+                    return Html::tag('a', $spanTag, [
+                        'href' => $urlGenerator->generate('inv/add', ['origin' => 'main']), 
+                        'style' => 'text-decoration:none']);
+                }    
+                    
             }
             return Html::tag('span');
         },

@@ -229,7 +229,7 @@ foreach ($invoice_status_totals as $total) { ?>
 ?>        
         <div class="col-xs-12 col-md-6">
 
-            <div id="panel-recent-invoices" class="panel panel-default">
+            <div id="panel-recent-invoices-1" class="panel panel-default">
 
                 <div class="panel-heading">
                     <b><i class="fa fa-history fa-margin"></i> <?= $translator->translate('recent.invoices'); ?></b>
@@ -380,7 +380,7 @@ foreach ($invoice_status_totals as $total) { ?>
         ?>            
             <div class="col-xs-12 col-md-6">
 
-                <div id="panel-recent-invoices" class="panel panel-default">
+                <div id="panel-recent-invoices-2" class="panel panel-default">
 
                     <div class="panel-heading">
                         <b><i class="fa fa-check-square-o fa-margin"></i> <?= $translator->translate('tasks'); ?></b>

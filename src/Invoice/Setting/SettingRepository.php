@@ -2157,6 +2157,8 @@ final class SettingRepository extends Select\Repository
             $common_invoice . 'inv/modal_message_action',
             //19
             $common_quote . 'quoteitem/partial_item_table',
+            //20
+            $common_quote. 'salesorderitem/partial_item_table',
         ];
         return $array[$key];
     }

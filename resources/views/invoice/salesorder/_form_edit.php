@@ -30,7 +30,6 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string, Stringable|null|scalar> $actionArgumentsDelAdd
- * @psalm-var array<array-key, mixed> $editInputAttributesUrlKey
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array<array-key, array<array-key, string>|string>> $optionsData
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['client']
@@ -62,7 +61,10 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                         ->header($translator->translate('error.summary'))
                                         ->onlyCommonErrors()
 ?>
-                                <?= Html::closeTag('div'); ?>        
+                                <?= Html::closeTag('div'); ?>
+                                <?= Html::openTag('div'); ?>
+                                	<?= Field::hidden($form, 'quote_id'); ?>
+                                <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                      <?= Field::hidden($form, 'number')
      ->hideLabel(false)
@@ -105,11 +107,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 );
                             } else { ?>
                                <div class="form-group">
-                                    <div class="col-xs-12 col-sm-2 text-right text-left-xs">
-                                        <label for="delivery_location_id"><?= $translator->translate('delivery.location'); ?>: </label>
-                                    </div>        
-                                    <div class="col-xs-12 col-sm-6">
-                                        <div class="input-group">  
+                                            <label for="delivery_location_id"><?= $translator->translate('delivery.location'); ?>: </label>
                                             <select name="delivery_location_id" id="delivery_location_id"
                                                     class="form-control" disabled>
                                                 <?php
@@ -170,16 +168,15 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                         <?php // If the quote is in draft status; do not show the url_key
-if ($form->getStatus_id() == 1) { ?>
-                            <?= Field::hidden($form, 'url_key')
-    ->hideLabel(true);
-    ?>
+                            if ($form->getStatus_id() == 1) { ?>
+                               <?= Field::hidden($form, 'url_key')
+                                   ->hideLabel(true);
+                                ?>
                         <?php } ?>
                         <?php if ($form->getStatus_id() > 1) { ?>
                             <?= Field::text($form, 'url_key')
-        ->hideLabel(false)
-        ->label($translator->translate('guest.url'))
-        ->addInputAttributes($editInputAttributesUrlKey);
+                                ->hideLabel(false)
+                                ->label($translator->translate('guest.url'));
                             ?>
                         <?php } ?>
                         <?= Html::closeTag('div'); ?>
@@ -216,28 +213,22 @@ if ($form->getStatus_id() == 1) { ?>
                         }
 ?>
                         <?= Html::openTag('div'); ?>
-                            <div class="col-xs-12 col-sm-2 text-right text-left-xs">   
-                                <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('term') ?></label>
+                            <div class="row">
+                                 <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('term') ?></label>
+                                 <textarea id="terms_and_conditions_file" class="form-control" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
                             </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <div class="input-group">
-                                    <textarea  class="form-control" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-2 text-right text-left-xs">  
-                                <label for="inv_id" class="control-label"><?= $translator->translate('salesorder.invoice.number'); ?></label>
-                            </div>
-                            <div class="col-xs-12 col-sm-6">  
-                                <div clsss="input-group">  
-                                    <input type="text" name="inv_number" id="inv_number" class="form-control" required disabled value="<?= $invNumber; ?>">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-2">  
+                                    <label for="inv_number" class="control-label"><?= $translator->translate('salesorder.invoice.number'); ?></label>
+                                    <input type="text" name="inv_number" id="inv_number" class="form-control" required disabled value="<?= $invNumber ?: $translator->translate('not.set'); ?>">
                                 </div>
                             </div>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
+                <?= $button::backSave(); ?>    
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
     
 <?= Html::closeTag('div'); ?>

@@ -10,6 +10,7 @@ use App\Invoice\Entity\SalesOrderItemAmount;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SOIAS;
 use App\Invoice\Product\ProductRepository as PR;
+use App\Invoice\Task\TaskRepository as TaskR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
@@ -56,6 +57,7 @@ final class SalesOrderItemController extends BaseController
         SOIR $soiR,
         TRR $trR,
         PR $pR,
+        TaskR $taskR,
         UR $uR,
         SOR $qR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
@@ -71,6 +73,7 @@ final class SalesOrderItemController extends BaseController
                 'so_id' => $so_item->getSales_order_id(),
                 'tax_rates' => $trR->findAllPreloaded(),
                 'products' => $pR->findAllPreloaded(),
+                'tasks' => $taskR->findAllPreloaded(),
                 'quotes' => $qR->findAllPreloaded(),
                 'units' => $uR->findAllPreloaded(),
                 'numberHelper' => new NumberHelper($this->sR),

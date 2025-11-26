@@ -53,7 +53,7 @@ class PdfHelper
             || $quote_or_inv instanceof Inv) {
             return $quote_or_inv->getClient()?->getClient_language() ?? $locale_lang;
         }
-        return '';
+        return 'English';
     }
 
     /**

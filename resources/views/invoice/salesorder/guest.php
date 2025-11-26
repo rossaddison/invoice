@@ -156,7 +156,7 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']);
         },
-        encodeContent: true,
+        encodeContent: false,
     ),
     new DataColumn(
         'date_created',

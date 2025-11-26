@@ -691,7 +691,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                             <b><?= $translator->translate('payment.method'); ?></b>
                                         </label>
 <?php if ($inv->getPayment_method() !== 0) { ?>
-                                            <select name="payment_method" id="payment_method" class="form-control" disabled="disabled">
+                                            <select name="payment_method" id="payment_method_1" class="form-control" disabled="disabled">
                                                 <option value="0"><?= Html::encode($translator->translate('select.payment.method')); ?></option>
                                         <?php
                                                 /**
@@ -709,7 +709,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
     <?php } ?>
                                             </select>
 <?php } else { ?>
-                                            <select name="payment_method" id="payment_method" class="form-control"
+                                            <select name="payment_method_2" id="payment_method" class="form-control"
     <?= 'disabled="disabled"'; ?>>
                                                 <option "0" ><?= Html::encode($translator->translate('none')); ?></option>
                                             </select>

@@ -4274,37 +4274,7 @@ final class InvController extends BaseController
             'actionArguments' => ['id' => $this->session->get('inv_id'), '_language' => $_language],
         ]);
     }
-
-    /**
-     * @param string $_language
-     * @param DLR $dlr
-     * @param string $delivery_location_id
-     * @return string
-     */
-    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id): string
-    {
-        if (!empty($delivery_location_id)) {
-            $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
-            if (null !== $del) {
-                return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
-                    'actionName' => 'del/view',
-                    'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
-                    'title' => $this->translator->translate('delivery.location'),
-                    'building_number' => $del->getBuildingNumber(),
-                    'address_1' => $del->getAddress_1(),
-                    'address_2' => $del->getAddress_2(),
-                    'city' => $del->getCity(),
-                    'state' => $del->getZip(),
-                    'country' => $del->getCountry(),
-                    'global_location_number' => $del->getGlobal_location_number(),
-                ]);
-            } //null!==$del
-        } else {
-            return '';
-        }
-        return '';
-    }
-
+    
     /**
      * @param bool $show_buttons
      * @param int $id

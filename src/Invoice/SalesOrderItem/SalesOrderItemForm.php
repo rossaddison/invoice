@@ -20,9 +20,8 @@ final class SalesOrderItemForm extends FormModel
 
     #[Required]
     private ?string $tax_rate_id = '';
-
-    #[Required]
     private ?string $product_id = '';
+    private ?string $task_id = '';
     private mixed $date_added = '';
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $name = '';
@@ -45,31 +44,30 @@ final class SalesOrderItemForm extends FormModel
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $product_unit = '';
 
-    #[Required]
     private ?int $product_unit_id = null;
 
     public function __construct(SoItem $salesOrderItem)
     {
         $this->id = $salesOrderItem->getId();
-
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
         $this->peppol_po_itemid = $salesOrderItem->getPeppol_po_itemid();
 
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
         $this->peppol_po_lineid = $salesOrderItem->getPeppol_po_lineid();
-
-        $this->date_added = $salesOrderItem->getDate_added();
         $this->name = $salesOrderItem->getName();
         $this->description = $salesOrderItem->getDescription();
         $this->quantity = $salesOrderItem->getQuantity();
         $this->price = $salesOrderItem->getPrice();
         $this->discount_amount = $salesOrderItem->getDiscount_amount();
+        $this->charge_amount = $salesOrderItem->getCharge_amount();
         $this->order = $salesOrderItem->getOrder();
-        $this->product_unit = $salesOrderItem->getProduct_unit();
+        $this->product_unit = $salesOrderItem->getProduct_unit();        
         $this->so_id = $salesOrderItem->getSales_order_id();
         $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
         $this->product_id = $salesOrderItem->getProduct_id();
+        $this->task_id = $salesOrderItem->getTask_id();
         $this->product_unit_id = (int) $salesOrderItem->getProduct_unit_id();
+        $this->date_added = $salesOrderItem->getDate_added();
     }
 
     public function getId(): ?string
@@ -100,6 +98,11 @@ final class SalesOrderItemForm extends FormModel
     public function getProduct_id(): ?string
     {
         return $this->product_id;
+    }
+    
+    public function getTask_id(): ?string
+    {
+        return $this->task_id;
     }
 
     public function getName(): ?string

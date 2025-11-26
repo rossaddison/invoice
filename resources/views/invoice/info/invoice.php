@@ -51,6 +51,13 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>26th November 2025</b></p>
+<p>1. SalesOrder accepts tasks as well as products.</p>
+<p>2. Once a sales order has reached the Generate stage, an invoice can be generated.</p>
+<p>3. A few of the assets have been incorporated into npm in case a developer wants to use the @npm path in assets to link the assets as opposed to using the cdn's. Personally I prefer the cdn's because they are quicker with the internet enabled.</p>
+<p>4. A delivery location has been included on the salesorder view.  The pdf does not as yet include a delivery location.</p>
+<p>Next: Incorporate a typescript toolbar above the salesorder allowing for the changing of the status. </p>
+<p>      Incorporate an enabled checkbox in a checkbox column in the quote index with the option to check and add an invoice.</p>
 <p><b>22nd November 2025</b></p>
 <p>SonarQube code reduction update - The modern approach is to rely on password_hash to generate a salt. So make it optional with $legacyExternalSaltRequired</p>
 <p>Php 8.5 preparation - explicit declaration of ?string $variable = null instead of string $variable = null</p>

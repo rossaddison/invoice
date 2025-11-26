@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
@@ -36,7 +37,9 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
-    <?= Html::encode($title) ?>
+    <?= Html::encode($title). ' '. A::tag()
+                                   ->href($urlGenerator->generate('del/edit', ['id' => $form->getId()]))
+                                   ->content('🖉'); ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= $button::back(); ?>
