@@ -25,6 +25,7 @@ phpunit.phar
 # evolving files
 /vendor
 /node_modules
+/resources/rbac/items.php
 
 # Codeception
 c3.php
