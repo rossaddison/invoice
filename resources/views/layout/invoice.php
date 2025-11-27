@@ -357,7 +357,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text('...config/common/params.php SyncTable currently not commented out and PhpFileSchemaProvider::MODE_READ_AND_WRITE...fast....MODE_WRITE_ONLY...slower'),
                 DropdownItem::divider(),
                 DropdownItem::text('Non-CLI/Non-FCGI: Manually Edit c:\wamp64\bin\apache\apache{version}\bin php.ini then ... Wampserver Icon ... Restart All Services'),
-                DropdownItem::text('php.ini (line 425): max_execution_time (pref 360) = ' . ((string) ini_get('max_execution_time') ?: 'unknown') . (((string) ini_get('max_execution_time')  == 400 ? '✅' : '❌'))),
+                DropdownItem::text('php.ini (line 425): max_execution_time (pref 400) = ' . ((string) ini_get('max_execution_time') ?: 'unknown') . (((string) ini_get('max_execution_time')  == 400 ? '✅' : '❌'))),
                 DropdownItem::text('php.ini: (line 1788): opcache.jit (pref see nothing) = ' . ((string) ini_get('opcache.jit') ?: 'unknown') . (((string) ini_get('opcache.jit')  == '' ? '✅' : '❌'))),
                 DropdownItem::text('php.ini: (line 1791): opcache.enable (pref 1) = ' . ((string) ini_get('opcache.enable') ?: 'unknown') . (((string) ini_get('opcache.enable')  == 1 ? '✅' : '❌'))),
                 DropdownItem::text('php.ini (line 1794): opcache.enable_cli (pref 1) = ' . ((string) ini_get('opcache.enable_cli') ?: 'unknown') . (((string) ini_get('opcache.enable_cli') == 1 ? '✅' : '❌'))),
