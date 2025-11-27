@@ -396,6 +396,8 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::text($translator->translate('platform.PhpVersion') . ' ' . PHP_VERSION),
                 DropdownItem::link($translator->translate('platform.PhpSupport'), 'https://php.net/supported-versions'),
                 DropdownItem::link($translator->translate('platform.update'), 'https://wampserver.aviatechno.net/'),
+                DropdownItem::link('Microsoft Typescript-Go Development Site for Typescript Version 7 (10x faster): Superceding Typescript 5.95', 'https://github.com/microsoft/typescript-go'),    
+                DropdownItem::link('SonarLint4NetbeansPlugin', 'https://plugins.netbeans.apache.org/catalogue/?id=21'),    
                 DropdownItem::link('Eclipse IDE for Php', 'https://www.eclipse.org/downloads/'),    
                 DropdownItem::link('Windows Installer Netbeans 28', 'https://installers.friendsofapachenetbeans.org/'),    
                 DropdownItem::link('Bootstrap 5 Icons with Filter', 'https://icons.getbootstrap.com/'),
