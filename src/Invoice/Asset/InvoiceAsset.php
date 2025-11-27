@@ -21,7 +21,7 @@ class InvoiceAsset extends AssetBundle
         'yii3i/yii3i.css',
 
         // bootstrapicons
-        '//cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.min.css',
+        '//cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
         '//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
 
         // Automatic asterisk * for required form fields
@@ -61,7 +61,7 @@ class InvoiceAsset extends AssetBundle
         'rebuild/js/mailer_ajax_email_addresses.js',
 
         // External CDN libraries
-        '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js',
+        '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.5/dist/index.bundle.min.js',
         '//cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js',
     ];
 }
