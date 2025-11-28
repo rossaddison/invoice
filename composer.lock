@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "039395e05549bac60176762a995751e6",
+    "content-hash": "e5c5957bf8f3f0448a16564e4fc39e23",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -18395,16 +18395,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "5.7.3",
+            "version": "5.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "4d0d3086d7c876626167d198cec285e98d3629dc"
+                "reference": "9a37739401485b42d779495e70548309820d11d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/4d0d3086d7c876626167d198cec285e98d3629dc",
-                "reference": "4d0d3086d7c876626167d198cec285e98d3629dc",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/9a37739401485b42d779495e70548309820d11d6",
+                "reference": "9a37739401485b42d779495e70548309820d11d6",
                 "shasum": ""
             },
             "require": {
@@ -18414,8 +18414,8 @@
                 "phpstan/phpdoc-parser": "^2.0",
                 "psr/log": "^1.1 || ^2.0 || ^3.0",
                 "symfony/deprecation-contracts": "^2 || ^3",
-                "symfony/finder": "^5.0 || ^6.0 || ^7.0",
-                "symfony/yaml": "^5.4 || ^6.0 || ^7.0"
+                "symfony/finder": "^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/yaml": "^5.4 || ^6.0 || ^7.0 || ^8.0"
             },
             "conflict": {
                 "symfony/process": ">=6, <6.4.14"
@@ -18477,9 +18477,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/5.7.3"
+                "source": "https://github.com/zircote/swagger-php/tree/5.7.5"
             },
-            "time": "2025-11-17T20:56:13+00:00"
+            "time": "2025-11-28T23:22:21+00:00"
         }
     ],
     "packages-dev": [
