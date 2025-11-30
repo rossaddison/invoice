@@ -168,7 +168,7 @@ foreach ($countries as $cldr => $country) {
         continue;
     }
         ?>
-                <?php $cvH->print_field_for_form($customField, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->print_field_for_form($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
@@ -224,7 +224,7 @@ if ($custom_field->getLocation() !== 2) {
     continue;
 }
     ?>
-                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
         <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -291,7 +291,7 @@ echo Field::date($form, 'client_birthdate')
             continue;
         }
             ?>
-                    <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                    <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>
@@ -316,7 +316,7 @@ echo Field::date($form, 'client_birthdate')
             continue;
         }
             ?>
-                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator,  $clientCustomValues, $customValues); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -338,7 +338,7 @@ echo Field::date($form, 'client_birthdate')
                                 continue;
                             }
                                 ?>
-                                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
                             <?php endforeach; ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>

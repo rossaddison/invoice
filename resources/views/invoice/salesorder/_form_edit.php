@@ -67,24 +67,24 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                      <?= Field::hidden($form, 'number')
-     ->hideLabel(false)
-     ->label($translator->translate('salesorder'))
-     ->addInputAttributes([
-         'class' => 'form-control',
-         'readonly' => 'readonly',
-     ])
-     ->value(Html::encode($form->getNumber()))
-?>
+                                        ->hideLabel(false)
+                                        ->label($translator->translate('salesorder'))
+                                        ->addInputAttributes([
+                                            'class' => 'form-control',
+                                            'readonly' => 'readonly',
+                                        ])
+                                        ->value(Html::encode($form->getNumber()))
+                                   ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'client_id')
-   ->label($translator->translate('user.account.clients'))
-   ->addInputAttributes(['class' => 'form-control'])
-   ->value($form->getClient_id())
-   ->prompt($translator->translate('none'))
-   ->optionsData($optionsData['client'])
-   ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                                        ->label($translator->translate('user.account.clients'))
+                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->value($form->getClient_id())
+                                        ->prompt($translator->translate('none'))
+                                        ->optionsData($optionsData['client'])
+                                        ->hint($translator->translate('hint.this.field.is.required'));
+                                     ?>
                                 <?= Html::closeTag('div'); ?>            
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'group_id')
@@ -209,7 +209,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                          */
                         foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
                             $custom_values = $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom'));
-                            $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator, $so_custom_values, $custom_values);
+                            $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator, $urlGenerator, $so_custom_values, $custom_values);
                         }
 ?>
                         <?= Html::openTag('div'); ?>

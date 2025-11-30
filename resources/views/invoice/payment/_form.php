@@ -156,7 +156,7 @@ if ($openInvsCount > 0) {
  * @var App\Invoice\Entity\CustomField $customField
  */
 foreach ($customFields as $customField): ?>  
-                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $paymentCustomValues, $customValues); ?>
+                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>

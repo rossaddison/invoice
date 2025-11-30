@@ -323,7 +323,7 @@ if ($vat) {
                          * @var App\Invoice\Entity\CustomField $customField
                          */
                         foreach ($customFields as $customField): ?>
-                        <?php $cvH->print_field_for_form($customField, $invCustomForm, $translator, $invCustomValues, $customValues); ?>
+                        <?php $cvH->print_field_for_form($customField, $invCustomForm, $translator, $urlGenerator, $invCustomValues, $customValues); ?>
                     <?php endforeach; ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>    

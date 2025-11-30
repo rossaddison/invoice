@@ -51,6 +51,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>29th November 2025</b></p>
+<p>Mobile Phone Testing</p>
+<p>Include an editable link for each custom field so that the field inputs can be edited.</p>
+<p>Remove unnecessary invoiceplane 'new' section on the quote/salesorder/inv views. New items are added by separate forms.</p>
 <p><b>26th November 2025</b></p>
 <p>1. SalesOrder accepts tasks as well as products.</p>
 <p>2. Once a sales order has reached the Generate stage, an invoice can be generated.</p>

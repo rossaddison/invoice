@@ -12,12 +12,14 @@ use App\Invoice\Helpers\DateHelper as DHelp;
 use Yiisoft\FormModel\Field;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\B;
 use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use Yiisoft\Router\UrlGeneratorInterface as urlGenerator;
 
 class CustomValuesHelper
 {
@@ -95,29 +97,36 @@ class CustomValuesHelper
     public function print_field_for_form(
         CustomField $custom_field,
         FormModel $formModel,
-        Translator $translator,
+        Translator $translator,        
+        UrlGenerator $urlGenerator,    
         array $entity_custom_values,
         array $custom_value,
     ): void {
         $customFieldId = $custom_field->getId();
-
+        $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
         $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
-
+        $label = $custom_field->getLabel() ?? '';
+        $cfEditableAt = A::tag()
+                ->href($urlGenerator->generate('customfield/edit', ['id' => $customFieldId]))
+                ->content($translator->translate('custom.field.edit'))
+                ->addAttributes(['style' => 'text-decoration:none'])
+                ->render() . Html::tag('br') . Html::tag('br');
+        $upArrowCfEditableAt = '⬆️ ' . $cfEditableAt;
+        $leftArrowCfEditableAt = '⬅️ '. $cfEditableAt;
         switch ($custom_field->getType()) {
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
-
                 echo Field::date($formModel, 'custom_field_id')
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
                        ? $translator->translate('hint.this.field.is.required')
                        : $translator->translate('hint.this.field.is.not.required'))
-                ->value($dateValue);
+                ->value($dateValue) . $upArrowCfEditableAt;
 
                 break;
 
@@ -133,13 +142,13 @@ class CustomValuesHelper
 
                 echo Label::tag()
                 ->forId($customFieldId, )
-                ->content(Html::encode($custom_field->getLabel()));
+                ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
                 echo Select::tag()
                 ->addAttributes(
                     [
                         'id' => $customFieldId,
-                        'name' => 'custom[' . $customFieldId . ']',
+                        'name' => $customBracketCustomField,
                         'class' => 'form-control',
                     ],
                 )
@@ -168,7 +177,7 @@ class CustomValuesHelper
 
                 echo Label::tag()
                 ->forId($customFieldId)
-                ->content(Html::encode($custom_field->getLabel()));
+                ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $selChoices
@@ -177,7 +186,7 @@ class CustomValuesHelper
                 ->addAttributes([
                     'class' => 'form-control',
                     'id' => $customFieldId,
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                 ])
                 ->disabled(false)
                 ->multiple(true)
@@ -187,7 +196,7 @@ class CustomValuesHelper
                 break;
 
             case 'RADIOLIST-CHOICE':
-                $groupName = 'custom[' . $customFieldId . ']';
+                $groupName = $customBracketCustomField;
                 $custom_values = $this->cvR->repoCustomFieldquery((int) $customFieldId);
                 $items = [];
                 /**
@@ -198,7 +207,7 @@ class CustomValuesHelper
                 }
                 echo Field::radioList($formModel, 'custom_field_id')
                 ->name($groupName)
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->radioAttributes(['required' => $custom_field->getRequired()])
                 ->radioLabelWrap(false)
                 ->radioLabelAttributes(['class' => 'ms-2'])
@@ -209,27 +218,27 @@ class CustomValuesHelper
                 ->hideLabel(false)
                 ->disabled(false)
                 ->items($items, true)
-                ->value($fieldValue ?: '');
+                ->value($fieldValue ?: '') . $upArrowCfEditableAt;
                 break;
 
             case 'BOOLEAN':
                 echo Field::checkbox($formModel, 'custom_field_id')
                 ->addInputAttributes([
                     'id' => $customFieldId,
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                 ])
                 ->disabled(false)
                 ->inputClass('form-check-input')
                 ->inputLabelAttributes(['class' => 'form-check-label'])
-                ->inputLabel($custom_field->getLabel())
-                ->value($fieldValue);
+                ->inputLabel($label)
+                ->value($fieldValue) . $upArrowCfEditableAt;
                 break;
 
             case 'EMAIL':
                 echo Field::email($formModel, 'custom_field_id')
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->minlength($custom_field->getEmailMinLength() ?? 0)
@@ -239,7 +248,7 @@ class CustomValuesHelper
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
                 break;
 
             case 'NUMBER':
@@ -250,25 +259,25 @@ class CustomValuesHelper
                     //$this->s->get_config_theme_bootstrap5_horizontal(),
                     'bootstrap5-vertical',
                 )
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->min($custom_field->getNumberMin() ?? 0)
                 ->max($custom_field->getNumberMax() ?? 100)
-                ->value((int) $fieldValue ?: 0)
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
                     ? $translator->translate('hint.this.field.is.required')
-                    : $translator->translate('hint.this.field.is.not.required'));
+                    : $translator->translate('hint.this.field.is.not.required'))    
+                ->value((int) $fieldValue ?: 0) . $upArrowCfEditableAt;
                 break;
 
             case 'TEXTAREA':
                 echo Field::textarea($formModel, 'custom_field_id')
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->minlength($custom_field->getTextAreaMinLength() ?? 0)
@@ -281,16 +290,16 @@ class CustomValuesHelper
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
                 break;
 
             case 'URL':
                 $minLength = $custom_field->getUrlMinLength() ?? 0;
                 $maxLength = $custom_field->getUrlMaxLength() ?? 150;
                 echo Field::url($formModel, 'custom_field_id')
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->minlength($minLength)
@@ -300,16 +309,16 @@ class CustomValuesHelper
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
                 ->disabled(false)
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
                 break;
 
             default:
                 $minLength = $custom_field->getTextMinLength() ?? 0;
                 $maxLength = $custom_field->getTextMaxLength() ?? 100;
                 echo Field::text($formModel, 'custom_field_id')
-                ->label($custom_field->getLabel())
+                ->label($label)
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->minlength($minLength)
@@ -319,7 +328,7 @@ class CustomValuesHelper
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
                 ->disabled(false)
-                ->value(Html::encode((string) $fieldValue ?: ''));
+                ->value(Html::encode((string) $fieldValue ?: '')) . $upArrowCfEditableAt;
         }
     }
 
@@ -333,6 +342,7 @@ class CustomValuesHelper
     {
         $customFieldId = $custom_field->getId();
         $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
+        $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
         switch ($custom_field->getType()) {
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
@@ -340,7 +350,7 @@ class CustomValuesHelper
                 echo Field::date($formModel, 'custom_field_id')
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -353,7 +363,7 @@ class CustomValuesHelper
                 if (null !== $customValue) {
                     echo Field::text($formModel, 'custom_field_id')
                     ->addInputAttributes([
-                        'name' => 'custom[' . $customFieldId . ']',
+                        'name' => $customBracketCustomField,
                         'id' => $customFieldId,
                     ])
                     ->disabled(true)
@@ -378,7 +388,7 @@ class CustomValuesHelper
 
                 echo Field::text($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -387,7 +397,7 @@ class CustomValuesHelper
 
                 break;
             case 'RADIOLIST-CHOICE':
-                $groupName = 'custom[' . $customFieldId . ']';
+                $groupName = $customBracketCustomField;
                 $custom_values = $this->cvR->repoCustomFieldquery((int) $customFieldId);
                 $items = [];
                 /**
@@ -415,7 +425,7 @@ class CustomValuesHelper
             case 'BOOLEAN':
                 echo Field::checkbox($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -429,7 +439,7 @@ class CustomValuesHelper
                 echo Field::email($formModel, 'custom_field_id')
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -439,7 +449,7 @@ class CustomValuesHelper
             case 'NUMBER':
                 echo Field::number($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -450,7 +460,7 @@ class CustomValuesHelper
             case 'TEXTAREA':
                 echo Field::textarea($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -462,7 +472,7 @@ class CustomValuesHelper
                 echo Field::url($formModel, 'custom_field_id')
                 ->label($custom_field->getLabel())
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
@@ -472,7 +482,7 @@ class CustomValuesHelper
             default:
                 echo Field::text($formModel, 'custom_field_id')
                 ->addInputAttributes([
-                    'name' => 'custom[' . $customFieldId . ']',
+                    'name' => $customBracketCustomField,
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)

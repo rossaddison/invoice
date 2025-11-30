@@ -333,6 +333,7 @@ return [
   'custom' => 'Invoice Custom',
   'custom.field' => 'Custom Field',
   'custom.field.add' => 'Custom Field Add',
+  'custom.field.edit' => 'Custom Field Edit',
   'custom.field.form' => 'Custom Field Form',
   'custom.field.location' => 'Document Position',
   'custom.field.number' => 'Number',

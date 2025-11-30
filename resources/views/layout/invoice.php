@@ -124,7 +124,10 @@ $this->beginPage();
     <head>
         <?= Meta::documentEncoding('utf-8') ?>
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
-        <?= Meta::data('viewport', 'width=device-width, initial-scale=1') ?>
+        <?= 
+            // Bootstrap5's Responsive Metatag
+            Meta::data('viewport', 'width=device-width, initial-scale=1') 
+        ?>
         <?= Style::tag()->content('#nprogress .bar {
                     height: 2px !important; /* ~2mm */
                     background: #2196f3 !important;
@@ -150,12 +153,12 @@ $offcanvasPlacement = match ($bootstrap5OffcanvasPlacement) {
     'top' => OffcanvasPlacement::TOP,
 };
 
-echo ($bootstrap5OffcanvasEnable ? Offcanvas::widget()
+echo $bootstrap5OffcanvasEnable ? Offcanvas::widget()
         ->id('offcanvas' . ucFirst($bootstrap5OffcanvasPlacement))
         ->placement($offcanvasPlacement)
         ->title('Offcanvas')
         ->togglerContent('Toggle ' . strtolower($bootstrap5OffcanvasPlacement) . ' offcanvas')
-        ->begin() : '');
+        ->begin() : '';
 
 echo NavBar::widget()
   // public folder represented by first forward slash ie. root

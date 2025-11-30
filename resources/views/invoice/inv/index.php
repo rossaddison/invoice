@@ -487,7 +487,7 @@ $columns = [
                      * @var string $iconMap[$iROString][$dRO][$status]
                      */
                     $icon = $iconMap[$iROString][$dRO][$status] ?? '';
-                    return !empty($icon) ? $icon : '';
+                    return !empty($icon) ? $icon : '🚫';
                 },
                 url: static function (Inv $inv) use ($s, $urlGenerator): string {
                     $iRO = $inv->getIs_read_only();

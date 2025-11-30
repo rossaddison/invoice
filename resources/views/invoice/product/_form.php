@@ -159,7 +159,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Entity\CustomField $customField
  */
 foreach ($customFields as $customField): ?>
-          <?php $cvH->print_field_for_form($customField, $productCustomForm, $translator, $productCustomValues, $customValues); ?>
+          <?php $cvH->print_field_for_form($customField, $productCustomForm, $translator, $urlGenerator, $productCustomValues, $customValues); ?>
       <?php endforeach; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
