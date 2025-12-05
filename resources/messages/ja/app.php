@@ -33,22 +33,31 @@ return [
 'alert.task.delete' => '注意! 請求書を生成するために使用されたタスクを削除します。',
 'all' => '全て',
 'allowance.or.charge' => '手当または料金',
-'allowance.or.charge.add' => 'ドキュメントレベル（請求書明細レベルではない）の控除または料金の追加',
+'allowance.or.charge.add' =>
+    'ドキュメントレベル（請求書明細レベルではない）の控除または料金の追加',
 'allowance.or.charge.allowance' => '手当',
-'allowance.or.charge.allowance.vat' => '控除に対するVAT',
+'allowance.or.charge.allowance.vat' =>
+	'控除に対するVAT',
 'allowance.or.charge.amount' => '控除額（乗数：基本額にパーセンテージを乗じた数値）',
-'allowance.or.charge.base.amount' => '基本金額',
+'allowance.or.charge.base.amount' =>
+	'基本金額',
 'allowance.or.charge.charge' => '充電',
-'allowance.or.charge.charge.vat' => '付加価値税の請求',
-'allowance.or.charge.edit.allowance' => 'ドキュメントレベル（請求書明細レベルではない）の手当編集',
-'allowance.or.charge.edit.charge' => 'ドキュメントレベル（請求書明細レベルではない）の料金編集',
+'allowance.or.charge.charge.vat' =>
+	'付加価値税の請求',
+'allowance.or.charge.edit.allowance' =>
+	'ドキュメントレベル（請求書明細レベルではない）の手当編集',
+'allowance.or.charge.edit.charge' =>
+	'ドキュメントレベル（請求書明細レベルではない）の料金編集',
 'allowance.or.charge.index' => '明細項目に対する手当または料金の指数',
 'allowance.or.charge.inv' => '請求書の控除または請求',
 'allowance.or.charge.item' => '請求書項目の控除または請求',
-'allowance.or.charge.item.add' => '手当/料金追加',
-'allowance.or.charge.multiplier.factor.numeric' => '乗数数値',
+'allowance.or.charge.item.add' =>
+	'手当/料金追加',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'乗数数値',
 'allowance.or.charge.reason' => '理由',
-'allowance.or.charge.reason.code' => '理由コード',
+'allowance.or.charge.reason.code' =>
+	'理由コード',
 'already.paid' => 'この請求書はすでに支払われています。',
 'amount' => '請求項目 金額',
 'amount.add' => '請求書項目 金額 追加',
@@ -65,32 +74,41 @@ return [
 'archive' => 'PDFをUploads/Archiveにアーカイブする',
 'assign.client' => 'クライアントの割り当て',
 'assign.client.on.signup' => 'サインアップ時にユーザーにクライアントを割り当てます。',
-'assign.client.on.signup.default.age.minimum.eighteen' => 'サインアップ時に、デフォルトの最低年齢が 18 歳のクライアントをユーザーに割り当てます。',
-'assign.client.on.signup.done' => 'サインアップ時にユーザーにクライアントを割り当てます。',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'サインアップ時に、デフォルトの最低年齢が 18 歳のクライアントをユーザーに割り当てます。',
+'assign.client.on.signup.done' =>
+	'サインアップ時にユーザーにクライアントを割り当てます。',
 'assigned.clients' => '割り当てられたクライアント',
 'attachment.list' => '添付ファイルリスト',
 'attachments' => '添付ファイル',
 'automatic.email.on.recur' => '定期的な請求書を自動メールで送信',
 'back' => '戻る',
 'balance' => 'バランス',
-'balance.does.not.equal.zero' => '残高がゼロではありません。ステータスが支払済み =&gt; 残高はゼロである必要があります。 ',
+'balance.does.not.equal.zero' =>
+	'残高がゼロではありません。ステータスが支払済み => 残高はゼロである必要があります。',
 'base.invoice' => '基本請求書',
 'bcc' => 'BCC',
 'bcc.mails.to.admin' => 'すべての送信メールをBCCとして管理者アカウントに送信します',
-'bcc.mails.to.admin.hint' => '管理者アカウントは、InvoicePlane のインストール中に作成されたアカウントです。',
+'bcc.mails.to.admin.hint' =>
+	'管理者アカウントは、InvoicePlane のインストール中に作成されたアカウントです。',
 'before.amount' => '以前の金額',
 'bill.to' => '請求先',
 'birthdate' => '生年月日',
 'body' => '体',
 'boolean' => 'ブール値',
 'bootstrap5' => 'ブートストラップ5',
-'bootstrap5.alert.close.button.font.size' => 'アラート閉じるボタンのフォントサイズ',
+'bootstrap5.alert.close.button.font.size' =>
+	'アラート閉じるボタンのフォントサイズ',
 'bootstrap5.alert.message.font' => '警告メッセージのフォント',
-'bootstrap5.alert.message.font.size' => '警告メッセージのフォントサイズ',
-'bootstrap5.layout.invoice.navbar.font' => '請求書ナビゲーションバーのフォントレイアウト',
-'bootstrap5.layout.invoice.navbar.font.size' => 'レイアウト請求書ナビゲーションバーのフォントサイズ',
+'bootstrap5.alert.message.font.size' =>
+	'警告メッセージのフォントサイズ',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'請求書ナビゲーションバーのフォントレイアウト',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'レイアウト請求書ナビゲーションバーのフォントサイズ',
 'bootstrap5.offcanvas.enable' => 'オフキャンバスを有効にする',
-'bootstrap5.offcanvas.placement' => 'オフキャンバス配置（例：上、下、開始（左）、終了（右））',
+'bootstrap5.offcanvas.placement' =>
+    'オフキャンバス配置（例：上、下、開始（左）、終了（右））',
 'breadcrumb.product.index' => '製品インデックス',
 'breadcrumb.product.property.index' => '製品特性インデックス',
 'calculate.discounts' => '割引を計算する',
@@ -130,8 +148,10 @@ return [
 'cash.discount' => '現金割引',
 'category.primary' => 'カテゴリー プライマリ',
 'category.secondary' => 'カテゴリーセカンダリ',
-'caution.delete.invoices' => 'テストのみ: すべての請求書と関連レコードを削除します。(関数 inv/flush を参照)',
-'caution.deleted.invoices' => 'テストのみ: すべての請求書および関連フィールドが削除されました。',
+'caution.delete.invoices' => 'テストのみ:'
+	. 'すべての請求書と関連レコードを削除します。(関数 inv/flush を参照)',
+'caution.deleted.invoices' => 'テストのみ:'
+	. 'すべての請求書および関連フィールドが削除されました。',
 'cc' => 'CC',
 'change.client' => 'クライアントの変更',
 'change.password' => 'パスワードを変更する',
@@ -144,7 +164,8 @@ return [
 'client.access' => 'クライアントアクセス',
 'client.add' => 'クライアント追加',
 'client.age' => '年',
-'client.age.hint' => 'このフィールドは必須であり、クライアントは法的に16歳以上である必要があります。',
+'client.age.hint' =>
+    'このフィールドは必須であり、クライアントは法的に16歳以上である必要があります。',
 'client.already.exists' => 'クライアントはすでに存在します。',
 'client.birthdate.hint' => '生年月日が不明な場合は、01/01/1901と入力してください。',
 'client.building.number' => 'クライアント建物番号',
@@ -153,18 +174,28 @@ return [
 'client.contract.reference' => '契約参照',
 'client.custom' => 'クライアントカスタム',
 'client.custom.add' => 'クライアントカスタム追加',
-'client.delete.history.exits.no' => '削除できません。クライアント履歴が存在します。',
+'client.delete.history.exits.no' =>
+	'削除できません。クライアント履歴が存在します。',
 'client.detail.changes' => '詳細が変更になった場合はメールをお送りください。',
 'client.error.summary' => 'エラーの概要',
 'client.form' => 'クライアントフォーム',
 'client.frequency' => 'クライアント頻度',
 'client.group' => 'クライアントグループ',
-'client.has.not.assigned' => 'これらのクライアントはユーザーアカウントに割り当てられていません。ユーザーアカウントごとに1つ以上のクライアントが割り当てられます。',
-'client.has.not.user.account' => 'このクライアントにはユーザー アカウントがないか、現在ユーザーに割り当てられていません。1. クライアントがサインアップ済み (ユーザー アカウントがある) であることを確認するか、このクライアントを現在登録されているユーザーに割り当ててください。2. 設定 ... 請求書ユーザー アカウント ... ユーザー アカウントの追加 3. このクライアントをユーザー アカウントに割り当てます。4. この状態では、このクライアントの請求書と見積書を作成することはできません。',
+'client.has.not.assigned' =>
+    'これらのクライアントはユーザーアカウントに割り当てられていません。ユーザーアカウントごとに1つ以上のクライアントが割り当てられます。',
+'client.has.not.user.account' =>
+	'このクライアントにはユーザー アカウントがないか、現在ユーザーに割り当てられていません。1.'
+. 'クライアントがサインアップ済み (ユーザー アカウントがある) であることを確認するか、このクライアントを現在登録されているユーザーに割り当ててください。2.'
+. '設定 .'
+. '請求書ユーザー アカウント .'
+. 'ユーザー アカウントの追加 3.'
+. 'このクライアントをユーザー アカウントに割り当てます。4.'
+. 'この状態では、このクライアントの請求書と見積書を作成することはできません。',
 'client.has.user.account' => 'ユーザーアカウント',
 'client.import.list.blank' => 'クライアントインポートリストが空白',
 'client.name' => 'クライアント名',
-'client.not.allocated.to.user' => 'クライアントがユーザーに割り当てられていません',
+'client.not.allocated.to.user' =>
+	'クライアントがユーザーに割り当てられていません',
 'client.note' => 'クライアントノート',
 'client.note.add' => 'クライアントメモの追加',
 'client.note.date' => 'クライアント日付',
@@ -174,38 +205,66 @@ return [
 'client.peppol' => 'クライアント Peppol の詳細',
 'client.peppol.accounting.cost' => '簿記用クライアント会計コストコード',
 'client.peppol.add' => '電子請求書用の Peppol の詳細を追加する',
-'client.peppol.buyer.reference.default' => '購入者参照: クライアントによってクライアント購入注文連絡担当者が指定されていない場合、これがデフォルトの購入者参照または発注担当者になります。',
-'client.peppol.buyer.reference.example' => '例：通常注文する人の名前、通常注文する人の従業員番号、またはこの人または部門/グループを識別するコード',
+'client.peppol.buyer.reference.default' =>
+	'購入者参照:'
+	. 'クライアントによってクライアント購入注文連絡担当者が指定されていない場合、これがデフォルトの購入者参照または発注担当者になります。',
+'client.peppol.buyer.reference.example' =>
+	'例：通常注文する人の名前、通常注文する人の従業員番号、またはこの人または部門/グループを識別するコード',
 'client.peppol.clientpeppols.form' => '会計クライアント/顧客当事者フォーム',
 'client.peppol.edit' => '電子請求書のPeppolの詳細を編集する',
-'client.peppol.endpointid' => 'エンドポイントID: メールアドレス',
-'client.peppol.endpointid.schemeid' => 'エンドポイント ID - EAS (電子アドレス スキーム) に基づくスキーム ID、4 桁のコード (例: 0192)',
-'client.peppol.financial.institution.branchid' => '金融機関支店ID',
+'client.peppol.endpointid' => 'エンドポイントID:'
+	. 'メールアドレス',
+'client.peppol.endpointid.schemeid' => 'エンドポイント ID - EAS (電子アドレス '
+	. 'スキーム) に基づくスキーム ID、4 桁のコード (例:'
+	. '0192)',
+'client.peppol.financial.institution.branchid' =>
+	'金融機関支店ID',
 'client.peppol.identificationid' => '識別ID',
 'client.peppol.identificationid.schemeid' => '識別ID - schemeID',
-'client.peppol.legal.entity.company.legal.form' => '法人形態 - 売主に関連する追加の法的情報（例：株式資本）',
-'client.peppol.legal.entity.companyid' => '法人会社ID',
-'client.peppol.legal.entity.companyid.schemeid' => '法人会社ID - schemeID',
-'client.peppol.legal.entity.registration.name' => '法人登録名',
+'client.peppol.legal.entity.company.legal.form' =>
+	'法人形態 - 売主に関連する追加の法的情報（例：株式資本）',
+'client.peppol.legal.entity.companyid' =>
+	'法人会社ID',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'法人会社ID - schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'法人登録名',
 'client.peppol.not.found' => 'クライアントまたは顧客が Peppol の詳細を設定していません。',
-'client.peppol.not.found.accounting.cost' => '見つかりません: 会計コスト、または関連データをバイヤーの財務アカウントのどこに記帳するかを指定するテキスト値。',
-'client.peppol.not.found.delivery.location' => '配送先の国名が見つかりません',
-'client.peppol.not.found.id' => 'クライアントは、オンラインのクライアント Peppol 詳細の下にアカウント ID を入力していません。',
-'client.peppol.not.found.id.supplier.assigned' => 'クライアント Peppol サプライヤーに割り当てられたアカウント ID が見つかりません',
-'client.peppol.not.found.invoice' => 'リンクされた請求書が見つかりません',
-'client.peppol.not.found.purchase.order' => '販売注文には購買注文番号が関連付けられていません',
-'client.peppol.not.found.purchase.order.item.number' => '販売注文明細項目には、一致する購入注文明細項目識別番号（購入者の品目識別番号）が関連付けられていません。管理者: 請求書の販売注文明細項目番号を編集してください。',
-'client.peppol.not.found.purchase.order.line.number' => '販売注文明細番号には、一致する購入注文明細番号 (OrderLineReference LineID) が関連付けられていません。管理者: 請求書の販売注文明細番号を編集してください。 ',
-'client.peppol.not.found.sales.order' => '販売注文が存在しません',
-'client.peppol.payee.financial.account.name' => '受取人の金融口座名義',
-'client.peppol.payee.financial.accountid' => '受取人金融口座ID',
-'client.peppol.record.updated.successfully' => 'Peppol レコードが正常に更新されました',
-'client.peppol.supplier.assigned.account.id' => 'サプライヤー割り当てアカウントID',
+'client.peppol.not.found.accounting.cost' =>
+	'見つかりません:'
+	. '会計コスト、または関連データをバイヤーの財務アカウントのどこに記帳するかを指定するテキスト値。',
+'client.peppol.not.found.delivery.location' =>
+	'配送先の国名が見つかりません',
+'client.peppol.not.found.id' =>
+	'クライアントは、オンラインのクライアント Peppol 詳細の下にアカウント ID を入力していません。',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'クライアント Peppol サプライヤーに割り当てられたアカウント ID が見つかりません',
+'client.peppol.not.found.invoice' =>
+	'リンクされた請求書が見つかりません',
+'client.peppol.not.found.purchase.order' =>
+	'販売注文には購買注文番号が関連付けられていません',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'販売注文明細項目には、一致する購入注文明細項目識別番号（購入者の品目識別番号）が関連付けられていません。管理者:'
+	. '請求書の販売注文明細項目番号を編集してください。',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'販売注文明細番号には、一致する購入注文明細番号 (OrderLineReference LineID) が関連付けられていません。管理者:'
+	. '請求書の販売注文明細番号を編集してください。',
+'client.peppol.not.found.sales.order' =>
+	'販売注文が存在しません',
+'client.peppol.payee.financial.account.name' =>
+	'受取人の金融口座名義',
+'client.peppol.payee.financial.accountid' =>
+	'受取人金融口座ID',
+'client.peppol.record.updated.successfully' =>
+	'Peppol レコードが正常に更新されました',
+'client.peppol.supplier.assigned.account.id' =>
+	'サプライヤー割り当てアカウントID',
 'client.peppol.taxschemecompanyid' => '税制会社ID',
 'client.peppol.taxschemeid' => '税制ID',
 'client.postaladdress' => '郵便番号',
 'client.postaladdress.add' => 'クライアントの住所を追加する',
-'client.postaladdress.additional.street.name' => '追加の通り名',
+'client.postaladdress.additional.street.name' =>
+	'追加の通り名',
 'client.postaladdress.available' => '利用可能な郵便住所',
 'client.postaladdress.building.number' => '建物番号',
 'client.postaladdress.city.name' => '都市名',
@@ -218,7 +277,10 @@ return [
 'client.streets' => '通り',
 'client.surname' => 'クライアントの姓',
 'client.surname.optional' => 'クライアントの姓（任意）',
-'client.title' => 'クライアントの敬称（Mr./Mrs./Miss/Dr./Prof）',
+'client.title' => 'クライアントの敬称（Mr.'
+	. '/Mrs.'
+	. '/Miss/Dr.'
+	. '/Prof）',
 'client.title.doctor' => '博士',
 'client.title.miss' => '逃す',
 'client.title.mr' => '氏',
@@ -240,14 +302,16 @@ return [
 'company.private.logo.height' => 'ロゴの高さ',
 'company.private.logo.margin' => 'ロゴ余白',
 'company.private.logo.width' => 'ロゴの幅',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'ロゴはアップロードとパブリックフォルダから削除されます',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'ロゴはアップロードとパブリックフォルダから削除されます',
 'company.public' => '企業公開',
 'complete' => '完了',
 'confirm' => '確認する',
 'confirm.deletion' => '削除を確認',
 'contact.information' => '連絡先',
 'continue' => '続く',
-'continue.with.developer.sandbox.hmrc' => 'Developer Gov Sandbox UK を続ける',
+'continue.with.developer.sandbox.hmrc' =>
+	'Developer Gov Sandbox UK を続ける',
 'continue.with.facebook' => 'Facebookで続ける',
 'continue.with.github' => 'Githubで続ける',
 'continue.with.google' => 'Googleで続行',
@@ -263,7 +327,8 @@ return [
 'contract.create' => '契約書を作成するには、「請求書」→「表示」→「オプション」→「編集」を選択します。請求書の発行先となるクライアントに対して契約書が作成されます。この契約書を今後の請求書にリンクしてください。',
 'contract.index.button.list' => '請求書',
 'contract.name' => '名前',
-'contract.none' => 'リマインダー: この請求書には契約が設定されていません',
+'contract.none' => 'リマインダー:'
+	. 'この請求書には契約が設定されていません',
 'contract.period.end' => '期末',
 'contract.period.start' => '期間開始',
 'contract.reference' => '参照',
@@ -295,9 +360,13 @@ return [
 'creditcard.expiry.year' => '有効期限',
 'creditcard.number' => 'クレジットカード番号',
 'cron.key' => 'CRONキー',
-'curl.store.cove.api.get.legal.entity.id.successful' => '法人設立を成功させる',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Store Cove セットアップ API 呼び出し - 法人の成功',
-'curl.store.cove.api.setup.successful' => 'Store Cove セットアップ API 呼び出しが成功しました',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'法人設立を成功させる',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Store Cove セットアップ API 呼び出し '
+	. '- 法人の成功',
+'curl.store.cove.api.setup.successful' =>
+	'Store Cove セットアップ API 呼び出しが成功しました',
 'currency' => '通貨',
 'currency.code' => '通貨コード',
 'currency.symbol' => '通貨記号',
@@ -335,7 +404,8 @@ return [
 'date.supplied' => '提供日',
 'dates' => '請求書の日付',
 'datetime.immutable.date.created' => '作成する',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
 'datetime.immutable.date.modified' => 'に対して',
 'datetime.immutable.time.created' => '時間',
 'days' => '日数',
@@ -347,7 +417,8 @@ return [
 'default.hourly.rate' => 'デフォルトの時給',
 'default.invoice.group' => 'デフォルトの請求書グループ',
 'default.invoice.tax.rate' => 'デフォルトの請求書税率',
-'default.invoice.tax.rate.placement' => 'デフォルトの請求書税率の配置',
+'default.invoice.tax.rate.placement' =>
+	'デフォルトの請求書税率の配置',
 'default.item.tax.rate' => 'デフォルトの商品税率',
 'default.list.limit' => 'リスト内の項目数',
 'default.notes' => 'デフォルトのメモ',
@@ -370,7 +441,8 @@ return [
 'delete.user.client.warning' => 'このユーザーからこのクライアントの割り当てを解除してもよろしいですか?',
 'deleted' => '削除済み',
 'deletion.forbidden' => '請求書の削除は禁止されています。管理者に連絡するか、ドキュメントを参照してください。',
-'delivery' => '配送の詳細: 請求書/配送期間の開始日/終了日',
+'delivery' => '配送の詳細:'
+	. '請求書/配送期間の開始日/終了日',
 'delivery.actual.delivery.date' => '実際の配達日',
 'delivery.add' => '配送を追加',
 'delivery.date.created' => '作成日',
@@ -378,15 +450,23 @@ return [
 'delivery.end.date' => '納品/請求期間の終了日',
 'delivery.location' => '配送場所',
 'delivery.location.add' => '配送場所の追加',
-'delivery.location.add.in.invoice' => '請求書の下に配送先を追加します...表示...オプション...編集',
+'delivery.location.add.in.invoice' =>
+	'請求書の下に配送先を追加します.'
+	. '表示.'
+	. 'オプション.'
+	. '編集',
 'delivery.location.building.number' => '建物番号',
 'delivery.location.client' => 'クライアントの配送場所',
 'delivery.location.delete' => '配送場所の削除',
 'delivery.location.edit' => '配送場所の編集',
-'delivery.location.electronic.address.scheme' => '電子アドレススキーム（コードリスト）デフォルト：0088 欧州商品番号（EAN）ロケーションコード（別名：GLN）グローバルロケーション番号',
-'delivery.location.global.location.number' => 'グローバルロケーション番号（13桁）',
-'delivery.location.id.not.found' => '配送場所のグローバルロケーション番号IDが見つかりません',
-'delivery.location.index.button.list' => '請求書',
+'delivery.location.electronic.address.scheme' =>
+	'電子アドレススキーム（コードリスト）デフォルト：0088 欧州商品番号（EAN）ロケーションコード（別名：GLN）グローバルロケーション番号',
+'delivery.location.global.location.number' =>
+	'グローバルロケーション番号（13桁）',
+'delivery.location.id.not.found' =>
+	'配送場所のグローバルロケーション番号IDが見つかりません',
+'delivery.location.index.button.list' =>
+	'請求書',
 'delivery.location.none' => 'この請求書には配送場所がリンクされていません',
 'delivery.location.peppol.output' => 'この請求書には配送先が関連付けられていません。そのため、Peppolの出力はありません。',
 'delivery.location.plural' => '配達場所',
@@ -444,19 +524,29 @@ return [
 'email.send.method.sendmail' => 'センドメール',
 'email.send.method.smtp' => 'SMTP',
 'email.settings' => 'メール設定',
-'email.source.email.template' => ' 設定から取得...メールテンプレート',
-'email.source.user.account' => ' 設定から取得...請求書ユーザーアカウント',
+'email.source.email.template' => '設定から取得.'
+	. 'メールテンプレート',
+'email.source.user.account' => '設定から取得.'
+	. '請求書ユーザーアカウント',
 'email.successfully.sent' => 'メールは正常に送信されました',
 'email.template' => 'メールテンプレート',
 'email.template.add' => 'メールテンプレートの追加',
 'email.template.already.exists' => '電子メール テンプレートはすでに存在します。',
 'email.template.form' => 'メールテンプレートフォーム',
-'email.template.from.email.leave.blank' => 'このフィールドを空白のままにすると、ユーザーのアカウントのメールアドレスがメールフォームに編集可能な値として挿入されます。例：会計士のサーバーメールアドレス。サーバー関連のメールアドレスを使用することをお勧めします。',
+'email.template.from.email.leave.blank' =>
+	'このフィールドを空白のままにすると、ユーザーのアカウントのメールアドレスがメールフォームに編集可能な値として挿入されます。例：会計士のサーバーメールアドレス。サーバー関連のメールアドレスを使用することをお勧めします。',
 'email.template.from.source' => 'メールソース',
-'email.template.from.source.admin.email' => '管理者のメールアドレス (config/common/params)',
-'email.template.from.source.froms.email' => 'テーブルのデフォルトから（設定...電子メールドロップダウンの電子メールアドレスから）',
-'email.template.from.source.sender.email' => '送信者のメールアドレス (config/common/params)',
-'email.template.not.configured' => 'メールテンプレートが設定されていません。設定...請求書...請求書テンプレート...デフォルトのメールテンプレート',
+'email.template.from.source.admin.email' =>
+	'管理者のメールアドレス (config/common/params)',
+'email.template.from.source.froms.email' =>
+	'テーブルのデフォルトから（設定.'
+	. '電子メールドロップダウンの電子メールアドレスから）',
+'email.template.from.source.sender.email' =>
+	'送信者のメールアドレス (config/common/params)',
+'email.template.not.configured' => 'メールテンプレートが設定されていません。設定.'
+	. '請求書.'
+	. '請求書テンプレート.'
+	. 'デフォルトのメールテンプレート',
 'email.template.overdue' => '期限切れメールテンプレート',
 'email.template.paid' => '有料メールテンプレート',
 'email.template.successfully.added' => 'メールテンプレートが正常に追加されました',
@@ -474,17 +564,26 @@ return [
 'enable.projects' => 'プロジェクトモジュールを有効にする',
 'enable.vat' => 'VATを有効にする',
 'enable.vat.message' => 'ビューのオプションボタンの上に VAT リマインダーメッセージを表示する',
-'enable.vat.warning.line.1' => '1. VAT を有効にすると、請求書の個々の明細項目にのみ VAT が課税されます。つまり、見積/請求書税は請求書に表示されず、0 に減額されます。',
-'enable.vat.warning.line.2' => '2. VAT を有効にすると、前述のように、明細項目外の税金は税額合計に含まれません。 ',
-'enable.vat.warning.line.3' => '3. 別のデータベースに VAT 見積書/請求書を作成します。',
-'enable.vat.warning.line.4' => '4. すべての新しい VAT 請求書明細項目には、belongs_to_vat_invoice フラグが付けられます。',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. 'VAT を有効にすると、請求書の個々の明細項目にのみ VAT が課税されます。つまり、見積/請求書税は請求書に表示されず、0 に減額されます。',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. 'VAT を有効にすると、前述のように、明細項目外の税金は税額合計に含まれません。',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. '別のデータベースに VAT 見積書/請求書を作成します。',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. 'すべての新しい VAT 請求書明細項目には、belongs_to_vat_invoice フラグが付けられます。',
 'enabled' => '有効',
 'end' => '終わり',
 'end.date' => '終了日',
 'enforcement' => '執行官出席演説',
 'enter' => '入力',
 'enter.payment' => '支払いを入力する',
-'error.duplicate.file' => 'エラー: ファイル名が重複しています。変更してください。',
+'error.duplicate.file' => 'エラー:'
+	. 'ファイル名が重複しています。変更してください。',
 'errors' => 'エラー',
 'every' => '毎',
 'example' => '例',
@@ -501,9 +600,14 @@ return [
 'family.name' => '苗字',
 'family.search' => 'ファミリーサーチ',
 'faq' => 'よくある質問',
-'faq.ai.callback.session' => 'Copilot: `callbackGithub` 関数の状態管理を改善するには、https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php をどのように含めればよいですか?',
+'faq.ai.callback.session' => 'Copilot:'
+	. '`callbackGithub` 関数の状態管理を改善するには、https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php をどのように含めればよいですか?',
 'faq.business.rules' => 'Peppol ビジネス ルールとは何ですか?',
-'faq.gov.developer.sandbox.hmrc' => 'このリポジトリを HMRC 開発者サンドボックスに接続するにはどうすればよいですか?',
+'faq.gov.developer.sandbox.hmrc' =>
+	'このリポジトリを HMRC 開発者サンドボックスに接続するにはどうすればよいですか?',
 'faq.lamp.alpine' => 'このリポジトリを Linux Alpine、Apache2、mySql/mariadb、php に設定するにはどうすればよいですか?',
 'faq.oauth2' => 'OAuth2アイデンティティプロバイダ（Facebookでのサインアップやログインなど）を設定するにはどうすればいいですか？',
 'faq.payment.provider' => 'オンライン決済プロバイダーを設定するにはどうすればよいですか?',
@@ -537,25 +641,11 @@ return [
 'from.date' => '開始日',
 'from.default.in.dropdown' => 'ドロップダウンリストのデフォルトのメールアドレス',
 'from.email' => 'メールから',
-'from.email.address' => '送信元メールアドレス: デフォルトを選択',
+'from.email.address' => '送信元メールアドレス:'
+	. 'デフォルトを選択',
 'from.include.in.dropdown' => 'このメールアドレスをドロップダウンリストに含める',
 'from.name' => '送信者名',
 'front.page' => 'フロントページ',
-'gallery.caption.slide1' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide10' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide11' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide12' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide13' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide14' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide15' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide2' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide3' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide4' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide5' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide6' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide7' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide8' => '../resources/messages/en/app.php からこのテキストを変更できます。',
-'gallery.caption.slide9' => '../resources/messages/en/app.php からこのテキストを変更できます。',
 'gateway.online.payment' => 'オンライン決済',
 'gender' => '性別',
 'gender.female' => '女性',
@@ -567,59 +657,98 @@ return [
 'general.yes' => 'はい',
 'generate' => '生成する',
 'generate.copy' => 'コピーを生成',
-'generate.invoice.number.for.draft' => '請求書草案の請求書番号を生成する',
-'generate.quote.number.for.draft' => '見積案の見積番号を生成する',
+'generate.invoice.number.for.draft' =>
+	'請求書草案の請求書番号を生成する',
+'generate.quote.number.for.draft' =>
+	'見積案の見積番号を生成する',
 'generate.sumex' => 'Sumex PDF を生成',
 'generator' => 'ジェネレータ',
 'generator.add' => 'ジェネレーターの追加',
 'generator.camelcase.capital.name' => 'コントローラー名とリポジトリ名で使用されるキャメルケースの大文字の名前（例：TaxRate）。上記の例の「product」を使用する場合は、「Product」を使用します。',
-'generator.camelcase.capital.name.product' => '製品',
+'generator.camelcase.capital.name.product' =>
+	'製品',
 'generator.controller.and.repository' => 'コントローラーとリポジトリ',
 'generator.controller.layout.directory' => 'コントローラーレイアウトディレクトリ（例：dirname(dirname(__DIR__))）は、コントローラーコンストラクトの直後に表示されます。コントローラーファイルは (__DIR__) に配置され、レイアウトディレクトリへのパスを追加するための「ベース」として使用される「src」ディレクトリの2つ下のディレクトリです。',
-'generator.controller.layout.directory.dot.path' => 'コントローラー レイアウト ディレクトリ ドット パス (例: &#39;/views/layout/invoice.php&#39;) はコントローラー コンストラクトの直後に表示され (アポストロフィは除く)、上記の src ディレクトリの場所に追加されます。',
-'generator.controller.layout.directory.dot.path.placeholder' => 'コントローラーレイアウトディレクトリドットパス',
-'generator.controller.layout.directory.placeholder' => 'コントローラーレイアウトディレクトリ (例: dirname(dirname(__DIR__))',
+'generator.controller.layout.directory.dot.path' =>
+	'コントローラー レイアウト ディレクトリ ドット パス '
+	. '(例:'
+	. '&#39;/views/layout/invoice.'
+	. 'php&#39;) はコントローラー コンストラクトの直後に表示され (アポストロフィは除く)、上記の src '
+	. 'ディレクトリの場所に追加されます。',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'コントローラーレイアウトディレクトリドットパス',
+'generator.controller.layout.directory.placeholder' =>
+	'コントローラーレイアウトディレクトリ (例:'
+	. 'dirname(dirname(__DIR__))',
 'generator.controller.path.layout' => 'レイアウトファイルへのパス',
 'generator.created.at.include' => 'エンティティにcreated_atフィールドを含める',
 'generator.deleted.at.include' => 'エンティティにdeleted_atフィールドを含める',
 'generator.external.entity' => 'このエンティティで使用される外部エンティティ。設定エンティティは、単純なキー =&gt; 値のペアのIDインデックスデータベースです。',
 'generator.external.entity.default' => '外部エンティティ（例：MyEntity、パスを除く）。パスはジェネレータに組み込まれています。デフォルト：設定',
 'generator.external.entity.placeholder' => '外部エンティティ（例：MyEntity、パスは除く）。パスはジェネレーターで生成されます。デフォルト：設定。追加リポジトリ（例：メインリポジトリに加えて設定リポジトリ）。',
-'generator.file.type.not.found' => 'ファイルタイプが見つかりません。',
+'generator.file.type.not.found' =>
+	'ファイルタイプが見つかりません。',
 'generator.flash.include' => 'コントローラーの追加/編集/表示/削除機能にフラッシュメッセージを含める',
 'generator.generate' => '生成する',
 'generator.generated' => ' 生成日時 ',
-'generator.google.translate.any' => '英語に翻訳\any_lang.php',
-'generator.google.translate.app' => '英語を翻訳\app_lang.php',
-'generator.google.translate.common' => '英語を翻訳\common_lang.php',
-'generator.google.translate.diff' => '英語を翻訳\diff_lang.php',
-'generator.google.translate.gateway' => '英語を翻訳\gateway_lang.php',
-'generator.google.translate.ip' => '英語を翻訳\ip_lang.php',
-'generator.google.translate.latest.a' => '英語を翻訳\a_latest_lang.php',
-'generator.google.translate.latest.b' => '英語に翻訳\b_latest_lang.php',
+'generator.google.translate.any' => '英語に翻訳\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => '英語を翻訳\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => '英語を翻訳\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => '英語を翻訳\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => '英語を翻訳\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => '英語を翻訳\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'英語を翻訳\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'英語に翻訳\\b_latest_lang.'
+	. 'php',
 'generator.headerline.include' => 'Ajax が必要な場合はヘッダー行を含める',
 'generator.history' => 'このレコードには既存のジェネレータ関係があるため、削除できません。まずこれらの関係を削除してください。',
 'generator.modified.at.include' => 'エンティティにmodified_atフィールドを含める',
 'generator.namespace' => '名前空間',
-'generator.namespace.before.entity' => 'エンティティ パスの前の名前空間 (例: App\Invoice (App\Invoice\Entity ではありません))',
+'generator.namespace.before.entity' => 'エンティティ パスの前の名前空間 (例:'
+	. 'App\\Invoice (App\\Invoice\\Entity ではありません))',
 'generator.relation.form' => 'ジェネレータ関係フォーム',
-'generator.relation.form.camelcase.name' => 'ID を除いた Camelcase 名 (例: Product テーブルの tax_rate_id &#39;外部キー/リレーション&#39; が TaxRate に簡略化され、エンティティの名前である)',
-'generator.relation.form.entity.generator' => 'エンティティジェネレーター',
-'generator.relation.form.lowercase.name' => 'ID を除く小文字の名前 (例: Product テーブルの tax_rate_id &#39;外部キー/リレーション&#39; は tax.rate に簡略化されます) ',
-'generator.relation.form.view.field.name' => 'ビューフィールド名',
+'generator.relation.form.camelcase.name' =>
+	'ID を除いた Camelcase 名 (例:'
+	. 'Product テーブルの tax_rate_id &#39;外部キー/リレーション&#39; が '
+	. 'TaxRate に簡略化され、エンティティの名前である)',
+'generator.relation.form.entity.generator' =>
+	'エンティティジェネレーター',
+'generator.relation.form.lowercase.name' =>
+	'ID を除く小文字の名前 (例:'
+	. 'Product テーブルの tax_rate_id &#39;外部キー/リレーション&#39; は '
+	. 'tax.'
+	. 'rate に簡略化されます)',
+'generator.relation.form.view.field.name' =>
+	'ビューフィールド名',
 'generator.relations' => 'ジェネレータ関係',
 'generator.relations.add' => 'ジェネレータ関係の追加',
-'generator.route.prefix' => 'ルート プレフィックス (例: コントローラー構築後に表示される &#39;invoice/product&#39; の invoice)。',
+'generator.route.prefix' => 'ルート プレフィックス (例:'
+	. 'コントローラー構築後に表示される &#39;invoice/product&#39; の invoice)。',
 'generator.route.suffix' => 'ルートサフィックス（例：コントローラ構築後に表示される「invoice/product」の製品）。',
 'generator.small.plural.name' => 'コントローラーのインデックスコントローラー関数ですべてのエンティティジェネレーターを一覧表示するために使用する、短縮形の複数形名。通常は上記の値の末尾にsが付きます。',
-'generator.small.plural.name.placeholder' => '小文字の複数形',
-'generator.small.plural.name.products' => '製品',
+'generator.small.plural.name.placeholder' =>
+	'小文字の複数形',
+'generator.small.plural.name.products' =>
+	'製品',
 'generator.small.singular.name' => 'コントローラー内で編集およびビューコントローラー関数に使用される短い単数名。通常はルートサフィックスと同じです。例：product',
-'generator.small.singular.name.placeholder' => '小文字の単数名',
-'generator.small.singular.name.product' => '製品',
+'generator.small.singular.name.placeholder' =>
+	'小文字の単数名',
+'generator.small.singular.name.product' =>
+	'製品',
 'generator.table' => 'テーブル',
-'generator.table.used.to.generate.entity.controller.repository' => 'エンティティ、コントローラーの追加、編集、削除、ビュー、リポジトリ、サービス、マッパーを生成するために使用されるテーブル',
-'generator.updated.at.include' => 'エンティティにupdated.atフィールドを含める',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'エンティティ、コントローラーの追加、編集、削除、ビュー、リポジトリ、サービス、マッパーを生成するために使用されるテーブル',
+'generator.updated.at.include' => 'エンティティにupdated.'
+	. 'atフィールドを含める',
 'generators' => '発電機',
 'generators.relation' => 'ジェネレータ関係',
 'gln' => 'GLN',
@@ -640,36 +769,56 @@ return [
 'guest.read.only' => 'ゲスト（読み取り専用）',
 'guest.url' => 'ゲストURL',
 'hide.or.unhide.columns' => '列を非表示または表示する',
-'hint.greater.than.zero.please' => '0.00 より大きい数値を入力してください。',
-'hint.this.field.is.not.required' => 'このフィールドは必須ではありません',
-'hint.this.field.is.required' => 'この項目は必須です',
+'hint.greater.than.zero.please' =>
+	'0.'
+	. '00 より大きい数値を入力してください。',
+'hint.this.field.is.not.required' =>
+	'このフィールドは必須ではありません',
+'hint.this.field.is.required' =>
+	'この項目は必須です',
 'home' => '家',
 'home.caption.slide1' => '管理者としてサインアップしてログインしてください。インターネットに接続できません…メール接続エラーを無視してください。',
 'home.caption.slide2' => '管理者としてユーザーをサインアップします。メールアカウントが正規のものであり、インターネット接続が確立されていることを確認してください。ユーザーにはクライアントアカウントが付与されます。',
 'home.caption.slide3' => 'メールアカウントが不正で、インターネット接続もできません。管理者ログインし、設定でユーザーの請求書ユーザーアカウントを有効化してください。クライアントアカウントを作成し、ユーザーに割り当ててください。',
-'home.caption.slides.location.debug.mode' => 'コンテンツの場所は ./resources/views/site/index.php （./resources/views/layout/ 内）です。… 翻訳スライドの場所は ./resources/messages/app.php です。',
+'home.caption.slides.location.debug.mode' =>
+	'コンテンツの場所は .'
+	. '/resources/views/site/index.'
+	. 'php （.'
+	. '/resources/views/layout/ 内）です。… 翻訳スライドの場所は .'
+	. '/resources/messages/app.'
+	. 'php です。',
 'hostname' => 'ホスト名',
 'html.sumex.no' => 'SumexなしのHTML',
 'html.sumex.yes' => 'Sumexを使用したHTML',
 'id' => 'ID',
 'identifier.format' => '識別子のフォーマット',
 'identifier.format.template.tags' => '識別子のテンプレートタグ',
-'identifier.format.template.tags.instructions' => 'テンプレートタグを使用すると、顧客名や請求書番号などの動的な情報をメールテンプレートに追加できます。<b>識別子のフォーマット</b>フィールドをクリックし、ドロップダウンからタグを選択してください。選択したタグはテキストフィールドに自動的に挿入されます。',
+'identifier.format.template.tags.instructions' =>
+	'テンプレートタグを使用すると、顧客名や請求書番号などの動的な情報をメールテンプレートに追加できます。<b>識別子のフォーマット</b>フィールドをクリックし、ドロップダウンからタグを選択してください。選択したタグはテキストフィールドに自動的に挿入されます。',
 'identity.provider.authentication.successful' => '選択したIDプロバイダによる認証が完了し、サインアップが完了し、クライアントアカウントが割り当てられました。アカ​​ウントを有効にするには、1時間以内にこちらをクリックしてください。初回ログインは1時間以内に行ってください。',
-'image.overdue' => '  画像の場所: ./invoice/public/img/overdue.png',
-'image.paid' => '  画像の場所: ./invoice/public/img/paid.png',
+'image.overdue' => '画像の場所:'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => '画像の場所:'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => '輸入',
 'import.data' => 'データのインポート',
 'import.from.csv' => 'CSVからインポート',
 'in.progress' => '進行中',
 'inactive' => '非アクティブ',
-'index.checkbox.add.some.items.to.enable' => '請求書に項目がありません。項目を追加してチェックボックスを有効にしてください',
+'index.checkbox.add.some.items.to.enable' =>
+	'請求書に項目がありません。項目を追加してチェックボックスを有効にしてください',
 'index.footer.showing' => '%s 件中 %s 件を表示',
 'index.showing' => '%s 件中 %s 件を表示',
 'info.task.readonly' => 'このタスクはすでに請求されているため、これ以上変更することはできません。',
 'install.test.data' => 'テストデータをインストールできるようになりました',
-'install.test.data.exists.already' => '請求書テストデータは既に存在します',
-'install.test.data.goto.tab.index' => '設定に移動...一般...テストデータをインストール',
+'install.test.data.exists.already' =>
+	'請求書テストデータは既に存在します',
+'install.test.data.goto.tab.index' =>
+	'設定に移動.'
+	. '一般.'
+	. 'テストデータをインストール',
 'interface' => 'インタフェース',
 'invalid.amount' => '無効な金額',
 'invalid.subscriber.number' => '無効な加入者番号',
@@ -682,14 +831,16 @@ return [
 'invoiceplane.database.username' => 'ユーザー名',
 'invoiceplane.families' => '挿入された家族',
 'invoiceplane.import' => 'テスト接続',
-'invoiceplane.import.complete.connection.closed' => 'インポートが完了しました。接続が閉じられました。',
+'invoiceplane.import.complete.connection.closed' =>
+	'インポートが完了しました。接続が閉じられました。',
 'invoiceplane.import.connected' => '接続があります!',
 'invoiceplane.import.proceed' => 'インポートプロセスを進める',
 'invoiceplane.import.proceed.alert' => '本当に続行しますか?',
 'invoiceplane.imported' => 'テーブルがインポートされました',
 'invoiceplane.news' => 'InvoicePlaneニュース',
 'invoiceplane.no.connection' => '接続なし',
-'invoiceplane.no.username.or.password' => 'InvoicePlaneのデータベース名、ユーザー名、パスワードを保存してください。',
+'invoiceplane.no.username.or.password' =>
+	'InvoicePlaneのデータベース名、ユーザー名、パスワードを保存してください。',
 'invoiceplane.products' => '挿入された製品',
 'invoiceplane.tables' => 'InvoicePlaneテーブル（Client、Product、Unit、Family、TaxRate）を空のテーブルにインポートします。インポート前にこれらのテーブルに既存のデータや、請求書などの既存のドキュメントが存在しないことを確認してください。',
 'invoiceplane.tables.not.empty' => 'インポートする前に、クライアント、製品、ユニット、ファミリー、税率テーブルを空にする必要があります。',
@@ -741,7 +892,8 @@ return [
 'layout.migrations' => '移行',
 'layout.no-records' => '記録なし',
 'layout.not-found' => '見つかりません',
-'layout.page.not-authorised' => '承認されていません: 認証資格情報が正しくありません。',
+'layout.page.not-authorised' => '承認されていません:'
+	. '認証資格情報が正しくありません。',
 'layout.page.not-found' => 'ページ {url} が見つかりませんでした。',
 'layout.page.user-cancelled-oauth2' => 'ユーザーがアイデンティティプロバイダ（例：Facebook）経由のログイン/登録をキャンセルしました',
 'layout.pagination-summary' => '{total} 件中 {pageSize} 件の投稿を表示しています',
@@ -814,8 +966,10 @@ return [
 'mpdf' => 'Mpdf',
 'mpdf.allow.charset.conversion' => '文字セット変換を許可する',
 'mpdf.auto.arabic' => 'オートアラビア語',
-'mpdf.auto.language.to.font' => '自動言語フォント',
-'mpdf.auto.script.to.lang' => '言語への自動スクリプト',
+'mpdf.auto.language.to.font' =>
+	'自動言語フォント',
+'mpdf.auto.script.to.lang' =>
+	'言語への自動スクリプト',
 'mpdf.auto.vietnamese' => 'ベトナム車',
 'mpdf.cjk' => '中国語、日本語、韓国語フォント',
 'mpdf.ltr' => '左から右へ',
@@ -829,36 +983,76 @@ return [
 'mtd.fph.screen.timestamp' => 'タイムスタンプ',
 'mtd.fph.some.advisories' => '少なくとも 1 つのヘッダーが無効である可能性があります',
 'mtd.fph.some.invalid' => '少なくとも1つのヘッダーが無効です',
-'mtd.gov.client.browser.do.not.track' => 'ブラウザでDo Not Trackオプションがオンになっているかどうかを示す値',
-'mtd.gov.client.browser.do.not.track.eg' => '例：偽',
-'mtd.gov.client.browser.js.user.agent' => 'Gov クライアント ブラウザ JS ユーザー エージェント',
-'mtd.gov.client.browser.js.user.agent.eg' => '例: Mozilla/5.0 (iPad; U; Mac OS X のような CPU OS 3 2.1; en-us) (KHTML、Gecko のような) Mobile/7B405',
-'mtd.gov.client.browser.plugins' => '発信元デバイスのブラウザプラグインのリスト',
-'mtd.gov.client.browser.plugins.eg' => '例: Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => '政府クライアント接続方法',
-'mtd.gov.client.device.id' => 'デバイスID',
-'mtd.gov.client.device.id.eg' => '例: beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => 'ローカルIP',
-'mtd.gov.client.multi.factor' => 'マルチファクター',
-'mtd.gov.client.multi.factor.eg' => '例: type=OTP;status=success,type=SMS;status=failure,type=Biometric,type=SMS;timestamp=2023-04-01T12:34:56Z;unique-reference=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => 'ワンタイムパスワード（OTP）： ',
-'mtd.gov.client.public.ip' => 'パブリックIP',
-'mtd.gov.client.public.port' => 'パブリック ポート (http 80 や https 443 ではない、例: 57961)',
+'mtd.gov.client.browser.do.not.track' =>
+	'ブラウザでDo Not Trackオプションがオンになっているかどうかを示す値',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'例：偽',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov クライアント ブラウザ JS ユーザー '
+	. 'エージェント',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'例:'
+	. 'Mozilla/5.'
+	. '0 (iPad; U; Mac OS '
+	. 'X のような CPU OS 3 '
+	. '2.'
+	. '1; en-us) (KHTML、Gecko のような) Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'発信元デバイスのブラウザプラグインのリスト',
+'mtd.gov.client.browser.plugins.eg' =>
+	'例:'
+	. 'Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'政府クライアント接続方法',
+'mtd.gov.client.device.id' =>
+	'デバイスID',
+'mtd.gov.client.device.id.eg' =>
+	'例:'
+	. 'beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'ローカルIP',
+'mtd.gov.client.multi.factor' =>
+	'マルチファクター',
+'mtd.gov.client.multi.factor.eg' =>
+	'例:'
+	. 'type=OTP;status=success,type=SMS;status=failure,type=Biometric,type=SMS;timestamp=2023-04-01T12:'
+	. '34:'
+	. '56Z;unique-reference=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'ワンタイムパスワード（OTP）：',
+'mtd.gov.client.public.ip' =>
+	'パブリックIP',
+'mtd.gov.client.public.port' =>
+	'パブリック ポート (http 80 や '
+	. 'https 443 ではない、例:'
+	. '57961)',
 'mtd.gov.client.screens' => '政府クライアントスクリーン',
-'mtd.gov.client.screens.colour.depth' => '色深度',
-'mtd.gov.client.screens.height' => '画面の高さ',
-'mtd.gov.client.screens.pixels' => 'ピクセル',
-'mtd.gov.client.screens.scaling.factor' => 'スケーリング係数',
-'mtd.gov.client.screens.scaling.factor.bits' => 'ビット',
-'mtd.gov.client.screens.width' => '画面幅',
+'mtd.gov.client.screens.colour.depth' =>
+	'色深度',
+'mtd.gov.client.screens.height' =>
+	'画面の高さ',
+'mtd.gov.client.screens.pixels' =>
+	'ピクセル',
+'mtd.gov.client.screens.scaling.factor' =>
+	'スケーリング係数',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'ビット',
+'mtd.gov.client.screens.width' =>
+	'画面幅',
 'mtd.gov.client.timezone' => 'タイムゾーン',
-'mtd.gov.client.user.ids' => 'ユーザーID',
-'mtd.gov.client.user.ids.uuid' => 'ユーザID',
-'mtd.gov.client.window.size' => 'ウィンドウサイズ',
-'mtd.gov.client.window.size.pixels' => 'ピクセル',
+'mtd.gov.client.user.ids' =>
+	'ユーザーID',
+'mtd.gov.client.user.ids.uuid' =>
+	'ユーザID',
+'mtd.gov.client.window.size' =>
+	'ウィンドウサイズ',
+'mtd.gov.client.window.size.pixels' =>
+	'ピクセル',
 'mtd.gov.vendor.forwarded' => 'トランスポート層セキュリティ（TLS）を終了するサービス間のインターネット上のホップの詳細を記載したリスト',
-'mtd.gov.vendor.license.ids' => '発信元デバイスで API リクエストを開始したベンダー ソフトウェアに関連するハッシュ化されたライセンス キーのキー値データ構造',
-'mtd.gov.vendor.public.ip' => '送信元デバイスがリクエストを送信したサーバーのパブリックIPアドレス',
+'mtd.gov.vendor.license.ids' =>
+	'発信元デバイスで API リクエストを開始したベンダー ソフトウェアに関連するハッシュ化されたライセンス キーのキー値データ構造',
+'mtd.gov.vendor.public.ip' =>
+	'送信元デバイスがリクエストを送信したサーバーのパブリックIPアドレス',
 'mtd.gov.vendor.version' => 'リクエストの処理に関係するソフトウェアバージョンのキー値データ構造',
 'multiple.choice' => '多肢選択問題',
 'name' => '名前',
@@ -887,17 +1081,29 @@ return [
 'number' => '#',
 'number.format' => '数値形式',
 'number.format.compact.comma' => '1000000,00 (小数点にコンマを使用したコンパクト形式)',
-'number.format.compact.point' => '1000000.00（小数点付きのコンパクト形式）',
-'number.format.european' => '1.000.000,00（ヨーロッパ形式）',
-'number.format.iso.80k.1' => '1 000 000.00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (小数点付き ISO 80000-1)',
-'number.format.iso80k1.point' => '1 000 000.00（小数点付きISO 80000-1）',
-'number.format.us.uk' => '1,000,000.00（米国/英国形式）',
-'number.missing.therefore.use.invoice.id' => '請求書番号が欠落しているため、請求書ID',
+'number.format.compact.point' => '1000000.'
+	. '00（小数点付きのコンパクト形式）',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00（ヨーロッパ形式）',
+'number.format.iso.80k.1' =>
+	'1 000 000.'
+	. '00 (ISO 80000-1)',
+'number.format.iso80k1.comma' => '1 000 000,00 (小数点付き ISO '
+	. '80000-1)',
+'number.format.iso80k1.point' => '1 000 000.'
+	. '00（小数点付きISO 80000-1）',
+'number.format.us.uk' => '1,000,000.'
+	. '00（米国/英国形式）',
+'number.missing.therefore.use.invoice.id' =>
+	'請求書番号が欠落しているため、請求書ID',
 'number.no' => '請求書番号なし',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => 'クライアントID',
-'oauth2.google.people.api.v1.client.secret' => 'クライアントシークレット',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'クライアントID',
+'oauth2.google.people.api.v1.client.secret' =>
+	'クライアントシークレット',
 'online.log' => 'オンラインログ',
 'online.payment' => 'オンライン決済',
 'online.payment.3dauth.redirect' => '認証のためにカード発行会社にリダイレクトしますので、しばらくお待ちください...',
@@ -955,7 +1161,8 @@ return [
 'online.payment.storePassword' => 'ストアパスワード',
 'online.payment.subAccountId' => 'サブアカウントID',
 'online.payment.testMode' => 'テストモード',
-'online.payment.testOrLiveApiKey' => 'テストまたはライブ API キー (test_ または live_ で始まるもの)',
+'online.payment.testOrLiveApiKey' => 'テストまたはライブ API キー (test_ または '
+	. 'live_ で始まるもの)',
 'online.payment.transactionKey' => 'トランザクションキー',
 'online.payment.transactionPassword' => '取引パスワード',
 'online.payment.username' => 'ユーザー名',
@@ -967,7 +1174,8 @@ return [
 'open' => '開ける',
 'open.invoices' => '未払い請求書',
 'open.quotes' => 'オープンクォート',
-'open.reports.in.new.tab' => '新しいブラウザタブでレポートを開く',
+'open.reports.in.new.tab' =>
+	'新しいブラウザタブでレポートを開く',
 'optional' => 'オプション',
 'options' => 'オプション',
 'order' => '注文',
@@ -1001,22 +1209,40 @@ return [
 'payment.deleted' => '支払いが削除されました',
 'payment.description' => '請求書 %s の支払い',
 'payment.form' => '支払いフォーム',
-'payment.gateway.default.locale' => 'デフォルトのロケール（例：en.GB）',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Mollie 支払いゲートウェイ テストまたはライブ API キーが設定されました。',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Mollie 支払いゲートウェイ テストまたはライブ API キーを設定する必要があります。',
-'payment.gateway.mollie.api.payment.id' => 'Mollie 支払い ID: ',
-'payment.gateway.no' => '設定...表示...オンライン支払いで支払いゲートウェイが設定されていません',
+'payment.gateway.default.locale' => 'デフォルトのロケール（例：en.'
+	. 'GB）',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Mollie 支払いゲートウェイ テストまたはライブ API キーが設定されました。',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'Mollie 支払いゲートウェイ テストまたはライブ API キーを設定する必要があります。',
+'payment.gateway.mollie.api.payment.id' =>
+	'Mollie 支払い ID:',
+'payment.gateway.no' => '設定.'
+	. '表示.'
+	. 'オンライン支払いで支払いゲートウェイが設定されていません',
 'payment.history' => '支払い履歴',
-'payment.information.amazon.no.omnipay.version' => '現在、Amazon Pay Omnipayバージョンはありません。設定画面でPCI準拠バージョンを使用するには、Omnipayバージョンのチェックを外してください。',
-'payment.information.amazon.payment.session.complete' => 'Amazon 支払いセッション完了 - セッション ID: ',
-'payment.information.amazon.payment.session.incomplete' => 'Amazon の支払いセッションが完了していません - もう一度お試しください',
-'payment.information.braintree.braintree.no.omnipay.version' => '現在、Braintree バージョン 6.9.1 と互換性のある Braintree Omnipay バージョンはありません。設定画面で Omnipay バージョンのチェックを外して、PCI 準拠バージョンを使用してください。',
-'payment.information.invoice.number.not.provided' => '請求書番号が提供されていません',
-'payment.information.no.information.provided' => '情報は提供されていません',
+'payment.information.amazon.no.omnipay.version' =>
+	'現在、Amazon Pay Omnipayバージョンはありません。設定画面でPCI準拠バージョンを使用するには、Omnipayバージョンのチェックを外してください。',
+'payment.information.amazon.payment.session.complete' =>
+	'Amazon 支払いセッション完了 - セッション ID:',
+'payment.information.amazon.payment.session.incomplete' =>
+	'Amazon の支払いセッションが完了していません - もう一度お試しください',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'現在、Braintree バージョン 6.'
+	. '9.'
+	. '1 と互換性のある Braintree Omnipay バージョンはありません。設定画面で '
+	. 'Omnipay バージョンのチェックを外して、PCI 準拠バージョンを使用してください。',
+'payment.information.invoice.number.not.provided' =>
+	'請求書番号が提供されていません',
+'payment.information.no.information.provided' =>
+	'情報は提供されていません',
 'payment.information.none' => 'なし',
-'payment.information.omnipay.driver.being.used' => 'Omnipay のドライバー {{$d}} が使用されています。',
-'payment.information.payment.method.required' => 'この請求書には支払い方法が必要です。',
-'payment.information.stripe.api.key' => 'Stripe 支払いゲートウェイの秘密キー / API キーを設定する必要があります。',
+'payment.information.omnipay.driver.being.used' =>
+	'Omnipay のドライバー {{$d}} が使用されています。',
+'payment.information.payment.method.required' =>
+	'この請求書には支払い方法が必要です。',
+'payment.information.stripe.api.key' =>
+	'Stripe 支払いゲートウェイの秘密キー / API キーを設定する必要があります。',
 'payment.logs' => '支払いログ',
 'payment.method' => '支払方法',
 'payment.method.add' => '支払い方法の追加',
@@ -1028,19 +1254,41 @@ return [
 'payment.provider' => '決済プロバイダー',
 'payment.term' => '支払い条件',
 'payment.term.0.days' => '提供されている支払い方法のいずれかをご利用ください',
-'payment.term.add.additional.terms.at.setting.repository' => '設定リポジトリの getPaymentTerms 関数で追加の条件を追加します。',
-'payment.term.eom.120.days' => 'EOM(120): 発行月の月末から120日以内にお支払いください',
-'payment.term.eom.15.days' => 'EOM(15): 発行月の月末から15日以内にお支払いください。',
-'payment.term.eom.30.days' => 'EOM(30): 発行月の月末から30日以内にお支払いください。',
-'payment.term.eom.60.days' => 'EOM(60): 発行月の月末から60日以内にお支払いください',
-'payment.term.eom.90.days' => 'EOM(90): 発行月の月末から90日以内にお支払いください',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'設定リポジトリの getPaymentTerms 関数で追加の条件を追加します。',
+'payment.term.eom.120.days' =>
+	'EOM(120):'
+	. '発行月の月末から120日以内にお支払いください',
+'payment.term.eom.15.days' =>
+	'EOM(15):'
+	. '発行月の月末から15日以内にお支払いください。',
+'payment.term.eom.30.days' =>
+	'EOM(30):'
+	. '発行月の月末から30日以内にお支払いください。',
+'payment.term.eom.60.days' =>
+	'EOM(60):'
+	. '発行月の月末から60日以内にお支払いください',
+'payment.term.eom.90.days' =>
+	'EOM(90):'
+	. '発行月の月末から90日以内にお支払いください',
 'payment.term.general' => '30日以内にお支払いください',
-'payment.term.mfi.15' => 'MFI(15): 発行日翌月の15日にお支払いください。',
-'payment.term.net.120.days' => 'ネット(120): 発行日から120日以内にお支払いください',
-'payment.term.net.15.days' => 'ネット(15): 発行日から15日以内にお支払いください。',
-'payment.term.net.30.days' => 'ネット(30): 発行日から30日以内にお支払いください',
-'payment.term.net.60.days' => 'ネット(60): 発行日から60日以内にお支払いください',
-'payment.term.net.90.days' => 'ネット(90): 発行日から90日以内にお支払いください',
+'payment.term.mfi.15' => 'MFI(15):'
+	. '発行日翌月の15日にお支払いください。',
+'payment.term.net.120.days' =>
+	'ネット(120):'
+	. '発行日から120日以内にお支払いください',
+'payment.term.net.15.days' =>
+	'ネット(15):'
+	. '発行日から15日以内にお支払いください。',
+'payment.term.net.30.days' =>
+	'ネット(30):'
+	. '発行日から30日以内にお支払いください',
+'payment.term.net.60.days' =>
+	'ネット(60):'
+	. '発行日から60日以内にお支払いください',
+'payment.term.net.90.days' =>
+	'ネット(90):'
+	. '発行日から90日以内にお支払いください',
 'payment.term.pia' => 'お支払いは前払い（PIA）が必要です',
 'payment.term.polite' => 'ご利用いただきありがとうございます。この請求書を受け取ってから30日以内にお支払いください。',
 'payment.terms.default' => '14日以内にお支払いください',
@@ -1052,7 +1300,10 @@ return [
 'pdf.archived.no' => 'アップロード/アーカイブ/請求書でPDFがアーカイブされていない',
 'pdf.archived.yes' => 'アップロード/アーカイブ/請求書にアーカイブされたPDF',
 'pdf.include.zugferd' => 'ZUGFeRDを含める',
-'pdf.include.zugferd.help' => 'このオプションを有効にすると、請求書のXML標準であるZUGFeRD XMLが請求書PDFに含まれます。<a href="https://www.ferd-net.de/">詳細情報</a>',
+'pdf.include.zugferd.help' => 'このオプションを有効にすると、請求書のXML標準であるZUGFeRD XMLが請求書PDFに含まれます。<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">詳細情報</a>',
 'pdf.invoice.footer' => 'PDFフッター',
 'pdf.invoice.footer.hint' => 'ここで任意の HTML を入力できます。これは PDF 請求書の下部に表示されます。',
 'pdf.modal' => 'モーダルPDF',
@@ -1063,55 +1314,105 @@ return [
 'pdf.template.overdue' => '期限切れのPDFテンプレート',
 'pdf.template.paid' => '有料PDFテンプレート',
 'pdf.watermark' => 'PDF透かしを有効にする',
-'peppol' => 'Peppol ユニバーサルビジネス言語 (UBL) 2.1 請求書 - Ecosio 検証済み',
+'peppol' => 'Peppol ユニバーサルビジネス言語 (UBL) 2.'
+	. '1 請求書 - Ecosio 検証済み',
 'peppol.abbreviation' => 'ペッポル',
-'peppol.allowance.or.charge.inherit' => '請求書控除額と請求書項目控除額は、完了したPeppol文書レベル控除額から継承されます。',
+'peppol.allowance.or.charge.inherit' =>
+	'請求書控除額と請求書項目控除額は、完了したPeppol文書レベル控除額から継承されます。',
 'peppol.client.check' => 'このクライアントに関するPeppolの詳細が不足しています。少なくとも1つが不足しています。「表示」→「クライアント」→「オプション」→「電子請求書用のPeppol詳細の編集」を参照してください。',
 'peppol.client.defaults' => 'テスト用に、クライアント Peppol フォームに OpenPeppol のデフォルトを入力します。',
-'peppol.currency.code.from' => '元の通貨、つまり原産国の税通貨（変更するには、config/common/params.php TaxCurrencyCode を参照してください）',
-'peppol.currency.code.to' => '変換後の通貨、つまりドキュメントの通貨:関数 get.setting(&#39;currency.code.to&#39;) を参照してください。',
+'peppol.currency.code.from' => '元の通貨、つまり原産国の税通貨（変更するには、config/common/params.'
+	. 'php TaxCurrencyCode を参照してください）',
+'peppol.currency.code.to' => '変換後の通貨、つまりドキュメントの通貨:'
+	. '関数 get.'
+	. 'setting(&#39;currency.'
+	. 'code.'
+	. 'to&#39;) を参照してください。',
 'peppol.currency.from.to' => '今日の「From Currency」の1つが「To Currency」に変換されます',
 'peppol.currency.to.from' => '今日の「To Currency」の1つは「From Currency」の1つに変換されます',
 'peppol.document.reference.null' => '請求書番号-null-請求書ID',
-'peppol.ecosio.validator' => 'OpenPeppol UBL Invoice 用 Ecosio バリデータ (3.15.0) (別名 BIS Billing 3.0.14)',
+'peppol.ecosio.validator' => 'OpenPeppol UBL Invoice 用 Ecosio '
+	. 'バリデータ (3.'
+	. '15.'
+	. '0) (別名 BIS Billing 3.'
+	. '0.'
+	. '14)',
 'peppol.electronic.invoicing' => 'Peppol電子請求書',
-'peppol.enable' => 'ユニバーサルビジネス言語 (UBL) 2.1 を使用して Peppol を有効にする',
+'peppol.enable' => 'ユニバーサルビジネス言語 (UBL) 2.'
+	. '1 を使用して Peppol を有効にする',
 'peppol.include.delivery.period' => '配送期間を含める',
-'peppol.invoice.note.not.found' => '請求書の注記が見つかりません',
+'peppol.invoice.note.not.found' =>
+	'請求書の注記が見つかりません',
 'peppol.label.switch.off' => 'Peppol デフォルトが有効',
 'peppol.label.switch.on' => 'Peppol デフォルト無効',
 'peppol.mandatory' => ' （必須）',
 'peppol.optional' => ' （オプション）',
 'peppol.stand.in.code' => '説明コード - 商品の供給/支払い時に、将来の課税ポイント日に使用される基準を示します。課税ポイントが特定できる場合、説明コードは請求期間において相互に除外されます。',
-'peppol.store.cove.1.1.1' => 'Store CoveのウェブサイトでAPIアクセスを登録する',
-'peppol.store.cove.1.1.2' => 'Store CoveのウェブサイトからAPIキーを作成し、「設定」→「表示」→「オンライン決済」→「Store Cove」→「APIキー」に保存します。',
-'peppol.store.cove.1.1.3' => '最初の API 呼び出しを行って JSON 応答を取得します。',
-'peppol.store.cove.1.1.4' => '緑色のボタンをクリックして取得した最初のテストJSON請求書を送信します。World=&gt;DE',
+'peppol.store.cove.1.1.1' =>
+	'Store CoveのウェブサイトでAPIアクセスを登録する',
+'peppol.store.cove.1.1.2' =>
+	'Store CoveのウェブサイトからAPIキーを作成し、「設定」→「表示」→「オンライン決済」→「Store Cove」→「APIキー」に保存します。',
+'peppol.store.cove.1.1.3' =>
+	'最初の API 呼び出しを行って JSON 応答を取得します。',
+'peppol.store.cove.1.1.4' =>
+	'緑色のボタンをクリックして取得した最初のテストJSON請求書を送信します。World=&gt;DE',
 'peppol.stream.toggle' => 'Peppol - 「ストリーミング」または「ファイルに保存」トグルボタン',
-'peppol.tax.category.not.found' => 'Peppol 税カテゴリ コード (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) がありません。',
-'peppol.tax.category.percent.not.found' => 'Peppol 税カテゴリ パーセント (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) がありません。',
+'peppol.tax.category.not.found' =>
+	'Peppol 税カテゴリ コード (https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/) がありません。',
+'peppol.tax.category.percent.not.found' =>
+	'Peppol 税カテゴリ パーセント (https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/) がありません。',
 'peppol.tax.rate.code' => 'ペッポル税率コード',
-'peppol.trying.to.send.non.pdf.file' => '現在、Peppol請求書にはPDFファイルのみが送信されます。',
+'peppol.trying.to.send.non.pdf.file' =>
+	'現在、Peppol請求書にはPDFファイルのみが送信されます。',
 'peppol.unit' => 'Peppolを使用したユニット分類',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'ソース: src/Invoice/Ubl/Invoice: ドキュメントの説明がありません - Ecosio: ドキュメントには空の要素を含めることはできません。解決策: 請求書ビューで、「オプション」→「編集」→「ドキュメントの説明」を選択してください。',
-'peppol.validator.Invoice.cac.Note' => 'ソース: src/Invoice/Ubl/Invoice: 請求書メモがありません - Ecosio: ドキュメントには空の要素を含めることはできません。',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party: メールアドレスが見つかりません - Ecosio: 電子アドレスは必ず入力してください。解決策: クライアント... 表示... オプション... 電子請求書の Peppol 情報を編集... EndPointID',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'ソース:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'ドキュメントの説明がありません - Ecosio:'
+	. 'ドキュメントには空の要素を含めることはできません。解決策:'
+	. '請求書ビューで、「オプション」→「編集」→「ドキュメントの説明」を選択してください。',
+'peppol.validator.Invoice.cac.Note' =>
+	'ソース:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. '請求書メモがありません - Ecosio:'
+	. 'ドキュメントには空の要素を含めることはできません。',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party:'
+	. 'メールアドレスが見つかりません - Ecosio:'
+	. '電子アドレスは必ず入力してください。解決策:'
+	. 'クライアント.'
+	. '表示.'
+	. 'オプション.'
+	. '電子請求書の Peppol 情報を編集.'
+	. 'EndPointID',
 'peppol.version' => 'ペッポルバージョン',
 'peppol.xml.stream' => 'ストリーム、つまりダウンロード フォルダーではなくブラウザーの画面に表示されます。',
 'per.item' => '1品あたり',
 'per.page.total' => ' 1ページあたり。合計 ',
 'performance' => 'パフォーマンス',
-'performance.label.switch.off' => '高速読み取りおよび書き込みモード - config/common/params.php で「mode」を検索してください。 ',
-'performance.label.switch.on' => '低速書き込み専用モード - config/common/params.php の「mode」を検索してください ',
+'performance.label.switch.off' => '高速読み取りおよび書き込みモード - config/common/params.'
+	. 'php で「mode」を検索してください。',
+'performance.label.switch.on' => '低速書き込み専用モード - config/common/params.'
+	. 'php の「mode」を検索してください',
 'period' => '期間',
 'permission' => '必要な権限がありません。',
 'personal.information' => '個人情報',
 'phone' => '電話',
 'phone.abbr' => 'P',
 'phone.number' => '電話番号',
-'php.timezone.fail' => 'タイムゾーンが設定されていないようです。PHP設定のdate.timezoneを確認してください。設定されていない場合は<strong>%s</strong>が選択されます。',
+'php.timezone.fail' => 'タイムゾーンが設定されていないようです。PHP設定のdate.'
+	. 'timezoneを確認してください。設定されていない場合は<strong>%s</strong>が選択されます。',
 'php.timezone.success' => '有効なタイムゾーンが設定されています。',
-'php.version.fail' => 'PHP バージョン %s がインストールされていますが、InvoicePlane には PHP バージョン %s 以上が必要です',
+'php.version.fail' => 'PHP バージョン %s がインストールされていますが、InvoicePlane には '
+	. 'PHP バージョン %s 以上が必要です',
 'php.version.success' => 'PHPはインストール要件を満たしているようです',
 'platform' => 'プラットフォーム',
 'platform.PhpMyAdmin' => 'PhpMyAdmin バージョン',
@@ -1138,25 +1439,38 @@ return [
 'price' => '価格',
 'product' => '製品',
 'product.add' => '商品追加',
-'product.additional.item.property.name' => 'Peppol 追加プロパティ アイテム名 (例: 色)',
-'product.additional.item.property.value' => 'Peppol 追加プロパティアイテム値（例：黒）',
-'product.country.of.origin.code' => 'ISO-3166-1:Alpha2 国コードを使用した Peppol 原産国コード',
-'product.custom.fields' => '製品カスタムフィールド (例: Peppol: AddedItemProperty 複数選択フィールドの色の値が黒)',
+'product.additional.item.property.name' =>
+	'Peppol 追加プロパティ アイテム名 (例:'
+	. '色)',
+'product.additional.item.property.value' =>
+	'Peppol 追加プロパティアイテム値（例：黒）',
+'product.country.of.origin.code' =>
+	'ISO-3166-1:'
+	. 'Alpha2 国コードを使用した Peppol 原産国コード',
+'product.custom.fields' => '製品カスタムフィールド (例:'
+	. 'Peppol:'
+	. 'AddedItemProperty 複数選択フィールドの色の値が黒)',
 'product.description' => '製品説明',
 'product.edit' => '製品を編集',
 'product.error.summary' => '製品エラーの概要',
 'product.families' => '製品ファミリー',
 'product.form.tab.category' => 'カテゴリ',
-'product.form.tab.not.required' => '必須ではないフィールド',
+'product.form.tab.not.required' =>
+	'必須ではないフィールド',
 'product.form.tab.required' => '必須フィールド',
 'product.found' => '商品が見つかりました',
 'product.history' => '削除できません。この製品は請求書または見積書に記載されています。',
-'product.icc.id' => 'Peppol 商品分類コード ID 例: 9873242',
+'product.icc.id' => 'Peppol 商品分類コード ID 例:'
+	. '9873242',
 'product.icc.listid' => 'Peppolアイテム分類コードリストID - 例：SRV',
-'product.icc.listversionid' => 'Peppol アイテム分類コードリストバージョン ID (オプション) - 例: アイテム分類がデンマークのサプライヤーから提供される場合は、UNSPSC バージョン 19.0501 を使用する必要があります。',
+'product.icc.listversionid' => 'Peppol アイテム分類コードリストバージョン ID (オプション) - '
+	. '例:'
+	. 'アイテム分類がデンマークのサプライヤーから提供される場合は、UNSPSC バージョン 19.'
+	. '0501 を使用する必要があります。',
 'product.id' => '製品ID',
 'product.image' => '画像',
-'product.item.classification.code.scheme.id.not.found' => '製品項目分類コードスキームIDが見つかりません',
+'product.item.classification.code.scheme.id.not.found' =>
+	'製品項目分類コードスキームIDが見つかりません',
 'product.name' => '製品名',
 'product.not.found' => '商品が見つかりません',
 'product.peppol.unit' => 'ペッポルとのユニット',
@@ -1170,12 +1484,18 @@ return [
 'product.property.table' => '製品特性表',
 'product.property.value' => '価値',
 'product.record.successfully.added' => '製品レコードが正常に追加されました',
-'product.sii.id' => '上記のスキームに関連付けられた Peppol 標準アイテム識別 ID - 例: グローバル トレード アイテム番号データベース内の 14 桁のゼロ パディングされた識別子 (バーコードの下に表示されます)',
+'product.sii.id' => '上記のスキームに関連付けられた Peppol 標準アイテム識別 ID - '
+	. '例:'
+	. 'グローバル トレード アイテム番号データベース内の 14 桁のゼロ '
+	. 'パディングされた識別子 (バーコードの下に表示されます)',
 'product.sii.schemeid' => 'Peppol標準アイテム識別スキームID - 例：0160',
 'product.sku' => 'SKU',
 'product.tariff' => '関税',
 'product.unit' => '製品ユニット',
-'product.unit.code.not.found' => '製品にはユニットコードが関連付けられていません。製品...編集...Peppol のユニット。',
+'product.unit.code.not.found' =>
+	'製品にはユニットコードが関連付けられていません。製品.'
+	. '編集.'
+	. 'Peppol のユニット。',
 'product.units' => '製品単位',
 'product.view.tab.details' => '製品詳細',
 'product.view.tab.gallery' => '製品ギャラリー',
@@ -1189,7 +1509,8 @@ return [
 'productimage.list' => 'この製品に関連する画像のリスト',
 'productimage.no.file.uploaded' => '画像がアップロードされていません。重複している可能性があります。',
 'productimage.plural' => '製品画像',
-'productimage.possible.file.upload.attack' => '可能性のあるファイルアップロード攻撃: ',
+'productimage.possible.file.upload.attack' =>
+	'可能性のあるファイルアップロード攻撃:',
 'productimage.upload' => '商品画像をアップロード',
 'productimage.uploaded.to' => '画像は次のディレクトリにアップロードされました: ',
 'productimage.view' => '製品ビューでは、製品に関連する複数の画像を追加できます。',
@@ -1229,23 +1550,33 @@ return [
 'qr.code.settings' => 'QRコード設定',
 'qr.code.settings.bic' => 'ビック',
 'qr.code.settings.effect' => '上記の設定はこの QR コードにどのような影響を与えますか?',
-'qr.code.settings.effect.explanation' => '実際のコードでは…なし。上記の非常に基本的な実際のコードが使用されているため、すべてデフォルトが使用されます。',
+'qr.code.settings.effect.explanation' =>
+	'実際のコードでは…なし。上記の非常に基本的な実際のコードが使用されているため、すべてデフォルトが使用されます。',
 'qr.code.settings.enable' => 'QRコードを有効にする',
-'qr.code.settings.enable.hint' => 'このオプションを有効にすると、請求書PDFにQRコードが表示されます。正しく機能するには、以下の受取人、IBAN、BICを入力してください。入力されていない場合、QRコードは表示されません。',
+'qr.code.settings.enable.hint' =>
+	'このオプションを有効にすると、請求書PDFにQRコードが表示されます。正しく機能するには、以下の受取人、IBAN、BICを入力してください。入力されていない場合、QRコードは表示されません。',
 'qr.code.settings.iban' => 'IBAN',
 'qr.code.settings.recipient' => '受信者',
-'qr.code.settings.remittance.text' => '送金テキスト',
-'qr.code.settings.remittance.text.tags' => '送金テキストタグ',
+'qr.code.settings.remittance.text' =>
+	'送金テキスト',
+'qr.code.settings.remittance.text.tags' =>
+	'送金テキストタグ',
 'qr.code.source' => 'QRコードソース',
-'qr.code.source.path' => 'リソース\ビュー\請求書\設定\会社.ロゴとアドレス.php',
+'qr.code.source.path' => 'リソース\\ビュー\\請求書\\設定\\会社.'
+	. 'ロゴとアドレス.'
+	. 'php',
 'qr.code.type' => 'QRコードの種類',
-'qr.code.type.absolute.url' => '絶対（全体）URLベース',
+'qr.code.type.absolute.url' =>
+	'絶対（全体）URLベース',
 'qr.code.widget.used' => '使用されたウィジェット',
 'qr.ecc.level' => 'QRコードECCレベル（デフォルト：L）',
 'qr.height.and.width' => 'QRコードの高さと幅（デフォルト：60）',
 'qr.meaning' => '意味',
 'qr.meaning.benefit' => 'スキャンして戻ると（URLを入力せずに）請求書をPDF形式で印刷できます。有効なクライアントアカウントをお持ちのすべてのユーザーに適用されます。',
-'qr.output.type' => 'QR コード出力タイプ (例: .svg、.png) (デフォルト: png)',
+'qr.output.type' => 'QR コード出力タイプ (例:'
+	. 'svg、.'
+	. 'png) (デフォルト:'
+	. 'png)',
 'qr.version' => 'QRコードバージョン番号（最古0、最新40）（デフォルト：40）',
 'qty' => '数量',
 'quantity' => '量',
@@ -1266,10 +1597,15 @@ return [
 'quote.date' => '見積日',
 'quote.dates' => '見積日',
 'quote.delete.not' => '請求書は削除されていません。',
-'quote.delivery.location.index.button.list' => '引用',
+'quote.delivery.location.index.button.list' =>
+	'引用',
 'quote.delivery.location.none' => 'この見積もりには配送場所がリンクされていません。',
 'quote.disable.flash.messages' => '引用フラッシュメッセージを無効にする',
-'quote.email.templates.not.configured' => 'メールテンプレートが設定されていません。設定...見積...見積テンプレート...デフォルトのメールテンプレート',
+'quote.email.templates.not.configured' =>
+	'メールテンプレートが設定されていません。設定.'
+	. '見積.'
+	. '見積テンプレート.'
+	. 'デフォルトのメールテンプレート',
 'quote.group' => '引用グループ',
 'quote.id' => '引用ID ',
 'quote.item' => '引用項目',
@@ -1279,7 +1615,8 @@ return [
 'quote.item.cannot.delete' => '見積項目を削除できません',
 'quote.label.switch.off' => 'VAT見積り',
 'quote.label.switch.on' => '非VAT見積',
-'quote.not.copied.to.invoice' => '見積書から請求書が作成されていません。請求書が重複しています。見積書を別の見積書にコピーし、それを請求書にコピーしてください。各見積書には対応する請求書が必要です。',
+'quote.not.copied.to.invoice' =>
+	'見積書から請求書が作成されていません。請求書が重複しています。見積書を別の見積書にコピーし、それを請求書にコピーしてください。各見積書には対応する請求書が必要です。',
 'quote.number' => '見積番号',
 'quote.number.status' => '見積番号のステータス',
 'quote.overview' => '見積もり概要',
@@ -1288,15 +1625,23 @@ return [
 'quote.pre.password' => '見積標準PDFパスワード（オプション）',
 'quote.reject' => '拒否する',
 'quote.rejected' => 'この引用は拒否されました',
-'quote.sales.order.created.from.quote' => '見積から販売注文が作成され、発注書番号が入力されました。',
-'quote.sales.order.not.created.from.quote' => '見積から受注書が作成されませんでした。受注書が重複しています。見積書を別の見積書にコピーし、さらに受注書にコピーしてください。各見積書には対応する受注書が必要です。',
-'quote.status.email.body' => 'クライアント %1$s は %2$s に引用 %3$s を投稿しました引用へのリンク: %4$s',
+'quote.sales.order.created.from.quote' =>
+	'見積から販売注文が作成され、発注書番号が入力されました。',
+'quote.sales.order.not.created.from.quote' =>
+	'見積から受注書が作成されませんでした。受注書が重複しています。見積書を別の見積書にコピーし、さらに受注書にコピーしてください。各見積書には対応する受注書が必要です。',
+'quote.status.email.body' => 'クライアント %1$s は %2$s に引用 '
+	. '%3$s を投稿しました引用へのリンク:'
+	. '%4$s',
 'quote.status.email.subject' => 'クライアント%1$s %2$sの見積もり%3$s',
 'quote.tax' => '税金の見積もり',
 'quote.tax.rate' => '見積税率',
 'quote.tax.rate.add' => '見積税率追加',
-'quote.tax.rate.cannot.delete' => '見積税率を削除できません',
-'quote.tax.rate.incomplete.fields' => '不完全なフィールド: 税率を入力してください。ヒント: 税率をゼロにしてください。',
+'quote.tax.rate.cannot.delete' =>
+	'見積税率を削除できません',
+'quote.tax.rate.incomplete.fields' =>
+	'不完全なフィールド:'
+	. '税率を入力してください。ヒント:'
+	. '税率をゼロにしてください。',
 'quote.tax.rate.saved' => '見積税率が保存されました',
 'quote.template' => '見積テンプレート',
 'quote.templates' => '見積テンプレート',
@@ -1304,9 +1649,12 @@ return [
 'quote.to.so' => '見積から受注まで',
 'quote.to.so.password' => '販売注文パスワード',
 'quote.vat.quote' => 'VAT見積り',
-'quote.with.purchase.order.line.number' => '購入注文明細番号（Peppol 要件） - 販売注文明細番号と一致させる',
-'quote.with.purchase.order.number' => '発注書番号 - 販売注文番号と一致させる',
-'quote.with.purchase.order.person' => '注文者/部署',
+'quote.with.purchase.order.line.number' =>
+	'購入注文明細番号（Peppol 要件） - 販売注文明細番号と一致させる',
+'quote.with.purchase.order.number' =>
+	'発注書番号 - 販売注文番号と一致させる',
+'quote.with.purchase.order.person' =>
+	'注文者/部署',
 'quotes' => '引用',
 'quotes.expire.after' => '見積りの有効期限（日数）',
 'quotes.requiring.approval' => '承認が必要な見積',
@@ -1345,14 +1693,18 @@ return [
 'report' => '報告',
 'report.options' => 'レポートオプション',
 'report.sales.by.product' => '製品別売上',
-'report.sales.by.product.info' => 'このレポートには、商品の売上合計と商品税額が記載されています。これらの商品に関連する追加の請求書税額は含まれていません。',
+'report.sales.by.product.info' =>
+	'このレポートには、商品の売上合計と商品税額が記載されています。これらの商品に関連する追加の請求書税額は含まれていません。',
 'report.sales.by.task' => 'タスク別売上',
-'report.sales.by.task.info' => 'このレポートには、タスクの売上合計とそれに含まれる項目の税額が表示されます。これらのタスクに関連する追加の請求書税額は含まれません。',
-'report.test.fraud.prevention.headers.api' => 'テスト不正防止ヘッダー API',
+'report.sales.by.task.info' =>
+	'このレポートには、タスクの売上合計とそれに含まれる項目の税額が表示されます。これらのタスクに関連する追加の請求書税額は含まれません。',
+'report.test.fraud.prevention.headers.api' =>
+	'テスト不正防止ヘッダー API',
 'reports' => 'レポート',
 'reset' => 'リセット',
 'reset.password' => 'パスワードをリセットする',
-'rules.peppol.en16931.001' => 'ビジネスプロセスまたはプロファイルIDを指定する必要があります。config/common/params.phpでProfileIDを検索してください。',
+'rules.peppol.en16931.001' => 'ビジネスプロセスまたはプロファイルIDを指定する必要があります。config/common/params.'
+	. 'phpでProfileIDを検索してください。',
 'run.report' => '実行レポート',
 'sales' => '販売',
 'sales.by.client' => '顧客別売上',
@@ -1363,10 +1715,13 @@ return [
 'salesorder.assembled.packaged.prepared' => '組み立て済み/梱包済み/準備済み',
 'salesorder.cancelled' => '販売注文がキャンセルされました',
 'salesorder.client.confirmed.terms' => 'クライアントが確認した条件',
-'salesorder.clients.purchase.order.number' => 'クライアントの注文番号',
-'salesorder.clients.purchase.order.person' => 'クライアントの発注担当者が注文を処理する',
+'salesorder.clients.purchase.order.number' =>
+	'クライアントの注文番号',
+'salesorder.clients.purchase.order.person' =>
+	'クライアントの発注担当者が注文を処理する',
 'salesorder.copied.to.invoice' => '受注書が請求書にコピーされました',
-'salesorder.copied.to.invoice.not' => '請求書は受注書から作成されていません。請求書が重複しています。受注書を別の受注書にコピーし、請求書にコピーしてください。各受注書には対応する請求書が必要です。',
+'salesorder.copied.to.invoice.not' =>
+	'請求書は受注書から作成されていません。請求書が重複しています。受注書を別の受注書にコピーし、請求書にコピーしてください。各受注書には対応する請求書が必要です。',
 'salesorder.date.created' => '販売注文作成日',
 'salesorder.default.group' => '販売注文のデフォルトグループ',
 'salesorder.goods.services.confirmed' => 'クライアントが配達を確認',
@@ -1390,12 +1745,26 @@ return [
 'save.item.as.lookup' => 'アイテムをルックアップとして保存',
 'search.family' => '家族を検索',
 'search.product' => '製品を検索',
-'security.disable.read.only.empty' => '読み取り専用を無効にする設定は現在、0 または 1 の値が設定されていません。請求書の削除を防ぐ読み取り専用機能を使用できるように、デフォルトで 0 に設定することをお勧めします。',
-'security.disable.read.only.info' => '警告: 請求書保護と削除防止の読み取り専用機能が有効になっています。送信済みの請求書を下書きにリセットするには、「disable.read.only」を無効にしてください。',
-'security.disable.read.only.success' => '成功: 請求書保護と削除防止の読み取り専用機能が再度有効化されました',
-'security.disable.read.only.true.draft.check.and.mark' => '警告: 読み取り専用を無効にする設定が true の状態で下書きを編集しています',
-'security.disable.read.only.true.sent.check.and.mark' => '警告: 送信済みの請求書を編集中ですが、読み取り専用設定が true になっています',
-'security.disable.read.only.warning' => '警告: 請求書保護および削除防止の読み取り専用機能が無効になっています',
+'security.disable.read.only.empty' =>
+	'読み取り専用を無効にする設定は現在、0 または 1 の値が設定されていません。請求書の削除を防ぐ読み取り専用機能を使用できるように、デフォルトで 0 '
+	. 'に設定することをお勧めします。',
+'security.disable.read.only.info' =>
+	'警告:'
+	. '請求書保護と削除防止の読み取り専用機能が有効になっています。送信済みの請求書を下書きにリセットするには、「disable.'
+	. 'read.'
+	. 'only」を無効にしてください。',
+'security.disable.read.only.success' =>
+	'成功:'
+	. '請求書保護と削除防止の読み取り専用機能が再度有効化されました',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'警告:'
+	. '読み取り専用を無効にする設定が true の状態で下書きを編集しています',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'警告:'
+	. '送信済みの請求書を編集中ですが、読み取り専用設定が true になっています',
+'security.disable.read.only.warning' =>
+	'警告:'
+	. '請求書保護および削除防止の読み取り専用機能が無効になっています',
 'select.family' => '家族を選択',
 'select.payment.method' => '支払い方法を選択してください',
 'select.project' => 'プロジェクトを選択',
@@ -1407,30 +1776,42 @@ return [
 'set.to.read.only' => '請求書を読み取り専用に設定する',
 'setting' => '設定',
 'setting.add' => '設定の追加',
-'setting.as.a.result.of ' => ' の結果として ',
+'setting.as.a.result.of ' =>
+	'の結果として',
 'setting.assets.cleared.at' => '資産の清算 ',
-'setting.assets.were.not.cleared.at' => '資産は清算されなかった ',
+'setting.assets.were.not.cleared.at' =>
+	'資産は清算されなかった',
 'setting.company' => '企業公開情報',
 'setting.company.private' => '会社の個人情報',
 'setting.company.profile' => 'プロフィールの変更（例：携帯電話番号やメールアドレス）',
 'setting.duplicate.key' => '保存を完了できませんでした。次のキーが重複しています: ',
-'setting.error.on.the.public.assets.folder' => ' パブリックアセットフォルダのエラー。',
+'setting.error.on.the.public.assets.folder' =>
+	'パブリックアセットフォルダのエラー。',
 'setting.form' => '設定フォーム',
 'setting.key' => '設定キー',
 'setting.section' => 'セクション',
 'setting.subsection' => 'サブセクション',
 'setting.translator.key' => '翻訳キー',
 'setting.value' => '設定値',
-'setting.you.have.cleared.the.cache' => 'キャッシュをクリアしました。',
-'setting.you.have.not.cleared.the.cache.due.to.a' => 'キャッシュをクリアしていない ',
+'setting.you.have.cleared.the.cache' =>
+	'キャッシュをクリアしました。',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'キャッシュをクリアしていない',
 'settings' => '設定',
 'settings.successfully.saved' => '設定が正常に保存されました',
 'setup.choose.language' => '言語を選択',
 'setup.choose.language.message' => 'インストールを続行するには、言語を選択してください。',
 'setup.complete' => 'インストール完了',
 'setup.complete.message' => 'InvoicePlane が正常にインストールされました。ログインしてください。',
-'setup.complete.secure.setup' => 'インストールのセキュリティを強化したい場合は、とりあえずセットアップを無効にしてください。無効にするには、 <code>ipconfig.php</code>ファイル内の<code>DISABLE_SETUP=false</code>行を<code>DISABLE_SETUP=true</code>に置き換えてください。',
-'setup.complete.support.note' => '何か問題が発生した場合やヘルプが必要な場合は、<a href="https://wiki.invoiceplane.com">公式 wiki</a>または<a href="https://community.invoiceplane.com/">コミュニティ フォーラム</a>を参照してください。',
+'setup.complete.secure.setup' => 'インストールのセキュリティを強化したい場合は、とりあえずセットアップを無効にしてください。無効にするには、 <code>ipconfig.'
+	. 'php</code>ファイル内の<code>DISABLE_SETUP=false</code>行を<code>DISABLE_SETUP=true</code>に置き換えてください。',
+'setup.complete.support.note' => '何か問題が発生した場合やヘルプが必要な場合は、<a href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">公式 wiki</a>または<a href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">コミュニティ フォーラム</a>を参照してください。',
 'setup.create.user' => 'ユーザーアカウントを作成する',
 'setup.create.user.message' => 'これは、InvoicePlane にログインするために必要な情報です。',
 'setup.database.configured.message' => 'データベースは正常に構成されました。',
@@ -1456,14 +1837,24 @@ return [
 'setup.user.email.info' => 'あなたのメールアドレスは InvoicePlane へのログインに使用されます。',
 'setup.user.name.info' => '会社名または氏名（名と姓）のいずれか。',
 'setup.user.password.info' => '強力なパスワードを使用してください。大文字、小文字、数字、記号の組み合わせをお勧めします。最小文字数：8文字',
-'setup.user.password.verify.info' => '同じパスワードを再度入力してパスワードを確認してください。',
-'setup.v120.alert' => '<strong>注意！</strong><br> InvoicePlane アプリケーションのいくつかの重要な変更に関する<a href="https://go.invoiceplane.com/v120update" target="_blank">この更新通知</a>を読むことが非常に重要です。',
-'setup.v147.alert' => '<strong>注意！</strong><br>ファイル<code>application/config/config.php</code>を開き、 <code>$config[&#39;sess_use_database&#39;] = false;</code>の行を<code>$config[&#39;sess_use_database&#39;] = true;</code>に変更してください。<br>詳細は<a href="https://go.invoiceplane.com/v147update" target="_blank">こちらを</a>ご覧ください',
+'setup.user.password.verify.info' =>
+	'同じパスワードを再度入力してパスワードを確認してください。',
+'setup.v120.alert' => '<strong>注意！</strong><br> InvoicePlane アプリケーションのいくつかの重要な変更に関する<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">この更新通知</a>を読むことが非常に重要です。',
+'setup.v147.alert' => '<strong>注意！</strong><br>ファイル<code>application/config/config.'
+	. 'php</code>を開き、 <code>$config[&#39;sess_use_database&#39;] = false;</code>の行を<code>$config[&#39;sess_use_database&#39;] = '
+	. 'true;</code>に変更してください。<br>詳細は<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">こちらを</a>ご覧ください',
 'showing.of' => '%s 件中 %s 件を表示 ',
 'signup' => 'サインアップ',
 'single.choice' => '単一選択',
 'site.soletrader.about.choose' => '当社を選ぶ魅力的な理由は次のとおりです:',
-'site.soletrader.about.competitive.rates' => '競争力のある料金',
+'site.soletrader.about.competitive.rates' =>
+	'競争力のある料金',
 'site.soletrader.about.contemporary' => '現代的なスキル',
 'site.soletrader.about.dissatisfaction' => 'サービスにご満足いただけない場合は、無料でやり直しさせていただきます。',
 'site.soletrader.about.finished' => '完了したプロジェクト',
@@ -1519,28 +1910,53 @@ return [
 'stop.logging.in' => 'ログインを停止',
 'stop.signing.up' => '登録をやめる',
 'storecove' => 'ストアコーブ',
-'storecove.advisory.to.developer.field.easily.missed' => '顧客が見逃しやすいフィールド',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. 送信者の作成 - 法人の国',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'顧客が見逃しやすいフィールド',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. '送信者の作成 - 法人の国',
 'storecove.invoice.json.encoded' => 'StoreCove JSONエンコードされた請求書',
 'storecove.legal' => '法律上の',
-'storecove.legal.entity.id.for.json' => '1.1.4. 送信者の作成 - Store Cove 法人 ID を invoice.json に挿入',
-'storecove.legal.entity.identifier.id.not.found' => '構成パラメータの会計サプライヤーパーティの法人会社 ID が見つかりません。',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. '送信者の作成 - Store Cove 法人 '
+	. 'ID を invoice.'
+	. 'json に挿入',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'構成パラメータの会計サプライヤーパーティの法人会社 ID が見つかりません。',
 'storecove.no.contract.exists' => '契約は存在しない',
 'storecove.not.available' => '利用不可',
-'storecove.purchase.order.item.id.null' => 'po-item-id-null',
-'storecove.receiver.identifier' => '受信者識別子 - StoreCove 6.3 を参照',
-'storecove.region.country.legal.tax' => '地域 ---------- 国 --------- 法定 --------- 税金',
-'storecove.salesorder.number.not.exist' => '販売注文番号が存在しません',
-'storecove.sender.identifier' => '6.2 送信者識別子',
-'storecove.sender.identifier.basis' => '6.2 送信者識別子の根拠 - 法的または税務的',
-'storecove.supplier.contact.email.not.found' => 'サプライヤーの連絡先メールアドレスが見つかりません。設定パラメータ配列を参照してください。',
-'storecove.supplier.contact.firstname.not.found' => 'サプライヤー連絡先名が見つかりません。構成パラメータ配列を参照してください。',
-'storecove.supplier.contact.lastname.not.found' => 'サプライヤー連絡先の姓が見つかりません。構成パラメータ配列を参照してください。',
-'storecove.supplier.contact.name.not.found' => 'サプライヤーの連絡先名が見つかりません。構成パラメータ配列を参照してください。',
-'storecove.supplier.contact.telephone.not.found' => 'サプライヤーの連絡先電話番号が見つかりません。設定パラメータ配列を参照してください。',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-null',
+'storecove.receiver.identifier' => '受信者識別子 - StoreCove 6.'
+	. '3 を参照',
+'storecove.region.country.legal.tax' =>
+	'地域 ---------- 国 --------- 法定 '
+	. '--------- 税金',
+'storecove.salesorder.number.not.exist' =>
+	'販売注文番号が存在しません',
+'storecove.sender.identifier' => '6.'
+	. '2 送信者識別子',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 送信者識別子の根拠 - 法的または税務的',
+'storecove.supplier.contact.email.not.found' =>
+	'サプライヤーの連絡先メールアドレスが見つかりません。設定パラメータ配列を参照してください。',
+'storecove.supplier.contact.firstname.not.found' =>
+	'サプライヤー連絡先名が見つかりません。構成パラメータ配列を参照してください。',
+'storecove.supplier.contact.lastname.not.found' =>
+	'サプライヤー連絡先の姓が見つかりません。構成パラメータ配列を参照してください。',
+'storecove.supplier.contact.name.not.found' =>
+	'サプライヤーの連絡先名が見つかりません。構成パラメータ配列を参照してください。',
+'storecove.supplier.contact.telephone.not.found' =>
+	'サプライヤーの連絡先電話番号が見つかりません。設定パラメータ配列を参照してください。',
 'storecove.tax' => '税',
 'storecove.tax.rate.code' => 'ストアコーブ税率コード',
-'storecove.tax.scheme.identifier.id.not.found' => '構成パラメータの会計サプライヤーパーティ税制会社 ID が見つかりません。',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'構成パラメータの会計サプライヤーパーティ税制会社 ID が見つかりません。',
 'stream' => 'ブラウザ/モーダルでPDFをストリーミング',
 'street.address' => '住所',
 'street.address.2' => '住所（続き）',
@@ -1555,7 +1971,10 @@ return [
 'sumex.canton' => 'カントン',
 'sumex.diagnosis' => '診断',
 'sumex.edit' => 'Sumex編集',
-'sumex.help' => 'このオプションは、請求書にTARMED / SUMEX1準互換の請求書を生成するためのメニュー項目を追加します。TARMED / SUMEX1は、スイスの医療業界標準です。<a href="http://sumex1.net/">詳細情報</a>',
+'sumex.help' => 'このオプションは、請求書にTARMED / SUMEX1準互換の請求書を生成するためのメニュー項目を追加します。TARMED / SUMEX1は、スイスの医療業界標準です。<a '
+	. 'href="http:'
+	. '//sumex1.'
+	. 'net/">詳細情報</a>',
 'sumex.information' => 'Sumex情報',
 'sumex.insurednumber' => '被保険者番号',
 'sumex.observations' => '観察',
@@ -1624,44 +2043,102 @@ return [
 'tax.rates' => '税率',
 'taxes' => '税金',
 'telegram' => '電報',
-'telegram.bot.api.chat.id' => 'Telegram: 非ボット: 個人アカウント: Hello World: テストメッセージ: メッセージの受信者:<b>チャットID</b>',
-'telegram.bot.api.chat.id.not.set' => 'ボットに最初のメッセージを送信し、「Hello」「World」テスト メッセージを受信する非ボットの個人 Telegram アカウント所有者のチャット ID が設定されていません。',
-'telegram.bot.api.current.status' => '<b>現在の使用状況:</b>クライアントにはチャット ID がなく、ボットにメッセージを送信しないため、Webhook は必要ありません。',
+'telegram.bot.api.chat.id' =>
+	'Telegram:'
+	. '非ボット:'
+	. '個人アカウント:'
+	. 'Hello World:'
+	. 'テストメッセージ:'
+	. 'メッセージの受信者:'
+	. '<b>チャットID</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'ボットに最初のメッセージを送信し、「Hello」「World」テスト メッセージを受信する非ボットの個人 Telegram アカウント所有者のチャット ID '
+	. 'が設定されていません。',
+'telegram.bot.api.current.status' =>
+	'<b>現在の使用状況:'
+	. '</b>クライアントにはチャット ID がなく、ボットにメッセージを送信しないため、Webhook は必要ありません。',
 'telegram.bot.api.enable' => 'Telegramを有効にする',
-'telegram.bot.api.enabled.not' => 'Telegramが有効になっていません',
-'telegram.bot.api.future.use' => '<b>将来の使用:</b>チャットIDを持つクライアントにはテレグラム請求書が送信され、クライアントはWebhookに確認を返信することで受領を確認します。',
-'telegram.bot.api.general.purpose' => '<b>トークンによって識別される登録済みボットは、以下の登録済みチャット ID (通常は管理者の個人的な非ボット テレグラム アカウント) に顧客支払い通知を送信します。</b>',
-'telegram.bot.api.get.updates.failed' => 'Telegram の更新に失敗しました。',
-'telegram.bot.api.get.updates.success' => 'API メソッド getUpdates を使用して Telegram の更新に成功しました。',
-'telegram.bot.api.hello.world.test.message' => 'Telegram Bot APIからHello Worldです。yiisoft開発者の皆様、ありがとうございます！',
-'telegram.bot.api.hello.world.test.message.sent' => 'Hello World メッセージが送信されました。',
-'telegram.bot.api.hello.world.test.message.sent.not' => 'Hello World メッセージは送信されませんでした。',
-'telegram.bot.api.hello.world.test.message.use' => '基本的なテストメッセージ「Hello World from Telegram Bot Api」を外部チャットIDに送信する',
-'telegram.bot.api.payment.notification.success' => 'Telegramの支払い通知が成功しました',
-'telegram.bot.api.payment.notifications' => 'Telegramの支払い通知',
+'telegram.bot.api.enabled.not' =>
+	'Telegramが有効になっていません',
+'telegram.bot.api.future.use' =>
+	'<b>将来の使用:'
+	. '</b>チャットIDを持つクライアントにはテレグラム請求書が送信され、クライアントはWebhookに確認を返信することで受領を確認します。',
+'telegram.bot.api.general.purpose' =>
+	'<b>トークンによって識別される登録済みボットは、以下の登録済みチャット ID (通常は管理者の個人的な非ボット テレグラム アカウント) '
+	. 'に顧客支払い通知を送信します。</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'Telegram の更新に失敗しました。',
+'telegram.bot.api.get.updates.success' =>
+	'API メソッド getUpdates を使用して Telegram '
+	. 'の更新に成功しました。',
+'telegram.bot.api.hello.world.test.message' =>
+	'Telegram Bot APIからHello Worldです。yiisoft開発者の皆様、ありがとうございます！',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'Hello World メッセージが送信されました。',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'Hello World メッセージは送信されませんでした。',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'基本的なテストメッセージ「Hello World from Telegram Bot '
+	. 'Api」を外部チャットIDに送信する',
+'telegram.bot.api.payment.notification.success' =>
+	'Telegramの支払い通知が成功しました',
+'telegram.bot.api.payment.notifications' =>
+	'Telegramの支払い通知',
 'telegram.bot.api.token' => 'TelegramボットAPIトークン',
-'telegram.bot.api.token.not.set' => 'Telegram ボット API トークンが設定されていません',
-'telegram.bot.api.webhook.delete' => 'Webhookを削除する',
-'telegram.bot.api.webhook.deleted' => '手動の API 取得メソッド getUpdates を使用できるように、Webhook が無効になりました。',
-'telegram.bot.api.webhook.secret.token' => '追加のセキュリティのための Webhook シークレット トークン (queryParameter ではなく、setWebhook 関数のパラメータとして使用されます)',
-'telegram.bot.api.webhook.setup' => 'Webhookが設定されました。',
-'telegram.bot.api.webhook.setup.already' => 'Webhookはすでに設定されています。',
-'telegram.bot.api.webhook.url.this.site' => 'TelegramHelper の setWebhook 関数で使用されるこのサイトの Telegram Webhook Url。',
+'telegram.bot.api.token.not.set' =>
+	'Telegram ボット API トークンが設定されていません',
+'telegram.bot.api.webhook.delete' =>
+	'Webhookを削除する',
+'telegram.bot.api.webhook.deleted' =>
+	'手動の API 取得メソッド getUpdates を使用できるように、Webhook '
+	. 'が無効になりました。',
+'telegram.bot.api.webhook.secret.token' =>
+	'追加のセキュリティのための Webhook シークレット トークン (queryParameter '
+	. 'ではなく、setWebhook 関数のパラメータとして使用されます)',
+'telegram.bot.api.webhook.setup' =>
+	'Webhookが設定されました。',
+'telegram.bot.api.webhook.setup.already' =>
+	'Webhookはすでに設定されています。',
+'telegram.bot.api.webhook.url.this.site' =>
+	'TelegramHelper の setWebhook 関数で使用されるこのサイトの Telegram '
+	. 'Webhook Url。',
 'template' => '請求書テンプレート',
 'templates' => '請求書テンプレート',
 'term' => '利用規約',
 'term.1' => '利用規約を読んでいません。',
 'term.2' => '利用規約を読み、同意します。',
-'term.add.additional.terms.at.setting.repository' => '設定リポジトリの getPaymentTerms 関数で追加の条件を追加します。',
+'term.add.additional.terms.at.setting.repository' =>
+	'設定リポジトリの getPaymentTerms 関数で追加の条件を追加します。',
 'terms' => '条項',
 'test.data.install' => 'テストデータをインストールする',
 'test.data.use' => 'テストデータを使用する',
 'test.remove' => 'テストデータを削除する',
-'test.remove.tooltip' => '表示..設定..一般..テストデータのインストール..いいえ および 表示..設定..一般..テストデータの使用..いいえ',
+'test.remove.tooltip' => '表示.'
+	. '設定.'
+	. '一般.'
+	. 'テストデータのインストール.'
+	. 'いいえ および 表示.'
+	. '設定.'
+	. '一般.'
+	. 'テストデータの使用.'
+	. 'いいえ',
 'test.reset' => 'テストデータをリセット',
 'test.reset.setting' => '設定の再インストール',
-'test.reset.setting.tooltip' => 'これにより、現在の設定がすべて削除され、InvoiceController/install.default.settings.on.first.run のデフォルト設定が再インストールされます。',
-'test.reset.tooltip' => '表示..設定..全般..テスト データのインストール..はい および 表示..設定..全般..テスト データの使用..はい',
+'test.reset.setting.tooltip' => 'これにより、現在の設定がすべて削除され、InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run のデフォルト設定が再インストールされます。',
+'test.reset.tooltip' => '表示.'
+	. '設定.'
+	. '全般.'
+	. 'テスト データのインストール.'
+	. 'はい および 表示.'
+	. '設定.'
+	. '全般.'
+	. 'テスト データの使用.'
+	. 'はい',
 'text' => '文章',
 'theme' => 'テーマ',
 'this.month' => '今月',
@@ -1685,20 +2162,33 @@ return [
 'true' => '真実',
 'try.again' => 'もう一度やり直してください',
 'two.factor.authentication' => '二要素認証',
-'two.factor.authentication.attempt.failure' => '2要素認証の試行失敗',
-'two.factor.authentication.attempt.failure.must.setup' => '2要素認証の試行失敗: シークレット(+)を使用して新しいQRコードを設定し、プロンプトが表示されたら以前のエントリを上書きすることを選択する必要があります。',
-'two.factor.authentication.attempt.success' => '2要素認証の試行成功',
+'two.factor.authentication.attempt.failure' =>
+	'2要素認証の試行失敗',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'2要素認証の試行失敗:'
+	. 'シークレット(+)を使用して新しいQRコードを設定し、プロンプトが表示されたら以前のエントリを上書きすることを選択する必要があります。',
+'two.factor.authentication.attempt.success' =>
+	'2要素認証の試行成功',
 'two.factor.authentication.disabled' => 'セキュリティ強化のため、2 要素認証は無効になりました。',
 'two.factor.authentication.enable' => '二要素認証を有効にする',
-'two.factor.authentication.enabled.with.disabling' => '二要素認証は現在、セキュリティ強化のため有効になっています。認証成功後は、次回ログインまでセキュリティを強化するため、二要素認証は無効になります。ログインするたびにQRコードをスキャンして新しいシークレットを入力する必要があります。',
-'two.factor.authentication.enabled.without.disabling' => '2 要素認証は現在、追加のセキュリティのために有効になっており、認証が成功した後も無効になりません。2 要素認証を設定した後、ログイン後にスキャンするために QR コードが再度表示されることはありません。',
+'two.factor.authentication.enabled.with.disabling' =>
+	'二要素認証は現在、セキュリティ強化のため有効になっています。認証成功後は、次回ログインまでセキュリティを強化するため、二要素認証は無効になります。ログインするたびにQRコードをスキャンして新しいシークレットを入力する必要があります。',
+'two.factor.authentication.enabled.without.disabling' =>
+	'2 要素認証は現在、追加のセキュリティのために有効になっており、認証が成功した後も無効になりません。2 要素認証を設定した後、ログイン後にスキャンするために QR コードが再度表示されることはありません。',
 'two.factor.authentication.error' => '2要素認証エラー',
-'two.factor.authentication.form.verify.login' => 'ログインを確認する',
-'two.factor.authentication.invalid.code.format' => 'コードの形式が無効です。アプリから取得した6桁のコードを入力してください。',
-'two.factor.authentication.missing.code.or.secret' => '認証コードまたは 2FA シークレットがありません。',
-'two.factor.authentication.new.six.digit.code' => 'アプリから新しい 6 桁の認証コード (セットアップ コードとは異なる) を入力してください。',
-'two.factor.authentication.no.secret.generated' => 'シークレットが生成されませんでした。セットアップを再起動してください。',
-'two.factor.authentication.qr.code.enter.manually' => 'または、次のコードを Android アプリに手動で入力します。 ',
+'two.factor.authentication.form.verify.login' =>
+	'ログインを確認する',
+'two.factor.authentication.invalid.code.format' =>
+	'コードの形式が無効です。アプリから取得した6桁のコードを入力してください。',
+'two.factor.authentication.missing.code.or.secret' =>
+	'認証コードまたは 2FA シークレットがありません。',
+'two.factor.authentication.new.six.digit.code' =>
+	'アプリから新しい 6 桁の認証コード (セットアップ コードとは異なる) '
+	. 'を入力してください。',
+'two.factor.authentication.no.secret.generated' =>
+	'シークレットが生成されませんでした。セットアップを再起動してください。',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'または、次のコードを Android アプリに手動で入力します。',
 'two.factor.authentication.scan' => 'Aegis アプリでこの QR コードをスキャンします:',
 'two.factor.authentication.setup' => '2要素認証を設定する',
 'type' => 'タイプ',
@@ -1745,35 +2235,52 @@ return [
 'user.form' => 'ユーザーフォーム',
 'user.iban' => 'IBAN',
 'user.inv.active.not' => 'ユーザーアカウントがアクティブではありません',
-'user.inv.list.limit' => 'ページごとにリストされるレコードの数（注: デフォルトを上書きします）',
-'user.inv.more.than.one.assigned' => '請求書の作成に失敗しました。設定...ユーザーアカウントを参照してください。このクライアントには複数のユーザーが割り当てられています。',
+'user.inv.list.limit' => 'ページごとにリストされるレコードの数（注:'
+	. 'デフォルトを上書きします）',
+'user.inv.more.than.one.assigned' =>
+	'請求書の作成に失敗しました。設定.'
+	. 'ユーザーアカウントを参照してください。このクライアントには複数のユーザーが割り当てられています。',
 'user.inv.refer.to' => '1 ページあたり 10 件のレコードというデフォルトは、ここをクリックすると上書きできます。',
 'user.inv.role.accountant' => '会計士',
-'user.inv.role.accountant.assigned' => '会計担当者の役割が割り当てられました',
-'user.inv.role.accountant.default' => 'デフォルトでは、クライアントの会計担当者は請求書の表示、請求書の支払い、請求書の支払いの表示、請求書の支払いの編集を行うことができます。',
+'user.inv.role.accountant.assigned' =>
+	'会計担当者の役割が割り当てられました',
+'user.inv.role.accountant.default' =>
+	'デフォルトでは、クライアントの会計担当者は請求書の表示、請求書の支払い、請求書の支払いの表示、請求書の支払いの編集を行うことができます。',
 'user.inv.role.administrator' => '管理者',
-'user.inv.role.administrator.already.assigned' => '管理者の役割はすでに割り当てられています',
-'user.inv.role.administrator.assigned' => '管理者ロールが割り当てられました。 ',
-'user.inv.role.all.new' => 'すべての新規ユーザーは、デフォルトでオブザーバーの役割を引き受けます。つまり、ドキュメントを表示できますが、送信されたドキュメントを編集することはできません。つまり、ドキュメントを観察したり確認したりすることはできません。',
+'user.inv.role.administrator.already.assigned' =>
+	'管理者の役割はすでに割り当てられています',
+'user.inv.role.administrator.assigned' =>
+	'管理者ロールが割り当てられました。',
+'user.inv.role.all.new' =>
+	'すべての新規ユーザーは、デフォルトでオブザーバーの役割を引き受けます。つまり、ドキュメントを表示できますが、送信されたドキュメントを編集することはできません。つまり、ドキュメントを観察したり確認したりすることはできません。',
 'user.inv.role.observer' => 'オブザーバー',
-'user.inv.role.observer.assigned' => 'オブザーバーの役割が割り当てられました',
-'user.inv.role.observer.assigned.already' => 'オブザーバーロールはすでに割り当てられています。',
-'user.inv.role.revoke.all' => 'すべてのロールを取り消す',
-'user.inv.role.warning.revoke.all' => 'すべての役割を取り消してもよろしいですか？',
-'user.inv.role.warning.role' => 'この役割を引き受けてもよろしいですか?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'ドロップダウンの管理者タイプを管理者以外のユーザーに割り当てることはできません',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'ドロップダウンのゲストタイプを管理者に割り当てることができません',
+'user.inv.role.observer.assigned' =>
+	'オブザーバーの役割が割り当てられました',
+'user.inv.role.observer.assigned.already' =>
+	'オブザーバーロールはすでに割り当てられています。',
+'user.inv.role.revoke.all' =>
+	'すべてのロールを取り消す',
+'user.inv.role.warning.revoke.all' =>
+	'すべての役割を取り消してもよろしいですか？',
+'user.inv.role.warning.role' =>
+	'この役割を引き受けてもよろしいですか?',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'ドロップダウンの管理者タイプを管理者以外のユーザーに割り当てることはできません',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'ドロップダウンのゲストタイプを管理者に割り当てることができません',
 'user.signup.please' => 'ぜひご登録ください！',
 'user.subscriber.number' => '加入者番号',
 'user.type' => 'ユーザータイプ',
 'username' => 'ユーザー名',
 'users' => 'ユーザー',
 'utility.assets.clear' => 'アセットキャッシュをクリア',
-'validator.fail' => 'フィールド %s を処理できません: %s',
+'validator.fail' => 'フィールド %s を処理できません:'
+	. '%s',
 'validator.invalid.login.password' => 'ログインまたはパスワードが無効です',
 'validator.password.change' => 'パスワードが変更されました',
 'validator.password.not.match' => 'パスワードが一致しません',
-'validator.password.not.match.new' => '新しいパスワードが一致しません',
+'validator.password.not.match.new' =>
+	'新しいパスワードが一致しません',
 'validator.password.reset' => 'パスワードがリセットされました',
 'validator.user.exist' => 'このログインを持つユーザーは既に存在します',
 'validator.user.exist.not' => 'このログインを持つユーザーは存在しません',
@@ -1822,4 +2329,81 @@ return [
 'yes' => 'はい',
 'zip' => '郵便番号',
 'zip.code' => '郵便番号',
+    
+'allowance.or.charge.allowance.tax' =>
+	'控除に対する税金',
+'allowance.or.charge.charge.tax' =>
+	'課税対象',
+'allowance.or.charge.inv.add' =>
+	'請求書の控除額または請求額を追加する',
+'allowance.or.charge.level' => 'レベル（⬅️全体、明細➡）',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'配送/取り扱い/梱包',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'配送/手数料/梱包にかかるVAT',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'送料・手数料・梱包にかかる税金',
+'amount.payment' => '全額お支払いいただく金額',
+'calendar' => 'カレンダー',
+'continue.with.developersandboxhmrc' => 'Developer Gov Sandbox UK を続ける',
+'continue.with.oidc' => 'Open Id Connect を続ける',
+'continue.with.openbanking' => 'オープンバンキングを続ける',
+'converted.to.invoice' => '請求書に変換',
+'converted.to.so' => '販売注文に変換',
+'custom.field.edit' => 'カスタムフィールド編集',
+'delete.quote.single' => 'この見積は販売注文または請求書が関連付けられていないため削除できます',
+'delete.quote.derived' => 'この見積には販売注文または請求書のいずれかがリンクされているため、削除できません。',
+'extended' => '拡張',
+'extended.language' => '拡張言語',
+'file' => 'ファイル',
+'grand.fathered' => '祖父の',
+'layout.password.otp.6' => 'OTPパスワード（6桁）',
+'layout.password.otp.6.8' =>
+	'OTPパスワード（6桁）/バックアップリカバリコード（8桁）',
+'oauth2.account.locked' => 'アカウントがロックされました',
+'oauth2.backup.recovery.codes' => 'リカバリコードをバックアップしてください。安全な場所に保管してください。',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'バックアップリカバリコードの再生成',
+'oauth2.consent.required' => '同意が必要',
+'oauth2.default' => 'デフォルトのoauth2.'
+	. '0設定を使用',
+'oauth2.invalid.request' => '無効なリクエスト',
+'oauth2.invalid.client' => '無効なクライアント',
+'oauth2.invalid.grant' => '無効な許可',
+'oauth2.login.required' => 'ログインが必要です',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'認証コードまたは状態パラメータがありません。',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'状態パラメータがありません。CSRF攻撃の可能性があります',
+'oauth2.server.error' => 'サーバーエラー',
+'oauth2.temporarily.unavailable' => '一時的に利用できません',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'実稼働環境ではテスト ユーザーの作成は許可されません。',
+'oauth2.unauthorized.client' => '許可されていないクライアント',
+'oauth2.unsupported.response.type' => 'サポートされていない応答タイプ',
+'oauth2.unsupported.grant.type' => 'サポートされていない付与タイプ',
+'online.payment.apiToken' => 'APIトークン',
+'online.payment.thirdPartyProvider' => 'サードパーティプロバイダー（例：Wonderful）',
+'open.banking.pay.with' => 'オープンバンキングで支払う: ',
+'open.banking.not.configured' => 'Open Bankingが設定されていません。サポートにお問い合わせください。',
+'radiolist.choice' => 'ラジオリストの選択',
+'region' => '地域',
+'script' => 'スクリプト',
+'tax.rate.active.not' => '警告:'
+	. '税率が有効化されていません。少なくとも1つの税率を有効化してください。設定.'
+	. '税率',
+'textarea' => 'テキストエリア',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'8桁のバックアップ回復コードが無効です',
+'two.factor.authentication.invalid.totp.code' =>
+	'6桁のタイムドワンタイム認証コードが無効です',
+'two.factor.authentication.rate.limit.reached' =>
+	'レート制限に達しました。10秒お待ちください。',
+'url' => 'URL',
+'variant' => '変異体',
+'approval.required' => '承認が必要です',
+'quote.approval.required' => '見積承認が必要です',
+'quote.must.be.approved.first' =>
+	'変換前に見積りを承認する必要があります',
 ];
+

@@ -13,6 +13,10 @@ use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 // Yiisoft
+use Yiisoft\Bootstrap5\DropdownItem;
+use Yiisoft\I18n\Locale;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
@@ -31,6 +35,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         private CompanyPrivateRepository $companyPrivateRepository,
         private SettingRepository $settingRepository,
         private Translator $translator,
+        private UrlGenerator $urlGenerator,
+        private CurrentRoute $currentRoute,
     ) {
     }
 
@@ -171,7 +177,10 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $logoPath = ((isset($companyLogoFileName)
                       && !empty($companyLogoFileName))
                       ? '/logo/' . $companyLogoFileName
-                      : '/site/logo.png');
+                      : '/site/logo.png');        
+        $_language = '_language';
+        $localeSplitter =  new Locale($this->currentRoute->getArgument('_language') ?? 'en');
+        $siteIndex = 'site/index';
         return [
             'bootstrap5OffcanvasEnable' => $bootstrap5OffcanvasEnable,
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
@@ -220,6 +229,100 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
              * in invoice/layout under debug mode
              */
             'scrutinizerRepository' => 'rossaddison/invoice',
+            //e.g. af-ZA split into af
+            'splitterLanguage' => $localeSplitter->language(),
+            //e.g. af-ZA split into ZA
+            'splitterRegion' => $localeSplitter->region(),
+            'afZA' => DropdownItem::link('Afrikaans South African',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'af-ZA'], fallbackRouteName: $siteIndex)),
+            'arBH' => DropdownItem::link('Arabic Bahrainian/ عربي',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'ar-BH'], fallbackRouteName: $siteIndex)),
+            'az' => DropdownItem::link('Azerbaijani / Azərbaycan',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'az'], fallbackRouteName: $siteIndex)),
+            'beBY' => DropdownItem::link('Belarusian / Беларуская',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'be-BY'], fallbackRouteName: $siteIndex)),
+            'bs' => DropdownItem::link('Bosnian / Bosanski',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'bs'], fallbackRouteName: $siteIndex)),
+            'zhCN' => DropdownItem::link('Chinese Simplified / 简体中文',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'zh-CN'], fallbackRouteName: $siteIndex)),
+            'zhTW' => DropdownItem::link('Tiawanese Mandarin / 简体中文',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'zh-TW'], fallbackRouteName: $siteIndex)),
+            'en' => DropdownItem::link('English',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'en'], fallbackRouteName: $siteIndex)),
+            'fil' => DropdownItem::link('Filipino / Filipino',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'fil'], fallbackRouteName: $siteIndex)),
+            'fr' => DropdownItem::link('French / Français',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'fr'], fallbackRouteName: $siteIndex)),
+            'gdGB' => DropdownItem::link('Scots Gaelic / Gàidhlig na h-Alba',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'gd-GB'], fallbackRouteName: $siteIndex)),
+            'haNG' => DropdownItem::link('Hausa Nigerian / Hausawa Ɗan Najeriya',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'ha-NG'], fallbackRouteName: $siteIndex)),
+            'heIL' => DropdownItem::link('Hebrew Israel / העברית ישראל',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'he-IL'], fallbackRouteName: $siteIndex)),
+            'nl' =>DropdownItem::link('Dutch / Nederlands',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'nl'], fallbackRouteName: $siteIndex)),
+            'de' => DropdownItem::link('German / Deutsch',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'de'], fallbackRouteName: $siteIndex)),
+            'id' => DropdownItem::link('Indonesian / bahasa Indonesia',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'id'], fallbackRouteName: $siteIndex)),
+            'igNG' => DropdownItem::link('Igbo Nigerian / Igbo Naịjirịa',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'ig-NG'], fallbackRouteName: $siteIndex)),
+            'it' => DropdownItem::link('Italian / Italiano',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'it'], fallbackRouteName: $siteIndex)),
+            'ja' => DropdownItem::link('Japanese / 日本',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'ja'], fallbackRouteName: $siteIndex)),
+            'pl' => DropdownItem::link('Polish / Polski',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'pl'], fallbackRouteName: $siteIndex)),
+            'ptBR' => DropdownItem::link('Portugese Brazilian / Português Brasileiro',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'pt-BR'], fallbackRouteName: $siteIndex)),
+            'ru' => DropdownItem::link('Russian / Русский',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'ru'], fallbackRouteName: $siteIndex)),
+            'sk' => DropdownItem::link('Slovakian / Slovenský',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'sk'], fallbackRouteName: $siteIndex)),
+            'sl' => DropdownItem::link('Slovenian / Slovenski',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'sl'], fallbackRouteName: $siteIndex)),
+            'es' => DropdownItem::link('Spanish /  Española x',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'es'], fallbackRouteName: $siteIndex)),
+            'uk' => DropdownItem::link('Ukrainian / українська',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'uk'], fallbackRouteName: $siteIndex)),
+            'uz' => DropdownItem::link('Uzbek / o' . "'" . 'zbek',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'uz'], fallbackRouteName: $siteIndex)),
+            'vi' => DropdownItem::link('Vietnamese / Tiếng Việt',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'vi'], fallbackRouteName: $siteIndex)),
+            'yoNG' => DropdownItem::link('Yoruba Nigerian / Ọmọ orílẹ̀-èdè Nàìjíríà',
+                $this->urlGenerator
+                     ->generateFromCurrent([$_language => 'yo-NG'], fallbackRouteName: $siteIndex)),
+            'zuZA' => DropdownItem::link('Zulu South African/ Zulu South African',
+                $this->urlGenerator
+                    ->generateFromCurrent([$_language => 'zu-ZA'], fallbackRouteName: $siteIndex)),
         ];
     }
 }

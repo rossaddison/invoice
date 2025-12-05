@@ -59,7 +59,7 @@ class GeneratorController extends BaseController
     /**
      * Related logic: see Note: The working file app.php in ./resources/messages/en is too big for google to translate.
      *
-     * Related logic: see Note these below filenames e.g. '_ip_lang.php' represent the filenames in:
+     * Related logic: see Note these below filenames e.g. 'app_lang.php' and 'diff_lang' represent the filenames in:
      * ./resources/views/invoice/generator/templates_protected. As strings they will be
      * used to construct a filename. The translation of the specific ./src/Invoice/Language/English file
      * is placed in the templates_protected/{individual file} 'php shell template' to build a new php file.
@@ -206,9 +206,9 @@ class GeneratorController extends BaseController
                 putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
                 try {
                     $translationClient = new TranslationServiceClient([]);
-                    // Use the ..src/Invoice/Language/English/ip_lang.php associative array as template
+                    // Use the ..src/Invoice/Language/English/app_lang.php or diff_lang associative array as template
                     $lang = new Lang();
-                    // type eg. 'ip', 'gateway'  of ip_lang.php or gateway_lang.php respectively
+                    // type eg. 'app' or 'diff' respectively
                     $lang->load($type, 'English');
                     /** @var array<array-key, string> $content */
                     $content = $lang->_language;

@@ -28,27 +28,47 @@ return [
 'aging.1.15' => '1 - 15 dagen',
 'aging.16.30' => '16 - 30 dagen',
 'aging.above.30' => 'Boven 30 dagen',
-'alert.no.client.assigned' => 'Er is geen klant aan dit project toegewezen.',
-'alert.no.tasks.found' => 'Er zijn geen taken gevonden voor dit project.',
-'alert.task.delete' => 'Let op! U wilt een taak verwijderen die is gebruikt om een ​​factuur te genereren.',
+'alert.no.client.assigned' => 'Er is geen klant aan '
+	. 'dit project toegewezen.',
+'alert.no.tasks.found' => 'Er zijn geen taken gevonden '
+	. 'voor dit project.',
+'alert.task.delete' => 'Let op! U wilt een '
+	. 'taak verwijderen die is gebruikt '
+	. 'om een ​​factuur te genereren.',
 'all' => 'Alle',
 'allowance.or.charge' => 'Toeslag of heffing',
-'allowance.or.charge.add' => 'Documentniveau (dus NIET factuurregelniveau) Toeslag of toeslag toevoegen',
+'allowance.or.charge.add' =>
+    'Documentniveau (dus NIET factuurregelniveau) Toeslag '
+	. 'of toeslag toevoegen',
 'allowance.or.charge.allowance' => 'Toelage',
-'allowance.or.charge.allowance.vat' => 'BTW op toeslagen',
-'allowance.or.charge.amount' => 'Toeslagbedrag (numerieke vermenigvuldigingsfactor als percentage vermenigvuldigd met basisbedrag)',
-'allowance.or.charge.base.amount' => 'Basisbedrag',
+'allowance.or.charge.allowance.vat' =>
+	'BTW op toeslagen',
+'allowance.or.charge.amount' =>
+    'Toeslagbedrag (numerieke vermenigvuldigingsfactor als percentage '
+	. 'vermenigvuldigd met basisbedrag)',
+'allowance.or.charge.base.amount' =>
+	'Basisbedrag',
 'allowance.or.charge.charge' => 'Aanval',
-'allowance.or.charge.charge.vat' => 'BTW in rekening gebracht',
-'allowance.or.charge.edit.allowance' => 'Documentniveau (dus NIET factuurregelniveau) Toeslag bewerken',
-'allowance.or.charge.edit.charge' => 'Documentniveau (dus NIET factuurregelniveau) Kosten bewerken',
-'allowance.or.charge.index' => 'Index van de toeslag of kosten ten opzichte van de post',
+'allowance.or.charge.charge.vat' =>
+	'BTW in rekening gebracht',
+'allowance.or.charge.edit.allowance' =>
+	'Documentniveau (dus NIET factuurregelniveau) Toeslag '
+	. 'bewerken',
+'allowance.or.charge.edit.charge' =>
+	'Documentniveau (dus NIET factuurregelniveau) Kosten '
+	. 'bewerken',
+'allowance.or.charge.index' => 'Index van de toeslag of '
+	. 'kosten ten opzichte van de '
+	. 'post',
 'allowance.or.charge.inv' => 'Factuurtoeslag of -kosten',
 'allowance.or.charge.item' => 'Factuurartikeltoeslag of -kosten',
-'allowance.or.charge.item.add' => 'Toeslag/toeslag toevoegen',
-'allowance.or.charge.multiplier.factor.numeric' => 'Vermenigvuldigingsfactor Numeriek',
+'allowance.or.charge.item.add' =>
+	'Toeslag/toeslag toevoegen',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'Vermenigvuldigingsfactor Numeriek',
 'allowance.or.charge.reason' => 'Reden',
-'allowance.or.charge.reason.code' => 'Redencode',
+'allowance.or.charge.reason.code' =>
+	'Redencode',
 'already.paid' => 'Deze factuur is al betaald.',
 'amount' => 'Factuurbedrag',
 'amount.add' => 'Factuurartikel Bedrag Toevoegen',
@@ -57,40 +77,63 @@ return [
 'amount.settings' => 'Bedraginstellingen',
 'amounts' => 'Factuurbedragen',
 'any.family' => 'Elke familie',
-'apply.after.item.tax' => 'Toepassen na belasting op het artikel',
+'apply.after.item.tax' => 'Toepassen na belasting op het '
+	. 'artikel',
 'apply.before.item.tax' => 'Toepassen vóór artikelbelasting',
 'approve' => 'Goedkeuren',
 'approve.this.quote' => 'Deze offerte goedkeuren',
 'approved' => 'Goedgekeurd',
 'archive' => 'Archiveer de pdf op Uploads/Archief',
 'assign.client' => 'Client toewijzen',
-'assign.client.on.signup' => 'Wijs bij registratie een client toe aan de gebruiker.',
-'assign.client.on.signup.default.age.minimum.eighteen' => 'Wijs bij registratie een cliënt toe met een standaard minimumleeftijd van achttien jaar aan de gebruiker.',
-'assign.client.on.signup.done' => 'Bij registratie is een client aan de gebruiker toegewezen.',
+'assign.client.on.signup' => 'Wijs bij registratie een client '
+	. 'toe aan de gebruiker.',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'Wijs bij registratie een cliënt '
+	. 'toe met een standaard minimumleeftijd '
+	. 'van achttien jaar aan de '
+	. 'gebruiker.',
+'assign.client.on.signup.done' =>
+	'Bij registratie is een client '
+	. 'aan de gebruiker toegewezen.',
 'assigned.clients' => 'Toegewezen klanten',
 'attachment.list' => 'Bijlagenlijst',
 'attachments' => 'Bijlagen',
 'automatic.email.on.recur' => 'Automatisch terugkerende facturen e-mailen',
 'back' => 'Rug',
 'balance' => 'Evenwicht',
-'balance.does.not.equal.zero' => 'Saldo is niet gelijk aan nul. Status is Betaald =&gt; Saldo zou nul moeten zijn. ',
+'balance.does.not.equal.zero' =>
+	'Saldo is niet gelijk aan '
+	. 'nul.'
+	. 'Status is Betaald =&gt; Saldo '
+	. 'zou nul moeten zijn.',
 'base.invoice' => 'Basisfactuur',
 'bcc' => 'BCC',
-'bcc.mails.to.admin' => 'Stuur alle uitgaande e-mails als BCC naar het beheerdersaccount',
-'bcc.mails.to.admin.hint' => 'Het beheerdersaccount is het account dat is aangemaakt tijdens de installatie van InvoicePlane.',
+'bcc.mails.to.admin' => 'Stuur alle uitgaande e-mails als '
+	. 'BCC naar het beheerdersaccount',
+'bcc.mails.to.admin.hint' =>
+	'Het beheerdersaccount is het account '
+	. 'dat is aangemaakt tijdens de '
+	. 'installatie van InvoicePlane.',
 'before.amount' => 'Voor Bedrag',
 'bill.to' => 'Rekening aan',
 'birthdate' => 'Geboortedatum',
 'body' => 'Lichaam',
 'boolean' => 'Booleaanse',
 'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' => 'Lettergrootte van de knop Alert sluiten',
+'bootstrap5.alert.close.button.font.size' =>
+	'Lettergrootte van de knop Alert '
+	. 'sluiten',
 'bootstrap5.alert.message.font' => 'Waarschuwingsberichtlettertype',
-'bootstrap5.alert.message.font.size' => 'Lettergrootte waarschuwingsbericht',
-'bootstrap5.layout.invoice.navbar.font' => 'Factuurnavigatiebalklettertype-indeling',
-'bootstrap5.layout.invoice.navbar.font.size' => 'Lay-out factuur navigatiebalk lettergrootte',
+'bootstrap5.alert.message.font.size' =>
+	'Lettergrootte waarschuwingsbericht',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'Factuurnavigatiebalklettertype-indeling',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'Lay-out factuur navigatiebalk lettergrootte',
 'bootstrap5.offcanvas.enable' => 'Offcanvas inschakelen',
-'bootstrap5.offcanvas.placement' => 'Offcanvas-plaatsing, bijvoorbeeld boven, onder, begin (links), einde (rechts)',
+'bootstrap5.offcanvas.placement' =>
+    'Offcanvas-plaatsing, bijvoorbeeld boven, onder, begin '
+	. '(links), einde (rechts)',
 'breadcrumb.product.index' => 'Productindex',
 'breadcrumb.product.property.index' => 'Producteigenschapsindex',
 'calculate.discounts' => 'Kortingen berekenen',
@@ -130,8 +173,13 @@ return [
 'cash.discount' => 'Contante korting',
 'category.primary' => 'Categorie Primair',
 'category.secondary' => 'Categorie Secundair',
-'caution.delete.invoices' => 'Alleen testen: verwijder alle facturen en bijbehorende records. (Zie functie inv/flush)',
-'caution.deleted.invoices' => 'Alleen testen: alle facturen en bijbehorende velden zijn verwijderd.',
+'caution.delete.invoices' => 'Alleen testen:'
+	. 'verwijder alle facturen en bijbehorende '
+	. 'records.'
+	. '(Zie functie inv/flush)',
+'caution.deleted.invoices' => 'Alleen testen:'
+	. 'alle facturen en bijbehorende velden '
+	. 'zijn verwijderd.',
 'cc' => 'CC',
 'change.client' => 'Client wijzigen',
 'change.password' => 'Wachtwoord wijzigen',
@@ -144,27 +192,57 @@ return [
 'client.access' => 'Clienttoegang',
 'client.add' => 'Klant toevoegen',
 'client.age' => 'Leeftijd',
-'client.age.hint' => 'Dit veld is verplicht en de cliënt moet wettelijk minimaal 16 jaar oud zijn',
+'client.age.hint' => 'Dit veld is verplicht en '
+	. 'de cliënt moet wettelijk minimaal '
+	. '16 jaar oud zijn',
 'client.already.exists' => 'Klant bestaat al!',
-'client.birthdate.hint' => 'Indien de geboortedatum niet bekend is, vul dan 01/01/1901 in',
+'client.birthdate.hint' => 'Indien de geboortedatum niet bekend '
+	. 'is, vul dan 01/01/1901 in',
 'client.building.number' => 'Klantgebouwnummer',
 'client.contract.period.end' => 'Periode einde',
 'client.contract.period.start' => 'Periode Start',
 'client.contract.reference' => 'Contractreferentie',
 'client.custom' => 'Klantspecifiek',
 'client.custom.add' => 'Aangepaste toevoeging van client',
-'client.delete.history.exits.no' => 'Kan niet verwijderen. Clientgeschiedenis bestaat al.',
-'client.detail.changes' => 'Stuur ons een e-mail als deze gegevens wijzigen.',
+'client.delete.history.exits.no' =>
+	'Kan niet verwijderen.'
+	. 'Clientgeschiedenis bestaat al.',
+'client.detail.changes' => 'Stuur ons een e-mail als '
+	. 'deze gegevens wijzigen.',
 'client.error.summary' => 'Foutenoverzicht',
 'client.form' => 'Klantformulier',
 'client.frequency' => 'Clientfrequentie',
 'client.group' => 'Klantengroep',
-'client.has.not.assigned' => 'Deze clients zijn niet aan een gebruikersaccount toegewezen. Eén of meer clients per gebruikersaccount.',
-'client.has.not.user.account' => 'Deze klant heeft geen gebruikersaccount of is momenteel niet aan een gebruiker toegewezen. 1. Zorg ervoor dat de klant is aangemeld, d.w.z. een gebruikersaccount heeft, of wijs deze klant toe aan een momenteel geregistreerde gebruiker. 2. Instellingen ... Factuurgebruikersaccount ... Gebruikersaccount toevoegen 3. Wijs deze klant toe aan het gebruikersaccount 4. Facturen en offertes kunnen in deze staat niet voor deze klant worden gemaakt.',
+'client.has.not.assigned' => 'Deze clients zijn niet aan '
+	. 'een gebruikersaccount toegewezen.'
+	. 'Eén of meer clients per '
+	. 'gebruikersaccount.',
+'client.has.not.user.account' =>
+	'Deze klant heeft geen gebruikersaccount '
+	. 'of is momenteel niet aan '
+	. 'een gebruiker toegewezen.'
+	. '1.'
+	. 'Zorg ervoor dat de klant '
+	. 'is aangemeld, d.'
+	. 'w.'
+	. 'z.'
+	. 'een gebruikersaccount heeft, of wijs '
+	. 'deze klant toe aan een '
+	. 'momenteel geregistreerde gebruiker.'
+	. '2.'
+	. 'Instellingen .'
+	. 'Factuurgebruikersaccount .'
+	. 'Gebruikersaccount toevoegen 3.'
+	. 'Wijs deze klant toe aan '
+	. 'het gebruikersaccount 4.'
+	. 'Facturen en offertes kunnen in '
+	. 'deze staat niet voor deze '
+	. 'klant worden gemaakt.',
 'client.has.user.account' => 'Gebruikersaccount',
 'client.import.list.blank' => 'Client Import Lijst Leeg',
 'client.name' => 'Klantnaam',
-'client.not.allocated.to.user' => 'Client niet toegewezen aan gebruiker',
+'client.not.allocated.to.user' =>
+	'Client niet toegewezen aan gebruiker',
 'client.note' => 'Klantnotitie',
 'client.note.add' => 'Klantnotitie toevoegen',
 'client.note.date' => 'Klantdatum',
@@ -174,38 +252,96 @@ return [
 'client.peppol' => 'Klant Peppol-gegevens',
 'client.peppol.accounting.cost' => 'Cliëntboekhoudkostencode voor boekhouding',
 'client.peppol.add' => 'Voeg Peppol-gegevens toe voor e-facturering',
-'client.peppol.buyer.reference.default' => 'Koperreferentie: Als de klant geen contactpersoon voor de inkooporder heeft opgegeven, wordt dit de standaard koperreferentie of de persoon die de bestelling plaatst.',
-'client.peppol.buyer.reference.example' => 'bijv. naam van de persoon die normaal bestelt, personeelsnummer van de persoon die normaal bestelt of een code die deze persoon of afdeling/groep identificeert',
-'client.peppol.clientpeppols.form' => 'Formulier voor boekhoudkundige cliënt/klantpartij',
+'client.peppol.buyer.reference.default' =>
+	'Koperreferentie:'
+	. 'Als de klant geen contactpersoon '
+	. 'voor de inkooporder heeft opgegeven,'
+	. 'wordt dit de standaard koperreferentie '
+	. 'of de persoon die de '
+	. 'bestelling plaatst.',
+'client.peppol.buyer.reference.example' =>
+	'bijv.'
+	. 'naam van de persoon die '
+	. 'normaal bestelt, personeelsnummer van de '
+	. 'persoon die normaal bestelt of '
+	. 'een code die deze persoon '
+	. 'of afdeling/groep identificeert',
+'client.peppol.clientpeppols.form' =>
+    'Formulier voor boekhoudkundige cliënt/klantpartij',
 'client.peppol.edit' => 'Peppol-gegevens bewerken voor e-facturering',
-'client.peppol.endpointid' => 'Eindpunt-ID: e-mailadres',
-'client.peppol.endpointid.schemeid' => 'Eindpunt-ID - schemeID gebaseerd op EAS (Electronic Address Scheme) 4-cijferige code, bijvoorbeeld 0192',
-'client.peppol.financial.institution.branchid' => 'Financiële instelling filiaal-ID',
+'client.peppol.endpointid' => 'Eindpunt-ID:'
+	. 'e-mailadres',
+'client.peppol.endpointid.schemeid' => 'Eindpunt-ID - schemeID gebaseerd op '
+	. 'EAS (Electronic Address Scheme) 4-cijferige '
+	. 'code, bijvoorbeeld 0192',
+'client.peppol.financial.institution.branchid' =>
+	'Financiële instelling filiaal-ID',
 'client.peppol.identificationid' => 'Identificatie-ID',
 'client.peppol.identificationid.schemeid' => 'Identificatie-ID - schemeID',
-'client.peppol.legal.entity.company.legal.form' => 'Juridische entiteit Vennootschap Rechtsvorm - Aanvullende juridische informatie relevant voor de verkoper, bijvoorbeeld aandelenkapitaal',
-'client.peppol.legal.entity.companyid' => 'Juridische entiteit Bedrijfs-ID',
-'client.peppol.legal.entity.companyid.schemeid' => 'Juridische entiteit Bedrijfs-ID - schemeID',
-'client.peppol.legal.entity.registration.name' => 'Naam van de rechtspersoonregistratie',
-'client.peppol.not.found' => 'De klant of cliënt heeft geen Peppol-gegevens ingesteld.',
-'client.peppol.not.found.accounting.cost' => 'Niet gevonden: Boekhoudkundige kosten of een tekstuele waarde die aangeeft waar de relevante gegevens in de financiële rekeningen van de kopers moeten worden geboekt.',
-'client.peppol.not.found.delivery.location' => 'Bezorglocatie Land Naam niet gevonden',
-'client.peppol.not.found.id' => 'De klant heeft zijn account-ID niet online ingevuld bij de klant-Peppol-gegevens.',
-'client.peppol.not.found.id.supplier.assigned' => 'Klant Peppol Leverancier Toegewezen Account-ID Niet Gevonden',
-'client.peppol.not.found.invoice' => 'Geen gekoppelde factuur gevonden',
-'client.peppol.not.found.purchase.order' => 'Er is geen inkoopordernummer aan de verkooporder gekoppeld',
-'client.peppol.not.found.purchase.order.item.number' => 'Er is geen overeenkomend identificatienummer voor de verkooporderregel (artikelidentificatie van de koper) aan gekoppeld. Beheerder: Bewerk het verkooporderartikelnummer van de factuur.',
-'client.peppol.not.found.purchase.order.line.number' => 'Er is geen bijbehorend inkooporderregelnummer (OrderLineReference LineID) gekoppeld aan het verkooporderregelnummer. Beheerder: Bewerk het verkooporderregelnummer van de factuur. ',
-'client.peppol.not.found.sales.order' => 'Verkooporder bestaat niet',
-'client.peppol.payee.financial.account.name' => 'Naam financiële rekening begunstigde',
-'client.peppol.payee.financial.accountid' => 'Financiële rekening-ID van de begunstigde',
-'client.peppol.record.updated.successfully' => 'Peppol-record succesvol bijgewerkt',
-'client.peppol.supplier.assigned.account.id' => 'Toegewezen account-ID van leverancier',
+'client.peppol.legal.entity.company.legal.form' =>
+	'Juridische entiteit Vennootschap Rechtsvorm - '
+	. 'Aanvullende juridische informatie relevant voor '
+	. 'de verkoper, bijvoorbeeld aandelenkapitaal',
+'client.peppol.legal.entity.companyid' =>
+	'Juridische entiteit Bedrijfs-ID',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'Juridische entiteit Bedrijfs-ID - schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'Naam van de rechtspersoonregistratie',
+'client.peppol.not.found' => 'De klant of cliënt heeft '
+	. 'geen Peppol-gegevens ingesteld.',
+'client.peppol.not.found.accounting.cost' =>
+	'Niet gevonden:'
+	. 'Boekhoudkundige kosten of een tekstuele '
+	. 'waarde die aangeeft waar de '
+	. 'relevante gegevens in de financiële '
+	. 'rekeningen van de kopers moeten '
+	. 'worden geboekt.',
+'client.peppol.not.found.delivery.location' =>
+	'Bezorglocatie Land Naam niet gevonden',
+'client.peppol.not.found.id' =>
+	'De klant heeft zijn account-ID '
+	. 'niet online ingevuld bij de '
+	. 'klant-Peppol-gegevens.',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'Klant Peppol Leverancier Toegewezen Account-ID '
+	. 'Niet Gevonden',
+'client.peppol.not.found.invoice' =>
+	'Geen gekoppelde factuur gevonden',
+'client.peppol.not.found.purchase.order' =>
+	'Er is geen inkoopordernummer aan '
+	. 'de verkooporder gekoppeld',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'Er is geen overeenkomend identificatienummer '
+	. 'voor de verkooporderregel (artikelidentificatie van '
+	. 'de koper) aan gekoppeld.'
+	. 'Beheerder:'
+	. 'Bewerk het verkooporderartikelnummer van de '
+	. 'factuur.',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'Er is geen bijbehorend inkooporderregelnummer '
+	. '(OrderLineReference LineID) gekoppeld aan het '
+	. 'verkooporderregelnummer.'
+	. 'Beheerder:'
+	. 'Bewerk het verkooporderregelnummer van de '
+	. 'factuur.',
+'client.peppol.not.found.sales.order' =>
+	'Verkooporder bestaat niet',
+'client.peppol.payee.financial.account.name' =>
+	'Naam financiële rekening begunstigde',
+'client.peppol.payee.financial.accountid' =>
+	'Financiële rekening-ID van de begunstigde',
+'client.peppol.record.updated.successfully' =>
+	'Peppol-record succesvol bijgewerkt',
+'client.peppol.supplier.assigned.account.id' =>
+	'Toegewezen account-ID van leverancier',
 'client.peppol.taxschemecompanyid' => 'Belastingregeling Bedrijfs-ID',
 'client.peppol.taxschemeid' => 'Belastingregeling ID',
 'client.postaladdress' => 'Postadres',
-'client.postaladdress.add' => 'Voeg een postadres van een klant toe',
-'client.postaladdress.additional.street.name' => 'Extra straatnaam',
+'client.postaladdress.add' => 'Voeg een postadres van een '
+	. 'klant toe',
+'client.postaladdress.additional.street.name' =>
+	'Extra straatnaam',
 'client.postaladdress.available' => 'Beschikbare postadressen',
 'client.postaladdress.building.number' => 'Gebouwnummer',
 'client.postaladdress.city.name' => 'Stadsnaam',
@@ -218,7 +354,12 @@ return [
 'client.streets' => 'Straten',
 'client.surname' => 'Achternaam van de klant',
 'client.surname.optional' => 'Achternaam van de klant (optioneel)',
-'client.title' => 'Titel van de cliënt (Dhr./Mevr./Juffr./Dr./Prof.)',
+'client.title' => 'Titel van de cliënt (Dhr.'
+	. '/Mevr.'
+	. '/Juffr.'
+	. '/Dr.'
+	. '/Prof.'
+	. ')',
 'client.title.doctor' => 'Dokter',
 'client.title.miss' => 'Missen',
 'client.title.mr' => 'Meneer',
@@ -234,20 +375,26 @@ return [
 'common.name' => 'Naam',
 'company' => 'Bedrijf',
 'company.deleted' => 'Bedrijf is verwijderd',
-'company.not.deleted' => 'Het bedrijf is niet verwijderd, omdat u er een bedrijfsprofiel aan hebt gekoppeld.',
+'company.not.deleted' => 'Het bedrijf is niet verwijderd,'
+	. 'omdat u er een bedrijfsprofiel '
+	. 'aan hebt gekoppeld.',
 'company.private' => 'Bedrijf Privé',
 'company.private.logo' => 'Bedrijfslogo',
 'company.private.logo.height' => 'Hoogte van het logo',
 'company.private.logo.margin' => 'Logo-marge',
 'company.private.logo.width' => 'Breedte logo',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Logo wordt verwijderd uit uploads en openbare mappen',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'Logo wordt verwijderd uit uploads '
+	. 'en openbare mappen',
 'company.public' => 'Bedrijf Openbaar',
 'complete' => 'Compleet',
 'confirm' => 'Bevestigen',
 'confirm.deletion' => 'Verwijdering bevestigen',
 'contact.information' => 'Contactgegevens',
 'continue' => 'Doorgaan',
-'continue.with.developer.sandbox.hmrc' => 'Doorgaan met Developer Gov Sandbox UK',
+'continue.with.developer.sandbox.hmrc' =>
+	'Doorgaan met Developer Gov Sandbox '
+	. 'UK',
 'continue.with.facebook' => 'Doorgaan met Facebook',
 'continue.with.github' => 'Ga verder met Github',
 'continue.with.google' => 'Doorgaan met Google',
@@ -260,10 +407,21 @@ return [
 'contract' => 'Contract',
 'contract.add' => 'Een contract toevoegen',
 'contract.contracts' => 'Contracten',
-'contract.create' => 'Maak uw contracten aan via Factuur...Bekijken...Opties...Bewerken. Er wordt een contract aangemaakt voor de klant aan wie de factuur wordt verzonden. Koppel dit contract aan toekomstige facturen.',
+'contract.create' => 'Maak uw contracten aan via '
+	. 'Factuur.'
+	. 'Bekijken.'
+	. 'Opties.'
+	. 'Bewerken.'
+	. 'Er wordt een contract aangemaakt '
+	. 'voor de klant aan wie '
+	. 'de factuur wordt verzonden.'
+	. 'Koppel dit contract aan toekomstige '
+	. 'facturen.',
 'contract.index.button.list' => 'Facturen',
 'contract.name' => 'Naam',
-'contract.none' => 'Herinnering: Er is geen contract opgesteld voor deze factuur',
+'contract.none' => 'Herinnering:'
+	. 'Er is geen contract opgesteld '
+	. 'voor deze factuur',
 'contract.period.end' => 'Periode einde',
 'contract.period.start' => 'Periode Start',
 'contract.reference' => 'Referentie',
@@ -274,7 +432,13 @@ return [
 'country' => 'Land',
 'create' => 'Creëren',
 'create.credit.invoice' => 'Creditfactuur aanmaken',
-'create.credit.invoice.alert' => 'Als u een creditfactuur aanmaakt, wordt de huidige factuur <em>alleen-lezen,</em> wat betekent dat u deze niet meer kunt bewerken. De creditfactuur bevat de huidige status met alle posten, maar met negatieve bedragen en saldi.',
+'create.credit.invoice.alert' => 'Als u een creditfactuur aanmaakt,'
+	. 'wordt de huidige factuur <em>alleen-lezen,</em> '
+	. 'wat betekent dat u deze '
+	. 'niet meer kunt bewerken.'
+	. 'De creditfactuur bevat de huidige '
+	. 'status met alle posten, maar '
+	. 'met negatieve bedragen en saldi.',
 'create.invoice' => 'Factuur aanmaken',
 'create.product' => 'Product maken',
 'create.project' => 'Project maken',
@@ -288,16 +452,22 @@ return [
 'credit.invoice.details' => 'Creditfactuurgegevens',
 'credit.invoice.for.invoice' => 'Creditnota',
 'credit.note.creation.successful' => 'Creditnota-creatie succesvol',
-'credit.note.creation.unsuccessful' => 'Het aanmaken van een creditnota of creditnota om de factuur te annuleren, is mislukt',
+'credit.note.creation.unsuccessful' => 'Het aanmaken van een creditnota '
+	. 'of creditnota om de factuur '
+	. 'te annuleren, is mislukt',
 'creditcard.cvv' => 'CVV / CSC',
 'creditcard.details' => 'Creditcardgegevens',
 'creditcard.expiry.month' => 'Vervaldatum maand',
 'creditcard.expiry.year' => 'Vervaldatum',
 'creditcard.number' => 'Creditcardnummer',
 'cron.key' => 'CRON-sleutel',
-'curl.store.cove.api.get.legal.entity.id.successful' => 'Maak een rechtspersoon succesvol',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Store Cove Setup API-oproep - Juridische entiteit succesvol',
-'curl.store.cove.api.setup.successful' => 'Store Cove Setup API-oproep succesvol',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'Maak een rechtspersoon succesvol',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Store Cove Setup API-oproep - '
+	. 'Juridische entiteit succesvol',
+'curl.store.cove.api.setup.successful' =>
+	'Store Cove Setup API-oproep succesvol',
 'currency' => 'Munteenheid',
 'currency.code' => 'Valutacode',
 'currency.symbol' => 'Valutasymbool',
@@ -335,7 +505,8 @@ return [
 'date.supplied' => 'Datum geleverd',
 'dates' => 'Factuurdata',
 'datetime.immutable.date.created' => 'Creëren',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
 'datetime.immutable.date.modified' => 'Tegen',
 'datetime.immutable.time.created' => 'Tijd',
 'days' => 'Dagen',
@@ -347,7 +518,8 @@ return [
 'default.hourly.rate' => 'Standaard uurtarief',
 'default.invoice.group' => 'Standaard factuurgroep',
 'default.invoice.tax.rate' => 'Standaard factuurbelastingtarief',
-'default.invoice.tax.rate.placement' => 'Standaard factuurbelastingtariefplaatsing',
+'default.invoice.tax.rate.placement' =>
+	'Standaard factuurbelastingtariefplaatsing',
 'default.item.tax.rate' => 'Standaard belastingtarief voor artikelen',
 'default.list.limit' => 'Aantal items in lijsten',
 'default.notes' => 'Standaardnotities',
@@ -357,20 +529,43 @@ return [
 'default.quote.group' => 'Standaard offertegroep',
 'default.terms' => 'Standaardvoorwaarden',
 'delete' => 'Verwijderen',
-'delete.attachment.warning' => 'Weet u zeker dat u deze bijlage wilt verwijderen?',
+'delete.attachment.warning' => 'Weet u zeker dat u '
+	. 'deze bijlage wilt verwijderen?',
 'delete.client' => 'Client verwijderen',
-'delete.client.warning' => 'Als u deze klant verwijdert, verwijdert u ook alle facturen, offertes en betalingen die aan deze klant gerelateerd zijn. Weet u zeker dat u deze klant definitief wilt verwijderen?',
+'delete.client.warning' => 'Als u deze klant verwijdert,'
+	. 'verwijdert u ook alle facturen,'
+	. 'offertes en betalingen die aan '
+	. 'deze klant gerelateerd zijn.'
+	. 'Weet u zeker dat u '
+	. 'deze klant definitief wilt verwijderen?',
 'delete.invoice' => 'Factuur verwijderen',
-'delete.invoice.warning' => 'Als u deze factuur verwijdert, kunt u deze later niet meer herstellen. Weet u zeker dat u deze factuur definitief wilt verwijderen?',
+'delete.invoice.warning' => 'Als u deze factuur verwijdert,'
+	. 'kunt u deze later niet '
+	. 'meer herstellen.'
+	. 'Weet u zeker dat u '
+	. 'deze factuur definitief wilt verwijderen?',
 'delete.quote' => 'Citaat verwijderen',
-'delete.quote.warning' => 'Als u dit citaat verwijdert, kunt u het later niet meer terughalen. Weet u zeker dat u dit citaat definitief wilt verwijderen?',
-'delete.record.warning' => 'Weet u zeker dat u dit record wilt verwijderen?',
-'delete.sent' => 'Kan niet verwijderen - factuur verzonden',
-'delete.tax.warning' => 'Weet u zeker dat u deze belasting wilt verwijderen?',
-'delete.user.client.warning' => 'Weet u zeker dat u deze client aan deze gebruiker wilt ontkoppelen?',
+'delete.quote.warning' => 'Als u dit citaat verwijdert,'
+	. 'kunt u het later niet '
+	. 'meer terughalen.'
+	. 'Weet u zeker dat u '
+	. 'dit citaat definitief wilt verwijderen?',
+'delete.record.warning' => 'Weet u zeker dat u '
+	. 'dit record wilt verwijderen?',
+'delete.sent' => 'Kan niet verwijderen - factuur '
+	. 'verzonden',
+'delete.tax.warning' => 'Weet u zeker dat u '
+	. 'deze belasting wilt verwijderen?',
+'delete.user.client.warning' => 'Weet u zeker dat u '
+	. 'deze client aan deze gebruiker '
+	. 'wilt ontkoppelen?',
 'deleted' => 'Verwijderd',
-'deletion.forbidden' => 'Het verwijderen van facturen is niet toegestaan. Neem contact op met de beheerder of raadpleeg de documentatie.',
-'delivery' => 'Leveringsgegevens: Factuur/Begin-/einddatum van de leveringsperiode',
+'deletion.forbidden' => 'Het verwijderen van facturen is '
+	. 'niet toegestaan.'
+	. 'Neem contact op met de '
+	. 'beheerder of raadpleeg de documentatie.',
+'delivery' => 'Leveringsgegevens:'
+	. 'Factuur/Begin-/einddatum van de leveringsperiode',
 'delivery.actual.delivery.date' => 'Werkelijke leverdatum',
 'delivery.add' => 'Levering toevoegen',
 'delivery.date.created' => 'Datum aangemaakt',
@@ -378,17 +573,32 @@ return [
 'delivery.end.date' => 'Einddatum levering/factuurperiode',
 'delivery.location' => 'Bezorglocatie',
 'delivery.location.add' => 'Bezorglocatie toevoegen',
-'delivery.location.add.in.invoice' => 'Voeg de afleverlocatie toe onder Factuur ... Bekijken ... Opties ... Bewerken',
+'delivery.location.add.in.invoice' =>
+	'Voeg de afleverlocatie toe onder '
+	. 'Factuur .'
+	. 'Bekijken .'
+	. 'Opties .'
+	. 'Bewerken',
 'delivery.location.building.number' => 'Gebouwnummer',
 'delivery.location.client' => 'Afleverlocaties van de klant',
 'delivery.location.delete' => 'Afleverlocatie Verwijderen',
 'delivery.location.edit' => 'Bezorglocatie bewerken',
-'delivery.location.electronic.address.scheme' => 'Elektronisch adresschema (codelijst) Standaard: 0088 Europese artikelnummering (EAN) Locatiecode ook wel (GLN) Globale locatienummers',
-'delivery.location.global.location.number' => 'Wereldwijd locatienummer (13 cijfers)',
-'delivery.location.id.not.found' => 'Afleverlocatie Wereldwijd locatienummer ID niet gevonden',
-'delivery.location.index.button.list' => 'Facturen',
-'delivery.location.none' => 'Er is geen afleverlocatie aan deze factuur gekoppeld',
-'delivery.location.peppol.output' => 'Er is geen afleverlocatie aan deze factuur gekoppeld. Daarom is er geen Peppol-output.',
+'delivery.location.electronic.address.scheme' =>
+	'Elektronisch adresschema (codelijst) Standaard:'
+	. '0088 Europese artikelnummering (EAN) Locatiecode '
+	. 'ook wel (GLN) Globale locatienummers',
+'delivery.location.global.location.number' =>
+	'Wereldwijd locatienummer (13 cijfers)',
+'delivery.location.id.not.found' =>
+	'Afleverlocatie Wereldwijd locatienummer ID niet '
+	. 'gevonden',
+'delivery.location.index.button.list' =>
+	'Facturen',
+'delivery.location.none' => 'Er is geen afleverlocatie aan '
+	. 'deze factuur gekoppeld',
+'delivery.location.peppol.output' => 'Er is geen afleverlocatie aan '
+	. 'deze factuur gekoppeld.'
+	. 'Daarom is er geen Peppol-output.',
 'delivery.location.plural' => 'Bezorglocaties',
 'delivery.location.view' => 'Weergave bezorglocatie',
 'delivery.party' => 'Bezorgfeest',
@@ -415,7 +625,9 @@ return [
 'download.pdf' => 'PDF downloaden',
 'draft' => 'Voorlopige versie',
 'draft.guest' => 'Klanten kunnen conceptfacturen niet bekijken.',
-'draft.number.off' => 'Nieuwe conceptfacturen hebben geen factuurnummer. Markeer als verzonden om het factuurnummer te ontvangen.',
+'draft.number.off' => 'Nieuwe conceptfacturen hebben geen factuurnummer.'
+	. 'Markeer als verzonden om het '
+	. 'factuurnummer te ontvangen.',
 'draft.number.on' => 'Nieuwe conceptfacturen krijgen een factuurnummer',
 'drop.files.here' => 'Plaats uw bestanden hier!',
 'due.date' => 'Twee data',
@@ -428,15 +640,21 @@ return [
 'email.default' => 'Standaard',
 'email.default.none.set' => 'Er is geen standaard ingesteld',
 'email.exception' => 'E-mailuitzondering.',
-'email.from.dropdown' => 'Vanuit de e-maildropdown E-mailadressen die moeten worden opgenomen in het MailerQuote-formulier en MailerInv-formulier',
+'email.from.dropdown' => 'Vanuit de e-maildropdown E-mailadressen die '
+	. 'moeten worden opgenomen in het '
+	. 'MailerQuote-formulier en MailerInv-formulier',
 'email.include' => 'Erbij betrekken',
 'email.invoice' => 'E-mail factuur',
-'email.link.click.confirm' => 'Bevestig uw e-mailadres door op deze link te klikken',
+'email.link.click.confirm' => 'Bevestig uw e-mailadres door op '
+	. 'deze link te klikken',
 'email.log' => 'Logboek verzonden facturen per e-mail',
 'email.logs' => 'Facturen per e-mail verzonden logboeken',
 'email.logs.with.filter' => 'Gemaild',
-'email.not.configured' => 'Voordat u e-mail kunt verzenden, moet u uw e-mailinstellingen configureren in het gedeelte Systeeminstellingen.',
-'email.not.sent.successfully' => 'De e-mail is NIET succesvol verzonden',
+'email.not.configured' => 'Voordat u e-mail kunt verzenden,'
+	. 'moet u uw e-mailinstellingen configureren '
+	. 'in het gedeelte Systeeminstellingen.',
+'email.not.sent.successfully' => 'De e-mail is NIET succesvol '
+	. 'verzonden',
 'email.pdf.attachment' => 'Offerte/factuur bijvoegen bij e-mail?',
 'email.quote' => 'E-mail offerte',
 'email.send.method' => 'E-mailverzendmethode',
@@ -444,47 +662,101 @@ return [
 'email.send.method.sendmail' => 'Mail verzenden',
 'email.send.method.smtp' => 'SMTP',
 'email.settings' => 'E-mailinstellingen',
-'email.source.email.template' => ' Opgehaald uit Instellingen ... E-mailsjabloon',
-'email.source.user.account' => ' Opgehaald uit Instellingen ... Factuurgebruikersaccount',
+'email.source.email.template' => 'Opgehaald uit Instellingen .'
+	. 'E-mailsjabloon',
+'email.source.user.account' => 'Opgehaald uit Instellingen .'
+	. 'Factuurgebruikersaccount',
 'email.successfully.sent' => 'E-mail succesvol verzonden',
 'email.template' => 'E-mailsjabloon',
 'email.template.add' => 'E-mailsjabloon toevoegen',
 'email.template.already.exists' => 'E-mailsjabloon bestaat al!',
 'email.template.form' => 'E-mailsjabloonformulier',
-'email.template.from.email.leave.blank' => ': Als u dit veld leeg laat, wordt het e-mailadres van het gebruikersaccount als een bewerkbare waarde in het mailformulier ingevoegd, bijvoorbeeld het server-e-mailadres van een accountant. Gebruik hier bij voorkeur een servergerelateerd e-mailadres.',
+'email.template.from.email.leave.blank' =>
+	'Als u dit veld leeg '
+	. 'laat, wordt het e-mailadres van '
+	. 'het gebruikersaccount als een bewerkbare '
+	. 'waarde in het mailformulier ingevoegd,'
+	. 'bijvoorbeeld het server-e-mailadres van een '
+	. 'accountant.'
+	. 'Gebruik hier bij voorkeur een '
+	. 'servergerelateerd e-mailadres.',
 'email.template.from.source' => 'E-mailbron',
-'email.template.from.source.admin.email' => 'E-mailadres van de beheerder (config/common/params)',
-'email.template.from.source.froms.email' => 'Vanuit tabel Standaard (instellingen...Vanuit e-mail vervolgkeuzelijst e-mailadressen)',
-'email.template.from.source.sender.email' => 'E-mailadres van de afzender (config/common/params)',
-'email.template.not.configured' => 'E-mailsjablonen niet geconfigureerd. Instellingen...Facturen...Factuursjablonen...Standaard e-mailsjabloon',
+'email.template.from.source.admin.email' =>
+	'E-mailadres van de beheerder (config/common/params)',
+'email.template.from.source.froms.email' =>
+	'Vanuit tabel Standaard (instellingen.'
+	. 'Vanuit e-mail vervolgkeuzelijst e-mailadressen)',
+'email.template.from.source.sender.email' =>
+	'E-mailadres van de afzender (config/common/params)',
+'email.template.not.configured' => 'E-mailsjablonen niet geconfigureerd.'
+	. 'Instellingen.'
+	. 'Facturen.'
+	. 'Factuursjablonen.'
+	. 'Standaard e-mailsjabloon',
 'email.template.overdue' => 'Te laat e-mailsjabloon',
 'email.template.paid' => 'Betaalde e-mailsjabloon',
 'email.template.successfully.added' => 'E-mailsjabloon succesvol toegevoegd',
 'email.template.successfully.deleted' => 'E-mailsjabloon succesvol verwijderd',
 'email.template.successfully.edited' => 'E-mailsjabloon succesvol bewerkt',
 'email.template.tags' => 'E-mailsjabloontags',
-'email.template.tags.instructions' => 'Sjabloontags kunnen worden gebruikt om dynamische informatie, zoals de naam van de klant of een factuurnummer, aan de e-mailsjabloon toe te voegen. Klik op het tekstveld &#39;Body&#39; en selecteer vervolgens een tag uit de keuzelijst. Deze wordt automatisch in het tekstveld ingevoegd.',
+'email.template.tags.instructions' => 'Sjabloontags kunnen worden gebruikt om '
+	. 'dynamische informatie, zoals de naam '
+	. 'van de klant of een '
+	. 'factuurnummer, aan de e-mailsjabloon toe '
+	. 'te voegen.'
+	. 'Klik op het tekstveld \'Body\''
+	. 'en selecteer vervolgens een tag '
+	. 'uit de keuzelijst.'
+	. 'Deze wordt automatisch in het '
+	. 'tekstveld ingevoegd.',
 'email.template.type' => 'E-mailsjabloontype',
 'email.templates' => 'E-mailsjablonen',
-'email.to.address.missing' => 'U moet een e-mailadres opgeven waarnaar de e-mail verzonden moet worden.',
-'email.warning.draft' => 'Conceptfacturen moeten eerst als verzonden worden gemarkeerd, zodat ze aan de kant van de klant verschijnen en vervolgens per e-mail kunnen worden verzonden.',
+'email.to.address.missing' => 'U moet een e-mailadres opgeven '
+	. 'waarnaar de e-mail verzonden moet '
+	. 'worden.',
+'email.warning.draft' => 'Conceptfacturen moeten eerst als verzonden '
+	. 'worden gemarkeerd, zodat ze aan '
+	. 'de kant van de klant '
+	. 'verschijnen en vervolgens per e-mail '
+	. 'kunnen worden verzonden.',
 'enable.debug.mode' => 'De debugmodus inschakelen',
 'enable.online.payments' => 'Online betalingen inschakelen',
 'enable.permissive.search.clients' => 'Toestaand zoeken inschakelen',
 'enable.projects' => 'De Projectenmodule inschakelen',
 'enable.vat' => 'BTW inschakelen',
-'enable.vat.message' => 'BTW-herinneringsbericht weergeven boven de optieknop op de weergaven',
-'enable.vat.warning.line.1' => '1. Als btw is ingeschakeld, worden alleen de afzonderlijke posten op de factuur belast met btw. De btw op de offerte/factuur wordt dan niet op de factuur weergegeven en wordt verlaagd naar 0.',
-'enable.vat.warning.line.2' => '2. Als de btw is ingeschakeld, worden er geen niet-postspecifieke belastingen, zoals hierboven vermeld, in het totale belastingbedrag opgenomen. ',
-'enable.vat.warning.line.3' => '3. Maak BTW-offertes/facturen aan in een aparte database.',
-'enable.vat.warning.line.4' => '4. Alle nieuwe btw-factuurregels worden gemarkeerd met de vlag &#39;behoort_tot_vat_factuur&#39;.',
+'enable.vat.message' => 'BTW-herinneringsbericht weergeven boven de optieknop '
+	. 'op de weergaven',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. 'Als btw is ingeschakeld, worden '
+	. 'alleen de afzonderlijke posten op '
+	. 'de factuur belast met btw.'
+	. 'De btw op de offerte/factuur '
+	. 'wordt dan niet op de '
+	. 'factuur weergegeven en wordt verlaagd '
+	. 'naar 0.',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. 'Als de btw is ingeschakeld,'
+	. 'worden er geen niet-postspecifieke belastingen,'
+	. 'zoals hierboven vermeld, in het '
+	. 'totale belastingbedrag opgenomen.',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. 'Maak BTW-offertes/facturen aan in een '
+	. 'aparte database.',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. 'Alle nieuwe btw-factuurregels worden gemarkeerd '
+	. 'met de vlag \'behoort_tot_vat_factuur\'.',
 'enabled' => 'Ingeschakeld',
 'end' => 'Einde',
 'end.date' => 'Einddatum',
 'enforcement' => 'Toespraak van de handhavingsfunctionaris',
 'enter' => 'Binnenkomen',
 'enter.payment' => 'Betaling invoeren',
-'error.duplicate.file' => 'Fout: Dubbele bestandsnaam, wijzig deze!',
+'error.duplicate.file' => 'Fout:'
+	. 'Dubbele bestandsnaam, wijzig deze!',
 'errors' => 'Fouten',
 'every' => 'Elk',
 'example' => 'Voorbeeld',
@@ -497,16 +769,30 @@ return [
 'family' => 'Familie',
 'family.add' => 'Familie toevoegen',
 'family.already.exists' => 'Familie bestaat al!',
-'family.history' => 'Familiegeschiedenis bestaat. Kan niet worden verwijderd.',
+'family.history' => 'Familiegeschiedenis bestaat.'
+	. 'Kan niet worden verwijderd.',
 'family.name' => 'Familienaam',
 'family.search' => 'Familie zoeken',
 'faq' => 'Veelgestelde vragen',
-'faq.ai.callback.session' => 'Copilot: Hoe kan ik https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php opnemen om het statusbeheer in de functie `callbackGithub` te verbeteren?',
+'faq.ai.callback.session' => 'Copilot:'
+	. 'Hoe kan ik https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php opnemen om het statusbeheer '
+	. 'in de functie `callbackGithub` te '
+	. 'verbeteren?',
 'faq.business.rules' => 'Wat zijn de Peppol-bedrijfsregels?',
-'faq.gov.developer.sandbox.hmrc' => 'Hoe verbind ik deze repository met de HMRC Developer Sandbox?',
-'faq.lamp.alpine' => 'Hoe kan ik deze repository instellen op Linux Alpine, Apache2, mySql/mariadb en php?',
-'faq.oauth2' => 'Hoe stel ik een OAuth2-identiteitsprovider in, bijvoorbeeld voor het registreren en inloggen met Facebook?',
-'faq.payment.provider' => 'Hoe stel ik een online betalingsaanbieder in?',
+'faq.gov.developer.sandbox.hmrc' =>
+	'Hoe verbind ik deze repository '
+	. 'met de HMRC Developer Sandbox?',
+'faq.lamp.alpine' => 'Hoe kan ik deze repository '
+	. 'instellen op Linux Alpine, Apache2,'
+	. 'mySql/mariadb en php?',
+'faq.oauth2' => 'Hoe stel ik een OAuth2-identiteitsprovider '
+	. 'in, bijvoorbeeld voor het registreren '
+	. 'en inloggen met Facebook?',
+'faq.payment.provider' => 'Hoe stel ik een online '
+	. 'betalingsaanbieder in?',
 'faq.php.info.all' => 'Alle',
 'faq.php.info.configuration' => 'Configuratie',
 'faq.php.info.credits' => 'Credits',
@@ -516,8 +802,10 @@ return [
 'faq.php.info.licence' => 'Licentie',
 'faq.php.info.modules' => 'Modules',
 'faq.php.info.variables' => 'Variabelen',
-'faq.shared.hosting' => 'Hoe host ik yii3i op shared hosting?',
-'faq.taxpoint' => 'Hoe bepaal je wat het belastingpunt is?',
+'faq.shared.hosting' => 'Hoe host ik yii3i op '
+	. 'shared hosting?',
+'faq.taxpoint' => 'Hoe bepaal je wat het '
+	. 'belastingpunt is?',
 'faq.yii.requirement.checker' => 'Yii-toepassingsvereistencontrole',
 'fax' => 'Fax',
 'fax.abbr' => 'F',
@@ -529,7 +817,11 @@ return [
 'filter.quotes' => 'Filtercitaten',
 'first' => 'Eerst',
 'first.day.of.week' => 'Eerste dag van de week',
-'first.reset' => 'Verwijder eerst de testoffertes en -facturen die u voor de test hebt gemaakt. Daarna kunt u de testgegevens verwijderen.',
+'first.reset' => 'Verwijder eerst de testoffertes en '
+	. '-facturen die u voor de '
+	. 'test hebt gemaakt.'
+	. 'Daarna kunt u de testgegevens '
+	. 'verwijderen.',
 'flash.messages.appear.here' => 'Hier verschijnen flitsberichten.',
 'footer' => 'Voettekst',
 'forgot.your.password' => 'Ik ben mijn wachtwoord vergeten',
@@ -537,25 +829,12 @@ return [
 'from.date' => 'Vanaf datum',
 'from.default.in.dropdown' => 'Standaard e-mailadres in de vervolgkeuzelijst',
 'from.email' => 'Van e-mail',
-'from.email.address' => 'Van e-mailadressen: Kies een standaard',
-'from.include.in.dropdown' => 'Voeg dit e-mailadres toe aan de vervolgkeuzelijst',
+'from.email.address' => 'Van e-mailadressen:'
+	. 'Kies een standaard',
+'from.include.in.dropdown' => 'Voeg dit e-mailadres toe aan '
+	. 'de vervolgkeuzelijst',
 'from.name' => 'Van Naam',
 'front.page' => 'Voorpagina',
-'gallery.caption.slide1' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide10' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide11' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide12' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide13' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide14' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide15' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide2' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide3' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide4' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide5' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide6' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide7' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide8' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
-'gallery.caption.slide9' => 'Via ../resources/messages/en/app.php kunt u deze tekst wijzigen.',
 'gateway.online.payment' => 'Online betaling',
 'gender' => 'Geslacht',
 'gender.female' => 'Vrouwelijk',
@@ -567,59 +846,149 @@ return [
 'general.yes' => 'Ja',
 'generate' => 'Genereren',
 'generate.copy' => 'Kopie genereren',
-'generate.invoice.number.for.draft' => 'Factuurnummer genereren voor conceptfacturen',
-'generate.quote.number.for.draft' => 'Genereer het offertenummer voor conceptoffertes',
+'generate.invoice.number.for.draft' =>
+	'Factuurnummer genereren voor conceptfacturen',
+'generate.quote.number.for.draft' =>
+	'Genereer het offertenummer voor conceptoffertes',
 'generate.sumex' => 'Genereer Sumex PDF',
 'generator' => 'Generator',
 'generator.add' => 'Generator toevoegen',
-'generator.camelcase.capital.name' => 'Camelcase Capital Naam gebruikt in controller- en repositorynamen, bijvoorbeeld TaxRate. Gebruik &#39;Product&#39; als u bovenstaand voorbeeld van &#39;product&#39; gebruikt.',
-'generator.camelcase.capital.name.product' => 'Product',
+'generator.camelcase.capital.name' => 'Camelcase Capital Naam gebruikt in '
+	. 'controller- en repositorynamen, bijvoorbeeld TaxRate.'
+	. 'Gebruik \'Product\' als u bovenstaand '
+	. 'voorbeeld van \'product\' gebruikt.',
+'generator.camelcase.capital.name.product' =>
+	'Product',
 'generator.controller.and.repository' => 'Controller en repository',
-'generator.controller.layout.directory' => 'Controller Layout Directory, bijvoorbeeld dirname(dirname(__DIR__)), die direct na de controllerconstructie verschijnt. Het Controller-bestand bevindt zich in (__DIR__) en bevindt zich twee mappen onder de &#39;src&#39;-map, die als &#39;basis&#39; wordt gebruikt om een ​​pad aan de Layout-map toe te voegen.',
-'generator.controller.layout.directory.dot.path' => 'Controller Layout Directory Dot Path, bijvoorbeeld &#39;/views/layout/invoice.php&#39;, dat direct na de controllerconstructie verschijnt (zonder de apostrofs) en wordt toegevoegd aan de bovenstaande brondirectorylocatie.',
-'generator.controller.layout.directory.dot.path.placeholder' => 'Controller-indeling Directory Dot-pad',
-'generator.controller.layout.directory.placeholder' => 'Controller-indelingsmap, bijvoorbeeld dirname(dirname(__DIR__))',
+'generator.controller.layout.directory' =>
+    'Controller Layout Directory, bijvoorbeeld dirname(dirname(__DIR__)),'
+	. 'die direct na de controllerconstructie '
+	. 'verschijnt.'
+	. 'Het Controller-bestand bevindt zich in '
+	. '(__DIR__) en bevindt zich twee '
+	. 'mappen onder de \'src\'-map, die '
+	. 'als \'basis\' wordt gebruikt om '
+	. 'een ​​pad aan de Layout-map '
+	. 'toe te voegen.',
+'generator.controller.layout.directory.dot.path' =>
+	'Controller Layout Directory Dot Path,'
+	. 'bijvoorbeeld \'/views/layout/invoice.'
+	. 'php\', dat direct na de '
+	. 'controllerconstructie verschijnt (zonder de apostrofs) '
+	. 'en wordt toegevoegd aan de '
+	. 'bovenstaande brondirectorylocatie.',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'Controller-indeling Directory Dot-pad',
+'generator.controller.layout.directory.placeholder' =>
+	'Controller-indelingsmap, bijvoorbeeld dirname(dirname(__DIR__))',
 'generator.controller.path.layout' => 'Pad naar lay-outbestand',
-'generator.created.at.include' => 'Voeg het veld created_at toe aan Entity',
+'generator.created.at.include' => 'Voeg het veld created_at toe '
+	. 'aan Entity',
 'generator.deleted.at.include' => 'Veld verwijderd_at opnemen in Entiteit',
-'generator.external.entity' => 'Externe entiteit gebruikt in deze entiteit. De instellingsentiteit is een eenvoudige sleutel =&gt; waardepaar-id geïndexeerde database.',
-'generator.external.entity.default' => 'Externe entiteit, bijvoorbeeld MyEntity exclusief pad. Pad ingebouwd in Generator. Standaard: Instelling',
-'generator.external.entity.placeholder' => 'Externe entiteit, bijvoorbeeld MyEntity exclusief pad. Pad ingebouwd in Generator. Standaard: Instelling. Extra repository, bijvoorbeeld Repository instellen naast hoofdrepository.',
-'generator.file.type.not.found' => 'Bestandstype niet gevonden.',
-'generator.flash.include' => 'Flash-bericht toevoegen aan de functie Toevoegen/Bewerken/Bekijken/Verwijderen in de controller',
+'generator.external.entity' => 'Externe entiteit gebruikt in deze '
+	. 'entiteit.'
+	. 'De instellingsentiteit is een eenvoudige '
+	. 'sleutel =&gt; waardepaar-id geïndexeerde database.',
+'generator.external.entity.default' =>
+    'Externe entiteit, bijvoorbeeld MyEntity exclusief '
+	. 'pad.'
+	. 'Pad ingebouwd in Generator.'
+	. 'Standaard:'
+	. 'Instelling',
+'generator.external.entity.placeholder' =>
+    'Externe entiteit, bijvoorbeeld MyEntity exclusief '
+	. 'pad.'
+	. 'Pad ingebouwd in Generator.'
+	. 'Standaard:'
+	. 'Instelling.'
+	. 'Extra repository, bijvoorbeeld Repository instellen '
+	. 'naast hoofdrepository.',
+'generator.file.type.not.found' =>
+	'Bestandstype niet gevonden.',
+'generator.flash.include' => 'Flash-bericht toevoegen aan de functie '
+	. 'Toevoegen/Bewerken/Bekijken/Verwijderen in de controller',
 'generator.generate' => 'Genereren',
 'generator.generated' => ' gegenereerd op ',
-'generator.google.translate.any' => 'Vertaal Engels\any_lang.php',
-'generator.google.translate.app' => 'Vertaal Engels\app_lang.php',
-'generator.google.translate.common' => 'Vertaal Engels\common_lang.php',
-'generator.google.translate.diff' => 'Vertaal Engels\diff_lang.php',
-'generator.google.translate.gateway' => 'Vertaal Engels\gateway_lang.php',
-'generator.google.translate.ip' => 'Vertaal Engels\ip_lang.php',
-'generator.google.translate.latest.a' => 'Vertaal Engels\a_latest_lang.php',
-'generator.google.translate.latest.b' => 'Vertaal Engels\b_latest_lang.php',
+'generator.google.translate.any' => 'Vertaal Engels\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => 'Vertaal Engels\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => 'Vertaal Engels\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => 'Vertaal Engels\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => 'Vertaal Engels\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => 'Vertaal Engels\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'Vertaal Engels\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'Vertaal Engels\\b_latest_lang.'
+	. 'php',
 'generator.headerline.include' => 'Koptekst toevoegen indien Ajax vereist',
-'generator.history' => 'Deze record heeft bestaande Generator Relations en kan daarom niet worden verwijderd. Verwijder eerst deze relaties.',
-'generator.modified.at.include' => 'Voeg het veld gewijzigd_op toe aan Entiteit',
+'generator.history' => 'Deze record heeft bestaande Generator '
+	. 'Relations en kan daarom niet '
+	. 'worden verwijderd.'
+	. 'Verwijder eerst deze relaties.',
+'generator.modified.at.include' => 'Voeg het veld gewijzigd_op toe '
+	. 'aan Entiteit',
 'generator.namespace' => 'Naamruimte',
-'generator.namespace.before.entity' => 'Naamruimte vóór entiteitspad, bijvoorbeeld App\Factuur (NIET App\Factuur\Entiteit)',
+'generator.namespace.before.entity' =>
+    'Naamruimte vóór entiteitspad, bijvoorbeeld App\\Factuur '
+	. '(NIET App\\Factuur\\Entiteit)',
 'generator.relation.form' => 'Generatorrelatieformulier',
-'generator.relation.form.camelcase.name' => 'Camelcase-naam exclusief id (bijv. tax_rate_id &#39;vreemde sleutel/relatie&#39; in de producttabel vereenvoudigd tot TaxRate EN is de naam van een entiteit)',
-'generator.relation.form.entity.generator' => 'Entiteitsgenerator',
-'generator.relation.form.lowercase.name' => 'Naam in kleine letters zonder id (bijv. tax_rate_id &#39;vreemde sleutel/relatie&#39; in de producttabel vereenvoudigd tot tax.rate) ',
-'generator.relation.form.view.field.name' => 'Veldnaam weergeven',
+'generator.relation.form.camelcase.name' =>
+	'Camelcase-naam exclusief id (bijv.'
+	. 'tax_rate_id \'vreemde sleutel/relatie\' in de '
+	. 'producttabel vereenvoudigd tot TaxRate EN '
+	. 'is de naam van een '
+	. 'entiteit)',
+'generator.relation.form.entity.generator' =>
+	'Entiteitsgenerator',
+'generator.relation.form.lowercase.name' =>
+	'Naam in kleine letters zonder '
+	. 'id (bijv.'
+	. 'tax_rate_id \'vreemde sleutel/relatie\' in de '
+	. 'producttabel vereenvoudigd tot tax.'
+	. 'rate)',
+'generator.relation.form.view.field.name' =>
+	'Veldnaam weergeven',
 'generator.relations' => 'Generatorrelaties',
 'generator.relations.add' => 'Generatoren Relatie Toevoegen',
-'generator.route.prefix' => 'Routeprefix, bijvoorbeeld factuur in &#39;factuur/product&#39;, dat na de controllerconstructie verschijnt.',
-'generator.route.suffix' => 'Route-achtervoegsel, bijvoorbeeld product in &#39;factuur/product&#39;, dat na de controllerconstructie verschijnt.',
-'generator.small.plural.name' => 'Kleine meervoudsnaam gebruikt in Controller voor de indexcontrollerfunctie om alle entiteitsgeneratoren te vermelden. Normaal gesproken de bovenstaande waarde met een s aan het einde.',
-'generator.small.plural.name.placeholder' => 'Kleine meervoudsnaam',
-'generator.small.plural.name.products' => 'producten',
-'generator.small.singular.name' => 'Kleine enkelvoudige naam gebruikt in de controller voor bewerkings- en weergavefuncties. Normaal gesproken hetzelfde als het route-suffix. Bijvoorbeeld: product.',
-'generator.small.singular.name.placeholder' => 'Kleine enkelvoudige naam',
-'generator.small.singular.name.product' => 'product',
+'generator.route.prefix' => 'Routeprefix, bijvoorbeeld factuur in \'factuur/product\','
+	. 'dat na de controllerconstructie verschijnt.',
+'generator.route.suffix' => 'Route-achtervoegsel, bijvoorbeeld product in \'factuur/product\','
+	. 'dat na de controllerconstructie verschijnt.',
+'generator.small.plural.name' => 'Kleine meervoudsnaam gebruikt in Controller '
+	. 'voor de indexcontrollerfunctie om alle '
+	. 'entiteitsgeneratoren te vermelden.'
+	. 'Normaal gesproken de bovenstaande waarde '
+	. 'met een s aan het '
+	. 'einde.',
+'generator.small.plural.name.placeholder' =>
+	'Kleine meervoudsnaam',
+'generator.small.plural.name.products' =>
+	'producten',
+'generator.small.singular.name' => 'Kleine enkelvoudige naam gebruikt in '
+	. 'de controller voor bewerkings- en '
+	. 'weergavefuncties.'
+	. 'Normaal gesproken hetzelfde als het '
+	. 'route-suffix.'
+	. 'Bijvoorbeeld:'
+	. 'product.',
+'generator.small.singular.name.placeholder' =>
+	'Kleine enkelvoudige naam',
+'generator.small.singular.name.product' =>
+	'product',
 'generator.table' => 'Tafel',
-'generator.table.used.to.generate.entity.controller.repository' => 'Tabel gebruikt om Entity, Controller Add Edit Delete View, Repository, Service, Mapper te genereren',
-'generator.updated.at.include' => 'Voeg veld &#39;updated.at&#39; toe aan entiteit',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'Tabel gebruikt om Entity, Controller '
+	. 'Add Edit Delete View, Repository,'
+	. 'Service, Mapper te genereren',
+'generator.updated.at.include' => 'Voeg veld \'updated.'
+	. 'at\' toe aan entiteit',
 'generators' => 'Generatoren',
 'generators.relation' => 'Generatoren Relatie',
 'gln' => 'GLN',
@@ -632,44 +1001,103 @@ return [
 'gridview.title' => 'Lijst met gebruikers',
 'group' => 'Groep',
 'group.add' => 'Groep toevoegen',
-'group.document.number' => 'Documentnummer niet gegenereerd. Controleer groepen.',
+'group.document.number' => 'Documentnummer niet gegenereerd.'
+	. 'Controleer groepen.',
 'group.form' => 'Groepsformulier',
-'group.history' => 'Groepsgeschiedenis bestaat. Kan niet worden verwijderd.',
+'group.history' => 'Groepsgeschiedenis bestaat.'
+	. 'Kan niet worden verwijderd.',
 'groups' => 'Groepen',
-'guest.account.denied' => 'Dit account is niet geconfigureerd. Neem contact op met de systeembeheerder.',
+'guest.account.denied' => 'Dit account is niet geconfigureerd.'
+	. 'Neem contact op met de '
+	. 'systeembeheerder.',
 'guest.read.only' => 'Gast (alleen-lezen)',
 'guest.url' => 'Gast-URL',
 'hide.or.unhide.columns' => 'Kolommen verbergen of zichtbaar maken',
-'hint.greater.than.zero.please' => 'Groter dan 0,00 alstublieft!',
-'hint.this.field.is.not.required' => 'Dit veld is niet verplicht',
-'hint.this.field.is.required' => 'Dit veld is verplicht',
+'hint.greater.than.zero.please' =>
+	'Groter dan 0,00 alstublieft!',
+'hint.this.field.is.not.required' =>
+	'Dit veld is niet verplicht',
+'hint.this.field.is.required' =>
+	'Dit veld is verplicht',
 'home' => 'Thuis',
-'home.caption.slide1' => 'Meld je aan en log in als beheerder. Geen internet... negeer e-mailfout bij verbinding.',
-'home.caption.slide2' => 'Registreer als beheerder een gebruiker. Controleer of het e-mailadres en de internetverbinding correct zijn. De gebruiker krijgt een clientaccount.',
-'home.caption.slide3' => 'E-mailaccount niet geldig en geen internetverbinding... Admin-login en het factuurgebruikersaccount van de gebruiker activeren via Instellingen. Klantaccount aanmaken. Toewijzen aan gebruiker.',
-'home.caption.slides.location.debug.mode' => 'Deze locatie van de inhoud: ./resources/views/site/index.php binnen ./resources/views/layout/. ... en de locatie van de vertaaldia&#39;s ./resources/messages/app.php',
+'home.caption.slide1' => 'Meld je aan en log '
+	. 'in als beheerder.'
+	. 'Geen internet.'
+	. 'negeer e-mailfout bij verbinding.',
+'home.caption.slide2' => 'Registreer als beheerder een gebruiker.'
+	. 'Controleer of het e-mailadres en '
+	. 'de internetverbinding correct zijn.'
+	. 'De gebruiker krijgt een clientaccount.',
+'home.caption.slide3' => 'E-mailaccount niet geldig en geen '
+	. 'internetverbinding.'
+	. 'Admin-login en het factuurgebruikersaccount van '
+	. 'de gebruiker activeren via Instellingen.'
+	. 'Klantaccount aanmaken.'
+	. 'Toewijzen aan gebruiker.',
+'home.caption.slides.location.debug.mode' =>
+	'Deze locatie van de inhoud:'
+	. '/resources/views/site/index.'
+	. 'php binnen .'
+	. '/resources/views/layout/.'
+	. '.'
+	. 'en de locatie van de '
+	. 'vertaaldia\'s .'
+	. '/resources/messages/app.'
+	. 'php',
 'hostname' => 'Hostnaam',
 'html.sumex.no' => 'Html zonder Sumex',
 'html.sumex.yes' => 'HTML met Sumex',
 'id' => 'ID',
 'identifier.format' => 'Identificatie-opmaak',
 'identifier.format.template.tags' => 'Sjabloontags voor de identificatie',
-'identifier.format.template.tags.instructions' => 'Sjabloontags kunnen worden gebruikt om dynamische informatie, zoals de naam van de klant of een factuurnummer, aan de e-mailsjabloon toe te voegen. Klik op het veld <b>&#39;ID-opmaak&#39;</b> en selecteer vervolgens een tag uit de keuzelijst. Deze wordt automatisch in het tekstveld ingevoegd.',
-'identity.provider.authentication.successful' => 'U bent succesvol geauthenticeerd via de door u gekozen identiteitsprovider, hebt u zich aangemeld en een klantaccount toegewezen gekregen. Klik hier binnen een uur om uw account te activeren. U heeft een uur de tijd om voor de eerste keer in te loggen.',
-'image.overdue' => '  Locatie van de afbeelding: ./invoice/public/img/overdue.png',
-'image.paid' => '  Locatie van de afbeelding: ./invoice/public/img/paid.png',
+'identifier.format.template.tags.instructions' =>
+	'Sjabloontags kunnen worden gebruikt om '
+	. 'dynamische informatie, zoals de naam '
+	. 'van de klant of een '
+	. 'factuurnummer, aan de e-mailsjabloon toe '
+	. 'te voegen.'
+	. 'Klik op het veld <b>\'ID-opmaak\'</b> '
+	. 'en selecteer vervolgens een tag '
+	. 'uit de keuzelijst.'
+	. 'Deze wordt automatisch in het '
+	. 'tekstveld ingevoegd.',
+'identity.provider.authentication.successful' =>
+    'U bent succesvol geauthenticeerd via '
+	. 'de door u gekozen identiteitsprovider,'
+	. 'hebt u zich aangemeld en '
+	. 'een klantaccount toegewezen gekregen.'
+	. 'Klik hier binnen een uur '
+	. 'om uw account te activeren.'
+	. 'U heeft een uur de '
+	. 'tijd om voor de eerste '
+	. 'keer in te loggen.',
+'image.overdue' => 'Locatie van de afbeelding:'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => 'Locatie van de afbeelding:'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => 'Importeren',
 'import.data' => 'Gegevens importeren',
 'import.from.csv' => 'Importeren vanuit CSV',
 'in.progress' => 'In uitvoering',
 'inactive' => 'Inactief',
-'index.checkbox.add.some.items.to.enable' => 'Factuur bevat geen items. Voeg items toe om het selectievakje in te schakelen.',
+'index.checkbox.add.some.items.to.enable' =>
+	'Factuur bevat geen items.'
+	. 'Voeg items toe om het '
+	. 'selectievakje in te schakelen.',
 'index.footer.showing' => '%s van %s weergeven',
 'index.showing' => '%s van %s weergeven',
-'info.task.readonly' => 'Deze taak kan niet meer worden gewijzigd omdat deze al is gefactureerd.',
+'info.task.readonly' => 'Deze taak kan niet meer '
+	. 'worden gewijzigd omdat deze al '
+	. 'is gefactureerd.',
 'install.test.data' => 'Testgegevens kunnen nu worden geïnstalleerd',
-'install.test.data.exists.already' => 'Factuurtestgegevens bestaan ​​al',
-'install.test.data.goto.tab.index' => 'Ga naar Instellingen ... Algemeen ... Testgegevens installeren',
+'install.test.data.exists.already' =>
+	'Factuurtestgegevens bestaan ​​al',
+'install.test.data.goto.tab.index' =>
+	'Ga naar Instellingen .'
+	. 'Algemeen .'
+	. 'Testgegevens installeren',
 'interface' => 'Interface',
 'invalid.amount' => 'Ongeldig bedrag',
 'invalid.subscriber.number' => 'Ongeldig abonneenummer',
@@ -682,20 +1110,34 @@ return [
 'invoiceplane.database.username' => 'Gebruikersnaam',
 'invoiceplane.families' => 'Gezinnen ingevoegd',
 'invoiceplane.import' => 'Testverbinding',
-'invoiceplane.import.complete.connection.closed' => 'Import voltooid! Verbinding verbroken!',
+'invoiceplane.import.complete.connection.closed' =>
+	'Import voltooid! Verbinding verbroken!',
 'invoiceplane.import.connected' => 'Je hebt een connectie!',
 'invoiceplane.import.proceed' => 'Ga door met het importproces',
-'invoiceplane.import.proceed.alert' => 'Weet u zeker dat u wilt doorgaan?',
+'invoiceplane.import.proceed.alert' => 'Weet u zeker dat u '
+	. 'wilt doorgaan?',
 'invoiceplane.imported' => 'Tabellen zijn geïmporteerd',
 'invoiceplane.news' => 'InvoicePlane Nieuws',
 'invoiceplane.no.connection' => 'Geen verbinding',
-'invoiceplane.no.username.or.password' => 'Bewaar uw databasenaam, gebruikersnaam en wachtwoord voor InvoicePlane',
+'invoiceplane.no.username.or.password' =>
+	'Bewaar uw databasenaam, gebruikersnaam en '
+	. 'wachtwoord voor InvoicePlane',
 'invoiceplane.products' => 'Ingevoegde producten',
-'invoiceplane.tables' => 'Importeer de InvoicePlane-tabellen Client, Product, Unit, Family en TaxRate in lege tabellen. Deze tabellen mogen vóór de import geen bestaande gegevens bevatten en er mogen geen bestaande documenten zijn, zoals facturen.',
-'invoiceplane.tables.not.empty' => 'Uw cliënt-, product-, eenheid-, familie- en belastingtarieftabellen moeten leeg zijn voordat u ze importeert',
-'invoiceplane.taxrates' => 'Belastingtarieven worden ingevoegd met het verplichte nultarief en het standaardtarief.',
+'invoiceplane.tables' => 'Importeer de InvoicePlane-tabellen Client, Product,'
+	. 'Unit, Family en TaxRate in '
+	. 'lege tabellen.'
+	. 'Deze tabellen mogen vóór de '
+	. 'import geen bestaande gegevens bevatten '
+	. 'en er mogen geen bestaande '
+	. 'documenten zijn, zoals facturen.',
+'invoiceplane.tables.not.empty' => 'Uw cliënt-, product-, eenheid-, familie- '
+	. 'en belastingtarieftabellen moeten leeg zijn '
+	. 'voordat u ze importeert',
+'invoiceplane.taxrates' => 'Belastingtarieven worden ingevoegd met het '
+	. 'verplichte nultarief en het standaardtarief.',
 'invoiceplane.units' => 'Ingevoegde eenheden',
-'invoiceplane.yes.connection' => 'Ja, u heeft een verbinding met uw Invoiceplane-database!',
+'invoiceplane.yes.connection' => 'Ja, u heeft een verbinding '
+	. 'met uw Invoiceplane-database!',
 'invoices' => 'Facturen',
 'invoices.due.after' => 'Facturen die vervallen na (dagen)',
 'is.not.writable' => 'is niet schrijfbaar',
@@ -711,7 +1153,8 @@ return [
 'item.lookups' => 'Item opzoeken',
 'item.name' => 'Artikelnaam',
 'item.tax' => 'Artikelbelasting',
-'item.tax.excluded' => 'Subtotaal x belastingpercentage (artikelbelasting is uitgesloten)',
+'item.tax.excluded' => 'Subtotaal x belastingpercentage (artikelbelasting is '
+	. 'uitgesloten)',
 'item.tax.included' => '(Subtotaal + Artikelbelasting) x Belastingpercentage',
 'item.tax.rate' => 'Belastingtarief voor artikelen',
 'items' => 'Factuurposten',
@@ -741,10 +1184,14 @@ return [
 'layout.migrations' => 'Migraties',
 'layout.no-records' => 'Geen gegevens',
 'layout.not-found' => 'Niet gevonden',
-'layout.page.not-authorised' => 'Niet geautoriseerd: Authenticatiegegevens zijn onjuist.',
-'layout.page.not-found' => 'De pagina {url} kon niet gevonden worden.',
-'layout.page.user-cancelled-oauth2' => 'Gebruiker heeft het inloggen/registreren via identiteitsprovider (bijvoorbeeld Facebook) geannuleerd',
-'layout.pagination-summary' => '{pageSize} van {total} berichten wordt weergegeven',
+'layout.page.not-authorised' => 'Niet geautoriseerd:'
+	. 'Authenticatiegegevens zijn onjuist.',
+'layout.page.not-found' => 'De pagina {url} kon niet '
+	. 'gevonden worden.',
+'layout.page.user-cancelled-oauth2' => 'Gebruiker heeft het inloggen/registreren via '
+	. 'identiteitsprovider (bijvoorbeeld Facebook) geannuleerd',
+'layout.pagination-summary' => '{pageSize} van {total} berichten wordt '
+	. 'weergegeven',
 'layout.password' => 'Wachtwoord',
 'layout.password-verify' => 'Bevestig uw wachtwoord',
 'layout.password-verify.new' => 'Bevestig uw nieuwe wachtwoord',
@@ -758,25 +1205,52 @@ return [
 'layout.title' => 'Titel',
 'layout.total.posts' => 'Totaal {count} berichten',
 'left.pad' => 'Linker pad',
-'letter' => '7 dagen brief vóór actie verzonden',
-'loading.error' => 'Het lijkt erop dat de applicatie vastgelopen is door een fout.',
+'letter' => '7 dagen brief vóór actie '
+	. 'verzonden',
+'loading.error' => 'Het lijkt erop dat de '
+	. 'applicatie vastgelopen is door een '
+	. 'fout.',
 'loading.error.help' => 'Hulp krijgen',
 'login' => 'Login',
 'login.logo' => 'Inloggen Logo',
 'loginalert.credentials.incorrect' => 'E-mailadres of wachtwoord onjuist.',
 'loginalert.no.password' => 'Voer een wachtwoord in.',
-'loginalert.user.inactive' => 'Deze gebruiker is gemarkeerd als inactief. Neem contact op met de systeembeheerder.',
-'loginalert.user.not.found' => 'Er is geen account geregistreerd met dit e-mailadres.',
-'loginalert.wrong.auth.code' => 'Wachtwoord opnieuw instellen geweigerd. U heeft een ongeldige autorisatietoken opgegeven.',
+'loginalert.user.inactive' => 'Deze gebruiker is gemarkeerd als '
+	. 'inactief.'
+	. 'Neem contact op met de '
+	. 'systeembeheerder.',
+'loginalert.user.not.found' => 'Er is geen account geregistreerd '
+	. 'met dit e-mailadres.',
+'loginalert.wrong.auth.code' => 'Wachtwoord opnieuw instellen geweigerd.'
+	. 'U heeft een ongeldige autorisatietoken '
+	. 'opgegeven.',
 'logo' => 'Factuurlogo',
 'logout' => 'Uitloggen',
 'loss' => 'Afgeschreven',
-'mark.invoices.sent.copy' => 'Facturen markeren als verzonden bij het kopiëren van een factuur',
-'mark.invoices.sent.pdf' => 'Facturen markeren als verzonden wanneer de PDF wordt gegenereerd',
-'mark.quotes.sent.pdf' => 'Markeer citaten als verzonden wanneer de PDF is gegenereerd',
-'mark.sent.copy.on' => 'Facturen markeren als verzonden bij het kopiëren van een factuur is ingeschakeld. Dit zou alleen ingeschakeld moeten zijn tijdens de ontwikkeling.',
-'mark.sent.off' => 'Facturen markeren als verzonden bij het kopiëren van facturen... staat momenteel UIT. Alleen AAN tijdens de ontwikkeling. Klik hier om het AAN te zetten.',
-'mark.sent.on' => 'Facturen markeren als verzonden bij het kopiëren van facturen... staat momenteel AAN. Zet het altijd UIT tijdens productie. Klik hier om het UIT te zetten.',
+'mark.invoices.sent.copy' => 'Facturen markeren als verzonden bij '
+	. 'het kopiëren van een factuur',
+'mark.invoices.sent.pdf' => 'Facturen markeren als verzonden wanneer '
+	. 'de PDF wordt gegenereerd',
+'mark.quotes.sent.pdf' => 'Markeer citaten als verzonden wanneer '
+	. 'de PDF is gegenereerd',
+'mark.sent.copy.on' => 'Facturen markeren als verzonden bij '
+	. 'het kopiëren van een factuur '
+	. 'is ingeschakeld.'
+	. 'Dit zou alleen ingeschakeld moeten '
+	. 'zijn tijdens de ontwikkeling.',
+'mark.sent.off' => 'Facturen markeren als verzonden bij '
+	. 'het kopiëren van facturen.'
+	. 'staat momenteel UIT.'
+	. 'Alleen AAN tijdens de ontwikkeling.'
+	. 'Klik hier om het AAN '
+	. 'te zetten.',
+'mark.sent.on' => 'Facturen markeren als verzonden bij '
+	. 'het kopiëren van facturen.'
+	. 'staat momenteel AAN.'
+	. 'Zet het altijd UIT tijdens '
+	. 'productie.'
+	. 'Klik hier om het UIT '
+	. 'te zetten.',
 'max' => 'Maximaal',
 'max.quantity' => 'Maximale hoeveelheid',
 'menu' => 'Menu',
@@ -785,7 +1259,10 @@ return [
 'menu.blog' => 'Blog',
 'menu.comments-feed' => 'Reactiesfeed',
 'menu.contact.details' => 'Contactgegevens',
-'menu.contact.soon' => 'Bedankt dat u contact met ons hebt opgenomen. Wij nemen zo spoedig mogelijk contact met u op.',
+'menu.contact.soon' => 'Bedankt dat u contact met '
+	. 'ons hebt opgenomen.'
+	. 'Wij nemen zo spoedig mogelijk '
+	. 'contact met u op.',
 'menu.contact.us' => 'Neem contact met ons op',
 'menu.gallery' => 'Galerij',
 'menu.language' => 'Taal',
@@ -814,8 +1291,10 @@ return [
 'mpdf' => 'Mpdf',
 'mpdf.allow.charset.conversion' => 'Conversie van tekensets toestaan',
 'mpdf.auto.arabic' => 'Auto Arabisch',
-'mpdf.auto.language.to.font' => 'Automatische taal naar lettertype',
-'mpdf.auto.script.to.lang' => 'Automatisch script naar taal',
+'mpdf.auto.language.to.font' =>
+	'Automatische taal naar lettertype',
+'mpdf.auto.script.to.lang' =>
+	'Automatisch script naar taal',
 'mpdf.auto.vietnamese' => 'Vietnamese auto',
 'mpdf.cjk' => 'Chinees, Japans, Koreaans lettertype',
 'mpdf.ltr' => 'Van links naar rechts',
@@ -825,41 +1304,100 @@ return [
 'mtd.fph.all.valid' => 'Alle Fraudepreventie-headers zijn geldig',
 'mtd.fph.generate' => 'Genereren',
 'mtd.fph.no.provided' => 'Geen fraudepreventieheaders verstrekt',
-'mtd.fph.record.alert' => 'Weet u zeker dat u nieuwe details in de Fraudepreventie-header wilt vastleggen? Eerdere details worden overschreven als u ze opslaat!',
+'mtd.fph.record.alert' => 'Weet u zeker dat u '
+	. 'nieuwe details in de Fraudepreventie-header '
+	. 'wilt vastleggen? Eerdere details worden '
+	. 'overschreven als u ze opslaat!',
 'mtd.fph.screen.timestamp' => 'Tijdstempel',
-'mtd.fph.some.advisories' => 'Minstens één header is mogelijk ongeldig',
-'mtd.fph.some.invalid' => 'Er is minstens één header ongeldig',
-'mtd.gov.client.browser.do.not.track' => 'Een waarde die aangeeft of de optie &#39;Niet volgen&#39; is ingeschakeld in de browser',
-'mtd.gov.client.browser.do.not.track.eg' => 'bv. vals',
-'mtd.gov.client.browser.js.user.agent' => 'Gov-Client-Browser-JS-Gebruikersagent',
-'mtd.gov.client.browser.js.user.agent.eg' => 'bijv. Mozilla/5.0 (iPad; U; CPU OS 3 2.1 zoals Mac OS X; en-us) (KHTML, zoals Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' => 'Een lijst met browserplug-ins op het oorspronkelijke apparaat',
-'mtd.gov.client.browser.plugins.eg' => 'bijv. Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Gov-Client-Connection-Methode',
-'mtd.gov.client.device.id' => 'Apparaat-ID',
-'mtd.gov.client.device.id.eg' => 'bijv. beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => 'Lokale IP&#39;s',
-'mtd.gov.client.multi.factor' => 'Multifactor',
-'mtd.gov.client.multi.factor.eg' => 'bijv. type=OTP;status=succes,type=SMS;status=mislukking,type=Biometrisch, type=SMS; tijdstempel=2023-04-01T12:34:56Z; unieke-referentie=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => 'Eenmalig wachtwoord (OTP): ',
-'mtd.gov.client.public.ip' => 'Openbaar IP',
-'mtd.gov.client.public.port' => 'Openbare poort (niet http 80, en niet https 443 bv 57961)',
+'mtd.fph.some.advisories' => 'Minstens één header is mogelijk '
+	. 'ongeldig',
+'mtd.fph.some.invalid' => 'Er is minstens één header '
+	. 'ongeldig',
+'mtd.gov.client.browser.do.not.track' =>
+	'Een waarde die aangeeft of '
+	. 'de optie \'Niet volgen\' is '
+	. 'ingeschakeld in de browser',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'bv.'
+	. 'vals',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov-Client-Browser-JS-Gebruikersagent',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'bijv.'
+	. 'Mozilla/5.'
+	. '0 (iPad; U; CPU OS '
+	. '3 2.'
+	. '1 zoals Mac OS X;'
+	. 'en-us) (KHTML, zoals Gecko) Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'Een lijst met browserplug-ins op '
+	. 'het oorspronkelijke apparaat',
+'mtd.gov.client.browser.plugins.eg' =>
+	'bijv.'
+	. 'Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'Gov-Client-Connection-Methode',
+'mtd.gov.client.device.id' =>
+	'Apparaat-ID',
+'mtd.gov.client.device.id.eg' =>
+	'bijv.'
+	. 'beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'Lokale IP\'s',
+'mtd.gov.client.multi.factor' =>
+	'Multifactor',
+'mtd.gov.client.multi.factor.eg' =>
+	'bijv.'
+	. 'type=OTP;status=succes,type=SMS;status=mislukking,type=Biometrisch, type=SMS; tijdstempel=2023-04-01T12:'
+	. '34:'
+	. '56Z; unieke-referentie=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'Eenmalig wachtwoord (OTP):',
+'mtd.gov.client.public.ip' =>
+	'Openbaar IP',
+'mtd.gov.client.public.port' =>
+	'Openbare poort (niet http 80,'
+	. 'en niet https 443 bv '
+	. '57961)',
 'mtd.gov.client.screens' => 'Gov-Client-schermen',
-'mtd.gov.client.screens.colour.depth' => 'Kleurdiepte',
-'mtd.gov.client.screens.height' => 'Schermhoogte',
-'mtd.gov.client.screens.pixels' => 'pixels',
-'mtd.gov.client.screens.scaling.factor' => 'Schaalfactor',
-'mtd.gov.client.screens.scaling.factor.bits' => 'stukjes',
-'mtd.gov.client.screens.width' => 'Schermbreedte',
+'mtd.gov.client.screens.colour.depth' =>
+	'Kleurdiepte',
+'mtd.gov.client.screens.height' =>
+	'Schermhoogte',
+'mtd.gov.client.screens.pixels' =>
+	'pixels',
+'mtd.gov.client.screens.scaling.factor' =>
+	'Schaalfactor',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'stukjes',
+'mtd.gov.client.screens.width' =>
+	'Schermbreedte',
 'mtd.gov.client.timezone' => 'Tijdzone',
-'mtd.gov.client.user.ids' => 'Gebruikers-ID&#39;s',
-'mtd.gov.client.user.ids.uuid' => 'uuid',
-'mtd.gov.client.window.size' => 'Venstergrootte',
-'mtd.gov.client.window.size.pixels' => 'pixels',
-'mtd.gov.vendor.forwarded' => 'Een lijst met details over de hops over internet tussen services die Transport Layer Security (TLS) beëindigen',
-'mtd.gov.vendor.license.ids' => 'Een sleutel-waarde-datastructuur van gehashte licentiesleutels die gerelateerd zijn aan de software van de leverancier die de API-aanvraag op het oorspronkelijke apparaat heeft geïnitieerd',
-'mtd.gov.vendor.public.ip' => 'Het openbare IP-adres van de servers waarnaar het oorspronkelijke apparaat zijn verzoeken heeft verzonden',
-'mtd.gov.vendor.version' => 'Een sleutel-waarde-datastructuur van de softwareversies die betrokken zijn bij het verwerken van een verzoek',
+'mtd.gov.client.user.ids' =>
+	'Gebruikers-ID\'s',
+'mtd.gov.client.user.ids.uuid' =>
+	'uuid',
+'mtd.gov.client.window.size' =>
+	'Venstergrootte',
+'mtd.gov.client.window.size.pixels' =>
+	'pixels',
+'mtd.gov.vendor.forwarded' => 'Een lijst met details over '
+	. 'de hops over internet tussen '
+	. 'services die Transport Layer Security '
+	. '(TLS) beëindigen',
+'mtd.gov.vendor.license.ids' =>
+	'Een sleutel-waarde-datastructuur van gehashte licentiesleutels '
+	. 'die gerelateerd zijn aan de '
+	. 'software van de leverancier die '
+	. 'de API-aanvraag op het oorspronkelijke '
+	. 'apparaat heeft geïnitieerd',
+'mtd.gov.vendor.public.ip' =>
+	'Het openbare IP-adres van de '
+	. 'servers waarnaar het oorspronkelijke apparaat '
+	. 'zijn verzoeken heeft verzonden',
+'mtd.gov.vendor.version' => 'Een sleutel-waarde-datastructuur van de softwareversies '
+	. 'die betrokken zijn bij het '
+	. 'verwerken van een verzoek',
 'multiple.choice' => 'Meerkeuzevragen',
 'name' => 'Naam',
 'new' => 'Nieuw',
@@ -874,7 +1412,8 @@ return [
 'no.client' => 'Geen klant',
 'no.file.uploaded' => 'Geen bestand geüpload',
 'no.overdue.invoices' => 'Geen achterstallige facturen',
-'no.quotes.requiring.approval' => 'Er zijn geen offertes die goedgekeurd moeten worden.',
+'no.quotes.requiring.approval' => 'Er zijn geen offertes die '
+	. 'goedgekeurd moeten worden.',
 'no.records' => 'Geen gegevens',
 'no.updates.available' => 'Geen updates beschikbaar.',
 'none' => 'Geen',
@@ -886,21 +1425,36 @@ return [
 'notes' => 'Notities',
 'number' => '#',
 'number.format' => 'Getalnotatie',
-'number.format.compact.comma' => '1000000,00 (Compact formaat met decimale komma)',
-'number.format.compact.point' => '1000000,00 (Compact formaat met decimaal punt)',
-'number.format.european' => '1.000.000,00 (Europees formaat)',
-'number.format.iso.80k.1' => '1 000 000,00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 met decimale komma)',
-'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 met decimaal punt)',
-'number.format.us.uk' => '1.000.000,00 (VS/VK-formaat)',
-'number.missing.therefore.use.invoice.id' => 'factuurnummer-ontbreekt-daarom-factuur-id-',
+'number.format.compact.comma' => '1000000,00 (Compact formaat met decimale '
+	. 'komma)',
+'number.format.compact.point' => '1000000,00 (Compact formaat met decimaal '
+	. 'punt)',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00 (Europees formaat)',
+'number.format.iso.80k.1' =>
+	'1 000 000,00 (ISO 80000-1)',
+'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
+	. 'met decimale komma)',
+'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 '
+	. 'met decimaal punt)',
+'number.format.us.uk' => '1.'
+	. '000.'
+	. '000,00 (VS/VK-formaat)',
+'number.missing.therefore.use.invoice.id' =>
+	'factuurnummer-ontbreekt-daarom-factuur-id-',
 'number.no' => 'Geen factuurnummer',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => 'Klant-ID',
-'oauth2.google.people.api.v1.client.secret' => 'Clientgeheim',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'Klant-ID',
+'oauth2.google.people.api.v1.client.secret' =>
+	'Clientgeheim',
 'online.log' => 'Online logboek',
 'online.payment' => 'Online betaling',
-'online.payment.3dauth.redirect' => 'Een ogenblik geduld terwijl we u ter verificatie doorverwijzen naar uw kaartuitgever...',
+'online.payment.3dauth.redirect' => 'Een ogenblik geduld terwijl we '
+	. 'u ter verificatie doorverwijzen naar '
+	. 'uw kaartuitgever.',
 'online.payment.accessKey' => 'Toegangssleutel',
 'online.payment.accessToken' => 'Toegangstoken',
 'online.payment.accountId' => 'Account-ID',
@@ -910,10 +1464,17 @@ return [
 'online.payment.appId' => 'App-ID',
 'online.payment.appSecret' => 'App-geheim',
 'online.payment.callbackPassword' => 'Terugbelwachtwoord',
-'online.payment.card.invalid' => 'Deze creditcard is ongeldig. Controleer de verstrekte gegevens.',
+'online.payment.card.invalid' => 'Deze creditcard is ongeldig.'
+	. 'Controleer de verstrekte gegevens.',
 'online.payment.clientId' => 'Klant-ID',
 'online.payment.clientSecret' => 'Clientgeheim',
-'online.payment.creditcard.hint' => 'Als u met creditcard wilt betalen, vul dan onderstaande gegevens in.<br/> De creditcardgegevens worden niet op onze servers opgeslagen, maar via een beveiligde verbinding naar de online betalingsgateway verzonden.',
+'online.payment.creditcard.hint' => 'Als u met creditcard wilt '
+	. 'betalen, vul dan onderstaande gegevens '
+	. 'in.'
+	. '<br/> De creditcardgegevens worden niet '
+	. 'op onze servers opgeslagen, maar '
+	. 'via een beveiligde verbinding naar '
+	. 'de online betalingsgateway verzonden.',
 'online.payment.developerMode' => 'Ontwikkelaarsmodus',
 'online.payment.for' => 'Online betaling voor',
 'online.payment.for.invoice' => 'Online betaling voor factuur',
@@ -926,8 +1487,10 @@ return [
 'online.payment.partnerID' => 'Partner-ID',
 'online.payment.password' => 'Wachtwoord',
 'online.payment.payment.cancelled' => 'Betaling geannuleerd.',
-'online.payment.payment.failed' => 'Betaling mislukt. Probeer het opnieuw.',
-'online.payment.payment.redirect' => 'Een ogenblik geduld terwijl we u doorsturen naar de betaalpagina...',
+'online.payment.payment.failed' => 'Betaling mislukt.'
+	. 'Probeer het opnieuw.',
+'online.payment.payment.redirect' => 'Een ogenblik geduld terwijl we '
+	. 'u doorsturen naar de betaalpagina.',
 'online.payment.payment.successful' => 'Betaling voor factuur %s succesvol!',
 'online.payment.pdtKey' => 'Pdt-sleutel',
 'online.payment.privateKey' => 'Privésleutel',
@@ -955,19 +1518,26 @@ return [
 'online.payment.storePassword' => 'Wachtwoord opslaan',
 'online.payment.subAccountId' => 'Subaccount-ID',
 'online.payment.testMode' => 'Testmodus',
-'online.payment.testOrLiveApiKey' => 'Test of Live API-sleutel, d.w.z. begint met test_ of live_',
+'online.payment.testOrLiveApiKey' => 'Test of Live API-sleutel, d.'
+	. 'w.'
+	. 'z.'
+	. 'begint met test_ of live_',
 'online.payment.transactionKey' => 'Transactiesleutel',
 'online.payment.transactionPassword' => 'Transactiewachtwoord',
 'online.payment.username' => 'Gebruikersnaam',
 'online.payment.vendor' => 'Leverancier',
-'online.payment.version' => 'Omnipay-versie (aangevinkt) / PCI-compatibel (geen creditcardgegevens opgeslagen in deze database) (niet aangevinkt)',
+'online.payment.version' => 'Omnipay-versie (aangevinkt) / PCI-compatibel (geen '
+	. 'creditcardgegevens opgeslagen in deze database) '
+	. '(niet aangevinkt)',
 'online.payment.webhookId' => 'Webhook-ID',
 'online.payment.websiteKey' => 'Website-sleutel',
 'online.payments' => 'Online betalingen',
 'open' => 'Open',
 'open.invoices' => 'Openstaande facturen',
 'open.quotes' => 'Open citaten',
-'open.reports.in.new.tab' => 'Rapporten openen in een nieuw browsertabblad',
+'open.reports.in.new.tab' =>
+	'Rapporten openen in een nieuw '
+	. 'browsertabblad',
 'optional' => 'Optioneel',
 'options' => 'Opties',
 'order' => 'Volgorde',
@@ -983,9 +1553,19 @@ return [
 'password.change' => 'Wachtwoord wijzigen',
 'password.changed' => 'Wachtwoord succesvol gewijzigd',
 'password.reset' => 'Wachtwoord opnieuw instellen',
-'password.reset.email' => 'U heeft een nieuw wachtwoord voor uw installatie aangevraagd. Klik op de link in uw inbox om uw wachtwoord opnieuw in te stellen.',
-'password.reset.failed' => 'Er is een fout opgetreden bij het verzenden van uw wachtwoordherstelmail. Controleer de applicatielogboeken of neem contact op met de systeembeheerder.',
-'password.reset.info' => 'U ontvangt een e-mail met een link om uw wachtwoord opnieuw in te stellen.',
+'password.reset.email' => 'U heeft een nieuw wachtwoord '
+	. 'voor uw installatie aangevraagd.'
+	. 'Klik op de link in '
+	. 'uw inbox om uw wachtwoord '
+	. 'opnieuw in te stellen.',
+'password.reset.failed' => 'Er is een fout opgetreden '
+	. 'bij het verzenden van uw '
+	. 'wachtwoordherstelmail.'
+	. 'Controleer de applicatielogboeken of neem '
+	. 'contact op met de systeembeheerder.',
+'password.reset.info' => 'U ontvangt een e-mail met '
+	. 'een link om uw wachtwoord '
+	. 'opnieuw in te stellen.',
 'password.reset.request.token' => 'Vraag wachtwoordhersteltoken aan',
 'past.month' => 'Afgelopen maand',
 'past.quarter' => 'Afgelopen kwartaal',
@@ -994,55 +1574,136 @@ return [
 'payment' => 'Betaling',
 'payment.add' => 'Betaling toevoegen',
 'payment.cannot.delete' => 'Betaling kan niet worden verwijderd',
-'payment.cannot.exceed.balance' => 'Het te betalen bedrag mag het factuurbedrag niet overschrijden.',
+'payment.cannot.exceed.balance' => 'Het te betalen bedrag mag '
+	. 'het factuurbedrag niet overschrijden.',
 'payment.custom' => 'Betaling op maat',
 'payment.custom.add' => 'Betaling Aangepast Toevoegen',
 'payment.date' => 'Betaaldatum',
 'payment.deleted' => 'Betaling verwijderd',
 'payment.description' => 'Betaling voor factuur %s',
 'payment.form' => 'Betalingsformulier',
-'payment.gateway.default.locale' => 'Standaard landinstellingen, bijvoorbeeld en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Mollie Payment Gateway Test of Live Api Key is ingesteld.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Mollie Payment Gateway Test of Live Api Key moet worden ingesteld.',
-'payment.gateway.mollie.api.payment.id' => 'Mollie-betalings-ID: ',
-'payment.gateway.no' => 'Er zijn geen betalingsgateways ingesteld onder Instellingen ... Bekijken ... Online betaling',
+'payment.gateway.default.locale' => 'Standaard landinstellingen, bijvoorbeeld en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Mollie Payment Gateway Test of '
+	. 'Live Api Key is ingesteld.',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'Mollie Payment Gateway Test of '
+	. 'Live Api Key moet worden '
+	. 'ingesteld.',
+'payment.gateway.mollie.api.payment.id' =>
+	'Mollie-betalings-ID:',
+'payment.gateway.no' => 'Er zijn geen betalingsgateways ingesteld '
+	. 'onder Instellingen .'
+	. 'Bekijken .'
+	. 'Online betaling',
 'payment.history' => 'Betalingsgeschiedenis',
-'payment.information.amazon.no.omnipay.version' => 'Er is momenteel geen Amazon Pay Omnipay-versie beschikbaar. Schakel Omnipay-versie uit om de PCI-compatibele versie te gebruiken in het Instellingenoverzicht.',
-'payment.information.amazon.payment.session.complete' => 'Amazon-betalingssessie voltooid - Sessie-ID: ',
-'payment.information.amazon.payment.session.incomplete' => 'Amazon-betalingssessie onvolledig - Probeer het opnieuw',
-'payment.information.braintree.braintree.no.omnipay.version' => 'Er is momenteel geen Braintree Omnipay-versie compatibel met Braintree-versie 6.9.1. Schakel Omnipay-versie uit om de PCI-compatibele versie te gebruiken onder Instellingen.',
-'payment.information.invoice.number.not.provided' => 'Factuurnummer is niet verstrekt',
-'payment.information.no.information.provided' => 'Er is geen informatie verstrekt',
+'payment.information.amazon.no.omnipay.version' =>
+	'Er is momenteel geen Amazon '
+	. 'Pay Omnipay-versie beschikbaar.'
+	. 'Schakel Omnipay-versie uit om de '
+	. 'PCI-compatibele versie te gebruiken in '
+	. 'het Instellingenoverzicht.',
+'payment.information.amazon.payment.session.complete' =>
+	'Amazon-betalingssessie voltooid - Sessie-ID:',
+'payment.information.amazon.payment.session.incomplete' =>
+	'Amazon-betalingssessie onvolledig - Probeer het '
+	. 'opnieuw',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'Er is momenteel geen Braintree '
+	. 'Omnipay-versie compatibel met Braintree-versie 6.'
+	. '9.'
+	. '1.'
+	. 'Schakel Omnipay-versie uit om de '
+	. 'PCI-compatibele versie te gebruiken onder '
+	. 'Instellingen.',
+'payment.information.invoice.number.not.provided' =>
+	'Factuurnummer is niet verstrekt',
+'payment.information.no.information.provided' =>
+	'Er is geen informatie verstrekt',
 'payment.information.none' => 'Geen',
-'payment.information.omnipay.driver.being.used' => 'Er wordt gebruik gemaakt van een driver {{$d}} van Omnipay.',
-'payment.information.payment.method.required' => 'Voor deze factuur is een betaalmethode vereist.',
-'payment.information.stripe.api.key' => 'De geheime sleutel/API-sleutel van Stripe Payment Gateway moet worden ingesteld.',
+'payment.information.omnipay.driver.being.used' =>
+	'Er wordt gebruik gemaakt van '
+	. 'een driver {{$d}} van Omnipay.',
+'payment.information.payment.method.required' =>
+	'Voor deze factuur is een '
+	. 'betaalmethode vereist.',
+'payment.information.stripe.api.key' =>
+	'De geheime sleutel/API-sleutel van Stripe '
+	. 'Payment Gateway moet worden ingesteld.',
 'payment.logs' => 'Betalingslogboeken',
 'payment.method' => 'Betaalmethode',
 'payment.method.add' => 'Betaalmethode toevoegen',
 'payment.method.already.exists' => 'Betaalmethode bestaat al!',
 'payment.method.form' => 'Betalingsmethodeformulier',
-'payment.method.history' => 'Kan niet verwijderen. Betaalmethodegeschiedenis bestaat.',
+'payment.method.history' => 'Kan niet verwijderen.'
+	. 'Betaalmethodegeschiedenis bestaat.',
 'payment.methods' => 'Betaalmethoden',
-'payment.no.invoice.sent' => 'Er zijn geen facturen door ons verzonden, noch door de klant ingezien.',
+'payment.no.invoice.sent' => 'Er zijn geen facturen door '
+	. 'ons verzonden, noch door de '
+	. 'klant ingezien.',
 'payment.provider' => 'Betalingsaanbieder',
 'payment.term' => 'Betalingsvoorwaarden',
-'payment.term.0.days' => 'Gebruik een van de aangeboden betaalmethoden',
-'payment.term.add.additional.terms.at.setting.repository' => 'Voeg extra voorwaarden toe via de getPaymentTerms-functie van de instellingenrepository.',
-'payment.term.eom.120.days' => 'EOM(120): Gelieve te betalen binnen 120 dagen einde maand van de uitgiftedatum',
-'payment.term.eom.15.days' => 'EOM(15): Gelieve te betalen binnen 15 dagen na het einde van de maand van de uitgiftedatum',
-'payment.term.eom.30.days' => 'EOM(30): Gelieve te betalen binnen 30 dagen na het einde van de maand van de uitgiftedatum',
-'payment.term.eom.60.days' => 'EOM(60): Betaal binnen 60 dagen na het einde van de maand na de uitgiftedatum.',
-'payment.term.eom.90.days' => 'EOM(90): Betaal binnen 90 dagen na het einde van de maand na de uitgiftedatum.',
+'payment.term.0.days' => 'Gebruik een van de aangeboden '
+	. 'betaalmethoden',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'Voeg extra voorwaarden toe via '
+	. 'de getPaymentTerms-functie van de instellingenrepository.',
+'payment.term.eom.120.days' =>
+	'EOM(120):'
+	. 'Gelieve te betalen binnen 120 '
+	. 'dagen einde maand van de '
+	. 'uitgiftedatum',
+'payment.term.eom.15.days' =>
+	'EOM(15):'
+	. 'Gelieve te betalen binnen 15 '
+	. 'dagen na het einde van '
+	. 'de maand van de uitgiftedatum',
+'payment.term.eom.30.days' =>
+	'EOM(30):'
+	. 'Gelieve te betalen binnen 30 '
+	. 'dagen na het einde van '
+	. 'de maand van de uitgiftedatum',
+'payment.term.eom.60.days' =>
+	'EOM(60):'
+	. 'Betaal binnen 60 dagen na '
+	. 'het einde van de maand '
+	. 'na de uitgiftedatum.',
+'payment.term.eom.90.days' =>
+	'EOM(90):'
+	. 'Betaal binnen 90 dagen na '
+	. 'het einde van de maand '
+	. 'na de uitgiftedatum.',
 'payment.term.general' => 'Betaling binnen 30 dagen',
-'payment.term.mfi.15' => 'MFI(15): Gelieve te betalen op de 15e van de maand volgend op de uitgiftedatum-maand',
-'payment.term.net.120.days' => 'Netto(120): Gelieve binnen 120 dagen na uitgiftedatum te betalen',
-'payment.term.net.15.days' => 'Netto(15): Gelieve binnen 15 dagen na uitgiftedatum te betalen.',
-'payment.term.net.30.days' => 'Netto(30): Gelieve binnen 30 dagen na uitgiftedatum te betalen',
-'payment.term.net.60.days' => 'Netto(60): Gelieve binnen 60 dagen na uitgiftedatum te betalen',
-'payment.term.net.90.days' => 'Netto(90): Gelieve binnen 90 dagen na uitgiftedatum te betalen',
+'payment.term.mfi.15' => 'MFI(15):'
+	. 'Gelieve te betalen op de '
+	. '15e van de maand volgend '
+	. 'op de uitgiftedatum-maand',
+'payment.term.net.120.days' =>
+	'Netto(120):'
+	. 'Gelieve binnen 120 dagen na '
+	. 'uitgiftedatum te betalen',
+'payment.term.net.15.days' =>
+	'Netto(15):'
+	. 'Gelieve binnen 15 dagen na '
+	. 'uitgiftedatum te betalen.',
+'payment.term.net.30.days' =>
+	'Netto(30):'
+	. 'Gelieve binnen 30 dagen na '
+	. 'uitgiftedatum te betalen',
+'payment.term.net.60.days' =>
+	'Netto(60):'
+	. 'Gelieve binnen 60 dagen na '
+	. 'uitgiftedatum te betalen',
+'payment.term.net.90.days' =>
+	'Netto(90):'
+	. 'Gelieve binnen 90 dagen na '
+	. 'uitgiftedatum te betalen',
 'payment.term.pia' => 'Betaling is vooraf vereist (PIA)',
-'payment.term.polite' => 'Wij stellen uw aankoop op prijs. Betaal alstublieft binnen 30 dagen na ontvangst van deze factuur.',
+'payment.term.polite' => 'Wij stellen uw aankoop op '
+	. 'prijs.'
+	. 'Betaal alstublieft binnen 30 dagen '
+	. 'na ontvangst van deze factuur.',
 'payment.terms.default' => 'Betaal binnen 14 dagen',
 'paymentpeppol' => 'Betalingen gedaan via Peppol',
 'paymentpeppol.reference.plural' => 'Betalingsreferenties met Peppol',
@@ -1052,72 +1713,200 @@ return [
 'pdf.archived.no' => 'Pdf NIET gearchiveerd bij Uploads/Archief/Factuur',
 'pdf.archived.yes' => 'Pdf gearchiveerd bij Uploads/Archief/Factuur',
 'pdf.include.zugferd' => 'Inclusief ZUGFeRD',
-'pdf.include.zugferd.help' => 'Als u deze optie inschakelt, wordt ZUGFeRD XML in factuur-pdf&#39;s opgenomen. Dit is een XML-standaard voor facturen. <a href="https://www.ferd-net.de/">Meer informatie</a>',
+'pdf.include.zugferd.help' => 'Als u deze optie inschakelt,'
+	. 'wordt ZUGFeRD XML in factuur-pdf\'s '
+	. 'opgenomen.'
+	. 'Dit is een XML-standaard voor '
+	. 'facturen.'
+	. '<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">Meer informatie</a>',
 'pdf.invoice.footer' => 'PDF-voettekst',
-'pdf.invoice.footer.hint' => 'Hier kunt u HTML-code invoeren die onderaan uw PDF-facturen wordt weergegeven.',
+'pdf.invoice.footer.hint' => 'Hier kunt u HTML-code invoeren '
+	. 'die onderaan uw PDF-facturen wordt '
+	. 'weergegeven.',
 'pdf.modal' => 'Modale Pdf',
 'pdf.quote.footer' => 'Citaat voettekst',
-'pdf.quote.footer.hint' => 'U kunt hier HTML-code invoeren die onderaan uw PDF-citaten wordt weergegeven.',
+'pdf.quote.footer.hint' => 'U kunt hier HTML-code invoeren '
+	. 'die onderaan uw PDF-citaten wordt '
+	. 'weergegeven.',
 'pdf.settings' => 'PDF-instellingen',
 'pdf.template' => 'PDF-sjabloon',
 'pdf.template.overdue' => 'Te laat PDF-sjabloon',
 'pdf.template.paid' => 'Betaalde PDF-sjabloon',
 'pdf.watermark' => 'PDF-watermerken inschakelen',
-'peppol' => 'Peppol Universal Business Language (UBL) 2.1 Factuur - Ecosio gevalideerd',
+'peppol' => 'Peppol Universal Business Language (UBL) '
+	. '2.'
+	. '1 Factuur - Ecosio gevalideerd',
 'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' => 'Factuurtoeslagen en factuurartikeltoeslagen worden overgenomen van een voltooide Peppol-documenttoeslag op documentniveau',
-'peppol.client.check' => 'Peppol-gegevens voor deze klant zijn onvoldoende. Er ontbreekt minstens één. Zie Bekijken... Klant... Opties... Peppol-gegevens bewerken voor e-facturering.',
-'peppol.client.defaults' => 'Vul het Client Peppol-formulier in met de standaardinstellingen van OpenPeppol voor testen.',
-'peppol.currency.code.from' => 'Van valuta, d.w.z. land van herkomst, belastingvaluta (voor wijziging zie config/common/params.php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'Naar valuta, d.w.z. documentvaluta: zie functie get.setting(&#39;currency.code.to&#39;)',
-'peppol.currency.from.to' => 'Eén van de Van Valuta&#39;s wordt vandaag omgezet naar deze van Naar Valuta',
-'peppol.currency.to.from' => 'Eén van de To Currency-koersen van vandaag wordt omgezet naar deze van de From Currency-koers',
+'peppol.allowance.or.charge.inherit' =>
+	'Factuurtoeslagen en factuurartikeltoeslagen worden overgenomen '
+	. 'van een voltooide Peppol-documenttoeslag op '
+	. 'documentniveau',
+'peppol.client.check' => 'Peppol-gegevens voor deze klant zijn '
+	. 'onvoldoende.'
+	. 'Er ontbreekt minstens één.'
+	. 'Zie Bekijken.'
+	. 'Klant.'
+	. 'Opties.'
+	. 'Peppol-gegevens bewerken voor e-facturering.',
+'peppol.client.defaults' => 'Vul het Client Peppol-formulier in '
+	. 'met de standaardinstellingen van OpenPeppol '
+	. 'voor testen.',
+'peppol.currency.code.from' => 'Van valuta, d.'
+	. 'w.'
+	. 'z.'
+	. 'land van herkomst, belastingvaluta (voor '
+	. 'wijziging zie config/common/params.'
+	. 'php TaxCurrencyCode)',
+'peppol.currency.code.to' => 'Naar valuta, d.'
+	. 'w.'
+	. 'z.'
+	. 'documentvaluta:'
+	. 'zie functie get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
+'peppol.currency.from.to' => 'Eén van de Van Valuta\'s '
+	. 'wordt vandaag omgezet naar deze '
+	. 'van Naar Valuta',
+'peppol.currency.to.from' => 'Eén van de To Currency-koersen '
+	. 'van vandaag wordt omgezet naar '
+	. 'deze van de From Currency-koers',
 'peppol.document.reference.null' => 'inv-nummer-nul-inv-id',
-'peppol.ecosio.validator' => 'Ecosio Validator voor OpenPeppol UBL-factuur (3.15.0) (ook bekend als BIS Billing 3.0.14)',
+'peppol.ecosio.validator' => 'Ecosio Validator voor OpenPeppol UBL-factuur '
+	. '(3.'
+	. '15.'
+	. '0) (ook bekend als BIS '
+	. 'Billing 3.'
+	. '0.'
+	. '14)',
 'peppol.electronic.invoicing' => 'Peppol Elektronische Facturering',
-'peppol.enable' => 'Peppol inschakelen met Universal Business Language (UBL) 2.1',
+'peppol.enable' => 'Peppol inschakelen met Universal Business '
+	. 'Language (UBL) 2.'
+	. '1',
 'peppol.include.delivery.period' => 'Inclusief leveringsperioden',
-'peppol.invoice.note.not.found' => 'Factuurnota niet gevonden',
+'peppol.invoice.note.not.found' =>
+	'Factuurnota niet gevonden',
 'peppol.label.switch.off' => 'Peppol-standaardinstellingen ingeschakeld',
 'peppol.label.switch.on' => 'Peppol-standaardinstellingen uitgeschakeld',
 'peppol.mandatory' => ' (Verplicht)',
 'peppol.optional' => ' (Optioneel)',
-'peppol.stand.in.code' => 'Omschrijvingcode - geeft aan welke basis zal worden gebruikt voor de toekomstige belastingdatum wanneer goederen worden geleverd/betaald. Indien een belastingdatum kan worden bepaald, wordt de omschrijvingcode in de factuurperiode uitgesloten.',
-'peppol.store.cove.1.1.1' => 'Registreer u voor API-toegang op de website van Store Cove',
-'peppol.store.cove.1.1.2' => 'Maak uw API-sleutel aan op de Store Cove-website en sla deze op in Instellingen...Weergave...Online betaling...Store Cove...API-sleutel',
-'peppol.store.cove.1.1.3' => 'Voer uw eerste API-aanroep uit om een ​​JSON-respons te ontvangen.',
-'peppol.store.cove.1.1.4' => 'Stuur uw eerste test Json-factuur die u hebt verkregen door op de groene knop te klikken Wereld=&gt;DE',
-'peppol.stream.toggle' => 'Peppol - Wisselknop &#39;Stream&#39; of &#39;Opslaan naar bestand&#39;',
-'peppol.tax.category.not.found' => 'Peppol-belastingcategoriecode (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) ontbreekt.',
-'peppol.tax.category.percent.not.found' => 'Peppol-belastingcategorie percentage (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) ontbreekt.',
+'peppol.stand.in.code' => 'Omschrijvingcode - geeft aan welke '
+	. 'basis zal worden gebruikt voor '
+	. 'de toekomstige belastingdatum wanneer goederen '
+	. 'worden geleverd/betaald.'
+	. 'Indien een belastingdatum kan worden '
+	. 'bepaald, wordt de omschrijvingcode in '
+	. 'de factuurperiode uitgesloten.',
+'peppol.store.cove.1.1.1' =>
+	'Registreer u voor API-toegang op '
+	. 'de website van Store Cove',
+'peppol.store.cove.1.1.2' =>
+	'Maak uw API-sleutel aan op '
+	. 'de Store Cove-website en sla '
+	. 'deze op in Instellingen.'
+	. 'Weergave.'
+	. 'Online betaling.'
+	. 'Store Cove.'
+	. 'API-sleutel',
+'peppol.store.cove.1.1.3' =>
+	'Voer uw eerste API-aanroep uit '
+	. 'om een ​​JSON-respons te ontvangen.',
+'peppol.store.cove.1.1.4' =>
+	'Stuur uw eerste test Json-factuur '
+	. 'die u hebt verkregen door '
+	. 'op de groene knop te '
+	. 'klikken Wereld=&gt;DE',
+'peppol.stream.toggle' => 'Peppol - Wisselknop \'Stream\' of '
+	. '\'Opslaan naar bestand\'',
+'peppol.tax.category.not.found' =>
+	'Peppol-belastingcategoriecode (https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/) ontbreekt.',
+'peppol.tax.category.percent.not.found' =>
+	'Peppol-belastingcategorie percentage (https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/) ontbreekt.',
 'peppol.tax.rate.code' => 'Peppol belastingtariefcode',
-'peppol.trying.to.send.non.pdf.file' => 'Momenteel worden er alleen pdf-bestanden verzonden met Peppol-facturen',
+'peppol.trying.to.send.non.pdf.file' =>
+	'Momenteel worden er alleen pdf-bestanden '
+	. 'verzonden met Peppol-facturen',
 'peppol.unit' => 'Eenheidsclassificatie met behulp van Peppol',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Bron: src/Invoice/Ubl/Invoice: Documentbeschrijving ontbreekt - Ecosio: Document MOET geen lege elementen bevatten. Oplossing: In factuurweergave: Opties ... Bewerken ... Documentbeschrijving',
-'peppol.validator.Invoice.cac.Note' => 'Bron: src/Invoice/Ubl/Invoice: Factuurnotitie ontbreekt - Ecosio: Document MAG geen lege elementen bevatten.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party: E-mailadres ontbreekt - Ecosio: Elektronisch adres MOET worden opgegeven. Oplossing: Client ... Bekijken ... Opties ... Peppol-gegevens bewerken voor e-facturering ... EndPointID',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'Bron:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Documentbeschrijving ontbreekt - Ecosio:'
+	. 'Document MOET geen lege elementen '
+	. 'bevatten.'
+	. 'Oplossing:'
+	. 'In factuurweergave:'
+	. 'Opties .'
+	. 'Bewerken .'
+	. 'Documentbeschrijving',
+'peppol.validator.Invoice.cac.Note' =>
+	'Bron:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Factuurnotitie ontbreekt - Ecosio:'
+	. 'Document MAG geen lege elementen '
+	. 'bevatten.',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party:'
+	. 'E-mailadres ontbreekt - Ecosio:'
+	. 'Elektronisch adres MOET worden opgegeven.'
+	. 'Oplossing:'
+	. 'Client .'
+	. 'Bekijken .'
+	. 'Opties .'
+	. 'Peppol-gegevens bewerken voor e-facturering .'
+	. 'EndPointID',
 'peppol.version' => 'Peppol-versie',
-'peppol.xml.stream' => 'Streamen, d.w.z. weergeven op het scherm in de browser in plaats van in de downloadmap.',
+'peppol.xml.stream' => 'Streamen, d.'
+	. 'w.'
+	. 'z.'
+	. 'weergeven op het scherm in '
+	. 'de browser in plaats van '
+	. 'in de downloadmap.',
 'per.item' => 'per artikel',
-'per.page.total' => ' per pagina. Totaal ',
+'per.page.total' => 'per pagina.'
+	. 'Totaal',
 'performance' => 'Prestatie',
-'performance.label.switch.off' => 'Snellere lees- en schrijfmodus - raadpleeg config/common/params.php en zoek naar &#39;mode&#39; ',
-'performance.label.switch.on' => 'Langzamere schrijfmodus - raadpleeg config/common/params.php zoek &#39;mode&#39; ',
+'performance.label.switch.off' => 'Snellere lees- en schrijfmodus - '
+	. 'raadpleeg config/common/params.'
+	. 'php en zoek naar \'mode\'',
+'performance.label.switch.on' =>
+    'Langzamere schrijfmodus - raadpleeg config/common/params.'
+	. 'php zoek \'mode\'',
 'period' => 'Periode',
-'permission' => 'U beschikt niet over de vereiste toestemming.',
+'permission' => 'U beschikt niet over de '
+	. 'vereiste toestemming.',
 'personal.information' => 'Persoonlijke gegevens',
 'phone' => 'Telefoon',
 'phone.abbr' => 'P',
 'phone.number' => 'Telefoonnummer',
-'php.timezone.fail' => 'Er lijkt geen tijdzone geconfigureerd te zijn. Controleer date.timezone in je PHP-configuratie. Anders wordt <strong>%s</strong> geselecteerd.',
-'php.timezone.success' => 'Er is een geldige tijdzone geconfigureerd.',
-'php.version.fail' => 'PHP-versie %s is geïnstalleerd, maar InvoicePlane vereist PHP-versie %s of hoger',
-'php.version.success' => 'PHP lijkt te voldoen aan de installatievereisten',
+'php.timezone.fail' => 'Er lijkt geen tijdzone geconfigureerd '
+	. 'te zijn.'
+	. 'Controleer date.'
+	. 'timezone in je PHP-configuratie.'
+	. 'Anders wordt <strong>%s</strong> geselecteerd.',
+'php.timezone.success' => 'Er is een geldige tijdzone '
+	. 'geconfigureerd.',
+'php.version.fail' => 'PHP-versie %s is geïnstalleerd, maar '
+	. 'InvoicePlane vereist PHP-versie %s of '
+	. 'hoger',
+'php.version.success' => 'PHP lijkt te voldoen aan '
+	. 'de installatievereisten',
 'platform' => 'Platform',
 'platform.PhpMyAdmin' => 'PhpMyAdmin-versie',
 'platform.PhpSupport' => 'PHP-ondersteuning',
 'platform.PhpVersion' => 'PHP-versie',
-'platform.csrf' => 'Bescherming tegen vervalsing op meerdere sites',
+'platform.csrf' => 'Bescherming tegen vervalsing op meerdere '
+	. 'sites',
 'platform.editor' => 'Editor',
 'platform.mySqlVersion' => 'mySql-versie',
 'platform.netbeans.UTF-8' => 'Netbeans UTF-8-codering',
@@ -1126,11 +1915,13 @@ return [
 'platform.update' => 'WampServer-bestanden en add-ons',
 'platform.windowsVersion' => 'Windows 11 Home-editie',
 'platform.xdebug' => 'Xdebug-extensie',
-'please.enable.js' => 'Schakel Javascript in om InvoicePlane te gebruiken',
+'please.enable.js' => 'Schakel Javascript in om InvoicePlane '
+	. 'te gebruiken',
 'po.group' => 'Inkoopordergroep',
 'port' => 'Haven',
 'position' => 'Positie',
-'possible.file.upload.attack' => 'Mogelijke aanval op het uploaden van bestanden: ',
+'possible.file.upload.attack' => 'Mogelijke aanval op het uploaden '
+	. 'van bestanden:',
 'pre.password' => 'Wachtwoord voor standaard PDF-factuur (optioneel)',
 'prefix' => 'Voorvoegsel',
 'prev' => 'Vorige',
@@ -1138,25 +1929,47 @@ return [
 'price' => 'Prijs',
 'product' => 'Product',
 'product.add' => 'Product toevoegen',
-'product.additional.item.property.name' => 'Peppol Extra Eigenschap Item Naam bijv. Kleur',
-'product.additional.item.property.value' => 'Peppol Extra Eigenschap Item Waarde bijv. Zwart',
-'product.country.of.origin.code' => 'Peppol-landcode van herkomst met behulp van ISO-3166-1:Alpha2-landcodes',
-'product.custom.fields' => 'Aangepaste productvelden (bijv. Peppol: AdditionalItemProperty meerkeuzeveld kleurwaarde zwart)',
+'product.additional.item.property.name' =>
+	'Peppol Extra Eigenschap Item Naam '
+	. 'bijv.'
+	. 'Kleur',
+'product.additional.item.property.value' =>
+	'Peppol Extra Eigenschap Item Waarde '
+	. 'bijv.'
+	. 'Zwart',
+'product.country.of.origin.code' =>
+	'Peppol-landcode van herkomst met behulp '
+	. 'van ISO-3166-1:'
+	. 'Alpha2-landcodes',
+'product.custom.fields' => 'Aangepaste productvelden (bijv.'
+	. 'Peppol:'
+	. 'AdditionalItemProperty meerkeuzeveld kleurwaarde zwart)',
 'product.description' => 'Productbeschrijving',
 'product.edit' => 'Product bewerken',
 'product.error.summary' => 'Samenvatting productfout',
 'product.families' => 'Productfamilies',
 'product.form.tab.category' => 'Categorie',
-'product.form.tab.not.required' => 'Niet verplichte velden',
+'product.form.tab.not.required' =>
+	'Niet verplichte velden',
 'product.form.tab.required' => 'Verplichte velden',
 'product.found' => 'Product gevonden',
-'product.history' => 'Kan niet worden verwijderd. Dit product staat op een factuur of offerte.',
+'product.history' => 'Kan niet worden verwijderd.'
+	. 'Dit product staat op een '
+	. 'factuur of offerte.',
 'product.icc.id' => 'Peppol-artikelclassificatiecode-ID, bijvoorbeeld 9873242',
-'product.icc.listid' => 'Peppol Item Classificatie Code Lijst id - bijv. SRV',
-'product.icc.listversionid' => 'Peppol Item Classification Code List Versie-ID (optioneel) - bijv. Als ItemClassification door Deense leveranciers wordt geleverd, moet UNSPSC-versie 19.0501 worden gebruikt.',
+'product.icc.listid' => 'Peppol Item Classificatie Code Lijst '
+	. 'id - bijv.'
+	. 'SRV',
+'product.icc.listversionid' => 'Peppol Item Classification Code List '
+	. 'Versie-ID (optioneel) - bijv.'
+	. 'Als ItemClassification door Deense leveranciers '
+	. 'wordt geleverd, moet UNSPSC-versie 19.'
+	. '0501 worden gebruikt.',
 'product.id' => 'Product-ID',
 'product.image' => 'Afbeelding',
-'product.item.classification.code.scheme.id.not.found' => 'Product Item Classificatie Code Schema Id niet gevonden',
+'product.item.classification.code.scheme.id.not.found' =>
+	'Product Item Classificatie Code Schema '
+	. 'Id niet gevonden',
 'product.name' => 'Productnaam',
 'product.not.found' => 'Product niet gevonden',
 'product.peppol.unit' => 'Eenheid met Peppol',
@@ -1170,34 +1983,60 @@ return [
 'product.property.table' => 'Producteigenschapstabel',
 'product.property.value' => 'Waarde',
 'product.record.successfully.added' => 'Productrecord succesvol toegevoegd',
-'product.sii.id' => 'Peppol Standard Item Identification-ID gekoppeld aan bovenstaand schema - bijvoorbeeld een 14-cijferige identificatie met nul-opvulling in de Global Trade Item Number-database (verschijnt onder de streepjescode)',
-'product.sii.schemeid' => 'Peppol Standaard Item Identificatie schema-ID - bijv. 0160',
+'product.sii.id' => 'Peppol Standard Item Identification-ID gekoppeld '
+	. 'aan bovenstaand schema - bijvoorbeeld '
+	. 'een 14-cijferige identificatie met nul-opvulling '
+	. 'in de Global Trade Item '
+	. 'Number-database (verschijnt onder de streepjescode)',
+'product.sii.schemeid' => 'Peppol Standaard Item Identificatie schema-ID '
+	. '- bijv.'
+	. '0160',
 'product.sku' => 'SKU',
 'product.tariff' => 'Tarief',
 'product.unit' => 'Producteenheid',
-'product.unit.code.not.found' => 'Product heeft geen bijbehorende eenheidscode. Product ... Bewerken ... Eenheid met Peppol.',
+'product.unit.code.not.found' =>
+	'Product heeft geen bijbehorende eenheidscode.'
+	. 'Product .'
+	. 'Bewerken .'
+	. 'Eenheid met Peppol.',
 'product.units' => 'Producteenheden',
 'product.view.tab.details' => 'Productdetails',
 'product.view.tab.gallery' => 'Productgalerij',
 'product.view.tab.images' => 'Productafbeeldingen',
 'product.view.tab.properties' => 'Producteigenschappen',
 'productimage.add' => 'Voeg een productafbeelding toe',
-'productimage.deleted.from' => 'De afbeelding is succesvol verwijderd uit de volgende map: ',
+'productimage.deleted.from' => 'De afbeelding is succesvol verwijderd '
+	. 'uit de volgende map:',
 'productimage.form' => 'Productafbeeldingformulier',
 'productimage.gallery' => 'Afbeeldingen met betrekking tot: ',
 'productimage.index' => 'Productafbeeldingindex',
-'productimage.list' => 'Lijst met afbeeldingen die aan dit product zijn gekoppeld',
-'productimage.no.file.uploaded' => 'Er is geen afbeelding geüpload. Mogelijk een duplicaat.',
+'productimage.list' => 'Lijst met afbeeldingen die aan '
+	. 'dit product zijn gekoppeld',
+'productimage.no.file.uploaded' => 'Er is geen afbeelding geüpload.'
+	. 'Mogelijk een duplicaat.',
 'productimage.plural' => 'Productafbeeldingen',
-'productimage.possible.file.upload.attack' => 'Mogelijke aanval op het uploaden van bestanden: ',
+'productimage.possible.file.upload.attack' =>
+	'Mogelijke aanval op het uploaden '
+	. 'van bestanden:',
 'productimage.upload' => 'Productafbeelding uploaden',
-'productimage.uploaded.to' => 'De afbeelding is geüpload naar de volgende map: ',
-'productimage.view' => 'Onder Productweergave kunnen meerdere afbeeldingen met betrekking tot het product worden toegevoegd',
+'productimage.uploaded.to' => 'De afbeelding is geüpload naar '
+	. 'de volgende map:',
+'productimage.view' => 'Onder Productweergave kunnen meerdere afbeeldingen '
+	. 'met betrekking tot het product '
+	. 'worden toegevoegd',
 'products' => 'Producten',
 'products.form' => 'Productformulier',
 'profile.deleted' => 'Profiel is verwijderd',
-'profile.history' => 'Profiel kan niet worden verwijderd. Geschiedenis bestaat al.',
-'profile.new' => 'Maak een profiel aan met een nieuw e-mailadres of mobiel nummer, activeer het en selecteer de bedrijfsgegevens waaraan u het wilt koppelen. Deze informatie verschijnt automatisch in de documentatie, zoals offertes en facturen.',
+'profile.history' => 'Profiel kan niet worden verwijderd.'
+	. 'Geschiedenis bestaat al.',
+'profile.new' => 'Maak een profiel aan met '
+	. 'een nieuw e-mailadres of mobiel '
+	. 'nummer, activeer het en selecteer '
+	. 'de bedrijfsgegevens waaraan u het '
+	. 'wilt koppelen.'
+	. 'Deze informatie verschijnt automatisch in '
+	. 'de documentatie, zoals offertes en '
+	. 'facturen.',
 'profile.not.deleted' => 'Profiel is niet verwijderd',
 'profile.plural' => 'Profielen',
 'profile.property.label.company' => 'Bedrijf',
@@ -1219,7 +2058,9 @@ return [
 'Q2' => 'Q2',
 'Q3' => 'Q3',
 'Q4' => 'Q4',
-'qr.absolute.url' => 'Absolute URL die wordt gebruikt om boven de QR-code te bouwen',
+'qr.absolute.url' => 'Absolute URL die wordt gebruikt '
+	. 'om boven de QR-code te '
+	. 'bouwen',
 'qr.code' => 'QR-code',
 'qr.code.1' => 'QR-code 1',
 'qr.code.details' => 'QR-codedetails',
@@ -1228,25 +2069,58 @@ return [
 'qr.code.level.3' => 'Het coderingsniveau is Geavanceerd',
 'qr.code.settings' => 'QR-code-instellingen',
 'qr.code.settings.bic' => 'BIC',
-'qr.code.settings.effect' => 'Welk effect hebben bovenstaande instellingen op deze QR-code?',
-'qr.code.settings.effect.explanation' => 'In de daadwerkelijke code... geen. Alle standaardwaarden worden gebruikt, omdat de zeer basale daadwerkelijke code hierboven wordt gebruikt.',
+'qr.code.settings.effect' => 'Welk effect hebben bovenstaande instellingen '
+	. 'op deze QR-code?',
+'qr.code.settings.effect.explanation' =>
+	'In de daadwerkelijke code.'
+	. 'geen.'
+	. 'Alle standaardwaarden worden gebruikt, omdat '
+	. 'de zeer basale daadwerkelijke code '
+	. 'hierboven wordt gebruikt.',
 'qr.code.settings.enable' => 'QR-code inschakelen',
-'qr.code.settings.enable.hint' => 'Als u deze optie inschakelt, wordt er een QR-code toegevoegd aan factuur-pdf&#39;s. U moet de ontvanger, IBAN en BIC hieronder invullen om correct te werken. Anders wordt de QR-code niet weergegeven.',
+'qr.code.settings.enable.hint' =>
+	'Als u deze optie inschakelt,'
+	. 'wordt er een QR-code toegevoegd '
+	. 'aan factuur-pdf\'s.'
+	. 'U moet de ontvanger, IBAN '
+	. 'en BIC hieronder invullen om '
+	. 'correct te werken.'
+	. 'Anders wordt de QR-code niet '
+	. 'weergegeven.',
 'qr.code.settings.iban' => 'IBAN',
 'qr.code.settings.recipient' => 'Ontvanger',
-'qr.code.settings.remittance.text' => 'Remittance-tekst',
-'qr.code.settings.remittance.text.tags' => 'Tekstlabels voor overmakingen',
+'qr.code.settings.remittance.text' =>
+	'Remittance-tekst',
+'qr.code.settings.remittance.text.tags' =>
+	'Tekstlabels voor overmakingen',
 'qr.code.source' => 'Qr-codebron',
-'qr.code.source.path' => 'resources\views\factuur\instelling\bedrijfslogo.en.adres.php',
+'qr.code.source.path' => 'resources\\views\\factuur\\instelling\\bedrijfslogo.'
+	. 'en.'
+	. 'adres.'
+	. 'php',
 'qr.code.type' => 'QR-codetype',
-'qr.code.type.absolute.url' => 'Absoluut (het geheel) URL-gebaseerd',
+'qr.code.type.absolute.url' =>
+	'Absoluut (het geheel) URL-gebaseerd',
 'qr.code.widget.used' => 'Gebruikte widget',
-'qr.ecc.level' => 'QR-code Ecc-niveau (standaard: L)',
-'qr.height.and.width' => 'QR-codehoogte en -breedte (standaard: 60)',
+'qr.ecc.level' => 'QR-code Ecc-niveau (standaard:'
+	. 'L)',
+'qr.height.and.width' => 'QR-codehoogte en -breedte (standaard:'
+	. '60)',
 'qr.meaning' => 'Betekenis',
-'qr.meaning.benefit' => 'Scannen en terug naar de weergave (zonder de URL in te voeren) waar de factuur in pdf-formaat kan worden afgedrukt. Geldig voor alle gebruikers met een actief cliëntaccount.',
-'qr.output.type' => 'QR-code-uitvoertype (bijv. .svg, .png) (Standaard: png)',
-'qr.version' => 'QR-codeversienummer (vroegste 0, laatste 40) (Standaard: 40)',
+'qr.meaning.benefit' => 'Scannen en terug naar de '
+	. 'weergave (zonder de URL in '
+	. 'te voeren) waar de factuur '
+	. 'in pdf-formaat kan worden afgedrukt.'
+	. 'Geldig voor alle gebruikers met '
+	. 'een actief cliëntaccount.',
+'qr.output.type' => 'QR-code-uitvoertype (bijv.'
+	. '.'
+	. 'svg, .'
+	. 'png) (Standaard:'
+	. 'png)',
+'qr.version' => 'QR-codeversienummer (vroegste 0, laatste 40) '
+	. '(Standaard:'
+	. '40)',
 'qty' => 'Aantal',
 'quantity' => 'Hoeveelheid',
 'quarter' => 'Kwartaal',
@@ -1266,10 +2140,17 @@ return [
 'quote.date' => 'Offertedatum',
 'quote.dates' => 'Offertedata',
 'quote.delete.not' => 'De factuur is niet verwijderd.',
-'quote.delivery.location.index.button.list' => 'Citaten',
-'quote.delivery.location.none' => 'Er is geen afleverlocatie aan deze offerte gekoppeld.',
+'quote.delivery.location.index.button.list' =>
+	'Citaten',
+'quote.delivery.location.none' => 'Er is geen afleverlocatie aan '
+	. 'deze offerte gekoppeld.',
 'quote.disable.flash.messages' => 'Schakel Quote Flash-berichten uit',
-'quote.email.templates.not.configured' => 'E-mailsjablonen niet geconfigureerd. Instellingen...Offertes...Offertesjablonen...Standaard e-mailsjabloon',
+'quote.email.templates.not.configured' =>
+	'E-mailsjablonen niet geconfigureerd.'
+	. 'Instellingen.'
+	. 'Offertes.'
+	. 'Offertesjablonen.'
+	. 'Standaard e-mailsjabloon',
 'quote.group' => 'Citaatgroep',
 'quote.id' => 'Citaat-ID ',
 'quote.item' => 'Citaat Item',
@@ -1279,7 +2160,14 @@ return [
 'quote.item.cannot.delete' => 'Kan citaat niet verwijderen',
 'quote.label.switch.off' => 'BTW-offerte',
 'quote.label.switch.on' => 'Offerte zonder BTW',
-'quote.not.copied.to.invoice' => 'Factuur NIET aangemaakt op basis van offerte! Dupliceer factuur. Kopieer uw offerte naar een andere offerte en kopieer deze vervolgens naar de factuur. Elke offerte moet een bijbehorende factuur hebben.',
+'quote.not.copied.to.invoice' =>
+	'Factuur NIET aangemaakt op basis '
+	. 'van offerte! Dupliceer factuur.'
+	. 'Kopieer uw offerte naar een '
+	. 'andere offerte en kopieer deze '
+	. 'vervolgens naar de factuur.'
+	. 'Elke offerte moet een bijbehorende '
+	. 'factuur hebben.',
 'quote.number' => 'Citaatnummer',
 'quote.number.status' => 'Status van offertenummer',
 'quote.overview' => 'Overzicht van offertes',
@@ -1288,15 +2176,33 @@ return [
 'quote.pre.password' => 'Standaard PDF-wachtwoord citeren (optioneel)',
 'quote.reject' => 'Afwijzen',
 'quote.rejected' => 'Dit citaat is afgewezen',
-'quote.sales.order.created.from.quote' => 'Verkooporder aangemaakt op basis van offerte en u heeft uw inkoopordernummer ingevoerd!',
-'quote.sales.order.not.created.from.quote' => 'Verkooporder niet aangemaakt op basis van offerte! Dubbele verkooporder. Kopieer uw offerte naar een andere offerte en kopieer deze vervolgens naar de verkooporder. Elke offerte moet een overeenkomende verkooporder hebben.',
-'quote.status.email.body' => 'De klant %1$s heeft %2$s de offerte %3$sLink naar offerte: %4$s',
+'quote.sales.order.created.from.quote' =>
+	'Verkooporder aangemaakt op basis van '
+	. 'offerte en u heeft uw '
+	. 'inkoopordernummer ingevoerd!',
+'quote.sales.order.not.created.from.quote' =>
+	'Verkooporder niet aangemaakt op basis '
+	. 'van offerte! Dubbele verkooporder.'
+	. 'Kopieer uw offerte naar een '
+	. 'andere offerte en kopieer deze '
+	. 'vervolgens naar de verkooporder.'
+	. 'Elke offerte moet een overeenkomende '
+	. 'verkooporder hebben.',
+'quote.status.email.body' => 'De klant %1$s heeft %2$s '
+	. 'de offerte %3$sLink naar offerte:'
+	. '%4$s',
 'quote.status.email.subject' => 'Klant %1$s %2$s citaat %3$s',
 'quote.tax' => 'Offerte Belasting',
 'quote.tax.rate' => 'Belastingtarief citeren',
 'quote.tax.rate.add' => 'Offerte belastingtarief toevoegen',
-'quote.tax.rate.cannot.delete' => 'Kan het belastingtarief niet verwijderen',
-'quote.tax.rate.incomplete.fields' => 'Onvolledige velden: U moet een belastingtarief opgeven. Tip: Geef een belastingtarief van nul op.',
+'quote.tax.rate.cannot.delete' =>
+	'Kan het belastingtarief niet verwijderen',
+'quote.tax.rate.incomplete.fields' =>
+	'Onvolledige velden:'
+	. 'U moet een belastingtarief opgeven.'
+	. 'Tip:'
+	. 'Geef een belastingtarief van nul '
+	. 'op.',
 'quote.tax.rate.saved' => 'Offerte belastingtarief is opgeslagen',
 'quote.template' => 'Offerte sjabloon',
 'quote.templates' => 'Offerte sjablonen',
@@ -1304,9 +2210,14 @@ return [
 'quote.to.so' => 'Offerte naar verkooporder',
 'quote.to.so.password' => 'Wachtwoord verkooporder',
 'quote.vat.quote' => 'BTW-offerte',
-'quote.with.purchase.order.line.number' => 'Inkooporderregelnummer (Peppol-vereiste) - moet worden gekoppeld aan het verkooporderregelnummer',
-'quote.with.purchase.order.number' => 'Inkoopordernummer - moet worden gekoppeld aan het verkoopordernummer',
-'quote.with.purchase.order.person' => 'Persoon/afdeling die de bestelling plaatst',
+'quote.with.purchase.order.line.number' =>
+	'Inkooporderregelnummer (Peppol-vereiste) - moet worden '
+	. 'gekoppeld aan het verkooporderregelnummer',
+'quote.with.purchase.order.number' =>
+	'Inkoopordernummer - moet worden gekoppeld '
+	. 'aan het verkoopordernummer',
+'quote.with.purchase.order.person' =>
+	'Persoon/afdeling die de bestelling plaatst',
 'quotes' => 'Citaten',
 'quotes.expire.after' => 'Offertes verlopen na (dagen)',
 'quotes.requiring.approval' => 'Offertes waarvoor goedkeuring vereist is',
@@ -1334,8 +2245,10 @@ return [
 'recurring.invoices' => 'Terugkerende facturen',
 'recurring.no.invoices.selected' => 'U heeft geen facturen geselecteerd.',
 'recurring.original.invoice.date' => 'Oorspronkelijke factuurdatum: ',
-'recurring.status.sent.only' => 'Alleen facturen met de status verzonden kunnen terugkerend worden gemaakt',
-'recurring.tooltip.next' => 'De volgende datum wordt vastgesteld door middel van de index.',
+'recurring.status.sent.only' => 'Alleen facturen met de status '
+	. 'verzonden kunnen terugkerend worden gemaakt',
+'recurring.tooltip.next' => 'De volgende datum wordt vastgesteld '
+	. 'door middel van de index.',
 'reject' => 'Afwijzen',
 'reject.this.quote' => 'Deze offerte afwijzen',
 'rejected' => 'Afgewezen',
@@ -1345,28 +2258,54 @@ return [
 'report' => 'Rapport',
 'report.options' => 'Rapportopties',
 'report.sales.by.product' => 'Verkoop per product',
-'report.sales.by.product.info' => 'Dit rapport toont de totale productverkoop inclusief de bijbehorende belasting. Het bevat geen extra factuurbelasting voor deze producten.',
+'report.sales.by.product.info' =>
+	'Dit rapport toont de totale '
+	. 'productverkoop inclusief de bijbehorende belasting.'
+	. 'Het bevat geen extra factuurbelasting '
+	. 'voor deze producten.',
 'report.sales.by.task' => 'Verkoop per taak',
-'report.sales.by.task.info' => 'Dit rapport toont de totale omzet van de taak, inclusief de bijbehorende artikelbelasting. Het bevat geen extra factuurbelasting met betrekking tot deze taken.',
-'report.test.fraud.prevention.headers.api' => 'API voor testfraudepreventieheaders',
+'report.sales.by.task.info' =>
+	'Dit rapport toont de totale '
+	. 'omzet van de taak, inclusief '
+	. 'de bijbehorende artikelbelasting.'
+	. 'Het bevat geen extra factuurbelasting '
+	. 'met betrekking tot deze taken.',
+'report.test.fraud.prevention.headers.api' =>
+	'API voor testfraudepreventieheaders',
 'reports' => 'Rapporten',
 'reset' => 'Reset',
 'reset.password' => 'Wachtwoord opnieuw instellen',
-'rules.peppol.en16931.001' => 'Bedrijfsproces of de profiel-ID moet worden opgegeven. Raadpleeg config/common/params.php voor het zoeken naar Profiel-ID.',
+'rules.peppol.en16931.001' => 'Bedrijfsproces of de profiel-ID moet '
+	. 'worden opgegeven.'
+	. 'Raadpleeg config/common/params.'
+	. 'php voor het zoeken naar '
+	. 'Profiel-ID.',
 'run.report' => 'Rapport uitvoeren',
 'sales' => 'Verkoop',
 'sales.by.client' => 'Verkoop per klant',
 'sales.by.date' => 'Verkoop per datum',
 'sales.with.tax' => 'Verkoop met belasting',
 'salesorder' => 'Verkooporder',
-'salesorder.agree.to.terms' => 'Ga akkoord met de voorwaarden die nu naar u worden verzonden',
+'salesorder.agree.to.terms' => 'Ga akkoord met de voorwaarden '
+	. 'die nu naar u worden '
+	. 'verzonden',
 'salesorder.assembled.packaged.prepared' => 'Geassembleerd/Verpakt/Voorbereid',
 'salesorder.cancelled' => 'Verkooporder geannuleerd',
 'salesorder.client.confirmed.terms' => 'Door de klant bevestigde voorwaarden',
-'salesorder.clients.purchase.order.number' => 'Inkoopordernummer van de klant',
-'salesorder.clients.purchase.order.person' => 'De inkooporderpersoon van de klant die zijn bestelling afhandelt',
+'salesorder.clients.purchase.order.number' =>
+	'Inkoopordernummer van de klant',
+'salesorder.clients.purchase.order.person' =>
+	'De inkooporderpersoon van de klant '
+	. 'die zijn bestelling afhandelt',
 'salesorder.copied.to.invoice' => 'Verkooporder gekopieerd naar factuur',
-'salesorder.copied.to.invoice.not' => 'Factuur NIET aangemaakt op basis van verkooporder! Dupliceer factuur. Kopieer uw verkooporder naar een andere verkooporder en kopieer deze vervolgens naar de factuur. Elke verkooporder moet een overeenkomende factuur hebben.',
+'salesorder.copied.to.invoice.not' =>
+	'Factuur NIET aangemaakt op basis '
+	. 'van verkooporder! Dupliceer factuur.'
+	. 'Kopieer uw verkooporder naar een '
+	. 'andere verkooporder en kopieer deze '
+	. 'vervolgens naar de factuur.'
+	. 'Elke verkooporder moet een overeenkomende '
+	. 'factuur hebben.',
 'salesorder.date.created' => 'Verkooporderdatum aangemaakt',
 'salesorder.default.group' => 'Standaardgroep verkooporder',
 'salesorder.goods.services.confirmed' => 'Bevestigde levering door klant',
@@ -1378,7 +2317,9 @@ return [
 'salesorder.number' => 'Verkoopordernummer',
 'salesorder.number.status' => 'Verkoopordernummer Status',
 'salesorder.password' => 'Wachtwoord verkooporder',
-'salesorder.payment.terms' => 'Betalingsvoorwaarden voor verkooporders, bijvoorbeeld: betaal binnen 30 dagen',
+'salesorder.payment.terms' =>
+    'Betalingsvoorwaarden voor verkooporders, bijvoorbeeld:'
+	. 'betaal binnen 30 dagen',
 'salesorder.recent' => 'Recente verkooporders',
 'salesorder.reject' => 'Verkooporder afgewezen',
 'salesorder.rejected' => 'Verkooporder afgewezen',
@@ -1390,12 +2331,40 @@ return [
 'save.item.as.lookup' => 'Item opslaan als opzoekitem',
 'search.family' => 'Zoek Familie',
 'search.product' => 'Zoek product',
-'security.disable.read.only.empty' => 'De instelling &#39;Alleen-lezen uitschakelen&#39; heeft momenteel geen waarde 0 of 1. Stel deze standaard in op 0, zodat er een alleen-lezenfunctie beschikbaar is om te voorkomen dat facturen worden verwijderd.',
-'security.disable.read.only.info' => 'Waarschuwing: De functionaliteit &#39;Alleen-lezen&#39; voor factuurbeveiliging en verwijderingspreventie is ingeschakeld. Schakel &#39;disable.read.only&#39; uit om verzonden facturen terug te zetten naar concept.',
-'security.disable.read.only.success' => 'Succes: de alleen-lezenfunctionaliteit voor factuurbeveiliging en verwijderingspreventie is opnieuw ingeschakeld',
-'security.disable.read.only.true.draft.check.and.mark' => 'Waarschuwing: U bewerkt een concept met de instelling Alleen-lezen uitgeschakeld op true',
-'security.disable.read.only.true.sent.check.and.mark' => 'Waarschuwing: U bewerkt een verzonden factuur met de instelling Alleen-lezen uitschakelen op true',
-'security.disable.read.only.warning' => 'Waarschuwing: De functionaliteit Alleen-lezen voor factuurbeveiliging en verwijderingspreventie is uitgeschakeld',
+'security.disable.read.only.empty' =>
+	'De instelling \'Alleen-lezen uitschakelen\' heeft '
+	. 'momenteel geen waarde 0 of '
+	. '1.'
+	. 'Stel deze standaard in op '
+	. '0, zodat er een alleen-lezenfunctie '
+	. 'beschikbaar is om te voorkomen '
+	. 'dat facturen worden verwijderd.',
+'security.disable.read.only.info' =>
+	'Waarschuwing:'
+	. 'De functionaliteit \'Alleen-lezen\' voor factuurbeveiliging '
+	. 'en verwijderingspreventie is ingeschakeld.'
+	. 'Schakel \'disable.'
+	. 'read.'
+	. 'only\' uit om verzonden facturen '
+	. 'terug te zetten naar concept.',
+'security.disable.read.only.success' =>
+	'Succes:'
+	. 'de alleen-lezenfunctionaliteit voor factuurbeveiliging en '
+	. 'verwijderingspreventie is opnieuw ingeschakeld',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'Waarschuwing:'
+	. 'U bewerkt een concept met '
+	. 'de instelling Alleen-lezen uitgeschakeld op '
+	. 'true',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'Waarschuwing:'
+	. 'U bewerkt een verzonden factuur '
+	. 'met de instelling Alleen-lezen uitschakelen '
+	. 'op true',
+'security.disable.read.only.warning' =>
+	'Waarschuwing:'
+	. 'De functionaliteit Alleen-lezen voor factuurbeveiliging '
+	. 'en verwijderingspreventie is uitgeschakeld',
 'select.family' => 'Selecteer familie',
 'select.payment.method' => 'Selecteer de betaalmethode',
 'select.project' => 'Selecteer project',
@@ -1404,86 +2373,183 @@ return [
 'send.email' => 'E-mail verzenden',
 'sent' => 'Verstuurd',
 'set.new.password' => 'Stel een nieuw wachtwoord in',
-'set.to.read.only' => 'Stel de factuur in op alleen-lezen',
+'set.to.read.only' => 'Stel de factuur in op '
+	. 'alleen-lezen',
 'setting' => 'Instelling',
 'setting.add' => 'Instellen Toevoegen',
-'setting.as.a.result.of ' => ' als gevolg van ',
+'setting.as.a.result.of ' =>
+	'als gevolg van',
 'setting.assets.cleared.at' => 'Activa vrijgegeven op ',
-'setting.assets.were.not.cleared.at' => 'De activa zijn niet vrijgegeven op ',
+'setting.assets.were.not.cleared.at' =>
+	'De activa zijn niet vrijgegeven '
+	. 'op',
 'setting.company' => 'Openbare bedrijfsgegevens',
 'setting.company.private' => 'Bedrijfsgegevens',
-'setting.company.profile' => 'Profiel wijzigen, bijvoorbeeld mobiel en e-mailadres',
-'setting.duplicate.key' => 'Het opslaan kon niet worden voltooid. U hebt een duplicaat met de volgende sleutel: ',
-'setting.error.on.the.public.assets.folder' => ' fout in de map met openbare activa.',
+'setting.company.profile' => 'Profiel wijzigen, bijvoorbeeld mobiel en '
+	. 'e-mailadres',
+'setting.duplicate.key' => 'Het opslaan kon niet worden '
+	. 'voltooid.'
+	. 'U hebt een duplicaat met '
+	. 'de volgende sleutel:',
+'setting.error.on.the.public.assets.folder' =>
+	'fout in de map met '
+	. 'openbare activa.',
 'setting.form' => 'Instellingsformulier',
 'setting.key' => 'Instelsleutel',
 'setting.section' => 'Sectie',
 'setting.subsection' => 'Subsectie',
 'setting.translator.key' => 'Vertalersleutel',
 'setting.value' => 'Instelwaarde',
-'setting.you.have.cleared.the.cache' => 'Je hebt de cache gewist.',
-'setting.you.have.not.cleared.the.cache.due.to.a' => 'Je hebt de cache niet gewist naar een ',
+'setting.you.have.cleared.the.cache' =>
+	'Je hebt de cache gewist.',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'Je hebt de cache niet '
+	. 'gewist naar een',
 'settings' => 'Instellingen',
 'settings.successfully.saved' => 'Instellingen succesvol opgeslagen',
 'setup.choose.language' => 'Kies een taal',
-'setup.choose.language.message' => 'Kies een taal om de installatie voort te zetten.',
+'setup.choose.language.message' => 'Kies een taal om de '
+	. 'installatie voort te zetten.',
 'setup.complete' => 'Installatie voltooid',
-'setup.complete.message' => 'InvoicePlane is succesvol geïnstalleerd. U kunt nu inloggen.',
-'setup.complete.secure.setup' => 'Als u uw installatie wilt beveiligen, kunt u de installatie tijdelijk uitschakelen. Vervang hiervoor de regel <code>DISABLE_SETUP=false</code> door <code>DISABLE_SETUP=true</code> in uw <code>ipconfig.php</code> bestand.',
-'setup.complete.support.note' => 'Als u problemen ondervindt of hulp nodig heeft, kunt u een kijkje nemen op de <a href="https://wiki.invoiceplane.com">officiële wiki</a> of het <a href="https://community.invoiceplane.com/">communityforum</a> .',
+'setup.complete.message' => 'InvoicePlane is succesvol geïnstalleerd.'
+	. 'U kunt nu inloggen.',
+'setup.complete.secure.setup' => 'Als u uw installatie wilt '
+	. 'beveiligen, kunt u de installatie '
+	. 'tijdelijk uitschakelen.'
+	. 'Vervang hiervoor de regel <code>DISABLE_SETUP=false</code> '
+	. 'door <code>DISABLE_SETUP=true</code> in uw <code>ipconfig.'
+	. 'php</code> bestand.',
+'setup.complete.support.note' => 'Als u problemen ondervindt of '
+	. 'hulp nodig heeft, kunt u '
+	. 'een kijkje nemen op de '
+	. '<a href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">officiële wiki</a> of het <a '
+	. 'href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">communityforum</a> .',
 'setup.create.user' => 'Gebruikersaccount aanmaken',
-'setup.create.user.message' => 'Dit zijn de gegevens die u nodig hebt om in te loggen bij InvoicePlane.',
+'setup.create.user.message' => 'Dit zijn de gegevens die '
+	. 'u nodig hebt om in '
+	. 'te loggen bij InvoicePlane.',
 'setup.database.configured.message' => 'De database is succesvol geconfigureerd.',
 'setup.database.details' => 'Databasegegevens',
-'setup.database.message' => 'Geef de volgende informatie op om verbinding te maken met uw database.',
-'setup.db.cannot.connect' => 'Kan geen verbinding maken met de databaseserver met de opgegeven databasegegevens. Controleer de inloggegevens en probeer het opnieuw.',
-'setup.db.database.info' => 'De naam van de database die u voor InvoicePlane hebt gemaakt.',
+'setup.database.message' => 'Geef de volgende informatie op '
+	. 'om verbinding te maken met '
+	. 'uw database.',
+'setup.db.cannot.connect' => 'Kan geen verbinding maken met '
+	. 'de databaseserver met de opgegeven '
+	. 'databasegegevens.'
+	. 'Controleer de inloggegevens en probeer '
+	. 'het opnieuw.',
+'setup.db.database.info' => 'De naam van de database '
+	. 'die u voor InvoicePlane hebt '
+	. 'gemaakt.',
 'setup.db.hostname.info' => 'De hostnaam voor uw database.',
-'setup.db.password.info' => 'Wachtwoord dat aan de database is gekoppeld.',
-'setup.db.port.info' => 'De poort waarop uw hostnaam luistert. Standaard is dit 3306.',
-'setup.db.username.info' => 'Gebruikersnaam die aan de database is gekoppeld.',
+'setup.db.password.info' => 'Wachtwoord dat aan de database '
+	. 'is gekoppeld.',
+'setup.db.port.info' => 'De poort waarop uw hostnaam '
+	. 'luistert.'
+	. 'Standaard is dit 3306.',
+'setup.db.username.info' => 'Gebruikersnaam die aan de database '
+	. 'is gekoppeld.',
 'setup.install.tables' => 'Tabellen installeren',
 'setup.other.contact' => 'Overig contact',
 'setup.prerequisites' => 'Vereisten',
-'setup.prerequisites.message' => 'Welkom bij InvoicePlane! Alle onderstaande problemen moeten worden opgelost voordat de installatie kan worden voortgezet.',
-'setup.tables.errors' => 'De onderstaande fouten moeten worden opgelost voordat de installatie kan worden voortgezet.',
+'setup.prerequisites.message' => 'Welkom bij InvoicePlane! Alle onderstaande '
+	. 'problemen moeten worden opgelost voordat '
+	. 'de installatie kan worden voortgezet.',
+'setup.tables.errors' => 'De onderstaande fouten moeten worden '
+	. 'opgelost voordat de installatie kan '
+	. 'worden voortgezet.',
 'setup.tables.success' => 'De databasetabellen zijn succesvol geïnstalleerd.',
-'setup.upgrade.message' => 'De onderstaande fouten moeten worden opgelost voordat de installatie kan worden voortgezet.',
+'setup.upgrade.message' => 'De onderstaande fouten moeten worden '
+	. 'opgelost voordat de installatie kan '
+	. 'worden voortgezet.',
 'setup.upgrade.success' => 'De databasetabellen zijn succesvol geüpgraded.',
 'setup.upgrade.tables' => 'Upgrade-tabellen',
-'setup.user.address.info' => 'De hieronder ingevulde adresgegevens worden op uw facturen weergegeven.',
-'setup.user.contact.info' => 'Deze contactgegevens kunnen ook op uw facturen worden weergegeven.',
-'setup.user.email.info' => 'Uw e-mailadres wordt gebruikt om in te loggen bij InvoicePlane.',
-'setup.user.name.info' => 'Hetzij uw bedrijfsnaam, hetzij uw voor- en achternaam.',
-'setup.user.password.info' => 'Vergeet niet een sterk wachtwoord te gebruiken. Een combinatie van hoofdletters, kleine letters, cijfers en symbolen wordt aanbevolen. Minimale lengte: 8 tekens.',
-'setup.user.password.verify.info' => 'Controleer uw wachtwoord door nogmaals hetzelfde wachtwoord in te voeren.',
-'setup.v120.alert' => '<strong>Aandacht!</strong><br> Het is erg belangrijk dat u <a href="https://go.invoiceplane.com/v120update" target="_blank">deze updatemededeling</a> over enkele belangrijke wijzigingen in de InvoicePlane-applicatie leest.',
-'setup.v147.alert' => '<strong>Aandacht!</strong><br> Open het bestand <code>application/config/config.php</code> en wijzig de regel <code>$config[&#39;sess_use_database&#39;] = false;</code> naar <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Meer details vindt u <a href="https://go.invoiceplane.com/v147update" target="_blank">hier</a>',
+'setup.user.address.info' => 'De hieronder ingevulde adresgegevens worden '
+	. 'op uw facturen weergegeven.',
+'setup.user.contact.info' => 'Deze contactgegevens kunnen ook op '
+	. 'uw facturen worden weergegeven.',
+'setup.user.email.info' => 'Uw e-mailadres wordt gebruikt om '
+	. 'in te loggen bij InvoicePlane.',
+'setup.user.name.info' => 'Hetzij uw bedrijfsnaam, hetzij uw '
+	. 'voor- en achternaam.',
+'setup.user.password.info' => 'Vergeet niet een sterk wachtwoord '
+	. 'te gebruiken.'
+	. 'Een combinatie van hoofdletters, kleine '
+	. 'letters, cijfers en symbolen wordt '
+	. 'aanbevolen.'
+	. 'Minimale lengte:'
+	. '8 tekens.',
+'setup.user.password.verify.info' =>
+	'Controleer uw wachtwoord door nogmaals '
+	. 'hetzelfde wachtwoord in te voeren.',
+'setup.v120.alert' => '<strong>Aandacht!</strong><br> Het is erg belangrijk '
+	. 'dat u <a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">deze updatemededeling</a> over enkele '
+	. 'belangrijke wijzigingen in de InvoicePlane-applicatie '
+	. 'leest.',
+'setup.v147.alert' =>
+    '<strong>Aandacht!</strong><br> Open het bestand '
+        . '<code>application/config/config.'
+	. 'php</code> en wijzig de regel '
+	. '<code>$config[\'sess_use_database\'] = false;</code> naar '
+        . '<code>$config[\'sess_use_database\'] '
+	. '= true;</code> .'
+	. '<br> Meer details vindt u '
+	. '<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">hier</a>',
 'showing.of' => '%s van %s weergeven ',
 'signup' => 'Aanmelden',
 'single.choice' => 'Enkele keuze',
-'site.soletrader.about.choose' => 'Hier zijn enkele aantrekkelijke redenen om voor ons te kiezen:',
-'site.soletrader.about.competitive.rates' => 'Concurrerende tarieven',
+'site.soletrader.about.choose' => 'Hier zijn enkele aantrekkelijke redenen '
+	. 'om voor ons te kiezen:',
+'site.soletrader.about.competitive.rates' =>
+	'Concurrerende tarieven',
 'site.soletrader.about.contemporary' => 'Hedendaagse vaardigheden',
-'site.soletrader.about.dissatisfaction' => 'Indien u niet tevreden bent over de service, voeren wij het werk kosteloos opnieuw uit.',
+'site.soletrader.about.dissatisfaction' => 'Indien u niet tevreden bent '
+	. 'over de service, voeren wij '
+	. 'het werk kosteloos opnieuw uit.',
 'site.soletrader.about.finished' => 'Afgeronde projecten',
 'site.soletrader.about.happy' => 'Tevreden klanten',
-'site.soletrader.about.quality' => 'Zonder in te boeten aan kwaliteit',
+'site.soletrader.about.quality' => 'Zonder in te boeten aan '
+	. 'kwaliteit',
 'site.soletrader.about.return' => 'Terugkerende klanten',
-'site.soletrader.about.simply' => 'U hoeft alleen maar te bellen en wij doen het werk opnieuw.',
+'site.soletrader.about.simply' => 'U hoeft alleen maar te '
+	. 'bellen en wij doen het '
+	. 'werk opnieuw.',
 'site.soletrader.about.solved' => 'Problemen opgelost',
-'site.soletrader.about.trained' => 'Ons team is goed opgeleid en ervaren.',
-'site.soletrader.about.we' => 'Wij zetten onze vaardigheden met toewijding en naar beste vermogen in.',
+'site.soletrader.about.trained' => 'Ons team is goed opgeleid '
+	. 'en ervaren.',
+'site.soletrader.about.we' => 'Wij zetten onze vaardigheden met '
+	. 'toewijding en naar beste vermogen '
+	. 'in.',
 'site.soletrader.about.willing' => 'Bereidwillige terugkeerondersteuning',
 'site.soletrader.contact.address' => 'Adres',
 'site.soletrader.contact.email' => 'E-mail',
-'site.soletrader.contact.lookout' => 'We zijn altijd op zoek naar nieuwe klanten. Als u interesse heeft om met ons samen te werken, kunt u op een van de volgende manieren contact met ons opnemen.',
+'site.soletrader.contact.lookout' => 'We zijn altijd op zoek '
+	. 'naar nieuwe klanten.'
+	. 'Als u interesse heeft om '
+	. 'met ons samen te werken,'
+	. 'kunt u op een van '
+	. 'de volgende manieren contact met '
+	. 'ons opnemen.',
 'site.soletrader.contact.phone' => 'Telefoon',
 'site.soletrader.contact.touch' => 'Neem contact op',
 'site.soletrader.pricing.basic' => 'basis',
 'site.soletrader.pricing.choosePlan' => 'Kies plan',
 'site.soletrader.pricing.currencyPerMonth' => 'per maand',
-'site.soletrader.pricing.explore' => 'Ontdek onze flexibele prijzen en vind de beste oplossing voor het runnen van uw bedrijf.',
+'site.soletrader.pricing.explore' => 'Ontdek onze flexibele prijzen en '
+	. 'vind de beste oplossing voor '
+	. 'het runnen van uw bedrijf.',
 'site.soletrader.pricing.plans' => 'Meer plannen',
 'site.soletrader.pricing.pricing' => ' Onze prijzen',
 'site.soletrader.pricing.pro' => 'Professioneel',
@@ -1493,7 +2559,8 @@ return [
 'site.soletrader.pricing.visits' => 'bezoeken',
 'site.soletrader.team.assistant' => 'Assistent',
 'site.soletrader.team.coordinator' => 'Coördinator',
-'site.soletrader.team.we' => 'Wij zijn een groep zorgzame, ervaren en ijverige personen.',
+'site.soletrader.team.we' => 'Wij zijn een groep zorgzame,'
+	. 'ervaren en ijverige personen.',
 'site.soletrader.testimonial.we' => 'Dit zijn de getuigenissen',
 'site.soletrader.testimonial.worker1' => 'Dit is mijn getuigenis',
 'site.soletrader.testimonial.worker2' => 'Dit is mijn getuigenis',
@@ -1519,29 +2586,66 @@ return [
 'stop.logging.in' => 'Stop met inloggen',
 'stop.signing.up' => 'Stop met aanmelden',
 'storecove' => 'Storecove',
-'storecove.advisory.to.developer.field.easily.missed' => 'Veld gemakkelijk gemist door klant',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. Een afzender aanmaken - Rechtspersoon Land',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'Veld gemakkelijk gemist door klant',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Een afzender aanmaken - Rechtspersoon '
+	. 'Land',
 'storecove.invoice.json.encoded' => 'StoreCove Json-gecodeerde factuur',
 'storecove.legal' => 'Juridisch',
-'storecove.legal.entity.id.for.json' => '1.1.4. Een afzender aanmaken - Store Cove Legal Entity ID ingevoegd in invoice.json',
-'storecove.legal.entity.identifier.id.not.found' => 'Configuratieparameters Boekhouding Leverancier Partij Juridische entiteit Bedrijf ID niet gevonden.',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Een afzender aanmaken - Store '
+	. 'Cove Legal Entity ID ingevoegd '
+	. 'in invoice.'
+	. 'json',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'Configuratieparameters Boekhouding Leverancier Partij Juridische '
+	. 'entiteit Bedrijf ID niet gevonden.',
 'storecove.no.contract.exists' => 'Er bestaat geen contract',
 'storecove.not.available' => 'Niet beschikbaar',
-'storecove.purchase.order.item.id.null' => 'po-item-id-nul',
-'storecove.receiver.identifier' => 'Ontvanger-ID - zie StoreCove 6.3',
-'storecove.region.country.legal.tax' => 'Regio ---------- Land --------- Juridisch --------- Belasting',
-'storecove.salesorder.number.not.exist' => 'Verkoopordernummer bestaat niet',
-'storecove.sender.identifier' => '6.2 Afzender-ID',
-'storecove.sender.identifier.basis' => '6.2 Afzender-ID-basis - Juridisch of fiscaal',
-'storecove.supplier.contact.email.not.found' => 'E-mailadres leverancier niet gevonden. Raadpleeg de config params-array.',
-'storecove.supplier.contact.firstname.not.found' => 'Voornaam leveranciercontact niet gevonden. Raadpleeg de config-parameterarray.',
-'storecove.supplier.contact.lastname.not.found' => 'Achternaam leveranciercontact niet gevonden. Raadpleeg de config-parameterarray.',
-'storecove.supplier.contact.name.not.found' => 'Naam van contactpersoon leverancier niet gevonden. Raadpleeg de config-parameterarray.',
-'storecove.supplier.contact.telephone.not.found' => 'Telefoonnummer leverancier niet gevonden. Raadpleeg de configuratieparameters.',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-nul',
+'storecove.receiver.identifier' => 'Ontvanger-ID - zie StoreCove 6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'Regio ---------- Land --------- Juridisch '
+	. '--------- Belasting',
+'storecove.salesorder.number.not.exist' =>
+	'Verkoopordernummer bestaat niet',
+'storecove.sender.identifier' => '6.'
+	. '2 Afzender-ID',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 Afzender-ID-basis - Juridisch of '
+	. 'fiscaal',
+'storecove.supplier.contact.email.not.found' =>
+	'E-mailadres leverancier niet gevonden.'
+	. 'Raadpleeg de config params-array.',
+'storecove.supplier.contact.firstname.not.found' =>
+	'Voornaam leveranciercontact niet gevonden.'
+	. 'Raadpleeg de config-parameterarray.',
+'storecove.supplier.contact.lastname.not.found' =>
+	'Achternaam leveranciercontact niet gevonden.'
+	. 'Raadpleeg de config-parameterarray.',
+'storecove.supplier.contact.name.not.found' =>
+	'Naam van contactpersoon leverancier niet '
+	. 'gevonden.'
+	. 'Raadpleeg de config-parameterarray.',
+'storecove.supplier.contact.telephone.not.found' =>
+	'Telefoonnummer leverancier niet gevonden.'
+	. 'Raadpleeg de configuratieparameters.',
 'storecove.tax' => 'Belasting',
 'storecove.tax.rate.code' => 'Storecove belastingtariefcode',
-'storecove.tax.scheme.identifier.id.not.found' => 'Configuratieparameters Boekhouding Leverancier Partij Belastingregeling Bedrijfs-ID niet gevonden.',
-'stream' => 'Stream Pdf in Browser / Modaal',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'Configuratieparameters Boekhouding Leverancier Partij Belastingregeling '
+	. 'Bedrijfs-ID niet gevonden.',
+'stream' => 'Stream Pdf in Browser / '
+	. 'Modaal',
 'street.address' => 'Straatadres',
 'street.address.2' => 'Straatadres (vervolg)',
 'subject' => 'Onderwerp',
@@ -1555,7 +2659,14 @@ return [
 'sumex.canton' => 'Kanton',
 'sumex.diagnosis' => 'Diagnose',
 'sumex.edit' => 'Sumex Bewerken',
-'sumex.help' => 'Deze optie voegt een menu-item toe aan facturen om een ​​semi-compatibele TARMED/SUMEX1-factuur te genereren. TARMED/SUMEX1 is een Zwitserse standaard voor de gezondheidszorg. <a href="http://sumex1.net/">Meer informatie</a>',
+'sumex.help' => 'Deze optie voegt een menu-item '
+	. 'toe aan facturen om een '
+	. '​​semi-compatibele TARMED/SUMEX1-factuur te genereren.'
+	. 'TARMED/SUMEX1 is een Zwitserse standaard '
+	. 'voor de gezondheidszorg.'
+	. '<a href="http:'
+	. '//sumex1.'
+	. 'net/">Meer informatie</a>',
 'sumex.information' => 'Sumex-informatie',
 'sumex.insurednumber' => 'Verzekerd nummer',
 'sumex.observations' => 'Observaties',
@@ -1592,7 +2703,12 @@ return [
 'sumex.sliptype' => 'Sumex Slip Type',
 'sumex.sliptype-esr9' => 'ESR 9 (Oranje Slip)',
 'sumex.sliptype-esrRed' => 'Rode slip',
-'sumex.sliptype.help' => 'Met deze optie wijzigt u het type slip in Sumex. Let op: als u de oranje slip selecteert, heeft u een abonneenummer nodig dat begint met &quot;01-&quot;.',
+'sumex.sliptype.help' => 'Met deze optie wijzigt u '
+	. 'het type slip in Sumex.'
+	. 'Let op:'
+	. 'als u de oranje slip '
+	. 'selecteert, heeft u een abonneenummer '
+	. 'nodig dat begint met &quot;01-&quot;.',
 'sumex.ssn' => 'AVS',
 'sumex.veka' => 'WEEK',
 'sunday' => 'Zondag',
@@ -1617,51 +2733,136 @@ return [
 'tax.rate.decimal.places' => 'Belastingtarief decimalen',
 'tax.rate.edit' => 'Belastingtarief bewerken',
 'tax.rate.form' => 'Belastingtariefformulier',
-'tax.rate.history.exists' => 'Kan niet verwijderen. Geschiedenis bestaat al.',
-'tax.rate.name' => 'Naam belastingtarief bijv. Standaard',
+'tax.rate.history.exists' => 'Kan niet verwijderen.'
+	. 'Geschiedenis bestaat al.',
+'tax.rate.name' => 'Naam belastingtarief bijv.'
+	. 'Standaard',
 'tax.rate.percent' => 'Belastingtarief Percentage',
 'tax.rate.placement' => 'Plaatsing van belastingtarieven',
 'tax.rates' => 'Belastingtarieven',
 'taxes' => 'Belastingen',
 'telegram' => 'Telegram',
-'telegram.bot.api.chat.id' => 'Telegram: Niet-bot: Persoonlijk account: Hallo wereld: Testbericht: Berichtontvanger: <b>Chat-ID</b>',
-'telegram.bot.api.chat.id.not.set' => 'De chat-ID van de persoonlijke Telegram-accounthouder die geen bot is en die het eerste bericht naar de bot heeft gestuurd en het testbericht &#39;Hallo&#39; en &#39;Wereld&#39; moet ontvangen, is niet ingesteld.',
-'telegram.bot.api.current.status' => '<b>Huidig ​​gebruik:</b> Er is geen webhook nodig omdat clients geen chat-ID&#39;s hebben en geen berichten naar de bot sturen.',
+'telegram.bot.api.chat.id' =>
+	'Telegram:'
+	. 'Niet-bot:'
+	. 'Persoonlijk account:'
+	. 'Hallo wereld:'
+	. 'Testbericht:'
+	. 'Berichtontvanger:'
+	. '<b>Chat-ID</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'De chat-ID van de persoonlijke '
+	. 'Telegram-accounthouder die geen bot is '
+	. 'en die het eerste bericht '
+	. 'naar de bot heeft gestuurd '
+	. 'en het testbericht \'Hallo\' en '
+	. '\'Wereld\' moet ontvangen, is niet '
+	. 'ingesteld.',
+'telegram.bot.api.current.status' =>
+	'<b>Huidig ​​gebruik:'
+	. '</b> Er is geen webhook '
+	. 'nodig omdat clients geen chat-ID\'s '
+	. 'hebben en geen berichten naar '
+	. 'de bot sturen.',
 'telegram.bot.api.enable' => 'Telegram inschakelen',
-'telegram.bot.api.enabled.not' => 'Telegram niet ingeschakeld',
-'telegram.bot.api.future.use' => '<b>Toekomstig gebruik:</b> Klanten met chat-id&#39;s krijgen een Telegram-factuur toegestuurd en bevestigen de ontvangst door een bevestiging terug te sturen naar de webhook.',
-'telegram.bot.api.general.purpose' => '<b>Geregistreerde bot, geïdentificeerd door token, stuurt klantbetalingsmeldingen naar onderstaande geregistreerde chat-ID (meestal het persoonlijke niet-bot-telegramaccount van de beheerder).</b>',
-'telegram.bot.api.get.updates.failed' => 'Uw Telegram-updates zijn mislukt.',
-'telegram.bot.api.get.updates.success' => 'Uw Telegram-updates zijn geslaagd met behulp van de API-methode getUpdates.',
-'telegram.bot.api.hello.world.test.message' => 'Hallo wereld vanuit de Telegram Bot API. Bedankt, yiisoft-ontwikkelaars!',
-'telegram.bot.api.hello.world.test.message.sent' => 'Hallo wereld-bericht verzonden.',
-'telegram.bot.api.hello.world.test.message.sent.not' => 'Hallo Wereld-bericht NIET verzonden.',
-'telegram.bot.api.hello.world.test.message.use' => 'Stuur een eenvoudig testbericht &#39;Hallo wereld van Telegram Bot API&#39; naar een externe chat-ID',
-'telegram.bot.api.payment.notification.success' => 'Telegram-betalingsmelding succesvol',
-'telegram.bot.api.payment.notifications' => 'Telegram-betalingsmeldingen',
+'telegram.bot.api.enabled.not' =>
+	'Telegram niet ingeschakeld',
+'telegram.bot.api.future.use' =>
+	'<b>Toekomstig gebruik:'
+	. '</b> Klanten met chat-id\'s krijgen '
+	. 'een Telegram-factuur toegestuurd en bevestigen '
+	. 'de ontvangst door een bevestiging '
+	. 'terug te sturen naar de '
+	. 'webhook.',
+'telegram.bot.api.general.purpose' =>
+	'<b>Geregistreerde bot, geïdentificeerd door token,'
+	. 'stuurt klantbetalingsmeldingen naar onderstaande geregistreerde '
+	. 'chat-ID (meestal het persoonlijke niet-bot-telegramaccount '
+	. 'van de beheerder).'
+	. '</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'Uw Telegram-updates zijn mislukt.',
+'telegram.bot.api.get.updates.success' =>
+	'Uw Telegram-updates zijn geslaagd met '
+	. 'behulp van de API-methode getUpdates.',
+'telegram.bot.api.hello.world.test.message' =>
+	'Hallo wereld vanuit de Telegram '
+	. 'Bot API.'
+	. 'Bedankt, yiisoft-ontwikkelaars!',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'Hallo wereld-bericht verzonden.',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'Hallo Wereld-bericht NIET verzonden.',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'Stuur een eenvoudig testbericht \'Hallo '
+	. 'wereld van Telegram Bot API\''
+	. 'naar een externe chat-ID',
+'telegram.bot.api.payment.notification.success' =>
+	'Telegram-betalingsmelding succesvol',
+'telegram.bot.api.payment.notifications' =>
+	'Telegram-betalingsmeldingen',
 'telegram.bot.api.token' => 'Telegram Bot API-token',
-'telegram.bot.api.token.not.set' => 'Telegram Bot API-token niet ingesteld',
-'telegram.bot.api.webhook.delete' => 'Verwijder de webhook',
-'telegram.bot.api.webhook.deleted' => 'Webhook is zojuist uitgeschakeld zodat de handmatige API-get-methode getUpdates kan worden gebruikt.',
-'telegram.bot.api.webhook.secret.token' => 'Webhook-geheime token voor extra beveiliging (gebruikt als parameter in de setWebhook-functie en niet als queryparameter)',
-'telegram.bot.api.webhook.setup' => 'De webhook is ingesteld.',
-'telegram.bot.api.webhook.setup.already' => 'De webhook is al ingesteld.',
-'telegram.bot.api.webhook.url.this.site' => 'De Telegram Webhook-URL van deze site wordt gebruikt in de setWebhook-functie van TelegramHelper.',
+'telegram.bot.api.token.not.set' =>
+	'Telegram Bot API-token niet ingesteld',
+'telegram.bot.api.webhook.delete' =>
+	'Verwijder de webhook',
+'telegram.bot.api.webhook.deleted' =>
+	'Webhook is zojuist uitgeschakeld zodat '
+	. 'de handmatige API-get-methode getUpdates kan '
+	. 'worden gebruikt.',
+'telegram.bot.api.webhook.secret.token' =>
+	'Webhook-geheime token voor extra beveiliging '
+	. '(gebruikt als parameter in de '
+	. 'setWebhook-functie en niet als queryparameter)',
+'telegram.bot.api.webhook.setup' =>
+	'De webhook is ingesteld.',
+'telegram.bot.api.webhook.setup.already' =>
+	'De webhook is al ingesteld.',
+'telegram.bot.api.webhook.url.this.site' =>
+	'De Telegram Webhook-URL van deze '
+	. 'site wordt gebruikt in de '
+	. 'setWebhook-functie van TelegramHelper.',
 'template' => 'Factuursjabloon',
 'templates' => 'Factuursjablonen',
 'term' => 'Algemene voorwaarden',
-'term.1' => 'Ik heb de algemene voorwaarden niet gelezen.',
-'term.2' => 'Ik heb de algemene voorwaarden gelezen en ga hiermee akkoord.',
-'term.add.additional.terms.at.setting.repository' => 'Voeg extra voorwaarden toe via de getPaymentTerms-functie van de instellingenrepository.',
+'term.1' => 'Ik heb de algemene voorwaarden '
+	. 'niet gelezen.',
+'term.2' => 'Ik heb de algemene voorwaarden '
+	. 'gelezen en ga hiermee akkoord.',
+'term.add.additional.terms.at.setting.repository' =>
+	'Voeg extra voorwaarden toe via '
+	. 'de getPaymentTerms-functie van de instellingenrepository.',
 'terms' => 'Voorwaarden',
 'test.data.install' => 'Testgegevens installeren',
 'test.data.use' => 'Gebruik testgegevens',
 'test.remove' => 'Testgegevens verwijderen',
-'test.remove.tooltip' => 'Weergave..Instellingen..Algemeen..Testgegevens installeren..Nee en Weergave..Instellingen..Algemeen..Testgegevens gebruiken..Nee',
+'test.remove.tooltip' => 'Weergave.'
+	. 'Instellingen.'
+	. 'Algemeen.'
+	. 'Testgegevens installeren.'
+	. 'Nee en Weergave.'
+	. 'Instellingen.'
+	. 'Algemeen.'
+	. 'Testgegevens gebruiken.'
+	. 'Nee',
 'test.reset' => 'Testgegevens resetten',
 'test.reset.setting' => 'Instellingen opnieuw installeren',
-'test.reset.setting.tooltip' => 'Hiermee worden alle huidige instellingen verwijderd en worden de standaardinstellingen in InvoiceController/install.default.settings.on.firstrun opnieuw geïnstalleerd.',
-'test.reset.tooltip' => 'Weergave..Instellingen..Algemeen..Testgegevens installeren..Ja en Weergave..Instellingen..Algemeen..Testgegevens gebruiken..Ja',
+'test.reset.setting.tooltip' => 'Hiermee worden alle huidige instellingen '
+	. 'verwijderd en worden de standaardinstellingen '
+	. 'in InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'firstrun opnieuw geïnstalleerd.',
+'test.reset.tooltip' => 'Weergave.'
+	. 'Instellingen.'
+	. 'Algemeen.'
+	. 'Testgegevens installeren.'
+	. 'Ja en Weergave.'
+	. 'Instellingen.'
+	. 'Algemeen.'
+	. 'Testgegevens gebruiken.'
+	. 'Ja',
 'text' => 'Tekst',
 'theme' => 'Thema',
 'this.month' => 'Deze maand',
@@ -1685,21 +2886,58 @@ return [
 'true' => 'WAAR',
 'try.again' => 'Probeer het opnieuw',
 'two.factor.authentication' => 'Twee-factorauthenticatie',
-'two.factor.authentication.attempt.failure' => 'Poging tot twee-factorauthenticatie mislukt',
-'two.factor.authentication.attempt.failure.must.setup' => 'Poging tot twee-factorauthenticatie mislukt: U moet een nieuwe QR-code instellen met geheim (+) en ervoor kiezen om de vorige invoer te overschrijven wanneer u daarom wordt gevraagd',
-'two.factor.authentication.attempt.success' => 'Poging tot twee-factorauthenticatie succesvol',
-'two.factor.authentication.disabled' => 'Twee-factorauthenticatie is nu uitgeschakeld voor extra beveiliging.',
+'two.factor.authentication.attempt.failure' =>
+	'Poging tot twee-factorauthenticatie mislukt',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'Poging tot twee-factorauthenticatie mislukt:'
+	. 'U moet een nieuwe QR-code '
+	. 'instellen met geheim (+) en '
+	. 'ervoor kiezen om de vorige '
+	. 'invoer te overschrijven wanneer u '
+	. 'daarom wordt gevraagd',
+'two.factor.authentication.attempt.success' =>
+	'Poging tot twee-factorauthenticatie succesvol',
+'two.factor.authentication.disabled' =>
+    'Twee-factorauthenticatie is nu uitgeschakeld voor '
+	. 'extra beveiliging.',
 'two.factor.authentication.enable' => 'Twee-factorauthenticatie inschakelen',
-'two.factor.authentication.enabled.with.disabling' => 'Twee-factorauthenticatie is momenteel ingeschakeld voor extra beveiliging en wordt na succesvolle authenticatie uitgeschakeld voor een extra beveiligingslaag tot de volgende login. Verplicht scannen van de QR-code na elke login voor een nieuw geheim.',
-'two.factor.authentication.enabled.without.disabling' => 'Momenteel is tweefactorauthenticatie ingeschakeld voor extra beveiliging en wordt niet uitgeschakeld na succesvolle authenticatie. Nadat u tweefactorauthenticatie hebt ingesteld en bent ingelogd, wordt de QR-code niet meer gescand.',
+'two.factor.authentication.enabled.with.disabling' =>
+	'Twee-factorauthenticatie is momenteel ingeschakeld voor '
+	. 'extra beveiliging en wordt na '
+	. 'succesvolle authenticatie uitgeschakeld voor een '
+	. 'extra beveiligingslaag tot de volgende '
+	. 'login.'
+	. 'Verplicht scannen van de QR-code '
+	. 'na elke login voor een '
+	. 'nieuw geheim.',
+'two.factor.authentication.enabled.without.disabling' =>
+	'Momenteel is tweefactorauthenticatie ingeschakeld voor '
+	. 'extra beveiliging en wordt niet '
+	. 'uitgeschakeld na succesvolle authenticatie.'
+	. 'Nadat u tweefactorauthenticatie hebt ingesteld '
+	. 'en bent ingelogd, wordt de '
+	. 'QR-code niet meer gescand.',
 'two.factor.authentication.error' => 'Fout bij tweefactorauthenticatie',
-'two.factor.authentication.form.verify.login' => 'Verifieer login',
-'two.factor.authentication.invalid.code.format' => 'Ongeldige code-indeling. Voer de 6-cijferige code uit uw app in.',
-'two.factor.authentication.missing.code.or.secret' => 'Authenticatiecode of 2FA-geheim ontbreekt.',
-'two.factor.authentication.new.six.digit.code' => 'Voer een nieuwe 6-cijferige authenticatiecode in (een andere dan de installatiecode) uit uw app.',
-'two.factor.authentication.no.secret.generated' => 'Er is geen geheim gegenereerd. Start de installatie opnieuw.',
-'two.factor.authentication.qr.code.enter.manually' => 'Of voer deze code handmatig in de Android-app in: ',
-'two.factor.authentication.scan' => 'Scan deze QR-code met uw Aegis-app:',
+'two.factor.authentication.form.verify.login' =>
+	'Verifieer login',
+'two.factor.authentication.invalid.code.format' =>
+	'Ongeldige code-indeling.'
+	. 'Voer de 6-cijferige code uit '
+	. 'uw app in.',
+'two.factor.authentication.missing.code.or.secret' =>
+	'Authenticatiecode of 2FA-geheim ontbreekt.',
+'two.factor.authentication.new.six.digit.code' =>
+	'Voer een nieuwe 6-cijferige authenticatiecode '
+	. 'in (een andere dan de '
+	. 'installatiecode) uit uw app.',
+'two.factor.authentication.no.secret.generated' =>
+	'Er is geen geheim gegenereerd.'
+	. 'Start de installatie opnieuw.',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'Of voer deze code handmatig '
+	. 'in de Android-app in:',
+'two.factor.authentication.scan' => 'Scan deze QR-code met uw '
+	. 'Aegis-app:',
 'two.factor.authentication.setup' => 'Twee-factorauthenticatie instellen',
 'type' => 'Type',
 'unit' => 'Eenheid',
@@ -1707,7 +2945,8 @@ return [
 'unit.already.exists' => 'Eenheid bestaat al!',
 'unit.description.not.provided' => 'Beschrijving niet verstrekt',
 'unit.edit' => 'Eenheid bewerken',
-'unit.history' => 'Kan niet verwijderen. Geschiedenis bestaat al.',
+'unit.history' => 'Kan niet verwijderen.'
+	. 'Geschiedenis bestaat al.',
 'unit.name' => 'Eenheidsnaam',
 'unit.name.plrl' => 'Eenheidsnaam (meervoud)',
 'unit.peppol' => 'Peppol',
@@ -1719,7 +2958,8 @@ return [
 'unknown' => 'Onbekend',
 'unpaid' => 'Onbetaald',
 'updatecheck' => 'Updatecontrole',
-'updatecheck.failed' => 'Updatecontrole mislukt! Controleer uw netwerkverbinding.',
+'updatecheck.failed' =>
+    'Updatecontrole mislukt! Controleer uw netwerkverbinding.',
 'updates' => 'Updates',
 'updates.available' => 'Updates beschikbaar!',
 'upload.date' => 'Uploaddatum',
@@ -1736,47 +2976,102 @@ return [
 'user.account.clients' => 'Klanten met gebruikersaccounts',
 'user.accounts' => 'Factuurgebruikersaccounts',
 'user.all.clients' => 'Alle klanten toevoegen',
-'user.all.clients.text' => '* Als deze optie is aangevinkt, kan de gebruiker alle clients zien, inclusief de clients die later zijn toegevoegd.',
+'user.all.clients.text' => '* Als deze optie is '
+	. 'aangevinkt, kan de gebruiker alle '
+	. 'clients zien, inclusief de clients '
+	. 'die later zijn toegevoegd.',
 'user.api.list' => 'Pre-factuurgebruikers - aangemelde gebruikers',
-'user.client.active.no' => 'Er zijn geen clients met actieve gebruikersaccounts. Beheerders wijzen client(en) toe aan een geregistreerd gebruikersaccount.',
+'user.client.active.no' => 'Er zijn geen clients met '
+	. 'actieve gebruikersaccounts.'
+	. 'Beheerders wijzen client(en) toe aan '
+	. 'een geregistreerd gebruikersaccount.',
 'user.client.count' => '#',
-'user.client.no.account' => 'Er is geen gebruikersaccount aan deze client gekoppeld en daarom kan dit document niet worden aangemaakt.',
-'user.clients.assigned.not' => 'Er zijn geen clients aan deze gebruiker toegewezen.',
+'user.client.no.account' => 'Er is geen gebruikersaccount aan '
+	. 'deze client gekoppeld en daarom '
+	. 'kan dit document niet worden '
+	. 'aangemaakt.',
+'user.clients.assigned.not' => 'Er zijn geen clients aan '
+	. 'deze gebruiker toegewezen.',
 'user.form' => 'Gebruikersformulier',
 'user.iban' => 'IBAN',
 'user.inv.active.not' => 'Het gebruikersaccount is niet actief',
-'user.inv.list.limit' => 'Aantal records weergegeven per pagina (Opmerking: overschrijft standaard)',
-'user.inv.more.than.one.assigned' => 'Factuur aanmaken mislukt: raadpleeg uw instellingen... Gebruikersaccount. Er is meer dan één gebruiker aan deze klant toegewezen.',
-'user.inv.refer.to' => 'U kunt de standaardwaarde van 10 records per pagina overschrijven door hier te klikken.',
+'user.inv.list.limit' => 'Aantal records weergegeven per pagina '
+	. '(Opmerking:'
+	. 'overschrijft standaard)',
+'user.inv.more.than.one.assigned' =>
+	'Factuur aanmaken mislukt:'
+	. 'raadpleeg uw instellingen.'
+	. 'Gebruikersaccount.'
+	. 'Er is meer dan één '
+	. 'gebruiker aan deze klant toegewezen.',
+'user.inv.refer.to' => 'U kunt de standaardwaarde van '
+	. '10 records per pagina overschrijven '
+	. 'door hier te klikken.',
 'user.inv.role.accountant' => 'Accountant',
-'user.inv.role.accountant.assigned' => 'Toegewezen accountantsrol',
-'user.inv.role.accountant.default' => 'De accountant van een cliënt kan standaard facturen bekijken, facturen betalen, betalingen van facturen bekijken en betalingen van facturen bewerken.',
+'user.inv.role.accountant.assigned' =>
+	'Toegewezen accountantsrol',
+'user.inv.role.accountant.default' =>
+	'De accountant van een cliënt '
+	. 'kan standaard facturen bekijken, facturen '
+	. 'betalen, betalingen van facturen bekijken '
+	. 'en betalingen van facturen bewerken.',
 'user.inv.role.administrator' => 'Beheerder',
-'user.inv.role.administrator.already.assigned' => 'De rol Beheerder is al toegewezen',
-'user.inv.role.administrator.assigned' => 'De rol Beheerder is nu toegewezen. ',
-'user.inv.role.all.new' => 'Alle nieuwe gebruikers krijgen standaard de rol van waarnemer, dat wil zeggen dat ze de documentatie die naar hen is verzonden, kunnen bekijken en niet bewerken. Ze kunnen de documentatie dus alleen observeren of bekijken.',
+'user.inv.role.administrator.already.assigned' =>
+	'De rol Beheerder is al '
+	. 'toegewezen',
+'user.inv.role.administrator.assigned' =>
+	'De rol Beheerder is nu '
+	. 'toegewezen.',
+'user.inv.role.all.new' =>
+	'Alle nieuwe gebruikers krijgen standaard '
+	. 'de rol van waarnemer, dat '
+	. 'wil zeggen dat ze de '
+	. 'documentatie die naar hen is '
+	. 'verzonden, kunnen bekijken en niet '
+	. 'bewerken.'
+	. 'Ze kunnen de documentatie dus '
+	. 'alleen observeren of bekijken.',
 'user.inv.role.observer' => 'Waarnemer',
-'user.inv.role.observer.assigned' => 'Toegewezen waarnemersrol',
-'user.inv.role.observer.assigned.already' => 'De rol van waarnemer is al toegewezen.',
-'user.inv.role.revoke.all' => 'Alle rollen intrekken',
-'user.inv.role.warning.revoke.all' => 'Weet u zeker dat u alle rollen wilt intrekken?',
-'user.inv.role.warning.role' => 'Weet u zeker dat u deze rol wilt overnemen?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Kan het beheerderstype van de dropdown niet toewijzen aan een niet-beheerder',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Kan het gasttype van de dropdown niet toewijzen aan een beheerder',
+'user.inv.role.observer.assigned' =>
+	'Toegewezen waarnemersrol',
+'user.inv.role.observer.assigned.already' =>
+	'De rol van waarnemer is '
+	. 'al toegewezen.',
+'user.inv.role.revoke.all' =>
+	'Alle rollen intrekken',
+'user.inv.role.warning.revoke.all' =>
+	'Weet u zeker dat u '
+	. 'alle rollen wilt intrekken?',
+'user.inv.role.warning.role' =>
+	'Weet u zeker dat u '
+	. 'deze rol wilt overnemen?',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'Kan het beheerderstype van de '
+	. 'dropdown niet toewijzen aan een '
+	. 'niet-beheerder',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'Kan het gasttype van de '
+	. 'dropdown niet toewijzen aan een '
+	. 'beheerder',
 'user.signup.please' => 'Meld je aan!',
 'user.subscriber.number' => 'Abonneenummer',
 'user.type' => 'Gebruikerstype',
 'username' => 'Gebruikersnaam',
 'users' => 'Gebruikers',
 'utility.assets.clear' => 'Cache van activa wissen',
-'validator.fail' => 'Kan veld %s niet verwerken: %s',
+'validator.fail' => 'Kan veld %s niet verwerken:'
+	. '%s',
 'validator.invalid.login.password' => 'Ongeldige login of wachtwoord',
 'validator.password.change' => 'Uw wachtwoord is gewijzigd',
 'validator.password.not.match' => 'Wachtwoorden komen niet overeen',
-'validator.password.not.match.new' => 'Uw nieuwe wachtwoorden komen niet overeen',
+'validator.password.not.match.new' =>
+	'Uw nieuwe wachtwoorden komen niet '
+	. 'overeen',
 'validator.password.reset' => 'Uw wachtwoord is gereset',
-'validator.user.exist' => 'Er bestaat al een gebruiker met deze login',
-'validator.user.exist.not' => 'Er bestaat geen gebruiker met deze login',
+'validator.user.exist' => 'Er bestaat al een gebruiker '
+	. 'met deze login',
+'validator.user.exist.not' => 'Er bestaat geen gebruiker met '
+	. 'deze login',
 'value' => 'Waarde',
 'values' => 'Waarden',
 'values.with.taxes' => 'Waarden met belastingen',
@@ -1815,11 +3110,111 @@ return [
 'web' => 'Web',
 'web.address' => 'Webadres',
 'welcome' => 'Welkom',
-'wrong.passwordreset.token' => 'Er is geen gebruiker gevonden voor de opgegeven resettoken. Als u denkt dat dit een fout is, neem dan contact op met uw beheerder.',
+'wrong.passwordreset.token' => 'Er is geen gebruiker gevonden '
+	. 'voor de opgegeven resettoken.'
+	. 'Als u denkt dat dit '
+	. 'een fout is, neem dan '
+	. 'contact op met uw beheerder.',
 'year' => 'Jaar',
 'year.prefix' => 'Jaarvoorvoegsel',
 'years' => 'Jaren',
 'yes' => 'Ja',
 'zip' => 'Postcode',
 'zip.code' => 'Postcode',
+    
+'allowance.or.charge.allowance.tax' =>
+	'Belasting op toeslagen',
+'allowance.or.charge.charge.tax' =>
+	'Belasting op de heffing',
+'allowance.or.charge.inv.add' =>
+	'Factuurtoeslag of -kosten toevoegen',
+'allowance.or.charge.level' => 'Niveau (⬅ ️Totaal, Regelitem ➡)',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'Verzending/verwerking/verpakking',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'BTW op verzending/verwerking/verpakking',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'Belasting op verzending/verwerking/verpakking',
+'amount.payment' => 'Betalingsbedrag dat volledig betaald moet '
+	. 'worden',
+'calendar' => 'Kalender',
+'continue.with.developersandboxhmrc' => 'Doorgaan met Developer Gov Sandbox '
+	. 'UK',
+'continue.with.oidc' => 'Doorgaan met Open Id Connect',
+'continue.with.openbanking' => 'Ga door met Open Banking',
+'converted.to.invoice' => 'Omgezet naar factuur',
+'converted.to.so' => 'Omgezet naar verkooporder',
+'custom.field.edit' => 'Aangepast veld bewerken',
+'delete.quote.single' => 'Deze offerte kan worden verwijderd '
+	. 'omdat er geen verkooporder of '
+	. 'factuur aan is gekoppeld',
+'delete.quote.derived' => 'Aan deze offerte is een '
+	. 'verkooporder of een factuur gekoppeld.'
+	. 'Deze kan dus niet worden '
+	. 'verwijderd.',
+'extended' => 'Verlengd',
+'extended.language' => 'Uitgebreide taal',
+'file' => 'Bestand',
+'grand.fathered' => 'Grootvader',
+'layout.password.otp.6' => 'OTP-wachtwoord (6 cijfers)',
+'layout.password.otp.6.8' =>
+	'OTP-wachtwoord (6 cijfers) / Back-upherstelcodes '
+	. '(8 cijfers)',
+'oauth2.account.locked' => 'Account vergrendeld',
+'oauth2.backup.recovery.codes' => 'Maak een back-up van de '
+	. 'herstelcodes.'
+	. 'Bewaar deze op een veilige '
+	. 'plaats.',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'Back-upherstelcodes regenereren',
+'oauth2.consent.required' => 'Toestemming vereist',
+'oauth2.default' => 'Standaard oauth2.'
+	. '0-configuratie gebruikt',
+'oauth2.invalid.request' => 'Ongeldig verzoek',
+'oauth2.invalid.client' => 'Ongeldige client',
+'oauth2.invalid.grant' => 'Ongeldige subsidie',
+'oauth2.login.required' => 'Inloggen vereist',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'Authenticatiecode of statusparameter ontbreekt.',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'Statusparameter ontbreekt.'
+	. 'Mogelijke csrf-aanval.',
+'oauth2.server.error' => 'Serverfout',
+'oauth2.temporarily.unavailable' => 'Tijdelijk niet beschikbaar',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'Het aanmaken van testgebruikers is '
+	. 'niet toegestaan ​​in de productieomgeving.',
+'oauth2.unauthorized.client' => 'Ongeautoriseerde klant',
+'oauth2.unsupported.response.type' => 'Niet-ondersteund antwoordtype',
+'oauth2.unsupported.grant.type' => 'Niet-ondersteund subsidietype',
+'online.payment.apiToken' => 'API-token',
+'online.payment.thirdPartyProvider' => 'Derde partij leverancier bijvoorbeeld Wonderful',
+'open.banking.pay.with' => 'Betalen met Open Banking: ',
+'open.banking.not.configured' => 'Open Banking is niet geconfigureerd.'
+	. 'Neem contact op met de '
+	. 'support.',
+'radiolist.choice' => 'Keuze van de radiolijst',
+'region' => 'Regio',
+'script' => 'Script',
+'tax.rate.active.not' => 'Waarschuwing:'
+	. 'Er zijn geen belastingtarieven actief.'
+	. 'Activeer minstens één belastingtarief.'
+	. 'Instellingen .'
+	. 'Belastingtarief',
+'textarea' => 'Tekstgebied',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'Ongeldige 8-cijferige back-upherstelcode',
+'two.factor.authentication.invalid.totp.code' =>
+	'Ongeldige 6-cijferige eenmalige authenticatiecode',
+'two.factor.authentication.rate.limit.reached' =>
+	'Snelheidslimiet bereikt.'
+	. 'Wacht 10 seconden.',
+'url' => 'URL',
+'variant' => 'Variant',
+'approval.required' => 'Goedkeuring vereist',
+'quote.approval.required' => 'Goedkeuring van offerte vereist',
+'quote.must.be.approved.first' =>
+	'Offerte moet vóór conversie worden '
+	. 'goedgekeurd',   
 ];
+

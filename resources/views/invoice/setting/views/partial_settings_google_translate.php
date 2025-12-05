@@ -13,14 +13,12 @@ use Yiisoft\Html\Html;
 <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <?= 'Google Translate'; ?>
-            </div>
+            <div class="panel-heading"><?= 'Google Translate'; ?></div>
             <div class="panel-body">
-                <?= Html::openTag('div', ['class' => 'row']); ?>
+                <div class = "row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="settings[google_translate_json_filename]" <?= $s->where('google_translate_json_filename'); ?>> <i class="bi bi-info-circle"></i>
+                            <label for="settings[google_translate_json_filename]" <?= $s->where('google_translate_json_filename'); ?>><i class="bi bi-info-circle"></i>
                                 <?= 'Google Translate Json Filename (eg. my_json_filename.json)'; ?>
                             </label>
                             <?php $body['settings[google_translate_json_filename]'] = $s->getSetting('google_translate_json_filename');?>
@@ -28,7 +26,7 @@ use Yiisoft\Html\Html;
                             id="settings[google_translate_json_filename]" value="<?= $s->getSetting('google_translate_json_filename'); ?>">
                         </div>
                         <div class="form-group">
-                            <label for="settings[google_translate_locale]" <?= $s->where('google_translate_locale'); ?>>
+                            <label for="settings[google_translate_locale]" <?= $s->where('google_translate_locale'); ?>><i class="bi bi-info-circle"></i>
                                 <?= 'Google Translate Locale'; ?>
                             </label>
                             <?php $body['settings[google_translate_locale]'] = $s->getSetting('google_translate_locale');?>
@@ -52,12 +50,14 @@ use Yiisoft\Html\Html;
                 </div>
             </div>
             <div class="panel-body">
-                <p><b>Objective:</b> Rebuild a \www\invoice\resources\messages\en\app.php language file and insert it into e.g. <a href="https://github.com/rossaddison/invoice/commit/28188010c7965092f92484871712bf8347f0f5ed">zu_ZA\app.php</a></p>
+                <p><b>Objective:</b> Translate the template file at \www\invoice\resources\messages\en\app.php into e.g. <a href="https://github.com/rossaddison/invoice/commit/28188010c7965092f92484871712bf8347f0f5ed">zu_ZA\app.php</a></p>
                 <p><b>Step 1:</b> Run the Generator ... Translate 'app' to translate the above file from English into the language of your choice into<pre><h6>...\resources\views\invoice\generator\output_overwrite</h6></pre>.</p>
                 <p><b>Step 2:</b> Adjust the <code>\resources\views\layout</code> files.</p>
                 <p><b>Step 3:</b> Adjust the <code>SettingsRepository locale_language_array()</code> to include your language. e.g. 'pt-BR' and also the <code>locales</code> function.</p>
                 <p><b>Step 4:</b> Adjust the <code>config\web\params.php</code> locales array to include your language. e.g. 'pt-BR'</p>
                 <p><b>Step 5:</b> Copy the contents from outputoverwrite folder into your resources/messages/{locale}
+                <p><b>Step 6:</b> Adjust the src/ViewInjection/LayoutViewInjection.php</p>
+                    
                 
             </div>
             <div class="panel-body">
@@ -78,6 +78,7 @@ use Yiisoft\Html\Html;
                 <p><strong>Step 8:</strong> <br />The symlink file points to <code>C:\wamp64\bin\php\php8.3.16\phpForApache.ini</code> Adjust this manually at line 1947 [curl] with eg. <code>"c:/wamp64/bin/php/php8.3.16/cacert.pem"</code> Note the forward slashes.</p>
                 <p><strong>Step 9:</strong> <br />Reboot your server.</p>
                 <p><strong>Step 10:</strong> <br />Copy the contents from outputoverwrite folder into your resources/messages/{locale}</p>
+                <p><strong>Step 11:</strong> <br />Adjust the <code>src/ViewInjection/LayoutViewInjection</code></p>
                 <p>&nbsp;</p>
             </div>             
         </div>

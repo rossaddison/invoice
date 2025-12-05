@@ -28,28 +28,50 @@ return [
 'aging.1.15' => '1–15 dni',
 'aging.16.30' => '16–30 dni',
 'aging.above.30' => 'Nad 30 dni',
-'alert.no.client.assigned' => 'Temu projektu ni dodeljen noben naročnik.',
-'alert.no.tasks.found' => 'Za ta projekt ni bilo najdenih nalog.',
-'alert.task.delete' => 'Pozor! Želite izbrisati nalogo, ki je bila uporabljena za ustvarjanje računa.',
+'alert.no.client.assigned' => 'Temu projektu ni dodeljen noben '
+	. 'naročnik.',
+'alert.no.tasks.found' => 'Za ta projekt ni bilo '
+	. 'najdenih nalog.',
+'alert.task.delete' => 'Pozor! Želite izbrisati nalogo, ki '
+	. 'je bila uporabljena za ustvarjanje '
+	. 'računa.',
 'all' => 'Vse',
 'allowance.or.charge' => 'Dodatek ali bremenitev',
-'allowance.or.charge.add' => 'Raven dokumenta (tj. NE raven vrstice računa) Dodatek ali bremenitev',
+'allowance.or.charge.add' => 'Raven dokumenta (tj.'
+	. 'NE raven vrstice računa) Dodatek '
+	. 'ali bremenitev',
 'allowance.or.charge.allowance' => 'Dodatek',
-'allowance.or.charge.allowance.vat' => 'DDV na nadomestilo',
-'allowance.or.charge.amount' => 'Znesek nadomestila (množitelj, numerično izražen kot odstotek, pomnožen z osnovnim zneskom)',
-'allowance.or.charge.base.amount' => 'Osnovni znesek',
+'allowance.or.charge.allowance.vat' =>
+	'DDV na nadomestilo',
+'allowance.or.charge.amount' => 'Znesek nadomestila (množitelj, numerično izražen '
+	. 'kot odstotek, pomnožen z osnovnim '
+	. 'zneskom)',
+'allowance.or.charge.base.amount' =>
+	'Osnovni znesek',
 'allowance.or.charge.charge' => 'Polnjenje',
-'allowance.or.charge.charge.vat' => 'DDV na računu',
-'allowance.or.charge.edit.allowance' => 'Urejanje dodatka na ravni dokumenta (tj. NE na ravni vrstice računa)',
-'allowance.or.charge.edit.charge' => 'Urejanje bremenitve na ravni dokumenta (tj. NE na ravni vrstice računa)',
-'allowance.or.charge.index' => 'Indeks dodatka ali stroškov glede na postavko',
+'allowance.or.charge.charge.vat' =>
+	'DDV na računu',
+'allowance.or.charge.edit.allowance' =>
+	'Urejanje dodatka na ravni dokumenta '
+	. '(tj.'
+	. 'NE na ravni vrstice računa)',
+'allowance.or.charge.edit.charge' =>
+	'Urejanje bremenitve na ravni dokumenta '
+	. '(tj.'
+	. 'NE na ravni vrstice računa)',
+'allowance.or.charge.index' => 'Indeks dodatka ali stroškov glede '
+	. 'na postavko',
 'allowance.or.charge.inv' => 'Dodatek ali bremenitev računa',
 'allowance.or.charge.item' => 'Dodatek ali bremenitev postavke računa',
-'allowance.or.charge.item.add' => 'Dodatek/strošek',
-'allowance.or.charge.multiplier.factor.numeric' => 'Številski faktor množenja',
+'allowance.or.charge.item.add' =>
+	'Dodatek/strošek',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'Številski faktor množenja',
 'allowance.or.charge.reason' => 'Razlog',
-'allowance.or.charge.reason.code' => 'Koda razloga',
-'already.paid' => 'Ta račun je bil že plačan.',
+'allowance.or.charge.reason.code' =>
+	'Koda razloga',
+'already.paid' => 'Ta račun je bil že '
+	. 'plačan.',
 'amount' => 'Znesek postavke računa',
 'amount.add' => 'Znesek postavke računa Dodaj',
 'amount.due' => 'Znesek zapadlosti',
@@ -65,32 +87,54 @@ return [
 'archive' => 'Arhivirajte pdf v mapi Nalaganja/Arhiv',
 'assign.client' => 'Dodeli stranko',
 'assign.client.on.signup' => 'Ob prijavi dodelite uporabniku stranko.',
-'assign.client.on.signup.default.age.minimum.eighteen' => 'Ob prijavi uporabniku dodelite stranko s privzeto minimalno starostjo osemnajst let.',
-'assign.client.on.signup.done' => 'Ob prijavi je bil uporabniku dodeljen odjemalec.',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'Ob prijavi uporabniku dodelite stranko '
+	. 's privzeto minimalno starostjo osemnajst '
+	. 'let.',
+'assign.client.on.signup.done' =>
+	'Ob prijavi je bil uporabniku '
+	. 'dodeljen odjemalec.',
 'assigned.clients' => 'Dodeljene stranke',
 'attachment.list' => 'Seznam prilog',
 'attachments' => 'Priloge',
-'automatic.email.on.recur' => 'Samodejno pošiljanje ponavljajočih se računov po e-pošti',
+'automatic.email.on.recur' => 'Samodejno pošiljanje ponavljajočih se računov '
+	. 'po e-pošti',
 'back' => 'Nazaj',
 'balance' => 'Ravnovesje',
-'balance.does.not.equal.zero' => 'Stanje ni enako nič. Stanje je Plačano =&gt; Stanje mora biti nič. ',
+'balance.does.not.equal.zero' =>
+	'Stanje ni enako nič.'
+	. 'Stanje je Plačano =&gt; Stanje '
+	. 'mora biti nič.',
 'base.invoice' => 'Osnovni račun',
 'bcc' => 'Skopna kopija',
-'bcc.mails.to.admin' => 'Pošlji vsa odhodna e-poštna sporočila kot SKP skrbniškemu računu',
-'bcc.mails.to.admin.hint' => 'Skrbniški račun je račun, ki je bil ustvarjen med namestitvijo programa InvoicePlane.',
+'bcc.mails.to.admin' => 'Pošlji vsa odhodna e-poštna sporočila '
+	. 'kot SKP skrbniškemu računu',
+'bcc.mails.to.admin.hint' =>
+	'Skrbniški račun je račun, ki '
+	. 'je bil ustvarjen med namestitvijo '
+	. 'programa InvoicePlane.',
 'before.amount' => 'Pred zneskom',
 'bill.to' => 'Račun za',
 'birthdate' => 'Datum rojstva',
 'body' => 'Telo',
 'boolean' => 'Logična vrednost',
 'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' => 'Velikost pisave gumba za zapiranje opozoril',
+'bootstrap5.alert.close.button.font.size' =>
+	'Velikost pisave gumba za zapiranje '
+	. 'opozoril',
 'bootstrap5.alert.message.font' => 'Pisava opozorilnega sporočila',
-'bootstrap5.alert.message.font.size' => 'Velikost pisave opozorilnega sporočila',
-'bootstrap5.layout.invoice.navbar.font' => 'Postavitev pisave navigacijske vrstice računa',
-'bootstrap5.layout.invoice.navbar.font.size' => 'Velikost pisave navigacijske vrstice postavitve računa',
+'bootstrap5.alert.message.font.size' =>
+	'Velikost pisave opozorilnega sporočila',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'Postavitev pisave navigacijske vrstice računa',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'Velikost pisave navigacijske vrstice postavitve '
+	. 'računa',
 'bootstrap5.offcanvas.enable' => 'Omogoči Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Postavitev zunaj platna, npr. zgoraj, spodaj, začetek tj. levo, konec tj. desno',
+'bootstrap5.offcanvas.placement' => 'Postavitev zunaj platna, npr.'
+	. 'zgoraj, spodaj, začetek tj.'
+	. 'levo, konec tj.'
+	. 'desno',
 'breadcrumb.product.index' => 'Kazalo izdelkov',
 'breadcrumb.product.property.index' => 'Kazalo lastnosti izdelka',
 'calculate.discounts' => 'Izračunaj popuste',
@@ -130,8 +174,13 @@ return [
 'cash.discount' => 'Popust za gotovino',
 'category.primary' => 'Kategorija Primarno',
 'category.secondary' => 'Kategorija Sekundarno',
-'caution.delete.invoices' => 'Samo za testiranje: Izbriši vse račune in povezane zapise. (Glej funkcijo inv/flush)',
-'caution.deleted.invoices' => 'Samo za testiranje: Vsi računi in povezana polja so bili izbrisani.',
+'caution.delete.invoices' => 'Samo za testiranje:'
+	. 'Izbriši vse račune in povezane '
+	. 'zapise.'
+	. '(Glej funkcijo inv/flush)',
+'caution.deleted.invoices' => 'Samo za testiranje:'
+	. 'Vsi računi in povezana polja '
+	. 'so bili izbrisani.',
 'cc' => 'Kp',
 'change.client' => 'Spremeni stranko',
 'change.password' => 'Spremeni geslo',
@@ -144,27 +193,56 @@ return [
 'client.access' => 'Dostop odjemalca',
 'client.add' => 'Dodaj stranko',
 'client.age' => 'Starost',
-'client.age.hint' => 'To polje je obvezno in stranka mora biti zakonsko stara vsaj 16 let.',
+'client.age.hint' => 'To polje je obvezno in '
+	. 'stranka mora biti zakonsko stara '
+	. 'vsaj 16 let.',
 'client.already.exists' => 'Stranka že obstaja!',
-'client.birthdate.hint' => 'Če datum rojstva ni znan, vnesite 01.01.1901',
+'client.birthdate.hint' => 'Če datum rojstva ni znan,'
+	. 'vnesite 01.'
+	. '01.'
+	. '1901',
 'client.building.number' => 'Številka stavbe stranke',
 'client.contract.period.end' => 'Konec obdobja',
 'client.contract.period.start' => 'Začetek menstruacije',
 'client.contract.reference' => 'Referenca pogodbe',
 'client.custom' => 'Stranka po meri',
 'client.custom.add' => 'Dodajanje po meri odjemalca',
-'client.delete.history.exits.no' => 'Ni mogoče izbrisati. Zgodovina strank obstaja.',
-'client.detail.changes' => 'Če se ta podatek spremeni, nam prosim pošljite e-pošto.',
+'client.delete.history.exits.no' =>
+	'Ni mogoče izbrisati.'
+	. 'Zgodovina strank obstaja.',
+'client.detail.changes' => 'Če se ta podatek spremeni,'
+	. 'nam prosim pošljite e-pošto.',
 'client.error.summary' => 'Povzetek napak',
 'client.form' => 'Obrazec za stranko',
 'client.frequency' => 'Pogostost strank',
 'client.group' => 'Skupina strank',
-'client.has.not.assigned' => 'Te stranke niso bile dodeljene uporabniškemu računu. Ena ali več strank na uporabniški račun.',
-'client.has.not.user.account' => 'Ta stranka nima uporabniškega računa ali trenutno ni dodeljena uporabniku. 1. Prepričajte se, da je stranka registrirana, tj. da ima uporabniški račun, ali pa dodelite to stranko trenutno registriranemu uporabniku. 2. Nastavitve ... Uporabniški račun za račune ... Dodaj uporabniški račun 3. Dodelite to stranko uporabniškemu računu 4. V tem trenutnem stanju za to stranko ne bo mogoče ustvariti računov in ponudb.',
+'client.has.not.assigned' => 'Te stranke niso bile dodeljene '
+	. 'uporabniškemu računu.'
+	. 'Ena ali več strank na '
+	. 'uporabniški račun.',
+'client.has.not.user.account' =>
+	'Ta stranka nima uporabniškega računa '
+	. 'ali trenutno ni dodeljena uporabniku.'
+	. '1.'
+	. 'Prepričajte se, da je stranka '
+	. 'registrirana, tj.'
+	. 'da ima uporabniški račun, ali '
+	. 'pa dodelite to stranko trenutno '
+	. 'registriranemu uporabniku.'
+	. '2.'
+	. 'Nastavitve .'
+	. 'Uporabniški račun za račune .'
+	. 'Dodaj uporabniški račun 3.'
+	. 'Dodelite to stranko uporabniškemu računu '
+	. '4.'
+	. 'V tem trenutnem stanju za '
+	. 'to stranko ne bo mogoče '
+	. 'ustvariti računov in ponudb.',
 'client.has.user.account' => 'Uporabniški račun',
 'client.import.list.blank' => 'Prazen seznam uvoza strank',
 'client.name' => 'Ime stranke',
-'client.not.allocated.to.user' => 'Odjemalec ni dodeljen uporabniku',
+'client.not.allocated.to.user' =>
+	'Odjemalec ni dodeljen uporabniku',
 'client.note' => 'Opomba stranke',
 'client.note.add' => 'Opomba stranke Dodaj',
 'client.note.date' => 'Datum stranke',
@@ -172,40 +250,100 @@ return [
 'client.notes' => 'Opombe stranke',
 'client.number' => 'Številka stranke',
 'client.peppol' => 'Podrobnosti o stranki Peppol',
-'client.peppol.accounting.cost' => 'Koda stroškov računovodstva stranke za knjigovodstvo',
+'client.peppol.accounting.cost' => 'Koda stroškov računovodstva stranke za '
+	. 'knjigovodstvo',
 'client.peppol.add' => 'Dodajte podatke Peppol za e-račune',
-'client.peppol.buyer.reference.default' => 'Referenca kupca: Če stranka ne določi kontaktne osebe za naročilo, je to privzeta referenca kupca ali oseba, ki oddaja naročilo.',
-'client.peppol.buyer.reference.example' => 'npr. ime osebe, ki običajno naroča, številka zaposlenega osebe, ki običajno naroča, ali koda, ki identificira to osebo ali oddelek/skupino',
+'client.peppol.buyer.reference.default' =>
+	'Referenca kupca:'
+	. 'Če stranka ne določi kontaktne '
+	. 'osebe za naročilo, je to '
+	. 'privzeta referenca kupca ali oseba,'
+	. 'ki oddaja naročilo.',
+'client.peppol.buyer.reference.example' =>
+	'npr.'
+	. 'ime osebe, ki običajno naroča,'
+	. 'številka zaposlenega osebe, ki običajno '
+	. 'naroča, ali koda, ki identificira '
+	. 'to osebo ali oddelek/skupino',
 'client.peppol.clientpeppols.form' => 'Obrazec za računovodsko stranko/naročnika',
 'client.peppol.edit' => 'Urejanje podatkov Peppol za e-račune',
-'client.peppol.endpointid' => 'ID končne točke: e-poštni naslov',
-'client.peppol.endpointid.schemeid' => 'ID končne točke - ID sheme, ki temelji na 4-mestni kodi EAS (elektronska shema naslovov), npr. 0192',
-'client.peppol.financial.institution.branchid' => 'ID poslovalnice finančne institucije',
+'client.peppol.endpointid' => 'ID končne točke:'
+	. 'e-poštni naslov',
+'client.peppol.endpointid.schemeid' => 'ID končne točke - ID '
+	. 'sheme, ki temelji na 4-mestni '
+	. 'kodi EAS (elektronska shema naslovov),'
+	. 'npr.'
+	. '0192',
+'client.peppol.financial.institution.branchid' =>
+	'ID poslovalnice finančne institucije',
 'client.peppol.identificationid' => 'Identifikacijska številka',
 'client.peppol.identificationid.schemeid' => 'Identifikacijski ID - schemeID',
-'client.peppol.legal.entity.company.legal.form' => 'Pravna oblika podjetja – dodatne pravne informacije, pomembne za prodajalca, npr. osnovni kapital',
-'client.peppol.legal.entity.companyid' => 'ID pravne osebe',
-'client.peppol.legal.entity.companyid.schemeid' => 'ID pravne osebe – schemeID',
-'client.peppol.legal.entity.registration.name' => 'Ime registracije pravne osebe',
-'client.peppol.not.found' => 'Stranka ali kupec ni nastavil svojih Peppol podatkov.',
-'client.peppol.not.found.accounting.cost' => 'Ni najdeno: Računovodski stroški ali besedilna vrednost, ki določa, kam knjižiti ustrezne podatke v finančne račune kupcev.',
-'client.peppol.not.found.delivery.location' => 'Lokacija dostave Država Imena ni bilo mogoče najti',
-'client.peppol.not.found.id' => 'Stranka ni izpolnila svoje identifikacijske številke računa v okviru svojih podatkov o stranki Peppol na spletu.',
-'client.peppol.not.found.id.supplier.assigned' => 'ID dodeljenega računa dobavitelja Peppol stranke ni bil najden',
-'client.peppol.not.found.invoice' => 'Povezanega računa ni bilo mogoče najti.',
-'client.peppol.not.found.purchase.order' => 'Prodajno naročilo nima povezane številke naročilnice',
-'client.peppol.not.found.purchase.order.item.number' => 'Postavka prodajnega naročila nima ujemajoče se identifikacijske številke postavke naročila (identifikacija postavke kupca). Skrbnik: Uredite številko postavke prodajnega naročila na računu.',
-'client.peppol.not.found.purchase.order.line.number' => 'Številka vrstice prodajnega naročila nima ujemajoče se številke vrstice naročila (OrderLineReference LineID). Skrbnik: Uredite številko vrstice prodajnega naročila računa. ',
-'client.peppol.not.found.sales.order' => 'Prodajno naročilo ne obstaja',
-'client.peppol.payee.financial.account.name' => 'Ime finančnega računa prejemnika plačila',
-'client.peppol.payee.financial.accountid' => 'ID finančnega računa prejemnika plačila',
-'client.peppol.record.updated.successfully' => 'Zapis Peppol je bil uspešno posodobljen',
-'client.peppol.supplier.assigned.account.id' => 'ID dodeljenega računa dobavitelja',
+'client.peppol.legal.entity.company.legal.form' =>
+	'Pravna oblika podjetja – dodatne '
+	. 'pravne informacije, pomembne za prodajalca,'
+	. 'npr.'
+	. 'osnovni kapital',
+'client.peppol.legal.entity.companyid' =>
+	'ID pravne osebe',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'ID pravne osebe – schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'Ime registracije pravne osebe',
+'client.peppol.not.found' => 'Stranka ali kupec ni nastavil '
+	. 'svojih Peppol podatkov.',
+'client.peppol.not.found.accounting.cost' =>
+	'Ni najdeno:'
+	. 'Računovodski stroški ali besedilna vrednost,'
+	. 'ki določa, kam knjižiti ustrezne '
+	. 'podatke v finančne račune kupcev.',
+'client.peppol.not.found.delivery.location' =>
+	'Lokacija dostave Država Imena ni '
+	. 'bilo mogoče najti',
+'client.peppol.not.found.id' =>
+	'Stranka ni izpolnila svoje identifikacijske '
+	. 'številke računa v okviru svojih '
+	. 'podatkov o stranki Peppol na '
+	. 'spletu.',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'ID dodeljenega računa dobavitelja Peppol '
+	. 'stranke ni bil najden',
+'client.peppol.not.found.invoice' =>
+	'Povezanega računa ni bilo mogoče '
+	. 'najti.',
+'client.peppol.not.found.purchase.order' =>
+	'Prodajno naročilo nima povezane številke '
+	. 'naročilnice',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'Postavka prodajnega naročila nima ujemajoče '
+	. 'se identifikacijske številke postavke naročila '
+	. '(identifikacija postavke kupca).'
+	. 'Skrbnik:'
+	. 'Uredite številko postavke prodajnega naročila '
+	. 'na računu.',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'Številka vrstice prodajnega naročila nima '
+	. 'ujemajoče se številke vrstice naročila '
+	. '(OrderLineReference LineID).'
+	. 'Skrbnik:'
+	. 'Uredite številko vrstice prodajnega naročila '
+	. 'računa.',
+'client.peppol.not.found.sales.order' =>
+	'Prodajno naročilo ne obstaja',
+'client.peppol.payee.financial.account.name' =>
+	'Ime finančnega računa prejemnika plačila',
+'client.peppol.payee.financial.accountid' =>
+	'ID finančnega računa prejemnika plačila',
+'client.peppol.record.updated.successfully' =>
+	'Zapis Peppol je bil uspešno '
+	. 'posodobljen',
+'client.peppol.supplier.assigned.account.id' =>
+	'ID dodeljenega računa dobavitelja',
 'client.peppol.taxschemecompanyid' => 'ID podjetja za davčno shemo',
 'client.peppol.taxschemeid' => 'ID davčne sheme',
 'client.postaladdress' => 'Poštni naslov',
 'client.postaladdress.add' => 'Dodaj poštni naslov stranke',
-'client.postaladdress.additional.street.name' => 'Dodatno ime ulice',
+'client.postaladdress.additional.street.name' =>
+	'Dodatno ime ulice',
 'client.postaladdress.available' => 'Razpoložljivi poštni naslovi',
 'client.postaladdress.building.number' => 'Številka stavbe',
 'client.postaladdress.city.name' => 'Ime mesta',
@@ -218,7 +356,12 @@ return [
 'client.streets' => 'Ulice',
 'client.surname' => 'Priimek stranke',
 'client.surname.optional' => 'Priimek stranke (neobvezno)',
-'client.title' => 'Naziv stranke (g./ga./gdč./dr./prof.)',
+'client.title' => 'Naziv stranke (g.'
+	. '/ga.'
+	. '/gdč.'
+	. '/dr.'
+	. '/prof.'
+	. ')',
 'client.title.doctor' => 'Dr.',
 'client.title.miss' => 'Gospodična',
 'client.title.mr' => 'G.',
@@ -234,20 +377,25 @@ return [
 'common.name' => 'Ime',
 'company' => 'Podjetje',
 'company.deleted' => 'Podjetje je bilo izbrisano',
-'company.not.deleted' => 'Podjetje ni bilo izbrisano, ker imate nanj priložen profil podjetja.',
+'company.not.deleted' => 'Podjetje ni bilo izbrisano, ker '
+	. 'imate nanj priložen profil podjetja.',
 'company.private' => 'Zasebno podjetje',
 'company.private.logo' => 'Logotip podjetja',
 'company.private.logo.height' => 'Višina logotipa',
 'company.private.logo.margin' => 'Rob logotipa',
 'company.private.logo.width' => 'Širina logotipa',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Logotip bo izbrisan iz naloženih datotek in javne mape',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'Logotip bo izbrisan iz naloženih '
+	. 'datotek in javne mape',
 'company.public' => 'Javno podjetje',
 'complete' => 'Dokončano',
 'confirm' => 'Potrdi',
 'confirm.deletion' => 'Potrdi brisanje',
 'contact.information' => 'Kontaktni podatki',
 'continue' => 'Nadaljuj',
-'continue.with.developer.sandbox.hmrc' => 'Nadaljujte z Developer Gov Sandbox UK',
+'continue.with.developer.sandbox.hmrc' =>
+	'Nadaljujte z Developer Gov Sandbox '
+	. 'UK',
 'continue.with.facebook' => 'Nadaljujte s Facebookom',
 'continue.with.github' => 'Nadaljujte z Githubom',
 'continue.with.google' => 'Nadaljuj z Googlom',
@@ -260,10 +408,20 @@ return [
 'contract' => 'Pogodba',
 'contract.add' => 'Dodaj pogodbo',
 'contract.contracts' => 'Pogodbe',
-'contract.create' => 'Ustvarite svoje pogodbe prek: Račun ... Ogled ... Možnosti ... Uredi. Za stranko, ki ji je račun izstavljen, bo ustvarjena pogodba. Povežite to pogodbo s prihodnjimi računi.',
+'contract.create' => 'Ustvarite svoje pogodbe prek:'
+	. 'Račun .'
+	. 'Ogled .'
+	. 'Možnosti .'
+	. 'Uredi.'
+	. 'Za stranko, ki ji je '
+	. 'račun izstavljen, bo ustvarjena pogodba.'
+	. 'Povežite to pogodbo s prihodnjimi '
+	. 'računi.',
 'contract.index.button.list' => 'Računi',
 'contract.name' => 'Ime',
-'contract.none' => 'Opomnik: Za ta račun ni bila sklenjena nobena pogodba',
+'contract.none' => 'Opomnik:'
+	. 'Za ta račun ni bila '
+	. 'sklenjena nobena pogodba',
 'contract.period.end' => 'Konec obdobja',
 'contract.period.start' => 'Začetek menstruacije',
 'contract.reference' => 'Referenca',
@@ -274,7 +432,14 @@ return [
 'country' => 'Država',
 'create' => 'Ustvari',
 'create.credit.invoice' => 'Ustvari dobropisni račun',
-'create.credit.invoice.alert' => 'Z ustvarjanjem dobropisnega računa bo trenutni račun na voljo <em>samo za branje,</em> kar pomeni, da ga ne boste mogli več urejati. Dobropisni račun bo vseboval trenutno stanje z vsemi postavkami, vendar z negativnimi zneski in saldi.',
+'create.credit.invoice.alert' => 'Z ustvarjanjem dobropisnega računa bo '
+	. 'trenutni račun na voljo <em>samo '
+	. 'za branje,</em> kar pomeni, da '
+	. 'ga ne boste mogli več '
+	. 'urejati.'
+	. 'Dobropisni račun bo vseboval trenutno '
+	. 'stanje z vsemi postavkami, vendar '
+	. 'z negativnimi zneski in saldi.',
 'create.invoice' => 'Ustvari račun',
 'create.product' => 'Ustvari izdelek',
 'create.project' => 'Ustvari projekt',
@@ -288,16 +453,23 @@ return [
 'credit.invoice.details' => 'Podrobnosti o kreditnem računu',
 'credit.invoice.for.invoice' => 'Dobropis',
 'credit.note.creation.successful' => 'Ustvarjanje dobropisa je bilo uspešno',
-'credit.note.creation.unsuccessful' => 'Ustvarjanje dobropisa ali dobropisa za preklic računa ni bilo uspešno.',
+'credit.note.creation.unsuccessful' => 'Ustvarjanje dobropisa ali dobropisa za '
+	. 'preklic računa ni bilo uspešno.',
 'creditcard.cvv' => 'CVV / CSC',
 'creditcard.details' => 'Podatki o kreditni kartici',
 'creditcard.expiry.month' => 'Mesec poteka veljavnosti',
 'creditcard.expiry.year' => 'Leto poteka veljavnosti',
 'creditcard.number' => 'Številka kreditne kartice',
 'cron.key' => 'CRON ključ',
-'curl.store.cove.api.get.legal.entity.id.successful' => 'Uspešno pridobivanje pravne osebe',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Klic API-ja za nastavitev Store Cove – pravna oseba je bila uspešna',
-'curl.store.cove.api.setup.successful' => 'Klic API-ja za nastavitev trgovine Store Cove je bil uspešen',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'Uspešno pridobivanje pravne osebe',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Klic API-ja za nastavitev Store '
+	. 'Cove – pravna oseba je '
+	. 'bila uspešna',
+'curl.store.cove.api.setup.successful' =>
+	'Klic API-ja za nastavitev trgovine '
+	. 'Store Cove je bil uspešen',
 'currency' => 'Valuta',
 'currency.code' => 'Koda valute',
 'currency.symbol' => 'Simbol valute',
@@ -335,7 +507,8 @@ return [
 'date.supplied' => 'Datum dobave',
 'dates' => 'Datumi računov',
 'datetime.immutable.date.created' => 'Ustvari',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
 'datetime.immutable.date.modified' => 'Proti',
 'datetime.immutable.time.created' => 'Čas',
 'days' => 'Dnevi',
@@ -347,7 +520,8 @@ return [
 'default.hourly.rate' => 'Privzeta urna postavka',
 'default.invoice.group' => 'Privzeta skupina računov',
 'default.invoice.tax.rate' => 'Privzeta davčna stopnja za račune',
-'default.invoice.tax.rate.placement' => 'Privzeta postavitev davčne stopnje računa',
+'default.invoice.tax.rate.placement' =>
+	'Privzeta postavitev davčne stopnje računa',
 'default.item.tax.rate' => 'Privzeta davčna stopnja artikla',
 'default.list.limit' => 'Število elementov na seznamih',
 'default.notes' => 'Privzete opombe',
@@ -357,20 +531,40 @@ return [
 'default.quote.group' => 'Privzeta skupina ponudb',
 'default.terms' => 'Privzeti pogoji',
 'delete' => 'Izbriši',
-'delete.attachment.warning' => 'Ali ste prepričani, da želite izbrisati to prilogo?',
+'delete.attachment.warning' => 'Ali ste prepričani, da želite '
+	. 'izbrisati to prilogo?',
 'delete.client' => 'Izbriši stranko',
-'delete.client.warning' => 'Če izbrišete to stranko, boste izbrisali tudi vse račune, ponudbe in plačila, povezana s to stranko. Ali ste prepričani, da želite trajno izbrisati to stranko?',
+'delete.client.warning' => 'Če izbrišete to stranko, boste '
+	. 'izbrisali tudi vse račune, ponudbe '
+	. 'in plačila, povezana s to '
+	. 'stranko.'
+	. 'Ali ste prepričani, da želite '
+	. 'trajno izbrisati to stranko?',
 'delete.invoice' => 'Izbriši račun',
-'delete.invoice.warning' => 'Če izbrišete ta račun, ga kasneje ne boste mogli obnoviti. Ali ste prepričani, da želite trajno izbrisati ta račun?',
+'delete.invoice.warning' => 'Če izbrišete ta račun, ga '
+	. 'kasneje ne boste mogli obnoviti.'
+	. 'Ali ste prepričani, da želite '
+	. 'trajno izbrisati ta račun?',
 'delete.quote' => 'Izbriši ponudbo',
-'delete.quote.warning' => 'Če izbrišete ta citat, ga kasneje ne boste mogli obnoviti. Ali ste prepričani, da želite trajno izbrisati ta citat?',
-'delete.record.warning' => 'Ali ste prepričani, da želite izbrisati ta zapis?',
-'delete.sent' => 'Ni mogoče izbrisati - račun je bil poslan',
-'delete.tax.warning' => 'Ali ste prepričani, da želite izbrisati ta davek?',
-'delete.user.client.warning' => 'Ali ste prepričani, da želite preklicati dodelitev te stranke temu uporabniku?',
+'delete.quote.warning' => 'Če izbrišete ta citat, ga '
+	. 'kasneje ne boste mogli obnoviti.'
+	. 'Ali ste prepričani, da želite '
+	. 'trajno izbrisati ta citat?',
+'delete.record.warning' => 'Ali ste prepričani, da želite '
+	. 'izbrisati ta zapis?',
+'delete.sent' => 'Ni mogoče izbrisati - račun '
+	. 'je bil poslan',
+'delete.tax.warning' => 'Ali ste prepričani, da želite '
+	. 'izbrisati ta davek?',
+'delete.user.client.warning' => 'Ali ste prepričani, da želite '
+	. 'preklicati dodelitev te stranke temu '
+	. 'uporabniku?',
 'deleted' => 'Izbrisano',
-'deletion.forbidden' => 'Brisanje računov je prepovedano. Obrnite se na administratorja ali si oglejte dokumentacijo.',
-'delivery' => 'Podrobnosti o dostavi: Začetni/končni datumi računa/dobavne dobe',
+'deletion.forbidden' => 'Brisanje računov je prepovedano.'
+	. 'Obrnite se na administratorja ali '
+	. 'si oglejte dokumentacijo.',
+'delivery' => 'Podrobnosti o dostavi:'
+	. 'Začetni/končni datumi računa/dobavne dobe',
 'delivery.actual.delivery.date' => 'Dejanski datum dobave',
 'delivery.add' => 'Dodaj dostavo',
 'delivery.date.created' => 'Datum nastanka',
@@ -378,17 +572,35 @@ return [
 'delivery.end.date' => 'Končni datum dobave/obdobje računa',
 'delivery.location' => 'Lokacija dostave',
 'delivery.location.add' => 'Lokacija dostave Dodaj',
-'delivery.location.add.in.invoice' => 'Dodajte lokacijo dostave pod Račun ... Ogled ... Možnosti ... Uredi',
+'delivery.location.add.in.invoice' =>
+	'Dodajte lokacijo dostave pod Račun '
+	. '.'
+	. 'Ogled .'
+	. 'Možnosti .'
+	. 'Uredi',
 'delivery.location.building.number' => 'Številka stavbe',
 'delivery.location.client' => 'Lokacije dostave naročnika',
 'delivery.location.delete' => 'Izbriši lokacijo dostave',
 'delivery.location.edit' => 'Uredi lokacijo dostave',
-'delivery.location.electronic.address.scheme' => 'Shema elektronskega naslavljanja (seznam kod) Privzeto: 0088 Evropsko oštevilčenje artiklov (EAN) Lokacijska koda oz. (GLN) Globalne lokacijske številke',
-'delivery.location.global.location.number' => 'Globalna lokacijska številka (13 mest)',
-'delivery.location.id.not.found' => 'ID globalne številke lokacije dostave ni bil najden',
-'delivery.location.index.button.list' => 'Računi',
-'delivery.location.none' => 'S tem računom ni povezana nobena lokacija dostave.',
-'delivery.location.peppol.output' => 'S tem računom ni povezana nobena lokacija dostave. Zato Peppol ne more zagotoviti nobenega izhoda.',
+'delivery.location.electronic.address.scheme' =>
+	'Shema elektronskega naslavljanja (seznam kod) '
+	. 'Privzeto:'
+	. '0088 Evropsko oštevilčenje artiklov (EAN) '
+	. 'Lokacijska koda oz.'
+	. '(GLN) Globalne lokacijske številke',
+'delivery.location.global.location.number' =>
+	'Globalna lokacijska številka (13 mest)',
+'delivery.location.id.not.found' =>
+	'ID globalne številke lokacije dostave '
+	. 'ni bil najden',
+'delivery.location.index.button.list' =>
+	'Računi',
+'delivery.location.none' => 'S tem računom ni povezana '
+	. 'nobena lokacija dostave.',
+'delivery.location.peppol.output' => 'S tem računom ni povezana '
+	. 'nobena lokacija dostave.'
+	. 'Zato Peppol ne more zagotoviti '
+	. 'nobenega izhoda.',
 'delivery.location.plural' => 'Lokacije dostave',
 'delivery.location.view' => 'Ogled lokacije dostave',
 'delivery.party' => 'Dostavna zabava',
@@ -414,12 +626,18 @@ return [
 'download' => 'Prenesi',
 'download.pdf' => 'Prenesi PDF',
 'draft' => 'Osnutek',
-'draft.guest' => 'Stranke si ne morejo ogledati osnutkov računov.',
-'draft.number.off' => 'Novi osnutki računov ne bodo imeli številke računa. Označite kot poslano, da dobite številko računa.',
-'draft.number.on' => 'Novi osnutki računov bodo imeli številko računa',
+'draft.guest' => 'Stranke si ne morejo ogledati '
+	. 'osnutkov računov.',
+'draft.number.off' => 'Novi osnutki računov ne bodo '
+	. 'imeli številke računa.'
+	. 'Označite kot poslano, da dobite '
+	. 'številko računa.',
+'draft.number.on' => 'Novi osnutki računov bodo imeli '
+	. 'številko računa',
 'drop.files.here' => 'Spustite datoteke sem!',
 'due.date' => 'Dva zmenka',
-'early.settlement.cash.discount' => 'Popust za predčasno poravnavo v gotovini',
+'early.settlement.cash.discount' => 'Popust za predčasno poravnavo v '
+	. 'gotovini',
 'edit' => 'Uredi',
 'elements' => 'Elementi',
 'email' => 'E-pošta',
@@ -428,15 +646,22 @@ return [
 'email.default' => 'Privzeto',
 'email.default.none.set' => 'Privzeta vrednost ni bila nastavljena',
 'email.exception' => 'Izjema pri pošiljanju e-pošte.',
-'email.from.dropdown' => 'Spustni seznam e-poštnih naslovov za e-pošto, ki jih je treba vključiti v obrazec za ponudbo in obrazec za račun',
+'email.from.dropdown' => 'Spustni seznam e-poštnih naslovov za '
+	. 'e-pošto, ki jih je treba '
+	. 'vključiti v obrazec za ponudbo '
+	. 'in obrazec za račun',
 'email.include' => 'Vključi',
 'email.invoice' => 'Račun po e-pošti',
-'email.link.click.confirm' => 'Prosimo, potrdite svoj e-poštni naslov s klikom na to povezavo',
+'email.link.click.confirm' => 'Prosimo, potrdite svoj e-poštni naslov '
+	. 's klikom na to povezavo',
 'email.log' => 'Dnevnik poslanih računov',
 'email.logs' => 'Dnevniki poslanih računov',
 'email.logs.with.filter' => 'Poslano po e-pošti',
-'email.not.configured' => 'Preden lahko pošljete e-pošto, morate konfigurirati nastavitve e-pošte v območju Sistemske nastavitve.',
-'email.not.sent.successfully' => 'E-poštno sporočilo NI bilo uspešno poslano',
+'email.not.configured' => 'Preden lahko pošljete e-pošto, morate '
+	. 'konfigurirati nastavitve e-pošte v območju '
+	. 'Sistemske nastavitve.',
+'email.not.sent.successfully' => 'E-poštno sporočilo NI bilo uspešno '
+	. 'poslano',
 'email.pdf.attachment' => 'Priložite ponudbo/račun po e-pošti?',
 'email.quote' => 'Ponudba po e-pošti',
 'email.send.method' => 'Način pošiljanja e-pošte',
@@ -444,47 +669,108 @@ return [
 'email.send.method.sendmail' => 'Pošlji pošto',
 'email.send.method.smtp' => 'SMTP',
 'email.settings' => 'Nastavitve e-pošte',
-'email.source.email.template' => ' Pridobljeno iz nastavitev ... Predloga e-pošte',
-'email.source.user.account' => ' Pridobljeno iz nastavitev ... Uporabniški račun za račune',
+'email.source.email.template' => 'Pridobljeno iz nastavitev .'
+	. 'Predloga e-pošte',
+'email.source.user.account' => 'Pridobljeno iz nastavitev .'
+	. 'Uporabniški račun za račune',
 'email.successfully.sent' => 'E-pošta je bila uspešno poslana',
 'email.template' => 'Predloga e-pošte',
 'email.template.add' => 'Predloga e-pošte Dodaj',
 'email.template.already.exists' => 'Predloga e-pošte že obstaja!',
 'email.template.form' => 'Predloga obrazca za e-pošto',
-'email.template.from.email.leave.blank' => 'Če to polje pustite prazno, bo e-poštni naslov uporabnikovega računa vstavljen kot vrednost, ki jo je mogoče urejati, v obrazec za pošiljanje pošte. Npr. e-poštni naslov strežnika računovodje. Tukaj po možnosti uporabite e-poštni naslov, povezan s strežnikom.',
+'email.template.from.email.leave.blank' =>
+	'Če to polje pustite prazno,'
+	. 'bo e-poštni naslov uporabnikovega računa '
+	. 'vstavljen kot vrednost, ki jo '
+	. 'je mogoče urejati, v obrazec '
+	. 'za pošiljanje pošte.'
+	. 'Npr.'
+	. 'e-poštni naslov strežnika računovodje.'
+	. 'Tukaj po možnosti uporabite e-poštni '
+	. 'naslov, povezan s strežnikom.',
 'email.template.from.source' => 'Vir e-pošte',
-'email.template.from.source.admin.email' => 'E-poštni naslov skrbnika (config/common/params)',
-'email.template.from.source.froms.email' => 'Iz tabele Privzeto (nastavitve ... Iz spustnega seznama e-pošte E-poštni naslovi)',
-'email.template.from.source.sender.email' => 'E-poštni naslov pošiljatelja (config/common/params)',
-'email.template.not.configured' => 'Predloge e-pošte niso konfigurirane. Nastavitve ... Računi ... Predloge računov ... Privzeta predloga e-pošte',
+'email.template.from.source.admin.email' =>
+	'E-poštni naslov skrbnika (config/common/params)',
+'email.template.from.source.froms.email' =>
+	'Iz tabele Privzeto (nastavitve .'
+	. 'Iz spustnega seznama e-pošte E-poštni '
+	. 'naslovi)',
+'email.template.from.source.sender.email' =>
+	'E-poštni naslov pošiljatelja (config/common/params)',
+'email.template.not.configured' => 'Predloge e-pošte niso konfigurirane.'
+	. 'Nastavitve .'
+	. 'Računi .'
+	. 'Predloge računov .'
+	. 'Privzeta predloga e-pošte',
 'email.template.overdue' => 'Predloga za e-pošto z zamudo',
 'email.template.paid' => 'Predloga plačljivega e-poštnega sporočila',
-'email.template.successfully.added' => 'Predloga e-pošte je bila uspešno dodana',
-'email.template.successfully.deleted' => 'Predloga e-pošte je bila uspešno izbrisana',
-'email.template.successfully.edited' => 'Predloga e-pošte je bila uspešno urejena',
+'email.template.successfully.added' => 'Predloga e-pošte je bila uspešno '
+	. 'dodana',
+'email.template.successfully.deleted' => 'Predloga e-pošte je bila uspešno '
+	. 'izbrisana',
+'email.template.successfully.edited' => 'Predloga e-pošte je bila uspešno '
+	. 'urejena',
 'email.template.tags' => 'Oznake predlog e-pošte',
-'email.template.tags.instructions' => 'Oznake predloge lahko uporabite za dodajanje dinamičnih informacij, kot sta ime stranke ali številka računa, v predlogo e-pošte. Kliknite besedilno polje Telo in nato v spustnem meniju izberite oznako. Samodejno bo vstavljena v besedilno polje.',
+'email.template.tags.instructions' => 'Oznake predloge lahko uporabite za '
+	. 'dodajanje dinamičnih informacij, kot sta '
+	. 'ime stranke ali številka računa,'
+	. 'v predlogo e-pošte.'
+	. 'Kliknite besedilno polje Telo in '
+	. 'nato v spustnem meniju izberite '
+	. 'oznako.'
+	. 'Samodejno bo vstavljena v besedilno '
+	. 'polje.',
 'email.template.type' => 'Vrsta predloge e-pošte',
 'email.templates' => 'Predloge e-poštnih sporočil',
-'email.to.address.missing' => 'Določiti morate e-poštni naslov, na katerega naj bo poslano e-poštno sporočilo.',
-'email.warning.draft' => 'Osnutke računov je treba najprej označiti kot poslane, da se prikažejo na strani stranke, nato pa jih je mogoče poslati po e-pošti.',
+'email.to.address.missing' => 'Določiti morate e-poštni naslov, na '
+	. 'katerega naj bo poslano e-poštno '
+	. 'sporočilo.',
+'email.warning.draft' => 'Osnutke računov je treba najprej '
+	. 'označiti kot poslane, da se '
+	. 'prikažejo na strani stranke, nato '
+	. 'pa jih je mogoče poslati '
+	. 'po e-pošti.',
 'enable.debug.mode' => 'Omogočite način odpravljanja napak',
 'enable.online.payments' => 'Omogoči spletna plačila',
 'enable.permissive.search.clients' => 'Omogoči permisivno iskanje',
 'enable.projects' => 'Omogočanje modula Projekti',
 'enable.vat' => 'Omogoči DDV',
-'enable.vat.message' => 'Prikaži sporočilo z opomnikom za DDV nad gumbom z možnostmi v pogledih',
-'enable.vat.warning.line.1' => '1. Z omogočenim DDV so z DDV obdavčene le posamezne postavke na računu. Tj. davki na ponudbi/računu se ne bodo prikazali na računu in bodo zmanjšani na 0.',
-'enable.vat.warning.line.2' => '2. Če je DDV omogočen, noben davki, ki niso del postavk, kot je omenjeno zgoraj, ne sestavljajo skupnega zneska davka. ',
-'enable.vat.warning.line.3' => '3. Ustvarite ponudbe/račune za DDV v ločeni zbirki podatkov.',
-'enable.vat.warning.line.4' => '4. Vse nove postavke na računu z DDV so označene z zastavico belongs_to_vat_invoice.',
+'enable.vat.message' => 'Prikaži sporočilo z opomnikom za '
+	. 'DDV nad gumbom z možnostmi '
+	. 'v pogledih',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. 'Z omogočenim DDV so z '
+	. 'DDV obdavčene le posamezne postavke '
+	. 'na računu.'
+	. 'Tj.'
+	. 'davki na ponudbi/računu se ne '
+	. 'bodo prikazali na računu in '
+	. 'bodo zmanjšani na 0.',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. 'Če je DDV omogočen, noben '
+	. 'davki, ki niso del postavk,'
+	. 'kot je omenjeno zgoraj, ne '
+	. 'sestavljajo skupnega zneska davka.',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. 'Ustvarite ponudbe/račune za DDV v '
+	. 'ločeni zbirki podatkov.',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. 'Vse nove postavke na računu '
+	. 'z DDV so označene z '
+	. 'zastavico belongs_to_vat_invoice.',
 'enabled' => 'Omogočeno',
 'end' => 'Konec',
 'end.date' => 'Končni datum',
 'enforcement' => 'Naslov prisotnega uradnika za izvrševanje',
 'enter' => 'Vnesite',
 'enter.payment' => 'Vnesite plačilo',
-'error.duplicate.file' => 'Napaka: Podvojeno ime datoteke, prosimo, spremenite ga!',
+'error.duplicate.file' => 'Napaka:'
+	. 'Podvojeno ime datoteke, prosimo, spremenite '
+	. 'ga!',
 'errors' => 'Napake',
 'every' => 'Vsak',
 'example' => 'Primer',
@@ -497,15 +783,28 @@ return [
 'family' => 'Družina',
 'family.add' => 'Družina Dodaj',
 'family.already.exists' => 'Družina že obstaja!',
-'family.history' => 'Družinska zgodovina obstaja. Ni mogoče izbrisati.',
+'family.history' => 'Družinska zgodovina obstaja.'
+	. 'Ni mogoče izbrisati.',
 'family.name' => 'Priimek',
 'family.search' => 'Iskanje družine',
 'faq' => 'Pogosta vprašanja',
-'faq.ai.callback.session' => 'Copilot: Kako lahko vključim https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php za izboljšanje upravljanja stanja v funkciji `callbackGithub`?',
+'faq.ai.callback.session' => 'Copilot:'
+	. 'Kako lahko vključim https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php za izboljšanje upravljanja stanja '
+	. 'v funkciji `callbackGithub`?',
 'faq.business.rules' => 'Kakšna so poslovna pravila Peppol?',
-'faq.gov.developer.sandbox.hmrc' => 'Kako povežem to skladišče s peskovnikom HMRC Developer Sandbox?',
-'faq.lamp.alpine' => 'Kako lahko nastavim ta repozitorij na Linux Alpine, Apache2, mySql/mariadb in php?',
-'faq.oauth2' => 'Kako nastavim ponudnika identitete OAuth2, npr. za registracijo in prijavo s Facebookom?',
+'faq.gov.developer.sandbox.hmrc' =>
+	'Kako povežem to skladišče s '
+	. 'peskovnikom HMRC Developer Sandbox?',
+'faq.lamp.alpine' => 'Kako lahko nastavim ta repozitorij '
+	. 'na Linux Alpine, Apache2, mySql/mariadb '
+	. 'in php?',
+'faq.oauth2' => 'Kako nastavim ponudnika identitete OAuth2,'
+	. 'npr.'
+	. 'za registracijo in prijavo s '
+	. 'Facebookom?',
 'faq.payment.provider' => 'Kako nastavim ponudnika spletnih plačil?',
 'faq.php.info.all' => 'Vse',
 'faq.php.info.configuration' => 'Konfiguracija',
@@ -516,8 +815,10 @@ return [
 'faq.php.info.licence' => 'Licenca',
 'faq.php.info.modules' => 'Moduli',
 'faq.php.info.variables' => 'Spremenljivke',
-'faq.shared.hosting' => 'Kako gostim yii3i na deljenem gostovanju?',
-'faq.taxpoint' => 'Kako ugotoviti, kaj je davčna točka?',
+'faq.shared.hosting' => 'Kako gostim yii3i na deljenem '
+	. 'gostovanju?',
+'faq.taxpoint' => 'Kako ugotoviti, kaj je davčna '
+	. 'točka?',
 'faq.yii.requirement.checker' => 'Preverjevalnik zahtev aplikacije Yii',
 'fax' => 'Faks',
 'fax.abbr' => 'Ž',
@@ -529,33 +830,24 @@ return [
 'filter.quotes' => 'Filtriraj citate',
 'first' => 'Prvi',
 'first.day.of.week' => 'Prvi dan v tednu',
-'first.reset' => 'Najprej izbrišite testne ponudbe in račune, ki ste jih ustvarili za testiranje. Nato lahko izbrišete testne podatke.',
+'first.reset' => 'Najprej izbrišite testne ponudbe in '
+	. 'račune, ki ste jih ustvarili '
+	. 'za testiranje.'
+	. 'Nato lahko izbrišete testne podatke.',
 'flash.messages.appear.here' => 'Tukaj se prikažejo bliskovna sporočila.',
 'footer' => 'Noga',
 'forgot.your.password' => 'Pozabil/a sem geslo',
 'form.error' => 'Napake obrazca',
 'from.date' => 'Od datuma',
-'from.default.in.dropdown' => 'Privzeti e-poštni naslov na spustnem seznamu',
+'from.default.in.dropdown' => 'Privzeti e-poštni naslov na spustnem '
+	. 'seznamu',
 'from.email' => 'Iz e-pošte',
-'from.email.address' => 'Iz e-poštnih naslovov: Izberite privzeto',
-'from.include.in.dropdown' => 'Vključi ta e-poštni naslov na spustni seznam',
+'from.email.address' => 'Iz e-poštnih naslovov:'
+	. 'Izberite privzeto',
+'from.include.in.dropdown' => 'Vključi ta e-poštni naslov na '
+	. 'spustni seznam',
 'from.name' => 'Ime od',
 'front.page' => 'Prva stran',
-'gallery.caption.slide1' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide10' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide11' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide12' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide13' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide14' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide15' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide2' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide3' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide4' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide5' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide6' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide7' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide8' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
-'gallery.caption.slide9' => 'To besedilo lahko spremenite na ../resources/messages/en/app.php.',
 'gateway.online.payment' => 'Spletno plačilo',
 'gender' => 'Spol',
 'gender.female' => 'Ženska',
@@ -567,59 +859,151 @@ return [
 'general.yes' => 'Da',
 'generate' => 'Ustvari',
 'generate.copy' => 'Ustvari kopijo',
-'generate.invoice.number.for.draft' => 'Ustvari številko računa za osnutke računov',
-'generate.quote.number.for.draft' => 'Ustvari številko ponudbe za osnutke ponudb',
+'generate.invoice.number.for.draft' =>
+	'Ustvari številko računa za osnutke '
+	. 'računov',
+'generate.quote.number.for.draft' =>
+	'Ustvari številko ponudbe za osnutke '
+	. 'ponudb',
 'generate.sumex' => 'Ustvari Sumex PDF',
 'generator' => 'Generator',
 'generator.add' => 'Generator Dodaj',
-'generator.camelcase.capital.name' => 'Ime z veliko začetnico, ki se uporablja v imenih kontrolerjev in repozitorij, npr. TaxRate. Če uporabljate zgornji primer &#39;product&#39;, uporabite &#39;Product&#39;.',
-'generator.camelcase.capital.name.product' => 'Izdelek',
+'generator.camelcase.capital.name' => 'Ime z veliko začetnico, ki '
+	. 'se uporablja v imenih kontrolerjev '
+	. 'in repozitorij, npr.'
+	. 'TaxRate.'
+	. 'Če uporabljate zgornji primer \'product\','
+	. 'uporabite \'Product\'.',
+'generator.camelcase.capital.name.product' =>
+	'Izdelek',
 'generator.controller.and.repository' => 'Krmilnik in repozitorij',
-'generator.controller.layout.directory' => 'Imenik postavitve krmilnika, npr. dirname(dirname(__DIR__)), ki se prikaže takoj za konstruktom krmilnika. Datoteka krmilnika se nahaja v (__DIR__) in je dva imenika pod imenikom &#39;src&#39;, ki bo uporabljen kot &#39;osnova&#39; za dodajanje poti do imenika postavitve.',
-'generator.controller.layout.directory.dot.path' => 'Pot do imenika postavitve krmilnika, npr. &#39;/views/layout/invoice.php&#39;, ki se prikaže takoj za konstruktom krmilnika (brez apostrofov) in je dodana zgornji lokaciji imenika src.',
-'generator.controller.layout.directory.dot.path.placeholder' => 'Pot do imenika postavitve krmilnika',
-'generator.controller.layout.directory.placeholder' => 'Imenik postavitve krmilnika, npr. dirname(dirname(__DIR__))',
+'generator.controller.layout.directory' => 'Imenik postavitve krmilnika, npr.'
+	. 'dirname(dirname(__DIR__)), ki se prikaže takoj '
+	. 'za konstruktom krmilnika.'
+	. 'Datoteka krmilnika se nahaja v '
+	. '(__DIR__) in je dva imenika '
+	. 'pod imenikom \'src\', ki bo '
+	. 'uporabljen kot \'osnova\' za dodajanje '
+	. 'poti do imenika postavitve.',
+'generator.controller.layout.directory.dot.path' =>
+	'Pot do imenika postavitve krmilnika,'
+	. 'npr.'
+	. '\'/views/layout/invoice.'
+	. 'php\', ki se prikaže takoj '
+	. 'za konstruktom krmilnika (brez apostrofov) '
+	. 'in je dodana zgornji lokaciji '
+	. 'imenika src.',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'Pot do imenika postavitve krmilnika',
+'generator.controller.layout.directory.placeholder' =>
+	'Imenik postavitve krmilnika, npr.'
+	. 'dirname(dirname(__DIR__))',
 'generator.controller.path.layout' => 'Pot do datoteke postavitve',
 'generator.created.at.include' => 'Vključi polje created_at v entiteto',
 'generator.deleted.at.include' => 'Vključi polje deleted_at v entiteto',
-'generator.external.entity' => 'Zunanja entiteta, uporabljena v tej entiteti. Entiteta nastavitve je preprosta baza podatkov, indeksirana z ID-jem para ključ =&gt; vrednost.',
-'generator.external.entity.default' => 'Zunanja entiteta, npr. MyEntity, brez poti. Pot je vgrajena v generator. Privzeta nastavitev:',
-'generator.external.entity.placeholder' => 'Zunanja entiteta, npr. MyEntity, brez poti. Pot, vgrajena v generator. Privzeto: Nastavitev. Dodatni repozitorij, npr. Repozitorij nastavitev poleg glavnega repozitorija.',
-'generator.file.type.not.found' => 'Vrsta datoteke ni bila najdena.',
-'generator.flash.include' => 'Vključite bliskovno sporočilo v funkcijo Dodaj/Uredi/Ogled/Izbriši v krmilniku',
+'generator.external.entity' => 'Zunanja entiteta, uporabljena v tej '
+	. 'entiteti.'
+	. 'Entiteta nastavitve je preprosta baza '
+	. 'podatkov, indeksirana z ID-jem para '
+	. 'ključ =&gt; vrednost.',
+'generator.external.entity.default' => 'Zunanja entiteta, npr.'
+	. 'MyEntity, brez poti.'
+	. 'Pot je vgrajena v generator.'
+	. 'Privzeta nastavitev:',
+'generator.external.entity.placeholder' => 'Zunanja entiteta, npr.'
+	. 'MyEntity, brez poti.'
+	. 'Pot, vgrajena v generator.'
+	. 'Privzeto:'
+	. 'Nastavitev.'
+	. 'Dodatni repozitorij, npr.'
+	. 'Repozitorij nastavitev poleg glavnega repozitorija.',
+'generator.file.type.not.found' =>
+	'Vrsta datoteke ni bila najdena.',
+'generator.flash.include' => 'Vključite bliskovno sporočilo v funkcijo '
+	. 'Dodaj/Uredi/Ogled/Izbriši v krmilniku',
 'generator.generate' => 'Ustvari',
 'generator.generated' => ' ustvarjeno ob ',
-'generator.google.translate.any' => 'Prevedi angleščino\any_lang.php',
-'generator.google.translate.app' => 'Prevedi angleščino\app_lang.php',
-'generator.google.translate.common' => 'Prevedi angleščino\common_lang.php',
-'generator.google.translate.diff' => 'Prevedi angleščino\diff_lang.php',
-'generator.google.translate.gateway' => 'Prevedi angleščino\gateway_lang.php',
-'generator.google.translate.ip' => 'Prevedi angleščino\ip_lang.php',
-'generator.google.translate.latest.a' => 'Prevedi angleščino\a_latest_lang.php',
-'generator.google.translate.latest.b' => 'Prevedi angleščino\b_latest_lang.php',
-'generator.headerline.include' => 'Vključite glavo, če je potreben Ajax',
-'generator.history' => 'Ta zapis ima obstoječe relacije generatorja, zato ga ni mogoče izbrisati. Najprej izbrišite te relacije.',
+'generator.google.translate.any' => 'Prevedi angleščino\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => 'Prevedi angleščino\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => 'Prevedi angleščino\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => 'Prevedi angleščino\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => 'Prevedi angleščino\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => 'Prevedi angleščino\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'Prevedi angleščino\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'Prevedi angleščino\\b_latest_lang.'
+	. 'php',
+'generator.headerline.include' => 'Vključite glavo, če je potreben '
+	. 'Ajax',
+'generator.history' => 'Ta zapis ima obstoječe relacije '
+	. 'generatorja, zato ga ni mogoče '
+	. 'izbrisati.'
+	. 'Najprej izbrišite te relacije.',
 'generator.modified.at.include' => 'Vključi polje modified_at v entiteto',
 'generator.namespace' => 'Imenski prostor',
-'generator.namespace.before.entity' => 'Imenski prostor pred potjo entitete, npr. Aplikacija\Račun (NE Aplikacija\Račun\Entiteta)',
+'generator.namespace.before.entity' => 'Imenski prostor pred potjo entitete,'
+	. 'npr.'
+	. 'Aplikacija\\Račun (NE Aplikacija\\Račun\\Entiteta)',
 'generator.relation.form' => 'Obrazec za relacijo generatorja',
-'generator.relation.form.camelcase.name' => 'Ime v kamelskem primeru brez ID-ja (npr. tax_rate_id &#39;tuji ključ/relacija&#39; v tabeli Product poenostavljeno v TaxRate IN je ime entitete)',
-'generator.relation.form.entity.generator' => 'Generator entitet',
-'generator.relation.form.lowercase.name' => 'Ime z malimi črkami brez ID-ja (npr. tax_rate_id &#39;tuji ključ/relacija&#39; v tabeli Product poenostavljeno na tax.rate) ',
-'generator.relation.form.view.field.name' => 'Ime polja pogleda',
+'generator.relation.form.camelcase.name' =>
+	'Ime v kamelskem primeru brez '
+	. 'ID-ja (npr.'
+	. 'tax_rate_id \'tuji ključ/relacija\' v tabeli '
+	. 'Product poenostavljeno v TaxRate IN '
+	. 'je ime entitete)',
+'generator.relation.form.entity.generator' =>
+	'Generator entitet',
+'generator.relation.form.lowercase.name' =>
+	'Ime z malimi črkami brez '
+	. 'ID-ja (npr.'
+	. 'tax_rate_id \'tuji ključ/relacija\' v tabeli '
+	. 'Product poenostavljeno na tax.'
+	. 'rate)',
+'generator.relation.form.view.field.name' =>
+	'Ime polja pogleda',
 'generator.relations' => 'Odnosi z generatorji',
 'generator.relations.add' => 'Generatorji Relacija Dodaj',
-'generator.route.prefix' => 'Predpona poti, npr. račun v &#39;račun/izdelek&#39;, ki se bo pojavila za konstruktom krmilnika.',
-'generator.route.suffix' => 'Pripona usmerjanja, npr. product v &#39;invoice/product&#39;, ki se bo pojavila za konstruktom krmilnika.',
-'generator.small.plural.name' => 'Kratko množinsko ime, ki se uporablja v krmilniku za funkcijo indeksnega krmilnika za seznam vseh generatorjev entitet. Običajno je to zgornja vrednost z &quot;s&quot; na koncu.',
-'generator.small.plural.name.placeholder' => 'Majhno množinsko ime',
-'generator.small.plural.name.products' => 'izdelki',
-'generator.small.singular.name' => 'Kratko edninsko ime, ki se uporablja v krmilniku za urejanje in ogled funkcij krmilnika. Običajno je enako kot pripona poti, npr. izdelek',
-'generator.small.singular.name.placeholder' => 'Majhno edninsko ime',
-'generator.small.singular.name.product' => 'izdelek',
+'generator.route.prefix' => 'Predpona poti, npr.'
+	. 'račun v \'račun/izdelek\', ki se '
+	. 'bo pojavila za konstruktom krmilnika.',
+'generator.route.suffix' => 'Pripona usmerjanja, npr.'
+	. 'product v \'invoice/product\', ki se '
+	. 'bo pojavila za konstruktom krmilnika.',
+'generator.small.plural.name' => 'Kratko množinsko ime, ki se '
+	. 'uporablja v krmilniku za funkcijo '
+	. 'indeksnega krmilnika za seznam vseh '
+	. 'generatorjev entitet.'
+	. 'Običajno je to zgornja vrednost '
+	. 'z &quot;s&quot; na koncu.',
+'generator.small.plural.name.placeholder' =>
+	'Majhno množinsko ime',
+'generator.small.plural.name.products' =>
+	'izdelki',
+'generator.small.singular.name' => 'Kratko edninsko ime, ki se '
+	. 'uporablja v krmilniku za urejanje '
+	. 'in ogled funkcij krmilnika.'
+	. 'Običajno je enako kot pripona '
+	. 'poti, npr.'
+	. 'izdelek',
+'generator.small.singular.name.placeholder' =>
+	'Majhno edninsko ime',
+'generator.small.singular.name.product' =>
+	'izdelek',
 'generator.table' => 'Tabela',
-'generator.table.used.to.generate.entity.controller.repository' => 'Tabela, uporabljena za ustvarjanje entitete, krmilnika, dodajanja, urejanja, brisanja, pogleda, repozitorija, storitve, preslikavnika',
-'generator.updated.at.include' => 'Vključi polje updated.at v entiteto',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'Tabela, uporabljena za ustvarjanje entitete,'
+	. 'krmilnika, dodajanja, urejanja, brisanja, pogleda,'
+	. 'repozitorija, storitve, preslikavnika',
+'generator.updated.at.include' => 'Vključi polje updated.'
+	. 'at v entiteto',
 'generators' => 'Generatorji',
 'generators.relation' => 'Razmerje med generatorji',
 'gln' => 'GLN',
@@ -632,44 +1016,99 @@ return [
 'gridview.title' => 'Seznam uporabnikov',
 'group' => 'Skupina',
 'group.add' => 'Dodaj skupino',
-'group.document.number' => 'Številka dokumenta ni bila ustvarjena. Preverite skupine.',
+'group.document.number' => 'Številka dokumenta ni bila ustvarjena.'
+	. 'Preverite skupine.',
 'group.form' => 'Skupinski obrazec',
-'group.history' => 'Zgodovina skupine obstaja. Ni mogoče izbrisati.',
+'group.history' => 'Zgodovina skupine obstaja.'
+	. 'Ni mogoče izbrisati.',
 'groups' => 'Skupine',
-'guest.account.denied' => 'Ta račun ni konfiguriran. Obrnite se na skrbnika sistema.',
+'guest.account.denied' => 'Ta račun ni konfiguriran.'
+	. 'Obrnite se na skrbnika sistema.',
 'guest.read.only' => 'Gost (samo za branje)',
 'guest.url' => 'URL za goste',
 'hide.or.unhide.columns' => 'Skrivanje ali razkrivanje stolpcev',
-'hint.greater.than.zero.please' => 'Več kot 0,00 prosim!',
-'hint.this.field.is.not.required' => 'To polje ni obvezno',
-'hint.this.field.is.required' => 'To polje je obvezno',
+'hint.greater.than.zero.please' =>
+	'Več kot 0,00 prosim!',
+'hint.this.field.is.not.required' =>
+	'To polje ni obvezno',
+'hint.this.field.is.required' =>
+	'To polje je obvezno',
 'home' => 'Domov',
-'home.caption.slide1' => 'Registrirajte se in prijavite kot skrbnik. Ni internetne povezave ... prezrite napako e-pošte pri povezavi.',
-'home.caption.slide2' => 'Kot administrator registrirajte uporabnika. Preverite, ali je e-poštni račun veljavna, internetna povezava ... Uporabnik bo dobil uporabniški račun.',
-'home.caption.slide3' => 'E-poštni račun ni veljaven in ni internetne povezave ... prijava skrbnika in aktiviranje uporabniškega računa za račune v nastavitvah. Ustvari račun stranke. Dodeli ga uporabniku.',
-'home.caption.slides.location.debug.mode' => 'Ta lokacija vsebine: ./resources/views/site/index.php znotraj ./resources/views/layout/. ... in lokacija diapozitiva s prevodom ./resources/messages/app.php',
+'home.caption.slide1' => 'Registrirajte se in prijavite kot '
+	. 'skrbnik.'
+	. 'Ni internetne povezave .'
+	. 'prezrite napako e-pošte pri povezavi.',
+'home.caption.slide2' => 'Kot administrator registrirajte uporabnika.'
+	. 'Preverite, ali je e-poštni račun '
+	. 'veljavna, internetna povezava .'
+	. 'Uporabnik bo dobil uporabniški račun.',
+'home.caption.slide3' => 'E-poštni račun ni veljaven in '
+	. 'ni internetne povezave .'
+	. 'prijava skrbnika in aktiviranje uporabniškega '
+	. 'računa za račune v nastavitvah.'
+	. 'Ustvari račun stranke.'
+	. 'Dodeli ga uporabniku.',
+'home.caption.slides.location.debug.mode' =>
+	'Ta lokacija vsebine:'
+	. '/resources/views/site/index.'
+	. 'php znotraj .'
+	. '/resources/views/layout/.'
+	. '.'
+	. 'in lokacija diapozitiva s prevodom '
+	. '.'
+	. '/resources/messages/app.'
+	. 'php',
 'hostname' => 'Ime gostitelja',
 'html.sumex.no' => 'Html brez Sumexa',
 'html.sumex.yes' => 'Html s Sumexom',
 'id' => 'Osebna izkaznica',
 'identifier.format' => 'Oblikovanje identifikatorja',
 'identifier.format.template.tags' => 'Oznake predlog za identifikator',
-'identifier.format.template.tags.instructions' => 'Oznake predloge lahko uporabite za dodajanje dinamičnih informacij, kot sta ime stranke ali številka računa, v predlogo e-poštnega sporočila. Kliknite polje <b>Oblikovanje identifikatorja</b> in nato v spustnem meniju izberite oznako. Samodejno bo vstavljena v besedilno polje.',
-'identity.provider.authentication.successful' => 'Uspešno ste bili overjeni prek izbranega ponudnika identitete, registrirani in vam je bil dodeljen račun stranke. V naslednji uri kliknite tukaj, da aktivirate svoj račun. Za prvo prijavo imate eno uro.',
-'image.overdue' => '  Lokacija slike: ./invoice/public/img/overdue.png',
-'image.paid' => '  Lokacija slike: ./invoice/public/img/paid.png',
+'identifier.format.template.tags.instructions' =>
+	'Oznake predloge lahko uporabite za '
+	. 'dodajanje dinamičnih informacij, kot sta '
+	. 'ime stranke ali številka računa,'
+	. 'v predlogo e-poštnega sporočila.'
+	. 'Kliknite polje <b>Oblikovanje identifikatorja</b> in '
+	. 'nato v spustnem meniju izberite '
+	. 'oznako.'
+	. 'Samodejno bo vstavljena v besedilno '
+	. 'polje.',
+'identity.provider.authentication.successful' => 'Uspešno ste bili overjeni prek '
+	. 'izbranega ponudnika identitete, registrirani in '
+	. 'vam je bil dodeljen račun '
+	. 'stranke.'
+	. 'V naslednji uri kliknite tukaj,'
+	. 'da aktivirate svoj račun.'
+	. 'Za prvo prijavo imate eno '
+	. 'uro.',
+'image.overdue' => 'Lokacija slike:'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => 'Lokacija slike:'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => 'Uvoz',
 'import.data' => 'Uvoz podatkov',
 'import.from.csv' => 'Uvozi iz CSV-ja',
 'in.progress' => 'V teku',
 'inactive' => 'Neaktivno',
-'index.checkbox.add.some.items.to.enable' => 'Račun ne vsebuje postavk. Dodajte postavke, da omogočite potrditveno polje.',
+'index.checkbox.add.some.items.to.enable' =>
+	'Račun ne vsebuje postavk.'
+	. 'Dodajte postavke, da omogočite potrditveno '
+	. 'polje.',
 'index.footer.showing' => 'Prikazanih je % od %s',
 'index.showing' => 'Prikazanih je % od %s',
-'info.task.readonly' => 'Te naloge ni več mogoče spremeniti, ker je že fakturirana.',
-'install.test.data' => 'Testne podatke je zdaj mogoče namestiti',
-'install.test.data.exists.already' => 'Testni podatki računa že obstajajo',
-'install.test.data.goto.tab.index' => 'Pojdi na Nastavitve ... Splošno ... Namestite testne podatke',
+'info.task.readonly' => 'Te naloge ni več mogoče '
+	. 'spremeniti, ker je že fakturirana.',
+'install.test.data' => 'Testne podatke je zdaj mogoče '
+	. 'namestiti',
+'install.test.data.exists.already' =>
+	'Testni podatki računa že obstajajo',
+'install.test.data.goto.tab.index' =>
+	'Pojdi na Nastavitve .'
+	. 'Splošno .'
+	. 'Namestite testne podatke',
 'interface' => 'Vmesnik',
 'invalid.amount' => 'Neveljaven znesek',
 'invalid.subscriber.number' => 'Neveljavna številka naročnika',
@@ -682,20 +1121,35 @@ return [
 'invoiceplane.database.username' => 'Uporabniško ime',
 'invoiceplane.families' => 'Vstavljene družine',
 'invoiceplane.import' => 'Preizkus povezave',
-'invoiceplane.import.complete.connection.closed' => 'Uvoz končan! Povezava prekinjena!',
+'invoiceplane.import.complete.connection.closed' =>
+	'Uvoz končan! Povezava prekinjena!',
 'invoiceplane.import.connected' => 'Imate povezavo!',
 'invoiceplane.import.proceed' => 'Nadaljujte s postopkom uvoza',
 'invoiceplane.import.proceed.alert' => 'Ste prepričani, da želite nadaljevati?',
 'invoiceplane.imported' => 'Tabele so bile uvožene',
 'invoiceplane.news' => 'Novice InvoicePlane',
 'invoiceplane.no.connection' => 'Ni povezave',
-'invoiceplane.no.username.or.password' => 'Prosimo, shranite ime baze podatkov, uporabniško ime in geslo za InvoicePlane',
+'invoiceplane.no.username.or.password' =>
+	'Prosimo, shranite ime baze podatkov,'
+	. 'uporabniško ime in geslo za '
+	. 'InvoicePlane',
 'invoiceplane.products' => 'Vstavljeni izdelki',
-'invoiceplane.tables' => 'Uvozite tabele InvoicePlane Stranka, Izdelek, Enota, Družina, Davčna stopnja v prazne tabele. Pred uvozom v teh tabelah ne sme biti nobenih podatkov in nobenih dokumentov, npr. Računov.',
-'invoiceplane.tables.not.empty' => 'Pred uvozom morajo biti vaše tabele strank, izdelkov, enot, družin in davčnih stopenj prazne.',
-'invoiceplane.taxrates' => 'Davčne stopnje so vstavljene z obvezno ničelno davčno stopnjo in standardno davčno stopnjo.',
+'invoiceplane.tables' => 'Uvozite tabele InvoicePlane Stranka, Izdelek,'
+	. 'Enota, Družina, Davčna stopnja v '
+	. 'prazne tabele.'
+	. 'Pred uvozom v teh tabelah '
+	. 'ne sme biti nobenih podatkov '
+	. 'in nobenih dokumentov, npr.'
+	. 'Računov.',
+'invoiceplane.tables.not.empty' => 'Pred uvozom morajo biti vaše '
+	. 'tabele strank, izdelkov, enot, družin '
+	. 'in davčnih stopenj prazne.',
+'invoiceplane.taxrates' => 'Davčne stopnje so vstavljene z '
+	. 'obvezno ničelno davčno stopnjo in '
+	. 'standardno davčno stopnjo.',
 'invoiceplane.units' => 'Vstavljene enote',
-'invoiceplane.yes.connection' => 'Da, imate povezavo z vašo bazo podatkov Invoiceplane!',
+'invoiceplane.yes.connection' => 'Da, imate povezavo z vašo '
+	. 'bazo podatkov Invoiceplane!',
 'invoices' => 'Računi',
 'invoices.due.after' => 'Rok zapadlosti računov (dni)',
 'is.not.writable' => 'ni zapisljivo',
@@ -711,8 +1165,10 @@ return [
 'item.lookups' => 'Iskanje artiklov',
 'item.name' => 'Ime elementa',
 'item.tax' => 'Davek na izdelek',
-'item.tax.excluded' => 'Vmesni seštevek x odstotek davka (davek na artikel je izključen)',
-'item.tax.included' => '(Vmesni seštevek + Davek na artikel) x Odstotek davka',
+'item.tax.excluded' => 'Vmesni seštevek x odstotek davka '
+	. '(davek na artikel je izključen)',
+'item.tax.included' => '(Vmesni seštevek + Davek na '
+	. 'artikel) x Odstotek davka',
 'item.tax.rate' => 'Davčna stopnja artikla',
 'items' => 'Postavke računa',
 'judgement' => 'Sodba pridobljena',
@@ -741,10 +1197,16 @@ return [
 'layout.migrations' => 'Migracije',
 'layout.no-records' => 'Ni zapisov',
 'layout.not-found' => 'Ni najdeno',
-'layout.page.not-authorised' => 'Ni pooblaščeno: Poverilnice za preverjanje pristnosti so napačne.',
-'layout.page.not-found' => 'Strani {url} ni bilo mogoče najti.',
-'layout.page.user-cancelled-oauth2' => 'Uporabnik je preklical prijavo/registracijo prek ponudnika identitete, npr. Facebook',
-'layout.pagination-summary' => 'Prikazanih je {pageSize} od {total} objav',
+'layout.page.not-authorised' => 'Ni pooblaščeno:'
+	. 'Poverilnice za preverjanje pristnosti so '
+	. 'napačne.',
+'layout.page.not-found' => 'Strani {url} ni bilo mogoče '
+	. 'najti.',
+'layout.page.user-cancelled-oauth2' => 'Uporabnik je preklical prijavo/registracijo prek '
+	. 'ponudnika identitete, npr.'
+	. 'Facebook',
+'layout.pagination-summary' => 'Prikazanih je {pageSize} od {total} '
+	. 'objav',
 'layout.password' => 'Geslo',
 'layout.password-verify' => 'Potrdite svoje geslo',
 'layout.password-verify.new' => 'Potrdite svoje novo geslo',
@@ -758,25 +1220,48 @@ return [
 'layout.title' => 'Naslov',
 'layout.total.posts' => 'Skupaj objav',
 'left.pad' => 'Leva ploščica',
-'letter' => '7-dnevni rok za poslano pismo pred ukrepanjem',
-'loading.error' => 'Zdi se, da se je aplikacija zataknila zaradi napake.',
+'letter' => '7-dnevni rok za poslano pismo '
+	. 'pred ukrepanjem',
+'loading.error' => 'Zdi se, da se je '
+	. 'aplikacija zataknila zaradi napake.',
 'loading.error.help' => 'Poiščite pomoč',
 'login' => 'Prijava',
 'login.logo' => 'Logotip za prijavo',
 'loginalert.credentials.incorrect' => 'Napačen e-poštni naslov ali geslo.',
 'loginalert.no.password' => 'Prosimo, vnesite geslo.',
-'loginalert.user.inactive' => 'Ta uporabnik je označen kot neaktiven. Obrnite se na sistemskega skrbnika.',
-'loginalert.user.not.found' => 'S tem e-poštnim naslovom ni registriran noben račun.',
-'loginalert.wrong.auth.code' => 'Ponastavitev gesla zavrnjena. Vnesli ste neveljaven žeton za avtorizacijo.',
+'loginalert.user.inactive' => 'Ta uporabnik je označen kot '
+	. 'neaktiven.'
+	. 'Obrnite se na sistemskega skrbnika.',
+'loginalert.user.not.found' => 'S tem e-poštnim naslovom ni '
+	. 'registriran noben račun.',
+'loginalert.wrong.auth.code' => 'Ponastavitev gesla zavrnjena.'
+	. 'Vnesli ste neveljaven žeton za '
+	. 'avtorizacijo.',
 'logo' => 'Logotip računa',
 'logout' => 'Odjava',
 'loss' => 'Odpisano',
-'mark.invoices.sent.copy' => 'Označi račune kot poslane pri kopiranju računa',
-'mark.invoices.sent.pdf' => 'Označi račune kot poslane, ko je ustvarjen PDF',
-'mark.quotes.sent.pdf' => 'Označi ponudbe kot poslane, ko je PDF ustvarjen',
-'mark.sent.copy.on' => 'Označi račune kot poslane pri kopiranju računa je vklopljeno. Vklopljeno naj bo le med razvojem.',
-'mark.sent.off' => 'Označi račune kot poslane pri kopiranju računov ... je trenutno IZKLOPLJENO. Med razvojem je nastavljeno na VKLOPLJENO. Kliknite tukaj, da ga vklopite.',
-'mark.sent.on' => 'Označi račune kot poslane pri kopiranju računov ... je trenutno VKLOPLJENO. Med produkcijo naj bo to vedno IZKLOPLJENO. Kliknite tukaj, da ga IZKLOPITE.',
+'mark.invoices.sent.copy' => 'Označi račune kot poslane pri '
+	. 'kopiranju računa',
+'mark.invoices.sent.pdf' => 'Označi račune kot poslane, ko '
+	. 'je ustvarjen PDF',
+'mark.quotes.sent.pdf' => 'Označi ponudbe kot poslane, ko '
+	. 'je PDF ustvarjen',
+'mark.sent.copy.on' => 'Označi račune kot poslane pri '
+	. 'kopiranju računa je vklopljeno.'
+	. 'Vklopljeno naj bo le med '
+	. 'razvojem.',
+'mark.sent.off' => 'Označi račune kot poslane pri '
+	. 'kopiranju računov .'
+	. 'je trenutno IZKLOPLJENO.'
+	. 'Med razvojem je nastavljeno na '
+	. 'VKLOPLJENO.'
+	. 'Kliknite tukaj, da ga vklopite.',
+'mark.sent.on' => 'Označi račune kot poslane pri '
+	. 'kopiranju računov .'
+	. 'je trenutno VKLOPLJENO.'
+	. 'Med produkcijo naj bo to '
+	. 'vedno IZKLOPLJENO.'
+	. 'Kliknite tukaj, da ga IZKLOPITE.',
 'max' => 'Maks.',
 'max.quantity' => 'Največja količina',
 'menu' => 'Meni',
@@ -785,7 +1270,9 @@ return [
 'menu.blog' => 'Blog',
 'menu.comments-feed' => 'Vir komentarjev',
 'menu.contact.details' => 'Kontaktni podatki',
-'menu.contact.soon' => 'Hvala, ker ste nas kontaktirali, stopili bomo v stik z vami v najkrajšem možnem času.',
+'menu.contact.soon' => 'Hvala, ker ste nas kontaktirali,'
+	. 'stopili bomo v stik z '
+	. 'vami v najkrajšem možnem času.',
 'menu.contact.us' => 'Kontaktirajte nas',
 'menu.gallery' => 'Galerija',
 'menu.language' => 'Jezik',
@@ -814,52 +1301,114 @@ return [
 'mpdf' => 'Mpdf',
 'mpdf.allow.charset.conversion' => 'Dovoli pretvorbo nabora znakov',
 'mpdf.auto.arabic' => 'Samodejna arabščina',
-'mpdf.auto.language.to.font' => 'Samodejno spreminjanje jezika v pisavo',
-'mpdf.auto.script.to.lang' => 'Samodejno pretvarjanje skripta v jezik',
+'mpdf.auto.language.to.font' =>
+	'Samodejno spreminjanje jezika v pisavo',
+'mpdf.auto.script.to.lang' =>
+	'Samodejno pretvarjanje skripta v jezik',
 'mpdf.auto.vietnamese' => 'Vietnamski avto',
 'mpdf.cjk' => 'Kitajska, japonska, korejska pisava',
 'mpdf.ltr' => 'Od leve proti desni',
 'mpdf.show.image.errors' => 'Prikaži napake na sliki',
 'mtd' => 'Digitalizacija davkov',
 'mtd.fph' => 'Glave za preprečevanje goljufij',
-'mtd.fph.all.valid' => 'Vse glave za preprečevanje goljufij so veljavne',
+'mtd.fph.all.valid' => 'Vse glave za preprečevanje goljufij '
+	. 'so veljavne',
 'mtd.fph.generate' => 'Ustvari',
-'mtd.fph.no.provided' => 'Glave za preprečevanje goljufij niso navedene',
-'mtd.fph.record.alert' => 'Ali ste prepričani, da želite zabeležiti nove podrobnosti glave za preprečevanje goljufij? Prejšnje podrobnosti bodo prepisane, če jih shranite!',
+'mtd.fph.no.provided' => 'Glave za preprečevanje goljufij niso '
+	. 'navedene',
+'mtd.fph.record.alert' => 'Ali ste prepričani, da želite '
+	. 'zabeležiti nove podrobnosti glave za '
+	. 'preprečevanje goljufij? Prejšnje podrobnosti bodo '
+	. 'prepisane, če jih shranite!',
 'mtd.fph.screen.timestamp' => 'Časovni žig',
-'mtd.fph.some.advisories' => 'Vsaj ena glava je potencialno neveljavna',
+'mtd.fph.some.advisories' => 'Vsaj ena glava je potencialno '
+	. 'neveljavna',
 'mtd.fph.some.invalid' => 'Vsaj ena glava je neveljavna',
-'mtd.gov.client.browser.do.not.track' => 'Vrednost, ki označuje, ali je v brskalniku vklopljena možnost »Ne sledi«.',
-'mtd.gov.client.browser.do.not.track.eg' => 'npr. napačno',
-'mtd.gov.client.browser.js.user.agent' => 'Gov-Client-Browser-JS-User-Agent',
-'mtd.gov.client.browser.js.user.agent.eg' => 'npr. Mozilla/5.0 (iPad; U; CPU OS 3 2.1 kot Mac OS X; en-us) (KHTML, kot Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' => 'Seznam vtičnikov brskalnika v izvorni napravi',
-'mtd.gov.client.browser.plugins.eg' => 'npr. Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Metoda povezave odjemalca Gov',
-'mtd.gov.client.device.id' => 'ID naprave',
-'mtd.gov.client.device.id.eg' => 'npr. beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => 'Lokalni IP-ji',
-'mtd.gov.client.multi.factor' => 'Večfaktorski',
-'mtd.gov.client.multi.factor.eg' => 'npr. vrsta=enokratno geslo; stanje=uspeh, vrsta=SMS; stanje=neuspeh, vrsta=biometrično, vrsta=SMS; časovni žig=2023-04-01T12:34:56Z; edinstvena referenca=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => 'Enkratno geslo (OTP): ',
-'mtd.gov.client.public.ip' => 'Javni IP',
-'mtd.gov.client.public.port' => 'Javna vrata (ne http 80 in ne https 443, npr. 57961)',
+'mtd.gov.client.browser.do.not.track' =>
+	'Vrednost, ki označuje, ali je '
+	. 'v brskalniku vklopljena možnost »Ne '
+	. 'sledi«.',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'npr.'
+	. 'napačno',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov-Client-Browser-JS-User-Agent',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'npr.'
+	. 'Mozilla/5.'
+	. '0 (iPad; U; CPU OS '
+	. '3 2.'
+	. '1 kot Mac OS X;'
+	. 'en-us) (KHTML, kot Gecko) Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'Seznam vtičnikov brskalnika v izvorni '
+	. 'napravi',
+'mtd.gov.client.browser.plugins.eg' =>
+	'npr.'
+	. 'Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'Metoda povezave odjemalca Gov',
+'mtd.gov.client.device.id' =>
+	'ID naprave',
+'mtd.gov.client.device.id.eg' =>
+	'npr.'
+	. 'beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'Lokalni IP-ji',
+'mtd.gov.client.multi.factor' =>
+	'Večfaktorski',
+'mtd.gov.client.multi.factor.eg' =>
+	'npr.'
+	. 'vrsta=enokratno geslo; stanje=uspeh, vrsta=SMS; stanje=neuspeh,'
+	. 'vrsta=biometrično, vrsta=SMS; časovni žig=2023-04-01T12:'
+	. '34:'
+	. '56Z; edinstvena referenca=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'Enkratno geslo (OTP):',
+'mtd.gov.client.public.ip' =>
+	'Javni IP',
+'mtd.gov.client.public.port' =>
+	'Javna vrata (ne http 80 '
+	. 'in ne https 443, npr.'
+	. '57961)',
 'mtd.gov.client.screens' => 'Zasloni odjemalcev vlade',
-'mtd.gov.client.screens.colour.depth' => 'Barvna globina',
-'mtd.gov.client.screens.height' => 'Višina zaslona',
-'mtd.gov.client.screens.pixels' => 'slikovnih pik',
-'mtd.gov.client.screens.scaling.factor' => 'Faktor skaliranja',
-'mtd.gov.client.screens.scaling.factor.bits' => 'bitov',
-'mtd.gov.client.screens.width' => 'Širina zaslona',
+'mtd.gov.client.screens.colour.depth' =>
+	'Barvna globina',
+'mtd.gov.client.screens.height' =>
+	'Višina zaslona',
+'mtd.gov.client.screens.pixels' =>
+	'slikovnih pik',
+'mtd.gov.client.screens.scaling.factor' =>
+	'Faktor skaliranja',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'bitov',
+'mtd.gov.client.screens.width' =>
+	'Širina zaslona',
 'mtd.gov.client.timezone' => 'Časovni pas',
-'mtd.gov.client.user.ids' => 'ID-ji uporabnikov',
-'mtd.gov.client.user.ids.uuid' => 'uuid',
-'mtd.gov.client.window.size' => 'Velikost okna',
-'mtd.gov.client.window.size.pixels' => 'slikovnih pik',
-'mtd.gov.vendor.forwarded' => 'Seznam, ki podrobno opisuje prehode prek interneta med storitvami, ki prekinejo varnost transportnega sloja (TLS).',
-'mtd.gov.vendor.license.ids' => 'Struktura podatkov ključ-vrednost zgoščenih licenčnih ključev, ki so povezani s programsko opremo prodajalca, ki je sprožila zahtevo API na izvorni napravi.',
-'mtd.gov.vendor.public.ip' => 'Javni IP-naslov strežnikov, na katere je izvorna naprava poslala svoje zahteve',
-'mtd.gov.vendor.version' => 'Struktura podatkov ključ-vrednost različic programske opreme, ki sodelujejo pri obravnavi zahteve',
+'mtd.gov.client.user.ids' =>
+	'ID-ji uporabnikov',
+'mtd.gov.client.user.ids.uuid' =>
+	'uuid',
+'mtd.gov.client.window.size' =>
+	'Velikost okna',
+'mtd.gov.client.window.size.pixels' =>
+	'slikovnih pik',
+'mtd.gov.vendor.forwarded' => 'Seznam, ki podrobno opisuje prehode '
+	. 'prek interneta med storitvami, ki '
+	. 'prekinejo varnost transportnega sloja (TLS).',
+'mtd.gov.vendor.license.ids' =>
+	'Struktura podatkov ključ-vrednost zgoščenih licenčnih '
+	. 'ključev, ki so povezani s '
+	. 'programsko opremo prodajalca, ki je '
+	. 'sprožila zahtevo API na izvorni '
+	. 'napravi.',
+'mtd.gov.vendor.public.ip' =>
+	'Javni IP-naslov strežnikov, na katere '
+	. 'je izvorna naprava poslala svoje '
+	. 'zahteve',
+'mtd.gov.vendor.version' => 'Struktura podatkov ključ-vrednost različic programske '
+	. 'opreme, ki sodelujejo pri obravnavi '
+	. 'zahteve',
 'multiple.choice' => 'Več izbir',
 'name' => 'Ime',
 'new' => 'Novo',
@@ -874,7 +1423,8 @@ return [
 'no.client' => 'Brez stranke',
 'no.file.uploaded' => 'Ni naložene datoteke',
 'no.overdue.invoices' => 'Brez zapadlih računov',
-'no.quotes.requiring.approval' => 'Ni ponudb, ki bi zahtevale odobritev.',
+'no.quotes.requiring.approval' => 'Ni ponudb, ki bi zahtevale '
+	. 'odobritev.',
 'no.records' => 'Ni zapisov',
 'no.updates.available' => 'Ni na voljo posodobitev.',
 'none' => 'Nobena',
@@ -886,21 +1436,36 @@ return [
 'notes' => 'Opombe',
 'number' => '#',
 'number.format' => 'Oblika številk',
-'number.format.compact.comma' => '1000000,00 (Skrajšana oblika z decimalno vejico)',
-'number.format.compact.point' => '1000000,00 (Kratek format z decimalno vejico)',
-'number.format.european' => '1.000.000,00 (evropski format)',
-'number.format.iso.80k.1' => '1 000 000,00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 z decimalno vejico)',
-'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 z decimalno vejico)',
-'number.format.us.uk' => '1.000.000,00 (oblika ZDA/VB)',
-'number.missing.therefore.use.invoice.id' => 'številka-računa-manjka-zato-id-računa-',
+'number.format.compact.comma' => '1000000,00 (Skrajšana oblika z decimalno '
+	. 'vejico)',
+'number.format.compact.point' => '1000000,00 (Kratek format z decimalno '
+	. 'vejico)',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00 (evropski format)',
+'number.format.iso.80k.1' =>
+	'1 000 000,00 (ISO 80000-1)',
+'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
+	. 'z decimalno vejico)',
+'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 '
+	. 'z decimalno vejico)',
+'number.format.us.uk' => '1.'
+	. '000.'
+	. '000,00 (oblika ZDA/VB)',
+'number.missing.therefore.use.invoice.id' =>
+	'številka-računa-manjka-zato-id-računa-',
 'number.no' => 'Brez številke računa',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => 'ID stranke',
-'oauth2.google.people.api.v1.client.secret' => 'Skrivnost odjemalca',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'ID stranke',
+'oauth2.google.people.api.v1.client.secret' =>
+	'Skrivnost odjemalca',
 'online.log' => 'Spletni dnevnik',
 'online.payment' => 'Spletno plačilo',
-'online.payment.3dauth.redirect' => 'Počakajte, da vas preusmerimo k izdajatelju vaše kartice za preverjanje pristnosti ...',
+'online.payment.3dauth.redirect' => 'Počakajte, da vas preusmerimo k '
+	. 'izdajatelju vaše kartice za preverjanje '
+	. 'pristnosti .',
 'online.payment.accessKey' => 'Dostopni ključ',
 'online.payment.accessToken' => 'Žeton za dostop',
 'online.payment.accountId' => 'ID računa',
@@ -910,10 +1475,16 @@ return [
 'online.payment.appId' => 'ID aplikacije',
 'online.payment.appSecret' => 'Skrivnost aplikacije',
 'online.payment.callbackPassword' => 'Geslo za povratni klic',
-'online.payment.card.invalid' => 'Ta kreditna kartica ni veljavna. Preverite navedene podatke.',
+'online.payment.card.invalid' => 'Ta kreditna kartica ni veljavna.'
+	. 'Preverite navedene podatke.',
 'online.payment.clientId' => 'ID stranke',
 'online.payment.clientSecret' => 'Skrivnost odjemalca',
-'online.payment.creditcard.hint' => 'Če želite plačati s kreditno kartico, prosimo, vnesite spodnje podatke.<br/> Podatki o kreditni kartici niso shranjeni na naših strežnikih in bodo preneseni na spletni plačilni prehod prek varne povezave.',
+'online.payment.creditcard.hint' => 'Če želite plačati s kreditno '
+	. 'kartico, prosimo, vnesite spodnje podatke.'
+	. '<br/> Podatki o kreditni kartici '
+	. 'niso shranjeni na naših strežnikih '
+	. 'in bodo preneseni na spletni '
+	. 'plačilni prehod prek varne povezave.',
 'online.payment.developerMode' => 'Način za razvijalce',
 'online.payment.for' => 'Spletno plačilo za',
 'online.payment.for.invoice' => 'Spletno plačilo računa',
@@ -926,8 +1497,10 @@ return [
 'online.payment.partnerID' => 'ID partnerja',
 'online.payment.password' => 'Geslo',
 'online.payment.payment.cancelled' => 'Plačilo preklicano.',
-'online.payment.payment.failed' => 'Plačilo ni uspelo. Poskusite znova.',
-'online.payment.payment.redirect' => 'Prosimo, počakajte, da vas preusmerimo na stran za plačilo ...',
+'online.payment.payment.failed' => 'Plačilo ni uspelo.'
+	. 'Poskusite znova.',
+'online.payment.payment.redirect' => 'Prosimo, počakajte, da vas preusmerimo '
+	. 'na stran za plačilo .',
 'online.payment.payment.successful' => 'Plačilo za račun %s uspešno!',
 'online.payment.pdtKey' => 'Ključ Pdt',
 'online.payment.privateKey' => 'Zasebni ključ',
@@ -955,19 +1528,27 @@ return [
 'online.payment.storePassword' => 'Geslo za trgovino',
 'online.payment.subAccountId' => 'ID podračuna',
 'online.payment.testMode' => 'Preskusni način',
-'online.payment.testOrLiveApiKey' => 'Ključ API-ja za test ali v živo, tj. začne se s test_ ali live_',
+'online.payment.testOrLiveApiKey' => 'Ključ API-ja za test ali '
+	. 'v živo, tj.'
+	. 'začne se s test_ ali '
+	. 'live_',
 'online.payment.transactionKey' => 'Ključ transakcije',
 'online.payment.transactionPassword' => 'Geslo za transakcijo',
 'online.payment.username' => 'Uporabniško ime',
 'online.payment.vendor' => 'Prodajalec',
-'online.payment.version' => 'Različica Omnipay (označeno) / Skladno s PCI (v tej bazi podatkov niso shranjeni podatki o kreditni kartici) (neoznačeno)',
+'online.payment.version' => 'Različica Omnipay (označeno) / Skladno '
+	. 's PCI (v tej bazi '
+	. 'podatkov niso shranjeni podatki o '
+	. 'kreditni kartici) (neoznačeno)',
 'online.payment.webhookId' => 'ID spletnega kavlja',
 'online.payment.websiteKey' => 'Ključ spletnega mesta',
 'online.payments' => 'Spletna plačila',
 'open' => 'Odprto',
 'open.invoices' => 'Odprti računi',
 'open.quotes' => 'Odprte ponudbe',
-'open.reports.in.new.tab' => 'Odpri poročila v novem zavihku brskalnika',
+'open.reports.in.new.tab' =>
+	'Odpri poročila v novem zavihku '
+	. 'brskalnika',
 'optional' => 'Neobvezno',
 'options' => 'Možnosti',
 'order' => 'Naročilo',
@@ -983,10 +1564,19 @@ return [
 'password.change' => 'Spremeni geslo',
 'password.changed' => 'Geslo je bilo uspešno spremenjeno',
 'password.reset' => 'Ponastavi geslo',
-'password.reset.email' => 'Zahtevali ste novo geslo za svojo namestitev. Za ponastavitev gesla kliknite povezavo v mapi »Prejeto«.',
-'password.reset.failed' => 'Pri poskusu pošiljanja e-poštnega sporočila za ponastavitev gesla je prišlo do napake. Preglejte dnevnike aplikacije ali se obrnite na skrbnika sistema.',
-'password.reset.info' => 'Prejeli boste e-poštno sporočilo s povezavo za ponastavitev gesla.',
-'password.reset.request.token' => 'Zahteva za žeton za ponastavitev gesla',
+'password.reset.email' => 'Zahtevali ste novo geslo za '
+	. 'svojo namestitev.'
+	. 'Za ponastavitev gesla kliknite povezavo '
+	. 'v mapi »Prejeto«.',
+'password.reset.failed' => 'Pri poskusu pošiljanja e-poštnega sporočila '
+	. 'za ponastavitev gesla je prišlo '
+	. 'do napake.'
+	. 'Preglejte dnevnike aplikacije ali se '
+	. 'obrnite na skrbnika sistema.',
+'password.reset.info' => 'Prejeli boste e-poštno sporočilo s '
+	. 'povezavo za ponastavitev gesla.',
+'password.reset.request.token' => 'Zahteva za žeton za ponastavitev '
+	. 'gesla',
 'past.month' => 'Pretekli mesec',
 'past.quarter' => 'Preteklo četrtletje',
 'past.year' => 'Preteklo leto',
@@ -994,130 +1584,340 @@ return [
 'payment' => 'Plačilo',
 'payment.add' => 'Plačilo Dodaj',
 'payment.cannot.delete' => 'Plačila ni mogoče izbrisati',
-'payment.cannot.exceed.balance' => 'Znesek plačila ne sme presegati stanja na računu.',
+'payment.cannot.exceed.balance' => 'Znesek plačila ne sme presegati '
+	. 'stanja na računu.',
 'payment.custom' => 'Plačilo po meri',
 'payment.custom.add' => 'Plačilo po meri Dodaj',
 'payment.date' => 'Datum plačila',
 'payment.deleted' => 'Plačilo izbrisano',
 'payment.description' => 'Plačilo za račun %s',
 'payment.form' => 'Plačilni obrazec',
-'payment.gateway.default.locale' => 'Privzete jezikovne nastavitve, npr. en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Nastavljen je bil preizkus plačilnega prehoda Mollie ali ključ API v živo.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Nastaviti je treba testni plačilni prehod Mollie ali ključ API v živo.',
-'payment.gateway.mollie.api.payment.id' => 'Molliejeva identifikacijska številka plačila: ',
-'payment.gateway.no' => 'V nastavitvah ... Ogled ... Spletno plačilo ni nastavljenih nobenih plačilnih prehodov.',
+'payment.gateway.default.locale' => 'Privzete jezikovne nastavitve, npr.'
+	. 'en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Nastavljen je bil preizkus plačilnega '
+	. 'prehoda Mollie ali ključ API '
+	. 'v živo.',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'Nastaviti je treba testni plačilni '
+	. 'prehod Mollie ali ključ API '
+	. 'v živo.',
+'payment.gateway.mollie.api.payment.id' =>
+	'Molliejeva identifikacijska številka plačila:',
+'payment.gateway.no' => 'V nastavitvah .'
+	. 'Ogled .'
+	. 'Spletno plačilo ni nastavljenih nobenih '
+	. 'plačilnih prehodov.',
 'payment.history' => 'Zgodovina plačil',
-'payment.information.amazon.no.omnipay.version' => 'Trenutno ni na voljo različice Amazon Pay Omnipay. V pogledu nastavitev počistite polje za različico Omnipay, da uporabite različico, ki je skladna s PCI.',
-'payment.information.amazon.payment.session.complete' => 'Seja plačila Amazon je končana - ID seje: ',
-'payment.information.amazon.payment.session.incomplete' => 'Plačilna seja Amazon ni končana - poskusite znova',
-'payment.information.braintree.braintree.no.omnipay.version' => 'Trenutno ni različice Braintree Omnipay, ki bi bila združljiva z različico Braintree 6.9.1. V pogledu nastavitev počistite polje pri možnosti Različica Omnipay, da uporabite različico, ki je skladna s PCI.',
-'payment.information.invoice.number.not.provided' => 'Številka računa ni bila navedena',
-'payment.information.no.information.provided' => 'Ni podanih nobenih informacij',
+'payment.information.amazon.no.omnipay.version' =>
+	'Trenutno ni na voljo različice '
+	. 'Amazon Pay Omnipay.'
+	. 'V pogledu nastavitev počistite polje '
+	. 'za različico Omnipay, da uporabite '
+	. 'različico, ki je skladna s '
+	. 'PCI.',
+'payment.information.amazon.payment.session.complete' =>
+	'Seja plačila Amazon je končana '
+	. '- ID seje:',
+'payment.information.amazon.payment.session.incomplete' =>
+	'Plačilna seja Amazon ni končana '
+	. '- poskusite znova',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'Trenutno ni različice Braintree Omnipay,'
+	. 'ki bi bila združljiva z '
+	. 'različico Braintree 6.'
+	. '9.'
+	. '1.'
+	. 'V pogledu nastavitev počistite polje '
+	. 'pri možnosti Različica Omnipay, da '
+	. 'uporabite različico, ki je skladna '
+	. 's PCI.',
+'payment.information.invoice.number.not.provided' =>
+	'Številka računa ni bila navedena',
+'payment.information.no.information.provided' =>
+	'Ni podanih nobenih informacij',
 'payment.information.none' => 'Nobena',
-'payment.information.omnipay.driver.being.used' => 'Uporablja se voznik {{$d}} iz Omnipaya.',
-'payment.information.payment.method.required' => 'Za ta račun je potreben način plačila.',
-'payment.information.stripe.api.key' => 'Nastaviti je treba tajni ključ/ključ API za plačilni prehod Stripe.',
+'payment.information.omnipay.driver.being.used' =>
+	'Uporablja se voznik {{$d}} iz '
+	. 'Omnipaya.',
+'payment.information.payment.method.required' =>
+	'Za ta račun je potreben '
+	. 'način plačila.',
+'payment.information.stripe.api.key' =>
+	'Nastaviti je treba tajni ključ/ključ '
+	. 'API za plačilni prehod Stripe.',
 'payment.logs' => 'Dnevniki plačil',
 'payment.method' => 'Način plačila',
 'payment.method.add' => 'Dodaj način plačila',
 'payment.method.already.exists' => 'Način plačila že obstaja!',
 'payment.method.form' => 'Obrazec za način plačila',
-'payment.method.history' => 'Ni mogoče izbrisati. Zgodovina plačilnih metod obstaja.',
+'payment.method.history' => 'Ni mogoče izbrisati.'
+	. 'Zgodovina plačilnih metod obstaja.',
 'payment.methods' => 'Načini plačila',
-'payment.no.invoice.sent' => 'Nismo poslali nobenih računov in jih stranka ni pregledala.',
+'payment.no.invoice.sent' => 'Nismo poslali nobenih računov in '
+	. 'jih stranka ni pregledala.',
 'payment.provider' => 'Ponudnik plačilnih storitev',
 'payment.term' => 'Plačilni pogoji',
-'payment.term.0.days' => 'Prosimo, uporabite enega od navedenih načinov plačila',
-'payment.term.add.additional.terms.at.setting.repository' => 'Dodajte dodatne pogoje v funkciji getPaymentTerms v repozitoriju nastavitev.',
-'payment.term.eom.120.days' => 'EOM(120): Prosimo, plačajte v 120 dneh od konca meseca izdaje.',
-'payment.term.eom.15.days' => 'EOM(15): Prosimo, plačajte v 15 dneh od konca meseca izdaje.',
-'payment.term.eom.30.days' => 'EOM(30): Prosimo, plačajte v 30 dneh od konca meseca izdaje.',
-'payment.term.eom.60.days' => 'EOM(60): Prosimo, plačajte v 60 dneh od konca meseca izdaje.',
-'payment.term.eom.90.days' => 'EOM(90): Prosimo, plačajte v 90 dneh od konca meseca izdaje.',
+'payment.term.0.days' => 'Prosimo, uporabite enega od navedenih '
+	. 'načinov plačila',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'Dodajte dodatne pogoje v funkciji '
+	. 'getPaymentTerms v repozitoriju nastavitev.',
+'payment.term.eom.120.days' =>
+	'EOM(120):'
+	. 'Prosimo, plačajte v 120 dneh '
+	. 'od konca meseca izdaje.',
+'payment.term.eom.15.days' =>
+	'EOM(15):'
+	. 'Prosimo, plačajte v 15 dneh '
+	. 'od konca meseca izdaje.',
+'payment.term.eom.30.days' =>
+	'EOM(30):'
+	. 'Prosimo, plačajte v 30 dneh '
+	. 'od konca meseca izdaje.',
+'payment.term.eom.60.days' =>
+	'EOM(60):'
+	. 'Prosimo, plačajte v 60 dneh '
+	. 'od konca meseca izdaje.',
+'payment.term.eom.90.days' =>
+	'EOM(90):'
+	. 'Prosimo, plačajte v 90 dneh '
+	. 'od konca meseca izdaje.',
 'payment.term.general' => 'Plačilo zapade v 30 dneh',
-'payment.term.mfi.15' => 'MFI(15): Prosimo, plačajte 15. v mesecu, ki sledi mesecu izdaje.',
-'payment.term.net.120.days' => 'Neto (120): Prosimo, plačajte v 120 dneh od datuma izdaje',
-'payment.term.net.15.days' => 'Neto (15): Prosimo, plačajte v 15 dneh od datuma izdaje.',
-'payment.term.net.30.days' => 'Neto (30): Prosimo, plačajte v 30 dneh od datuma izdaje',
-'payment.term.net.60.days' => 'Neto (60): Prosimo, plačajte v 60 dneh od datuma izdaje',
-'payment.term.net.90.days' => 'Neto (90): Prosimo, plačajte v 90 dneh od datuma izdaje',
+'payment.term.mfi.15' => 'MFI(15):'
+	. 'Prosimo, plačajte 15.'
+	. 'v mesecu, ki sledi mesecu '
+	. 'izdaje.',
+'payment.term.net.120.days' =>
+	'Neto (120):'
+	. 'Prosimo, plačajte v 120 dneh '
+	. 'od datuma izdaje',
+'payment.term.net.15.days' =>
+	'Neto (15):'
+	. 'Prosimo, plačajte v 15 dneh '
+	. 'od datuma izdaje.',
+'payment.term.net.30.days' =>
+	'Neto (30):'
+	. 'Prosimo, plačajte v 30 dneh '
+	. 'od datuma izdaje',
+'payment.term.net.60.days' =>
+	'Neto (60):'
+	. 'Prosimo, plačajte v 60 dneh '
+	. 'od datuma izdaje',
+'payment.term.net.90.days' =>
+	'Neto (90):'
+	. 'Prosimo, plačajte v 90 dneh '
+	. 'od datuma izdaje',
 'payment.term.pia' => 'Plačilo je potrebno vnaprej (PIA)',
-'payment.term.polite' => 'Cenimo vaše poslovanje. Prosimo, pošljite plačilo v 30 dneh od prejema tega računa.',
+'payment.term.polite' => 'Cenimo vaše poslovanje.'
+	. 'Prosimo, pošljite plačilo v 30 '
+	. 'dneh od prejema tega računa.',
 'payment.terms.default' => 'Plačilo v 14 dneh',
 'paymentpeppol' => 'Plačila, opravljena prek Peppola',
 'paymentpeppol.reference.plural' => 'Reference plačila z uporabo Peppola',
 'payments' => 'Plačila',
 'paymentterm' => 'Plačilni rok',
 'pdf' => 'PDF',
-'pdf.archived.no' => 'PDF NI arhiviran v mapi Nalaganja/Arhiv/Račun',
+'pdf.archived.no' => 'PDF NI arhiviran v mapi '
+	. 'Nalaganja/Arhiv/Račun',
 'pdf.archived.yes' => 'PDF arhiviran v mapi Nalaganja/Arhiv/Račun',
 'pdf.include.zugferd' => 'Vključi ZUGFeRD',
-'pdf.include.zugferd.help' => 'Če omogočite to možnost, bodo v PDF-jih računov vključeni ZUGFeRD XML, ki je standard XML za račune. <a href="https://www.ferd-net.de/">Več informacij</a>',
+'pdf.include.zugferd.help' => 'Če omogočite to možnost, bodo '
+	. 'v PDF-jih računov vključeni ZUGFeRD '
+	. 'XML, ki je standard XML '
+	. 'za račune.'
+	. '<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">Več informacij</a>',
 'pdf.invoice.footer' => 'Noga PDF-ja',
-'pdf.invoice.footer.hint' => 'Tukaj lahko vnesete poljuben HTML, ki bo prikazan na dnu vaših računov v PDF-ju.',
+'pdf.invoice.footer.hint' => 'Tukaj lahko vnesete poljuben HTML,'
+	. 'ki bo prikazan na dnu '
+	. 'vaših računov v PDF-ju.',
 'pdf.modal' => 'Modalni PDF',
 'pdf.quote.footer' => 'Podnožje citatov',
-'pdf.quote.footer.hint' => 'Tukaj lahko vnesete poljuben HTML, ki bo prikazan na dnu vaših ponudb v PDF-ju.',
+'pdf.quote.footer.hint' => 'Tukaj lahko vnesete poljuben HTML,'
+	. 'ki bo prikazan na dnu '
+	. 'vaših ponudb v PDF-ju.',
 'pdf.settings' => 'Nastavitve PDF-ja',
 'pdf.template' => 'Predloga PDF',
 'pdf.template.overdue' => 'Predloga PDF z zamudo',
 'pdf.template.paid' => 'Plačljiva predloga PDF',
 'pdf.watermark' => 'Omogoči vodne žige PDF-jev',
-'peppol' => 'Peppol Univerzalni poslovni jezik (UBL) 2.1 Račun - potrjeno s strani Ecosio',
+'peppol' => 'Peppol Univerzalni poslovni jezik (UBL) '
+	. '2.'
+	. '1 Račun - potrjeno s '
+	. 'strani Ecosio',
 'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' => 'Stroški nadomestila za račun in stroški nadomestila za postavke računa se podedujejo od izpolnjenega nadomestila za račun Peppol na ravni dokumenta',
-'peppol.client.check' => 'Podatki o Peppolu za to stranko so nezadostni. Manjka vsaj eden. Glejte Ogled ... Stranka ... Možnosti ... Urejanje podatkov o Peppolu za e-račune.',
-'peppol.client.defaults' => 'Izpolnite obrazec za odjemalca Peppol s privzetimi nastavitvami OpenPeppol za testiranje.',
-'peppol.currency.code.from' => 'Iz valute, tj. države izvora, valute davka (za spremembo glejte config/common/params.php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'V valuto, tj. v valuto dokumenta: glejte funkcijo get.setting(&#39;currency.code.to&#39;)',
-'peppol.currency.from.to' => 'Ena od valut From Currency danes pretvori v to od valut To Currency',
-'peppol.currency.to.from' => 'Ena od valut To danes pretvori v to od valute From.',
+'peppol.allowance.or.charge.inherit' =>
+	'Stroški nadomestila za račun in '
+	. 'stroški nadomestila za postavke računa '
+	. 'se podedujejo od izpolnjenega nadomestila '
+	. 'za račun Peppol na ravni '
+	. 'dokumenta',
+'peppol.client.check' => 'Podatki o Peppolu za to '
+	. 'stranko so nezadostni.'
+	. 'Manjka vsaj eden.'
+	. 'Glejte Ogled .'
+	. 'Stranka .'
+	. 'Možnosti .'
+	. 'Urejanje podatkov o Peppolu za '
+	. 'e-račune.',
+'peppol.client.defaults' => 'Izpolnite obrazec za odjemalca Peppol '
+	. 's privzetimi nastavitvami OpenPeppol za '
+	. 'testiranje.',
+'peppol.currency.code.from' => 'Iz valute, tj.'
+	. 'države izvora, valute davka (za '
+	. 'spremembo glejte config/common/params.'
+	. 'php TaxCurrencyCode)',
+'peppol.currency.code.to' => 'V valuto, tj.'
+	. 'v valuto dokumenta:'
+	. 'glejte funkcijo get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
+'peppol.currency.from.to' => 'Ena od valut From Currency '
+	. 'danes pretvori v to od '
+	. 'valut To Currency',
+'peppol.currency.to.from' => 'Ena od valut To danes '
+	. 'pretvori v to od valute '
+	. 'From.',
 'peppol.document.reference.null' => 'številka-računa-null-id-računa',
-'peppol.ecosio.validator' => 'Ecosio Validator za OpenPeppol UBL Invoice (3.15.0) (znan tudi kot BIS Billing 3.0.14)',
+'peppol.ecosio.validator' => 'Ecosio Validator za OpenPeppol UBL '
+	. 'Invoice (3.'
+	. '15.'
+	. '0) (znan tudi kot BIS '
+	. 'Billing 3.'
+	. '0.'
+	. '14)',
 'peppol.electronic.invoicing' => 'Peppol Elektronsko izdajanje računov',
-'peppol.enable' => 'Omogočite Peppol z uporabo univerzalnega poslovnega jezika (UBL) 2.1',
+'peppol.enable' => 'Omogočite Peppol z uporabo univerzalnega '
+	. 'poslovnega jezika (UBL) 2.'
+	. '1',
 'peppol.include.delivery.period' => 'Vključi obdobja dostave',
-'peppol.invoice.note.not.found' => 'Račun ni bil najden',
+'peppol.invoice.note.not.found' =>
+	'Račun ni bil najden',
 'peppol.label.switch.off' => 'Privzete nastavitve Peppola so omogočene',
 'peppol.label.switch.on' => 'Peppol privzete nastavitve onemogočene',
 'peppol.mandatory' => ' (Obvezno)',
 'peppol.optional' => ' (Neobvezno)',
-'peppol.stand.in.code' => 'Koda opisa – označuje, katera osnova bo uporabljena za prihodnji datum davčne točke ob dobavi/plačilu blaga. Če je davčno točko mogoče določiti, se koda opisa v obračunskem obdobju medsebojno izključi.',
-'peppol.store.cove.1.1.1' => 'Registrirajte se za dostop do API-ja na spletni strani Store Cove',
-'peppol.store.cove.1.1.2' => 'Ustvarite svoj API ključ na spletni strani Store Cove in ga shranite v Nastavitve ... Pogled ... Spletno plačilo ... Store Cove ... API ključ',
-'peppol.store.cove.1.1.3' => 'Opravite svoj prvi klic API-ja, da dobite odgovor JSON.',
-'peppol.store.cove.1.1.4' => 'Pošljite svoj prvi testni račun JSON, ki ste ga pridobili s klikom na zeleni gumb World=&gt;DE',
-'peppol.stream.toggle' => 'Peppol - gumb za preklop med »Pretakanje« in »Shranjevanje v datoteko«',
-'peppol.tax.category.not.found' => 'Manjka koda davčne kategorije Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
-'peppol.tax.category.percent.not.found' => 'Manjka odstotek davčne kategorije Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
+'peppol.stand.in.code' => 'Koda opisa – označuje, katera '
+	. 'osnova bo uporabljena za prihodnji '
+	. 'datum davčne točke ob dobavi/plačilu '
+	. 'blaga.'
+	. 'Če je davčno točko mogoče '
+	. 'določiti, se koda opisa v '
+	. 'obračunskem obdobju medsebojno izključi.',
+'peppol.store.cove.1.1.1' =>
+	'Registrirajte se za dostop do '
+	. 'API-ja na spletni strani Store '
+	. 'Cove',
+'peppol.store.cove.1.1.2' =>
+	'Ustvarite svoj API ključ na '
+	. 'spletni strani Store Cove in '
+	. 'ga shranite v Nastavitve .'
+	. 'Pogled .'
+	. 'Spletno plačilo .'
+	. 'Store Cove .'
+	. 'API ključ',
+'peppol.store.cove.1.1.3' =>
+	'Opravite svoj prvi klic API-ja,'
+	. 'da dobite odgovor JSON.',
+'peppol.store.cove.1.1.4' =>
+	'Pošljite svoj prvi testni račun '
+	. 'JSON, ki ste ga pridobili '
+	. 's klikom na zeleni gumb '
+	. 'World=&gt;DE',
+'peppol.stream.toggle' => 'Peppol - gumb za preklop '
+	. 'med »Pretakanje« in »Shranjevanje v '
+	. 'datoteko«',
+'peppol.tax.category.not.found' =>
+	'Manjka koda davčne kategorije Peppol '
+	. '(https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/).',
+'peppol.tax.category.percent.not.found' =>
+	'Manjka odstotek davčne kategorije Peppol '
+	. '(https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/).',
 'peppol.tax.rate.code' => 'Davčna koda Peppol',
-'peppol.trying.to.send.non.pdf.file' => 'Trenutno se s Peppol računi pošiljajo samo datoteke PDF.',
+'peppol.trying.to.send.non.pdf.file' =>
+	'Trenutno se s Peppol računi '
+	. 'pošiljajo samo datoteke PDF.',
 'peppol.unit' => 'Klasifikacija enot z uporabo Peppola',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Vir: src/Invoice/Ubl/Invoice: Manjka opis dokumenta - Ecosio: Dokument NE SME vsebovati praznih elementov. Rešitev: V pogledu računa: Možnosti ... Uredi ... Opis dokumenta',
-'peppol.validator.Invoice.cac.Note' => 'Vir: src/Invoice/Ubl/Invoice: Manjka opomba k računu - Ecosio: Dokument NE SME vsebovati praznih elementov.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Račun/Ubl/Stranka: Manjka e-poštni naslov - Ecosio: Elektronski naslov MORA biti naveden. Rešitev: Stranka ... Ogled ... Možnosti ... Uredi podatke Peppol za e-račun ... EndPointID',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'Vir:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Manjka opis dokumenta - Ecosio:'
+	. 'Dokument NE SME vsebovati praznih '
+	. 'elementov.'
+	. 'Rešitev:'
+	. 'V pogledu računa:'
+	. 'Možnosti .'
+	. 'Uredi .'
+	. 'Opis dokumenta',
+'peppol.validator.Invoice.cac.Note' =>
+	'Vir:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Manjka opomba k računu - '
+	. 'Ecosio:'
+	. 'Dokument NE SME vsebovati praznih '
+	. 'elementov.',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Račun/Ubl/Stranka:'
+	. 'Manjka e-poštni naslov - Ecosio:'
+	. 'Elektronski naslov MORA biti naveden.'
+	. 'Rešitev:'
+	. 'Stranka .'
+	. 'Ogled .'
+	. 'Možnosti .'
+	. 'Uredi podatke Peppol za e-račun '
+	. '.'
+	. 'EndPointID',
 'peppol.version' => 'Različica Peppol',
-'peppol.xml.stream' => 'Pretočno predvajanje, tj. prikaz na zaslonu v brskalniku namesto v mapi za prenose.',
+'peppol.xml.stream' => 'Pretočno predvajanje, tj.'
+	. 'prikaz na zaslonu v brskalniku '
+	. 'namesto v mapi za prenose.',
 'per.item' => 'na postavko',
-'per.page.total' => ' na stran. Skupaj ',
+'per.page.total' => 'na stran.'
+	. 'Skupaj',
 'performance' => 'Zmogljivost',
-'performance.label.switch.off' => 'Hitrejši način branja in pisanja - glejte config/common/params.php za iskanje &#39;mode&#39; ',
-'performance.label.switch.on' => 'Počasnejši način samo pisanja - glejte config/common/params.php in poiščite &#39;mode&#39; ',
+'performance.label.switch.off' => 'Hitrejši način branja in pisanja '
+	. '- glejte config/common/params.'
+	. 'php za iskanje \'mode\'',
+'performance.label.switch.on' => 'Počasnejši način samo pisanja - '
+	. 'glejte config/common/params.'
+	. 'php in poiščite \'mode\'',
 'period' => 'Obdobje',
 'permission' => 'Nimate potrebnega dovoljenja.',
 'personal.information' => 'Osebni podatki',
 'phone' => 'Telefon',
 'phone.abbr' => 'P',
 'phone.number' => 'Telefonska številka',
-'php.timezone.fail' => 'Zdi se, da ni konfiguriran noben časovni pas. Preverite date.timezone v konfiguraciji PHP. V nasprotnem primeru bo izbran <strong>%s</strong> .',
+'php.timezone.fail' => 'Zdi se, da ni konfiguriran '
+	. 'noben časovni pas.'
+	. 'Preverite date.'
+	. 'timezone v konfiguraciji PHP.'
+	. 'V nasprotnem primeru bo izbran '
+	. '<strong>%s</strong> .',
 'php.timezone.success' => 'Konfiguriran je veljaven časovni pas.',
-'php.version.fail' => 'Nameščena je različica PHP %s, vendar InvoicePlane zahteva različico PHP %s ali novejšo',
-'php.version.success' => 'Zdi se, da PHP izpolnjuje zahteve za namestitev',
+'php.version.fail' => 'Nameščena je različica PHP %s,'
+	. 'vendar InvoicePlane zahteva različico PHP '
+	. '%s ali novejšo',
+'php.version.success' => 'Zdi se, da PHP izpolnjuje '
+	. 'zahteve za namestitev',
 'platform' => 'Platforma',
 'platform.PhpMyAdmin' => 'Različica PhpMyAdmin',
 'platform.PhpSupport' => 'Podpora za PHP',
 'platform.PhpVersion' => 'Različica PHP-ja',
-'platform.csrf' => 'Zaščita pred ponarejanjem na več spletnih mestih',
+'platform.csrf' => 'Zaščita pred ponarejanjem na več '
+	. 'spletnih mestih',
 'platform.editor' => 'Urednik',
 'platform.mySqlVersion' => 'Različica mySql',
 'platform.netbeans.UTF-8' => 'Kodiranje Netbeans UTF-8',
@@ -1131,32 +1931,57 @@ return [
 'port' => 'Pristanišče',
 'position' => 'Položaj',
 'possible.file.upload.attack' => 'Možen napad z nalaganjem datotek: ',
-'pre.password' => 'Standardno geslo za PDF račun (neobvezno)',
+'pre.password' => 'Standardno geslo za PDF račun '
+	. '(neobvezno)',
 'prefix' => 'Predpona',
 'prev' => 'Prejšnje',
 'preview' => 'Predogled',
 'price' => 'Cena',
 'product' => 'Izdelek',
 'product.add' => 'Dodaj izdelek',
-'product.additional.item.property.name' => 'Ime dodatne lastnosti Peppol, npr. barva',
-'product.additional.item.property.value' => 'Vrednost dodatne lastnosti Peppol, npr. črna',
-'product.country.of.origin.code' => 'Koda države izvora Peppol z uporabo kod držav ISO-3166-1:Alpha2',
-'product.custom.fields' => 'Polja izdelka po meri (npr. Peppol: polje z več izbirami AdditionalItemProperty, barva, vrednost, črna)',
+'product.additional.item.property.name' =>
+	'Ime dodatne lastnosti Peppol, npr.'
+	. 'barva',
+'product.additional.item.property.value' =>
+	'Vrednost dodatne lastnosti Peppol, npr.'
+	. 'črna',
+'product.country.of.origin.code' =>
+	'Koda države izvora Peppol z '
+	. 'uporabo kod držav ISO-3166-1:'
+	. 'Alpha2',
+'product.custom.fields' => 'Polja izdelka po meri (npr.'
+	. 'Peppol:'
+	. 'polje z več izbirami AdditionalItemProperty,'
+	. 'barva, vrednost, črna)',
 'product.description' => 'Opis izdelka',
 'product.edit' => 'Uredi izdelek',
 'product.error.summary' => 'Povzetek napak izdelka',
 'product.families' => 'Družine izdelkov',
 'product.form.tab.category' => 'Kategorija',
-'product.form.tab.not.required' => 'Ni obvezna polja',
+'product.form.tab.not.required' =>
+	'Ni obvezna polja',
 'product.form.tab.required' => 'Obvezna polja',
 'product.found' => 'Izdelek najden',
-'product.history' => 'Ni mogoče izbrisati. Ta izdelek je na računu ali ponudbi.',
-'product.icc.id' => 'Peppol ID kode klasifikacije artiklov, npr. 9873242',
-'product.icc.listid' => 'ID seznama kod klasifikacije artiklov Peppol - npr. SRV',
-'product.icc.listversionid' => 'ID različice seznama kod klasifikacije artiklov Peppol (neobvezno) – npr. če klasifikacijo artiklov zagotavljajo danski dobavitelji, je treba uporabiti različico UNSPSC 19.0501.',
+'product.history' => 'Ni mogoče izbrisati.'
+	. 'Ta izdelek je na računu '
+	. 'ali ponudbi.',
+'product.icc.id' => 'Peppol ID kode klasifikacije artiklov,'
+	. 'npr.'
+	. '9873242',
+'product.icc.listid' => 'ID seznama kod klasifikacije artiklov '
+	. 'Peppol - npr.'
+	. 'SRV',
+'product.icc.listversionid' => 'ID različice seznama kod klasifikacije '
+	. 'artiklov Peppol (neobvezno) – npr.'
+	. 'če klasifikacijo artiklov zagotavljajo danski '
+	. 'dobavitelji, je treba uporabiti različico '
+	. 'UNSPSC 19.'
+	. '0501.',
 'product.id' => 'ID izdelka',
 'product.image' => 'Slika',
-'product.item.classification.code.scheme.id.not.found' => 'ID sheme klasifikacijskih kod izdelkov ni bil najden',
+'product.item.classification.code.scheme.id.not.found' =>
+	'ID sheme klasifikacijskih kod izdelkov '
+	. 'ni bil najden',
 'product.name' => 'Ime izdelka',
 'product.not.found' => 'Izdelka ni bilo mogoče najti',
 'product.peppol.unit' => 'Enota s Peppolom',
@@ -1169,35 +1994,63 @@ return [
 'product.property.name' => 'Ime',
 'product.property.table' => 'Tabela lastnosti izdelka',
 'product.property.value' => 'Vrednost',
-'product.record.successfully.added' => 'Zapis izdelka je bil uspešno dodan',
-'product.sii.id' => 'Standardna identifikacijska številka artikla Peppol, povezana z zgornjo shemo - npr. 14-mestna identifikatorska številka z ničlami ​​v podatkovni bazi globalnih trgovinskih številk artiklov (pojavlja se pod črtno kodo)',
-'product.sii.schemeid' => 'Peppol standardna identifikacija artikla shemid - npr. 0160',
+'product.record.successfully.added' => 'Zapis izdelka je bil uspešno '
+	. 'dodan',
+'product.sii.id' => 'Standardna identifikacijska številka artikla Peppol,'
+	. 'povezana z zgornjo shemo - '
+	. 'npr.'
+	. '14-mestna identifikatorska številka z ničlami '
+	. '​​v podatkovni bazi globalnih trgovinskih '
+	. 'številk artiklov (pojavlja se pod '
+	. 'črtno kodo)',
+'product.sii.schemeid' => 'Peppol standardna identifikacija artikla shemid '
+	. '- npr.'
+	. '0160',
 'product.sku' => 'SKU',
 'product.tariff' => 'Tarifa',
 'product.unit' => 'Enota izdelka',
-'product.unit.code.not.found' => 'Izdelek nima povezane kode enote. Izdelek ... Uredi ... Enota s Peppolom.',
+'product.unit.code.not.found' =>
+	'Izdelek nima povezane kode enote.'
+	. 'Izdelek .'
+	. 'Uredi .'
+	. 'Enota s Peppolom.',
 'product.units' => 'Enote izdelka',
 'product.view.tab.details' => 'Podrobnosti o izdelku',
 'product.view.tab.gallery' => 'Galerija izdelkov',
 'product.view.tab.images' => 'Slike izdelkov',
 'product.view.tab.properties' => 'Lastnosti izdelka',
 'productimage.add' => 'Dodaj sliko izdelka',
-'productimage.deleted.from' => 'Slika je bila uspešno izbrisana iz naslednjega imenika: ',
+'productimage.deleted.from' => 'Slika je bila uspešno izbrisana '
+	. 'iz naslednjega imenika:',
 'productimage.form' => 'Obrazec za sliko izdelka',
 'productimage.gallery' => 'Slike, povezane z: ',
 'productimage.index' => 'Kazalo slik izdelka',
-'productimage.list' => 'Seznam slik, povezanih s tem izdelkom',
-'productimage.no.file.uploaded' => 'Naložena ni bila nobena slika. Možen podvojeni vir.',
+'productimage.list' => 'Seznam slik, povezanih s tem '
+	. 'izdelkom',
+'productimage.no.file.uploaded' => 'Naložena ni bila nobena slika.'
+	. 'Možen podvojeni vir.',
 'productimage.plural' => 'Slike izdelkov',
-'productimage.possible.file.upload.attack' => 'Možen napad z nalaganjem datotek: ',
+'productimage.possible.file.upload.attack' =>
+	'Možen napad z nalaganjem datotek:',
 'productimage.upload' => 'Naloži sliko izdelka',
-'productimage.uploaded.to' => 'Slika je bila naložena v naslednji imenik: ',
-'productimage.view' => 'V razdelku »Ogled izdelka« je mogoče dodati več slik, povezanih z izdelkom.',
+'productimage.uploaded.to' => 'Slika je bila naložena v '
+	. 'naslednji imenik:',
+'productimage.view' => 'V razdelku »Ogled izdelka« je '
+	. 'mogoče dodati več slik, povezanih '
+	. 'z izdelkom.',
 'products' => 'Izdelki',
 'products.form' => 'Obrazec izdelka',
 'profile.deleted' => 'Profil je bil izbrisan',
-'profile.history' => 'Profila ni mogoče izbrisati. Zgodovina že obstaja.',
-'profile.new' => 'Ustvarite profil z novim e-poštnim naslovom ali mobilno številko, ga aktivirajte in izberite podatke o podjetju, s katerimi ga želite povezati. Ti podatki se bodo samodejno prikazali v dokumentaciji, npr. v ponudbah in računih.',
+'profile.history' => 'Profila ni mogoče izbrisati.'
+	. 'Zgodovina že obstaja.',
+'profile.new' => 'Ustvarite profil z novim e-poštnim '
+	. 'naslovom ali mobilno številko, ga '
+	. 'aktivirajte in izberite podatke o '
+	. 'podjetju, s katerimi ga želite '
+	. 'povezati.'
+	. 'Ti podatki se bodo samodejno '
+	. 'prikazali v dokumentaciji, npr.'
+	. 'v ponudbah in računih.',
 'profile.not.deleted' => 'Profil ni bil izbrisan',
 'profile.plural' => 'Profili',
 'profile.property.label.company' => 'Podjetje',
@@ -1215,11 +2068,16 @@ return [
 'provider.name' => 'Ime ponudnika',
 'provider.response' => 'Odgovor ponudnika',
 'purchase.price' => 'Nakupna cena',
-'Q1' => '1. četrtletje',
-'Q2' => '2. četrtletje',
-'Q3' => '3. četrtletje',
-'Q4' => '4. četrtletje',
-'qr.absolute.url' => 'Absolutni URL, uporabljen za gradnjo nad kodo QR',
+'Q1' => '1.'
+	. 'četrtletje',
+'Q2' => '2.'
+	. 'četrtletje',
+'Q3' => '3.'
+	. 'četrtletje',
+'Q4' => '4.'
+	. 'četrtletje',
+'qr.absolute.url' => 'Absolutni URL, uporabljen za gradnjo '
+	. 'nad kodo QR',
 'qr.code' => 'QR koda',
 'qr.code.1' => 'QR koda 1',
 'qr.code.details' => 'Podrobnosti QR kode',
@@ -1228,25 +2086,59 @@ return [
 'qr.code.level.3' => 'Raven kodiranja je napredna',
 'qr.code.settings' => 'Nastavitve QR kode',
 'qr.code.settings.bic' => 'BIC',
-'qr.code.settings.effect' => 'Kakšen vpliv imajo zgornje nastavitve na to QR kodo?',
-'qr.code.settings.effect.explanation' => 'V dejanski kodi ... nič. Vse privzete vrednosti so uporabljene, ker je uporabljena zgornja zelo osnovna dejanska koda.',
+'qr.code.settings.effect' => 'Kakšen vpliv imajo zgornje nastavitve '
+	. 'na to QR kodo?',
+'qr.code.settings.effect.explanation' =>
+	'V dejanski kodi .'
+	. 'nič.'
+	. 'Vse privzete vrednosti so uporabljene,'
+	. 'ker je uporabljena zgornja zelo '
+	. 'osnovna dejanska koda.',
 'qr.code.settings.enable' => 'Omogoči QR kodo',
-'qr.code.settings.enable.hint' => 'Če omogočite to možnost, bo za PDF-je računov vključena QR koda. Za pravilno delovanje morate spodaj izpolniti prejemnika, IBAN in BIC. V nasprotnem primeru se QR koda ne bo prikazala.',
+'qr.code.settings.enable.hint' =>
+	'Če omogočite to možnost, bo '
+	. 'za PDF-je računov vključena QR '
+	. 'koda.'
+	. 'Za pravilno delovanje morate spodaj '
+	. 'izpolniti prejemnika, IBAN in BIC.'
+	. 'V nasprotnem primeru se QR '
+	. 'koda ne bo prikazala.',
 'qr.code.settings.iban' => 'IBAN',
 'qr.code.settings.recipient' => 'Prejemnik',
-'qr.code.settings.remittance.text' => 'Besedilo nakazila',
-'qr.code.settings.remittance.text.tags' => 'Oznake besedila za nakazila',
+'qr.code.settings.remittance.text' =>
+	'Besedilo nakazila',
+'qr.code.settings.remittance.text.tags' =>
+	'Oznake besedila za nakazila',
 'qr.code.source' => 'Vir QR kode',
-'qr.code.source.path' => 'viri\ogledi\račun\nastavitev\logo.podjetja.in.naslov.php',
+'qr.code.source.path' => 'viri\\ogledi\\račun\\nastavitev\\logo.'
+	. 'podjetja.'
+	. 'in.'
+	. 'naslov.'
+	. 'php',
 'qr.code.type' => 'Vrsta QR kode',
-'qr.code.type.absolute.url' => 'Absolutni (celotn) URL na podlagi',
+'qr.code.type.absolute.url' =>
+	'Absolutni (celotn) URL na podlagi',
 'qr.code.widget.used' => 'Uporabljeni pripomoček',
-'qr.ecc.level' => 'Raven ECC kode QR (privzeto: L)',
-'qr.height.and.width' => 'Višina in širina QR kode (privzeto: 60)',
+'qr.ecc.level' => 'Raven ECC kode QR (privzeto:'
+	. 'L)',
+'qr.height.and.width' => 'Višina in širina QR kode '
+	. '(privzeto:'
+	. '60)',
 'qr.meaning' => 'Pomen',
-'qr.meaning.benefit' => 'Skenirajte in se vrnite na ogled (brez vnašanja URL-ja), kjer je mogoče račun natisniti v formatu PDF. Velja za vse uporabnike z aktivnim uporabniškim računom.',
-'qr.output.type' => 'Vrsta izhoda QR kode (npr. .svg, .png) (privzeto: png)',
-'qr.version' => 'Številka različice QR kode (najstarejša 0 najnovejša 40) (privzeto: 40)',
+'qr.meaning.benefit' => 'Skenirajte in se vrnite na '
+	. 'ogled (brez vnašanja URL-ja), kjer '
+	. 'je mogoče račun natisniti v '
+	. 'formatu PDF.'
+	. 'Velja za vse uporabnike z '
+	. 'aktivnim uporabniškim računom.',
+'qr.output.type' => 'Vrsta izhoda QR kode (npr.'
+	. '.'
+	. 'svg, .'
+	. 'png) (privzeto:'
+	. 'png)',
+'qr.version' => 'Številka različice QR kode (najstarejša '
+	. '0 najnovejša 40) (privzeto:'
+	. '40)',
 'qty' => 'Količina',
 'quantity' => 'Količina',
 'quarter' => 'Četrt',
@@ -1266,10 +2158,17 @@ return [
 'quote.date' => 'Datum ponudbe',
 'quote.dates' => 'Datumi ponudb',
 'quote.delete.not' => 'Račun ni bil izbrisan.',
-'quote.delivery.location.index.button.list' => 'Citati',
-'quote.delivery.location.none' => 'S to ponudbo ni povezana nobena lokacija dostave.',
+'quote.delivery.location.index.button.list' =>
+	'Citati',
+'quote.delivery.location.none' => 'S to ponudbo ni povezana '
+	. 'nobena lokacija dostave.',
 'quote.disable.flash.messages' => 'Onemogoči sporočila s citati',
-'quote.email.templates.not.configured' => 'Predloge e-pošte niso konfigurirane. Nastavitve ... Ponudbe ... Predloge ponudb ... Privzeta predloga e-pošte',
+'quote.email.templates.not.configured' =>
+	'Predloge e-pošte niso konfigurirane.'
+	. 'Nastavitve .'
+	. 'Ponudbe .'
+	. 'Predloge ponudb .'
+	. 'Privzeta predloga e-pošte',
 'quote.group' => 'Skupina za ponudbe',
 'quote.id' => 'ID ponudbe ',
 'quote.item' => 'Ponudba artikla',
@@ -1279,34 +2178,68 @@ return [
 'quote.item.cannot.delete' => 'Elementa ponudbe ni mogoče izbrisati',
 'quote.label.switch.off' => 'Ponudba DDV',
 'quote.label.switch.on' => 'Ponudba brez DDV',
-'quote.not.copied.to.invoice' => 'Račun NI ustvarjen iz ponudbe! Podvojen račun. Kopirajte ponudbo v drugo ponudbo in jo nato kopirajte v račun. Vsaka ponudba mora imeti ujemajoč se račun.',
+'quote.not.copied.to.invoice' =>
+	'Račun NI ustvarjen iz ponudbe!'
+	. 'Podvojen račun.'
+	. 'Kopirajte ponudbo v drugo ponudbo '
+	. 'in jo nato kopirajte v '
+	. 'račun.'
+	. 'Vsaka ponudba mora imeti ujemajoč '
+	. 'se račun.',
 'quote.number' => 'Številka ponudbe',
 'quote.number.status' => 'Status številke ponudbe',
 'quote.overview' => 'Pregled ponudb',
 'quote.overview.period' => 'Obdobje pregleda ponudb',
-'quote.password' => 'Geslo za PDF s citiranjem (neobvezno)',
-'quote.pre.password' => 'Navedite standardno geslo za PDF (neobvezno)',
+'quote.password' => 'Geslo za PDF s citiranjem '
+	. '(neobvezno)',
+'quote.pre.password' => 'Navedite standardno geslo za PDF '
+	. '(neobvezno)',
 'quote.reject' => 'Zavrni',
 'quote.rejected' => 'Ta ponudba je bila zavrnjena',
-'quote.sales.order.created.from.quote' => 'Prodajno naročilo je bilo ustvarjeno iz ponudbe in vnesli ste številko naročilnice!',
-'quote.sales.order.not.created.from.quote' => 'Prodajno naročilo ni bilo ustvarjeno iz ponudbe! Podvojeno prodajno naročilo. Kopirajte ponudbo v drugo ponudbo in jo nato kopirajte v prodajno naročilo. Vsaka ponudba mora imeti ujemajoče se prodajno naročilo.',
-'quote.status.email.body' => 'Stranka %1$s ima %2$s ponudbo %3$sPovezava do ponudbe: %4$s',
+'quote.sales.order.created.from.quote' =>
+	'Prodajno naročilo je bilo ustvarjeno '
+	. 'iz ponudbe in vnesli ste '
+	. 'številko naročilnice!',
+'quote.sales.order.not.created.from.quote' =>
+	'Prodajno naročilo ni bilo ustvarjeno '
+	. 'iz ponudbe! Podvojeno prodajno naročilo.'
+	. 'Kopirajte ponudbo v drugo ponudbo '
+	. 'in jo nato kopirajte v '
+	. 'prodajno naročilo.'
+	. 'Vsaka ponudba mora imeti ujemajoče '
+	. 'se prodajno naročilo.',
+'quote.status.email.body' => 'Stranka %1$s ima %2$s ponudbo '
+	. '%3$sPovezava do ponudbe:'
+	. '%4$s',
 'quote.status.email.subject' => 'Stranka %1$s %2$s ponudba %3$s',
 'quote.tax' => 'Davek na ponudbo',
 'quote.tax.rate' => 'Davčna stopnja ponudbe',
 'quote.tax.rate.add' => 'Ponudba Davčna stopnja Dodaj',
-'quote.tax.rate.cannot.delete' => 'Ponudbe davčne stopnje ni mogoče izbrisati',
-'quote.tax.rate.incomplete.fields' => 'Nepopolna polja: Vključiti morate davčno stopnjo. Nasvet: Vključite ničelno davčno stopnjo.',
-'quote.tax.rate.saved' => 'Ponudba davčne stopnje je bila shranjena',
+'quote.tax.rate.cannot.delete' =>
+	'Ponudbe davčne stopnje ni mogoče '
+	. 'izbrisati',
+'quote.tax.rate.incomplete.fields' =>
+	'Nepopolna polja:'
+	. 'Vključiti morate davčno stopnjo.'
+	. 'Nasvet:'
+	. 'Vključite ničelno davčno stopnjo.',
+'quote.tax.rate.saved' => 'Ponudba davčne stopnje je bila '
+	. 'shranjena',
 'quote.template' => 'Predloga ponudbe',
 'quote.templates' => 'Predloge ponudb',
 'quote.to.invoice' => 'Ponudba za račun',
 'quote.to.so' => 'Ponudba za prodajno naročilo',
 'quote.to.so.password' => 'Geslo za prodajno naročilo',
 'quote.vat.quote' => 'Ponudba DDV',
-'quote.with.purchase.order.line.number' => 'Številka vrstice naročilnice (zahteva Peppol) – ujema se s številko vrstice prodajnega naročila',
-'quote.with.purchase.order.number' => 'Številka naročilnice - ujema se s številko prodajne naročilnice',
-'quote.with.purchase.order.person' => 'Oseba/oddelek, ki oddaja naročilo',
+'quote.with.purchase.order.line.number' =>
+	'Številka vrstice naročilnice (zahteva Peppol) '
+	. '– ujema se s številko '
+	. 'vrstice prodajnega naročila',
+'quote.with.purchase.order.number' =>
+	'Številka naročilnice - ujema se '
+	. 's številko prodajne naročilnice',
+'quote.with.purchase.order.person' =>
+	'Oseba/oddelek, ki oddaja naročilo',
 'quotes' => 'Citati',
 'quotes.expire.after' => 'Ponudbe potečejo čez (dni)',
 'quotes.requiring.approval' => 'Ponudbe, ki zahtevajo odobritev',
@@ -1334,8 +2267,10 @@ return [
 'recurring.invoices' => 'Ponavljajoči se računi',
 'recurring.no.invoices.selected' => 'Niste izbrali nobenega računa.',
 'recurring.original.invoice.date' => 'Datum prvotnega računa: ',
-'recurring.status.sent.only' => 'Samo računi s statusom »poslano« se lahko ponavljajo',
-'recurring.tooltip.next' => 'Naslednji datum se določi s pomočjo indeksa.',
+'recurring.status.sent.only' => 'Samo računi s statusom »poslano« '
+	. 'se lahko ponavljajo',
+'recurring.tooltip.next' => 'Naslednji datum se določi s '
+	. 'pomočjo indeksa.',
 'reject' => 'Zavrni',
 'reject.this.quote' => 'Zavrni to ponudbo',
 'rejected' => 'Zavrnjeno',
@@ -1345,28 +2280,54 @@ return [
 'report' => 'Poročilo',
 'report.options' => 'Možnosti poročila',
 'report.sales.by.product' => 'Prodaja po izdelkih',
-'report.sales.by.product.info' => 'To poročilo prikazuje skupni znesek prodaje izdelkov skupaj z davkom na artikle. Ne vključuje dodatnega davka na račune, povezanega s temi izdelki.',
+'report.sales.by.product.info' =>
+	'To poročilo prikazuje skupni znesek '
+	. 'prodaje izdelkov skupaj z davkom '
+	. 'na artikle.'
+	. 'Ne vključuje dodatnega davka na '
+	. 'račune, povezanega s temi izdelki.',
 'report.sales.by.task' => 'Prodaja po nalogah',
-'report.sales.by.task.info' => 'To poročilo prikazuje skupni znesek prodaje opravila skupaj z davkom na artikel. Ne vključuje dodatnega davka na račun, povezanega s temi opravili.',
-'report.test.fraud.prevention.headers.api' => 'API za glave za preprečevanje goljufij',
+'report.sales.by.task.info' =>
+	'To poročilo prikazuje skupni znesek '
+	. 'prodaje opravila skupaj z davkom '
+	. 'na artikel.'
+	. 'Ne vključuje dodatnega davka na '
+	. 'račun, povezanega s temi opravili.',
+'report.test.fraud.prevention.headers.api' =>
+	'API za glave za preprečevanje '
+	. 'goljufij',
 'reports' => 'Poročila',
 'reset' => 'Ponastavi',
 'reset.password' => 'Ponastavi geslo',
-'rules.peppol.en16931.001' => 'Navesti je treba poslovni proces ali ID profila. Glejte config/common/params.php za iskanje ProfileID.',
+'rules.peppol.en16931.001' => 'Navesti je treba poslovni proces '
+	. 'ali ID profila.'
+	. 'Glejte config/common/params.'
+	. 'php za iskanje ProfileID.',
 'run.report' => 'Zaženi poročilo',
 'sales' => 'Prodaja',
 'sales.by.client' => 'Prodaja po strankah',
 'sales.by.date' => 'Prodaja po datumu',
 'sales.with.tax' => 'Prodaja z davkom',
 'salesorder' => 'Prodajno naročilo',
-'salesorder.agree.to.terms' => 'Prosimo, strinjajte se s pogoji, ki vam bodo poslani.',
+'salesorder.agree.to.terms' => 'Prosimo, strinjajte se s pogoji,'
+	. 'ki vam bodo poslani.',
 'salesorder.assembled.packaged.prepared' => 'Sestavljeno/Pakirano/Pripravljeno',
 'salesorder.cancelled' => 'Prodajno naročilo preklicano',
-'salesorder.client.confirmed.terms' => 'Pogoji, ki jih je potrdila stranka',
-'salesorder.clients.purchase.order.number' => 'Številka naročilnice stranke',
-'salesorder.clients.purchase.order.person' => 'Oseba, ki obravnava naročilo stranke',
+'salesorder.client.confirmed.terms' => 'Pogoji, ki jih je potrdila '
+	. 'stranka',
+'salesorder.clients.purchase.order.number' =>
+	'Številka naročilnice stranke',
+'salesorder.clients.purchase.order.person' =>
+	'Oseba, ki obravnava naročilo stranke',
 'salesorder.copied.to.invoice' => 'Prodajno naročilo kopirano na račun',
-'salesorder.copied.to.invoice.not' => 'Račun NI ustvarjen iz prodajnega naročila! Podvojen račun. Kopirajte svoje prodajno naročilo v drugo prodajno naročilo in ga nato kopirajte v račun. Vsako prodajno naročilo mora imeti ujemajoč se račun.',
+'salesorder.copied.to.invoice.not' =>
+	'Račun NI ustvarjen iz prodajnega '
+	. 'naročila! Podvojen račun.'
+	. 'Kopirajte svoje prodajno naročilo v '
+	. 'drugo prodajno naročilo in ga '
+	. 'nato kopirajte v račun.'
+	. 'Vsako prodajno naročilo mora imeti '
+	. 'ujemajoč se račun.',
 'salesorder.date.created' => 'Datum nastanka prodajnega naročila',
 'salesorder.default.group' => 'Privzeta skupina prodajnih naročil',
 'salesorder.goods.services.confirmed' => 'Dostava, potrjena s strani stranke',
@@ -1378,7 +2339,8 @@ return [
 'salesorder.number' => 'Številka prodajnega naročila',
 'salesorder.number.status' => 'Status številke prodajnega naročila',
 'salesorder.password' => 'Geslo za prodajno naročilo',
-'salesorder.payment.terms' => 'Plačilni pogoji prodajnega naročila, npr. prosimo, plačajte v 30 dneh',
+'salesorder.payment.terms' => 'Plačilni pogoji prodajnega naročila, npr.'
+	. 'prosimo, plačajte v 30 dneh',
 'salesorder.recent' => 'Nedavna prodajna naročila',
 'salesorder.reject' => 'Zavrnitev prodajnega naročila',
 'salesorder.rejected' => 'Prodajno naročilo zavrnjeno',
@@ -1390,12 +2352,40 @@ return [
 'save.item.as.lookup' => 'Shrani element kot iskanje',
 'search.family' => 'Iskanje družine',
 'search.product' => 'Iskanje izdelka',
-'security.disable.read.only.empty' => 'Nastavitev »onemogočanje samo branja« trenutno nima vrednosti 0 ali 1. Pravno jo je treba privzeto nastaviti na 0, da bo na voljo funkcija samo branja, ki prepreči brisanje računov.',
-'security.disable.read.only.info' => 'Opozorilo: Funkcija samo za branje za zaščito računov in preprečevanje brisanja je omogočena. Onemogočite možnost »disable.read.only«, da omogočite ponastavitev poslanih računov na osnutek.',
-'security.disable.read.only.success' => 'Uspeh: Funkcija samo za branje za zaščito računov in preprečevanje brisanja je bila ponovno omogočena.',
-'security.disable.read.only.true.draft.check.and.mark' => 'Opozorilo: Osnutek urejate z nastavitvijo »onemogoči samo branje« nastavljeno na »true«.',
-'security.disable.read.only.true.sent.check.and.mark' => 'Opozorilo: Urejate poslan račun z nastavitvijo »onemogoči samo branje« na »true«.',
-'security.disable.read.only.warning' => 'Opozorilo: Funkcija samo za branje za zaščito računov in preprečevanje brisanja je onemogočena.',
+'security.disable.read.only.empty' =>
+	'Nastavitev »onemogočanje samo branja« trenutno '
+	. 'nima vrednosti 0 ali 1.'
+	. 'Pravno jo je treba privzeto '
+	. 'nastaviti na 0, da bo '
+	. 'na voljo funkcija samo branja,'
+	. 'ki prepreči brisanje računov.',
+'security.disable.read.only.info' =>
+	'Opozorilo:'
+	. 'Funkcija samo za branje za '
+	. 'zaščito računov in preprečevanje brisanja '
+	. 'je omogočena.'
+	. 'Onemogočite možnost »disable.'
+	. 'read.'
+	. 'only«, da omogočite ponastavitev poslanih '
+	. 'računov na osnutek.',
+'security.disable.read.only.success' =>
+	'Uspeh:'
+	. 'Funkcija samo za branje za '
+	. 'zaščito računov in preprečevanje brisanja '
+	. 'je bila ponovno omogočena.',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'Opozorilo:'
+	. 'Osnutek urejate z nastavitvijo »onemogoči '
+	. 'samo branje« nastavljeno na »true«.',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'Opozorilo:'
+	. 'Urejate poslan račun z nastavitvijo '
+	. '»onemogoči samo branje« na »true«.',
+'security.disable.read.only.warning' =>
+	'Opozorilo:'
+	. 'Funkcija samo za branje za '
+	. 'zaščito računov in preprečevanje brisanja '
+	. 'je onemogočena.',
 'select.family' => 'Izberite družino',
 'select.payment.method' => 'Izberite način plačila',
 'select.project' => 'Izberite projekt',
@@ -1407,83 +2397,156 @@ return [
 'set.to.read.only' => 'Nastavite račun samo na branje',
 'setting' => 'Nastavitev',
 'setting.add' => 'Dodajanje nastavitve',
-'setting.as.a.result.of ' => ' kot posledica ',
+'setting.as.a.result.of ' =>
+	'kot posledica',
 'setting.assets.cleared.at' => 'Sredstva poravnana ob ',
-'setting.assets.were.not.cleared.at' => 'Sredstva niso bila poravnana ob ',
+'setting.assets.were.not.cleared.at' =>
+	'Sredstva niso bila poravnana ob',
 'setting.company' => 'Javne podrobnosti podjetja',
 'setting.company.private' => 'Zasebni podatki podjetja',
-'setting.company.profile' => 'Spreminjanje profila, npr. mobilnega telefona in e-poštnega naslova',
-'setting.duplicate.key' => 'Shranjevanja ni bilo mogoče dokončati. Imate dvojnik z naslednjim ključem: ',
-'setting.error.on.the.public.assets.folder' => ' napaka v mapi javnih sredstev.',
+'setting.company.profile' => 'Spreminjanje profila, npr.'
+	. 'mobilnega telefona in e-poštnega naslova',
+'setting.duplicate.key' => 'Shranjevanja ni bilo mogoče dokončati.'
+	. 'Imate dvojnik z naslednjim ključem:',
+'setting.error.on.the.public.assets.folder' =>
+	'napaka v mapi javnih sredstev.',
 'setting.form' => 'Nastavitev obrazca',
 'setting.key' => 'Nastavitveni ključ',
 'setting.section' => 'Oddelek',
 'setting.subsection' => 'Pododdelek',
 'setting.translator.key' => 'Ključ prevajalnika',
 'setting.value' => 'Nastavitev vrednosti',
-'setting.you.have.cleared.the.cache' => 'Počistili ste predpomnilnik.',
-'setting.you.have.not.cleared.the.cache.due.to.a' => 'Niste počistili predpomnilnika ',
+'setting.you.have.cleared.the.cache' =>
+	'Počistili ste predpomnilnik.',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'Niste počistili predpomnilnika',
 'settings' => 'Nastavitve',
 'settings.successfully.saved' => 'Nastavitve so bile uspešno shranjene',
 'setup.choose.language' => 'Izberite jezik',
 'setup.choose.language.message' => 'Izberite jezik za nadaljevanje namestitve.',
 'setup.complete' => 'Namestitev je končana',
-'setup.complete.message' => 'InvoicePlane je bil uspešno nameščen. Zdaj se lahko prijavite.',
-'setup.complete.secure.setup' => 'Če želite zavarovati svojo namestitev, lahko namestitev zaenkrat onemogočite. To storite tako, da v datoteki <code>ipconfig.php</code> vrstico <code>DISABLE_SETUP=false</code> zamenjate z <code>DISABLE_SETUP=true</code> .',
-'setup.complete.support.note' => 'Če naletite na kakršne koli težave ali potrebujete pomoč, si oglejte <a href="https://wiki.invoiceplane.com">uradni wiki</a> ali <a href="https://community.invoiceplane.com/">forum skupnosti</a> .',
+'setup.complete.message' => 'InvoicePlane je bil uspešno nameščen.'
+	. 'Zdaj se lahko prijavite.',
+'setup.complete.secure.setup' => 'Če želite zavarovati svojo namestitev,'
+	. 'lahko namestitev zaenkrat onemogočite.'
+	. 'To storite tako, da v '
+	. 'datoteki <code>ipconfig.'
+	. 'php</code> vrstico <code>DISABLE_SETUP=false</code> zamenjate z '
+	. '<code>DISABLE_SETUP=true</code> .',
+'setup.complete.support.note' => 'Če naletite na kakršne koli '
+	. 'težave ali potrebujete pomoč, si '
+	. 'oglejte <a href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">uradni wiki</a> ali <a href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">forum skupnosti</a> .',
 'setup.create.user' => 'Ustvari uporabniški račun',
-'setup.create.user.message' => 'To so podatki, ki jih boste potrebovali za prijavo v InvoicePlane.',
+'setup.create.user.message' => 'To so podatki, ki jih '
+	. 'boste potrebovali za prijavo v '
+	. 'InvoicePlane.',
 'setup.database.configured.message' => 'Baza podatkov je uspešno konfigurirana.',
 'setup.database.details' => 'Podrobnosti o zbirki podatkov',
-'setup.database.message' => 'Za povezavo z vašo bazo podatkov navedite naslednje podatke.',
-'setup.db.cannot.connect' => 'Z navedenimi podatki o bazi podatkov se ni mogoče povezati s strežnikom baze podatkov. Preverite poverilnice in poskusite znova.',
-'setup.db.database.info' => 'Ime baze podatkov, ki ste jo ustvarili za InvoicePlane.',
-'setup.db.hostname.info' => 'Ime gostitelja za vašo bazo podatkov.',
+'setup.database.message' => 'Za povezavo z vašo bazo '
+	. 'podatkov navedite naslednje podatke.',
+'setup.db.cannot.connect' => 'Z navedenimi podatki o bazi '
+	. 'podatkov se ni mogoče povezati '
+	. 's strežnikom baze podatkov.'
+	. 'Preverite poverilnice in poskusite znova.',
+'setup.db.database.info' => 'Ime baze podatkov, ki ste '
+	. 'jo ustvarili za InvoicePlane.',
+'setup.db.hostname.info' => 'Ime gostitelja za vašo bazo '
+	. 'podatkov.',
 'setup.db.password.info' => 'Geslo, povezano z bazo podatkov.',
-'setup.db.port.info' => 'Vrata, na katerih posluša vaše ime gostitelja. Privzeta vrednost je 3306.',
-'setup.db.username.info' => 'Uporabniško ime, povezano z bazo podatkov.',
+'setup.db.port.info' => 'Vrata, na katerih posluša vaše '
+	. 'ime gostitelja.'
+	. 'Privzeta vrednost je 3306.',
+'setup.db.username.info' => 'Uporabniško ime, povezano z bazo '
+	. 'podatkov.',
 'setup.install.tables' => 'Namestitev tabel',
 'setup.other.contact' => 'Drugi stik',
 'setup.prerequisites' => 'Predpogoji',
-'setup.prerequisites.message' => 'Dobrodošli v InvoicePlane! Vse spodaj navedene težave je treba odpraviti, preden se lahko namestitev nadaljuje.',
-'setup.tables.errors' => 'Pred nadaljevanjem namestitve je treba odpraviti spodnje napake.',
-'setup.tables.success' => 'Tabele baze podatkov so bile uspešno nameščene.',
-'setup.upgrade.message' => 'Pred nadaljevanjem namestitve je treba odpraviti spodnje napake.',
-'setup.upgrade.success' => 'Tabele baze podatkov so bile uspešno nadgrajene.',
+'setup.prerequisites.message' => 'Dobrodošli v InvoicePlane! Vse spodaj '
+	. 'navedene težave je treba odpraviti,'
+	. 'preden se lahko namestitev nadaljuje.',
+'setup.tables.errors' => 'Pred nadaljevanjem namestitve je treba '
+	. 'odpraviti spodnje napake.',
+'setup.tables.success' => 'Tabele baze podatkov so bile '
+	. 'uspešno nameščene.',
+'setup.upgrade.message' => 'Pred nadaljevanjem namestitve je treba '
+	. 'odpraviti spodnje napake.',
+'setup.upgrade.success' => 'Tabele baze podatkov so bile '
+	. 'uspešno nadgrajene.',
 'setup.upgrade.tables' => 'Nadgradi tabele',
-'setup.user.address.info' => 'Podatki o naslovu, vneseni spodaj, bodo prikazani na vaših računih.',
-'setup.user.contact.info' => 'Ti kontaktni podatki se lahko prikažejo tudi na vaših računih.',
-'setup.user.email.info' => 'Vaš e-poštni naslov bo uporabljen za prijavo v InvoicePlane.',
-'setup.user.name.info' => 'Bodisi ime vašega podjetja bodisi vaše ime in priimek.',
-'setup.user.password.info' => 'Ne pozabite uporabiti močnega gesla. Priporočljiva je kombinacija velikih in malih črk, številk in simbolov. Najmanjša dolžina: 8 znakov.',
-'setup.user.password.verify.info' => 'Geslo potrdite tako, da ga ponovno vnesete.',
-'setup.v120.alert' => '<strong>Pozor!</strong><br> Zelo pomembno je, da preberete <a href="https://go.invoiceplane.com/v120update" target="_blank">to obvestilo o posodobitvi,</a> ki obravnava nekatere pomembne spremembe aplikacije InvoicePlane.',
-'setup.v147.alert' => '<strong>Pozor!</strong><br> Odprite datoteko <code>application/config/config.php</code> in spremenite vrstico <code>$config[&#39;sess_use_database&#39;] = false;</code> v <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Več podrobnosti najdete <a href="https://go.invoiceplane.com/v147update" target="_blank">tukaj</a>',
+'setup.user.address.info' => 'Podatki o naslovu, vneseni spodaj,'
+	. 'bodo prikazani na vaših računih.',
+'setup.user.contact.info' => 'Ti kontaktni podatki se lahko '
+	. 'prikažejo tudi na vaših računih.',
+'setup.user.email.info' => 'Vaš e-poštni naslov bo uporabljen '
+	. 'za prijavo v InvoicePlane.',
+'setup.user.name.info' => 'Bodisi ime vašega podjetja bodisi '
+	. 'vaše ime in priimek.',
+'setup.user.password.info' => 'Ne pozabite uporabiti močnega gesla.'
+	. 'Priporočljiva je kombinacija velikih in '
+	. 'malih črk, številk in simbolov.'
+	. 'Najmanjša dolžina:'
+	. '8 znakov.',
+'setup.user.password.verify.info' =>
+	'Geslo potrdite tako, da ga '
+	. 'ponovno vnesete.',
+'setup.v120.alert' => '<strong>Pozor!</strong><br> Zelo pomembno je, da '
+	. 'preberete <a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">to obvestilo o posodobitvi,</a> '
+	. 'ki obravnava nekatere pomembne spremembe '
+	. 'aplikacije InvoicePlane.',
+'setup.v147.alert' => '<strong>Pozor!</strong><br> Odprite datoteko <code>application/config/config.'
+	. 'php</code> in spremenite vrstico <code>$config[\'sess_use_database\'] '
+	. '= false;</code> v <code>$config[\'sess_use_database\'] = '
+	. 'true;</code> .'
+	. '<br> Več podrobnosti najdete <a '
+	. 'href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">tukaj</a>',
 'showing.of' => 'Prikazanih je % od %s ',
 'signup' => 'Prijava',
 'single.choice' => 'Ena izbira',
-'site.soletrader.about.choose' => 'Tukaj je nekaj privlačnih razlogov, zakaj izbrati nas:',
-'site.soletrader.about.competitive.rates' => 'Konkurenčne cene',
+'site.soletrader.about.choose' => 'Tukaj je nekaj privlačnih razlogov,'
+	. 'zakaj izbrati nas:',
+'site.soletrader.about.competitive.rates' =>
+	'Konkurenčne cene',
 'site.soletrader.about.contemporary' => 'Sodobne veščine',
-'site.soletrader.about.dissatisfaction' => 'V primeru nezadovoljstva s storitvijo bomo delo brezplačno ponovili.',
+'site.soletrader.about.dissatisfaction' => 'V primeru nezadovoljstva s storitvijo '
+	. 'bomo delo brezplačno ponovili.',
 'site.soletrader.about.finished' => 'Končani projekti',
 'site.soletrader.about.happy' => 'Zadovoljne stranke',
 'site.soletrader.about.quality' => 'Brez žrtvovanja kakovosti',
 'site.soletrader.about.return' => 'Vračajoče se stranke',
-'site.soletrader.about.simply' => 'Preprosto dvignite telefon in delo bomo ponovili.',
+'site.soletrader.about.simply' => 'Preprosto dvignite telefon in delo '
+	. 'bomo ponovili.',
 'site.soletrader.about.solved' => 'Rešene težave',
-'site.soletrader.about.trained' => 'Naša ekipa je dobro usposobljena in izkušena.',
-'site.soletrader.about.we' => 'Svoje spretnosti marljivo uporabljamo po svojih najboljših močeh.',
+'site.soletrader.about.trained' => 'Naša ekipa je dobro usposobljena '
+	. 'in izkušena.',
+'site.soletrader.about.we' => 'Svoje spretnosti marljivo uporabljamo po '
+	. 'svojih najboljših močeh.',
 'site.soletrader.about.willing' => 'Podpora za voljna vrnitev',
 'site.soletrader.contact.address' => 'Naslov',
 'site.soletrader.contact.email' => 'E-pošta',
-'site.soletrader.contact.lookout' => 'Vedno iščemo nove stranke. Če vas zanima sodelovanje z nami, nas kontaktirajte na enega od naslednjih načinov.',
+'site.soletrader.contact.lookout' => 'Vedno iščemo nove stranke.'
+	. 'Če vas zanima sodelovanje z '
+	. 'nami, nas kontaktirajte na enega '
+	. 'od naslednjih načinov.',
 'site.soletrader.contact.phone' => 'Telefon',
 'site.soletrader.contact.touch' => 'Stopite v stik',
 'site.soletrader.pricing.basic' => 'osnovno',
 'site.soletrader.pricing.choosePlan' => 'Izberite paket',
 'site.soletrader.pricing.currencyPerMonth' => 'na mesec',
-'site.soletrader.pricing.explore' => 'Raziščite naše prilagodljive cene in poiščite odlično rešitev za vaše podjetje.',
+'site.soletrader.pricing.explore' => 'Raziščite naše prilagodljive cene in '
+	. 'poiščite odlično rešitev za vaše '
+	. 'podjetje.',
 'site.soletrader.pricing.plans' => 'Več načrtov',
 'site.soletrader.pricing.pricing' => ' Naše cene',
 'site.soletrader.pricing.pro' => 'Strokovno',
@@ -1493,14 +2556,16 @@ return [
 'site.soletrader.pricing.visits' => 'obiski',
 'site.soletrader.team.assistant' => 'Pomočnik',
 'site.soletrader.team.coordinator' => 'Koordinator',
-'site.soletrader.team.we' => 'Smo skupina skrbnih, izkušenih in marljivih posameznikov.',
+'site.soletrader.team.we' => 'Smo skupina skrbnih, izkušenih in '
+	. 'marljivih posameznikov.',
 'site.soletrader.testimonial.we' => 'To so pričevanja',
 'site.soletrader.testimonial.worker1' => 'To je moje pričevanje',
 'site.soletrader.testimonial.worker2' => 'To je moje pričevanje',
 'site.soletrader.testimonial.worker3' => 'To je moje pričevanje',
 'site.todays.date' => 'Današnji datum',
 'six.months' => 'Šest mesecev',
-'smtp.mail.from' => 'Naslov pošiljatelja SMTP za sistemska e-poštna sporočila',
+'smtp.mail.from' => 'Naslov pošiljatelja SMTP za sistemska '
+	. 'e-poštna sporočila',
 'smtp.password' => 'Geslo SMTP',
 'smtp.port' => 'Vrata SMTP',
 'smtp.requires.authentication' => 'Zahteva preverjanje pristnosti',
@@ -1519,29 +2584,74 @@ return [
 'stop.logging.in' => 'Ustavi prijavo',
 'stop.signing.up' => 'Prenehaj prijavo',
 'storecove' => 'Storecove',
-'storecove.advisory.to.developer.field.easily.missed' => 'Stranka zlahka spregleda polje',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. Ustvari pošiljatelja – država pravne osebe',
-'storecove.invoice.json.encoded' => 'Račun, kodiran v JSON-u v storitvi StoreCove',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'Stranka zlahka spregleda polje',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Ustvari pošiljatelja – država pravne '
+	. 'osebe',
+'storecove.invoice.json.encoded' => 'Račun, kodiran v JSON-u v '
+	. 'storitvi StoreCove',
 'storecove.legal' => 'Pravno',
-'storecove.legal.entity.id.for.json' => '1.1.4. Ustvarjanje pošiljatelja – ID pravne osebe Store Cove, vstavljen v datoteko invoice.json',
-'storecove.legal.entity.identifier.id.not.found' => 'Parametri konfiguracije Računovodstvo Dobavitelj Stranka Pravna oseba ID podjetja ni bil najden.',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Ustvarjanje pošiljatelja – ID pravne '
+	. 'osebe Store Cove, vstavljen v '
+	. 'datoteko invoice.'
+	. 'json',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'Parametri konfiguracije Računovodstvo Dobavitelj Stranka '
+	. 'Pravna oseba ID podjetja ni '
+	. 'bil najden.',
 'storecove.no.contract.exists' => 'Pogodba ne obstaja',
 'storecove.not.available' => 'Ni na voljo',
-'storecove.purchase.order.item.id.null' => 'po-item-id-null',
-'storecove.receiver.identifier' => 'Identifikator prejemnika - glejte StoreCove 6.3',
-'storecove.region.country.legal.tax' => 'Regija ---------- Država --------- Pravno --------- Davki',
-'storecove.salesorder.number.not.exist' => 'Številka prodajnega naročila ne obstaja',
-'storecove.sender.identifier' => '6.2 Identifikator pošiljatelja',
-'storecove.sender.identifier.basis' => '6.2 Podlaga za identifikator pošiljatelja – pravna ali davčna',
-'storecove.supplier.contact.email.not.found' => 'E-poštnega naslova za stik z dobaviteljem ni bilo mogoče najti. Glejte polje konfiguracijskih parametrov.',
-'storecove.supplier.contact.firstname.not.found' => 'Ime stika z dobaviteljem ni bilo najdeno. Glejte polje konfiguracijskih parametrov.',
-'storecove.supplier.contact.lastname.not.found' => 'Priimek dobaviteljevega stika ni bil najden. Glejte polje konfiguracijskih parametrov.',
-'storecove.supplier.contact.name.not.found' => 'Imena kontaktne osebe dobavitelja ni bilo mogoče najti. Glejte polje konfiguracijskih parametrov.',
-'storecove.supplier.contact.telephone.not.found' => 'Telefonske številke dobavitelja ni bilo mogoče najti. Glejte polje konfiguracijskih parametrov.',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-null',
+'storecove.receiver.identifier' => 'Identifikator prejemnika - glejte StoreCove '
+	. '6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'Regija ---------- Država --------- Pravno '
+	. '--------- Davki',
+'storecove.salesorder.number.not.exist' =>
+	'Številka prodajnega naročila ne obstaja',
+'storecove.sender.identifier' => '6.'
+	. '2 Identifikator pošiljatelja',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 Podlaga za identifikator pošiljatelja '
+	. '– pravna ali davčna',
+'storecove.supplier.contact.email.not.found' =>
+	'E-poštnega naslova za stik z '
+	. 'dobaviteljem ni bilo mogoče najti.'
+	. 'Glejte polje konfiguracijskih parametrov.',
+'storecove.supplier.contact.firstname.not.found' =>
+	'Ime stika z dobaviteljem ni '
+	. 'bilo najdeno.'
+	. 'Glejte polje konfiguracijskih parametrov.',
+'storecove.supplier.contact.lastname.not.found' =>
+	'Priimek dobaviteljevega stika ni bil '
+	. 'najden.'
+	. 'Glejte polje konfiguracijskih parametrov.',
+'storecove.supplier.contact.name.not.found' =>
+	'Imena kontaktne osebe dobavitelja ni '
+	. 'bilo mogoče najti.'
+	. 'Glejte polje konfiguracijskih parametrov.',
+'storecove.supplier.contact.telephone.not.found' =>
+	'Telefonske številke dobavitelja ni bilo '
+	. 'mogoče najti.'
+	. 'Glejte polje konfiguracijskih parametrov.',
 'storecove.tax' => 'Davek',
 'storecove.tax.rate.code' => 'Davčna koda Storecove',
-'storecove.tax.scheme.identifier.id.not.found' => 'Parametri konfiguracije Računovodstvo Dobavitelj Stranka Davčna shema ID podjetja ni bil najden.',
-'stream' => 'Pretočno predvajanje PDF-ja v brskalniku / modalnem oknu',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'Parametri konfiguracije Računovodstvo Dobavitelj Stranka '
+	. 'Davčna shema ID podjetja ni '
+	. 'bil najden.',
+'stream' => 'Pretočno predvajanje PDF-ja v brskalniku '
+	. '/ modalnem oknu',
 'street.address' => 'Naslov ulice',
 'street.address.2' => 'Ulični naslov (nadaljevanje)',
 'subject' => 'Zadeva',
@@ -1555,7 +2665,14 @@ return [
 'sumex.canton' => 'Kanton',
 'sumex.diagnosis' => 'Diagnoza',
 'sumex.edit' => 'Sumex Uredi',
-'sumex.help' => 'Ta možnost doda v račune vnos v meni za ustvarjanje pol-združljivega računa TARMED / SUMEX1. TARMED / SUMEX1 je švicarski standard za zdravstvo. <a href="http://sumex1.net/">Več informacij</a>',
+'sumex.help' => 'Ta možnost doda v račune '
+	. 'vnos v meni za ustvarjanje '
+	. 'pol-združljivega računa TARMED / SUMEX1.'
+	. 'TARMED / SUMEX1 je švicarski '
+	. 'standard za zdravstvo.'
+	. '<a href="http:'
+	. '//sumex1.'
+	. 'net/">Več informacij</a>',
 'sumex.information' => 'Informacije o Sumexu',
 'sumex.insurednumber' => 'Zavarovana številka',
 'sumex.observations' => 'Opažanja',
@@ -1592,7 +2709,11 @@ return [
 'sumex.sliptype' => 'Vrsta zdrsa Sumex',
 'sumex.sliptype-esr9' => 'ESR 9 (oranžni zdrs)',
 'sumex.sliptype-esrRed' => 'Rdeči zdrs',
-'sumex.sliptype.help' => 'Ta možnost bo spremenila vrsto potrdila v Sumexu. Upoštevajte, da če izberete oranžno potrdilo, potrebujete številko naročnika, ki se začne z &quot;01-&quot;.',
+'sumex.sliptype.help' => 'Ta možnost bo spremenila vrsto '
+	. 'potrdila v Sumexu.'
+	. 'Upoštevajte, da če izberete oranžno '
+	. 'potrdilo, potrebujete številko naročnika, ki '
+	. 'se začne z &quot;01-&quot;.',
 'sumex.ssn' => 'AVS',
 'sumex.veka' => 'TEDEN',
 'sunday' => 'Nedelja',
@@ -1617,51 +2738,138 @@ return [
 'tax.rate.decimal.places' => 'Decimalna mesta davčne stopnje',
 'tax.rate.edit' => 'Uredi davčno stopnjo',
 'tax.rate.form' => 'Obrazec za davčno stopnjo',
-'tax.rate.history.exists' => 'Ni mogoče izbrisati. Zgodovina že obstaja.',
-'tax.rate.name' => 'Ime davčne stopnje, npr. standardna',
+'tax.rate.history.exists' => 'Ni mogoče izbrisati.'
+	. 'Zgodovina že obstaja.',
+'tax.rate.name' => 'Ime davčne stopnje, npr.'
+	. 'standardna',
 'tax.rate.percent' => 'Davčna stopnja Odstotek',
 'tax.rate.placement' => 'Določanje davčne stopnje',
 'tax.rates' => 'Davčne stopnje',
 'taxes' => 'Davki',
 'telegram' => 'Telegram',
-'telegram.bot.api.chat.id' => 'Telegram: Brez bota: Osebni račun: Pozdravljen, svet: Testno sporočilo: Prejemnik sporočila: <b>ID klepeta</b>',
-'telegram.bot.api.chat.id.not.set' => 'ID klepeta imetnika osebnega telegram računa, ki ni bota in je botu poslal prvo sporočilo ter bo prejel testno sporočilo »Pozdravljen« »Svet«, ni bil nastavljen.',
-'telegram.bot.api.current.status' => '<b>Trenutna uporaba:</b> Spletni kavelj ni potreben, ker odjemalci nimajo ID-jev klepeta in ne pošiljajo sporočil botu.',
+'telegram.bot.api.chat.id' =>
+	'Telegram:'
+	. 'Brez bota:'
+	. 'Osebni račun:'
+	. 'Pozdravljen, svet:'
+	. 'Testno sporočilo:'
+	. 'Prejemnik sporočila:'
+	. '<b>ID klepeta</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'ID klepeta imetnika osebnega telegram '
+	. 'računa, ki ni bota in '
+	. 'je botu poslal prvo sporočilo '
+	. 'ter bo prejel testno sporočilo '
+	. '»Pozdravljen« »Svet«, ni bil nastavljen.',
+'telegram.bot.api.current.status' =>
+	'<b>Trenutna uporaba:'
+	. '</b> Spletni kavelj ni potreben,'
+	. 'ker odjemalci nimajo ID-jev klepeta '
+	. 'in ne pošiljajo sporočil botu.',
 'telegram.bot.api.enable' => 'Omogoči Telegram',
-'telegram.bot.api.enabled.not' => 'Telegram ni omogočen',
-'telegram.bot.api.future.use' => '<b>Prihodnja uporaba:</b> Stranke z ID-ji klepeta prejmejo račun v Telegramu in potrdijo prejem tako, da pošljejo potrditev nazaj v webhook.',
-'telegram.bot.api.general.purpose' => '<b>Registrirani bot, identificiran z žetonom, pošilja obvestila o plačilih strank na spodnji registrirani ID klepeta (običajno na osebni telegram račun skrbnika, ki ni bot).</b>',
-'telegram.bot.api.get.updates.failed' => 'Vaše posodobitve Telegrama niso uspele.',
-'telegram.bot.api.get.updates.success' => 'Vaše posodobitve Telegrama so bile uspešne z uporabo metode API getUpdates.',
-'telegram.bot.api.hello.world.test.message' => 'Pozdravljen svet od Telegram Bot API-ja. Hvala razvijalcem yiisofta!',
-'telegram.bot.api.hello.world.test.message.sent' => 'Sporočilo Pozdravljen svet je bilo poslano.',
-'telegram.bot.api.hello.world.test.message.sent.not' => 'Sporočilo Pozdravljen, svet NI poslano.',
-'telegram.bot.api.hello.world.test.message.use' => 'Pošlji osnovno testno sporočilo »Pozdravljen, svet iz Telegram Bot Api« na zunanji ID klepeta',
-'telegram.bot.api.payment.notification.success' => 'Obvestilo o plačilu v Telegramu je bilo uspešno',
-'telegram.bot.api.payment.notifications' => 'Obvestila o plačilih v Telegramu',
+'telegram.bot.api.enabled.not' =>
+	'Telegram ni omogočen',
+'telegram.bot.api.future.use' =>
+	'<b>Prihodnja uporaba:'
+	. '</b> Stranke z ID-ji klepeta '
+	. 'prejmejo račun v Telegramu in '
+	. 'potrdijo prejem tako, da pošljejo '
+	. 'potrditev nazaj v webhook.',
+'telegram.bot.api.general.purpose' =>
+	'<b>Registrirani bot, identificiran z žetonom,'
+	. 'pošilja obvestila o plačilih strank '
+	. 'na spodnji registrirani ID klepeta '
+	. '(običajno na osebni telegram račun '
+	. 'skrbnika, ki ni bot).'
+	. '</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'Vaše posodobitve Telegrama niso uspele.',
+'telegram.bot.api.get.updates.success' =>
+	'Vaše posodobitve Telegrama so bile '
+	. 'uspešne z uporabo metode API '
+	. 'getUpdates.',
+'telegram.bot.api.hello.world.test.message' =>
+	'Pozdravljen svet od Telegram Bot '
+	. 'API-ja.'
+	. 'Hvala razvijalcem yiisofta!',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'Sporočilo Pozdravljen svet je bilo '
+	. 'poslano.',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'Sporočilo Pozdravljen, svet NI poslano.',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'Pošlji osnovno testno sporočilo »Pozdravljen,'
+	. 'svet iz Telegram Bot Api« '
+	. 'na zunanji ID klepeta',
+'telegram.bot.api.payment.notification.success' =>
+	'Obvestilo o plačilu v Telegramu '
+	. 'je bilo uspešno',
+'telegram.bot.api.payment.notifications' =>
+	'Obvestila o plačilih v Telegramu',
 'telegram.bot.api.token' => 'Žeton API-ja bota Telegram',
-'telegram.bot.api.token.not.set' => 'Žeton API-ja bota Telegram ni nastavljen',
-'telegram.bot.api.webhook.delete' => 'Izbriši spletni kavelj',
-'telegram.bot.api.webhook.deleted' => 'Spletni kavelj je bil pravkar onemogočen, tako da je mogoče uporabiti ročno metodo API-ja getUpdates.',
-'telegram.bot.api.webhook.secret.token' => 'Skrivni žeton Webhook za dodatno varnost (uporablja se kot parameter v funkciji setWebhook in ne kot parameter poizvedbe)',
-'telegram.bot.api.webhook.setup' => 'Spletni kavelj je nastavljen.',
-'telegram.bot.api.webhook.setup.already' => 'Spletni kavelj je že nastavljen.',
-'telegram.bot.api.webhook.url.this.site' => 'URL spletnega kavlja Telegram te strani, uporabljen v funkciji setWebhook v storitvi TelegramHelper.',
+'telegram.bot.api.token.not.set' =>
+	'Žeton API-ja bota Telegram ni '
+	. 'nastavljen',
+'telegram.bot.api.webhook.delete' =>
+	'Izbriši spletni kavelj',
+'telegram.bot.api.webhook.deleted' =>
+	'Spletni kavelj je bil pravkar '
+	. 'onemogočen, tako da je mogoče '
+	. 'uporabiti ročno metodo API-ja getUpdates.',
+'telegram.bot.api.webhook.secret.token' =>
+	'Skrivni žeton Webhook za dodatno '
+	. 'varnost (uporablja se kot parameter '
+	. 'v funkciji setWebhook in ne '
+	. 'kot parameter poizvedbe)',
+'telegram.bot.api.webhook.setup' =>
+	'Spletni kavelj je nastavljen.',
+'telegram.bot.api.webhook.setup.already' =>
+	'Spletni kavelj je že nastavljen.',
+'telegram.bot.api.webhook.url.this.site' =>
+	'URL spletnega kavlja Telegram te '
+	. 'strani, uporabljen v funkciji setWebhook '
+	. 'v storitvi TelegramHelper.',
 'template' => 'Predloga računa',
 'templates' => 'Predloge računov',
 'term' => 'Pogoji poslovanja',
 'term.1' => 'Nisem prebral pogojev poslovanja.',
-'term.2' => 'Prebral/a sem pogoje in se z njimi strinjam.',
-'term.add.additional.terms.at.setting.repository' => 'Dodajte dodatne pogoje v funkciji getPaymentTerms v repozitoriju nastavitev.',
+'term.2' => 'Prebral/a sem pogoje in se '
+	. 'z njimi strinjam.',
+'term.add.additional.terms.at.setting.repository' =>
+	'Dodajte dodatne pogoje v funkciji '
+	. 'getPaymentTerms v repozitoriju nastavitev.',
 'terms' => 'Pogoji',
 'test.data.install' => 'Namestite testne podatke',
 'test.data.use' => 'Uporabi testne podatke',
 'test.remove' => 'Odstrani testne podatke',
-'test.remove.tooltip' => 'Ogled ..Nastavitve ..Splošno ..Namesti testne podatke ..Ne in Ogled ..Nastavitve ..Splošno ..Uporabi testne podatke ..Ne',
+'test.remove.tooltip' => 'Ogled .'
+	. 'Nastavitve .'
+	. 'Splošno .'
+	. 'Namesti testne podatke .'
+	. 'Ne in Ogled .'
+	. 'Nastavitve .'
+	. 'Splošno .'
+	. 'Uporabi testne podatke .'
+	. 'Ne',
 'test.reset' => 'Ponastavi testne podatke',
 'test.reset.setting' => 'Ponovna namestitev nastavitev',
-'test.reset.setting.tooltip' => 'S tem boste odstranili vse trenutne nastavitve in znova namestili privzete nastavitve v datoteki InvoiceController/install.default.settings.on.first.run.',
-'test.reset.tooltip' => 'Ogled ..Nastavitve ..Splošno ..Namesti testne podatke ..Da in Ogled ..Nastavitve ..Splošno ..Uporabi testne podatke ..Da',
+'test.reset.setting.tooltip' => 'S tem boste odstranili vse '
+	. 'trenutne nastavitve in znova namestili '
+	. 'privzete nastavitve v datoteki InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run.',
+'test.reset.tooltip' => 'Ogled .'
+	. 'Nastavitve .'
+	. 'Splošno .'
+	. 'Namesti testne podatke .'
+	. 'Da in Ogled .'
+	. 'Nastavitve .'
+	. 'Splošno .'
+	. 'Uporabi testne podatke .'
+	. 'Da',
 'text' => 'Besedilo',
 'theme' => 'Tema',
 'this.month' => 'Ta mesec',
@@ -1685,21 +2893,55 @@ return [
 'true' => 'Res je',
 'try.again' => 'Poskusi znova',
 'two.factor.authentication' => 'Dvofaktorska avtentikacija',
-'two.factor.authentication.attempt.failure' => 'Neuspešen poskus dvofaktorske avtentikacije',
-'two.factor.authentication.attempt.failure.must.setup' => 'Poskus dvofaktorske avtentikacije ni uspel: Nastaviti morate novo kodo QR s skrivnim ključem (+) in ob pozivu izbrati prepis prejšnjega vnosa.',
-'two.factor.authentication.attempt.success' => 'Uspešen poskus dvofaktorske avtentikacije',
-'two.factor.authentication.disabled' => 'Dvofaktorska avtentikacija je zdaj onemogočena zaradi dodatne varnosti.',
+'two.factor.authentication.attempt.failure' =>
+	'Neuspešen poskus dvofaktorske avtentikacije',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'Poskus dvofaktorske avtentikacije ni uspel:'
+	. 'Nastaviti morate novo kodo QR '
+	. 's skrivnim ključem (+) in '
+	. 'ob pozivu izbrati prepis prejšnjega '
+	. 'vnosa.',
+'two.factor.authentication.attempt.success' =>
+	'Uspešen poskus dvofaktorske avtentikacije',
+'two.factor.authentication.disabled' => 'Dvofaktorska avtentikacija je zdaj onemogočena '
+	. 'zaradi dodatne varnosti.',
 'two.factor.authentication.enable' => 'Omogoči dvofaktorsko preverjanje pristnosti',
-'two.factor.authentication.enabled.with.disabling' => 'Dvofaktorska avtentikacija je trenutno omogočena za dodatno varnost in se po uspešni avtentikaciji onemogoči za dodatno plast varnosti do naslednje prijave. Obvezno skeniranje kode QR po vsaki prijavi za novo skrivnost.',
-'two.factor.authentication.enabled.without.disabling' => 'Dvofaktorska avtentikacija je trenutno omogočena za dodatno varnost in se po uspešni avtentikaciji ne onemogoči. Koda QR ne bo več vidna za skeniranje po prijavi, ko nastavite dvofaktorsko avtentikacijo.',
+'two.factor.authentication.enabled.with.disabling' =>
+	'Dvofaktorska avtentikacija je trenutno omogočena '
+	. 'za dodatno varnost in se '
+	. 'po uspešni avtentikaciji onemogoči za '
+	. 'dodatno plast varnosti do naslednje '
+	. 'prijave.'
+	. 'Obvezno skeniranje kode QR po '
+	. 'vsaki prijavi za novo skrivnost.',
+'two.factor.authentication.enabled.without.disabling' =>
+	'Dvofaktorska avtentikacija je trenutno omogočena '
+	. 'za dodatno varnost in se '
+	. 'po uspešni avtentikaciji ne onemogoči.'
+	. 'Koda QR ne bo več '
+	. 'vidna za skeniranje po prijavi,'
+	. 'ko nastavite dvofaktorsko avtentikacijo.',
 'two.factor.authentication.error' => 'Napaka pri dvofaktorski avtentikaciji',
-'two.factor.authentication.form.verify.login' => 'Potrdi prijavo',
-'two.factor.authentication.invalid.code.format' => 'Neveljavna oblika kode. Vnesite 6-mestno kodo iz aplikacije.',
-'two.factor.authentication.missing.code.or.secret' => 'Manjka koda za preverjanje pristnosti ali skrivnost 2FA.',
-'two.factor.authentication.new.six.digit.code' => 'Vnesite novo 6-mestno kodo za preverjanje pristnosti (ki se razlikuje od nastavitvene kode) iz aplikacije.',
-'two.factor.authentication.no.secret.generated' => 'Skrivnost ni bila ustvarjena. Ponovno zaženite namestitev.',
-'two.factor.authentication.qr.code.enter.manually' => 'Ali pa ročno vnesite to kodo v aplikacijo za Android: ',
-'two.factor.authentication.scan' => 'Skenirajte to QR kodo z aplikacijo Aegis:',
+'two.factor.authentication.form.verify.login' =>
+	'Potrdi prijavo',
+'two.factor.authentication.invalid.code.format' =>
+	'Neveljavna oblika kode.'
+	. 'Vnesite 6-mestno kodo iz aplikacije.',
+'two.factor.authentication.missing.code.or.secret' =>
+	'Manjka koda za preverjanje pristnosti '
+	. 'ali skrivnost 2FA.',
+'two.factor.authentication.new.six.digit.code' =>
+	'Vnesite novo 6-mestno kodo za '
+	. 'preverjanje pristnosti (ki se razlikuje '
+	. 'od nastavitvene kode) iz aplikacije.',
+'two.factor.authentication.no.secret.generated' =>
+	'Skrivnost ni bila ustvarjena.'
+	. 'Ponovno zaženite namestitev.',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'Ali pa ročno vnesite to '
+	. 'kodo v aplikacijo za Android:',
+'two.factor.authentication.scan' => 'Skenirajte to QR kodo z '
+	. 'aplikacijo Aegis:',
 'two.factor.authentication.setup' => 'Nastavitev dvofaktorske avtentikacije',
 'type' => 'Vrsta',
 'unit' => 'Enota',
@@ -1707,7 +2949,8 @@ return [
 'unit.already.exists' => 'Enota že obstaja!',
 'unit.description.not.provided' => 'Opis ni naveden',
 'unit.edit' => 'Uredi enoto',
-'unit.history' => 'Ni mogoče izbrisati. Zgodovina obstaja.',
+'unit.history' => 'Ni mogoče izbrisati.'
+	. 'Zgodovina obstaja.',
 'unit.name' => 'Ime enote',
 'unit.name.plrl' => 'Ime enote (množinska oblika)',
 'unit.peppol' => 'Peppol',
@@ -1719,7 +2962,8 @@ return [
 'unknown' => 'Neznano',
 'unpaid' => 'Neplačano',
 'updatecheck' => 'Preverjanje posodobitev',
-'updatecheck.failed' => 'Preverjanje posodobitve ni uspelo! Preverite omrežno povezavo.',
+'updatecheck.failed' => 'Preverjanje posodobitve ni uspelo! Preverite '
+	. 'omrežno povezavo.',
 'updates' => 'Posodobitve',
 'updates.available' => 'Posodobitve so na voljo!',
 'upload.date' => 'Datum nalaganja',
@@ -1736,47 +2980,94 @@ return [
 'user.account.clients' => 'Stranke z uporabniškimi računi',
 'user.accounts' => 'Uporabniški računi za račune',
 'user.all.clients' => 'Dodaj vse stranke',
-'user.all.clients.text' => '* Če je ta možnost označena, bo uporabnik lahko videl vse odjemalce, vključno s tistimi, ki bodo dodani pozneje.',
+'user.all.clients.text' => '* Če je ta možnost '
+	. 'označena, bo uporabnik lahko videl '
+	. 'vse odjemalce, vključno s tistimi,'
+	. 'ki bodo dodani pozneje.',
 'user.api.list' => 'Uporabniki predračunov - registrirani uporabniki',
-'user.client.active.no' => 'Nimate strank z aktivnimi uporabniškimi računi. Skrbniki dodelijo stranko(-e) registriranemu uporabniškemu računu.',
+'user.client.active.no' => 'Nimate strank z aktivnimi uporabniškimi '
+	. 'računi.'
+	. 'Skrbniki dodelijo stranko(-e) registriranemu uporabniškemu '
+	. 'računu.',
 'user.client.count' => '#',
-'user.client.no.account' => 'Ta stranka nima povezanega uporabniškega računa, zato tega dokumenta ni mogoče ustvariti.',
-'user.clients.assigned.not' => 'Temu uporabniku ni dodeljenih nobenih strank.',
+'user.client.no.account' => 'Ta stranka nima povezanega uporabniškega '
+	. 'računa, zato tega dokumenta ni '
+	. 'mogoče ustvariti.',
+'user.clients.assigned.not' => 'Temu uporabniku ni dodeljenih nobenih '
+	. 'strank.',
 'user.form' => 'Uporabniški obrazec',
 'user.iban' => 'IBAN',
 'user.inv.active.not' => 'Uporabniški račun ni aktiven',
-'user.inv.list.limit' => 'Število zapisov, navedenih na stran (opomba: preglasi privzeto)',
-'user.inv.more.than.one.assigned' => 'Ustvarjanje računa ni uspelo: Oglejte si nastavitve ... Uporabniški račun. Tej stranki je dodeljenih več uporabnikov.',
-'user.inv.refer.to' => 'Privzeto nastavitev 10 zapisov na stran lahko prepišete s klikom tukaj.',
+'user.inv.list.limit' => 'Število zapisov, navedenih na stran '
+	. '(opomba:'
+	. 'preglasi privzeto)',
+'user.inv.more.than.one.assigned' =>
+	'Ustvarjanje računa ni uspelo:'
+	. 'Oglejte si nastavitve .'
+	. 'Uporabniški račun.'
+	. 'Tej stranki je dodeljenih več '
+	. 'uporabnikov.',
+'user.inv.refer.to' => 'Privzeto nastavitev 10 zapisov na '
+	. 'stran lahko prepišete s klikom '
+	. 'tukaj.',
 'user.inv.role.accountant' => 'Računovodja',
-'user.inv.role.accountant.assigned' => 'Dodeljena vloga računovodje',
-'user.inv.role.accountant.default' => 'Računovodja stranke lahko privzeto pregleduje račune, plačuje račune, pregleduje plačila računov in ureja plačila računov.',
+'user.inv.role.accountant.assigned' =>
+	'Dodeljena vloga računovodje',
+'user.inv.role.accountant.default' =>
+	'Računovodja stranke lahko privzeto pregleduje '
+	. 'račune, plačuje račune, pregleduje plačila '
+	. 'računov in ureja plačila računov.',
 'user.inv.role.administrator' => 'Skrbnik',
-'user.inv.role.administrator.already.assigned' => 'Vloga skrbnika je že dodeljena',
-'user.inv.role.administrator.assigned' => 'Vloga skrbnika je zdaj dodeljena. ',
-'user.inv.role.all.new' => 'Vsi novi uporabniki bodo privzeto prevzeli vlogo opazovalca, tj. lahko si bodo ogledovali dokumentacijo in je ne bodo mogli urejati, tj. opazovali ali pregledovali dokumentacijo.',
+'user.inv.role.administrator.already.assigned' =>
+	'Vloga skrbnika je že dodeljena',
+'user.inv.role.administrator.assigned' =>
+	'Vloga skrbnika je zdaj dodeljena.',
+'user.inv.role.all.new' =>
+	'Vsi novi uporabniki bodo privzeto '
+	. 'prevzeli vlogo opazovalca, tj.'
+	. 'lahko si bodo ogledovali dokumentacijo '
+	. 'in je ne bodo mogli '
+	. 'urejati, tj.'
+	. 'opazovali ali pregledovali dokumentacijo.',
 'user.inv.role.observer' => 'Opazovalec',
-'user.inv.role.observer.assigned' => 'Dodeljena vloga opazovalca',
-'user.inv.role.observer.assigned.already' => 'Vloga opazovalca je že dodeljena.',
-'user.inv.role.revoke.all' => 'Prekliči vse vloge',
-'user.inv.role.warning.revoke.all' => 'Ali ste prepričani, da želite preklicati vse vloge?',
-'user.inv.role.warning.role' => 'Ste prepričani, da želite prevzeti to vlogo?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Skrbniškega tipa spustnega menija ni mogoče dodeliti osebi, ki ni skrbnik',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Skrbniku ni mogoče dodeliti vrste gosta v spustnem meniju',
+'user.inv.role.observer.assigned' =>
+	'Dodeljena vloga opazovalca',
+'user.inv.role.observer.assigned.already' =>
+	'Vloga opazovalca je že dodeljena.',
+'user.inv.role.revoke.all' =>
+	'Prekliči vse vloge',
+'user.inv.role.warning.revoke.all' =>
+	'Ali ste prepričani, da želite '
+	. 'preklicati vse vloge?',
+'user.inv.role.warning.role' =>
+	'Ste prepričani, da želite prevzeti '
+	. 'to vlogo?',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'Skrbniškega tipa spustnega menija ni '
+	. 'mogoče dodeliti osebi, ki ni '
+	. 'skrbnik',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'Skrbniku ni mogoče dodeliti vrste '
+	. 'gosta v spustnem meniju',
 'user.signup.please' => 'Prosim, prijavite se!',
 'user.subscriber.number' => 'Številka naročnika',
 'user.type' => 'Vrsta uporabnika',
 'username' => 'Uporabniško ime',
 'users' => 'Uporabniki',
 'utility.assets.clear' => 'Počisti predpomnilnik sredstev',
-'validator.fail' => 'Polja %s ni mogoče obdelati: %s',
+'validator.fail' => 'Polja %s ni mogoče obdelati:'
+	. '%s',
 'validator.invalid.login.password' => 'Neveljavno prijavo ali geslo',
 'validator.password.change' => 'Vaše geslo je bilo spremenjeno',
 'validator.password.not.match' => 'Gesli se ne ujemata',
-'validator.password.not.match.new' => 'Vaša nova gesla se ne ujemata',
+'validator.password.not.match.new' =>
+	'Vaša nova gesla se ne '
+	. 'ujemata',
 'validator.password.reset' => 'Vaše geslo je bilo ponastavljeno',
-'validator.user.exist' => 'Uporabnik s to prijavo že obstaja',
-'validator.user.exist.not' => 'Uporabnik s temi prijavnimi podatki ne obstaja',
+'validator.user.exist' => 'Uporabnik s to prijavo že '
+	. 'obstaja',
+'validator.user.exist.not' => 'Uporabnik s temi prijavnimi podatki '
+	. 'ne obstaja',
 'value' => 'Vrednost',
 'values' => 'Vrednote',
 'values.with.taxes' => 'Vrednosti z davki',
@@ -1815,11 +3106,110 @@ return [
 'web' => 'Splet',
 'web.address' => 'Spletni naslov',
 'welcome' => 'Dobrodošli',
-'wrong.passwordreset.token' => 'Za navedeni žeton za ponastavitev ni bil najden noben uporabnik. Če menite, da gre za napako, se obrnite na skrbnika.',
+'wrong.passwordreset.token' => 'Za navedeni žeton za ponastavitev '
+	. 'ni bil najden noben uporabnik.'
+	. 'Če menite, da gre za '
+	. 'napako, se obrnite na skrbnika.',
 'year' => 'Leto',
 'year.prefix' => 'Predpona leta',
 'years' => 'Leta',
 'yes' => 'Da',
 'zip' => 'Poštna številka',
-'zip.code' => 'Poštna številka',
+'zip.code' => 'Poštna številka','allowance.or.charge.allowance.tax' => 'Davek na olajšavo',
+
+'allowance.or.charge.charge.tax' =>
+	'Davek na stroške',
+'allowance.or.charge.inv.add' =>
+	'Dodaj dodatek ali bremenitev računa',
+'allowance.or.charge.level' => 'Raven (⬅ ️Skupno, Postavka ➡)',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'Dostava/ravnanje/embalaža',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'DDV na pošiljanje/pakiranje/embalažo',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'Davek na pošiljanje/ravnanje/embalažo',
+'amount.payment' => 'Znesek plačila, ki ga je '
+	. 'treba plačati v celoti',
+'calendar' => 'Koledar',
+'continue.with.developersandboxhmrc' => 'Nadaljujte z Developer Gov Sandbox '
+	. 'UK',
+'continue.with.oidc' => 'Nadaljujte z Open Id Connect',
+'continue.with.openbanking' => 'Nadaljujte z odprtim bančništvom',
+'converted.to.invoice' => 'Pretvorjeno v račun',
+'converted.to.so' => 'Pretvorjeno v prodajno naročilo',
+'custom.field.edit' => 'Urejanje polja po meri',
+'delete.quote.single' => 'To ponudbo je mogoče izbrisati,'
+	. 'ker z njo ni povezano '
+	. 'nobeno prodajno naročilo ali račun.',
+'delete.quote.derived' => 'S to ponudbo je povezan '
+	. 'bodisi prodajni nalog bodisi račun,'
+	. 'zato ga ni mogoče izbrisati.',
+'extended' => 'Razširjeno',
+'extended.language' => 'Razširjeni jezik',
+'file' => 'Datoteka',
+'grand.fathered' => 'Veliki oče',
+'layout.password.otp.6' => 'Enkratno geslo (6 števk)',
+'layout.password.otp.6.8' =>
+	'Geslo ETP (6 mest) / '
+	. 'Varnostne kode za obnovitev (8 '
+	. 'mest)',
+'oauth2.account.locked' => 'Račun zaklenjen',
+'oauth2.backup.recovery.codes' => 'Varnostne kopije obnovitvenih kod.'
+	. 'Hranite na varnem mestu.',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'Obnovite varnostne kode za obnovitev',
+'oauth2.consent.required' => 'Potrebno je soglasje',
+'oauth2.default' => 'Uporabljena je privzeta konfiguracija oauth2.'
+	. '0',
+'oauth2.invalid.request' => 'Neveljavna zahteva',
+'oauth2.invalid.client' => 'Neveljavna stranka',
+'oauth2.invalid.grant' => 'Neveljavna dodelitev',
+'oauth2.login.required' => 'Zahtevana prijava',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'Manjka koda za preverjanje pristnosti '
+	. 'ali parameter stanja.',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'Manjka parameter stanja.'
+	. 'Možen napad csrf.',
+'oauth2.server.error' => 'Napaka strežnika',
+'oauth2.temporarily.unavailable' => 'Trenutno ni na voljo',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'Ustvarjanje testnega uporabnika ni dovoljeno '
+	. 'v produkcijskem okolju.',
+'oauth2.unauthorized.client' => 'Nepooblaščena stranka',
+'oauth2.unsupported.response.type' => 'Nepodprta vrsta odgovora',
+'oauth2.unsupported.grant.type' => 'Nepodprta vrsta nepovratnih sredstev',
+'online.payment.apiToken' => 'Žeton API-ja',
+'online.payment.thirdPartyProvider' => 'Ponudnik tretje osebe, npr.'
+	. 'Wonderful',
+'open.banking.pay.with' => 'Plačilo z odprtim bančništvom: ',
+'open.banking.not.configured' => 'Odprto bančništvo ni konfigurirano.'
+	. 'Obrnite se na podporo.',
+'radiolist.choice' => 'Izbira radijskega seznama',
+'region' => 'Regija',
+'script' => 'Skript',
+'tax.rate.active.not' => 'Opozorilo:'
+	. 'Nobena davčna stopnja ni bila '
+	. 'aktivirana.'
+	. 'Aktivirajte vsaj eno davčno stopnjo.'
+	. 'Nastavitve .'
+	. 'Davčna stopnja',
+'textarea' => 'Območje besedila',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'Neveljavna 8-mestna varnostna koda za '
+	. 'obnovitev',
+'two.factor.authentication.invalid.totp.code' =>
+	'Neveljavna 6-mestna časovno omejena enkratna '
+	. 'avtentikacijska koda',
+'two.factor.authentication.rate.limit.reached' =>
+	'Dosežena je omejitev hitrosti.'
+	. 'Počakajte 10 sekund.',
+'url' => 'URL',
+'variant' => 'Različica',
+'approval.required' => 'Zahtevana odobritev',
+'quote.approval.required' => 'Zahtevana je odobritev ponudbe',
+'quote.must.be.approved.first' =>
+	'Ponudba mora biti odobrena pred '
+	. 'konverzijo',
 ];
+

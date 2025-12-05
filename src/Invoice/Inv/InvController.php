@@ -2150,6 +2150,7 @@ final class InvController extends BaseController
                 'viewRenderer' => $this->viewRenderer,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true,
+                'locale' => new \Yiisoft\I18n\Locale($_language),
             ];
             return $this->viewRenderer->render('index', $parameters);
         }

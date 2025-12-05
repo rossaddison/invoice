@@ -2,10 +2,10 @@
 html {
     font-family: sans-serif;
     -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%
-}
-body {
-    margin: 0
+    -webkit-text-size-adjust: 100%;
+    font-size: 10px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    min-height: 100vh
 }
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
     display: block
@@ -21,15 +21,11 @@ audio:not([controls]) {
 [hidden], template {
     display: none
 }
-a {
-    background-color: transparent
-}
 a:active, a:hover {
     outline: 0
 }
 abbr[title] {
     border-bottom: none;
-    text-decoration: underline;
     -webkit-text-decoration: underline dotted;
     text-decoration: underline dotted
 }
@@ -62,24 +58,25 @@ sup {
 sub {
     bottom: -0.25em
 }
-img {
-    border: 0
-}
 svg:not(:root) {
     overflow: hidden
 }
 figure {
-    margin: 1em 40px
-}
+    margin: 1em 40px 0px 0px
+}    
 hr {
     box-sizing: content-box;
-    height: 0
+    height: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #eee
 }
 pre {
     overflow: auto
 }
 code, kbd, pre, samp {
-    font-family: monospace, monospace;
+    font-family: monospace;
     font-size: 1em
 }
 button, input, optgroup, select, textarea {
@@ -120,11 +117,6 @@ input[type="search"] {
 }
 input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
     -webkit-appearance: none
-}
-fieldset {
-    border: 1px solid #c0c0c0;
-    margin: 0 2px;
-    padding: 0.35em 0.625em 0.75em
 }
 legend {
     border: 0;
@@ -173,9 +165,6 @@ td, th {
     tr, img {
         page-break-inside: avoid
     }
-    img {
-        max-width: 100% !important
-    }
     p, h2, h3 {
         orphans: 3;
         widows: 3
@@ -208,16 +197,13 @@ td, th {
 *:before, *:after {
     box-sizing: border-box
 }
-html {
-    font-size: 10px;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
-}
 body {
     font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 14px;
     line-height: 1.428571429;
     color: #333;
-    background-color: #fff
+    background-color: #fff;
+    margin: 0
 }
 input, button, select, textarea {
     font-family: inherit;
@@ -226,7 +212,8 @@ input, button, select, textarea {
 }
 a {
     color: #2C8EDD;
-    text-decoration: none
+    text-decoration: none;
+    background-color: transparent
 }
 a:hover, a:focus {
     color: #1a66a2;
@@ -236,11 +223,10 @@ a:focus {
     outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px
 }
-figure {
-    margin: 0
-}
 img {
-    vertical-align: middle
+    max-width: 100% !important;
+    vertical-align: middle;
+    border: 0
 }
 .img-responsive {
     display: block;
@@ -263,12 +249,6 @@ img {
 }
 .img-circle {
     border-radius: 50%
-}
-hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee
 }
 .sr-only {
     position: absolute;
@@ -413,10 +393,8 @@ a.text-danger:hover, a.text-danger:focus {
     color: #843534
 }
 .bg-primary {
-    color: #fff
-}
-.bg-primary {
-    background-color: #2C8EDD
+    color: #fff;
+    background-color: #2C8EDD    
 }
 a.bg-primary:hover, a.bg-primary:focus {
     background-color: #1e73b8
@@ -1416,12 +1394,6 @@ th {
     .table-responsive>.table-bordered>tbody>tr:last-child>th, .table-responsive>.table-bordered>tbody>tr:last-child>td, .table-responsive>.table-bordered>tfoot>tr:last-child>th, .table-responsive>.table-bordered>tfoot>tr:last-child>td {
         border-bottom: 0
     }
-}
-fieldset {
-    min-width: 0;
-    padding: 0;
-    margin: 0;
-    border: 0
 }
 legend {
     display: block;
@@ -8059,17 +8031,10 @@ button.close {
     margin-left: -5px;
     margin-right: -5px
 }
-html {
-    min-height: 100vh
-}
 body {
     min-height: 100vh;
     overflow-x: hidden;
     overflow-y: scroll
-}
-img {
-    vertical-align: middle;
-    max-width: 100%
 }
 h1, h2, h3, h4, h5, h6 {
     margin: 0
@@ -8080,8 +8045,9 @@ form {
 fieldset {
     border-radius: 4px;
     border: 1px solid #ddd;
-    margin-bottom: 15px;
-    padding: 15px
+    min-width: 0;
+    margin: 0 2px 0px 15px;
+    padding: 0.35em 0.625em 0.75em
 }
 fieldset legend {
     padding: 0 15px;
@@ -8759,11 +8725,23 @@ body.error div.error-container h1 {
     }
 }
 @media (max-width: 767px) {
+    table, thead, tbody, th, td, tr { 
+        display:block; 
+    } 
+    td { 
+        position:relative; 
+        padding-left:50%; 
+    } 
+    td:before { 
+        position:absolute; 
+        left:10px; 
+        content:attr(data-label); 
+    }
     .navbar-nav {
         margin: 7px 0
     }
     .navbar-nav .dropdown .dropdown-menu {
-        background: #1e242c
+        background: #fff
     }
     #content {
         padding: 10px

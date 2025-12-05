@@ -246,7 +246,8 @@ return [
     Route::methods([Method::GET, Method::POST], '/resetpassword/resetpassword/{token}')
         ->action([ResetPasswordController::class, 'resetpassword'])
         ->name('auth/resetpassword'),
-    // email-verification token is masked before sending by email and must be unmasked after inbox click. Refer to userinv/signup
+    // email-verification token is masked before sending by email
+    // and must be unmasked after inbox click. Refer to userinv/signup
     Route::methods([Method::GET, Method::POST], '/signup')
         ->middleware(fn (
             ResponseFactoryInterface $responseFactory,

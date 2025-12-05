@@ -707,29 +707,6 @@ final class SettingController extends BaseController
     /**
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function clear(): \Yiisoft\DataResponse\DataResponse
-    {
-        $directory = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'assets';
-        try {
-            $filehelper = new FileHelper();
-            $filehelper->clearDirectory($directory);
-            $this->flashMessage('info', $this->translator->translate('setting.assets.cleared.at') . $directory);
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
-                '//invoice/setting/successful',
-                ['heading' => $this->translator->translate('successful'),'message' => $this->translator->translate('setting.you.have.cleared.the.cache')],
-            ));
-        } catch (\Exception $e) {
-            $this->flashMessage('warning', $this->translator->translate('setting.assets.were.not.cleared.at') . $directory . $this->translator->translate('setting.as.a.result.of') . $e->getMessage());
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
-                '//invoice/setting/unsuccessful',
-                ['heading' => $this->translator->translate('unsuccessful'),'message' => $this->translator->translate('setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('setting.error.on.the.public.assets.folder')],
-            ));
-        }
-    }
-
-    /**
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
     public function get_cron_key(): \Yiisoft\DataResponse\DataResponse
     {
         $parameters = [

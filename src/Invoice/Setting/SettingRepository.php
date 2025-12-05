@@ -871,12 +871,15 @@ final class SettingRepository extends Select\Repository
             'af-ZA' => 'AfrikaansSouthAfrican',
             'ar-BH' => 'ArabicBahrainian',
             'az' => 'Azerbaijani',
+            'be-BY' => 'Belarusian',
             'bs' => 'Bosnian',
             'de' => 'German',
             'en' => 'English',
             'fil' => 'Filipino',
             'fr' => 'French',
+            'ha-NG' => 'HausaNigerian',
             'id' => 'Indonesian',
+            'ig-NG' => 'IgboNigerian',
             'it' => 'Italian',
             'ja' => 'Japanese',
             'pl-PL' => 'Polish',
@@ -889,6 +892,7 @@ final class SettingRepository extends Select\Repository
             'uk' => 'Ukrainian',
             'uz' => 'Uzbek',
             'vi' => 'Vietnamese',
+            'yo-NG' => 'YorubaNigerian',
             'zh-CN' => 'ChineseSimplified',
             'zh-TW' => 'TaiwaneseMandarin',
             'zu-ZA' => 'ZuluSouthAfrican',
@@ -896,6 +900,9 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
+     * Used in: Google Translate Dropdown Box in
+     * resources/views/invoice/setting/views/partial_settings_google_translate.php
+     * Related logic: SettingController function tab_index() 'google_translate' => ['locales']
      * @return array
      */
     public function locales(): array
@@ -908,8 +915,9 @@ final class SettingRepository extends Select\Repository
             'da', 'de',
             'el', 'es', 'et',
             'fa', 'fi', 'fil', 'fr',
-            'he', 'hr', 'hu', 'hy',
-            'id', 'it',
+            'gd-GB',
+            'ha-NG', 'he-IL', 'hr', 'hu', 'hy',
+            'id', 'it', 'ig-NG',
             'ja',
             'ka', 'kk', 'ko', 'kz',
             'lt', 'lv',
@@ -921,6 +929,7 @@ final class SettingRepository extends Select\Repository
             'tg', 'th', 'tr',
             'uk', 'uz',
             'vi',
+            'yo-NG',
             'zh-CN', 'zh-TW',
             'zu-ZA',
         ];
@@ -1641,9 +1650,7 @@ final class SettingRepository extends Select\Repository
                 . '---Step--7: Adjust the php.ini [apache_module] by means of the wampserver icon or by clicking on the symlink in the directory.' . "\r\n"
                 . '---Step--8: Edit this symlink file manually at [curl] with eg. "c:/wamp64/bin/php/php8.1.13/cacert.pem   Note the forward slashes.' . "\r\n"
                 . '---Step--9: Reboot your server' . "\r\n"
-                . '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. resources/messages/{de}/app.php.'
-                . '---Step--11: Include your language in src/Invoice/Language/{your language}.',
-
+                . '---Step--10: After generating the file, move the file from views/generator/output_overwrite to eg. resources/messages/{de}/app.php.',
                 'where' => 'GeneratorController/google_translate_lang',
             ],
             'google_translate_en_app_php' => [

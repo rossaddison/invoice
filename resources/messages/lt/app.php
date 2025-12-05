@@ -917,66 +917,6 @@ return [
 	. 'pašto adresą į išskleidžiamąjį sąrašą',
 'from.name' => 'Nuo vardo',
 'front.page' => 'Titulinis puslapis',
-'gallery.caption.slide1' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide10' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide11' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide12' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide13' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide14' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide15' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide2' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide3' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide4' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide5' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide6' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide7' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide8' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide9' => 'Šį tekstą galite pakeisti adresu '
-	. '.'
-	. '/resources/messages/en/app.'
-	. 'php.',
 'gateway.online.payment' => 'Mokėjimas internetu',
 'gender' => 'Lytis',
 'gender.female' => 'Moteris',

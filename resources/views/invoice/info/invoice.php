@@ -33,8 +33,8 @@
       'gridComponents' => Reference::to(GridComponents::class)  
     ],
   ],      
-</code>    
-</p>    
+</code>
+</p> 
 <p><s>Pdf template construction upon emailing.</s></p>
 <p><s>Work on info issues</s></p>
 <p>Work In Progress - Shorter Term Goals</p>
@@ -51,6 +51,18 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>5th December 2025</b></p>
+<p>Include 7 additional languages: Igbo, Yoruba, Hausa, Belarusian, Hebrew, Scots Gaelic</p>
+<p>Summary Procedure for including your own language:</p>
+<p>Step 1: config/web/params.php</p>
+<p>Step 2: src/ViewInjection/LayoutViewInjection.php</p>
+<p>Step 3: resources/views/layout/... all the php files</p>
+<p>Step 4: SettingRepository function locales() ... locale selected in the Google Translate Dropdown.</p>
+<p>Included additional translations in all the languages</p>
+<p>Code reduction: Dropdown items have been converted to variables in the src/ViewInjection/LayoutViewInjection.php</p> 
+<p>Public Assets can only be cleared from the command line. Removed from main menu.</p>
+<p>A script function shorten() shortens 'too long key value' lines in output_overwrite/app.php's identified by SonarQube Rule s103.</p>  
+<p>Next: Microsoft Typescript-Go Compatibility test on separate branch 'typescript-go-v7-compatibility-test' using vs-code</p>
 <p><b>29th November 2025</b></p>
 <p>Mobile Phone Testing</p>
 <p>Include an editable link for each custom field so that the field inputs can be edited.</p>

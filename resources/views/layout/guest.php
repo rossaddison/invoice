@@ -43,6 +43,36 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var string $companyLogoMargin
  * @var string $companyLogoWidth
  * @var string $logoPath
+ * @var DropdownItem $afZA
+ * @var DropdownItem $arBH
+ * @var DropdownItem $az
+ * @var DropdownItem $beBY
+ * @var DropdownItem $bs
+ * @var DropdownItem $zhCN
+ * @var DropdownItem $zhTW
+ * @var DropdownItem $en
+ * @var DropdownItem $fil
+ * @var DropdownItem $fr
+ * @var DropdownItem $gdGB
+ * @var DropdownItem $haNG
+ * @var DropdownItem $heIL
+ * @var DropdownItem $igNG
+ * @var DropdownItem $nl
+ * @var DropdownItem $de
+ * @var DropdownItem $id
+ * @var DropdownItem $it
+ * @var DropdownItem $ja
+ * @var DropdownItem $pl
+ * @var DropdownItem $ptBR
+ * @var DropdownItem $ru
+ * @var DropdownItem $sk
+ * @var DropdownItem $sl
+ * @var DropdownItem $es
+ * @var DropdownItem $uk
+ * @var DropdownItem $uz
+ * @var DropdownItem $vi
+ * @var DropdownItem $yoNG
+ * @var DropdownItem $zuZA
  */
 
 $assetManager->register(AppAsset::class);
@@ -110,7 +140,9 @@ $this->beginPage();
 </head>
 <body>
 <?php
-    Html::tag('Noscript', Html::tag('Div', $translator->translate('please.enable.js'), ['class' => 'alert alert-danger no-margin']));
+    Html::tag('Noscript',
+        Html::tag('Div', $translator->translate('please.enable.js'),
+            ['class' => 'alert alert-danger no-margin']));
 ?>
 <header>
 <?php
@@ -146,7 +178,8 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('client'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('client/guest')),
+        DropdownItem::link($translator->translate('view'),
+            $urlGenerator->generate('client/guest')),
     )
     ->render();
 
@@ -160,7 +193,8 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('quote'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('quote/guest')),
+        DropdownItem::link($translator->translate('view'),
+            $urlGenerator->generate('quote/guest')),
     )
     ->render();
 
@@ -174,7 +208,8 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('salesorder'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('salesorder/guest')),
+        DropdownItem::link($translator->translate('view'),
+            $urlGenerator->generate('salesorder/guest')),
     )
     ->render();
 
@@ -188,7 +223,8 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($translator->translate('invoice'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('inv/guest')),
+        DropdownItem::link($translator->translate('view'),
+            $urlGenerator->generate('inv/guest')),
     )
     ->render();
 
@@ -202,8 +238,10 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent((string) I::tag()->addClass('bi bi-coin') . ' ' . $translator->translate('payment'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('payment/guest')),
-        DropdownItem::link($translator->translate('online.log'), $urlGenerator->generate('payment/guest_online_log')),
+        DropdownItem::link($translator->translate('view'),
+            $urlGenerator->generate('payment/guest')),
+        DropdownItem::link($translator->translate('online.log'),
+            $urlGenerator->generate('payment/guest_online_log')),
     )
     ->render();
 
@@ -217,9 +255,12 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent((string) I::tag()->addClass('fa fa-cogs') . ' ' . $translator->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($translator->translate('view'), $urlGenerator->generate('userinv/guest')),
-        DropdownItem::link($translator->translate('password.change'), $urlGenerator->generate('auth/change')),
-        DropdownItem::link($translator->translate('email.log'), $urlGenerator->generate('invsentlog/guest')),
+        DropdownItem::link($translator->translate('view'),
+            $urlGenerator->generate('userinv/guest')),
+        DropdownItem::link($translator->translate('password.change'),
+            $urlGenerator->generate('auth/change')),
+        DropdownItem::link($translator->translate('email.log'),
+            $urlGenerator->generate('invsentlog/guest')),
     )
     ->render();
     // Translate
@@ -235,28 +276,10 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent(I::tag()->addClass('bi bi-translate'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Tiawanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
-        DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+        // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
+        $afZA, $arBH, $az, $beBY, $bs, $zhCN, $zhTW, $en,
+        $fil, $fr, $gdGB, $haNG, $heIL, $igNG, $nl, $de, $id, $it, $ja, $pl, $ptBR,
+        $ru, $sk, $sl, $es, $uk, $uz, $vi, $yoNG, $zuZA
     )->render();
 }
 
@@ -298,7 +321,8 @@ if (!$isGuest) {
     ->csrf($csrf)
     ->open()
     . '<div class="mb-1">'
-    . (string) Button::submit(null !== $user ? (string) preg_replace('/\d+/', '', $user->getLogin() . ' ' . $translator->translate('logout')) : '' . ' '
+    . (string) Button::submit(null !== $user ? (string) preg_replace('/\d+/', '', $user->getLogin()
+        . ' ' . $translator->translate('logout')) : '' . ' '
         . $translator->translate('logout'))->class('btn btn-primary')
     . '</div>'
     . Form::tag()->close();
