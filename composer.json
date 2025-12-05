@@ -93,7 +93,7 @@
         "yiisoft/data": "dev-master",
         "yiisoft/data-response": "^2.1.1",
         "yiisoft/db": "dev-master",
-        "yiisoft/db-mysql": "dev-master",
+        "yiisoft/db-mysql": "dev-bc",
         "yiisoft/definitions": "^3.4.1",
         "yiisoft/di": "^1.4.1",
         "yiisoft/error-handler": "^4.3",
