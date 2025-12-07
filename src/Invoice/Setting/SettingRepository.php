@@ -251,6 +251,7 @@ final class SettingRepository extends Select\Repository
     {
         return match ($entity) {
             'client' => ['custom.fields', 'address', 'contact.information', 'personal.information', 'tax.information'],
+            'family' => ['custom.fields'],
             'product' => ['custom.fields'],
             'invoice' => ['custom.fields'],
             'payment' => ['custom.fields'],
@@ -263,6 +264,7 @@ final class SettingRepository extends Select\Repository
     {
         return [
             'client' => ['custom.fields', 'address', 'contact.information', 'personal.information', 'tax.information'],
+            'family' => ['custom.fields'],
             'product' => ['custom.fields'],
             'invoice' => ['custom.fields'],
             'payment' => ['custom.fields'],

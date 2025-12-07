@@ -19,7 +19,7 @@ final class ClientForm extends FormModel
     #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $client_name = '';
-    #[Length(min: 0, max: 3, skipOnEmpty: true)]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $client_group = '';
     #[Length(min: 0, max: 15, skipOnEmpty: true)]
     private ?string $client_frequency = '';

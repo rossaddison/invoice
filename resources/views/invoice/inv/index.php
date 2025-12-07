@@ -636,7 +636,7 @@ $columns = [
         header: 'id',
         content: static fn (Inv $model) => (string) $model->getId(),
         withSorting: true,
-    ),
+    ),                 
     new DataColumn(
         property: 'filterInvNumber',
         header: $translator->translate('number'),
@@ -653,6 +653,13 @@ $columns = [
                     //'onchange' => ''
                 ])
                 ->optionsData($optionsDataInvNumberDropDownFilter),
+        withSorting: false,
+    ),
+    new DataColumn(
+        property: 'filterDateCreatedYearMonth',
+        header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
+        content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
+        filter: $optionsDataYearMonthDropDownFilter,
         withSorting: false,
     ),
     new DataColumn(
@@ -769,17 +776,28 @@ $columns = [
         withSorting: false,
     ),
     new DataColumn(
+        'client_number',
+        header: $translator->translate('client.number'),
+        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_number()),
+        encodeContent: false,
+    ),
+    new DataColumn(
+        'client_address_1',
+        header: $translator->translate('street.address'),
+        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_address_1()),
+        encodeContent: false,
+    ),
+    new DataColumn(
+        'client_address_2',
+        header: $translator->translate('street.address.2'),
+        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_address_2()),
+        encodeContent: false,
+    ),            
+    new DataColumn(
         property: 'filterClientGroup',
         header: $translator->translate('client.group'),
         content: static fn (Inv $model): string => $model->getClient()?->getClient_group() ?? '',
         filter: $optionsDataClientGroupDropDownFilter,
-        withSorting: false,
-    ),
-    new DataColumn(
-        property: 'filterDateCreatedYearMonth',
-        header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
-        content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
-        filter: $optionsDataYearMonthDropDownFilter,
         withSorting: false,
     ),
     new DataColumn(

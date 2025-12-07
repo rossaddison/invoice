@@ -53,7 +53,7 @@ class Client
         private string $client_name = '',
         #[Column(type: 'string(151)', nullable: true)]
         private ?string $client_surname = '',
-        #[Column(type: 'string(3)', nullable: true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $client_group = '',
         #[Column(type: 'string(15)', nullable: true)]
         private ?string $client_frequency = '',
