@@ -51,6 +51,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>7th December 2025</b></p>
+<p>Incorporate custom fields into Family</p>
+<p>Improve the invoice/inv/index.php regarding client address related information</p>
+<p>New invoice-typescript-iife.js file compiled and will be adopted into the main branch using v7.</p>
+<p>Microsoft Typescript-Go v7 Testing: TYPESCRIPT_GO_V7_COMPATIBILITY_TESTING_GUIDE.MD</p>
 <p><b>5th December 2025</b></p>
 <p>Include 7 additional languages: Igbo, Yoruba, Hausa, Belarusian, Hebrew, Scots Gaelic</p>
 <p>Summary Procedure for including your own language:</p>
