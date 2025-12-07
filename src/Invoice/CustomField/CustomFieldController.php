@@ -309,6 +309,7 @@ final class CustomFieldController extends BaseController
     {
         return [
             'client_custom' => 'client',
+            'family_custom' => 'family',
             'product_custom' => 'product',
             'inv_custom' => 'invoice',
             'payment_custom' => 'payment',
