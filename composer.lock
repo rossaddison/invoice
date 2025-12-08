@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "650882373fdeea701be39addc5a87bd0",
+    "content-hash": "bf112bddc308a1cfcd09cd725a569c5d",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -13935,20 +13935,20 @@
         },
         {
             "name": "yiisoft/cookies",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/cookies.git",
-                "reference": "7bb44019f4618f381ea6611dcbcaad13904e1e2e"
+                "reference": "7d83b86282b14fbf11c3bc7c01f0739c583d4421"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/cookies/zipball/7bb44019f4618f381ea6611dcbcaad13904e1e2e",
-                "reference": "7bb44019f4618f381ea6611dcbcaad13904e1e2e",
+                "url": "https://api.github.com/repos/yiisoft/cookies/zipball/7d83b86282b14fbf11c3bc7c01f0739c583d4421",
+                "reference": "7d83b86282b14fbf11c3bc7c01f0739c583d4421",
                 "shasum": ""
             },
             "require": {
-                "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "7.4.* || 8.0 - 8.5",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/http-message-implementation": "1.0",
                 "psr/http-server-handler": "^1.0",
@@ -13959,17 +13959,23 @@
                 "yiisoft/strings": "^2.0"
             },
             "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.8.3",
                 "httpsoft/http-message": "^1.1.6",
                 "maglnet/composer-require-checker": "^3.8 || ^4.2",
                 "phpunit/phpunit": "^9.6.22",
                 "psr/clock": "^1.0",
                 "rector/rector": "^2.0.11",
-                "roave/infection-static-analysis-plugin": "^1.18",
                 "spatie/phpunit-watcher": "^1.23.6",
-                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.10",
                 "yiisoft/test-support": "^1.4"
             },
             "type": "library",
+            "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true,
+                    "target-directory": "tools"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Cookies\\": "src"
@@ -14004,7 +14010,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-04-16T08:15:54+00:00"
+            "time": "2025-12-08T12:51:15+00:00"
         },
         {
             "name": "yiisoft/csrf",
