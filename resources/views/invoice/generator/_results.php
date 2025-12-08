@@ -6,6 +6,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\VarDumper\VarDumper;
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Helpers\GenerateCodeFileHelper $generated
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var bool $canEdit
@@ -14,7 +15,7 @@ use Yiisoft\VarDumper\VarDumper;
  * @var string $id
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 ?>
 <?= Html::tag('h1')

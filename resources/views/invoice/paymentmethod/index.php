@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Entity\PaymentMethod $paymentmethod
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -14,7 +15,7 @@ use Yiisoft\Html\Html;
  * @var string $id
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 ?>
 <div id="headerbar">

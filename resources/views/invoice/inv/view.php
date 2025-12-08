@@ -67,7 +67,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
 ?>
     <?php
-        echo $alert;
+        echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 echo $modal_delete_inv;
 if ($vat === '0') {
     echo $modal_add_inv_tax;

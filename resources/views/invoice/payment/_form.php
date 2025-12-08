@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
  */
 
 // If there are no invoices to make payment against give a warning
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 
 <?= Form::tag()

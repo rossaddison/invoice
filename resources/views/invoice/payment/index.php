@@ -30,7 +30,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $grid_summary = $s->grid_summary(
     $paginator,

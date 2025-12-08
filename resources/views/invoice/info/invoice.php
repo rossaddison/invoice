@@ -51,6 +51,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>8th December 2025</b></p>
+<p>Use the native-reset class to condense the drop-down filter boxes on the inv index</p>
+<p>Use the table-responsive class on the inv index to help fit more columns on page</p>
+<p>Only show flash messages if the disable_flash_messages setting is 0</p>
 <p><b>7th December 2025</b></p>
 <p>Incorporate custom fields into Family</p>
 <p>Improve the invoice/inv/index.php regarding client address related information</p>

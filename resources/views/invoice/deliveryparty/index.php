@@ -79,7 +79,7 @@ $columns = [
     ),
 ];
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarString
     = Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open()

@@ -38,7 +38,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFilterUserInvLoginDropDown
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])

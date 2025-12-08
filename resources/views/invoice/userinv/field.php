@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
  * @var string $alert
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $client_helper = new ClientHelper($s);
 
 ?>

@@ -73,7 +73,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataYearMonthDropDownFilter
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 echo Breadcrumbs::widget()
  ->links(
@@ -601,7 +601,7 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf'),
-                    'class' => 'bi bi-file-pdf',
+                    'class' => 'reset-native bi bi-file-pdf',
                 ],
             ),
             new ActionButton(
@@ -612,7 +612,7 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf') . '➡️' . $translator->translate('custom.field'),
-                    'class' => 'bi bi-file-pdf-fill',
+                    'class' => 'reset-native bi bi-file-pdf-fill',
                 ],
             ),
             new ActionButton(
@@ -650,7 +650,7 @@ $columns = [
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'name' => 'number',
-                    //'onchange' => ''
+                    'class' => 'native-reset',
                 ])
                 ->optionsData($optionsDataInvNumberDropDownFilter),
         withSorting: false,
@@ -659,7 +659,12 @@ $columns = [
         property: 'filterDateCreatedYearMonth',
         header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
         content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
-        filter: $optionsDataYearMonthDropDownFilter,
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'name' => 'number',
+                    'class' => 'native-reset',
+                ])
+                ->optionsData($optionsDataYearMonthDropDownFilter),
         withSorting: false,
     ),
     new DataColumn(
@@ -770,7 +775,7 @@ $columns = [
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'name' => 'client_id',
-                    //'onchange' => ''
+                    'class' => 'native-reset',
                 ])
                 ->optionsData($optionsDataClientsDropdownFilter),
         withSorting: false,
@@ -797,7 +802,12 @@ $columns = [
         property: 'filterClientGroup',
         header: $translator->translate('client.group'),
         content: static fn (Inv $model): string => $model->getClient()?->getClient_group() ?? '',
-        filter: $optionsDataClientGroupDropDownFilter,
+        filter: DropdownFilter::widget()
+            ->addAttributes([
+                'name' => 'number',
+                'class' => 'native-reset',
+            ])
+            ->optionsData($optionsDataClientGroupDropDownFilter),
         withSorting: false,
     ),
     new DataColumn(
@@ -848,7 +858,10 @@ $columns = [
         },
         encodeContent: false,
         filter: TextInputFilter::widget()
-                ->addAttributes(['style' => 'max-width: 50px']),
+                ->addAttributes([
+                    'style' => 'max-width: 50px',
+                    'class' => 'native-reset',
+                ]),
         withSorting: false,
     ),
     new DataColumn(
@@ -1031,7 +1044,7 @@ $grid_summary = $s->grid_summary(
 echo GridView::widget()
 // unpack the contents within the array using the three dot splat operator
 ->bodyRowAttributes(['class' => 'align-left'])
-->tableAttributes(['class' => 'table table-striped h-75', 'id' => 'table-invoice'])
+->tableAttributes(['class' => 'table-responsive table-bordered table-striped h-75', 'id' => 'table-invoice'])
 ->columns(...$columns)
 ->dataReader($sortedAndPagedPaginator)
 ->urlCreator($urlCreator)

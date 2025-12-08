@@ -27,7 +27,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataGuestInvNumberDropDownFilter
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 /*
  * Related logic: see https://emojipedia.org/incoming-envelope

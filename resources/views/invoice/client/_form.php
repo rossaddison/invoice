@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
     ->open()
 ?>
 <?=
-    $alert;
+    $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 <?= Field::errorSummary($form)
     ->errors($errors)

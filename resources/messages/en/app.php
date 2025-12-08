@@ -591,7 +591,7 @@ return [
   'details' => 'Details',
   'development.progress' => 'Development Progress',
   'development.schema' => 'Schema',
-  'disable.flash.messages' => 'Disable Invoice Flash Messages',
+  'disable.flash.messages' => 'Disable Flash Messages',
   'disable.quickactions' => 'Disable the Quickactions',
   'disable.sidebar' => 'Disable the Sidebar',
   'discount' => 'Discount',
@@ -1930,8 +1930,6 @@ prior to importing and no existing documents e.g. Invoices.',
   'quote.delivery.location.index.button.list' => 'Quotes',
   'quote.delivery.location.none' =>
     'No delivery location has been linked to this quote.',
-  'quote.disable.flash.messages' =>
-    'Disable Quote Flash Messages',
   'quote.email.templates.not.configured' =>
     'Email templates not configured.'
     . ' Settings'

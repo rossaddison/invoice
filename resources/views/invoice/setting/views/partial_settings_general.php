@@ -186,38 +186,18 @@ foreach ($countries as $cldr => $country) { ?>
                     
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="settings[disable_flash_messages_quote]">
-                                <?= $translator->translate('quote.disable.flash.messages'); ?>
-                            </label>
-                            <?php $body['settings[disable_flash_messages_quote]'] = $s->getSetting('disable_flash_messages_quote'); ?>
-                            <select name="settings[disable_flash_messages_quote]" id="settings[disable_flash_messages_quote]" class="form-control">
-                                <option value="0">
-                                    <?= $translator->translate('no'); ?>
-                                </option>
-                                <option value="1" 
-                                    <?php
-    $s->check_select($body['settings[disable_flash_messages_quote]'], '1');
-?>>
-                                    <?= $translator->translate('yes'); ?>
-                                </option>
-                            </select>    
-                        </div>
-                    </div>
-                    
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[disable_flash_messages_inv]">
+                            <label for="settings[disable_flash_messages]">
                                 <?= $translator->translate('disable.flash.messages'); ?>
                             </label>
-                            <?php $body['settings[disable_flash_messages_inv]'] = $s->getSetting('disable_flash_messages_inv'); ?>
-                            <select name="settings[disable_flash_messages_inv]" id="settings[disable_flash_messages_inv]" class="form-control">
+                            <?php $body['settings[disable_flash_messages]'] = $s->getSetting('disable_flash_messages'); ?>
+                            <select name="settings[disable_flash_messages]" id="settings[disable_flash_messages]" class="form-control">
                                 <option value="0">
                                     <?= $translator->translate('no'); ?>
                                 </option>
                                 <option value="1" 
                                     <?php
-    $s->check_select($body['settings[disable_flash_messages_inv]'], '1');
-?>>
+                                        $s->check_select($body['settings[disable_flash_messages]'], '1');
+                                    ?>>
                                     <?= $translator->translate('yes'); ?>
                                 </option>
                             </select>    

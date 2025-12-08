@@ -38,7 +38,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $statuses = [
     1 => [

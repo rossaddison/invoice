@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $id
  */
 
-echo $alert;
+ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $columns = [
     new DataColumn(

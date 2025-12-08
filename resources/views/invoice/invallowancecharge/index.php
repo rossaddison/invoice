@@ -40,7 +40,7 @@ use Yiisoft\Router\CurrentRoute;
  */
 $vat = $s->getSetting('enable_vat_registration');
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])

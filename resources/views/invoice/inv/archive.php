@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $alert
@@ -10,7 +11,7 @@ declare(strict_types=1);
  * @var string $partial_inv_archive
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?> 
 
 <div id="headerbar">

@@ -40,7 +40,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 /**
  * Related logic: see alert if there are no delivery locations associated with this quote
  */
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 ?>
 <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>

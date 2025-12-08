@@ -45,7 +45,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientsDropdownFilter
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])

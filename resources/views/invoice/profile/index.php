@@ -28,7 +28,7 @@ use Yiisoft\Router\CurrentRoute;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])

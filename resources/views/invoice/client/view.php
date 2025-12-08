@@ -154,7 +154,7 @@ use Yiisoft\Html\Tag\A;
 
         <div id="clientDetails" class="tab-pane tab-rich-content active">
 
-            <?= $alert; ?>
+            <?= $s->getSetting('disable_flash_messages') == '0' ? $alert : ''; ?>
 
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
