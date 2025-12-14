@@ -29,9 +29,13 @@ final class InvRepository extends Select\Repository
      * @param EntityWriter $entityWriter
      * @param Translator $translator
      */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter, private readonly Translator $translator)
+    public function __construct(
+        Select $select, 
+        private readonly EntityWriter $entityWriter, 
+        private readonly Translator $translator
+    )
     {
-        parent::__construct($select);
+        parent::__construct($select->load('client')->where(['client.client_active' => 1]));
     }
 
     public function filterInvNumber(string $invNumber): EntityReader

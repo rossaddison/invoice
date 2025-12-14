@@ -36,7 +36,6 @@ final class ProductForm extends FormModel
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
     public ?string $product_name = null;
 
-    #[Required]
     public ?string $product_description = null;
 
     #[Length(min: 0, max: 100, skipOnEmpty: true)]

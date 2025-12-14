@@ -72,51 +72,76 @@ final readonly class GridComponents
      */
     public function gridMiniTableOfInvoicesForClient(Client $model, int $max_per_row, UrlGenerator $urlGenerator): string
     {
-        $item_count = 0;
-        $string = Html::openTag('table');
-        $string .= Html::openTag('tr', [
-            'class' => 'card-header bg-info text-black',
-        ]);
         $invoices = $model->getInvs()->toArray();
-        // Work with the Array Collection to build an output string
-        /**
-         * @var \App\Invoice\Entity\Inv $invoice
-         */
-        foreach ($invoices as $invoice) {
-            if ($item_count == $max_per_row) {
-                $string .= Html::closeTag('tr');
-                $string .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
-                $item_count = 0;
-            }
-            $invNumber = $invoice->getNumber();
-            $invId = $invoice->getId();
-            $invBalance = $invoice->getInvAmount()->getBalance();
-            $string .= Html::openTag('td')
-                . A::tag()
-                    ->addAttributes([
-                        'style' => 'text-decoration:none',
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => $invoice->getDate_created()->format('m-d')])
-                    ->href($urlGenerator->generate('inv/view', ['id' => $invId]))
-                    ->content(
-                        ((null !== $invNumber && null !== $invId)
-                              ? $invNumber
-                              : $this->translator
-                                     ->translate('number.missing.therefore.use.invoice.id')
-                                       . ($invId ?? ''))
-                                       . ' '
-                                       . (null !== $invBalance
-                                             ? (string) $invBalance
-                                             : ''),
-                    )
-                    ->render()
-                . Html::closeTag('td');
-            $item_count++;
+        if (empty($invoices)) {
+            return '';
         }
-        $string .= Html::closeTag('tr');
-        $string .= Html::closeTag('table');
-        return $string;
-    }
+
+        $itemCount = 0;
+
+        // Table with black border, collapsed borders, and black text inside
+        $html = Html::openTag('table', [
+            'style' => 'border:1px solid #000; border-collapse:collapse; color:#000;',
+            'class' => 'table table-sm mb-0',
+        ]);
+        $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+
+        /** @var \App\Invoice\Entity\Inv $invoice */
+        foreach ($invoices as $invoice) {
+            if ($itemCount === $max_per_row) {
+                $html .= Html::closeTag('tr');
+                $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+                $itemCount = 0;
+            }
+
+            $invId = $invoice->getId();
+            $invNumberRaw = $invoice->getNumber();
+            $invNumberLabel = (null !== $invNumberRaw && null !== $invId)
+                ? $invNumberRaw
+                : $this->translator->translate('number.missing.therefore.use.invoice.id') . ($invId ?? '');
+
+            // Format amount: round to 2 decimals then trim trailing zeros (at most 2 decimals)
+            $invBalance = $invoice->getInvAmount()->getBalance();
+            $balancePart = '';
+            if ($invBalance !== null) {
+                $formatted = number_format($invBalance, 2, '.', '');
+                $formatted = rtrim(rtrim($formatted, '0'), '.'); // remove trailing zeros and possible trailing dot
+                $balancePart = ' ' . Html::encode($formatted);
+            }
+
+            // Tooltip date (safe): guard against missing/invalid date
+            $dateTitle = '';
+            $dateObj = $invoice->getDate_created();
+
+             try {
+                 $dateTitle = $dateObj->format('m-d');
+             } catch (\Throwable) {
+                 $dateTitle = '';
+             }
+
+
+            $anchorHtml = A::tag()
+                ->addAttributes([
+                    // ensure link text is black and no underline
+                    'style' => 'color:#000; text-decoration:none;',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => Html::encode($dateTitle),
+                ])
+                ->href($urlGenerator->generate('inv/view', ['id' => $invId]))
+                ->content(Html::encode($invNumberLabel) . $balancePart)
+                ->render();
+
+            // Each cell has a black border and black text
+            $html .= Html::openTag('td', ['style' => 'border:1px solid #000; padding:0.25rem; color:#000;']) . $anchorHtml . Html::closeTag('td');
+
+            $itemCount++;
+        }
+
+        $html .= Html::closeTag('tr');
+        $html .= Html::closeTag('table');
+
+        return $html;
+    }   
 
     /**
      * @param Inv $model
@@ -126,37 +151,59 @@ final readonly class GridComponents
      */
     public function gridMiniTableOfInvSentLogsForInv(Inv $model, int $max_per_row, UrlGenerator $urlGenerator): string
     {
-        $item_count = 0;
-        $string = Html::openTag('table');
-        $string .= Html::openTag('tr', [
-            'class' => 'card-header bg-info text-black',
-        ]);
         $invSentLogs = $model->getInvSentLogs()->toArray();
-        // Work with the Array Collection to build an output string
-        /**
-         * @var \App\Invoice\Entity\InvSentLog $invSentLog
-         */
-        foreach ($invSentLogs as $invSentLog) {
-            if ($item_count == $max_per_row) {
-                $string .= Html::closeTag('tr');
-                $string .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
-                $item_count = 0;
-            }
-            $invSentLogId = $invSentLog->getId();
-            $string .= Html::openTag('td')
-                . A::tag()
-                    ->addAttributes([
-                        'style' => 'text-decoration:none',
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => $invSentLog->getDate_sent()->format('m-d')])
-                    ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
-                    ->content((string) $invSentLogId)
-                    ->render()
-                . Html::closeTag('td');
-            $item_count++;
+        if (empty($invSentLogs)) {
+            return '';
         }
-        $string .= Html::closeTag('tr');
-        $string .= Html::closeTag('table');
-        return $string;
+
+        $itemCount = 0;
+
+        // Table with black border, collapsed borders, and black text inside
+        $html = Html::openTag('table', [
+            'style' => 'border:1px solid #000; border-collapse:collapse; color:#000;',
+            'class' => 'table table-sm mb-0',
+        ]);
+        $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+
+        /** @var \App\Invoice\Entity\InvSentLog $invSentLog */
+        foreach ($invSentLogs as $invSentLog) {
+            if ($itemCount === $max_per_row) {
+                $html .= Html::closeTag('tr');
+                $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+                $itemCount = 0;
+            }
+
+            $invSentLogId = $invSentLog->getId();
+
+            // Tooltip date (safe)
+            $dateTitle = '';
+            $dateObj = $invSentLog->getDate_sent();
+            try {
+                $dateTitle = $dateObj->format('m-d');
+            } catch (\Throwable) {
+                $dateTitle = '';
+            }
+
+            $anchorHtml = A::tag()
+                ->addAttributes([
+                    // ensure link text is black and no underline
+                    'style' => 'color:#000; text-decoration:none;',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => Html::encode($dateTitle),
+                ])
+                ->href($urlGenerator->generate('invsentlog/view', ['id' => $invSentLogId]))
+                ->content(Html::encode((string)$invSentLogId))
+                ->render();
+
+            // Each cell has a 1px black border and black text
+            $html .= Html::openTag('td', ['style' => 'border:1px solid #000; padding:0.25rem; color:#000;']) . $anchorHtml . Html::closeTag('td');
+
+            $itemCount++;
+        }
+
+        $html .= Html::closeTag('tr');
+        $html .= Html::closeTag('table');
+
+        return $html;
     }
 }

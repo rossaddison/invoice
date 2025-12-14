@@ -219,6 +219,9 @@ return [
   'client.contract.reference' => 'Contract Reference',
   'client.custom' => 'Client Custom',
   'client.custom.add' => 'Client Custom Add',
+  'client.deactivate.warning' =>
+    'Warning: Invoices and related source documentation, will not be viewable'
+    . ' if the client is not active.',
   'client.delete.history.exits.no' =>
     'Cannot delete. Client History exists.',
   'client.detail.changes' =>
@@ -627,7 +630,8 @@ return [
     . ' your email address by clicking this link',
   'email.log' => 'Invoices Emailed Log',
   'email.logs' => 'Invoices Emailed Logs',
-  'email.logs.with.filter' => 'Emailed',
+  'email.logs.with.filter' => 'Specific emails for this invoice',
+  'email.logs.table' => 'A table of email logs specific to this invoice',
   'email.not.configured' => 'Before you can send Email,'
     . ' you have to configure your'
     . ' Email settings in the System Settings area.',
@@ -735,6 +739,8 @@ return [
   'family.add' => 'Family Add',
   'family.already.exists' => 'Family already exists!',
   'family.history' => 'Family History exists. Cannot delete',
+  'family.comma.list' => 'Product Number List e.g. 1, 2, 5, 7',
+  'family.product.prefix' => 'Product Number List Prefix e.g. House',
   'family.name' => 'Family name',
   'family.search' => 'Family Search',
   'faq' => 'FAQ\'s',

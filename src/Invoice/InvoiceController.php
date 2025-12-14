@@ -75,6 +75,7 @@ final class InvoiceController extends BaseController
              * CAUTION: THIS WILL ALSO REMOVE ALL THE SETTINGS INCLUDING SECRET KEYS
              */
 
+            'active_only' => 0,
             'bootstrap5_offcanvas_enable' => 0,
             'bootstrap5_offcanvas_placement' => 'top',
             'bootstrap5_alert_message_font_size' => '10',

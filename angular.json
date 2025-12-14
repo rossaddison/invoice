@@ -14,15 +14,15 @@
         }
       },
       "root": "",
-      "sourceRoot": "angular",
+      "sourceRoot": "angular/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/yii3-invoice-angular",
-            "index": "angular/index.html",
-            "main": "angular/main.ts",
+            "outputPath": "public/assets/angular",
+            "index": "angular/src/index.html",
+            "main": "angular/src/main.ts",
             "polyfills": [
               "zone.js"
             ],

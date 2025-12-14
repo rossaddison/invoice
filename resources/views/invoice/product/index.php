@@ -77,6 +77,14 @@ $columns = [
         withSorting: true,
     ),
     new DataColumn(
+        property: 'product_name',
+        header: $translator->translate('product.name'),
+        encodeHeader: true,
+        content: static fn (Product $model): string => Html::encode($model->getProduct_name()),
+        visible: true,
+        withSorting: false,
+    ),
+    new DataColumn(
         property: 'product_sku',
         header: $translator->translate('product.sku'),
         encodeHeader: true,

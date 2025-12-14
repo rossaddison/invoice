@@ -2115,14 +2115,22 @@ final class InvController extends BaseController
                 'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
-                'defaultInvoiceGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_invoice_group')))
-                                            ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName
-                                                                                               : $this->sR->getSetting('not.set'))
-                                            : $this->sR->getSetting('not.set'),
-                'defaultInvoicePaymentMethod' => null !== ($pmR = $pmR->repoPaymentMethodquery($this->sR->getSetting('invoice_default_payment_method')))
-                                            ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 ? $paymentMethodName
-                                                                                                : $this->sR->getSetting('not.set'))
-                                            : $this->sR->getSetting('not.set'),
+                'defaultInvoiceGroup' =>
+                    null !==
+                        ($gR = $groupRepo->repoGroupquery(
+                                $this->sR->getSetting('default_invoice_group'))
+                        )   ? (strlen($groupName = $gR->getName() ?? '') > 0
+                            ? $groupName
+                            : $this->sR->getSetting('not.set'))
+                            : $this->sR->getSetting('not.set'),
+                'defaultInvoicePaymentMethod' =>
+                    null !==
+                        ($pmR = $pmR->repoPaymentMethodquery(
+                                $this->sR->getSetting('invoice_default_payment_method')))
+                            ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 
+                            ? $paymentMethodName
+                            : $this->sR->getSetting('not.set'))
+                            : $this->sR->getSetting('not.set'),
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
                 'invs' => $invs,

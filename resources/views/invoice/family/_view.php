@@ -58,27 +58,27 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'family_name')
-  ->label($translator->translate('family.name'))
-  ->addInputAttributes([
-      'placeholder' => $translator->translate('family.name'),
-      'value' => Html::encode($form->getFamily_name() ?? ''),
-      'class' => 'form-control',
-      'id' => 'family_name',
-  ])
-  ->readonly(true);
-?>
+                        ->label($translator->translate('family.name'))
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('family.name'),
+                            'value' => Html::encode($form->getFamily_name() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'family_name',
+                        ])
+                        ->readonly(true);
+                  ?>
                 <?= Html::closeTag('div'); ?>  
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?= Field::select($form, 'category_primary_id')
-    ->label($translator->translate('category.primary'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->value($form->getCategory_primary_id())
-    ->prompt($translator->translate('none'))
-    ->optionsData($categoryPrimaries)
-    ->disabled(true);
-?>
+                    <?= Field::select($form, 'category_primary_id')
+                        ->label($translator->translate('category.primary'))
+                        ->addInputAttributes([
+                            'class' => 'form-control  alert alert-warning',
+                        ])
+                        ->value($form->getCategory_primary_id())
+                        ->prompt($translator->translate('none'))
+                        ->optionsData($categoryPrimaries)
+                        ->disabled(true);
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_secondary_id')
@@ -91,6 +91,30 @@ use Yiisoft\Html\Tag\Form;
                         ->optionsData($categorySecondaries)
                         ->disabled(true)
                     ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'family_commalist')
+                        ->label($translator->translate('family.comma.list'))
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('family.comma.list'),
+                            'value' => Html::encode($form->getFamily_commalist() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'family_commalist',
+                        ])
+                        ->disabled(true);
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'family_productprefix')
+                        ->label($translator->translate('family.product.prefix'))
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('family.product.prefix'),
+                            'value' => Html::encode($form->getFamily_productprefix() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'family_productprefix',
+                        ])
+                        ->disabled(true);
+                  ?>
                 <?= Html::closeTag('div'); ?>
                 <?php
                 $i = 1;

@@ -11,6 +11,7 @@ import { SalesOrderHandler } from './salesorder.js';
 import { FamilyHandler } from './family.js';
 import { SettingsHandler } from './settings.js';
 import { initTooltips, initSimpleSelects, showFullpageLoader, hideFullpageLoader, initPasswordMeter } from './scripts.js';
+import './family-commalist-picker.js';
 
 /**
  * Initialize Invoice Application

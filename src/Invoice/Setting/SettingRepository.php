@@ -1485,7 +1485,10 @@ final class SettingRepository extends Select\Repository
     public function tooltip_array(): array
     {
         return [
-            // General Settings
+            'active_only' => [
+                'why' => 'Old fully paid up clients, that have cancelled i.e. flagged inactive, are excluded from the Invoice index',
+                'where' => './resources/views/invoice/settings/views/partial_settings_invoices.php and src/Invoice/InvoiceController.php', 
+            ],
             'bcc_mails_to_admin' => [
                 'why' => 'A blind carbon copy email, unseen to the recipient of the email, is sent to the administrator.',
                 'where' => ' Helpers/MailerHelper yii_mailer_send function.',

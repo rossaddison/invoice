@@ -35,3 +35,6 @@ c3.php
 
 # Code Style
 php-cs-fixer.cache
+
+# Angular
+.angular/

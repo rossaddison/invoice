@@ -360,7 +360,7 @@ class Client
     {
         return $this->client_active;
     }
-
+    
     public function setClient_active(bool $client_active): void
     {
         $this->client_active = $client_active;

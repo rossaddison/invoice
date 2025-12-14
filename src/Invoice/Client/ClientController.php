@@ -313,6 +313,9 @@ final class ClientController extends BaseController
                     if ($origin  == 'edit') {
                         return $this->webService->getRedirectResponse('client/index');
                     }
+                    if ($origin  == 'inv') {
+                        return $this->webService->getRedirectResponse('inv/index');
+                    }
                 }
                 return $this->viewRenderer->render('_form', $parameters);
             } // null!==client_id

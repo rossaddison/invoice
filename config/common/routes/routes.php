@@ -773,6 +773,11 @@ return [
                 ->name('family/view')
                 ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([FamilyController::class, 'view']),
+            // Generate products from selected families
+            Route::methods([Method::GET, Method::POST], '/family/generate_products')
+                ->name('family/generate_products')
+                ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
+                ->action([FamilyController::class, 'generate_products']),
             Route::get('/from')
                 ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([FromDropDownController::class, 'index'])

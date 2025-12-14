@@ -51,6 +51,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>14th December 2025</b></p>
+<p>Product Generator created. It uses the family_commalist field and prefixes the 
+   family_productprefix field to generate products with their product names. An angular number picker has been
+   created for the family form to fill the commalist field.</p>
 <p><b>8th December 2025</b></p>
 <p>Use the native-reset class to condense the drop-down filter boxes on the inv index</p>
 <p>Use the table-responsive class on the inv index to help fit more columns on page</p>

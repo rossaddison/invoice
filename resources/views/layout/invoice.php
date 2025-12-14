@@ -92,7 +92,7 @@ use Yiisoft\Html\Tag\Meta;
  * @var string $userLogin
  *
  * @var string $xdebug
- * 
+ *
  */
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
@@ -120,7 +120,7 @@ $this->beginPage();
     <head>
         <?= Meta::documentEncoding('utf-8') ?>
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
-        <?= 
+        <?=
             // Bootstrap5's Responsive Metatag
             Meta::data('viewport', 'width=device-width, initial-scale=1') 
         ?>

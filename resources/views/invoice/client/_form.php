@@ -74,7 +74,12 @@ Html::openTag('div', ['class' => 'card-header d-flex justify-content-between']),
 $translator->translate('personal.information'),
 Html::openTag('div', ['class' => 'p-2']),
 Field::checkbox($form, 'client_active')
-->inputLabelAttributes(['class' => 'form-check-label'])
+->inputLabelAttributes([
+    'class' => 'form-check-label',
+    'data-bs-toggle' => 'tooltip',
+    'onclick' => "return confirm(" . "'" . $translator->translate('client.deactivate.warning') . "');",
+    'title' => $translator->translate('client.deactivate.warning')
+])
 ->inputClass('form-check-input')
 ->ariaDescribedBy($translator->translate('client.active')),
 Html::closeTag('div'),

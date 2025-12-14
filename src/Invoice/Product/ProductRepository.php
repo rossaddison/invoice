@@ -180,6 +180,25 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
+     * Assist in checking for existing products when generating from family
+     * @psalm-return EntityReader
+     */
+    public function repoProductWithFamilyIdQuery(string $product_name, string $family_id): EntityReader
+    {
+        $query = $this
+            ->select()
+            ->load('family')
+            ->load('tax_rate')
+            ->load('unit');
+
+        if (!empty($product_name) && ($family_id > (string) 0)) {
+            $query = $query->andWhere(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+        }
+
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * Get products with filter using views/invoice/product/modal_product_lookups_inv or ...quote
      * Excludes zero-valued products for invoice/quote selection
      *

@@ -157,7 +157,9 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate('invrecurring/index'),
      ),
      BreadcrumbLink::to(
-         label: $translator->translate('set.to.read.only') . ' ' . $iR->getSpecificStatusArrayEmoji((int) $s->getSetting('read_only_toggle')),
+         label: $translator->translate('set.to.read.only') 
+             . ' ' 
+             . $iR->getSpecificStatusArrayEmoji((int) $s->getSetting('read_only_toggle')),
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
@@ -194,12 +196,14 @@ $markAsSent = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('sent'))])
         ->addClass('btn btn-success')
         ->content('☑️' . $translator->translate('sent') . $iR->getSpecificStatusArrayEmoji(2))
+        // src/typescript/invoice.ts
         ->id('btn-mark-as-sent')
         ->render();
 
 /**
- * Use with the checkbox column to mark invoices as draft. The customer will no longer be able to view the invoice on their side.
- * Related logic: see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-draft', function () {
+ * Use with the checkbox column to mark invoices as draft. The customer will
+ * no longer be able to view the invoice on their side.
+ * Related logic: see src/typescript/invoice.ts
  */
 $disabledMarkSentAsDraft = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('security.disable.read.only.info'))])
@@ -441,6 +445,7 @@ $columns = [
         multiple: true,
     ),
     new ActionColumn(
+        header: '',
         buttons: [
             new ActionButton(
                 // is_read_only false, disable_read_only 0, status draft1 => ✎, not disabled
@@ -592,7 +597,28 @@ $columns = [
                     $attributes = $attributesMap[$iROString][$dRO][$status] ?? [];
                     return $attributes;
                 },
-            ),
+            ),            
+        ],    
+    ),            
+    new ActionColumn(
+        header: '',
+        before: Html::openTag('div', ['class' => 'dropdown'])
+            . Html::openTag('button', [
+                'class' => 'btn btn-info dropdown-toggle',
+                'type' => 'button',
+                'id' => 'dropdownMenuButton',
+                'data-toggle' => 'dropdown',
+                'aria-haspopup' => 'true',
+                'aria-expanded' => 'false',
+            ])
+            . Html::closeTag('button')
+            . Html::openTag('div', [
+                'class' => 'dropdown-menu',
+                'aria-labelledby' => 'dropdownMenuButton'
+            ])
+            . Html::openTag('div', 
+                ['class' => 'btn-group', 'role' => 'group']),
+        buttons: [
             new ActionButton(
                 url: static function (Inv $inv) use ($translator, $urlGenerator): string {
                     return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf', ['id' => $inv->getId()]);
@@ -601,7 +627,7 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf'),
-                    'class' => 'reset-native bi bi-file-pdf',
+                    'class' => 'bi bi-file-pdf',
                 ],
             ),
             new ActionButton(
@@ -612,7 +638,7 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf') . '➡️' . $translator->translate('custom.field'),
-                    'class' => 'reset-native bi bi-file-pdf-fill',
+                    'class' => 'bi bi-file-pdf-fill',
                 ],
             ),
             new ActionButton(
@@ -630,6 +656,9 @@ $columns = [
                 ],
             ),
         ],
+        after: Html::closeTag('div')
+               . Html::closeTag('div')
+               . Html::closeTag('div'),
     ),
     new DataColumn(
         'id',
@@ -660,15 +689,42 @@ $columns = [
         header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
         content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
         filter: DropdownFilter::widget()
-                ->addAttributes([
-                    'name' => 'number',
-                    'class' => 'native-reset',
-                ])
-                ->optionsData($optionsDataYearMonthDropDownFilter),
+            ->addAttributes([
+                'name' => 'number',
+                'class' => 'native-reset',
+            ])
+            ->optionsData($optionsDataYearMonthDropDownFilter),
         withSorting: false,
+        visible: $visible,
     ),
+    // Make a client active / inactive via client/edit            
     new DataColumn(
-        header: '💳',
+        header: Label::tag()->content('🔛️')->addAttributes(
+            [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('active')
+            ])->render(),
+        encodeHeader: false,
+        property: 'id',    
+        content: static function (Inv $model) use ($urlGenerator, $translator): A {
+            return A::tag()
+                ->addAttributes([
+                    'style' => 'text-decoration:none',                            
+                ])    
+                ->href($urlGenerator->generate('client/edit',
+                    ['id' => $model->getClient()?->getClient_id(), 'origin' => 'inv']))
+                ->content($model->getClient()?->getClient_active() ? '✅' : '❌'
+            );
+        },
+    ),
+    // Credit note for the invoice
+    new DataColumn(
+        header: Label::tag()->content('💳')->addAttributes(
+            [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('credit.invoice.for.invoice')
+            ])->render(),
+        encodeHeader: false,    
         property: 'creditinvoice_parent_id',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
@@ -683,10 +739,19 @@ $columns = [
         },
         encodeContent: false,
         withSorting: false,
+        visible: $visible,
     ),
+    // If more than one email has been sent regarding this invoice,
+    // present a toggle button to display the table to the right of
+    // the toggle button
     new DataColumn(
         'invsentlogs',
-        header: $translator->translate('email.logs.with.filter'),
+        header: Label::tag()->content('↔️')->addAttributes(
+            [
+                'data-bs-toggle' => 'tooltip',
+                'title' => 'toggle',
+            ])->render(),
+        encodeHeader: false,
         content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
             $modelId = $model->getId();
             if (null !== $modelId) {
@@ -694,16 +759,22 @@ $columns = [
                 if ($count > 0) {
                     return $toggleColumnInvSentLog;
                 } else {
-                    return '❌';
+                    return '0 📧';
                 }
             }
             return '';
         },
         encodeContent: false,
     ),
+    // Link to invsentlog index where the index has been filtered according to inv number
     new DataColumn(
         'invsentlogs',
-        header: $translator->translate('email.logs.with.filter'),
+        header: Label::tag()->content('➡️📧')->addAttributes(
+            [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('email.logs.with.filter')
+            ])->render(),
+        encodeHeader: false,
         content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
             $modelId = $model->getId();
             if (null !== $modelId) {
@@ -718,11 +789,19 @@ $columns = [
                     return $linkToInvSentLogWithFilterInv;
                 }
             }
-            return '';
+            return '0 📧';
         },
         encodeContent: false,
+        visible: $visible,        
     ),
+    // A table of emails specific to the invoice
     new DataColumn(
+        header: Label::tag()->content('|||')->addAttributes(
+            [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('email.logs.table')
+            ])->render(),
+        encodeHeader: false,
         content: static function (Inv $model) use ($islR, $urlGenerator, $gridComponents): string {
             $modelId = $model->getId();
             if (null !== $modelId) {
@@ -743,7 +822,7 @@ $columns = [
                     $urlGenerator,
                 );
             }
-            return '';
+            return '0 📧';
         },
         visible: $visibleToggleInvSentLogColumn,
         encodeContent: false,
@@ -797,8 +876,8 @@ $columns = [
         header: $translator->translate('street.address.2'),
         content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_address_2()),
         encodeContent: false,
-    ),            
-    new DataColumn(
+    ),
+        new DataColumn(
         property: 'filterClientGroup',
         header: $translator->translate('client.group'),
         content: static fn (Inv $model): string => $model->getClient()?->getClient_group() ?? '',
@@ -815,6 +894,7 @@ $columns = [
         header: $translator->translate('datetime.immutable.time.created'),
         // Show only the time of the DateTimeImmutable
         content: static fn (Inv $model): string => ($model->getTime_created())->format('H:i:s'),
+        visible: $visible,
     ),
     new DataColumn(
         'date_modified',
@@ -831,6 +911,7 @@ $columns = [
             }
         },
         encodeContent: false,
+        visible: $visible,        
     ),
     new DataColumn(
         'date_due',
@@ -843,6 +924,7 @@ $columns = [
         },
         encodeContent: false,
         withSorting: true,
+        visible: $visible,
     ),
     new DataColumn(
         property: 'filterInvAmountTotal',
@@ -986,7 +1068,7 @@ $columns = [
                             ],
                         ),
                     )->href($urlGenerator->generate('inv/delete', ['id' => $model->getId()]))
-                     : Label::tag();
+                    : Label::tag()->content('🚫');
         },
         encodeContent: false,
         visible: $visible,
@@ -1041,10 +1123,18 @@ $grid_summary = $s->grid_summary(
     $label,
 );
 
+// Add left-aligned wrapper when additional columns are visible to accommodate more columns
+$tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
+
+if ($visible) {
+    echo '<div class="text-start">';
+
+}
+
 echo GridView::widget()
 // unpack the contents within the array using the three dot splat operator
 ->bodyRowAttributes(['class' => 'align-left'])
-->tableAttributes(['class' => 'table-responsive table-bordered table-striped h-75', 'id' => 'table-invoice'])
+->tableAttributes(['class' => $tableOrTableResponsive . ' table-bordered table-striped h-75', 'id' => 'table-invoice'])
 ->columns(...$columns)
 ->dataReader($sortedAndPagedPaginator)
 ->urlCreator($urlCreator)
@@ -1066,6 +1156,11 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
+
+// Close the left-aligned wrapper div when additional columns are visible
+if ($visible) {
+    echo '</div>';
+}
 
 echo $modal_add_inv;
 echo $modal_create_recurring_multiple;

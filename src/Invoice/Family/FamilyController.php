@@ -7,12 +7,16 @@ namespace App\Invoice\Family;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\FamilyCustom;
+use App\Invoice\Entity\Product;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as csR;
 use App\Invoice\CustomField\CustomFieldRepository as cfR;
 use App\Invoice\CustomValue\CustomValueRepository as cvR;
 use App\Invoice\Family\FamilyRepository as fR;
+use App\Invoice\Product\ProductRepository as pR;
+use App\Invoice\TaxRate\TaxRateRepository as trR;
+use App\Invoice\Unit\UnitRepository as uR;
 use App\Invoice\FamilyCustom\FamilyCustomForm;
 use App\Invoice\FamilyCustom\FamilyCustomService;
 use App\Invoice\FamilyCustom\FamilyCustomRepository as fcR;
@@ -30,6 +34,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Injector\Inject;
 
 final class FamilyController extends BaseController
 {
@@ -54,10 +59,14 @@ final class FamilyController extends BaseController
     }
 
     /**
+     * @param Request $request
      * @param CurrentRoute $currentRoute
-     * @param FamilyRepository $familyRepository
+     * @param fR $familyRepository
      * @param cpR $cpR
      * @param csR $csR
+     * @param trR $taxRateRepository
+     * @param uR $unitRepository
+     * @return \Yiisoft\DataResponse\DataResponse
      */
     public function index(
         Request $request,
@@ -65,6 +74,8 @@ final class FamilyController extends BaseController
         fR $familyRepository,
         cpR $cpR,
         csR $csR,
+        trR $taxRateRepository,
+        uR $unitRepository,
     ): \Yiisoft\DataResponse\DataResponse {
         $families = $this->familys($familyRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
@@ -84,6 +95,7 @@ final class FamilyController extends BaseController
              */
             'cpR' => $cpR,
             'csR' => $csR,
+            'modal_generate_products' => $this->index_modal_generate_products($taxRateRepository, $unitRepository),
             'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
         ];
         return $this->viewRenderer->render('index', $parameters);
@@ -121,11 +133,11 @@ final class FamilyController extends BaseController
      * @return Response
      */
     public function add(
-        Request $request, 
-        FormHydrator $formHydrator, 
-        cfR $cfR, 
-        cvR $cvR, 
-        cpR $cpR, 
+        Request $request,
+        FormHydrator $formHydrator,
+        cfR $cfR,
+        cvR $cvR,
+        cpR $cpR,
         csR $csR
     ): Response
     {
@@ -264,7 +276,7 @@ final class FamilyController extends BaseController
         #[RouteArgument('id')] string $id,
         Request $request,
         fR $familyRepository,
-        fcR $fcR,    
+        fcR $fcR,
         cfR $cfR,
         cvR $cvR,    
         cpR $cpR,
@@ -420,6 +432,127 @@ final class FamilyController extends BaseController
     private function family(#[RouteArgument('id')] string $id, fR $familyRepository): ?Family
     {
         return $familyRepository->repoFamilyquery($id);
+    }
+
+    /**
+     * Generate products from selected families using their comma lists
+     * @param Request $request
+     * @param fR $familyRepository
+     * @param pR $productRepository
+     * @param trR $taxRateRepository
+     * @param uR $unitRepository
+     * @return Response
+     */
+    public function generate_products(
+        Request $request,
+        fR $familyRepository,
+        pR $productRepository,
+        trR $taxRateRepository,
+        uR $unitRepository
+    ): Response {
+        // Debug: Log that method was called
+        error_log("FamilyController::generate_products called at " . date('Y-m-d H:i:s'));
+        $applicationJson = 'application/json';
+        $body = $request->getParsedBody();
+        if ($request->getMethod() === Method::POST && isset($body['family_ids'])) {
+            $familyIds = (array) $body['family_ids'];
+            $taxRateId = (string) ($body['tax_rate_id'] ?? null);
+            $unitId = (string) ($body['unit_id'] ?? null);
+            
+            if (empty($familyIds) || ($taxRateId <= 0)  || ($unitId <= 0)) {
+                return $this->factory->createResponse(Json::encode([
+                    'success' => false,
+                    'message' => 'Missing required parameters: family_ids, tax_rate_id, or unit_id'
+                ]))->withHeader('Content-Type', $applicationJson);
+            }
+            
+            $generatedCount = 0;
+            $errors = [];
+            
+            try {
+                /**
+                 * @var string $familyId
+                 */
+                foreach ($familyIds as $familyId) {
+                    $family = $familyRepository->repoFamilyquery($familyId);
+                    if (!$family) {
+                        $errors[] = "Family with ID $familyId not found";
+                        continue;
+                    }
+                    
+                    $commalist = $family->getFamily_commalist();
+                    $productPrefix = $family->getFamily_productprefix();
+                    
+                    if (strlen($cl = $commalist ?? '') === 0 || strlen($pp = $productPrefix ?? '') === 0) {
+                        $errors[] = "Family '{$family->getFamily_name()}' missing comma list or product prefix";
+                        continue;
+                    }
+                    
+                    // Split comma list and generate products
+                    $items = array_map('trim', explode(',', $cl));
+                    $items = array_filter($items); // Remove empty items
+                    
+                    foreach ($items as $item) {
+                        $productName = $pp . ' ' . $item;
+                        
+                        // Check if product already exists
+                        $existingProducts = $productRepository->repoProductWithFamilyIdQuery($productName, $familyId);
+                        if ($existingProducts->count() > 0) {
+                            $errors[] = "Product '$productName' already exists";
+                            continue;
+                        }
+                        
+                        // Create new product
+                        $product = new Product();
+                        $product->setProduct_name($productName);
+                        $product->setProduct_description($productName);
+                        $product->setProduct_price(0.00);
+                        $product->setFamily_id((int) $familyId);
+                        $product->setTax_rate_id((int) $taxRateId);
+                        $product->setUnit_id((int) $unitId);
+                        $product->setProduct_sku($item); // Use the item as SKU
+                        
+                        $productRepository->save($product);
+                        $generatedCount++;
+                    }
+                }
+                
+                $responseData = [
+                    'success' => true,
+                    'count' => $generatedCount,
+                    'message' => $generatedCount == 0 ? "No products generated becau" : "Generated $generatedCount products"
+                ];
+                
+                if (!empty($errors)) {
+                    $responseData['warnings'] = $errors;
+                }
+                
+                return $this->factory->createResponse(Json::encode($responseData))
+                    ->withHeader('Content-Type', 'application/json');
+                    
+            } catch (\Exception $e) {
+                return $this->factory->createResponse(Json::encode([
+                    'success' => false,
+                    'message' => 'Error generating products: ' . $e->getMessage()
+                ]))->withHeader('Content-Type', 'application/json');
+            }
+        }
+        
+        return $this->factory->createResponse(Json::encode([
+            'success' => false,
+            'message' => 'Invalid request method or missing data'
+        ]))->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * Generate the product generation modal
+     */
+    private function index_modal_generate_products(trR $taxRateRepository, uR $unitRepository): string
+    {
+        return $this->viewRenderer->renderPartialAsString('//invoice/family/modal_generate_products', [
+            'taxRates' => $taxRateRepository->findAllPreloaded(),
+            'units' => $unitRepository->findAllPreloaded(),
+        ]);
     }
 
     /**
