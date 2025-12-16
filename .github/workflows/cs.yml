@@ -2,7 +2,6 @@ name: Code Style
 
 on:
   workflow_dispatch:
-
 jobs:
   cs-fix:
     timeout-minutes: 30
