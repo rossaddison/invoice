@@ -739,7 +739,7 @@ return [
   'family.add' => 'Family Add',
   'family.already.exists' => 'Family already exists!',
   'family.history' => 'Family History exists. Cannot delete',
-  'family.comma.list' => 'Product Number List e.g. 1, 2, 5, 7',
+  'family.comma.list' => 'Product Number List e.g. 1, 2, 5, 7 for Product Generator',
   'family.product.prefix' => 'Product Number List Prefix e.g. House',
   'family.name' => 'Family name',
   'family.search' => 'Family Search',
