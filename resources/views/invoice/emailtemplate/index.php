@@ -7,6 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -14,7 +15,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $alert
  * @var string $csrf
  */
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('email.templates'); ?></h1>
@@ -32,7 +33,7 @@ echo $alert;
         <?php
             $pagination = OffsetPagination::widget()
             ->paginator($paginator)
-            ->urlGenerator(fn(string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
+            ->urlGenerator(fn (string $page) => $urlGenerator->generate('emailtemplate/index', ['page' => $page]));
 ?>
         <?php
     if ($pagination->isPaginationRequired()) {

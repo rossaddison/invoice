@@ -124,12 +124,12 @@ foreach ($orm_schema->getColumns() as $column) {
             break;
             //Boolean type, some databases store it as an integer (1/0).
         case 'boolean':
-            $ab = '    #[Column(type:' .
-                  "'bool'" .
-                  ',default:false' .
-                  ($column->isNullable() ? ',nullable: false' : ',nullable: false') .
-                  ')]' .
-                  "\n";
+            $ab = '    #[Column(type:'
+                  . "'bool'"
+                  . ',default:false'
+                  . ($column->isNullable() ? ',nullable: false' : ',nullable: false')
+                  . ')]'
+                  . "\n";
             $ate_or_lic = 'private ';
             break;
             //Database specific integer (usually 32 bits).

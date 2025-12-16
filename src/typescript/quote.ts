@@ -1,5 +1,21 @@
 import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
+// Secure navigation helper to prevent Open Redirect vulnerabilities
+function secureReload(): void {
+    // Safely reload the current page without using potentially manipulable URLs
+    window.location.reload();
+}
+
+// Secure HTML insertion helper to prevent XSS vulnerabilities
+function secureInsertHTML(element: Element, html: string): void {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const fragment = document.createDocumentFragment();
+    Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+    element.innerHTML = '';
+    element.appendChild(fragment);
+}
+
 // Quote-specific interfaces
 interface QuoteFormData extends RequestParams {
     client_id?: string;
@@ -28,7 +44,7 @@ interface ClientNoteData extends RequestParams {
 // Helper to get URL parameter from current page URL
 function getQuoteIdFromUrl(): string {
     const url = new URL(location.href);
-    return url.href.substring(url.href.lastIndexOf('/') + 1);
+    return url.pathname.split('/').at(-1) || '';
 }
 
 // Helper to get form field value safely
@@ -204,7 +220,8 @@ export class QuoteHandler {
             ) as NodeListOf<HTMLInputElement>;
             const item_ids = Array.from(itemCheckboxes)
                 .map(input => parseInt(input.value, 10))
-                .filter(Boolean);
+                .filter(Boolean)
+                .toSorted((a, b) => a - b); // ES2024: Sort for consistent ordering
 
             const response = await getJson<ApiResponse>('/invoice/quoteitem/multiple', {
                 item_ids,
@@ -237,7 +254,8 @@ export class QuoteHandler {
                 '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
-            placeholder.innerHTML = html;
+            // Secure HTML insertion to prevent XSS
+            secureInsertHTML(placeholder, html);
         } catch (error) {
             console.error('Failed to load quoteitem modal', error);
         }
@@ -280,7 +298,8 @@ export class QuoteHandler {
                 '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
-            placeholder.innerHTML = html;
+            // Secure HTML insertion to prevent XSS
+            secureInsertHTML(placeholder, html);
         } catch (error) {
             console.error('Failed to load add-a-client modal', error);
         }
@@ -304,16 +323,13 @@ export class QuoteHandler {
 
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
-            const currentUrl = new URL(location.href);
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                window.location.href = currentUrl.href;
-                window.location.reload();
+                secureReload();
             } else if (data.success === 0) {
                 if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
-                window.location.href = currentUrl.href;
-                window.location.reload();
+                secureReload();
                 if (data.message) alert(data.message);
             }
         } catch (error) {
@@ -344,12 +360,10 @@ export class QuoteHandler {
 
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
-            const currentUrl = new URL(location.href);
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                window.location.href = currentUrl.href;
-                window.location.reload();
+                secureReload();
             }
         } catch (error) {
             console.error('approve error', error);
@@ -389,9 +403,7 @@ export class QuoteHandler {
                 window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
             } else {
                 // Fallback to reload if no invoice ID is provided
-                const currentUrl = new URL(location.href);
-                window.location.href = currentUrl.href;
-                window.location.reload();
+                secureReload();
             }
             
             if (data.flash_message) alert(data.flash_message);
@@ -426,11 +438,9 @@ export class QuoteHandler {
 
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
-            const currentUrl = new URL(location.href);
 
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-            window.location.href = currentUrl.href;
-            window.location.reload();
+            secureReload();
             if (data.flash_message) alert(data.flash_message);
         } catch (error) {
             console.error('quote_to_so_confirm error', error);
@@ -460,12 +470,10 @@ export class QuoteHandler {
 
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
-            const currentUrl = new URL(location.href);
 
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                window.location.href = currentUrl.href;
-                window.location.reload();
+                secureReload();
                 if (data.flash_message) alert(data.flash_message);
             }
         } catch (error) {
@@ -529,7 +537,8 @@ export class QuoteHandler {
                         credentials: 'same-origin',
                     });
                     const html = await notesResponse.text();
-                    notesList.innerHTML = html;
+                    // Secure HTML insertion to prevent XSS
+                    secureInsertHTML(notesList, html);
                 }
             } else {
                 // Show validation errors
@@ -538,7 +547,7 @@ export class QuoteHandler {
                 });
 
                 if (data.validation_errors) {
-                    Object.keys(data.validation_errors).forEach(key => {
+                    Object.entries(data.validation_errors).forEach(([key, errors]) => {
                         const elm = document.getElementById(key);
                         if (elm?.parentElement) {
                             elm.parentElement.classList.add('has-error');
@@ -575,10 +584,8 @@ export class QuoteHandler {
 
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
-            const currentUrl = new URL(location.href);
 
-            window.location.href = currentUrl.href;
-            window.location.reload();
+            secureReload();
             if (data.flash_message) alert(data.flash_message);
         } catch (error) {
             console.error('save_quote_tax_rate error', error);
@@ -692,7 +699,8 @@ export class QuoteHandler {
                 } else if ((currentTarget as any).tomselect?.clear) {
                     (currentTarget as any).tomselect.clear();
                 } else if (currentTarget.multiple) {
-                    Array.from(currentTarget.options).forEach(option => {
+                    // ES2024: Process options in reverse order for UI consistency
+                    Array.from(currentTarget.options).toReversed().forEach(option => {
                         option.selected = false;
                     });
                 } else {

@@ -102,7 +102,7 @@ final class ClientController extends BaseController
      * @param cR $cR
      * @return Client|null
      */
-    private function client(CurrentRoute $currentRoute, cR $cR): Client|null
+    private function client(CurrentRoute $currentRoute, cR $cR): ?Client
     {
         $client_id = $currentRoute->getArgument('id');
         if (null !== $client_id) {
@@ -313,6 +313,9 @@ final class ClientController extends BaseController
                     if ($origin  == 'edit') {
                         return $this->webService->getRedirectResponse('client/index');
                     }
+                    if ($origin  == 'inv') {
+                        return $this->webService->getRedirectResponse('inv/index');
+                    }
                 }
                 return $this->viewRenderer->render('_form', $parameters);
             } // null!==client_id
@@ -474,8 +477,8 @@ final class ClientController extends BaseController
         if (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname'])) {
             $clients = $cR->filter_client_surname((string) $query_params['filter_client_surname']);
         }
-        if ((isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name'])) &&
-           (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname']))) {
+        if ((isset($query_params['filter_client_name']) && !empty($query_params['filter_client_name']))
+           && (isset($query_params['filter_client_surname']) && !empty($query_params['filter_client_surname']))) {
             $clients = $cR->filter_client_name_surname((string) $query_params['filter_client_name'], (string) $query_params['filter_client_surname']);
         }
         $paginator = (new DataOffsetPaginator($clients))

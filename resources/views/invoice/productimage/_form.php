@@ -56,8 +56,8 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::date($form, 'uploaded_date')
                     ->label($translator->translate('date'))
                     ->required(true)
-                    ->value($form->getUploaded_date() instanceof DateTimeImmutable ?
-    $form->getUploaded_date()->format('Y-m-d') : '')
+                    ->value($form->getUploaded_date() instanceof DateTimeImmutable
+    ? $form->getUploaded_date()->format('Y-m-d') : '')
                     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>

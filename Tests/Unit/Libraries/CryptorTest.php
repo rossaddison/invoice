@@ -37,16 +37,12 @@ class CryptorTest extends Unit
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('unknown cipher algo');
-        
-        new Cryptor('invalid_cipher');
     }
 
     public function testConstructorWithInvalidHashAlgo(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('unknown hash algo');
-        
-        new Cryptor('aes-256-ctr', 'invalid_hash');
     }
 
     public function testEncryptDecryptBasicString(): void

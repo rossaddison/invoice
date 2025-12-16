@@ -184,7 +184,7 @@ final class ItemLookupController extends BaseController
      * @param ItemLookupRepository $itemlookupRepository
      * @return ItemLookup|null
      */
-    private function itemlookup(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository): ItemLookup|null
+    private function itemlookup(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository): ?ItemLookup
     {
         $itemlookup = new ItemLookup();
         $id = $currentRoute->getArgument('id');

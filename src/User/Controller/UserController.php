@@ -33,7 +33,7 @@ final class UserController
         #[RouteArgument('page')]
         int $page = 1,
         #[RouteArgument('pagesize')]
-        int $pageSize = null,
+        ?int $pageSize = null,
     ): Response {
         $order = null !== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
         $sort = Sort::only(['id', 'login'])->withOrder($order);

@@ -98,7 +98,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderAmountqueryTest(string $so_id): SalesOrderAmount|null
+    public function repoSalesOrderAmountqueryTest(string $so_id): ?SalesOrderAmount
     {
         $query = $this->select()
                       ->load('so')
@@ -113,7 +113,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSoquery(string $so_id): SalesOrderAmount|null
+    public function repoSoquery(string $so_id): ?SalesOrderAmount
     {
         $query = $this->select()
                       ->load('so')
@@ -128,7 +128,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderquery(string $so_id): SalesOrderAmount|null
+    public function repoSalesOrderquery(string $so_id): ?SalesOrderAmount
     {
         $query = $this->select()
                       ->load('so')

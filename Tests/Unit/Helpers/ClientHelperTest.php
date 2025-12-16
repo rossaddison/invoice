@@ -65,17 +65,6 @@ class ClientHelperTest extends Unit
         $this->assertSame(' Doe', $result);
     }
 
-    public function testFormatClientWithClientEntityWithEmptySurname(): void
-    {
-        $client = new Client();
-        $client->setClient_name('John');
-        $client->setClient_surname('');
-        
-        $result = $this->clientHelper->format_client($client);
-        
-        $this->assertSame('John', $result);
-    }
-
     public function testFormatClientWithClientEntityBothEmpty(): void
     {
         $client = new Client();

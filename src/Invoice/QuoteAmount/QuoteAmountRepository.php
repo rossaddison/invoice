@@ -98,7 +98,7 @@ final class QuoteAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteAmountqueryTest(string $quote_id): QuoteAmount|null
+    public function repoQuoteAmountqueryTest(string $quote_id): ?QuoteAmount
     {
         $query = $this->select()
                       ->load('quote')
@@ -113,7 +113,7 @@ final class QuoteAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteAmountquery(string $quote_id): QuoteAmount|null
+    public function repoQuoteAmountquery(string $quote_id): ?QuoteAmount
     {
         $query = $this->select()
                       ->load('quote')
@@ -128,7 +128,7 @@ final class QuoteAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuotequery(string $quote_id): QuoteAmount|null
+    public function repoQuotequery(string $quote_id): ?QuoteAmount
     {
         $query = $this->select()
                       ->load('quote')

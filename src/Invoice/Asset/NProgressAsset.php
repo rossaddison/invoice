@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Asset;
 
 use Yiisoft\Assets\AssetBundle;
+use Yiisoft\Files\PathMatcher\PathMatcher;
 
 class NProgressAsset extends AssetBundle
 {

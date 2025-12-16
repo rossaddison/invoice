@@ -73,7 +73,7 @@ class InvItem
         $this->date = new DateTimeImmutable();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -83,7 +83,7 @@ class InvItem
         $this->id = $id;
     }
 
-    public function getTaxRate(): TaxRate|null
+    public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
     }
@@ -116,7 +116,7 @@ class InvItem
         $this->task = $task;
     }
 
-    public function getInv(): Inv|null
+    public function getInv(): ?Inv
     {
         return $this->inv;
     }
@@ -167,7 +167,7 @@ class InvItem
         $this->date_added = $date_added;
     }
 
-    public function getProduct_id(): string|null
+    public function getProduct_id(): ?string
     {
         return null !== $this->product_id ? (string) $this->product_id : null;
     }
@@ -177,7 +177,7 @@ class InvItem
         $this->product_id = $product_id;
     }
 
-    public function getTask_id(): string|null
+    public function getTask_id(): ?string
     {
         return null !== $this->task_id ? (string) $this->task_id : null;
     }
@@ -207,7 +207,7 @@ class InvItem
         $this->description = $description;
     }
 
-    public function getQuantity(): float|null
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
@@ -240,7 +240,7 @@ class InvItem
     // For Charges and Allowances see the extension table InvItemAllowanceCharges
     // which extends this entity by means of inv_item_id
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }

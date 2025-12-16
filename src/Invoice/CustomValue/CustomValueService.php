@@ -8,7 +8,9 @@ use App\Invoice\Entity\CustomValue;
 
 final readonly class CustomValueService
 {
-    public function __construct(private CustomValueRepository $repository) {}
+    public function __construct(private CustomValueRepository $repository)
+    {
+    }
 
     /**
      * @param CustomValue $model

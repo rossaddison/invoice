@@ -8,7 +8,9 @@ use App\Invoice\Entity\Task;
 
 final readonly class TaskService
 {
-    public function __construct(private TaskRepository $repository) {}
+    public function __construct(private TaskRepository $repository)
+    {
+    }
 
     /**
      * @param Task $model

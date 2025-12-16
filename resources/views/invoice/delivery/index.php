@@ -25,7 +25,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $label
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
@@ -39,22 +39,22 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Delivery $model) => Html::encode($model->getId()),
+        content: static fn (Delivery $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'start_date',
         header: $translator->translate('start.date'),
-        content: static fn(Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? ''),
+        content: static fn (Delivery $model) => Html::encode(($model->getStart_date())?->format('Y-m-d') ?? ''),
     ),
     new DataColumn(
         'actual_delivery_date',
         header: $translator->translate('delivery.actual.delivery.date'),
-        content: static fn(Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
+        content: static fn (Delivery $model) => Html::encode(($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
     ),
     new DataColumn(
         'end_date',
         header: $translator->translate('end.date'),
-        content: static fn(Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? ''),
+        content: static fn (Delivery $model) => Html::encode(($model->getEnd_date())?->format('Y-m-d') ?? ''),
     ),
     new DataColumn(
         content: static function (Delivery $model) use ($urlGenerator, $translator): string {
@@ -64,7 +64,7 @@ $columns = [
     new DataColumn(
         'delivery_location_id',
         header: $translator->translate('delivery.location.global.location.number'),
-        content: static fn(Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
+        content: static fn (Delivery $model): string => Html::encode($model->getDelivery_location()?->getGlobal_location_number()),
     ),
 ];
 
@@ -76,10 +76,10 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('delivery/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

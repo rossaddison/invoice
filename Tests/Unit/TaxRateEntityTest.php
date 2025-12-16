@@ -10,6 +10,8 @@ use Codeception\Test\Unit;
 class TaxRateEntityTest extends Unit
 {
     private TaxRate $taxRate;
+    
+    public string $vatStandard = 'VAT Standard';
 
     protected function setUp(): void
     {
@@ -36,7 +38,7 @@ class TaxRateEntityTest extends Unit
             tax_rate_code: 'VT',
             peppol_tax_rate_code: 'S',
             storecove_tax_type: 'standard',
-            tax_rate_name: 'VAT Standard',
+            tax_rate_name: $this->vatStandard,
             tax_rate_percent: 20.00,
             tax_rate_default: true
         );
@@ -44,7 +46,7 @@ class TaxRateEntityTest extends Unit
         $this->assertEquals('VT', $taxRate->getTaxRateCode());
         $this->assertEquals('S', $taxRate->getPeppolTaxRateCode());
         $this->assertEquals('standard', $taxRate->getStorecoveTaxType());
-        $this->assertEquals('VAT Standard', $taxRate->getTaxRateName());
+        $this->assertEquals($this->vatStandard, $taxRate->getTaxRateName());
         $this->assertEquals(20.00, $taxRate->getTaxRatePercent());
         $this->assertTrue($taxRate->getTaxRateDefault());
         $this->assertNull($taxRate->getTaxRateId());
@@ -98,8 +100,8 @@ class TaxRateEntityTest extends Unit
     {
         $this->assertEquals('', $this->taxRate->getTaxRateName());
         
-        $this->taxRate->setTaxRateName('VAT Standard');
-        $this->assertEquals('VAT Standard', $this->taxRate->getTaxRateName());
+        $this->taxRate->setTaxRateName($this->vatStandard);
+        $this->assertEquals($this->vatStandard, $this->taxRate->getTaxRateName());
         
         $this->taxRate->setTaxRateName('Zero Rate');
         $this->assertEquals('Zero Rate', $this->taxRate->getTaxRateName());

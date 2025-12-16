@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
  */
 
 // If there are no invoices to make payment against give a warning
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 
 <?= Form::tag()
@@ -101,12 +101,12 @@ if ($openInvsCount > 0) {
     foreach ($openInvs as $inv) {
         $invAmount = $iaR->repoInvquery((int) $inv->getId());
         if (null !== $invAmount) {
-            $optionsDataInvId[(int) $inv->getId()] =
-               ($inv->getNumber() ?? $translator->translate('number.no')) .
-               ' - ' .
-               ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id()))) .
-               ' - ' .
-               ($numberHelper->format_currency($invAmount->getBalance()));
+            $optionsDataInvId[(int) $inv->getId()]
+               = ($inv->getNumber() ?? $translator->translate('number.no'))
+               . ' - '
+               . ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id())))
+               . ' - '
+               . ($numberHelper->format_currency($invAmount->getBalance()));
         }
     }
 } else {
@@ -156,7 +156,7 @@ if ($openInvsCount > 0) {
  * @var App\Invoice\Entity\CustomField $customField
  */
 foreach ($customFields as $customField): ?>  
-                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $paymentCustomValues, $customValues); ?>
+                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>

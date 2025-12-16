@@ -28,27 +28,47 @@ return [
 'aging.1.15' => '1 - 15 dni',
 'aging.16.30' => '16 - 30 dni',
 'aging.above.30' => 'Powyżej 30 dni',
-'alert.no.client.assigned' => 'Do tego projektu nie przypisano żadnego klienta.',
-'alert.no.tasks.found' => 'Nie znaleziono zadań dla tego projektu.',
-'alert.task.delete' => 'Uwaga! Chcesz usunąć zadanie, które zostało użyte do wygenerowania faktury.',
+'alert.no.client.assigned' => 'Do tego projektu nie przypisano '
+	. 'żadnego klienta.',
+'alert.no.tasks.found' => 'Nie znaleziono zadań dla tego '
+	. 'projektu.',
+'alert.task.delete' => 'Uwaga! Chcesz usunąć zadanie, które '
+	. 'zostało użyte do wygenerowania faktury.',
 'all' => 'Wszystko',
 'allowance.or.charge' => 'Dodatek lub opłata',
-'allowance.or.charge.add' => 'Poziom dokumentu (tj. NIE poziom pozycji faktury) Dodaj dodatek lub opłatę',
+'allowance.or.charge.add' => 'Poziom dokumentu (tj.'
+	. 'NIE poziom pozycji faktury) Dodaj '
+	. 'dodatek lub opłatę',
 'allowance.or.charge.allowance' => 'Dodatek',
-'allowance.or.charge.allowance.vat' => 'Podatek VAT od dodatku',
-'allowance.or.charge.amount' => 'Kwota opłaty za dodatek (współczynnik mnożnika liczbowy jako procent pomnożony przez kwotę bazową)',
-'allowance.or.charge.base.amount' => 'Kwota bazowa',
+'allowance.or.charge.allowance.vat' =>
+	'Podatek VAT od dodatku',
+'allowance.or.charge.amount' => 'Kwota opłaty za dodatek (współczynnik '
+	. 'mnożnika liczbowy jako procent pomnożony '
+	. 'przez kwotę bazową)',
+'allowance.or.charge.base.amount' =>
+	'Kwota bazowa',
 'allowance.or.charge.charge' => 'Opłata',
-'allowance.or.charge.charge.vat' => 'Podatek VAT od opłaty',
-'allowance.or.charge.edit.allowance' => 'Poziom dokumentu (tj. NIE poziom wiersza faktury) Edycja odpisu',
-'allowance.or.charge.edit.charge' => 'Poziom dokumentu (tj. NIE poziom wiersza faktury) Opłata Edycja',
-'allowance.or.charge.index' => 'Wskaźnik odpisów lub opłat w odniesieniu do pozycji budżetowej',
+'allowance.or.charge.charge.vat' =>
+	'Podatek VAT od opłaty',
+'allowance.or.charge.edit.allowance' =>
+	'Poziom dokumentu (tj.'
+	. 'NIE poziom wiersza faktury) Edycja '
+	. 'odpisu',
+'allowance.or.charge.edit.charge' =>
+	'Poziom dokumentu (tj.'
+	. 'NIE poziom wiersza faktury) Opłata '
+	. 'Edycja',
+'allowance.or.charge.index' => 'Wskaźnik odpisów lub opłat w '
+	. 'odniesieniu do pozycji budżetowej',
 'allowance.or.charge.inv' => 'Dodatek lub opłata za fakturę',
 'allowance.or.charge.item' => 'Pozycja faktury Dodatek lub opłata',
-'allowance.or.charge.item.add' => 'Dodatek/opłata Dodaj',
-'allowance.or.charge.multiplier.factor.numeric' => 'Współczynnik mnożnika numeryczny',
+'allowance.or.charge.item.add' =>
+	'Dodatek/opłata Dodaj',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'Współczynnik mnożnika numeryczny',
 'allowance.or.charge.reason' => 'Powód',
-'allowance.or.charge.reason.code' => 'Kod przyczyny',
+'allowance.or.charge.reason.code' =>
+	'Kod przyczyny',
 'already.paid' => 'Ta faktura została już zapłacona.',
 'amount' => 'Kwota pozycji faktury',
 'amount.add' => 'Pozycja faktury Kwota Dodaj',
@@ -62,35 +82,56 @@ return [
 'approve' => 'Zatwierdzić',
 'approve.this.quote' => 'Zatwierdź tę wycenę',
 'approved' => 'Zatwierdzony',
-'archive' => 'Zarchiwizuj plik PDF w zakładce Prześlij/Archiwizuj',
+'archive' => 'Zarchiwizuj plik PDF w zakładce '
+	. 'Prześlij/Archiwizuj',
 'assign.client' => 'Przypisz klienta',
-'assign.client.on.signup' => 'Przypisz klienta do użytkownika podczas rejestracji.',
-'assign.client.on.signup.default.age.minimum.eighteen' => 'Podczas rejestracji przypisz użytkownikowi klienta z domyślnym minimalnym wiekiem osiemnastu lat.',
-'assign.client.on.signup.done' => 'Przypisano klienta do użytkownika po rejestracji.',
+'assign.client.on.signup' => 'Przypisz klienta do użytkownika podczas '
+	. 'rejestracji.',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'Podczas rejestracji przypisz użytkownikowi klienta '
+	. 'z domyślnym minimalnym wiekiem osiemnastu '
+	. 'lat.',
+'assign.client.on.signup.done' =>
+	'Przypisano klienta do użytkownika po '
+	. 'rejestracji.',
 'assigned.clients' => 'Przypisani klienci',
 'attachment.list' => 'Lista załączników',
 'attachments' => 'Załączniki',
 'automatic.email.on.recur' => 'Automatyczne wysyłanie cyklicznych faktur e-mailem',
 'back' => 'Z powrotem',
 'balance' => 'Balansować',
-'balance.does.not.equal.zero' => 'Saldo nie jest równe zeru. Status jest opłacony =&gt; Saldo powinno wynosić zero. ',
+'balance.does.not.equal.zero' =>
+	'Saldo nie jest równe zeru.'
+	. 'Status jest opłacony =&gt; Saldo '
+	. 'powinno wynosić zero.',
 'base.invoice' => 'Faktura bazowa',
 'bcc' => 'Ukryta kopia',
-'bcc.mails.to.admin' => 'Wysyłaj wszystkie wiadomości e-mail wychodzące jako UDW na konto administratora',
-'bcc.mails.to.admin.hint' => 'Konto administratora to konto utworzone podczas instalacji InvoicePlane.',
+'bcc.mails.to.admin' => 'Wysyłaj wszystkie wiadomości e-mail wychodzące '
+	. 'jako UDW na konto administratora',
+'bcc.mails.to.admin.hint' =>
+	'Konto administratora to konto utworzone '
+	. 'podczas instalacji InvoicePlane.',
 'before.amount' => 'Przed kwotą',
 'bill.to' => 'Rachunek do',
 'birthdate' => 'Data urodzenia',
 'body' => 'Ciało',
 'boolean' => 'Wartość logiczna',
 'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' => 'Rozmiar czcionki przycisku Zamknij alert',
+'bootstrap5.alert.close.button.font.size' =>
+	'Rozmiar czcionki przycisku Zamknij alert',
 'bootstrap5.alert.message.font' => 'Czcionka komunikatu ostrzegawczego',
-'bootstrap5.alert.message.font.size' => 'Rozmiar czcionki wiadomości alertu',
-'bootstrap5.layout.invoice.navbar.font' => 'Układ czcionki paska nawigacyjnego faktury',
-'bootstrap5.layout.invoice.navbar.font.size' => 'Układ Faktura Pasek nawigacyjny Rozmiar czcionki',
+'bootstrap5.alert.message.font.size' =>
+	'Rozmiar czcionki wiadomości alertu',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'Układ czcionki paska nawigacyjnego faktury',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'Układ Faktura Pasek nawigacyjny Rozmiar '
+	. 'czcionki',
 'bootstrap5.offcanvas.enable' => 'Włącz Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Umiejscowienie poza płótnem, np. góra, dół, początek, tj. lewa strona, koniec, tj. prawa strona',
+'bootstrap5.offcanvas.placement' => 'Umiejscowienie poza płótnem, np.'
+	. 'góra, dół, początek, tj.'
+	. 'lewa strona, koniec, tj.'
+	. 'prawa strona',
 'breadcrumb.product.index' => 'Indeks produktów',
 'breadcrumb.product.property.index' => 'Indeks właściwości produktu',
 'calculate.discounts' => 'Oblicz rabaty',
@@ -130,8 +171,13 @@ return [
 'cash.discount' => 'Rabat gotówkowy',
 'category.primary' => 'Kategoria podstawowa',
 'category.secondary' => 'Kategoria Drugorzędna',
-'caution.delete.invoices' => 'Tylko do testowania: Usuń wszystkie faktury i powiązane rekordy. (Zobacz funkcję inv/flush)',
-'caution.deleted.invoices' => 'Tylko do celów testowych: Wszystkie pola faktur i powiązane z nimi pola zostały usunięte.',
+'caution.delete.invoices' => 'Tylko do testowania:'
+	. 'Usuń wszystkie faktury i powiązane '
+	. 'rekordy.'
+	. '(Zobacz funkcję inv/flush)',
+'caution.deleted.invoices' => 'Tylko do celów testowych:'
+	. 'Wszystkie pola faktur i powiązane '
+	. 'z nimi pola zostały usunięte.',
 'cc' => 'DK',
 'change.client' => 'Zmień klienta',
 'change.password' => 'Zmień hasło',
@@ -144,27 +190,57 @@ return [
 'client.access' => 'Dostęp klienta',
 'client.add' => 'Dodaj klienta',
 'client.age' => 'Wiek',
-'client.age.hint' => 'To pole jest wymagane, a klient musi mieć ukończone 16 lat.',
+'client.age.hint' => 'To pole jest wymagane, a '
+	. 'klient musi mieć ukończone 16 '
+	. 'lat.',
 'client.already.exists' => 'Klient już istnieje!',
-'client.birthdate.hint' => 'Jeżeli data urodzenia nie jest znana, wpisz 01/01/1901',
+'client.birthdate.hint' => 'Jeżeli data urodzenia nie jest '
+	. 'znana, wpisz 01/01/1901',
 'client.building.number' => 'Numer budynku klienta',
 'client.contract.period.end' => 'Koniec okresu',
 'client.contract.period.start' => 'Początek okresu',
 'client.contract.reference' => 'Odniesienie do umowy',
 'client.custom' => 'Klient niestandardowy',
 'client.custom.add' => 'Klient niestandardowy Dodaj',
-'client.delete.history.exits.no' => 'Nie można usunąć. Historia klienta istnieje.',
-'client.detail.changes' => 'W przypadku zmiany tych danych prosimy o przesłanie nam wiadomości e-mail.',
+'client.delete.history.exits.no' =>
+	'Nie można usunąć.'
+	. 'Historia klienta istnieje.',
+'client.detail.changes' => 'W przypadku zmiany tych danych '
+	. 'prosimy o przesłanie nam wiadomości '
+	. 'e-mail.',
 'client.error.summary' => 'Podsumowanie błędów',
 'client.form' => 'Formularz klienta',
 'client.frequency' => 'Częstotliwość klienta',
 'client.group' => 'Grupa klientów',
-'client.has.not.assigned' => 'Ci klienci nie zostali przypisani do konta użytkownika. Jeden lub więcej klientów na konto użytkownika.',
-'client.has.not.user.account' => 'Ten klient nie ma konta użytkownika lub nie jest obecnie przypisany do użytkownika. 1. Upewnij się, że klient jest zarejestrowany, tzn. ma konto użytkownika lub przypisz tego klienta do użytkownika, który jest obecnie zarejestrowany. 2. Ustawienia ... Konto użytkownika faktury ... Dodaj konto użytkownika 3. Przypisz tego klienta do konta użytkownika 4. W obecnym stanie nie będzie można tworzyć faktur i ofert dla tego klienta.',
+'client.has.not.assigned' => 'Ci klienci nie zostali przypisani '
+	. 'do konta użytkownika.'
+	. 'Jeden lub więcej klientów na '
+	. 'konto użytkownika.',
+'client.has.not.user.account' =>
+	'Ten klient nie ma konta '
+	. 'użytkownika lub nie jest obecnie '
+	. 'przypisany do użytkownika.'
+	. '1.'
+	. 'Upewnij się, że klient jest '
+	. 'zarejestrowany, tzn.'
+	. 'ma konto użytkownika lub przypisz '
+	. 'tego klienta do użytkownika, który '
+	. 'jest obecnie zarejestrowany.'
+	. '2.'
+	. 'Ustawienia .'
+	. 'Konto użytkownika faktury .'
+	. 'Dodaj konto użytkownika 3.'
+	. 'Przypisz tego klienta do konta '
+	. 'użytkownika 4.'
+	. 'W obecnym stanie nie będzie '
+	. 'można tworzyć faktur i ofert '
+	. 'dla tego klienta.',
 'client.has.user.account' => 'Konto użytkownika',
 'client.import.list.blank' => 'Lista importu klienta pusta',
 'client.name' => 'Nazwa klienta',
-'client.not.allocated.to.user' => 'Klient nie jest przypisany do użytkownika',
+'client.not.allocated.to.user' =>
+	'Klient nie jest przypisany do '
+	. 'użytkownika',
 'client.note' => 'Uwaga klienta',
 'client.note.add' => 'Notatka klienta Dodaj',
 'client.note.date' => 'Data klienta',
@@ -172,40 +248,99 @@ return [
 'client.notes' => 'Notatki klienta',
 'client.number' => 'Numer klienta',
 'client.peppol' => 'Szczegóły dotyczące klienta Peppol',
-'client.peppol.accounting.cost' => 'Kod kosztów księgowości klienta dla księgowości',
+'client.peppol.accounting.cost' => 'Kod kosztów księgowości klienta dla '
+	. 'księgowości',
 'client.peppol.add' => 'Dodaj dane Peppol do e-fakturowania',
-'client.peppol.buyer.reference.default' => 'Referencje kupującego: Jeśli klient nie wskazał osoby kontaktowej w sprawie zamówienia zakupu, jest to domyślne referencje kupującego lub osoba składająca zamówienie.',
-'client.peppol.buyer.reference.example' => 'np. imię i nazwisko osoby normalnie zamawiającej, numer pracownika osoby normalnie zamawiającej lub kod identyfikujący tę osobę lub dział/grupę',
+'client.peppol.buyer.reference.default' =>
+	'Referencje kupującego:'
+	. 'Jeśli klient nie wskazał osoby '
+	. 'kontaktowej w sprawie zamówienia zakupu,'
+	. 'jest to domyślne referencje kupującego '
+	. 'lub osoba składająca zamówienie.',
+'client.peppol.buyer.reference.example' =>
+	'np.'
+	. 'imię i nazwisko osoby normalnie '
+	. 'zamawiającej, numer pracownika osoby normalnie '
+	. 'zamawiającej lub kod identyfikujący tę '
+	. 'osobę lub dział/grupę',
 'client.peppol.clientpeppols.form' => 'Formularz klienta/strony księgowej',
-'client.peppol.edit' => 'Edytuj dane Peppol na potrzeby fakturowania elektronicznego',
-'client.peppol.endpointid' => 'Identyfikator punktu końcowego: adres e-mail',
-'client.peppol.endpointid.schemeid' => 'Identyfikator punktu końcowego - schemeID oparty na 4-cyfrowym kodzie EAS (Electonric Address Scheme), np. 0192',
-'client.peppol.financial.institution.branchid' => 'Identyfikator oddziału instytucji finansowej',
+'client.peppol.edit' => 'Edytuj dane Peppol na potrzeby '
+	. 'fakturowania elektronicznego',
+'client.peppol.endpointid' => 'Identyfikator punktu końcowego:'
+	. 'adres e-mail',
+'client.peppol.endpointid.schemeid' => 'Identyfikator punktu końcowego - schemeID '
+	. 'oparty na 4-cyfrowym kodzie EAS '
+	. '(Electonric Address Scheme), np.'
+	. '0192',
+'client.peppol.financial.institution.branchid' =>
+	'Identyfikator oddziału instytucji finansowej',
 'client.peppol.identificationid' => 'Identyfikator ID',
 'client.peppol.identificationid.schemeid' => 'Identyfikator ID - schemeID',
-'client.peppol.legal.entity.company.legal.form' => 'Osoba prawna Forma prawna spółki - Dodatkowe informacje prawne istotne dla Sprzedawcy, np. Kapitał zakładowy',
-'client.peppol.legal.entity.companyid' => 'Podmiot prawny Numer identyfikacyjny firmy',
-'client.peppol.legal.entity.companyid.schemeid' => 'Numer identyfikacyjny podmiotu prawnego firmy - schemeID',
-'client.peppol.legal.entity.registration.name' => 'Nazwa rejestracyjna podmiotu prawnego',
-'client.peppol.not.found' => 'Klient nie skonfigurował swoich danych Peppol.',
-'client.peppol.not.found.accounting.cost' => 'Nie znaleziono: Koszt księgowy lub wartość tekstowa określająca miejsce zaksięgowania odpowiednich danych na kontach finansowych Kupującego.',
-'client.peppol.not.found.delivery.location' => 'Nie znaleziono nazwy kraju miejsca dostawy',
-'client.peppol.not.found.id' => 'Klient nie podał swojego identyfikatora konta w danych Klienta Peppol online.',
-'client.peppol.not.found.id.supplier.assigned' => 'Klient Peppol Dostawca Przypisane ID Konta Nie Znaleziono',
-'client.peppol.not.found.invoice' => 'Nie znaleziono powiązanej faktury',
-'client.peppol.not.found.purchase.order' => 'Zamówienie sprzedaży nie ma przypisanego numeru zamówienia zakupu',
-'client.peppol.not.found.purchase.order.item.number' => 'Pozycja zamówienia sprzedaży nie ma odpowiadającego jej numeru identyfikacyjnego pozycji zamówienia zakupu (identyfikatora pozycji kupującego). Administrator: Edytuj numer pozycji zamówienia sprzedaży na fakturze.',
-'client.peppol.not.found.purchase.order.line.number' => 'Numer pozycji zamówienia sprzedaży nie ma odpowiadającego mu numeru pozycji zamówienia zakupu (OrderLineReference LineID). Administrator: Edytuj numer pozycji zamówienia sprzedaży na fakturze. ',
-'client.peppol.not.found.sales.order' => 'Zamówienie sprzedaży nie istnieje',
-'client.peppol.payee.financial.account.name' => 'Nazwa konta finansowego odbiorcy',
-'client.peppol.payee.financial.accountid' => 'Identyfikator konta finansowego odbiorcy',
-'client.peppol.record.updated.successfully' => 'Rekord Peppol został pomyślnie zaktualizowany',
-'client.peppol.supplier.assigned.account.id' => 'Identyfikator konta przypisany dostawcy',
-'client.peppol.taxschemecompanyid' => 'Numer identyfikacyjny firmy w ramach schematu podatkowego',
+'client.peppol.legal.entity.company.legal.form' =>
+	'Osoba prawna Forma prawna spółki '
+	. '- Dodatkowe informacje prawne istotne '
+	. 'dla Sprzedawcy, np.'
+	. 'Kapitał zakładowy',
+'client.peppol.legal.entity.companyid' =>
+	'Podmiot prawny Numer identyfikacyjny firmy',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'Numer identyfikacyjny podmiotu prawnego firmy '
+	. '- schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'Nazwa rejestracyjna podmiotu prawnego',
+'client.peppol.not.found' => 'Klient nie skonfigurował swoich danych '
+	. 'Peppol.',
+'client.peppol.not.found.accounting.cost' =>
+	'Nie znaleziono:'
+	. 'Koszt księgowy lub wartość tekstowa '
+	. 'określająca miejsce zaksięgowania odpowiednich danych '
+	. 'na kontach finansowych Kupującego.',
+'client.peppol.not.found.delivery.location' =>
+	'Nie znaleziono nazwy kraju miejsca '
+	. 'dostawy',
+'client.peppol.not.found.id' =>
+	'Klient nie podał swojego identyfikatora '
+	. 'konta w danych Klienta Peppol '
+	. 'online.',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'Klient Peppol Dostawca Przypisane ID '
+	. 'Konta Nie Znaleziono',
+'client.peppol.not.found.invoice' =>
+	'Nie znaleziono powiązanej faktury',
+'client.peppol.not.found.purchase.order' =>
+	'Zamówienie sprzedaży nie ma przypisanego '
+	. 'numeru zamówienia zakupu',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'Pozycja zamówienia sprzedaży nie ma '
+	. 'odpowiadającego jej numeru identyfikacyjnego pozycji '
+	. 'zamówienia zakupu (identyfikatora pozycji kupującego).'
+	. 'Administrator:'
+	. 'Edytuj numer pozycji zamówienia sprzedaży '
+	. 'na fakturze.',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'Numer pozycji zamówienia sprzedaży nie '
+	. 'ma odpowiadającego mu numeru pozycji '
+	. 'zamówienia zakupu (OrderLineReference LineID).'
+	. 'Administrator:'
+	. 'Edytuj numer pozycji zamówienia sprzedaży '
+	. 'na fakturze.',
+'client.peppol.not.found.sales.order' =>
+	'Zamówienie sprzedaży nie istnieje',
+'client.peppol.payee.financial.account.name' =>
+	'Nazwa konta finansowego odbiorcy',
+'client.peppol.payee.financial.accountid' =>
+	'Identyfikator konta finansowego odbiorcy',
+'client.peppol.record.updated.successfully' =>
+	'Rekord Peppol został pomyślnie zaktualizowany',
+'client.peppol.supplier.assigned.account.id' =>
+	'Identyfikator konta przypisany dostawcy',
+'client.peppol.taxschemecompanyid' => 'Numer identyfikacyjny firmy w ramach '
+	. 'schematu podatkowego',
 'client.peppol.taxschemeid' => 'Numer identyfikacyjny schematu podatkowego',
 'client.postaladdress' => 'Adres pocztowy',
 'client.postaladdress.add' => 'Dodaj adres pocztowy klienta',
-'client.postaladdress.additional.street.name' => 'Dodatkowa nazwa ulicy',
+'client.postaladdress.additional.street.name' =>
+	'Dodatkowa nazwa ulicy',
 'client.postaladdress.available' => 'Dostępne adresy pocztowe',
 'client.postaladdress.building.number' => 'Numer budynku',
 'client.postaladdress.city.name' => 'Nazwa miasta',
@@ -234,20 +369,26 @@ return [
 'common.name' => 'Nazwa',
 'company' => 'Firma',
 'company.deleted' => 'Firma została usunięta',
-'company.not.deleted' => 'Firma nie została usunięta, ponieważ masz do niej przypisany Profil firmy.',
+'company.not.deleted' => 'Firma nie została usunięta, ponieważ '
+	. 'masz do niej przypisany Profil '
+	. 'firmy.',
 'company.private' => 'Firma Prywatna',
 'company.private.logo' => 'Logo firmy',
 'company.private.logo.height' => 'Wysokość logo',
 'company.private.logo.margin' => 'Margines logo',
 'company.private.logo.width' => 'Szerokość logo',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Logo zostanie usunięte z przesłanych plików i folderów publicznych',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'Logo zostanie usunięte z przesłanych '
+	. 'plików i folderów publicznych',
 'company.public' => 'Spółka Publiczna',
 'complete' => 'Kompletny',
 'confirm' => 'Potwierdzać',
 'confirm.deletion' => 'Potwierdź usunięcie',
 'contact.information' => 'Informacje kontaktowe',
 'continue' => 'Kontynuować',
-'continue.with.developer.sandbox.hmrc' => 'Kontynuuj z Developer Gov Sandbox UK',
+'continue.with.developer.sandbox.hmrc' =>
+	'Kontynuuj z Developer Gov Sandbox '
+	. 'UK',
 'continue.with.facebook' => 'Kontynuuj za pomocą Facebooka',
 'continue.with.github' => 'Kontynuuj z Github',
 'continue.with.google' => 'Kontynuuj z Google',
@@ -260,10 +401,20 @@ return [
 'contract' => 'Umowa',
 'contract.add' => 'Dodaj umowę',
 'contract.contracts' => 'Umowy',
-'contract.create' => 'Utwórz swoje umowy za pomocą. Faktura...Widok...Opcje...Edytuj. Zostanie utworzona umowa dla klienta, na którego wystawiana jest faktura. Połącz tę umowę z przyszłymi fakturami.',
+'contract.create' => 'Utwórz swoje umowy za pomocą.'
+	. 'Faktura.'
+	. 'Widok.'
+	. 'Opcje.'
+	. 'Edytuj.'
+	. 'Zostanie utworzona umowa dla klienta,'
+	. 'na którego wystawiana jest faktura.'
+	. 'Połącz tę umowę z przyszłymi '
+	. 'fakturami.',
 'contract.index.button.list' => 'Faktury',
 'contract.name' => 'Nazwa',
-'contract.none' => 'Przypomnienie: Dla tej faktury nie utworzono żadnej umowy',
+'contract.none' => 'Przypomnienie:'
+	. 'Dla tej faktury nie utworzono '
+	. 'żadnej umowy',
 'contract.period.end' => 'Koniec okresu',
 'contract.period.start' => 'Początek okresu',
 'contract.reference' => 'Odniesienie',
@@ -274,7 +425,13 @@ return [
 'country' => 'Kraj',
 'create' => 'Tworzyć',
 'create.credit.invoice' => 'Utwórz fakturę kredytową',
-'create.credit.invoice.alert' => 'Utworzenie faktury kredytowej spowoduje, że bieżąca faktura będzie <em>tylko do odczytu,</em> co oznacza, że ​​nie będziesz już mógł edytować faktury. Faktura kredytowa będzie zawierać bieżący stan ze wszystkimi pozycjami, ale z ujemnymi kwotami i saldami.',
+'create.credit.invoice.alert' => 'Utworzenie faktury kredytowej spowoduje, że '
+	. 'bieżąca faktura będzie <em>tylko do '
+	. 'odczytu,</em> co oznacza, że ​​nie '
+	. 'będziesz już mógł edytować faktury.'
+	. 'Faktura kredytowa będzie zawierać bieżący '
+	. 'stan ze wszystkimi pozycjami, ale '
+	. 'z ujemnymi kwotami i saldami.',
 'create.invoice' => 'Utwórz fakturę',
 'create.product' => 'Utwórz produkt',
 'create.project' => 'Utwórz projekt',
@@ -288,16 +445,25 @@ return [
 'credit.invoice.details' => 'Szczegóły faktury kredytowej',
 'credit.invoice.for.invoice' => 'Nota kredytowa',
 'credit.note.creation.successful' => 'Utworzenie noty kredytowej powiodło się',
-'credit.note.creation.unsuccessful' => 'Nie udało się utworzyć noty kredytowej lub noty kredytowej w celu anulowania faktury',
+'credit.note.creation.unsuccessful' => 'Nie udało się utworzyć noty '
+	. 'kredytowej lub noty kredytowej w '
+	. 'celu anulowania faktury',
 'creditcard.cvv' => 'CVV / CSC',
 'creditcard.details' => 'Dane karty kredytowej',
 'creditcard.expiry.month' => 'Miesiąc wygaśnięcia',
 'creditcard.expiry.year' => 'Rok wygaśnięcia',
 'creditcard.number' => 'Numer karty kredytowej',
 'cron.key' => 'Klucz CRON',
-'curl.store.cove.api.get.legal.entity.id.successful' => 'Uzyskaj sukces w zakresie podmiotu prawnego',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Wywołanie interfejsu API konfiguracji Store Cove — pomyślne dla podmiotu prawnego',
-'curl.store.cove.api.setup.successful' => 'Wywołanie interfejsu API konfiguracji Store Cove powiodło się',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'Uzyskaj sukces w zakresie podmiotu '
+	. 'prawnego',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Wywołanie interfejsu API konfiguracji Store '
+	. 'Cove — pomyślne dla podmiotu '
+	. 'prawnego',
+'curl.store.cove.api.setup.successful' =>
+	'Wywołanie interfejsu API konfiguracji Store '
+	. 'Cove powiodło się',
 'currency' => 'Waluta',
 'currency.code' => 'Kod waluty',
 'currency.symbol' => 'Symbol waluty',
@@ -335,7 +501,8 @@ return [
 'date.supplied' => 'Data doręczenia',
 'dates' => 'Daty faktury',
 'datetime.immutable.date.created' => 'Tworzyć',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
 'datetime.immutable.date.modified' => 'Przeciwko',
 'datetime.immutable.time.created' => 'Czas',
 'days' => 'Dni',
@@ -347,7 +514,9 @@ return [
 'default.hourly.rate' => 'Domyślna stawka godzinowa',
 'default.invoice.group' => 'Domyślna grupa faktur',
 'default.invoice.tax.rate' => 'Domyślna stawka podatku na fakturze',
-'default.invoice.tax.rate.placement' => 'Domyślne umieszczenie stawki podatku na fakturze',
+'default.invoice.tax.rate.placement' =>
+	'Domyślne umieszczenie stawki podatku na '
+	. 'fakturze',
 'default.item.tax.rate' => 'Domyślna stawka podatku od pozycji',
 'default.list.limit' => 'Liczba elementów na listach',
 'default.notes' => 'Domyślne notatki',
@@ -357,20 +526,38 @@ return [
 'default.quote.group' => 'Domyślna grupa ofert',
 'default.terms' => 'Warunki domyślne',
 'delete' => 'Usuwać',
-'delete.attachment.warning' => 'Czy na pewno chcesz usunąć ten załącznik?',
+'delete.attachment.warning' => 'Czy na pewno chcesz usunąć '
+	. 'ten załącznik?',
 'delete.client' => 'Usuń klienta',
-'delete.client.warning' => 'Jeśli usuniesz tego klienta, usuniesz również wszystkie faktury, oferty i płatności związane z tym klientem. Czy na pewno chcesz trwale usunąć tego klienta?',
+'delete.client.warning' => 'Jeśli usuniesz tego klienta, usuniesz '
+	. 'również wszystkie faktury, oferty i '
+	. 'płatności związane z tym klientem.'
+	. 'Czy na pewno chcesz trwale '
+	. 'usunąć tego klienta?',
 'delete.invoice' => 'Usuń fakturę',
-'delete.invoice.warning' => 'Jeśli usuniesz tę fakturę, nie będziesz mógł jej później odzyskać. Czy na pewno chcesz trwale usunąć tę fakturę?',
+'delete.invoice.warning' => 'Jeśli usuniesz tę fakturę, nie '
+	. 'będziesz mógł jej później odzyskać.'
+	. 'Czy na pewno chcesz trwale '
+	. 'usunąć tę fakturę?',
 'delete.quote' => 'Usuń cytat',
-'delete.quote.warning' => 'Jeśli usuniesz ten cytat, nie będziesz mógł go później odzyskać. Czy na pewno chcesz trwale usunąć ten cytat?',
-'delete.record.warning' => 'Czy na pewno chcesz usunąć ten rekord?',
-'delete.sent' => 'Nie można usunąć - faktura wysłana',
-'delete.tax.warning' => 'Czy na pewno chcesz usunąć ten podatek?',
-'delete.user.client.warning' => 'Czy na pewno chcesz usunąć tego klienta z tego użytkownika?',
+'delete.quote.warning' => 'Jeśli usuniesz ten cytat, nie '
+	. 'będziesz mógł go później odzyskać.'
+	. 'Czy na pewno chcesz trwale '
+	. 'usunąć ten cytat?',
+'delete.record.warning' => 'Czy na pewno chcesz usunąć '
+	. 'ten rekord?',
+'delete.sent' => 'Nie można usunąć - faktura '
+	. 'wysłana',
+'delete.tax.warning' => 'Czy na pewno chcesz usunąć '
+	. 'ten podatek?',
+'delete.user.client.warning' => 'Czy na pewno chcesz usunąć '
+	. 'tego klienta z tego użytkownika?',
 'deleted' => 'Usunięto',
-'deletion.forbidden' => 'Usuwanie faktur jest zabronione. Skontaktuj się z administratorem lub zapoznaj się z dokumentacją.',
-'delivery' => 'Szczegóły dostawy: Data rozpoczęcia/zakończenia okresu faktury/dostawy',
+'deletion.forbidden' => 'Usuwanie faktur jest zabronione.'
+	. 'Skontaktuj się z administratorem lub '
+	. 'zapoznaj się z dokumentacją.',
+'delivery' => 'Szczegóły dostawy:'
+	. 'Data rozpoczęcia/zakończenia okresu faktury/dostawy',
 'delivery.actual.delivery.date' => 'Rzeczywista data dostawy',
 'delivery.add' => 'Dodaj dostawę',
 'delivery.date.created' => 'Data utworzenia',
@@ -378,17 +565,34 @@ return [
 'delivery.end.date' => 'Data końcowa dostawy/okres fakturowania',
 'delivery.location' => 'Miejsce dostawy',
 'delivery.location.add' => 'Dodaj lokalizację dostawy',
-'delivery.location.add.in.invoice' => 'Dodaj lokalizację dostawy w obszarze Faktura... Widok... Opcje... Edytuj',
+'delivery.location.add.in.invoice' =>
+	'Dodaj lokalizację dostawy w obszarze '
+	. 'Faktura.'
+	. 'Widok.'
+	. 'Opcje.'
+	. 'Edytuj',
 'delivery.location.building.number' => 'Numer budynku',
 'delivery.location.client' => 'Miejsca dostaw Klienta',
 'delivery.location.delete' => 'Usuń lokalizację dostawy',
 'delivery.location.edit' => 'Edytuj lokalizację dostawy',
-'delivery.location.electronic.address.scheme' => 'Schemat adresów elektronicznych (lista kodów) Domyślnie: 0088 Europejski kod lokalizacji artykułów (EAN) znany również jako (GLN) Globalne numery lokalizacji',
-'delivery.location.global.location.number' => 'Globalny numer lokalizacji (13 cyfr)',
-'delivery.location.id.not.found' => 'Lokalizacja dostawy Globalny numer lokalizacji ID nie został znaleziony',
-'delivery.location.index.button.list' => 'Faktury',
-'delivery.location.none' => 'Do tej faktury nie powiązano żadnej lokalizacji dostawy',
-'delivery.location.peppol.output' => 'Z tą fakturą nie jest powiązana żadna lokalizacja dostawy. Dlatego nie ma wyników Peppol',
+'delivery.location.electronic.address.scheme' =>
+	'Schemat adresów elektronicznych (lista kodów) '
+	. 'Domyślnie:'
+	. '0088 Europejski kod lokalizacji artykułów '
+	. '(EAN) znany również jako (GLN) '
+	. 'Globalne numery lokalizacji',
+'delivery.location.global.location.number' =>
+	'Globalny numer lokalizacji (13 cyfr)',
+'delivery.location.id.not.found' =>
+	'Lokalizacja dostawy Globalny numer lokalizacji '
+	. 'ID nie został znaleziony',
+'delivery.location.index.button.list' =>
+	'Faktury',
+'delivery.location.none' => 'Do tej faktury nie powiązano '
+	. 'żadnej lokalizacji dostawy',
+'delivery.location.peppol.output' => 'Z tą fakturą nie jest '
+	. 'powiązana żadna lokalizacja dostawy.'
+	. 'Dlatego nie ma wyników Peppol',
 'delivery.location.plural' => 'Miejsca dostaw',
 'delivery.location.view' => 'Widok miejsca dostawy',
 'delivery.party' => 'Strona dostawy',
@@ -414,12 +618,18 @@ return [
 'download' => 'Pobierać',
 'download.pdf' => 'Pobierz PDF',
 'draft' => 'Projekt',
-'draft.guest' => 'Projekty faktur nie są widoczne dla Klientów.',
-'draft.number.off' => 'Nowe projekty faktur nie będą miały numeru faktury. Oznacz jako wysłane, aby uzyskać numer faktury',
-'draft.number.on' => 'Nowe projekty faktur będą miały numer faktury',
+'draft.guest' => 'Projekty faktur nie są widoczne '
+	. 'dla Klientów.',
+'draft.number.off' => 'Nowe projekty faktur nie będą '
+	. 'miały numeru faktury.'
+	. 'Oznacz jako wysłane, aby uzyskać '
+	. 'numer faktury',
+'draft.number.on' => 'Nowe projekty faktur będą miały '
+	. 'numer faktury',
 'drop.files.here' => 'Upuść pliki tutaj!',
 'due.date' => 'Dwie daty',
-'early.settlement.cash.discount' => 'Rabat gotówkowy za wczesną rozliczoną płatność',
+'early.settlement.cash.discount' => 'Rabat gotówkowy za wczesną rozliczoną '
+	. 'płatność',
 'edit' => 'Redagować',
 'elements' => 'Elementy',
 'email' => 'E-mail',
@@ -428,15 +638,22 @@ return [
 'email.default' => 'Domyślny',
 'email.default.none.set' => 'Nie ustawiono wartości domyślnej',
 'email.exception' => 'Wyjątek dotyczący wysyłania wiadomości e-mail.',
-'email.from.dropdown' => 'Z rozwijanej listy e-mail Adresy e-mail, które mają zostać uwzględnione w formularzu MailerQuote i formularzu MailerInv',
+'email.from.dropdown' => 'Z rozwijanej listy e-mail Adresy '
+	. 'e-mail, które mają zostać uwzględnione '
+	. 'w formularzu MailerQuote i formularzu '
+	. 'MailerInv',
 'email.include' => 'Włączać',
 'email.invoice' => 'Faktura e-mail',
-'email.link.click.confirm' => 'Potwierdź swój adres e-mail klikając ten link',
+'email.link.click.confirm' => 'Potwierdź swój adres e-mail klikając '
+	. 'ten link',
 'email.log' => 'Dziennik faktur wysłanych e-mailem',
 'email.logs' => 'Faktury wysłane e-mailem Dzienniki',
 'email.logs.with.filter' => 'Wysłano e-mailem',
-'email.not.configured' => 'Zanim będziesz mógł wysłać wiadomość e-mail, musisz skonfigurować ustawienia poczty e-mail w obszarze Ustawienia systemowe.',
-'email.not.sent.successfully' => 'Wiadomość e-mail NIE została pomyślnie wysłana',
+'email.not.configured' => 'Zanim będziesz mógł wysłać wiadomość '
+	. 'e-mail, musisz skonfigurować ustawienia poczty '
+	. 'e-mail w obszarze Ustawienia systemowe.',
+'email.not.sent.successfully' => 'Wiadomość e-mail NIE została pomyślnie '
+	. 'wysłana',
 'email.pdf.attachment' => 'Załączyć ofertę/fakturę w e-mailu?',
 'email.quote' => 'Wyślij ofertę e-mailem',
 'email.send.method' => 'Metoda wysyłania wiadomości e-mail',
@@ -444,47 +661,105 @@ return [
 'email.send.method.sendmail' => 'Wyślij maila',
 'email.send.method.smtp' => 'SMTP',
 'email.settings' => 'Ustawienia poczty e-mail',
-'email.source.email.template' => ' Pobrano z Ustawień ... Szablon wiadomości e-mail',
-'email.source.user.account' => ' Pobrano z Ustawień ... Konto użytkownika faktury',
+'email.source.email.template' => 'Pobrano z Ustawień .'
+	. 'Szablon wiadomości e-mail',
+'email.source.user.account' => 'Pobrano z Ustawień .'
+	. 'Konto użytkownika faktury',
 'email.successfully.sent' => 'E-mail został pomyślnie wysłany',
 'email.template' => 'Szablon e-maila',
 'email.template.add' => 'Dodaj szablon e-maila',
 'email.template.already.exists' => 'Szablon wiadomości e-mail już istnieje!',
 'email.template.form' => 'Formularz szablonu wiadomości e-mail',
-'email.template.from.email.leave.blank' => ': Jeśli pozostawisz to pole puste, adres e-mail konta użytkownika zostanie wstawiony jako edytowalna wartość w formularzu mailera. np. adres e-mail serwera księgowego. Najlepiej użyć tutaj adresu e-mail związanego z serwerem.',
+'email.template.from.email.leave.blank' =>
+	'Jeśli pozostawisz to pole puste,'
+	. 'adres e-mail konta użytkownika zostanie '
+	. 'wstawiony jako edytowalna wartość w '
+	. 'formularzu mailera.'
+	. 'np.'
+	. 'adres e-mail serwera księgowego.'
+	. 'Najlepiej użyć tutaj adresu e-mail '
+	. 'związanego z serwerem.',
 'email.template.from.source' => 'Źródło wiadomości e-mail',
-'email.template.from.source.admin.email' => 'Adres e-mail administratora (config/common/params)',
-'email.template.from.source.froms.email' => 'Z domyślnej tabeli (ustawienia... Z rozwijanego menu adresów e-mail)',
-'email.template.from.source.sender.email' => 'Adres e-mail nadawcy (config/common/params)',
-'email.template.not.configured' => 'Szablony e-mail nie są skonfigurowane. Ustawienia...Faktury...Szablony faktur...Domyślny szablon e-mail',
-'email.template.overdue' => 'Szablon wiadomości e-mail z przeterminowanym terminem płatności',
+'email.template.from.source.admin.email' =>
+	'Adres e-mail administratora (config/common/params)',
+'email.template.from.source.froms.email' =>
+	'Z domyślnej tabeli (ustawienia.'
+	. 'Z rozwijanego menu adresów e-mail)',
+'email.template.from.source.sender.email' =>
+	'Adres e-mail nadawcy (config/common/params)',
+'email.template.not.configured' => 'Szablony e-mail nie są skonfigurowane.'
+	. 'Ustawienia.'
+	. 'Faktury.'
+	. 'Szablony faktur.'
+	. 'Domyślny szablon e-mail',
+'email.template.overdue' => 'Szablon wiadomości e-mail z przeterminowanym '
+	. 'terminem płatności',
 'email.template.paid' => 'Płatny szablon e-maila',
-'email.template.successfully.added' => 'Szablon wiadomości e-mail został pomyślnie dodany',
-'email.template.successfully.deleted' => 'Szablon wiadomości e-mail został pomyślnie usunięty',
-'email.template.successfully.edited' => 'Szablon wiadomości e-mail został pomyślnie edytowany',
+'email.template.successfully.added' => 'Szablon wiadomości e-mail został pomyślnie '
+	. 'dodany',
+'email.template.successfully.deleted' => 'Szablon wiadomości e-mail został pomyślnie '
+	. 'usunięty',
+'email.template.successfully.edited' => 'Szablon wiadomości e-mail został pomyślnie '
+	. 'edytowany',
 'email.template.tags' => 'Tagi szablonów wiadomości e-mail',
-'email.template.tags.instructions' => 'Znaczniki szablonów mogą być używane do dodawania dynamicznych informacji, takich jak nazwa klienta lub numer faktury do szablonu wiadomości e-mail. Kliknij pole tekstowe Body, a następnie wybierz znacznik z listy rozwijanej. Zostanie on automatycznie wstawiony do pola tekstowego.',
+'email.template.tags.instructions' => 'Znaczniki szablonów mogą być używane '
+	. 'do dodawania dynamicznych informacji, takich '
+	. 'jak nazwa klienta lub numer '
+	. 'faktury do szablonu wiadomości e-mail.'
+	. 'Kliknij pole tekstowe Body, a '
+	. 'następnie wybierz znacznik z listy '
+	. 'rozwijanej.'
+	. 'Zostanie on automatycznie wstawiony do '
+	. 'pola tekstowego.',
 'email.template.type' => 'Typ szablonu wiadomości e-mail',
 'email.templates' => 'Szablony e-maili',
-'email.to.address.missing' => 'Musisz podać adres e-mail, na który wiadomość ma zostać wysłana.',
-'email.warning.draft' => 'Projekty faktur muszą zostać najpierw oznaczone jako wysłane, aby były widoczne po stronie klienta, a dopiero potem można je wysłać e-mailem.',
+'email.to.address.missing' => 'Musisz podać adres e-mail, na '
+	. 'który wiadomość ma zostać wysłana.',
+'email.warning.draft' => 'Projekty faktur muszą zostać najpierw '
+	. 'oznaczone jako wysłane, aby były '
+	. 'widoczne po stronie klienta, a '
+	. 'dopiero potem można je wysłać '
+	. 'e-mailem.',
 'enable.debug.mode' => 'Włącz tryb debugowania',
 'enable.online.payments' => 'Włącz płatności online',
 'enable.permissive.search.clients' => 'Włącz wyszukiwanie zezwalające',
 'enable.projects' => 'Włącz moduł Projekty',
 'enable.vat' => 'Włącz VAT',
-'enable.vat.message' => 'Wyświetl wiadomość przypominającą o podatku VAT nad przyciskiem opcji w widokach',
-'enable.vat.warning.line.1' => '1. Po włączeniu VAT-u, tylko poszczególne pozycje na fakturze są opodatkowane VAT-em. Np. Podatki od oferty/faktury nie pojawią się na fakturze i zostaną obniżone do 0.',
-'enable.vat.warning.line.2' => '2. Po włączeniu podatku VAT, podatek niebędący podatkiem jednostkowym, o którym mowa powyżej, nie stanowi całości podatku. ',
-'enable.vat.warning.line.3' => '3. Utwórz oferty/faktury VAT w oddzielnej bazie danych.',
-'enable.vat.warning.line.4' => '4. Wszystkie nowe pozycje faktury VAT są oznaczone flagą belong_to_vat_invoice.',
+'enable.vat.message' => 'Wyświetl wiadomość przypominającą o podatku '
+	. 'VAT nad przyciskiem opcji w '
+	. 'widokach',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. 'Po włączeniu VAT-u, tylko poszczególne '
+	. 'pozycje na fakturze są opodatkowane '
+	. 'VAT-em.'
+	. 'Np.'
+	. 'Podatki od oferty/faktury nie pojawią '
+	. 'się na fakturze i zostaną '
+	. 'obniżone do 0.',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. 'Po włączeniu podatku VAT, podatek '
+	. 'niebędący podatkiem jednostkowym, o którym '
+	. 'mowa powyżej, nie stanowi całości '
+	. 'podatku.',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. 'Utwórz oferty/faktury VAT w oddzielnej '
+	. 'bazie danych.',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. 'Wszystkie nowe pozycje faktury VAT '
+	. 'są oznaczone flagą belong_to_vat_invoice.',
 'enabled' => 'Włączony',
 'end' => 'Koniec',
 'end.date' => 'Data zakończenia',
 'enforcement' => 'Adres obecności funkcjonariusza egzekucyjnego',
 'enter' => 'Wchodzić',
 'enter.payment' => 'Wprowadź płatność',
-'error.duplicate.file' => 'Błąd: Zduplikowana nazwa pliku, proszę ją zmienić!',
+'error.duplicate.file' => 'Błąd:'
+	. 'Zduplikowana nazwa pliku, proszę ją '
+	. 'zmienić!',
 'errors' => 'Błędy',
 'every' => 'Każdy',
 'example' => 'Przykład',
@@ -497,15 +772,29 @@ return [
 'family' => 'Rodzina',
 'family.add' => 'Dodaj rodzinę',
 'family.already.exists' => 'Rodzina już istnieje!',
-'family.history' => 'Historia rodziny istnieje. Nie można usunąć',
+'family.history' => 'Historia rodziny istnieje.'
+	. 'Nie można usunąć',
 'family.name' => 'Nazwisko',
 'family.search' => 'Poszukiwanie rodziny',
 'faq' => 'Najczęściej zadawane pytania',
-'faq.ai.callback.session' => 'Copilot: W jaki sposób mogę dodać https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php, aby usprawnić zarządzanie stanem w funkcji `callbackGithub`?',
+'faq.ai.callback.session' => 'Copilot:'
+	. 'W jaki sposób mogę dodać '
+	. 'https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php, aby usprawnić zarządzanie stanem '
+	. 'w funkcji `callbackGithub`?',
 'faq.business.rules' => 'Jakie są zasady biznesowe Peppol?',
-'faq.gov.developer.sandbox.hmrc' => 'Jak połączyć to repozytorium z HMRC Developer Sandbox?',
-'faq.lamp.alpine' => 'Jak mogę skonfigurować to repozytorium na Linux Alpine, Apache2, mySql/mariadb i php?',
-'faq.oauth2' => 'Jak skonfigurować dostawcę tożsamości OAuth2, np. rejestrując się i logując za pomocą Facebooka',
+'faq.gov.developer.sandbox.hmrc' =>
+	'Jak połączyć to repozytorium z '
+	. 'HMRC Developer Sandbox?',
+'faq.lamp.alpine' => 'Jak mogę skonfigurować to repozytorium '
+	. 'na Linux Alpine, Apache2, mySql/mariadb '
+	. 'i php?',
+'faq.oauth2' => 'Jak skonfigurować dostawcę tożsamości OAuth2,'
+	. 'np.'
+	. 'rejestrując się i logując za '
+	. 'pomocą Facebooka',
 'faq.payment.provider' => 'Jak skonfigurować dostawcę płatności online?',
 'faq.php.info.all' => 'Wszystko',
 'faq.php.info.configuration' => 'Konfiguracja',
@@ -516,8 +805,10 @@ return [
 'faq.php.info.licence' => 'Licencja',
 'faq.php.info.modules' => 'Moduły',
 'faq.php.info.variables' => 'Zmienne',
-'faq.shared.hosting' => 'Jak hostować yii3i na hostingu współdzielonym?',
-'faq.taxpoint' => 'Jak ustalić moment powstania obowiązku podatkowego?',
+'faq.shared.hosting' => 'Jak hostować yii3i na hostingu '
+	. 'współdzielonym?',
+'faq.taxpoint' => 'Jak ustalić moment powstania obowiązku '
+	. 'podatkowego?',
 'faq.yii.requirement.checker' => 'Sprawdzanie wymagań aplikacji Yii',
 'fax' => 'Faks',
 'fax.abbr' => 'F',
@@ -529,33 +820,69 @@ return [
 'filter.quotes' => 'Filtruj cytaty',
 'first' => 'Pierwszy',
 'first.day.of.week' => 'Pierwszy dzień tygodnia',
-'first.reset' => 'Najpierw usuń oferty testowe i faktury, które utworzyłeś do testowania. Następnie dane testowe mogą zostać usunięte.',
+'first.reset' => 'Najpierw usuń oferty testowe i '
+	. 'faktury, które utworzyłeś do testowania.'
+	. 'Następnie dane testowe mogą zostać '
+	. 'usunięte.',
 'flash.messages.appear.here' => 'Tutaj pojawiają się wiadomości błyskawiczne.',
 'footer' => 'Stopka',
 'forgot.your.password' => 'Zapomniałem hasła',
 'form.error' => 'Błędy formularza',
 'from.date' => 'Od daty',
-'from.default.in.dropdown' => 'Domyślny adres e-mail na liście rozwijanej',
+'from.default.in.dropdown' => 'Domyślny adres e-mail na liście '
+	. 'rozwijanej',
 'from.email' => 'Z e-maila',
-'from.email.address' => 'Z adresów e-mail: Wybierz domyślny',
-'from.include.in.dropdown' => 'Dodaj ten adres e-mail do listy rozwijanej',
+'from.email.address' => 'Z adresów e-mail:'
+	. 'Wybierz domyślny',
+'from.include.in.dropdown' => 'Dodaj ten adres e-mail do '
+	. 'listy rozwijanej',
 'from.name' => 'Od imienia',
 'front.page' => 'Strona tytułowa',
-'gallery.caption.slide1' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide10' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide11' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide12' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide13' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide14' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide15' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide2' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide3' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide4' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide5' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide6' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide7' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide8' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
-'gallery.caption.slide9' => 'W ../resources/messages/en/app.php możesz zmienić ten tekst.',
+'gallery.caption.slide1' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide10' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide11' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide12' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide13' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide14' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide15' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide2' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide3' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide4' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide5' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide6' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide7' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide8' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
+'gallery.caption.slide9' => 'W .'
+	. '/resources/messages/en/app.'
+	. 'php możesz zmienić ten tekst.',
 'gateway.online.payment' => 'Płatność online',
 'gender' => 'Płeć',
 'gender.female' => 'Kobieta',
@@ -567,59 +894,152 @@ return [
 'general.yes' => 'Tak',
 'generate' => 'Spowodować',
 'generate.copy' => 'Wygeneruj kopię',
-'generate.invoice.number.for.draft' => 'Wygeneruj numer faktury dla wersji roboczych faktur',
-'generate.quote.number.for.draft' => 'Wygeneruj numer oferty dla wersji roboczych ofert',
+'generate.invoice.number.for.draft' =>
+	'Wygeneruj numer faktury dla wersji '
+	. 'roboczych faktur',
+'generate.quote.number.for.draft' =>
+	'Wygeneruj numer oferty dla wersji '
+	. 'roboczych ofert',
 'generate.sumex' => 'Wygeneruj plik PDF Sumex',
 'generator' => 'Generator',
 'generator.add' => 'Dodaj generator',
-'generator.camelcase.capital.name' => 'Nazwa Camelcase Capital używana w nazwach kontrolerów i repozytoriów, np. TaxRate. Użyj &#39;Product&#39;, jeśli używasz powyższego przykładu &#39;product&#39;',
-'generator.camelcase.capital.name.product' => 'Produkt',
+'generator.camelcase.capital.name' => 'Nazwa Camelcase Capital używana w '
+	. 'nazwach kontrolerów i repozytoriów, np.'
+	. 'TaxRate.'
+	. 'Użyj \'Product\', jeśli używasz powyższego '
+	. 'przykładu \'product\'',
+'generator.camelcase.capital.name.product' =>
+	'Produkt',
 'generator.controller.and.repository' => 'Kontroler i repozytorium',
-'generator.controller.layout.directory' => 'Katalog układu kontrolera np. dirname(dirname(__DIR__)), który pojawia się zaraz po konstrukcji kontrolera. Plik kontrolera znajduje się w (__DIR__) i jest dwa katalogi poniżej katalogu &#39;src&#39;, który będzie używany jako &#39;baza&#39; do dołączenia ścieżki do katalogu układu.',
-'generator.controller.layout.directory.dot.path' => 'Ścieżka do katalogu układu kontrolera, np. &#39;/views/layout/invoice.php&#39;, która pojawia się zaraz za konstrukcją kontrolera (bez apostrofów) i jest dołączona do podanej wyżej lokalizacji katalogu src.',
-'generator.controller.layout.directory.dot.path.placeholder' => 'Ścieżka do katalogu układu kontrolera',
-'generator.controller.layout.directory.placeholder' => 'Katalog układu kontrolera np. dirname(dirname(__DIR__))',
+'generator.controller.layout.directory' => 'Katalog układu kontrolera np.'
+	. 'dirname(dirname(__DIR__)), który pojawia się zaraz '
+	. 'po konstrukcji kontrolera.'
+	. 'Plik kontrolera znajduje się w '
+	. '(__DIR__) i jest dwa katalogi '
+	. 'poniżej katalogu \'src\', który będzie '
+	. 'używany jako \'baza\' do dołączenia '
+	. 'ścieżki do katalogu układu.',
+'generator.controller.layout.directory.dot.path' =>
+	'Ścieżka do katalogu układu kontrolera,'
+	. 'np.'
+	. '\'/views/layout/invoice.'
+	. 'php\', która pojawia się zaraz '
+	. 'za konstrukcją kontrolera (bez apostrofów) '
+	. 'i jest dołączona do podanej '
+	. 'wyżej lokalizacji katalogu src.',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'Ścieżka do katalogu układu kontrolera',
+'generator.controller.layout.directory.placeholder' =>
+	'Katalog układu kontrolera np.'
+	. 'dirname(dirname(__DIR__))',
 'generator.controller.path.layout' => 'Ścieżka do pliku układu',
 'generator.created.at.include' => 'Dołącz pole created_at do Encji',
 'generator.deleted.at.include' => 'Dołącz pole removed_at do Encji',
-'generator.external.entity' => 'Entity zewnętrzne używane w tym Entity. Entity ustawień to prosta para klucz =&gt; wartość indeksowana identyfikatorem bazy danych.',
-'generator.external.entity.default' => 'Jednostka zewnętrzna np. MyEntity z wyłączeniem ścieżki. Ścieżka wbudowana w Generator. Domyślnie: Ustawienie',
-'generator.external.entity.placeholder' => 'Jednostka zewnętrzna np. MyEntity z wyłączeniem ścieżki. Ścieżka wbudowana w Generator. Domyślne: Ustawienie. Dodatkowe repozytorium np. Ustawienie repozytorium oprócz głównego repozytorium.',
-'generator.file.type.not.found' => 'Nie znaleziono typu pliku.',
-'generator.flash.include' => 'Dołącz wiadomość Flash do funkcji Dodaj/Edytuj/Wyświetl/Usuń w Kontrolerze',
+'generator.external.entity' => 'Entity zewnętrzne używane w tym '
+	. 'Entity.'
+	. 'Entity ustawień to prosta para '
+	. 'klucz =&gt; wartość indeksowana identyfikatorem '
+	. 'bazy danych.',
+'generator.external.entity.default' => 'Jednostka zewnętrzna np.'
+	. 'MyEntity z wyłączeniem ścieżki.'
+	. 'Ścieżka wbudowana w Generator.'
+	. 'Domyślnie:'
+	. 'Ustawienie',
+'generator.external.entity.placeholder' => 'Jednostka zewnętrzna np.'
+	. 'MyEntity z wyłączeniem ścieżki.'
+	. 'Ścieżka wbudowana w Generator.'
+	. 'Domyślne:'
+	. 'Ustawienie.'
+	. 'Dodatkowe repozytorium np.'
+	. 'Ustawienie repozytorium oprócz głównego repozytorium.',
+'generator.file.type.not.found' =>
+	'Nie znaleziono typu pliku.',
+'generator.flash.include' => 'Dołącz wiadomość Flash do funkcji '
+	. 'Dodaj/Edytuj/Wyświetl/Usuń w Kontrolerze',
 'generator.generate' => 'Spowodować',
 'generator.generated' => ' wygenerowano w ',
-'generator.google.translate.any' => 'Przetłumacz angielski\any_lang.php',
-'generator.google.translate.app' => 'Przetłumacz angielski\app_lang.php',
-'generator.google.translate.common' => 'Przetłumacz English\common_lang.php',
-'generator.google.translate.diff' => 'Przetłumacz English\diff_lang.php',
-'generator.google.translate.gateway' => 'Przetłumacz English\gateway_lang.php',
-'generator.google.translate.ip' => 'Przetłumacz English\ip_lang.php',
-'generator.google.translate.latest.a' => 'Przetłumacz English\a_latest_lang.php',
-'generator.google.translate.latest.b' => 'Przetłumacz English\b_latest_lang.php',
-'generator.headerline.include' => 'Dołącz nagłówek, jeśli wymagany jest Ajax',
-'generator.history' => 'Ten rekord ma istniejące relacje Generatora, więc nie można go usunąć. Najpierw usuń te relacje.',
+'generator.google.translate.any' => 'Przetłumacz angielski\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => 'Przetłumacz angielski\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => 'Przetłumacz English\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => 'Przetłumacz English\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => 'Przetłumacz English\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => 'Przetłumacz English\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'Przetłumacz English\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'Przetłumacz English\\b_latest_lang.'
+	. 'php',
+'generator.headerline.include' => 'Dołącz nagłówek, jeśli wymagany jest '
+	. 'Ajax',
+'generator.history' => 'Ten rekord ma istniejące relacje '
+	. 'Generatora, więc nie można go '
+	. 'usunąć.'
+	. 'Najpierw usuń te relacje.',
 'generator.modified.at.include' => 'Dołącz pole modified_at do Encji',
 'generator.namespace' => 'Przestrzeń nazw',
-'generator.namespace.before.entity' => 'Przestrzeń nazw przed ścieżką jednostki, np. App\Invoice (NIE App\Invoice\Entity)',
+'generator.namespace.before.entity' => 'Przestrzeń nazw przed ścieżką jednostki,'
+	. 'np.'
+	. 'App\\Invoice (NIE App\\Invoice\\Entity)',
 'generator.relation.form' => 'Formularz relacji generatora',
-'generator.relation.form.camelcase.name' => 'Nazwa w formacie Camelcase z wyłączeniem identyfikatora (np. tax_rate_id „klucz obcy/relacja” w tabeli Produkt uproszczony do TaxRate AND jest nazwą jednostki)',
-'generator.relation.form.entity.generator' => 'Generator jednostek',
-'generator.relation.form.lowercase.name' => 'Nazwa zapisana małymi literami bez identyfikatora (np. tax_rate_id &#39;klucz obcy/relacja&#39; w tabeli Produkt uproszczono do tax.rate) ',
-'generator.relation.form.view.field.name' => 'Wyświetl nazwę pola',
+'generator.relation.form.camelcase.name' =>
+	'Nazwa w formacie Camelcase z '
+	. 'wyłączeniem identyfikatora (np.'
+	. 'tax_rate_id „klucz obcy/relacja” w tabeli '
+	. 'Produkt uproszczony do TaxRate AND '
+	. 'jest nazwą jednostki)',
+'generator.relation.form.entity.generator' =>
+	'Generator jednostek',
+'generator.relation.form.lowercase.name' =>
+	'Nazwa zapisana małymi literami bez '
+	. 'identyfikatora (np.'
+	. 'tax_rate_id \'klucz obcy/relacja\' w tabeli '
+	. 'Produkt uproszczono do tax.'
+	. 'rate)',
+'generator.relation.form.view.field.name' =>
+	'Wyświetl nazwę pola',
 'generator.relations' => 'Relacje generatora',
 'generator.relations.add' => 'Dodaj relację generatorów',
-'generator.route.prefix' => 'Prefiks trasy, np. faktura w &#39;faktura/produkt&#39;, który pojawi się po konstrukcji kontrolera.',
-'generator.route.suffix' => 'Sufiks trasy, np. „produkt” w „faktura/produkt”, który pojawi się po konstrukcji kontrolera.',
-'generator.small.plural.name' => 'Mała liczba mnoga nazwy używana w kontrolerze dla funkcji kontrolera indeksu w celu wyświetlenia wszystkich generatorów encji. Zwykle powyższa wartość z s na końcu.',
-'generator.small.plural.name.placeholder' => 'Mała liczba mnoga nazwy',
-'generator.small.plural.name.products' => 'Produkty',
-'generator.small.singular.name' => 'Mała pojedyncza nazwa używana w kontrolerze do edycji i przeglądania funkcji kontrolera. Zwykle taka sama jak sufiks trasy. np. product',
-'generator.small.singular.name.placeholder' => 'Mała pojedyncza nazwa',
-'generator.small.singular.name.product' => 'produkt',
+'generator.route.prefix' => 'Prefiks trasy, np.'
+	. 'faktura w \'faktura/produkt\', który pojawi '
+	. 'się po konstrukcji kontrolera.',
+'generator.route.suffix' => 'Sufiks trasy, np.'
+	. '„produkt” w „faktura/produkt”, który pojawi '
+	. 'się po konstrukcji kontrolera.',
+'generator.small.plural.name' => 'Mała liczba mnoga nazwy używana '
+	. 'w kontrolerze dla funkcji kontrolera '
+	. 'indeksu w celu wyświetlenia wszystkich '
+	. 'generatorów encji.'
+	. 'Zwykle powyższa wartość z s '
+	. 'na końcu.',
+'generator.small.plural.name.placeholder' =>
+	'Mała liczba mnoga nazwy',
+'generator.small.plural.name.products' =>
+	'Produkty',
+'generator.small.singular.name' => 'Mała pojedyncza nazwa używana w '
+	. 'kontrolerze do edycji i przeglądania '
+	. 'funkcji kontrolera.'
+	. 'Zwykle taka sama jak sufiks '
+	. 'trasy.'
+	. 'np.'
+	. 'product',
+'generator.small.singular.name.placeholder' =>
+	'Mała pojedyncza nazwa',
+'generator.small.singular.name.product' =>
+	'produkt',
 'generator.table' => 'Tabela',
-'generator.table.used.to.generate.entity.controller.repository' => 'Tabela używana do generowania Encji, Kontrolera Dodaj Edytuj Usuń Widok, Repozytorium, Usługa, Maper',
-'generator.updated.at.include' => 'Dołącz pole updated.at do Encji',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'Tabela używana do generowania Encji,'
+	. 'Kontrolera Dodaj Edytuj Usuń Widok,'
+	. 'Repozytorium, Usługa, Maper',
+'generator.updated.at.include' => 'Dołącz pole updated.'
+	. 'at do Encji',
 'generators' => 'Generatory',
 'generators.relation' => 'Relacja generatorów',
 'gln' => 'GLN',
@@ -632,44 +1052,99 @@ return [
 'gridview.title' => 'Lista użytkowników',
 'group' => 'Grupa',
 'group.add' => 'Dodaj grupę',
-'group.document.number' => 'Numer dokumentu nie został wygenerowany. Sprawdź grupy.',
+'group.document.number' => 'Numer dokumentu nie został wygenerowany.'
+	. 'Sprawdź grupy.',
 'group.form' => 'Formularz grupowy',
-'group.history' => 'Historia grupy istnieje. Nie można usunąć',
+'group.history' => 'Historia grupy istnieje.'
+	. 'Nie można usunąć',
 'groups' => 'Grupy',
-'guest.account.denied' => 'To konto nie jest skonfigurowane. Skontaktuj się z administratorem systemu.',
+'guest.account.denied' => 'To konto nie jest skonfigurowane.'
+	. 'Skontaktuj się z administratorem systemu.',
 'guest.read.only' => 'Gość (tylko do odczytu)',
 'guest.url' => 'Adres URL gościa',
 'hide.or.unhide.columns' => 'Ukryj lub pokaż kolumny',
-'hint.greater.than.zero.please' => 'Proszę podać wartość większą niż 0,00!',
-'hint.this.field.is.not.required' => 'To pole nie jest wymagane',
-'hint.this.field.is.required' => 'To pole jest wymagane',
+'hint.greater.than.zero.please' =>
+	'Proszę podać wartość większą niż '
+	. '0,00!',
+'hint.this.field.is.not.required' =>
+	'To pole nie jest wymagane',
+'hint.this.field.is.required' =>
+	'To pole jest wymagane',
 'home' => 'Dom',
-'home.caption.slide1' => 'Zarejestruj się i zaloguj jako administrator. Brak internetu ... zignoruj ​​błąd połączenia e-mail.',
-'home.caption.slide2' => 'Jako administrator zarejestruj użytkownika. Konto e-mail jest legalne, a połączenie internetowe ... sprawdź. Użytkownik otrzyma konto klienckie.',
-'home.caption.slide3' => 'Konto e-mail nie jest legalne i nie ma połączenia z internetem... zaloguj się administrator i aktywuj konto użytkownika Invoice w Ustawieniach. Utwórz konto klienta. Przypisz je użytkownikowi',
-'home.caption.slides.location.debug.mode' => 'Ta lokalizacja zawartości: ./resources/views/site/index.php w ./resources/views/layout/. ... i lokalizacja slajdu z tłumaczeniem ./resources/messages/app.php',
+'home.caption.slide1' => 'Zarejestruj się i zaloguj jako '
+	. 'administrator.'
+	. 'Brak internetu .'
+	. 'zignoruj ​​błąd połączenia e-mail.',
+'home.caption.slide2' => 'Jako administrator zarejestruj użytkownika.'
+	. 'Konto e-mail jest legalne, a '
+	. 'połączenie internetowe .'
+	. 'sprawdź.'
+	. 'Użytkownik otrzyma konto klienckie.',
+'home.caption.slide3' => 'Konto e-mail nie jest legalne '
+	. 'i nie ma połączenia z '
+	. 'internetem.'
+	. 'zaloguj się administrator i aktywuj '
+	. 'konto użytkownika Invoice w Ustawieniach.'
+	. 'Utwórz konto klienta.'
+	. 'Przypisz je użytkownikowi',
+'home.caption.slides.location.debug.mode' =>
+	'Ta lokalizacja zawartości:'
+	. '/resources/views/site/index.'
+	. 'php w .'
+	. '/resources/views/layout/.'
+	. '.'
+	. 'i lokalizacja slajdu z tłumaczeniem '
+	. '.'
+	. '/resources/messages/app.'
+	. 'php',
 'hostname' => 'Nazwa hosta',
 'html.sumex.no' => 'Html bez Sumex',
 'html.sumex.yes' => 'Html z Sumex',
 'id' => 'ID',
 'identifier.format' => 'Formatowanie identyfikatora',
 'identifier.format.template.tags' => 'Znaczniki szablonu dla identyfikatora',
-'identifier.format.template.tags.instructions' => 'Znaczniki szablonów mogą być używane do dodawania dynamicznych informacji, takich jak nazwa klienta lub numer faktury do szablonu wiadomości e-mail. Kliknij pole <b>formatowania identyfikatora</b> , a następnie wybierz znacznik z listy rozwijanej. Zostanie on automatycznie wstawiony do pola tekstowego.',
-'identity.provider.authentication.successful' => 'Zostałeś pomyślnie uwierzytelniony przez wybranego Dostawcę Tożsamości, zarejestrowałeś się i przydzielono Ci konto klienta. Kliknij tutaj w ciągu najbliższej godziny, aby aktywować swoje konto. Masz godzinę na pierwsze logowanie.',
-'image.overdue' => '  Lokalizacja obrazu: ./invoice/public/img/overdue.png',
-'image.paid' => '  Lokalizacja obrazu: ./invoice/public/img/paid.png',
+'identifier.format.template.tags.instructions' =>
+	'Znaczniki szablonów mogą być używane '
+	. 'do dodawania dynamicznych informacji, takich '
+	. 'jak nazwa klienta lub numer '
+	. 'faktury do szablonu wiadomości e-mail.'
+	. 'Kliknij pole <b>formatowania identyfikatora</b> ,'
+	. 'a następnie wybierz znacznik z '
+	. 'listy rozwijanej.'
+	. 'Zostanie on automatycznie wstawiony do '
+	. 'pola tekstowego.',
+'identity.provider.authentication.successful' => 'Zostałeś pomyślnie uwierzytelniony przez wybranego '
+	. 'Dostawcę Tożsamości, zarejestrowałeś się i '
+	. 'przydzielono Ci konto klienta.'
+	. 'Kliknij tutaj w ciągu najbliższej '
+	. 'godziny, aby aktywować swoje konto.'
+	. 'Masz godzinę na pierwsze logowanie.',
+'image.overdue' => 'Lokalizacja obrazu:'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => 'Lokalizacja obrazu:'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => 'Import',
 'import.data' => 'Importuj dane',
 'import.from.csv' => 'Importuj z CSV',
 'in.progress' => 'W toku',
 'inactive' => 'Nieaktywny',
-'index.checkbox.add.some.items.to.enable' => 'Faktura nie zawiera żadnych pozycji. Dodaj pozycje, aby włączyć pole wyboru',
+'index.checkbox.add.some.items.to.enable' =>
+	'Faktura nie zawiera żadnych pozycji.'
+	. 'Dodaj pozycje, aby włączyć pole '
+	. 'wyboru',
 'index.footer.showing' => 'Wyświetlanie %s z %s',
 'index.showing' => 'Wyświetlanie %s z %s',
-'info.task.readonly' => 'Tego zadania nie można już zmienić, ponieważ zostało już zafakturowane.',
+'info.task.readonly' => 'Tego zadania nie można już '
+	. 'zmienić, ponieważ zostało już zafakturowane.',
 'install.test.data' => 'Dane testowe można teraz zainstalować',
-'install.test.data.exists.already' => 'Dane testowe faktury już istnieją',
-'install.test.data.goto.tab.index' => 'Przejdź do Ustawień... Ogólne... Zainstaluj dane testowe',
+'install.test.data.exists.already' =>
+	'Dane testowe faktury już istnieją',
+'install.test.data.goto.tab.index' =>
+	'Przejdź do Ustawień.'
+	. 'Ogólne.'
+	. 'Zainstaluj dane testowe',
 'interface' => 'Interfejs',
 'invalid.amount' => 'Nieprawidłowa kwota',
 'invalid.subscriber.number' => 'Nieprawidłowy numer abonenta',
@@ -682,20 +1157,35 @@ return [
 'invoiceplane.database.username' => 'Nazwa użytkownika',
 'invoiceplane.families' => 'Wstawione rodziny',
 'invoiceplane.import' => 'Test połączenia',
-'invoiceplane.import.complete.connection.closed' => 'Import zakończony! Połączenie zamknięte!',
+'invoiceplane.import.complete.connection.closed' =>
+	'Import zakończony! Połączenie zamknięte!',
 'invoiceplane.import.connected' => 'Masz połączenie!',
 'invoiceplane.import.proceed' => 'Kontynuuj proces importowania',
 'invoiceplane.import.proceed.alert' => 'Czy na pewno chcesz kontynuować?',
 'invoiceplane.imported' => 'Tabele zostały zaimportowane',
 'invoiceplane.news' => 'Aktualności InvoicePlane',
 'invoiceplane.no.connection' => 'Brak połączenia',
-'invoiceplane.no.username.or.password' => 'Zapisz nazwę bazy danych, nazwę użytkownika i hasło dla InvoicePlane',
+'invoiceplane.no.username.or.password' =>
+	'Zapisz nazwę bazy danych, nazwę '
+	. 'użytkownika i hasło dla InvoicePlane',
 'invoiceplane.products' => 'Produkty wstawione',
-'invoiceplane.tables' => 'Importuj tabele InvoicePlane Client, Product, Unit, Family, TaxRate do pustych tabel. Przed importem w tych tabelach nie powinno być żadnych istniejących danych ani żadnych istniejących dokumentów, np. Invoices.',
-'invoiceplane.tables.not.empty' => 'Przed zaimportowaniem tabele Klienta, Produktu, Jednostki, Rodziny i Stawki Podatkowej muszą być puste',
-'invoiceplane.taxrates' => 'Wprowadzono stawki podatkowe z obowiązkową zerową stawką podatkową i standardową stawką podatkową.',
+'invoiceplane.tables' => 'Importuj tabele InvoicePlane Client, Product,'
+	. 'Unit, Family, TaxRate do pustych '
+	. 'tabel.'
+	. 'Przed importem w tych tabelach '
+	. 'nie powinno być żadnych istniejących '
+	. 'danych ani żadnych istniejących dokumentów,'
+	. 'np.'
+	. 'Invoices.',
+'invoiceplane.tables.not.empty' => 'Przed zaimportowaniem tabele Klienta, Produktu,'
+	. 'Jednostki, Rodziny i Stawki Podatkowej '
+	. 'muszą być puste',
+'invoiceplane.taxrates' => 'Wprowadzono stawki podatkowe z obowiązkową '
+	. 'zerową stawką podatkową i standardową '
+	. 'stawką podatkową.',
 'invoiceplane.units' => 'Wstawione jednostki',
-'invoiceplane.yes.connection' => 'Tak, masz połączenie z bazą danych Invoiceplane!',
+'invoiceplane.yes.connection' => 'Tak, masz połączenie z bazą '
+	. 'danych Invoiceplane!',
 'invoices' => 'Faktury',
 'invoices.due.after' => 'Faktury płatne po (dniach)',
 'is.not.writable' => 'nie jest zapisywalny',
@@ -711,8 +1201,10 @@ return [
 'item.lookups' => 'Wyszukiwanie elementów',
 'item.name' => 'Nazwa przedmiotu',
 'item.tax' => 'Podatek od pozycji',
-'item.tax.excluded' => 'Suma częściowa x Procent podatku (podatek od pozycji został wyłączony)',
-'item.tax.included' => '(Suma częściowa + podatek od pozycji) x Procent podatku',
+'item.tax.excluded' => 'Suma częściowa x Procent podatku '
+	. '(podatek od pozycji został wyłączony)',
+'item.tax.included' => '(Suma częściowa + podatek od '
+	. 'pozycji) x Procent podatku',
 'item.tax.rate' => 'Stawka podatku od przedmiotu',
 'items' => 'Pozycje faktury',
 'judgement' => 'Uzyskano wyrok',
@@ -741,9 +1233,12 @@ return [
 'layout.migrations' => 'Migracje',
 'layout.no-records' => 'Brak rekordów',
 'layout.not-found' => 'Nie znaleziono',
-'layout.page.not-authorised' => 'Brak autoryzacji: Dane uwierzytelniające są nieprawidłowe.',
+'layout.page.not-authorised' => 'Brak autoryzacji:'
+	. 'Dane uwierzytelniające są nieprawidłowe.',
 'layout.page.not-found' => 'Nie znaleziono strony {url}.',
-'layout.page.user-cancelled-oauth2' => 'Użytkownik anulował logowanie/rejestrację za pośrednictwem dostawcy tożsamości, np. Facebook',
+'layout.page.user-cancelled-oauth2' => 'Użytkownik anulował logowanie/rejestrację za pośrednictwem '
+	. 'dostawcy tożsamości, np.'
+	. 'Facebook',
 'layout.pagination-summary' => 'Wyświetlanie {pageSize} z {total} postów',
 'layout.password' => 'Hasło',
 'layout.password-verify' => 'Potwierdź swoje hasło',
@@ -759,24 +1254,45 @@ return [
 'layout.total.posts' => 'Łącznie {count} postów',
 'left.pad' => 'Lewa podkładka',
 'letter' => '7-dniowy list przed wysłaniem akcji',
-'loading.error' => 'Wygląda na to, że aplikacja zawiesiła się z powodu błędu.',
+'loading.error' => 'Wygląda na to, że aplikacja '
+	. 'zawiesiła się z powodu błędu.',
 'loading.error.help' => 'Uzyskaj pomoc',
 'login' => 'Login',
 'login.logo' => 'Logo logowania',
 'loginalert.credentials.incorrect' => 'Nieprawidłowy adres e-mail lub hasło.',
 'loginalert.no.password' => 'Proszę podać hasło.',
-'loginalert.user.inactive' => 'Ten użytkownik jest oznaczony jako nieaktywny. Skontaktuj się z administratorem systemu.',
-'loginalert.user.not.found' => 'Nie ma konta zarejestrowanego pod tym adresem e-mail.',
-'loginalert.wrong.auth.code' => 'Odmowa resetowania hasła. Podałeś nieprawidłowy token uwierzytelniający.',
+'loginalert.user.inactive' => 'Ten użytkownik jest oznaczony jako '
+	. 'nieaktywny.'
+	. 'Skontaktuj się z administratorem systemu.',
+'loginalert.user.not.found' => 'Nie ma konta zarejestrowanego pod '
+	. 'tym adresem e-mail.',
+'loginalert.wrong.auth.code' => 'Odmowa resetowania hasła.'
+	. 'Podałeś nieprawidłowy token uwierzytelniający.',
 'logo' => 'Logo faktury',
 'logout' => 'Wyloguj',
 'loss' => 'Odpisany',
-'mark.invoices.sent.copy' => 'Oznaczaj faktury jako wysłane podczas kopiowania faktury',
-'mark.invoices.sent.pdf' => 'Oznaczaj faktury jako wysłane po wygenerowaniu pliku PDF',
-'mark.quotes.sent.pdf' => 'Oznacz cytaty jako wysłane po wygenerowaniu pliku PDF',
-'mark.sent.copy.on' => 'Oznacz faktury jako wysłane, gdy kopiowanie faktury jest włączone. Powinno być włączone tylko podczas tworzenia',
-'mark.sent.off' => 'Oznacz faktury jako wysłane podczas kopiowania faktur ... jest obecnie WYŁĄCZONE. Ustawione na WŁĄCZONE tylko podczas rozwoju. Kliknij tutaj, aby je WŁĄCZYĆ',
-'mark.sent.on' => 'Oznacz faktury jako wysłane podczas kopiowania faktur ... jest obecnie WŁĄCZONE. Zawsze miej je włączone WYŁĄCZONE podczas produkcji. Kliknij tutaj, aby je WYŁĄCZYĆ',
+'mark.invoices.sent.copy' => 'Oznaczaj faktury jako wysłane podczas '
+	. 'kopiowania faktury',
+'mark.invoices.sent.pdf' => 'Oznaczaj faktury jako wysłane po '
+	. 'wygenerowaniu pliku PDF',
+'mark.quotes.sent.pdf' => 'Oznacz cytaty jako wysłane po '
+	. 'wygenerowaniu pliku PDF',
+'mark.sent.copy.on' => 'Oznacz faktury jako wysłane, gdy '
+	. 'kopiowanie faktury jest włączone.'
+	. 'Powinno być włączone tylko podczas '
+	. 'tworzenia',
+'mark.sent.off' => 'Oznacz faktury jako wysłane podczas '
+	. 'kopiowania faktur .'
+	. 'jest obecnie WYŁĄCZONE.'
+	. 'Ustawione na WŁĄCZONE tylko podczas '
+	. 'rozwoju.'
+	. 'Kliknij tutaj, aby je WŁĄCZYĆ',
+'mark.sent.on' => 'Oznacz faktury jako wysłane podczas '
+	. 'kopiowania faktur .'
+	. 'jest obecnie WŁĄCZONE.'
+	. 'Zawsze miej je włączone WYŁĄCZONE '
+	. 'podczas produkcji.'
+	. 'Kliknij tutaj, aby je WYŁĄCZYĆ',
 'max' => 'Maksymalnie',
 'max.quantity' => 'Maksymalna ilość',
 'menu' => 'Menu',
@@ -785,7 +1301,9 @@ return [
 'menu.blog' => 'Blog',
 'menu.comments-feed' => 'Kanał komentarzy',
 'menu.contact.details' => 'Dane kontaktowe',
-'menu.contact.soon' => 'Dziękujemy za kontakt z nami. Skontaktujemy się z Tobą najszybciej, jak to możliwe.',
+'menu.contact.soon' => 'Dziękujemy za kontakt z nami.'
+	. 'Skontaktujemy się z Tobą najszybciej,'
+	. 'jak to możliwe.',
 'menu.contact.us' => 'Skontaktuj się z nami',
 'menu.gallery' => 'Galeria',
 'menu.language' => 'Język',
@@ -808,58 +1326,119 @@ return [
 'mobile' => 'Przenośny',
 'mobile.number' => 'Numer telefonu komórkowego',
 'monday' => 'Poniedziałek',
-'monospaced.font.for.amounts' => 'Użyj czcionki o stałej szerokości dla kwot',
+'monospaced.font.for.amounts' => 'Użyj czcionki o stałej szerokości '
+	. 'dla kwot',
 'month' => 'Miesiąc',
 'month.prefix' => 'Prefiks miesiąca',
 'mpdf' => 'Plik PDF',
 'mpdf.allow.charset.conversion' => 'Zezwalaj na konwersję zestawu znaków',
 'mpdf.auto.arabic' => 'Auto arabski',
-'mpdf.auto.language.to.font' => 'Automatyczna zmiana języka na czcionkę',
-'mpdf.auto.script.to.lang' => 'Automatyczne skryptowanie do języka',
+'mpdf.auto.language.to.font' =>
+	'Automatyczna zmiana języka na czcionkę',
+'mpdf.auto.script.to.lang' =>
+	'Automatyczne skryptowanie do języka',
 'mpdf.auto.vietnamese' => 'Samochód wietnamski',
 'mpdf.cjk' => 'Czcionka chińska, japońska, koreańska',
 'mpdf.ltr' => 'Od lewej do prawej',
 'mpdf.show.image.errors' => 'Pokaż błędy obrazu',
 'mtd' => 'Cyfryzacja podatków',
 'mtd.fph' => 'Nagłówki dotyczące zapobiegania oszustwom',
-'mtd.fph.all.valid' => 'Wszystkie nagłówki dotyczące zapobiegania oszustwom są ważne',
+'mtd.fph.all.valid' => 'Wszystkie nagłówki dotyczące zapobiegania oszustwom '
+	. 'są ważne',
 'mtd.fph.generate' => 'Spowodować',
 'mtd.fph.no.provided' => 'Nie podano nagłówków zapobiegających oszustwom',
-'mtd.fph.record.alert' => 'Czy na pewno chcesz zapisać nowe szczegóły nagłówka Fraud Prevention Header? Poprzednie szczegóły zostaną nadpisane, jeśli zostaną zapisane!',
+'mtd.fph.record.alert' => 'Czy na pewno chcesz zapisać '
+	. 'nowe szczegóły nagłówka Fraud Prevention '
+	. 'Header? Poprzednie szczegóły zostaną nadpisane,'
+	. 'jeśli zostaną zapisane!',
 'mtd.fph.screen.timestamp' => 'Znak czasu',
-'mtd.fph.some.advisories' => 'Co najmniej jeden nagłówek jest potencjalnie nieprawidłowy',
-'mtd.fph.some.invalid' => 'Co najmniej jeden nagłówek jest nieprawidłowy',
-'mtd.gov.client.browser.do.not.track' => 'Wartość wskazująca, czy opcja Do Not Track jest włączona w przeglądarce',
-'mtd.gov.client.browser.do.not.track.eg' => 'np. fałsz',
-'mtd.gov.client.browser.js.user.agent' => 'Gov-Client-Browser-JS-User-Agent',
-'mtd.gov.client.browser.js.user.agent.eg' => 'np. Mozilla/5.0 (iPad; U; CPU OS 3 2.1 jak Mac OS X; en-us) (KHTML, jak Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' => 'Lista wtyczek przeglądarki na urządzeniu źródłowym',
-'mtd.gov.client.browser.plugins.eg' => 'np. Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Metoda połączenia z klientem rządowym',
-'mtd.gov.client.device.id' => 'Identyfikator urządzenia',
-'mtd.gov.client.device.id.eg' => 'np. beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => 'Lokalny adres IP',
-'mtd.gov.client.multi.factor' => 'Wieloczynnikowy',
-'mtd.gov.client.multi.factor.eg' => 'np. typ=OTP; status=sukces, typ=SMS; status=niepowodzenie, typ=Biometryczny, typ=SMS; znacznik czasu=2023-04-01T12:34:56Z; unikalne odniesienie=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => 'Jednorazowe hasło (OTP): ',
-'mtd.gov.client.public.ip' => 'Publiczny adres IP',
-'mtd.gov.client.public.port' => 'Port publiczny (nie http 80 i nie https 443, np. 57961)',
+'mtd.fph.some.advisories' => 'Co najmniej jeden nagłówek jest '
+	. 'potencjalnie nieprawidłowy',
+'mtd.fph.some.invalid' => 'Co najmniej jeden nagłówek jest '
+	. 'nieprawidłowy',
+'mtd.gov.client.browser.do.not.track' =>
+	'Wartość wskazująca, czy opcja Do '
+	. 'Not Track jest włączona w '
+	. 'przeglądarce',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'np.'
+	. 'fałsz',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov-Client-Browser-JS-User-Agent',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'np.'
+	. 'Mozilla/5.'
+	. '0 (iPad; U; CPU OS '
+	. '3 2.'
+	. '1 jak Mac OS X;'
+	. 'en-us) (KHTML, jak Gecko) Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'Lista wtyczek przeglądarki na urządzeniu '
+	. 'źródłowym',
+'mtd.gov.client.browser.plugins.eg' =>
+	'np.'
+	. 'Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'Metoda połączenia z klientem rządowym',
+'mtd.gov.client.device.id' =>
+	'Identyfikator urządzenia',
+'mtd.gov.client.device.id.eg' =>
+	'np.'
+	. 'beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'Lokalny adres IP',
+'mtd.gov.client.multi.factor' =>
+	'Wieloczynnikowy',
+'mtd.gov.client.multi.factor.eg' =>
+	'np.'
+	. 'typ=OTP; status=sukces, typ=SMS; status=niepowodzenie, typ=Biometryczny,'
+	. 'typ=SMS; znacznik czasu=2023-04-01T12:'
+	. '34:'
+	. '56Z; unikalne odniesienie=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'Jednorazowe hasło (OTP):',
+'mtd.gov.client.public.ip' =>
+	'Publiczny adres IP',
+'mtd.gov.client.public.port' =>
+	'Port publiczny (nie http 80 '
+	. 'i nie https 443, np.'
+	. '57961)',
 'mtd.gov.client.screens' => 'Ekrany klienta rządowego',
-'mtd.gov.client.screens.colour.depth' => 'Głębia koloru',
-'mtd.gov.client.screens.height' => 'Wysokość ekranu',
-'mtd.gov.client.screens.pixels' => 'piksele',
-'mtd.gov.client.screens.scaling.factor' => 'Współczynnik skalowania',
-'mtd.gov.client.screens.scaling.factor.bits' => 'bity',
-'mtd.gov.client.screens.width' => 'Szerokość ekranu',
+'mtd.gov.client.screens.colour.depth' =>
+	'Głębia koloru',
+'mtd.gov.client.screens.height' =>
+	'Wysokość ekranu',
+'mtd.gov.client.screens.pixels' =>
+	'piksele',
+'mtd.gov.client.screens.scaling.factor' =>
+	'Współczynnik skalowania',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'bity',
+'mtd.gov.client.screens.width' =>
+	'Szerokość ekranu',
 'mtd.gov.client.timezone' => 'Strefa czasowa',
-'mtd.gov.client.user.ids' => 'Identyfikatory użytkowników',
-'mtd.gov.client.user.ids.uuid' => 'identyfikator użytkownika',
-'mtd.gov.client.window.size' => 'Rozmiar okna',
-'mtd.gov.client.window.size.pixels' => 'piksele',
-'mtd.gov.vendor.forwarded' => 'Lista szczegółowo opisująca przeskoki w Internecie między usługami, które kończą protokół Transport Layer Security (TLS)',
-'mtd.gov.vendor.license.ids' => 'Struktura danych klucz-wartość zawierająca zahaszowane klucze licencyjne, które są powiązane z oprogramowaniem dostawcy, które zainicjowało żądanie API na urządzeniu źródłowym',
-'mtd.gov.vendor.public.ip' => 'Publiczny adres IP serwerów, do których urządzenie źródłowe wysyłało żądania',
-'mtd.gov.vendor.version' => 'Kluczowa struktura danych wartości wersji oprogramowania biorących udział w obsłudze żądania',
+'mtd.gov.client.user.ids' =>
+	'Identyfikatory użytkowników',
+'mtd.gov.client.user.ids.uuid' =>
+	'identyfikator użytkownika',
+'mtd.gov.client.window.size' =>
+	'Rozmiar okna',
+'mtd.gov.client.window.size.pixels' =>
+	'piksele',
+'mtd.gov.vendor.forwarded' => 'Lista szczegółowo opisująca przeskoki w '
+	. 'Internecie między usługami, które kończą '
+	. 'protokół Transport Layer Security (TLS)',
+'mtd.gov.vendor.license.ids' =>
+	'Struktura danych klucz-wartość zawierająca zahaszowane '
+	. 'klucze licencyjne, które są powiązane '
+	. 'z oprogramowaniem dostawcy, które zainicjowało '
+	. 'żądanie API na urządzeniu źródłowym',
+'mtd.gov.vendor.public.ip' =>
+	'Publiczny adres IP serwerów, do '
+	. 'których urządzenie źródłowe wysyłało żądania',
+'mtd.gov.vendor.version' => 'Kluczowa struktura danych wartości wersji '
+	. 'oprogramowania biorących udział w obsłudze '
+	. 'żądania',
 'multiple.choice' => 'Wielokrotny wybór',
 'name' => 'Nazwa',
 'new' => 'Nowy',
@@ -886,21 +1465,36 @@ return [
 'notes' => 'Notatki',
 'number' => '#',
 'number.format' => 'Format liczbowy',
-'number.format.compact.comma' => '1000000,00 (Format kompaktowy z przecinkiem dziesiętnym)',
-'number.format.compact.point' => '1000000,00 (Format kompaktowy z przecinkiem dziesiętnym)',
-'number.format.european' => '1.000.000,00 (format europejski)',
-'number.format.iso.80k.1' => '1 000 000,00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 z przecinkiem dziesiętnym)',
-'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 z przecinkiem dziesiętnym)',
-'number.format.us.uk' => '1 000 000,00 (format USA/Wielka Brytania)',
-'number.missing.therefore.use.invoice.id' => 'brak numeru faktury, dlatego też identyfikator faktury',
+'number.format.compact.comma' => '1000000,00 (Format kompaktowy z przecinkiem '
+	. 'dziesiętnym)',
+'number.format.compact.point' => '1000000,00 (Format kompaktowy z przecinkiem '
+	. 'dziesiętnym)',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00 (format europejski)',
+'number.format.iso.80k.1' =>
+	'1 000 000,00 (ISO 80000-1)',
+'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
+	. 'z przecinkiem dziesiętnym)',
+'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 '
+	. 'z przecinkiem dziesiętnym)',
+'number.format.us.uk' => '1 000 000,00 (format USA/Wielka '
+	. 'Brytania)',
+'number.missing.therefore.use.invoice.id' =>
+	'brak numeru faktury, dlatego też '
+	. 'identyfikator faktury',
 'number.no' => 'Brak numeru faktury',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => 'Identyfikator klienta',
-'oauth2.google.people.api.v1.client.secret' => 'Tajemnica klienta',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'Identyfikator klienta',
+'oauth2.google.people.api.v1.client.secret' =>
+	'Tajemnica klienta',
 'online.log' => 'Dziennik online',
 'online.payment' => 'Płatność online',
-'online.payment.3dauth.redirect' => 'Poczekaj, aż zostaniesz przekierowany na stronę wystawcy karty w celu uwierzytelnienia...',
+'online.payment.3dauth.redirect' => 'Poczekaj, aż zostaniesz przekierowany na '
+	. 'stronę wystawcy karty w celu '
+	. 'uwierzytelnienia.',
 'online.payment.accessKey' => 'Klucz dostępu',
 'online.payment.accessToken' => 'Token dostępu',
 'online.payment.accountId' => 'Identyfikator konta',
@@ -910,10 +1504,17 @@ return [
 'online.payment.appId' => 'Identyfikator aplikacji',
 'online.payment.appSecret' => 'Tajny kod aplikacji',
 'online.payment.callbackPassword' => 'Hasło oddzwaniania',
-'online.payment.card.invalid' => 'Ta karta kredytowa jest nieważna. Sprawdź podane informacje.',
+'online.payment.card.invalid' => 'Ta karta kredytowa jest nieważna.'
+	. 'Sprawdź podane informacje.',
 'online.payment.clientId' => 'Identyfikator klienta',
 'online.payment.clientSecret' => 'Tajemnica klienta',
-'online.payment.creditcard.hint' => 'Jeśli chcesz zapłacić kartą kredytową, wprowadź dane poniżej.<br/> Informacje o karcie kredytowej nie są przechowywane na naszych serwerach, lecz zostaną przesłane do bramki płatności online za pośrednictwem bezpiecznego połączenia.',
+'online.payment.creditcard.hint' => 'Jeśli chcesz zapłacić kartą kredytową,'
+	. 'wprowadź dane poniżej.'
+	. '<br/> Informacje o karcie kredytowej '
+	. 'nie są przechowywane na naszych '
+	. 'serwerach, lecz zostaną przesłane do '
+	. 'bramki płatności online za pośrednictwem '
+	. 'bezpiecznego połączenia.',
 'online.payment.developerMode' => 'Tryb programisty',
 'online.payment.for' => 'Płatność online za',
 'online.payment.for.invoice' => 'Płatność za fakturę online',
@@ -926,9 +1527,12 @@ return [
 'online.payment.partnerID' => 'Identyfikator partnera',
 'online.payment.password' => 'Hasło',
 'online.payment.payment.cancelled' => 'Płatność anulowana.',
-'online.payment.payment.failed' => 'Płatność nie powiodła się. Spróbuj ponownie.',
-'online.payment.payment.redirect' => 'Poczekaj, aż zostaniesz przekierowany na stronę płatności...',
-'online.payment.payment.successful' => 'Płatność za fakturę %s powiodła się!',
+'online.payment.payment.failed' => 'Płatność nie powiodła się.'
+	. 'Spróbuj ponownie.',
+'online.payment.payment.redirect' => 'Poczekaj, aż zostaniesz przekierowany na '
+	. 'stronę płatności.',
+'online.payment.payment.successful' => 'Płatność za fakturę %s powiodła '
+	. 'się!',
 'online.payment.pdtKey' => 'Klucz Pdt',
 'online.payment.privateKey' => 'Klucz prywatny',
 'online.payment.profileID' => 'Identyfikator profilu',
@@ -955,19 +1559,27 @@ return [
 'online.payment.storePassword' => 'Przechowuj hasło',
 'online.payment.subAccountId' => 'Identyfikator konta podrzędnego',
 'online.payment.testMode' => 'Tryb testowy',
-'online.payment.testOrLiveApiKey' => 'Klucz API testowy lub na żywo, np. zaczyna się od test_ lub live_',
+'online.payment.testOrLiveApiKey' => 'Klucz API testowy lub na '
+	. 'żywo, np.'
+	. 'zaczyna się od test_ lub '
+	. 'live_',
 'online.payment.transactionKey' => 'Klucz transakcji',
 'online.payment.transactionPassword' => 'Hasło transakcyjne',
 'online.payment.username' => 'Nazwa użytkownika',
 'online.payment.vendor' => 'Sprzedawca',
-'online.payment.version' => 'Wersja Omnipay (zaznaczona) / Zgodna z PCI (w tej bazie danych nie są przechowywane żadne dane kart kredytowych) (odznaczona)',
+'online.payment.version' => 'Wersja Omnipay (zaznaczona) / Zgodna '
+	. 'z PCI (w tej bazie '
+	. 'danych nie są przechowywane żadne '
+	. 'dane kart kredytowych) (odznaczona)',
 'online.payment.webhookId' => 'Identyfikator webhooka',
 'online.payment.websiteKey' => 'Klucz witryny',
 'online.payments' => 'Płatności online',
 'open' => 'Otwarte',
 'open.invoices' => 'Otwarte faktury',
 'open.quotes' => 'Otwórz oferty',
-'open.reports.in.new.tab' => 'Otwórz raporty w nowej karcie przeglądarki',
+'open.reports.in.new.tab' =>
+	'Otwórz raporty w nowej karcie '
+	. 'przeglądarki',
 'optional' => 'Fakultatywny',
 'options' => 'Opcje',
 'order' => 'Zamówienie',
@@ -983,9 +1595,16 @@ return [
 'password.change' => 'Zmień hasło',
 'password.changed' => 'Hasło zostało pomyślnie zmienione',
 'password.reset' => 'Zresetuj hasło',
-'password.reset.email' => 'Poprosiłeś o nowe hasło do instalacji. Kliknij link w swojej skrzynce odbiorczej, aby zresetować hasło.',
-'password.reset.failed' => 'Wystąpił błąd podczas próby wysłania wiadomości e-mail z resetowaniem hasła. Przejrzyj dzienniki aplikacji lub skontaktuj się z administratorem systemu.',
-'password.reset.info' => 'Otrzymasz wiadomość e-mail zawierającą link umożliwiający zresetowanie hasła.',
+'password.reset.email' => 'Poprosiłeś o nowe hasło do '
+	. 'instalacji.'
+	. 'Kliknij link w swojej skrzynce '
+	. 'odbiorczej, aby zresetować hasło.',
+'password.reset.failed' => 'Wystąpił błąd podczas próby wysłania '
+	. 'wiadomości e-mail z resetowaniem hasła.'
+	. 'Przejrzyj dzienniki aplikacji lub skontaktuj '
+	. 'się z administratorem systemu.',
+'password.reset.info' => 'Otrzymasz wiadomość e-mail zawierającą link '
+	. 'umożliwiający zresetowanie hasła.',
 'password.reset.request.token' => 'Poproś o token resetujący hasło',
 'past.month' => 'Poprzedni miesiąc',
 'past.quarter' => 'Ostatni kwartał',
@@ -994,55 +1613,139 @@ return [
 'payment' => 'Zapłata',
 'payment.add' => 'Dodaj płatność',
 'payment.cannot.delete' => 'Nie można usunąć płatności',
-'payment.cannot.exceed.balance' => 'Kwota płatności nie może przekraczać salda faktury.',
+'payment.cannot.exceed.balance' => 'Kwota płatności nie może przekraczać '
+	. 'salda faktury.',
 'payment.custom' => 'Płatność niestandardowa',
 'payment.custom.add' => 'Płatność niestandardowa Dodaj',
 'payment.date' => 'Data płatności',
 'payment.deleted' => 'Płatność usunięta',
 'payment.description' => 'Zapłata za fakturę %s',
 'payment.form' => 'Formularz płatności',
-'payment.gateway.default.locale' => 'Domyślne ustawienia regionalne, np. en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Test bramki płatniczej Mollie lub klucz API Live został skonfigurowany.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Należy skonfigurować test bramki płatności Mollie lub klucz API Live.',
-'payment.gateway.mollie.api.payment.id' => 'Identyfikator płatności Mollie: ',
-'payment.gateway.no' => 'W Ustawieniach nie skonfigurowano żadnych bramek płatności ... Wyświetl ... Płatność online',
+'payment.gateway.default.locale' => 'Domyślne ustawienia regionalne, np.'
+	. 'en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Test bramki płatniczej Mollie lub '
+	. 'klucz API Live został skonfigurowany.',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'Należy skonfigurować test bramki płatności '
+	. 'Mollie lub klucz API Live.',
+'payment.gateway.mollie.api.payment.id' =>
+	'Identyfikator płatności Mollie:',
+'payment.gateway.no' => 'W Ustawieniach nie skonfigurowano żadnych '
+	. 'bramek płatności .'
+	. 'Wyświetl .'
+	. 'Płatność online',
 'payment.history' => 'Historia płatności',
-'payment.information.amazon.no.omnipay.version' => 'Obecnie nie ma wersji Amazon Pay Omnipay. Odznacz opcję Wersja Omnipay, aby użyć wersji zgodnej z PCI w obszarze Ustawienia Widok',
-'payment.information.amazon.payment.session.complete' => 'Zakończono sesję płatności Amazon — identyfikator sesji: ',
-'payment.information.amazon.payment.session.incomplete' => 'Sesja płatności Amazon niekompletna — spróbuj ponownie',
-'payment.information.braintree.braintree.no.omnipay.version' => 'Obecnie nie ma wersji Braintree Omnipay kompatybilnej z wersją Braintree 6.9.1. Odznacz opcję Wersja Omnipay, aby użyć wersji zgodnej ze standardem PCI w obszarze Ustawienia Widok',
-'payment.information.invoice.number.not.provided' => 'Nie podano numeru faktury',
-'payment.information.no.information.provided' => 'Nie podano żadnych informacji',
+'payment.information.amazon.no.omnipay.version' =>
+	'Obecnie nie ma wersji Amazon '
+	. 'Pay Omnipay.'
+	. 'Odznacz opcję Wersja Omnipay, aby '
+	. 'użyć wersji zgodnej z PCI '
+	. 'w obszarze Ustawienia Widok',
+'payment.information.amazon.payment.session.complete' =>
+	'Zakończono sesję płatności Amazon — '
+	. 'identyfikator sesji:',
+'payment.information.amazon.payment.session.incomplete' =>
+	'Sesja płatności Amazon niekompletna — '
+	. 'spróbuj ponownie',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'Obecnie nie ma wersji Braintree '
+	. 'Omnipay kompatybilnej z wersją Braintree '
+	. '6.'
+	. '9.'
+	. '1.'
+	. 'Odznacz opcję Wersja Omnipay, aby '
+	. 'użyć wersji zgodnej ze standardem '
+	. 'PCI w obszarze Ustawienia Widok',
+'payment.information.invoice.number.not.provided' =>
+	'Nie podano numeru faktury',
+'payment.information.no.information.provided' =>
+	'Nie podano żadnych informacji',
 'payment.information.none' => 'Nic',
-'payment.information.omnipay.driver.being.used' => 'Używany jest sterownik {{$d}} z Omnipay.',
-'payment.information.payment.method.required' => 'Wymagane jest podanie metody płatności za tę fakturę.',
-'payment.information.stripe.api.key' => 'Należy skonfigurować tajny klucz/klucz API bramki płatności Stripe.',
+'payment.information.omnipay.driver.being.used' =>
+	'Używany jest sterownik {{$d}} z '
+	. 'Omnipay.',
+'payment.information.payment.method.required' =>
+	'Wymagane jest podanie metody płatności '
+	. 'za tę fakturę.',
+'payment.information.stripe.api.key' =>
+	'Należy skonfigurować tajny klucz/klucz API '
+	. 'bramki płatności Stripe.',
 'payment.logs' => 'Rejestry płatności',
 'payment.method' => 'Metoda płatności',
 'payment.method.add' => 'Dodaj metodę płatności',
 'payment.method.already.exists' => 'Ta metoda płatności już istnieje!',
 'payment.method.form' => 'Formularz metody płatności',
-'payment.method.history' => 'Nie można usunąć. Historia metod płatności istnieje.',
+'payment.method.history' => 'Nie można usunąć.'
+	. 'Historia metod płatności istnieje.',
 'payment.methods' => 'Metody płatności',
-'payment.no.invoice.sent' => 'Nie wysłaliśmy żadnej faktury i klient nie miał do niej dostępu.',
+'payment.no.invoice.sent' => 'Nie wysłaliśmy żadnej faktury i '
+	. 'klient nie miał do niej '
+	. 'dostępu.',
 'payment.provider' => 'Dostawca płatności',
 'payment.term' => 'Warunki płatności',
-'payment.term.0.days' => 'Proszę skorzystać z jednej z podanych metod płatności',
-'payment.term.add.additional.terms.at.setting.repository' => 'Dodaj dodatkowe warunki w funkcji getPaymentTerms w ustawieniach repozytorium.',
-'payment.term.eom.120.days' => 'EOM(120): Proszę o zapłatę w ciągu 120 dni od daty wystawienia do końca miesiąca',
-'payment.term.eom.15.days' => 'EOM(15): Prosimy o zapłatę w ciągu 15 dni od końca miesiąca, w którym nastąpiła data wydania',
-'payment.term.eom.30.days' => 'EOM(30): Prosimy o zapłatę w ciągu 30 dni od końca miesiąca, w którym nastąpiła data wydania',
-'payment.term.eom.60.days' => 'EOM(60): Prosimy o zapłatę w ciągu 60 dni od końca miesiąca, w którym nastąpiła data wydania',
-'payment.term.eom.90.days' => 'EOM(90): Prosimy o zapłatę w ciągu 90 dni od końca miesiąca, w którym nastąpiła data wydania',
-'payment.term.general' => 'Płatność wymagana w ciągu 30 dni',
-'payment.term.mfi.15' => 'MFI(15): Prosimy o zapłatę 15. dnia miesiąca następującego po dacie-wydania-miesiącu',
-'payment.term.net.120.days' => 'Netto (120): Prosimy o zapłatę w ciągu 120 dni od daty wystawienia',
-'payment.term.net.15.days' => 'Netto (15): Prosimy o zapłatę w ciągu 15 dni od daty wystawienia.',
-'payment.term.net.30.days' => 'Netto (30): Prosimy o zapłatę w ciągu 30 dni od daty wystawienia',
-'payment.term.net.60.days' => 'Netto (60): Prosimy o zapłatę w ciągu 60 dni od daty wystawienia',
-'payment.term.net.90.days' => 'Netto (90): Prosimy o zapłatę w ciągu 90 dni od daty wystawienia',
-'payment.term.pia' => 'Wymagana jest płatność z góry (PIA)',
-'payment.term.polite' => 'Doceniamy Twój biznes. Prosimy o dokonanie płatności w ciągu 30 dni od otrzymania tej faktury.',
+'payment.term.0.days' => 'Proszę skorzystać z jednej z '
+	. 'podanych metod płatności',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'Dodaj dodatkowe warunki w funkcji '
+	. 'getPaymentTerms w ustawieniach repozytorium.',
+'payment.term.eom.120.days' =>
+	'EOM(120):'
+	. 'Proszę o zapłatę w ciągu '
+	. '120 dni od daty wystawienia '
+	. 'do końca miesiąca',
+'payment.term.eom.15.days' =>
+	'EOM(15):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '15 dni od końca miesiąca,'
+	. 'w którym nastąpiła data wydania',
+'payment.term.eom.30.days' =>
+	'EOM(30):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '30 dni od końca miesiąca,'
+	. 'w którym nastąpiła data wydania',
+'payment.term.eom.60.days' =>
+	'EOM(60):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '60 dni od końca miesiąca,'
+	. 'w którym nastąpiła data wydania',
+'payment.term.eom.90.days' =>
+	'EOM(90):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '90 dni od końca miesiąca,'
+	. 'w którym nastąpiła data wydania',
+'payment.term.general' => 'Płatność wymagana w ciągu 30 '
+	. 'dni',
+'payment.term.mfi.15' => 'MFI(15):'
+	. 'Prosimy o zapłatę 15.'
+	. 'dnia miesiąca następującego po dacie-wydania-miesiącu',
+'payment.term.net.120.days' =>
+	'Netto (120):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '120 dni od daty wystawienia',
+'payment.term.net.15.days' =>
+	'Netto (15):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '15 dni od daty wystawienia.',
+'payment.term.net.30.days' =>
+	'Netto (30):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '30 dni od daty wystawienia',
+'payment.term.net.60.days' =>
+	'Netto (60):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '60 dni od daty wystawienia',
+'payment.term.net.90.days' =>
+	'Netto (90):'
+	. 'Prosimy o zapłatę w ciągu '
+	. '90 dni od daty wystawienia',
+'payment.term.pia' => 'Wymagana jest płatność z góry '
+	. '(PIA)',
+'payment.term.polite' => 'Doceniamy Twój biznes.'
+	. 'Prosimy o dokonanie płatności w '
+	. 'ciągu 30 dni od otrzymania '
+	. 'tej faktury.',
 'payment.terms.default' => 'Zapłać w ciągu 14 dni',
 'paymentpeppol' => 'Płatności realizowane za pośrednictwem Peppol',
 'paymentpeppol.reference.plural' => 'Odniesienia płatnicze przy użyciu Peppol',
@@ -1052,67 +1755,192 @@ return [
 'pdf.archived.no' => 'Pdf NIE Zarchiwizowany w Przesłane/Archiwum/Faktura',
 'pdf.archived.yes' => 'Pdf zarchiwizowane w Przesłane/Archiwum/Faktura',
 'pdf.include.zugferd' => 'Uwzględnij ZUGFeRD',
-'pdf.include.zugferd.help' => 'Włączenie tej opcji spowoduje uwzględnienie ZUGFeRD XML w plikach PDF faktur, co jest standardem XML dla faktur. <a href="https://www.ferd-net.de/">Więcej informacji</a>',
+'pdf.include.zugferd.help' => 'Włączenie tej opcji spowoduje uwzględnienie '
+	. 'ZUGFeRD XML w plikach PDF '
+	. 'faktur, co jest standardem XML '
+	. 'dla faktur.'
+	. '<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">Więcej informacji</a>',
 'pdf.invoice.footer' => 'Stopka PDF',
-'pdf.invoice.footer.hint' => 'Tutaj możesz wpisać dowolny kod HTML, który będzie wyświetlany na dole faktur PDF.',
+'pdf.invoice.footer.hint' => 'Tutaj możesz wpisać dowolny kod '
+	. 'HTML, który będzie wyświetlany na '
+	. 'dole faktur PDF.',
 'pdf.modal' => 'Modalny PDF',
 'pdf.quote.footer' => 'Stopka cytatu',
-'pdf.quote.footer.hint' => 'Tutaj możesz wpisać dowolny kod HTML, który będzie wyświetlany na dole Twoich ofert PDF.',
+'pdf.quote.footer.hint' => 'Tutaj możesz wpisać dowolny kod '
+	. 'HTML, który będzie wyświetlany na '
+	. 'dole Twoich ofert PDF.',
 'pdf.settings' => 'Ustawienia PDF',
 'pdf.template' => 'Szablon PDF',
 'pdf.template.overdue' => 'Przeterminowany szablon PDF',
 'pdf.template.paid' => 'Płatny szablon PDF',
 'pdf.watermark' => 'Włącz znaki wodne PDF',
-'peppol' => 'Faktura Peppol Universal Business Language (UBL) 2.1 — zweryfikowana przez Ecosio',
+'peppol' => 'Faktura Peppol Universal Business Language '
+	. '(UBL) 2.'
+	. '1 — zweryfikowana przez Ecosio',
 'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' => 'Opłaty za odliczenie na fakturze i opłaty za odliczenie na pozycji faktury dziedziczą po wypełnionym dokumencie Peppol',
-'peppol.client.check' => 'Szczegóły Peppol dotyczące tego klienta są niewystarczające. Brakuje co najmniej jednego. Zobacz Wyświetl ... Klient ... Opcje ... Edytuj szczegóły Peppol do e-fakturowania',
-'peppol.client.defaults' => 'Wypełnij formularz Client Peppol domyślnymi ustawieniami OpenPeppol w celu przeprowadzenia testów.',
-'peppol.currency.code.from' => 'Z waluty, np. kraju pochodzenia Waluta podatkowa (Aby zmienić, zobacz config/common/params.php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'Do waluty, tj. waluty dokumentu: zobacz funkcję get.setting(&#39;currency.code.to&#39;)',
-'peppol.currency.from.to' => 'Jedna z walut From Currency dzisiaj konwertuje się na tę walutę To Currency',
-'peppol.currency.to.from' => 'Jedna z walut To dzisiaj zamienia się na tę z walut From',
+'peppol.allowance.or.charge.inherit' =>
+	'Opłaty za odliczenie na fakturze '
+	. 'i opłaty za odliczenie na '
+	. 'pozycji faktury dziedziczą po wypełnionym '
+	. 'dokumencie Peppol',
+'peppol.client.check' => 'Szczegóły Peppol dotyczące tego klienta '
+	. 'są niewystarczające.'
+	. 'Brakuje co najmniej jednego.'
+	. 'Zobacz Wyświetl .'
+	. 'Klient .'
+	. 'Opcje .'
+	. 'Edytuj szczegóły Peppol do e-fakturowania',
+'peppol.client.defaults' => 'Wypełnij formularz Client Peppol domyślnymi '
+	. 'ustawieniami OpenPeppol w celu przeprowadzenia '
+	. 'testów.',
+'peppol.currency.code.from' => 'Z waluty, np.'
+	. 'kraju pochodzenia Waluta podatkowa (Aby '
+	. 'zmienić, zobacz config/common/params.'
+	. 'php TaxCurrencyCode)',
+'peppol.currency.code.to' => 'Do waluty, tj.'
+	. 'waluty dokumentu:'
+	. 'zobacz funkcję get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
+'peppol.currency.from.to' => 'Jedna z walut From Currency '
+	. 'dzisiaj konwertuje się na tę '
+	. 'walutę To Currency',
+'peppol.currency.to.from' => 'Jedna z walut To dzisiaj '
+	. 'zamienia się na tę z '
+	. 'walut From',
 'peppol.document.reference.null' => 'numer-inv-null-inv-id',
-'peppol.ecosio.validator' => 'Ecosio Validator dla faktury UBL OpenPeppol (3.15.0) (znany również jako BIS Billing 3.0.14)',
+'peppol.ecosio.validator' => 'Ecosio Validator dla faktury UBL '
+	. 'OpenPeppol (3.'
+	. '15.'
+	. '0) (znany również jako BIS '
+	. 'Billing 3.'
+	. '0.'
+	. '14)',
 'peppol.electronic.invoicing' => 'Peppol Elektroniczne Fakturowanie',
-'peppol.enable' => 'Włącz Peppol przy użyciu Universal Business Language (UBL) 2.1',
+'peppol.enable' => 'Włącz Peppol przy użyciu Universal '
+	. 'Business Language (UBL) 2.'
+	. '1',
 'peppol.include.delivery.period' => 'Uwzględnij okresy dostawy',
-'peppol.invoice.note.not.found' => 'Nie znaleziono notatki na fakturze',
+'peppol.invoice.note.not.found' =>
+	'Nie znaleziono notatki na fakturze',
 'peppol.label.switch.off' => 'Domyślne ustawienia Peppol włączone',
 'peppol.label.switch.on' => 'Domyślne ustawienia Peppol wyłączone',
 'peppol.mandatory' => ' (Obowiązkowy)',
 'peppol.optional' => ' (Fakultatywny)',
-'peppol.stand.in.code' => 'Kod opisu – wskazujący, jaka podstawa będzie używana dla przyszłej daty podatkowej, gdy towary zostaną dostarczone/zapłacone. Jeśli można ustalić datę podatkową, kod opisu jest wzajemnie wykluczany w okresie fakturowania.',
-'peppol.store.cove.1.1.1' => 'Zarejestruj się w celu uzyskania dostępu do API na stronie internetowej Store Cove',
-'peppol.store.cove.1.1.2' => 'Utwórz swój klucz API na stronie internetowej Store Cove i zapisz go w Ustawieniach...Widok...Płatności online...Store Cove...Klucz API',
-'peppol.store.cove.1.1.3' => 'Wykonaj pierwsze wywołanie API, aby uzyskać odpowiedź JSON.',
-'peppol.store.cove.1.1.4' => 'Wyślij swoją pierwszą testową fakturę JSON, którą otrzymałeś klikając zielony przycisk Świat=&gt;DE',
-'peppol.stream.toggle' => 'Peppol - przycisk przełączający „Przesyłaj strumieniowo” lub „Zapisz do pliku”',
-'peppol.tax.category.not.found' => 'Brak kodu kategorii podatkowej Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
-'peppol.tax.category.percent.not.found' => 'Brak kategorii podatku Peppol w procentach (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
+'peppol.stand.in.code' => 'Kod opisu – wskazujący, jaka '
+	. 'podstawa będzie używana dla przyszłej '
+	. 'daty podatkowej, gdy towary zostaną '
+	. 'dostarczone/zapłacone.'
+	. 'Jeśli można ustalić datę podatkową,'
+	. 'kod opisu jest wzajemnie wykluczany '
+	. 'w okresie fakturowania.',
+'peppol.store.cove.1.1.1' =>
+	'Zarejestruj się w celu uzyskania '
+	. 'dostępu do API na stronie '
+	. 'internetowej Store Cove',
+'peppol.store.cove.1.1.2' =>
+	'Utwórz swój klucz API na '
+	. 'stronie internetowej Store Cove i '
+	. 'zapisz go w Ustawieniach.'
+	. 'Widok.'
+	. 'Płatności online.'
+	. 'Store Cove.'
+	. 'Klucz API',
+'peppol.store.cove.1.1.3' =>
+	'Wykonaj pierwsze wywołanie API, aby '
+	. 'uzyskać odpowiedź JSON.',
+'peppol.store.cove.1.1.4' =>
+	'Wyślij swoją pierwszą testową fakturę '
+	. 'JSON, którą otrzymałeś klikając zielony '
+	. 'przycisk Świat=&gt;DE',
+'peppol.stream.toggle' => 'Peppol - przycisk przełączający „Przesyłaj '
+	. 'strumieniowo” lub „Zapisz do pliku”',
+'peppol.tax.category.not.found' =>
+	'Brak kodu kategorii podatkowej Peppol '
+	. '(https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/).',
+'peppol.tax.category.percent.not.found' =>
+	'Brak kategorii podatku Peppol w '
+	. 'procentach (https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/).',
 'peppol.tax.rate.code' => 'Kod stawki podatku Peppol',
-'peppol.trying.to.send.non.pdf.file' => 'Obecnie za pomocą faktur Peppol wysyłane są tylko pliki PDF',
+'peppol.trying.to.send.non.pdf.file' =>
+	'Obecnie za pomocą faktur Peppol '
+	. 'wysyłane są tylko pliki PDF',
 'peppol.unit' => 'Klasyfikacja jednostek przy użyciu Peppol',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Źródło: src/Invoice/Ubl/Invoice: Brak opisu dokumentu - Ecosio: Dokument NIE MUSI zawierać pustych elementów. Rozwiązanie: W widoku Faktura: Opcje ... Edytuj ... Opis dokumentu',
-'peppol.validator.Invoice.cac.Note' => 'Źródło: src/Invoice/Ubl/Invoice: Brak notatki na fakturze - Ecosio: Dokument NIE MOŻE zawierać pustych elementów.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party: Brak adresu e-mail - Ecosio: MUSI zostać podany adres elektroniczny. Rozwiązanie: Klient ... Wyświetl ... Opcje ... Edytuj dane Peppol na potrzeby fakturowania elektronicznego ... EndPointID',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'Źródło:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Brak opisu dokumentu - Ecosio:'
+	. 'Dokument NIE MUSI zawierać pustych '
+	. 'elementów.'
+	. 'Rozwiązanie:'
+	. 'W widoku Faktura:'
+	. 'Opcje .'
+	. 'Edytuj .'
+	. 'Opis dokumentu',
+'peppol.validator.Invoice.cac.Note' =>
+	'Źródło:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Brak notatki na fakturze - '
+	. 'Ecosio:'
+	. 'Dokument NIE MOŻE zawierać pustych '
+	. 'elementów.',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party:'
+	. 'Brak adresu e-mail - Ecosio:'
+	. 'MUSI zostać podany adres elektroniczny.'
+	. 'Rozwiązanie:'
+	. 'Klient .'
+	. 'Wyświetl .'
+	. 'Opcje .'
+	. 'Edytuj dane Peppol na potrzeby '
+	. 'fakturowania elektronicznego .'
+	. 'EndPointID',
 'peppol.version' => 'Wersja Peppol',
-'peppol.xml.stream' => 'Strumień, tzn. wyświetlanie na ekranie w przeglądarce zamiast w folderze pobranych plików.',
+'peppol.xml.stream' => 'Strumień, tzn.'
+	. 'wyświetlanie na ekranie w przeglądarce '
+	. 'zamiast w folderze pobranych plików.',
 'per.item' => 'za sztukę',
-'per.page.total' => ' na stronę. Razem ',
+'per.page.total' => 'na stronę.'
+	. 'Razem',
 'performance' => 'Wydajność',
-'performance.label.switch.off' => 'Szybszy tryb odczytu i zapisu — zapoznaj się z plikiem config/common/params.php, wyszukaj „tryb” ',
-'performance.label.switch.on' => 'Wolniejszy tryb tylko do zapisu — zapoznaj się z plikiem config/common/params.php, wyszukaj „mode” ',
+'performance.label.switch.off' => 'Szybszy tryb odczytu i zapisu '
+	. '— zapoznaj się z plikiem '
+	. 'config/common/params.'
+	. 'php, wyszukaj „tryb”',
+'performance.label.switch.on' => 'Wolniejszy tryb tylko do zapisu '
+	. '— zapoznaj się z plikiem '
+	. 'config/common/params.'
+	. 'php, wyszukaj „mode”',
 'period' => 'Okres',
 'permission' => 'Nie posiadasz wymaganych uprawnień.',
 'personal.information' => 'Informacje osobiste',
 'phone' => 'Telefon',
 'phone.abbr' => 'P',
 'phone.number' => 'Numer telefonu',
-'php.timezone.fail' => 'Wygląda na to, że nie skonfigurowano strefy czasowej. Sprawdź date.timezone w konfiguracji php. W przeciwnym razie zostanie wybrany <strong>%s</strong> .',
+'php.timezone.fail' => 'Wygląda na to, że nie '
+	. 'skonfigurowano strefy czasowej.'
+	. 'Sprawdź date.'
+	. 'timezone w konfiguracji php.'
+	. 'W przeciwnym razie zostanie wybrany '
+	. '<strong>%s</strong> .',
 'php.timezone.success' => 'Skonfigurowano prawidłową strefę czasową.',
-'php.version.fail' => 'Wersja PHP %s jest zainstalowana, ale InvoicePlane wymaga wersji PHP %s lub nowszej',
-'php.version.success' => 'Wygląda na to, że PHP spełnia wymagania instalacyjne',
+'php.version.fail' => 'Wersja PHP %s jest zainstalowana,'
+	. 'ale InvoicePlane wymaga wersji PHP '
+	. '%s lub nowszej',
+'php.version.success' => 'Wygląda na to, że PHP '
+	. 'spełnia wymagania instalacyjne',
 'platform' => 'Platforma',
 'platform.PhpMyAdmin' => 'Wersja PhpMyAdmin',
 'platform.PhpSupport' => 'Wsparcie PHP',
@@ -1126,37 +1954,65 @@ return [
 'platform.update' => 'Pliki i dodatki WampServer',
 'platform.windowsVersion' => 'Windows 11 Edycja Home',
 'platform.xdebug' => 'Rozszerzenie Xdebug',
-'please.enable.js' => 'Aby korzystać z InvoicePlane, włącz obsługę Javascript',
+'please.enable.js' => 'Aby korzystać z InvoicePlane, włącz '
+	. 'obsługę Javascript',
 'po.group' => 'Grupa zamówień zakupu',
 'port' => 'Port',
 'position' => 'Pozycja',
-'possible.file.upload.attack' => 'Możliwy atak polegający na przesłaniu pliku: ',
-'pre.password' => 'Standardowe hasło do faktury PDF (opcjonalnie)',
+'possible.file.upload.attack' => 'Możliwy atak polegający na przesłaniu '
+	. 'pliku:',
+'pre.password' => 'Standardowe hasło do faktury PDF '
+	. '(opcjonalnie)',
 'prefix' => 'Prefiks',
 'prev' => 'Poprzedni',
 'preview' => 'Zapowiedź',
 'price' => 'Cena',
 'product' => 'Produkt',
 'product.add' => 'Dodaj produkt',
-'product.additional.item.property.name' => 'Peppol Dodatkowa nazwa elementu właściwości, np. Kolor',
-'product.additional.item.property.value' => 'Wartość dodatkowej właściwości Peppol np. Czarny',
-'product.country.of.origin.code' => 'Kod kraju pochodzenia Peppol przy użyciu kodów krajów ISO-3166-1:Alpha2',
-'product.custom.fields' => 'Pola niestandardowe produktu (np. Peppol: AdditionalItemProperty pole wielokrotnego wyboru kolor wartość czarny)',
+'product.additional.item.property.name' =>
+	'Peppol Dodatkowa nazwa elementu właściwości,'
+	. 'np.'
+	. 'Kolor',
+'product.additional.item.property.value' =>
+	'Wartość dodatkowej właściwości Peppol np.'
+	. 'Czarny',
+'product.country.of.origin.code' =>
+	'Kod kraju pochodzenia Peppol przy '
+	. 'użyciu kodów krajów ISO-3166-1:'
+	. 'Alpha2',
+'product.custom.fields' => 'Pola niestandardowe produktu (np.'
+	. 'Peppol:'
+	. 'AdditionalItemProperty pole wielokrotnego wyboru kolor '
+	. 'wartość czarny)',
 'product.description' => 'Opis produktu',
 'product.edit' => 'Edytuj produkt',
 'product.error.summary' => 'Podsumowanie błędów produktu',
 'product.families' => 'Rodziny produktów',
 'product.form.tab.category' => 'Kategoria',
-'product.form.tab.not.required' => 'Pola nie są wymagane',
+'product.form.tab.not.required' =>
+	'Pola nie są wymagane',
 'product.form.tab.required' => 'Wymagane pola',
 'product.found' => 'Znaleziono produkt',
-'product.history' => 'Nie można usunąć. Ten produkt jest na fakturze lub ofercie.',
-'product.icc.id' => 'Peppol Kod klasyfikacji przedmiotu ID np. 9873242',
-'product.icc.listid' => 'Peppol Item Classificaiton Code List id - np. SRV',
-'product.icc.listversionid' => 'Identyfikator wersji listy kodów klasyfikacji pozycji Peppol (opcjonalnie) - np. Jeśli klasyfikacja pozycji pochodzi od duńskich dostawców, należy użyć wersji UNSPSC 19.0501.',
+'product.history' => 'Nie można usunąć.'
+	. 'Ten produkt jest na fakturze '
+	. 'lub ofercie.',
+'product.icc.id' => 'Peppol Kod klasyfikacji przedmiotu ID '
+	. 'np.'
+	. '9873242',
+'product.icc.listid' => 'Peppol Item Classificaiton Code List '
+	. 'id - np.'
+	. 'SRV',
+'product.icc.listversionid' => 'Identyfikator wersji listy kodów klasyfikacji '
+	. 'pozycji Peppol (opcjonalnie) - np.'
+	. 'Jeśli klasyfikacja pozycji pochodzi od '
+	. 'duńskich dostawców, należy użyć wersji '
+	. 'UNSPSC 19.'
+	. '0501.',
 'product.id' => 'Identyfikator produktu',
 'product.image' => 'Obraz',
-'product.item.classification.code.scheme.id.not.found' => 'Nie znaleziono schematu kodu klasyfikacji pozycji produktu',
+'product.item.classification.code.scheme.id.not.found' =>
+	'Nie znaleziono schematu kodu klasyfikacji '
+	. 'pozycji produktu',
 'product.name' => 'Nazwa produktu',
 'product.not.found' => 'Produkt nie został znaleziony',
 'product.peppol.unit' => 'Jednostka z Peppolem',
@@ -1170,34 +2026,61 @@ return [
 'product.property.table' => 'Tabela właściwości produktu',
 'product.property.value' => 'Wartość',
 'product.record.successfully.added' => 'Rekord produktu został pomyślnie dodany',
-'product.sii.id' => 'Identyfikator standardowej pozycji Peppol powiązany z powyższym schematem - np. 14-cyfrowy identyfikator uzupełniony zerami w bazie danych Global Trade Item Number (wyświetlany pod kodem kreskowym)',
-'product.sii.schemeid' => 'Schemat identyfikacji standardowej pozycji Peppol - np. 0160',
+'product.sii.id' => 'Identyfikator standardowej pozycji Peppol powiązany '
+	. 'z powyższym schematem - np.'
+	. '14-cyfrowy identyfikator uzupełniony zerami w '
+	. 'bazie danych Global Trade Item '
+	. 'Number (wyświetlany pod kodem kreskowym)',
+'product.sii.schemeid' => 'Schemat identyfikacji standardowej pozycji Peppol '
+	. '- np.'
+	. '0160',
 'product.sku' => 'Numer katalogowy',
 'product.tariff' => 'Taryfa',
 'product.unit' => 'Jednostka produktu',
-'product.unit.code.not.found' => 'Produkt nie ma przyporządkowanego mu kodu jednostki. Produkt ... Edytuj ... Jednostka z Peppol.',
+'product.unit.code.not.found' =>
+	'Produkt nie ma przyporządkowanego mu '
+	. 'kodu jednostki.'
+	. 'Produkt .'
+	. 'Edytuj .'
+	. 'Jednostka z Peppol.',
 'product.units' => 'Jednostki produktu',
 'product.view.tab.details' => 'Szczegóły produktu',
 'product.view.tab.gallery' => 'Galeria produktów',
 'product.view.tab.images' => 'Zdjęcia produktu',
 'product.view.tab.properties' => 'Właściwości produktu',
 'productimage.add' => 'Dodaj obraz produktu',
-'productimage.deleted.from' => 'Obraz został pomyślnie usunięty z następującego katalogu: ',
+'productimage.deleted.from' => 'Obraz został pomyślnie usunięty z '
+	. 'następującego katalogu:',
 'productimage.form' => 'Formularz obrazu produktu',
 'productimage.gallery' => 'Obrazy odnoszące się do: ',
 'productimage.index' => 'Indeks obrazów produktów',
-'productimage.list' => 'Lista obrazów powiązanych z tym produktem',
-'productimage.no.file.uploaded' => 'Nie przesłano żadnego obrazu. Możliwy duplikat.',
+'productimage.list' => 'Lista obrazów powiązanych z tym '
+	. 'produktem',
+'productimage.no.file.uploaded' => 'Nie przesłano żadnego obrazu.'
+	. 'Możliwy duplikat.',
 'productimage.plural' => 'Zdjęcia produktu',
-'productimage.possible.file.upload.attack' => 'Możliwy atak polegający na przesłaniu pliku: ',
+'productimage.possible.file.upload.attack' =>
+	'Możliwy atak polegający na przesłaniu '
+	. 'pliku:',
 'productimage.upload' => 'Prześlij obraz produktu',
-'productimage.uploaded.to' => 'Obraz został przesłany do następującego katalogu: ',
-'productimage.view' => 'W widoku produktu można dodać wiele obrazów odnoszących się do produktu',
+'productimage.uploaded.to' => 'Obraz został przesłany do następującego '
+	. 'katalogu:',
+'productimage.view' => 'W widoku produktu można dodać '
+	. 'wiele obrazów odnoszących się do '
+	. 'produktu',
 'products' => 'Produkty',
 'products.form' => 'Formularz produktu',
 'profile.deleted' => 'Profil został usunięty',
-'profile.history' => 'Nie można usunąć profilu. Historia istnieje',
-'profile.new' => 'Utwórz profil z nowym adresem e-mail lub numerem telefonu komórkowego, uaktywnij go i wybierz dane firmy, z którą chcesz go połączyć. Informacje te pojawią się automatycznie w dokumentacji, np. ofertach i fakturach.',
+'profile.history' => 'Nie można usunąć profilu.'
+	. 'Historia istnieje',
+'profile.new' => 'Utwórz profil z nowym adresem '
+	. 'e-mail lub numerem telefonu komórkowego,'
+	. 'uaktywnij go i wybierz dane '
+	. 'firmy, z którą chcesz go '
+	. 'połączyć.'
+	. 'Informacje te pojawią się automatycznie '
+	. 'w dokumentacji, np.'
+	. 'ofertach i fakturach.',
 'profile.not.deleted' => 'Profil nie został usunięty',
 'profile.plural' => 'Profile',
 'profile.property.label.company' => 'Firma',
@@ -1219,34 +2102,69 @@ return [
 'Q2' => 'II kwartał',
 'Q3' => 'III kwartał',
 'Q4' => '4 kwartał',
-'qr.absolute.url' => 'Absolutny adres URL użyty do zbudowania kodu QR',
+'qr.absolute.url' => 'Absolutny adres URL użyty do '
+	. 'zbudowania kodu QR',
 'qr.code' => 'Kod QR',
 'qr.code.1' => 'Kod QR 1',
 'qr.code.details' => 'Szczegóły kodu QR',
 'qr.code.level.1' => 'Poziom kodowania jest podstawowy',
-'qr.code.level.2' => 'Poziom kodowania: średniozaawansowany',
+'qr.code.level.2' => 'Poziom kodowania:'
+	. 'średniozaawansowany',
 'qr.code.level.3' => 'Poziom kodowania jest zaawansowany',
 'qr.code.settings' => 'Ustawienia kodu QR',
 'qr.code.settings.bic' => 'BIC',
-'qr.code.settings.effect' => 'Jaki wpływ mają powyższe ustawienia na ten kod QR?',
-'qr.code.settings.effect.explanation' => 'W rzeczywistym kodzie ... żadne. Wszystkie domyślne wartości są używane, ponieważ używany jest bardzo podstawowy rzeczywisty kod powyżej.',
+'qr.code.settings.effect' => 'Jaki wpływ mają powyższe ustawienia '
+	. 'na ten kod QR?',
+'qr.code.settings.effect.explanation' =>
+	'W rzeczywistym kodzie .'
+	. 'żadne.'
+	. 'Wszystkie domyślne wartości są używane,'
+	. 'ponieważ używany jest bardzo podstawowy '
+	. 'rzeczywisty kod powyżej.',
 'qr.code.settings.enable' => 'Włącz kod QR',
-'qr.code.settings.enable.hint' => 'Włączenie tej opcji spowoduje dodanie kodu QR do faktur PDF. Musisz wypełnić poniżej adresata, IBAN i BIC, aby działało poprawnie. W przeciwnym razie kod QR nie zostanie wyświetlony.',
+'qr.code.settings.enable.hint' =>
+	'Włączenie tej opcji spowoduje dodanie '
+	. 'kodu QR do faktur PDF.'
+	. 'Musisz wypełnić poniżej adresata, IBAN '
+	. 'i BIC, aby działało poprawnie.'
+	. 'W przeciwnym razie kod QR '
+	. 'nie zostanie wyświetlony.',
 'qr.code.settings.iban' => 'Numer IBAN',
 'qr.code.settings.recipient' => 'Odbiorca',
-'qr.code.settings.remittance.text' => 'Tekst przekazu pieniężnego',
-'qr.code.settings.remittance.text.tags' => 'Znaczniki tekstowe przelewu',
+'qr.code.settings.remittance.text' =>
+	'Tekst przekazu pieniężnego',
+'qr.code.settings.remittance.text.tags' =>
+	'Znaczniki tekstowe przelewu',
 'qr.code.source' => 'Źródło kodu QR',
-'qr.code.source.path' => 'zasoby\widoki\faktura\ustawienia\logo.firmy.i.adres.php',
+'qr.code.source.path' => 'zasoby\\widoki\\faktura\\ustawienia\\logo.'
+	. 'firmy.'
+	. 'i.'
+	. 'adres.'
+	. 'php',
 'qr.code.type' => 'Typ kodu QR',
-'qr.code.type.absolute.url' => 'Absolutny (cały) adres URL oparty',
+'qr.code.type.absolute.url' =>
+	'Absolutny (cały) adres URL oparty',
 'qr.code.widget.used' => 'Użyty widget',
-'qr.ecc.level' => 'Poziom Ecc kodu QR (domyślny: L)',
-'qr.height.and.width' => 'Wysokość i szerokość kodu QR (domyślna: 60)',
+'qr.ecc.level' => 'Poziom Ecc kodu QR (domyślny:'
+	. 'L)',
+'qr.height.and.width' => 'Wysokość i szerokość kodu QR '
+	. '(domyślna:'
+	. '60)',
 'qr.meaning' => 'Oznaczający',
-'qr.meaning.benefit' => 'Zeskanuj i wróć do widoku (bez wpisywania adresu URL), gdzie faktura może zostać wydrukowana w formacie PDF. Dotyczy wszystkich użytkowników z aktywnym kontem klienta.',
-'qr.output.type' => 'Typ wyjściowy kodu QR (np. .svg, .png) (Domyślny: png)',
-'qr.version' => 'Numer wersji kodu QR (najwcześniejszy 0 najnowszy 40) (domyślny: 40)',
+'qr.meaning.benefit' => 'Zeskanuj i wróć do widoku '
+	. '(bez wpisywania adresu URL), gdzie '
+	. 'faktura może zostać wydrukowana w '
+	. 'formacie PDF.'
+	. 'Dotyczy wszystkich użytkowników z aktywnym '
+	. 'kontem klienta.',
+'qr.output.type' => 'Typ wyjściowy kodu QR (np.'
+	. '.'
+	. 'svg, .'
+	. 'png) (Domyślny:'
+	. 'png)',
+'qr.version' => 'Numer wersji kodu QR (najwcześniejszy '
+	. '0 najnowszy 40) (domyślny:'
+	. '40)',
 'qty' => 'Ilość',
 'quantity' => 'Ilość',
 'quarter' => 'Kwartał',
@@ -1266,10 +2184,17 @@ return [
 'quote.date' => 'Data wyceny',
 'quote.dates' => 'Daty cytatów',
 'quote.delete.not' => 'Faktura nie została usunięta.',
-'quote.delivery.location.index.button.list' => 'Cytaty',
-'quote.delivery.location.none' => 'Do tej oferty nie przypisano żadnego miejsca dostawy.',
+'quote.delivery.location.index.button.list' =>
+	'Cytaty',
+'quote.delivery.location.none' => 'Do tej oferty nie przypisano '
+	. 'żadnego miejsca dostawy.',
 'quote.disable.flash.messages' => 'Wyłącz komunikaty Flash Quote',
-'quote.email.templates.not.configured' => 'Szablony e-mail nie są skonfigurowane. Ustawienia...Cytaty...Szablony ofert...Domyślny szablon e-mail',
+'quote.email.templates.not.configured' =>
+	'Szablony e-mail nie są skonfigurowane.'
+	. 'Ustawienia.'
+	. 'Cytaty.'
+	. 'Szablony ofert.'
+	. 'Domyślny szablon e-mail',
 'quote.group' => 'Grupa Cytatów',
 'quote.id' => 'Identyfikator oferty ',
 'quote.item' => 'Cytuj przedmiot',
@@ -1279,24 +2204,49 @@ return [
 'quote.item.cannot.delete' => 'Nie można usunąć elementu cytatu',
 'quote.label.switch.off' => 'Oferta VAT',
 'quote.label.switch.on' => 'Oferta BEZ VAT',
-'quote.not.copied.to.invoice' => 'Faktura NIE została utworzona z oferty! Duplikat faktury. Skopiuj swoją ofertę do innej oferty, a następnie skopiuj do faktury. Każda oferta musi mieć odpowiadającą jej fakturę.',
+'quote.not.copied.to.invoice' =>
+	'Faktura NIE została utworzona z '
+	. 'oferty! Duplikat faktury.'
+	. 'Skopiuj swoją ofertę do innej '
+	. 'oferty, a następnie skopiuj do '
+	. 'faktury.'
+	. 'Każda oferta musi mieć odpowiadającą '
+	. 'jej fakturę.',
 'quote.number' => 'Numer oferty',
 'quote.number.status' => 'Status numeru oferty',
 'quote.overview' => 'Przegląd oferty',
 'quote.overview.period' => 'Okres przeglądu oferty',
-'quote.password' => 'Hasło do pliku PDF z cytatem (opcjonalnie)',
+'quote.password' => 'Hasło do pliku PDF z '
+	. 'cytatem (opcjonalnie)',
 'quote.pre.password' => 'Podaj standardowe hasło PDF (opcjonalnie)',
 'quote.reject' => 'Odrzucić',
 'quote.rejected' => 'Ten cytat został odrzucony',
-'quote.sales.order.created.from.quote' => 'Zamówienie sprzedaży zostało utworzone na podstawie oferty, a Ty wprowadziłeś numer zamówienia zakupu!',
-'quote.sales.order.not.created.from.quote' => 'Zamówienie sprzedaży nie zostało utworzone z oferty! Duplikuj zamówienie sprzedaży. Skopiuj swoją ofertę do innej oferty, a następnie skopiuj do zamówienia sprzedaży. Każda oferta musi mieć pasujące zamówienie sprzedaży.',
-'quote.status.email.body' => 'Klient %1$s ma %2$s wycenę %3$sLink do wyceny: %4$s',
+'quote.sales.order.created.from.quote' =>
+	'Zamówienie sprzedaży zostało utworzone na '
+	. 'podstawie oferty, a Ty wprowadziłeś '
+	. 'numer zamówienia zakupu!',
+'quote.sales.order.not.created.from.quote' =>
+	'Zamówienie sprzedaży nie zostało utworzone '
+	. 'z oferty! Duplikuj zamówienie sprzedaży.'
+	. 'Skopiuj swoją ofertę do innej '
+	. 'oferty, a następnie skopiuj do '
+	. 'zamówienia sprzedaży.'
+	. 'Każda oferta musi mieć pasujące '
+	. 'zamówienie sprzedaży.',
+'quote.status.email.body' => 'Klient %1$s ma %2$s wycenę '
+	. '%3$sLink do wyceny:'
+	. '%4$s',
 'quote.status.email.subject' => 'Klient %1$s %2$s wycena %3$s',
 'quote.tax' => 'Cytat Podatek',
 'quote.tax.rate' => 'Podaj stawkę podatku',
 'quote.tax.rate.add' => 'Dodaj stawkę podatku',
-'quote.tax.rate.cannot.delete' => 'Nie można usunąć stawki podatku',
-'quote.tax.rate.incomplete.fields' => 'Pola niekompletne: Musisz podać stawkę podatku. Wskazówka: Podaj zerową stawkę podatku.',
+'quote.tax.rate.cannot.delete' =>
+	'Nie można usunąć stawki podatku',
+'quote.tax.rate.incomplete.fields' =>
+	'Pola niekompletne:'
+	. 'Musisz podać stawkę podatku.'
+	. 'Wskazówka:'
+	. 'Podaj zerową stawkę podatku.',
 'quote.tax.rate.saved' => 'Stawka podatku została zapisana',
 'quote.template' => 'Szablon oferty',
 'quote.templates' => 'Szablony cytatów',
@@ -1304,9 +2254,15 @@ return [
 'quote.to.so' => 'Cytat do zamówienia sprzedaży',
 'quote.to.so.password' => 'Hasło zamówienia sprzedaży',
 'quote.vat.quote' => 'Oferta VAT',
-'quote.with.purchase.order.line.number' => 'Numer pozycji zamówienia zakupu (wymagania Peppol) – należy dopasować do numeru pozycji zamówienia sprzedaży',
-'quote.with.purchase.order.number' => 'Numer zamówienia zakupu – należy dopasować do numeru zamówienia sprzedaży',
-'quote.with.purchase.order.person' => 'Osoba/Dział składający zamówienie',
+'quote.with.purchase.order.line.number' =>
+	'Numer pozycji zamówienia zakupu (wymagania '
+	. 'Peppol) – należy dopasować do '
+	. 'numeru pozycji zamówienia sprzedaży',
+'quote.with.purchase.order.number' =>
+	'Numer zamówienia zakupu – należy '
+	. 'dopasować do numeru zamówienia sprzedaży',
+'quote.with.purchase.order.person' =>
+	'Osoba/Dział składający zamówienie',
 'quotes' => 'Cytaty',
 'quotes.expire.after' => 'Cytaty wygasają po (dniach)',
 'quotes.requiring.approval' => 'Cytaty wymagające zatwierdzenia',
@@ -1334,8 +2290,10 @@ return [
 'recurring.invoices' => 'Faktury cykliczne',
 'recurring.no.invoices.selected' => 'Nie wybrałeś żadnej faktury.',
 'recurring.original.invoice.date' => 'Data oryginalnej faktury: ',
-'recurring.status.sent.only' => 'Tylko faktury ze statusem wysłane mogą być cykliczne',
-'recurring.tooltip.next' => 'Następną datę ustala się za pomocą indeksu.',
+'recurring.status.sent.only' => 'Tylko faktury ze statusem wysłane '
+	. 'mogą być cykliczne',
+'recurring.tooltip.next' => 'Następną datę ustala się za '
+	. 'pomocą indeksu.',
 'reject' => 'Odrzucić',
 'reject.this.quote' => 'Odrzuć tę wycenę',
 'rejected' => 'Odrzucony',
@@ -1345,28 +2303,53 @@ return [
 'report' => 'Raport',
 'report.options' => 'Opcje raportu',
 'report.sales.by.product' => 'Sprzedaż według produktu',
-'report.sales.by.product.info' => 'Ten raport podaje całkowitą sprzedaż produktu wraz z podatkiem od pozycji. Nie obejmuje dodatkowego podatku fakturowego związanego z tymi produktami.',
+'report.sales.by.product.info' =>
+	'Ten raport podaje całkowitą sprzedaż '
+	. 'produktu wraz z podatkiem od '
+	. 'pozycji.'
+	. 'Nie obejmuje dodatkowego podatku fakturowego '
+	. 'związanego z tymi produktami.',
 'report.sales.by.task' => 'Sprzedaż według zadania',
-'report.sales.by.task.info' => 'Ten raport podaje całkowitą sprzedaż zadania wraz z podatkiem od pozycji. Nie obejmuje dodatkowego podatku od faktury związanego z tymi zadaniami.',
-'report.test.fraud.prevention.headers.api' => 'Testowanie interfejsu API nagłówków zapobiegania oszustwom',
+'report.sales.by.task.info' =>
+	'Ten raport podaje całkowitą sprzedaż '
+	. 'zadania wraz z podatkiem od '
+	. 'pozycji.'
+	. 'Nie obejmuje dodatkowego podatku od '
+	. 'faktury związanego z tymi zadaniami.',
+'report.test.fraud.prevention.headers.api' =>
+	'Testowanie interfejsu API nagłówków zapobiegania '
+	. 'oszustwom',
 'reports' => 'Raporty',
 'reset' => 'Nastawić',
 'reset.password' => 'Zresetuj hasło',
-'rules.peppol.en16931.001' => 'Należy podać Business Process lub Profile ID. Zapoznaj się z config/common/params.php, wyszukaj ProfileID',
+'rules.peppol.en16931.001' => 'Należy podać Business Process lub '
+	. 'Profile ID.'
+	. 'Zapoznaj się z config/common/params.'
+	. 'php, wyszukaj ProfileID',
 'run.report' => 'Uruchom raport',
 'sales' => 'Obroty',
 'sales.by.client' => 'Sprzedaż według klienta',
 'sales.by.date' => 'Sprzedaż według daty',
 'sales.with.tax' => 'Sprzedaż z podatkiem',
 'salesorder' => 'Zamówienie sprzedaży',
-'salesorder.agree.to.terms' => 'Prosimy o zaakceptowanie Regulaminu, który zostanie do Ciebie wysłany',
+'salesorder.agree.to.terms' => 'Prosimy o zaakceptowanie Regulaminu, który '
+	. 'zostanie do Ciebie wysłany',
 'salesorder.assembled.packaged.prepared' => 'Zmontowany/Zapakowany/Przygotowany',
 'salesorder.cancelled' => 'Zamówienie sprzedaży anulowane',
 'salesorder.client.confirmed.terms' => 'Warunki potwierdzone przez klienta',
-'salesorder.clients.purchase.order.number' => 'Numer zamówienia klienta',
-'salesorder.clients.purchase.order.person' => 'Zamówienie Klienta Osoba obsługująca zamówienie',
+'salesorder.clients.purchase.order.number' =>
+	'Numer zamówienia klienta',
+'salesorder.clients.purchase.order.person' =>
+	'Zamówienie Klienta Osoba obsługująca zamówienie',
 'salesorder.copied.to.invoice' => 'Zamówienie sprzedaży skopiowane na fakturę',
-'salesorder.copied.to.invoice.not' => 'Faktura NIE została utworzona z zamówienia sprzedaży! Duplikat faktury. Skopiuj zamówienie sprzedaży do innego zamówienia sprzedaży, a następnie skopiuj do faktury. Każde zamówienie sprzedaży musi mieć odpowiadającą mu fakturę',
+'salesorder.copied.to.invoice.not' =>
+	'Faktura NIE została utworzona z '
+	. 'zamówienia sprzedaży! Duplikat faktury.'
+	. 'Skopiuj zamówienie sprzedaży do innego '
+	. 'zamówienia sprzedaży, a następnie skopiuj '
+	. 'do faktury.'
+	. 'Każde zamówienie sprzedaży musi mieć '
+	. 'odpowiadającą mu fakturę',
 'salesorder.date.created' => 'Data utworzenia zamówienia sprzedaży',
 'salesorder.default.group' => 'Grupa domyślna zamówienia sprzedaży',
 'salesorder.goods.services.confirmed' => 'Klient potwierdził dostawę',
@@ -1376,9 +2359,13 @@ return [
 'salesorder.invoice.generated' => 'Wygenerowano fakturę',
 'salesorder.invoice.number' => 'Numer faktury',
 'salesorder.number' => 'Numer zamówienia sprzedaży',
-'salesorder.number.status' => 'Numer zamówienia sprzedaży. Status',
+'salesorder.number.status' => 'Numer zamówienia sprzedaży.'
+	. 'Status',
 'salesorder.password' => 'Hasło zamówienia sprzedaży',
-'salesorder.payment.terms' => 'Warunki płatności za zamówienie sprzedaży np. Proszę zapłacić w ciągu 30 dni',
+'salesorder.payment.terms' => 'Warunki płatności za zamówienie sprzedaży '
+	. 'np.'
+	. 'Proszę zapłacić w ciągu 30 '
+	. 'dni',
 'salesorder.recent' => 'Ostatnie zamówienia sprzedaży',
 'salesorder.reject' => 'Odrzucenie zamówienia sprzedaży',
 'salesorder.rejected' => 'Zamówienie sprzedaży odrzucone',
@@ -1390,12 +2377,41 @@ return [
 'save.item.as.lookup' => 'Zapisz element jako wyszukiwanie',
 'search.family' => 'Szukaj Rodzina',
 'search.product' => 'Wyszukaj produkt',
-'security.disable.read.only.empty' => 'Ustawienie wyłącz tryb tylko do odczytu obecnie nie ma wartości 0 ani 1. Ustaw je domyślnie na 0, aby funkcja tylko do odczytu była dostępna i zapobiegała usuwaniu faktur.',
-'security.disable.read.only.info' => 'Ostrzeżenie: Funkcja Read Only dla ochrony faktur i zapobiegania usuwaniu jest włączona. Wyłącz &#39;disable.read.only&#39;, aby umożliwić resetowanie wysłanych faktur do wersji roboczej',
-'security.disable.read.only.success' => 'Sukces: Funkcja „Tylko do odczytu” dla ochrony faktur i zapobiegania ich usuwaniu została ponownie włączona',
-'security.disable.read.only.true.draft.check.and.mark' => 'Ostrzeżenie: Edytujesz wersję roboczą z włączonym ustawieniem „wyłącz tylko do odczytu”',
-'security.disable.read.only.true.sent.check.and.mark' => 'Ostrzeżenie: Edytujesz wysłaną fakturę z włączonym ustawieniem „wyłącz tylko do odczytu”',
-'security.disable.read.only.warning' => 'Ostrzeżenie: Funkcja „Tylko do odczytu” dla ochrony faktur i zapobiegania ich usuwaniu została wyłączona',
+'security.disable.read.only.empty' =>
+	'Ustawienie wyłącz tryb tylko do '
+	. 'odczytu obecnie nie ma wartości '
+	. '0 ani 1.'
+	. 'Ustaw je domyślnie na 0,'
+	. 'aby funkcja tylko do odczytu '
+	. 'była dostępna i zapobiegała usuwaniu '
+	. 'faktur.',
+'security.disable.read.only.info' =>
+	'Ostrzeżenie:'
+	. 'Funkcja Read Only dla ochrony '
+	. 'faktur i zapobiegania usuwaniu jest '
+	. 'włączona.'
+	. 'Wyłącz \'disable.'
+	. 'read.'
+	. 'only\', aby umożliwić resetowanie wysłanych '
+	. 'faktur do wersji roboczej',
+'security.disable.read.only.success' =>
+	'Sukces:'
+	. 'Funkcja „Tylko do odczytu” dla '
+	. 'ochrony faktur i zapobiegania ich '
+	. 'usuwaniu została ponownie włączona',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'Ostrzeżenie:'
+	. 'Edytujesz wersję roboczą z włączonym '
+	. 'ustawieniem „wyłącz tylko do odczytu”',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'Ostrzeżenie:'
+	. 'Edytujesz wysłaną fakturę z włączonym '
+	. 'ustawieniem „wyłącz tylko do odczytu”',
+'security.disable.read.only.warning' =>
+	'Ostrzeżenie:'
+	. 'Funkcja „Tylko do odczytu” dla '
+	. 'ochrony faktur i zapobiegania ich '
+	. 'usuwaniu została wyłączona',
 'select.family' => 'Wybierz rodzinę',
 'select.payment.method' => 'Wybierz metodę płatności',
 'select.project' => 'Wybierz projekt',
@@ -1404,86 +2420,159 @@ return [
 'send.email' => 'Wyślij e-mail',
 'sent' => 'Wysłano',
 'set.new.password' => 'Ustaw nowe hasło',
-'set.to.read.only' => 'Ustaw fakturę jako tylko do odczytu',
+'set.to.read.only' => 'Ustaw fakturę jako tylko do '
+	. 'odczytu',
 'setting' => 'Ustawienie',
 'setting.add' => 'Ustawienie Dodaj',
-'setting.as.a.result.of ' => ' w wyniku ',
+'setting.as.a.result.of ' =>
+	'w wyniku',
 'setting.assets.cleared.at' => 'Aktywa rozliczone w ',
-'setting.assets.were.not.cleared.at' => 'Aktywa nie zostały rozliczone ',
+'setting.assets.were.not.cleared.at' =>
+	'Aktywa nie zostały rozliczone',
 'setting.company' => 'Dane publiczne firmy',
 'setting.company.private' => 'Dane prywatne firmy',
-'setting.company.profile' => 'Zmiana profilu, np. telefonu komórkowego i adresu e-mail',
-'setting.duplicate.key' => 'Nie można ukończyć zapisu. Masz duplikat z następującym kluczem: ',
-'setting.error.on.the.public.assets.folder' => ' błąd w folderze zasobów publicznych.',
+'setting.company.profile' => 'Zmiana profilu, np.'
+	. 'telefonu komórkowego i adresu e-mail',
+'setting.duplicate.key' => 'Nie można ukończyć zapisu.'
+	. 'Masz duplikat z następującym kluczem:',
+'setting.error.on.the.public.assets.folder' =>
+	'błąd w folderze zasobów publicznych.',
 'setting.form' => 'Ustawienia formularza',
 'setting.key' => 'Ustawienie klucza',
 'setting.section' => 'Sekcja',
 'setting.subsection' => 'Podrozdział',
 'setting.translator.key' => 'Klucz tłumacza',
 'setting.value' => 'Ustawienie wartości',
-'setting.you.have.cleared.the.cache' => 'Wyczyściłeś pamięć podręczną.',
-'setting.you.have.not.cleared.the.cache.due.to.a' => 'Nie wyczyściłeś pamięci podręcznej ',
+'setting.you.have.cleared.the.cache' =>
+	'Wyczyściłeś pamięć podręczną.',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'Nie wyczyściłeś pamięci podręcznej',
 'settings' => 'Ustawienia',
 'settings.successfully.saved' => 'Ustawienia zostały pomyślnie zapisane',
 'setup.choose.language' => 'Wybierz język',
 'setup.choose.language.message' => 'Wybierz język, aby kontynuować instalację.',
 'setup.complete' => 'Instalacja ukończona',
-'setup.complete.message' => 'InvoicePlane został pomyślnie zainstalowany. Możesz się teraz zalogować.',
-'setup.complete.secure.setup' => 'Jeśli chcesz zabezpieczyć instalację, możesz na razie wyłączyć konfigurację. Aby to zrobić, zamień linię <code>DISABLE_SETUP=false</code> na <code>DISABLE_SETUP=true</code> w pliku <code>ipconfig.php</code> .',
-'setup.complete.support.note' => 'Jeśli napotkasz jakiekolwiek problemy lub potrzebujesz pomocy, zajrzyj na <a href="https://wiki.invoiceplane.com">oficjalną wiki</a> lub <a href="https://community.invoiceplane.com/">forum społeczności</a> .',
+'setup.complete.message' => 'InvoicePlane został pomyślnie zainstalowany.'
+	. 'Możesz się teraz zalogować.',
+'setup.complete.secure.setup' => 'Jeśli chcesz zabezpieczyć instalację, możesz '
+	. 'na razie wyłączyć konfigurację.'
+	. 'Aby to zrobić, zamień linię '
+	. '<code>DISABLE_SETUP=false</code> na <code>DISABLE_SETUP=true</code> w pliku '
+	. '<code>ipconfig.'
+	. 'php</code> .',
+'setup.complete.support.note' => 'Jeśli napotkasz jakiekolwiek problemy lub '
+	. 'potrzebujesz pomocy, zajrzyj na <a '
+	. 'href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">oficjalną wiki</a> lub <a href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">forum społeczności</a> .',
 'setup.create.user' => 'Utwórz konto użytkownika',
-'setup.create.user.message' => 'Te informacje będą Ci potrzebne do zalogowania się do InvoicePlane.',
+'setup.create.user.message' => 'Te informacje będą Ci potrzebne '
+	. 'do zalogowania się do InvoicePlane.',
 'setup.database.configured.message' => 'Baza danych została pomyślnie skonfigurowana.',
 'setup.database.details' => 'Szczegóły bazy danych',
-'setup.database.message' => 'Aby połączyć się z bazą danych, podaj poniższe informacje.',
-'setup.db.cannot.connect' => 'Nie można połączyć się z serwerem bazy danych przy użyciu podanych informacji o bazie danych. Sprawdź poświadczenia i spróbuj ponownie.',
-'setup.db.database.info' => 'Nazwa bazy danych utworzonej dla InvoicePlane.',
+'setup.database.message' => 'Aby połączyć się z bazą '
+	. 'danych, podaj poniższe informacje.',
+'setup.db.cannot.connect' => 'Nie można połączyć się z '
+	. 'serwerem bazy danych przy użyciu '
+	. 'podanych informacji o bazie danych.'
+	. 'Sprawdź poświadczenia i spróbuj ponownie.',
+'setup.db.database.info' => 'Nazwa bazy danych utworzonej dla '
+	. 'InvoicePlane.',
 'setup.db.hostname.info' => 'Nazwa hosta Twojej bazy danych.',
 'setup.db.password.info' => 'Hasło powiązane z bazą danych.',
-'setup.db.port.info' => 'Port, na którym nasłuchuje Twoja nazwa hosta. Domyślnie jest to 3306.',
-'setup.db.username.info' => 'Nazwa użytkownika powiązana z bazą danych.',
+'setup.db.port.info' => 'Port, na którym nasłuchuje Twoja '
+	. 'nazwa hosta.'
+	. 'Domyślnie jest to 3306.',
+'setup.db.username.info' => 'Nazwa użytkownika powiązana z bazą '
+	. 'danych.',
 'setup.install.tables' => 'Zainstaluj tabele',
 'setup.other.contact' => 'Inny kontakt',
 'setup.prerequisites' => 'Wymagania wstępne',
-'setup.prerequisites.message' => 'Witamy w InvoicePlane! Wszelkie problemy wymienione poniżej muszą zostać rozwiązane, zanim instalacja będzie mogła być kontynuowana.',
-'setup.tables.errors' => 'Aby kontynuować instalację, należy rozwiązać poniższe błędy.',
-'setup.tables.success' => 'Tabele bazy danych zostały pomyślnie zainstalowane.',
-'setup.upgrade.message' => 'Aby kontynuować instalację, należy rozwiązać poniższe błędy.',
-'setup.upgrade.success' => 'Tabele bazy danych zostały pomyślnie uaktualnione.',
+'setup.prerequisites.message' => 'Witamy w InvoicePlane! Wszelkie problemy '
+	. 'wymienione poniżej muszą zostać rozwiązane,'
+	. 'zanim instalacja będzie mogła być '
+	. 'kontynuowana.',
+'setup.tables.errors' => 'Aby kontynuować instalację, należy rozwiązać '
+	. 'poniższe błędy.',
+'setup.tables.success' => 'Tabele bazy danych zostały pomyślnie '
+	. 'zainstalowane.',
+'setup.upgrade.message' => 'Aby kontynuować instalację, należy rozwiązać '
+	. 'poniższe błędy.',
+'setup.upgrade.success' => 'Tabele bazy danych zostały pomyślnie '
+	. 'uaktualnione.',
 'setup.upgrade.tables' => 'Ulepsz tabele',
-'setup.user.address.info' => 'Podane poniżej dane adresowe będą wyświetlane na Twoich fakturach.',
-'setup.user.contact.info' => 'Te dane kontaktowe mogą być również wyświetlane na fakturach.',
-'setup.user.email.info' => 'Twój adres e-mail będzie używany do logowania się do InvoicePlane.',
-'setup.user.name.info' => 'Nazwa Twojej firmy lub Twoje imię i nazwisko.',
-'setup.user.password.info' => 'Pamiętaj, aby używać silnego hasła. Zaleca się kombinację wielkich i małych liter, cyfr i symboli. Minimalna długość: 8 znaków',
-'setup.user.password.verify.info' => 'Potwierdź swoje hasło podając je ponownie.',
-'setup.v120.alert' => '<strong>Uwaga!</strong><br> Bardzo ważne jest, aby zapoznać się z <a href="https://go.invoiceplane.com/v120update" target="_blank">niniejszą informacją o aktualizacji,</a> dotyczącą istotnych zmian w aplikacji InvoicePlane.',
-'setup.v147.alert' => '<strong>Uwaga!</strong><br> Otwórz plik <code>application/config/config.php</code> i zmień wiersz <code>$config[&#39;sess_use_database&#39;] = false;</code> na <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Więcej szczegółów znajdziesz <a href="https://go.invoiceplane.com/v147update" target="_blank">tutaj</a>',
+'setup.user.address.info' => 'Podane poniżej dane adresowe będą '
+	. 'wyświetlane na Twoich fakturach.',
+'setup.user.contact.info' => 'Te dane kontaktowe mogą być '
+	. 'również wyświetlane na fakturach.',
+'setup.user.email.info' => 'Twój adres e-mail będzie używany '
+	. 'do logowania się do InvoicePlane.',
+'setup.user.name.info' => 'Nazwa Twojej firmy lub Twoje '
+	. 'imię i nazwisko.',
+'setup.user.password.info' => 'Pamiętaj, aby używać silnego hasła.'
+	. 'Zaleca się kombinację wielkich i '
+	. 'małych liter, cyfr i symboli.'
+	. 'Minimalna długość:'
+	. '8 znaków',
+'setup.user.password.verify.info' =>
+	'Potwierdź swoje hasło podając je '
+	. 'ponownie.',
+'setup.v120.alert' => '<strong>Uwaga!</strong><br> Bardzo ważne jest, aby '
+	. 'zapoznać się z <a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">niniejszą informacją o aktualizacji,</a> '
+	. 'dotyczącą istotnych zmian w aplikacji '
+	. 'InvoicePlane.',
+'setup.v147.alert' => '<strong>Uwaga!</strong><br> Otwórz plik <code>application/config/config.'
+	. 'php</code> i zmień wiersz <code>$config[\'sess_use_database\'] '
+	. '= false;</code> na <code>$config[\'sess_use_database\'] = '
+	. 'true;</code> .'
+	. '<br> Więcej szczegółów znajdziesz <a '
+	. 'href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">tutaj</a>',
 'showing.of' => 'Wyświetlanie %s z %s ',
 'signup' => 'Zapisać się',
 'single.choice' => 'Pojedynczy wybór',
-'site.soletrader.about.choose' => 'Oto kilka powodów, dla których warto nas wybrać:',
-'site.soletrader.about.competitive.rates' => 'Konkurencyjne ceny',
+'site.soletrader.about.choose' => 'Oto kilka powodów, dla których '
+	. 'warto nas wybrać:',
+'site.soletrader.about.competitive.rates' =>
+	'Konkurencyjne ceny',
 'site.soletrader.about.contemporary' => 'Współczesne umiejętności',
-'site.soletrader.about.dissatisfaction' => 'W przypadku niezadowolenia z jakości usług, wykonamy pracę ponownie bezpłatnie.',
+'site.soletrader.about.dissatisfaction' => 'W przypadku niezadowolenia z jakości '
+	. 'usług, wykonamy pracę ponownie bezpłatnie.',
 'site.soletrader.about.finished' => 'Projekty ukończone',
 'site.soletrader.about.happy' => 'Zadowoleni klienci',
 'site.soletrader.about.quality' => 'Bez utraty jakości',
 'site.soletrader.about.return' => 'Klienci powracający',
-'site.soletrader.about.simply' => 'Po prostu podnieś słuchawkę, a my wykonamy pracę jeszcze raz.',
+'site.soletrader.about.simply' => 'Po prostu podnieś słuchawkę, a '
+	. 'my wykonamy pracę jeszcze raz.',
 'site.soletrader.about.solved' => 'Problemy rozwiązane',
-'site.soletrader.about.trained' => 'Nasz zespół jest dobrze wyszkolony i doświadczony.',
-'site.soletrader.about.we' => 'Staramy się wykorzystywać nasze umiejętności najlepiej jak potrafimy.',
+'site.soletrader.about.trained' => 'Nasz zespół jest dobrze wyszkolony '
+	. 'i doświadczony.',
+'site.soletrader.about.we' => 'Staramy się wykorzystywać nasze umiejętności '
+	. 'najlepiej jak potrafimy.',
 'site.soletrader.about.willing' => 'Chęć powrotu Wsparcie',
 'site.soletrader.contact.address' => 'Adres',
 'site.soletrader.contact.email' => 'E-mail',
-'site.soletrader.contact.lookout' => 'Zawsze szukamy nowych klientów. Jeśli jesteś zainteresowany współpracą z nami, skontaktuj się z nami w jeden z poniższych sposobów.',
+'site.soletrader.contact.lookout' => 'Zawsze szukamy nowych klientów.'
+	. 'Jeśli jesteś zainteresowany współpracą z '
+	. 'nami, skontaktuj się z nami '
+	. 'w jeden z poniższych sposobów.',
 'site.soletrader.contact.phone' => 'Telefon',
 'site.soletrader.contact.touch' => 'Skontaktuj się z nami',
 'site.soletrader.pricing.basic' => 'podstawowy',
 'site.soletrader.pricing.choosePlan' => 'Wybierz plan',
 'site.soletrader.pricing.currencyPerMonth' => 'na miesiąc',
-'site.soletrader.pricing.explore' => 'Zapoznaj się z naszą elastyczną ofertą cenową i znajdź idealne rozwiązanie dla Twojego biznesu.',
+'site.soletrader.pricing.explore' => 'Zapoznaj się z naszą elastyczną '
+	. 'ofertą cenową i znajdź idealne '
+	. 'rozwiązanie dla Twojego biznesu.',
 'site.soletrader.pricing.plans' => 'Więcej planów',
 'site.soletrader.pricing.pricing' => ' Nasze ceny',
 'site.soletrader.pricing.pro' => 'Profesjonalny',
@@ -1493,14 +2582,16 @@ return [
 'site.soletrader.pricing.visits' => 'wizyty',
 'site.soletrader.team.assistant' => 'Asystent',
 'site.soletrader.team.coordinator' => 'Koordynator',
-'site.soletrader.team.we' => 'Jesteśmy grupą troskliwych, doświadczonych i pracowitych osób.',
+'site.soletrader.team.we' => 'Jesteśmy grupą troskliwych, doświadczonych i '
+	. 'pracowitych osób.',
 'site.soletrader.testimonial.we' => 'Oto świadectwa',
 'site.soletrader.testimonial.worker1' => 'To jest moje świadectwo',
 'site.soletrader.testimonial.worker2' => 'To jest moje świadectwo',
 'site.soletrader.testimonial.worker3' => 'To jest moje świadectwo',
 'site.todays.date' => 'Dzisiejsza data',
 'six.months' => 'Sześć miesięcy',
-'smtp.mail.from' => 'Adres nadawcy SMTP dla wiadomości e-mail systemowych',
+'smtp.mail.from' => 'Adres nadawcy SMTP dla wiadomości '
+	. 'e-mail systemowych',
 'smtp.password' => 'Hasło SMTP',
 'smtp.port' => 'Port SMTP',
 'smtp.requires.authentication' => 'Wymaga uwierzytelnienia',
@@ -1519,31 +2610,80 @@ return [
 'stop.logging.in' => 'Zatrzymaj logowanie',
 'stop.signing.up' => 'Zatrzymaj rejestrację',
 'storecove' => 'Sklepik',
-'storecove.advisory.to.developer.field.easily.missed' => 'Pole łatwo pomijane przez klienta',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. Utwórz nadawcę - Kraj podmiotu prawnego',
-'storecove.invoice.json.encoded' => 'Faktura zakodowana w formacie Json StoreCove',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'Pole łatwo pomijane przez klienta',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Utwórz nadawcę - Kraj podmiotu '
+	. 'prawnego',
+'storecove.invoice.json.encoded' => 'Faktura zakodowana w formacie Json '
+	. 'StoreCove',
 'storecove.legal' => 'Prawny',
-'storecove.legal.entity.id.for.json' => '1.1.4. Utwórz nadawcę - Identyfikator podmiotu prawnego Store Cove wstawiony do pliku invoice.json',
-'storecove.legal.entity.identifier.id.not.found' => 'Parametry konfiguracji Księgowość Dostawca Strona Podmiot prawny Identyfikator firmy nie został znaleziony.',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Utwórz nadawcę - Identyfikator podmiotu '
+	. 'prawnego Store Cove wstawiony do '
+	. 'pliku invoice.'
+	. 'json',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'Parametry konfiguracji Księgowość Dostawca Strona '
+	. 'Podmiot prawny Identyfikator firmy nie '
+	. 'został znaleziony.',
 'storecove.no.contract.exists' => 'Nie istnieje żadna umowa',
 'storecove.not.available' => 'Niedostępne',
-'storecove.purchase.order.item.id.null' => 'po-item-id-null',
-'storecove.receiver.identifier' => 'Identyfikator odbiorcy - patrz StoreCove 6.3',
-'storecove.region.country.legal.tax' => 'Region ---------- Kraj --------- Prawny --------- Podatek',
-'storecove.salesorder.number.not.exist' => 'Numer zamówienia sprzedaży nie istnieje',
-'storecove.sender.identifier' => '6.2 Identyfikator nadawcy',
-'storecove.sender.identifier.basis' => '6.2 Podstawa identyfikatora nadawcy - prawna lub podatkowa',
-'storecove.supplier.contact.email.not.found' => 'Nie znaleziono adresu e-mail kontaktowego dostawcy. Zapoznaj się z tablicą parametrów konfiguracji.',
-'storecove.supplier.contact.firstname.not.found' => 'Nie znaleziono imienia kontaktu dostawcy. Zapoznaj się z tablicą parametrów konfiguracji.',
-'storecove.supplier.contact.lastname.not.found' => 'Nie znaleziono nazwiska kontaktu dostawcy. Zapoznaj się z tablicą parametrów konfiguracji.',
-'storecove.supplier.contact.name.not.found' => 'Nie znaleziono nazwy kontaktu dostawcy. Zapoznaj się z tablicą parametrów konfiguracji.',
-'storecove.supplier.contact.telephone.not.found' => 'Nie znaleziono numeru telefonu kontaktowego dostawcy. Zapoznaj się z tablicą parametrów konfiguracji.',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-null',
+'storecove.receiver.identifier' => 'Identyfikator odbiorcy - patrz StoreCove '
+	. '6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'Region ---------- Kraj --------- Prawny '
+	. '--------- Podatek',
+'storecove.salesorder.number.not.exist' =>
+	'Numer zamówienia sprzedaży nie istnieje',
+'storecove.sender.identifier' => '6.'
+	. '2 Identyfikator nadawcy',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 Podstawa identyfikatora nadawcy - '
+	. 'prawna lub podatkowa',
+'storecove.supplier.contact.email.not.found' =>
+	'Nie znaleziono adresu e-mail kontaktowego '
+	. 'dostawcy.'
+	. 'Zapoznaj się z tablicą parametrów '
+	. 'konfiguracji.',
+'storecove.supplier.contact.firstname.not.found' =>
+	'Nie znaleziono imienia kontaktu dostawcy.'
+	. 'Zapoznaj się z tablicą parametrów '
+	. 'konfiguracji.',
+'storecove.supplier.contact.lastname.not.found' =>
+	'Nie znaleziono nazwiska kontaktu dostawcy.'
+	. 'Zapoznaj się z tablicą parametrów '
+	. 'konfiguracji.',
+'storecove.supplier.contact.name.not.found' =>
+	'Nie znaleziono nazwy kontaktu dostawcy.'
+	. 'Zapoznaj się z tablicą parametrów '
+	. 'konfiguracji.',
+'storecove.supplier.contact.telephone.not.found' =>
+	'Nie znaleziono numeru telefonu kontaktowego '
+	. 'dostawcy.'
+	. 'Zapoznaj się z tablicą parametrów '
+	. 'konfiguracji.',
 'storecove.tax' => 'Podatek',
 'storecove.tax.rate.code' => 'Kod stawki podatkowej Storecove',
-'storecove.tax.scheme.identifier.id.not.found' => 'Parametry konfiguracji Księgowość Dostawca Strona Schemat podatkowy Identyfikator firmy nie został znaleziony.',
-'stream' => 'Strumień PDF w przeglądarce / modalu',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'Parametry konfiguracji Księgowość Dostawca Strona '
+	. 'Schemat podatkowy Identyfikator firmy nie '
+	. 'został znaleziony.',
+'stream' => 'Strumień PDF w przeglądarce / '
+	. 'modalu',
 'street.address' => 'Adres uliczny',
-'street.address.2' => 'Adres uliczny (c.d.)',
+'street.address.2' => 'Adres uliczny (c.'
+	. 'd.'
+	. ')',
 'subject' => 'Temat',
 'submenu' => 'Podmenu',
 'submit' => 'Składać',
@@ -1555,7 +2695,14 @@ return [
 'sumex.canton' => 'Kanton',
 'sumex.diagnosis' => 'Diagnoza',
 'sumex.edit' => 'Sumex Edytuj',
-'sumex.help' => 'Ta opcja dodaje wpis menu na fakturach, aby wygenerować fakturę półkompatybilną z TARMED / SUMEX1. TARMED / SUMEX1 to szwajcarski standard dla opieki zdrowotnej. <a href="http://sumex1.net/">Więcej informacji</a>',
+'sumex.help' => 'Ta opcja dodaje wpis menu '
+	. 'na fakturach, aby wygenerować fakturę '
+	. 'półkompatybilną z TARMED / SUMEX1.'
+	. 'TARMED / SUMEX1 to szwajcarski '
+	. 'standard dla opieki zdrowotnej.'
+	. '<a href="http:'
+	. '//sumex1.'
+	. 'net/">Więcej informacji</a>',
 'sumex.information' => 'Informacje o Sumex',
 'sumex.insurednumber' => 'Numer Ubezpieczonego',
 'sumex.observations' => 'Obserwacje',
@@ -1592,7 +2739,11 @@ return [
 'sumex.sliptype' => 'Typ poślizgu Sumex',
 'sumex.sliptype-esr9' => 'ESR 9 (Pomarańczowy Poślizg)',
 'sumex.sliptype-esrRed' => 'Czerwony Poślizg',
-'sumex.sliptype.help' => 'Ta opcja zmieni typ kuponu w Sumex. Należy pamiętać, że jeśli wybierzesz pomarańczowy kupon, potrzebujesz numeru abonenta zaczynającego się od „01-”',
+'sumex.sliptype.help' => 'Ta opcja zmieni typ kuponu '
+	. 'w Sumex.'
+	. 'Należy pamiętać, że jeśli wybierzesz '
+	. 'pomarańczowy kupon, potrzebujesz numeru abonenta '
+	. 'zaczynającego się od „01-”',
 'sumex.ssn' => 'AVS',
 'sumex.veka' => 'TYDZIEŃ',
 'sunday' => 'Niedziela',
@@ -1617,51 +2768,141 @@ return [
 'tax.rate.decimal.places' => 'Stawka podatku Miejsca dziesiętne',
 'tax.rate.edit' => 'Edytuj stawkę podatku',
 'tax.rate.form' => 'Formularz stawki podatkowej',
-'tax.rate.history.exists' => 'Nie można usunąć. Historia już istnieje',
-'tax.rate.name' => 'Nazwa stawki podatku np. Standardowa',
+'tax.rate.history.exists' => 'Nie można usunąć.'
+	. 'Historia już istnieje',
+'tax.rate.name' => 'Nazwa stawki podatku np.'
+	. 'Standardowa',
 'tax.rate.percent' => 'Stawka podatku w procentach',
 'tax.rate.placement' => 'Umieszczenie stawki podatku',
 'tax.rates' => 'Stawki podatkowe',
 'taxes' => 'Podatki',
 'telegram' => 'Telegram',
-'telegram.bot.api.chat.id' => 'Telegram: Nie-bot: Konto osobiste: Witaj świecie: Wiadomość testowa: Odbiorca wiadomości: <b>Identyfikator czatu</b>',
-'telegram.bot.api.chat.id.not.set' => 'Identyfikator czatu właściciela osobistego konta Telegram, które nie jest kontem bota i które wysłało botowi pierwszą wiadomość i ma otrzymać wiadomość testową „Witaj, świecie”, nie został skonfigurowany.',
-'telegram.bot.api.current.status' => '<b>Obecne zastosowanie:</b> Nie ma potrzeby stosowania webhooka, ponieważ klienci nie mają identyfikatorów czatu i nie wysyłają wiadomości do bota.',
+'telegram.bot.api.chat.id' =>
+	'Telegram:'
+	. 'Nie-bot:'
+	. 'Konto osobiste:'
+	. 'Witaj świecie:'
+	. 'Wiadomość testowa:'
+	. 'Odbiorca wiadomości:'
+	. '<b>Identyfikator czatu</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'Identyfikator czatu właściciela osobistego konta '
+	. 'Telegram, które nie jest kontem '
+	. 'bota i które wysłało botowi '
+	. 'pierwszą wiadomość i ma otrzymać '
+	. 'wiadomość testową „Witaj, świecie”, nie '
+	. 'został skonfigurowany.',
+'telegram.bot.api.current.status' =>
+	'<b>Obecne zastosowanie:'
+	. '</b> Nie ma potrzeby stosowania '
+	. 'webhooka, ponieważ klienci nie mają '
+	. 'identyfikatorów czatu i nie wysyłają '
+	. 'wiadomości do bota.',
 'telegram.bot.api.enable' => 'Włącz Telegram',
-'telegram.bot.api.enabled.not' => 'Telegram nie jest włączony',
-'telegram.bot.api.future.use' => '<b>Przyszłe zastosowanie:</b> Klienci z identyfikatorami czatu otrzymują fakturę telegramową i potwierdzają jej otrzymanie, wysyłając potwierdzenie do webhooka',
-'telegram.bot.api.general.purpose' => '<b>Zarejestrowany bot, identyfikowany za pomocą tokena, wysyła powiadomienia o płatnościach klienta na poniższy zarejestrowany identyfikator czatu (zwykle osobiste konto administratora w serwisie Telegram, niebędące kontem bota).</b>',
-'telegram.bot.api.get.updates.failed' => 'Aktualizacje w Telegramie nie powiodły się.',
-'telegram.bot.api.get.updates.success' => 'Aktualizacje w Telegramie powiodły się dzięki metodzie API getUpdates.',
-'telegram.bot.api.hello.world.test.message' => 'Hello World z Telegram Bot Api. Dziękuję programistom yiisoft!',
-'telegram.bot.api.hello.world.test.message.sent' => 'Wiadomość Hello World została wysłana.',
-'telegram.bot.api.hello.world.test.message.sent.not' => 'Wiadomość „Hello World” NIE została wysłana.',
-'telegram.bot.api.hello.world.test.message.use' => 'Wyślij podstawową wiadomość testową „Witaj świecie z Telegram Bot Api” na zewnętrzny identyfikator czatu',
-'telegram.bot.api.payment.notification.success' => 'Powiadomienie o płatności za pomocą Telegramu pomyślne',
-'telegram.bot.api.payment.notifications' => 'Powiadomienia o płatnościach Telegram',
+'telegram.bot.api.enabled.not' =>
+	'Telegram nie jest włączony',
+'telegram.bot.api.future.use' =>
+	'<b>Przyszłe zastosowanie:'
+	. '</b> Klienci z identyfikatorami czatu '
+	. 'otrzymują fakturę telegramową i potwierdzają '
+	. 'jej otrzymanie, wysyłając potwierdzenie do '
+	. 'webhooka',
+'telegram.bot.api.general.purpose' =>
+	'<b>Zarejestrowany bot, identyfikowany za pomocą '
+	. 'tokena, wysyła powiadomienia o płatnościach '
+	. 'klienta na poniższy zarejestrowany identyfikator '
+	. 'czatu (zwykle osobiste konto administratora '
+	. 'w serwisie Telegram, niebędące kontem '
+	. 'bota).'
+	. '</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'Aktualizacje w Telegramie nie powiodły '
+	. 'się.',
+'telegram.bot.api.get.updates.success' =>
+	'Aktualizacje w Telegramie powiodły się '
+	. 'dzięki metodzie API getUpdates.',
+'telegram.bot.api.hello.world.test.message' =>
+	'Hello World z Telegram Bot '
+	. 'Api.'
+	. 'Dziękuję programistom yiisoft!',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'Wiadomość Hello World została wysłana.',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'Wiadomość „Hello World” NIE została '
+	. 'wysłana.',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'Wyślij podstawową wiadomość testową „Witaj '
+	. 'świecie z Telegram Bot Api” '
+	. 'na zewnętrzny identyfikator czatu',
+'telegram.bot.api.payment.notification.success' =>
+	'Powiadomienie o płatności za pomocą '
+	. 'Telegramu pomyślne',
+'telegram.bot.api.payment.notifications' =>
+	'Powiadomienia o płatnościach Telegram',
 'telegram.bot.api.token' => 'Telegram Bot Api Token',
-'telegram.bot.api.token.not.set' => 'Telegram Bot Api Token Nie Ustawiony',
-'telegram.bot.api.webhook.delete' => 'Usuń Webhook',
-'telegram.bot.api.webhook.deleted' => 'Webhook został właśnie wyłączony, dzięki czemu można używać ręcznej metody pobierania za pomocą interfejsu API getUpdates.',
-'telegram.bot.api.webhook.secret.token' => 'Tajny token webhook zapewniający dodatkowe bezpieczeństwo (używany jako parametr w funkcji setWebhook, a nie jako queryParameter)',
-'telegram.bot.api.webhook.setup' => 'Webhook jest skonfigurowany.',
-'telegram.bot.api.webhook.setup.already' => 'Webhook został już skonfigurowany.',
-'telegram.bot.api.webhook.url.this.site' => 'Adres URL webhook Telegramu tej witryny jest używany w funkcji setWebhook TelegramHelper.',
+'telegram.bot.api.token.not.set' =>
+	'Telegram Bot Api Token Nie '
+	. 'Ustawiony',
+'telegram.bot.api.webhook.delete' =>
+	'Usuń Webhook',
+'telegram.bot.api.webhook.deleted' =>
+	'Webhook został właśnie wyłączony, dzięki '
+	. 'czemu można używać ręcznej metody '
+	. 'pobierania za pomocą interfejsu API '
+	. 'getUpdates.',
+'telegram.bot.api.webhook.secret.token' =>
+	'Tajny token webhook zapewniający dodatkowe '
+	. 'bezpieczeństwo (używany jako parametr w '
+	. 'funkcji setWebhook, a nie jako '
+	. 'queryParameter)',
+'telegram.bot.api.webhook.setup' =>
+	'Webhook jest skonfigurowany.',
+'telegram.bot.api.webhook.setup.already' =>
+	'Webhook został już skonfigurowany.',
+'telegram.bot.api.webhook.url.this.site' =>
+	'Adres URL webhook Telegramu tej '
+	. 'witryny jest używany w funkcji '
+	. 'setWebhook TelegramHelper.',
 'template' => 'Szablon faktury',
 'templates' => 'Szablony faktur',
 'term' => 'Warunki i postanowienia',
 'term.1' => 'Nie przeczytałem regulaminu.',
 'term.2' => 'Przeczytałem i akceptuję regulamin.',
-'term.add.additional.terms.at.setting.repository' => 'Dodaj dodatkowe warunki w funkcji getPaymentTerms w ustawieniach repozytorium.',
+'term.add.additional.terms.at.setting.repository' =>
+	'Dodaj dodatkowe warunki w funkcji '
+	. 'getPaymentTerms w ustawieniach repozytorium.',
 'terms' => 'Warunki',
 'test.data.install' => 'Zainstaluj dane testowe',
 'test.data.use' => 'Użyj danych testowych',
 'test.remove' => 'Usuń dane testowe',
-'test.remove.tooltip' => 'Widok..Ustawienia..Ogólne..Instalacja danych testowych..Nie i Widok..Ustawienia..Ogólne..Użyj danych testowych..Nie',
+'test.remove.tooltip' => 'Widok.'
+	. 'Ustawienia.'
+	. 'Ogólne.'
+	. 'Instalacja danych testowych.'
+	. 'Nie i Widok.'
+	. 'Ustawienia.'
+	. 'Ogólne.'
+	. 'Użyj danych testowych.'
+	. 'Nie',
 'test.reset' => 'Zresetuj dane testowe',
 'test.reset.setting' => 'Ustawienia Ponowna instalacja',
-'test.reset.setting.tooltip' => 'Spowoduje to usunięcie wszystkich bieżących ustawień i ponowną instalację ustawień domyślnych w InvoiceController/install.default.settings.on.first.run',
-'test.reset.tooltip' => 'Widok..Ustawienia..Ogólne..Instaluj dane testowe..Tak i Widok..Ustawienia..Ogólne..Użyj danych testowych..Tak',
+'test.reset.setting.tooltip' => 'Spowoduje to usunięcie wszystkich bieżących '
+	. 'ustawień i ponowną instalację ustawień '
+	. 'domyślnych w InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run',
+'test.reset.tooltip' => 'Widok.'
+	. 'Ustawienia.'
+	. 'Ogólne.'
+	. 'Instaluj dane testowe.'
+	. 'Tak i Widok.'
+	. 'Ustawienia.'
+	. 'Ogólne.'
+	. 'Użyj danych testowych.'
+	. 'Tak',
 'text' => 'Tekst',
 'theme' => 'Temat',
 'this.month' => 'W tym miesiącu',
@@ -1685,21 +2926,57 @@ return [
 'true' => 'PRAWDA',
 'try.again' => 'Spróbuj ponownie',
 'two.factor.authentication' => 'Dwuskładnikowe uwierzytelnianie',
-'two.factor.authentication.attempt.failure' => 'Nieudana próba uwierzytelnienia dwuskładnikowego',
-'two.factor.authentication.attempt.failure.must.setup' => 'Nieudana próba uwierzytelnienia dwuskładnikowego: Musisz skonfigurować nowy kod QR z tajnym znakiem (+) i wybrać opcję nadpisania poprzedniego wpisu, gdy zostaniesz o to poproszony',
-'two.factor.authentication.attempt.success' => 'Próba uwierzytelnienia dwuskładnikowego zakończona sukcesem',
-'two.factor.authentication.disabled' => 'W celu zapewnienia większego bezpieczeństwa uwierzytelnianie dwuskładnikowe zostało wyłączone.',
+'two.factor.authentication.attempt.failure' =>
+	'Nieudana próba uwierzytelnienia dwuskładnikowego',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'Nieudana próba uwierzytelnienia dwuskładnikowego:'
+	. 'Musisz skonfigurować nowy kod QR '
+	. 'z tajnym znakiem (+) i '
+	. 'wybrać opcję nadpisania poprzedniego wpisu,'
+	. 'gdy zostaniesz o to poproszony',
+'two.factor.authentication.attempt.success' =>
+	'Próba uwierzytelnienia dwuskładnikowego zakończona sukcesem',
+'two.factor.authentication.disabled' => 'W celu zapewnienia większego bezpieczeństwa '
+	. 'uwierzytelnianie dwuskładnikowe zostało wyłączone.',
 'two.factor.authentication.enable' => 'Włącz uwierzytelnianie dwuskładnikowe',
-'two.factor.authentication.enabled.with.disabling' => 'Dwuskładnikowe uwierzytelnianie jest obecnie włączone dla dodatkowego bezpieczeństwa i jest wyłączane po pomyślnym uwierzytelnieniu dla dodatkowej warstwy bezpieczeństwa do następnego logowania. Obowiązkowe skanowanie kodu QR po każdym logowaniu w celu uzyskania nowego sekretu.',
-'two.factor.authentication.enabled.without.disabling' => 'Dwuskładnikowe uwierzytelnianie jest obecnie włączone w celu zapewnienia dodatkowego bezpieczeństwa i nie zostanie wyłączone po pomyślnym uwierzytelnieniu. Kod QR nie będzie ponownie widoczny do zeskanowania po zalogowaniu się i skonfigurowaniu dwuskładnikowego uwierzytelniania.',
+'two.factor.authentication.enabled.with.disabling' =>
+	'Dwuskładnikowe uwierzytelnianie jest obecnie włączone '
+	. 'dla dodatkowego bezpieczeństwa i jest '
+	. 'wyłączane po pomyślnym uwierzytelnieniu dla '
+	. 'dodatkowej warstwy bezpieczeństwa do następnego '
+	. 'logowania.'
+	. 'Obowiązkowe skanowanie kodu QR po '
+	. 'każdym logowaniu w celu uzyskania '
+	. 'nowego sekretu.',
+'two.factor.authentication.enabled.without.disabling' =>
+	'Dwuskładnikowe uwierzytelnianie jest obecnie włączone '
+	. 'w celu zapewnienia dodatkowego bezpieczeństwa '
+	. 'i nie zostanie wyłączone po '
+	. 'pomyślnym uwierzytelnieniu.'
+	. 'Kod QR nie będzie ponownie '
+	. 'widoczny do zeskanowania po zalogowaniu '
+	. 'się i skonfigurowaniu dwuskładnikowego uwierzytelniania.',
 'two.factor.authentication.error' => 'Błąd uwierzytelniania dwuskładnikowego',
-'two.factor.authentication.form.verify.login' => 'Zweryfikuj logowanie',
-'two.factor.authentication.invalid.code.format' => 'Nieprawidłowy format kodu. Wprowadź 6-cyfrowy kod z aplikacji.',
-'two.factor.authentication.missing.code.or.secret' => 'Brak kodu uwierzytelniającego lub klucza tajnego 2FA.',
-'two.factor.authentication.new.six.digit.code' => 'Wprowadź nowy 6-cyfrowy kod uwierzytelniający (inny niż kod konfiguracji) z aplikacji.',
-'two.factor.authentication.no.secret.generated' => 'Nie wygenerowano żadnego sekretu. Proszę ponownie uruchomić instalację.',
-'two.factor.authentication.qr.code.enter.manually' => 'Lub wprowadź ten kod ręcznie do aplikacji na Androida: ',
-'two.factor.authentication.scan' => 'Zeskanuj ten kod QR za pomocą aplikacji Aegis:',
+'two.factor.authentication.form.verify.login' =>
+	'Zweryfikuj logowanie',
+'two.factor.authentication.invalid.code.format' =>
+	'Nieprawidłowy format kodu.'
+	. 'Wprowadź 6-cyfrowy kod z aplikacji.',
+'two.factor.authentication.missing.code.or.secret' =>
+	'Brak kodu uwierzytelniającego lub klucza '
+	. 'tajnego 2FA.',
+'two.factor.authentication.new.six.digit.code' =>
+	'Wprowadź nowy 6-cyfrowy kod uwierzytelniający '
+	. '(inny niż kod konfiguracji) z '
+	. 'aplikacji.',
+'two.factor.authentication.no.secret.generated' =>
+	'Nie wygenerowano żadnego sekretu.'
+	. 'Proszę ponownie uruchomić instalację.',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'Lub wprowadź ten kod ręcznie '
+	. 'do aplikacji na Androida:',
+'two.factor.authentication.scan' => 'Zeskanuj ten kod QR za '
+	. 'pomocą aplikacji Aegis:',
 'two.factor.authentication.setup' => 'Konfiguracja uwierzytelniania dwuskładnikowego',
 'type' => 'Typ',
 'unit' => 'Jednostka',
@@ -1707,7 +2984,8 @@ return [
 'unit.already.exists' => 'Jednostka już istnieje!',
 'unit.description.not.provided' => 'Opis nie został podany',
 'unit.edit' => 'Edytuj jednostkę',
-'unit.history' => 'Nie można usunąć. Historia istnieje.',
+'unit.history' => 'Nie można usunąć.'
+	. 'Historia istnieje.',
 'unit.name' => 'Nazwa jednostki',
 'unit.name.plrl' => 'Nazwa jednostki (forma liczby mnogiej)',
 'unit.peppol' => 'Peppol',
@@ -1719,7 +2997,8 @@ return [
 'unknown' => 'Nieznany',
 'unpaid' => 'Nie zapłacony',
 'updatecheck' => 'Sprawdź aktualizację',
-'updatecheck.failed' => 'Updatecheck nie powiodło się! Sprawdź połączenie sieciowe.',
+'updatecheck.failed' => 'Updatecheck nie powiodło się! Sprawdź '
+	. 'połączenie sieciowe.',
 'updates' => 'Aktualizacje',
 'updates.available' => 'Dostępne aktualizacje!',
 'upload.date' => 'Data przesłania',
@@ -1736,47 +3015,91 @@ return [
 'user.account.clients' => 'Klienci z kontami użytkowników',
 'user.accounts' => 'Konta użytkowników faktury',
 'user.all.clients' => 'Dodaj wszystkich klientów',
-'user.all.clients.text' => '* Jeśli ta opcja jest zaznaczona, użytkownik będzie mógł zobaczyć wszystkich klientów, także tych, którzy zostaną dodani później.',
+'user.all.clients.text' => '* Jeśli ta opcja jest '
+	. 'zaznaczona, użytkownik będzie mógł zobaczyć '
+	. 'wszystkich klientów, także tych, którzy '
+	. 'zostaną dodani później.',
 'user.api.list' => 'Użytkownicy przedfakturowi - zarejestrowani użytkownicy',
-'user.client.active.no' => 'Nie masz klientów z aktywnymi kontami użytkowników. Administratorzy przypisują klientów do zarejestrowanych kont użytkowników.',
+'user.client.active.no' => 'Nie masz klientów z aktywnymi '
+	. 'kontami użytkowników.'
+	. 'Administratorzy przypisują klientów do zarejestrowanych '
+	. 'kont użytkowników.',
 'user.client.count' => '#',
-'user.client.no.account' => 'Ten klient nie ma powiązanego konta użytkownika, dlatego nie można utworzyć tego dokumentu.',
-'user.clients.assigned.not' => 'Do tego użytkownika nie przypisano żadnych Klientów.',
+'user.client.no.account' => 'Ten klient nie ma powiązanego '
+	. 'konta użytkownika, dlatego nie można '
+	. 'utworzyć tego dokumentu.',
+'user.clients.assigned.not' => 'Do tego użytkownika nie przypisano '
+	. 'żadnych Klientów.',
 'user.form' => 'Formularz użytkownika',
 'user.iban' => 'Numer IBAN',
 'user.inv.active.not' => 'Konto użytkownika nie jest aktywne',
-'user.inv.list.limit' => 'Liczba rekordów wyświetlanych na stronie (Uwaga: zastępuje wartość domyślną)',
-'user.inv.more.than.one.assigned' => 'Tworzenie faktury nie powiodło się: Sprawdź swoje Ustawienia ... Konto użytkownika. Do tego klienta przypisano więcej niż jednego użytkownika.',
-'user.inv.refer.to' => 'Domyślną liczbę 10 rekordów na stronę można zastąpić, klikając tutaj.',
+'user.inv.list.limit' => 'Liczba rekordów wyświetlanych na stronie '
+	. '(Uwaga:'
+	. 'zastępuje wartość domyślną)',
+'user.inv.more.than.one.assigned' =>
+	'Tworzenie faktury nie powiodło się:'
+	. 'Sprawdź swoje Ustawienia .'
+	. 'Konto użytkownika.'
+	. 'Do tego klienta przypisano więcej '
+	. 'niż jednego użytkownika.',
+'user.inv.refer.to' => 'Domyślną liczbę 10 rekordów na '
+	. 'stronę można zastąpić, klikając tutaj.',
 'user.inv.role.accountant' => 'Księgowy',
-'user.inv.role.accountant.assigned' => 'Przypisano rolę księgowego',
-'user.inv.role.accountant.default' => 'Domyślnie księgowy klienta może przeglądać faktury, opłacać faktury, przeglądać płatności faktur i edytować płatności faktur.',
+'user.inv.role.accountant.assigned' =>
+	'Przypisano rolę księgowego',
+'user.inv.role.accountant.default' =>
+	'Domyślnie księgowy klienta może przeglądać '
+	. 'faktury, opłacać faktury, przeglądać płatności '
+	. 'faktur i edytować płatności faktur.',
 'user.inv.role.administrator' => 'Administrator',
-'user.inv.role.administrator.already.assigned' => 'Rola administratora została już przypisana',
-'user.inv.role.administrator.assigned' => 'Rola administratora została przypisana. ',
-'user.inv.role.all.new' => 'Wszyscy nowi użytkownicy domyślnie przyjmą rolę obserwatora, tzn. będą mogli przeglądać dokumentację, ale nie będą mogli jej edytować, czyli obserwować lub przeglądać.',
+'user.inv.role.administrator.already.assigned' =>
+	'Rola administratora została już przypisana',
+'user.inv.role.administrator.assigned' =>
+	'Rola administratora została przypisana.',
+'user.inv.role.all.new' =>
+	'Wszyscy nowi użytkownicy domyślnie przyjmą '
+	. 'rolę obserwatora, tzn.'
+	. 'będą mogli przeglądać dokumentację, ale '
+	. 'nie będą mogli jej edytować,'
+	. 'czyli obserwować lub przeglądać.',
 'user.inv.role.observer' => 'Obserwator',
-'user.inv.role.observer.assigned' => 'Przypisana rola obserwatora',
-'user.inv.role.observer.assigned.already' => 'Rola obserwatora została już przypisana.',
-'user.inv.role.revoke.all' => 'Odwołaj wszystkie role',
-'user.inv.role.warning.revoke.all' => 'Czy na pewno chcesz cofnąć wszystkie role?',
-'user.inv.role.warning.role' => 'Czy na pewno chcesz przyjąć tę rolę?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Nie można przypisać typu administratora listy rozwijanej osobie niebędącej administratorem',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Nie można przypisać typu gościa listy rozwijanej do administratora',
+'user.inv.role.observer.assigned' =>
+	'Przypisana rola obserwatora',
+'user.inv.role.observer.assigned.already' =>
+	'Rola obserwatora została już przypisana.',
+'user.inv.role.revoke.all' =>
+	'Odwołaj wszystkie role',
+'user.inv.role.warning.revoke.all' =>
+	'Czy na pewno chcesz cofnąć '
+	. 'wszystkie role?',
+'user.inv.role.warning.role' =>
+	'Czy na pewno chcesz przyjąć '
+	. 'tę rolę?',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'Nie można przypisać typu administratora '
+	. 'listy rozwijanej osobie niebędącej administratorem',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'Nie można przypisać typu gościa '
+	. 'listy rozwijanej do administratora',
 'user.signup.please' => 'Proszę się zarejestrować!',
 'user.subscriber.number' => 'Numer abonenta',
 'user.type' => 'Typ użytkownika',
 'username' => 'Nazwa użytkownika',
 'users' => 'Użytkownicy',
 'utility.assets.clear' => 'Wyczyść pamięć podręczną zasobów',
-'validator.fail' => 'Nie można przetworzyć pola %s: %s',
+'validator.fail' => 'Nie można przetworzyć pola %s:'
+	. '%s',
 'validator.invalid.login.password' => 'Nieprawidłowy login lub hasło',
 'validator.password.change' => 'Twoje hasło zostało zmienione',
 'validator.password.not.match' => 'Hasła nie pasują',
-'validator.password.not.match.new' => 'Twoje nowe hasła nie są takie same',
+'validator.password.not.match.new' =>
+	'Twoje nowe hasła nie są '
+	. 'takie same',
 'validator.password.reset' => 'Twoje hasło zostało zresetowane',
-'validator.user.exist' => 'Użytkownik o tym loginie już istnieje',
-'validator.user.exist.not' => 'Użytkownik o takim loginie nie istnieje',
+'validator.user.exist' => 'Użytkownik o tym loginie już '
+	. 'istnieje',
+'validator.user.exist.not' => 'Użytkownik o takim loginie nie '
+	. 'istnieje',
 'value' => 'Wartość',
 'values' => 'Wartości',
 'values.with.taxes' => 'Wartości z podatkami',
@@ -1815,11 +3138,113 @@ return [
 'web' => 'Sieć',
 'web.address' => 'Adres internetowy',
 'welcome' => 'Powitanie',
-'wrong.passwordreset.token' => 'Nie znaleziono użytkownika dla podanego tokenu resetowania. Jeśli uważasz, że to błąd, skontaktuj się z administratorem.',
+'wrong.passwordreset.token' => 'Nie znaleziono użytkownika dla podanego '
+	. 'tokenu resetowania.'
+	. 'Jeśli uważasz, że to błąd,'
+	. 'skontaktuj się z administratorem.',
 'year' => 'Rok',
 'year.prefix' => 'Prefiks roku',
 'years' => 'Lata',
 'yes' => 'Tak',
 'zip' => 'Kod pocztowy',
 'zip.code' => 'Kod pocztowy',
+    
+'allowance.or.charge.allowance.tax' =>
+	'Podatek od zasiłku',
+'allowance.or.charge.charge.tax' =>
+	'Podatek od opłaty',
+'allowance.or.charge.inv.add' =>
+	'Dodaj kwotę lub opłatę do '
+	. 'faktury',
+'allowance.or.charge.level' => 'Poziom (⬅ ️Ogólny, Pozycja zamówienia '
+	. '➡)',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'Wysyłka/Obsługa/Pakowanie',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'VAT od wysyłki/obsługi/opakowania',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'Podatek od wysyłki/obsługi/opakowania',
+'amount.payment' => 'Kwota płatności do zapłaty w '
+	. 'całości',
+'calendar' => 'Kalendarz',
+'continue.with.developersandboxhmrc' => 'Kontynuuj z Developer Gov Sandbox '
+	. 'UK',
+'continue.with.oidc' => 'Kontynuuj z Open Id Connect',
+'continue.with.openbanking' => 'Kontynuuj z Open Banking',
+'converted.to.invoice' => 'Przekonwertowano na fakturę',
+'converted.to.so' => 'Przekonwertowano na zamówienie sprzedaży',
+'custom.field.edit' => 'Edycja pola niestandardowego',
+'delete.quote.single' => 'Tę ofertę można usunąć, ponieważ '
+	. 'nie jest z nią powiązane '
+	. 'żadne zamówienie sprzedaży ani faktura',
+'delete.quote.derived' => 'Z tą ofertą powiązane jest '
+	. 'zamówienie sprzedaży lub faktura, dlatego '
+	. 'nie można jej usunąć.',
+'extended' => 'Rozszerzony',
+'extended.language' => 'Rozszerzony język',
+'file' => 'Plik',
+'grand.fathered' => 'Dziadek',
+'layout.password.otp.6' => 'Hasło OTP (6 cyfr)',
+'layout.password.otp.6.8' =>
+	'Hasło OTP (6 cyfr) / '
+	. 'Kody odzyskiwania zapasowego (8 cyfr)',
+'oauth2.account.locked' => 'Konto zablokowane',
+'oauth2.backup.recovery.codes' => 'Zapasowe kody odzyskiwania.'
+	. 'Przechowuj w bezpiecznym miejscu.',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'Regeneruj kody odzyskiwania kopii zapasowej',
+'oauth2.consent.required' => 'Wymagana zgoda',
+'oauth2.default' => 'Użyto domyślnej konfiguracji oauth2.'
+	. '0',
+'oauth2.invalid.request' => 'Nieprawidłowe żądanie',
+'oauth2.invalid.client' => 'Nieprawidłowy klient',
+'oauth2.invalid.grant' => 'Nieprawidłowy grant',
+'oauth2.login.required' => 'Wymagane logowanie',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'Brak kodu uwierzytelniającego lub parametru '
+	. 'stanu.',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'Brak parametru stanu.'
+	. 'Możliwy atak csrf.',
+'oauth2.server.error' => 'Błąd serwera',
+'oauth2.temporarily.unavailable' => 'Tymczasowo niedostępne',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'Tworzenie użytkowników testowych nie jest '
+	. 'dozwolone w środowisku produkcyjnym.',
+'oauth2.unauthorized.client' => 'Nieautoryzowany klient',
+'oauth2.unsupported.response.type' => 'Nieobsługiwany typ odpowiedzi',
+'oauth2.unsupported.grant.type' => 'Nieobsługiwany typ dotacji',
+'online.payment.apiToken' => 'Token API',
+'online.payment.thirdPartyProvider' => 'Dostawca zewnętrzny, np.'
+	. 'Wonderful',
+'open.banking.pay.with' => 'Zapłać za pomocą Open Banking: ',
+'open.banking.not.configured' => 'Usługa Open Banking nie jest '
+	. 'skonfigurowana.'
+	. 'Skontaktuj się z pomocą techniczną.',
+'radiolist.choice' => 'Wybór listy radiowej',
+'region' => 'Region',
+'script' => 'Scenariusz',
+'tax.rate.active.not' => 'Ostrzeżenie:'
+	. 'Nie aktywowano żadnych stawek podatkowych.'
+	. 'Aktywuj co najmniej jedną stawkę '
+	. 'podatkową.'
+	. 'Ustawienia.'
+	. 'Stawka podatkowa',
+'textarea' => 'Obszar tekstowy',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'Nieprawidłowy 8-cyfrowy kod odzyskiwania kopii '
+	. 'zapasowej',
+'two.factor.authentication.invalid.totp.code' =>
+	'Nieprawidłowy 6-cyfrowy jednorazowy kod uwierzytelniania '
+	. 'czasowego',
+'two.factor.authentication.rate.limit.reached' =>
+	'Osiągnięto limit szybkości.'
+	. 'Proszę zaczekać 10 sekund.',
+'url' => 'Adres URL',
+'variant' => 'Wariant',
+'approval.required' => 'Wymagana zgoda',
+'quote.approval.required' => 'Wymagana akceptacja oferty',
+'quote.must.be.approved.first' =>
+	'Przed konwersją należy zatwierdzić wycenę',    
 ];
+

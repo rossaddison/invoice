@@ -10,7 +10,9 @@ use App\Invoice\Setting\SettingRepository as SR;
 
 final readonly class ContractService
 {
-    public function __construct(private ContractRepository $repository) {}
+    public function __construct(private ContractRepository $repository)
+    {
+    }
 
     /**
      * @param Contract $model

@@ -32,27 +32,27 @@ final class UnitPeppolForm extends FormModel
         $this->description = $unitPeppol->getDescription();
     }
 
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getUnit_id(): string|null
+    public function getUnit_id(): ?string
     {
         return $this->unit_id;
     }
 
-    public function getCode(): string|null
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }

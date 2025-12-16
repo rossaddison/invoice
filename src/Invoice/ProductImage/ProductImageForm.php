@@ -29,7 +29,7 @@ final class ProductImageForm extends FormModel
         $this->uploaded_date = $productImage->getUploaded_date();
     }
 
-    public function getProduct_id(): int|null
+    public function getProduct_id(): ?int
     {
         return $this->product_id;
     }

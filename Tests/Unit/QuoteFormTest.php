@@ -58,7 +58,7 @@ final class QuoteFormTest extends TestCase
     {
         $form = $this->createFormWithData([
             'number' => 'QUOTE-' . str_repeat('1', 100), // Long quote number
-            'url_key' => str_repeat('a', 100), // Long URL key  
+            'url_key' => str_repeat('a', 100), // Long URL key
             'password' => str_repeat('p', 100), // Long password
             'notes' => str_repeat('Note content. ', 1000), // Very long notes
             'client_id' => 1,

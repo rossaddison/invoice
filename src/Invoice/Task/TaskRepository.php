@@ -40,6 +40,20 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
+     * Get tasks with non-zero prices for invoice/quote selection
+     *
+     * @psalm-return EntityReader
+     */
+    public function findAllPreloadedWithPrice(): EntityReader
+    {
+        $query = $this->select()
+            ->load('tax_rate')
+            ->load('project')
+            ->where(['price' => ['>' => 0]]);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * @psalm-return EntityReader
      */
     public function getReader(): EntityReader
@@ -90,7 +104,7 @@ final class TaskRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaskquery(string $id): Task|null
+    public function repoTaskquery(string $id): ?Task
     {
         $query = $this->select()->load('tax_rate')
                                 ->where(['id' => $id]);
@@ -105,6 +119,7 @@ final class TaskRepository extends Select\Repository
     public function repoTaskStatusquery(int $status): EntityReader
     {
         $query = $this->select()->load('tax_rate')
+                                ->load('project')
                                 ->where(['status' => $status]);
         return $this->prepareDataReader($query);
     }

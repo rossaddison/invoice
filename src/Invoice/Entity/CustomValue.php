@@ -29,12 +29,12 @@ class CustomValue
         $this->id = $id;
     }
 
-    public function getCustomField(): CustomField|null
+    public function getCustomField(): ?CustomField
     {
         return $this->custom_field;
     }
 
-    public function getCustom_field_id(): int|null
+    public function getCustom_field_id(): ?int
     {
         return $this->custom_field_id;
     }

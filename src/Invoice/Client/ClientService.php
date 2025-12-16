@@ -10,7 +10,9 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class ClientService
 {
-    public function __construct(private ClientRepository $repository) {}
+    public function __construct(private ClientRepository $repository)
+    {
+    }
 
     /**
      * @param Client $model
@@ -18,7 +20,7 @@ final readonly class ClientService
      * @param SettingRepository $s
      * @return int|null
      */
-    public function saveClient(Client $model, array $body, SettingRepository $s): int|null
+    public function saveClient(Client $model, array $body, SettingRepository $s): ?int
     {
         $datehelper = new DateHelper($s);
         isset($body['client_title']) ? $model->setClient_title((string) $body['client_title']) : '';

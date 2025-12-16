@@ -105,7 +105,7 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return InvItemAllowanceCharge|null
      */
-    public function repoInvItemAllowanceChargequery(string $id): InvItemAllowanceCharge|null
+    public function repoInvItemAllowanceChargequery(string $id): ?InvItemAllowanceCharge
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -164,7 +164,7 @@ final class InvItemAllowanceChargeRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemOriginalquery(string $inv_item_id): InvItemAllowanceCharge|null
+    public function repoInvItemOriginalquery(string $inv_item_id): ?InvItemAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')

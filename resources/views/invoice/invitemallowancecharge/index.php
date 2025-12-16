@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $inv_item_id
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -48,11 +48,11 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(InvItemAllowanceCharge $model) => $model->getId(),
+        content: static fn (InvItemAllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.reason.code'),
-        content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
+        content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReasonCode() ?? '',
     ),
     new DataColumn(
         content: static function (InvItemAllowanceCharge $model) use ($translator): string {
@@ -65,7 +65,7 @@ $columns = [
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.reason'),
-        content: static fn(InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
+        content: static fn (InvItemAllowanceCharge $model) => $model->getAllowanceCharge()?->getReason() ?? '',
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.amount'),
@@ -130,16 +130,16 @@ $grid_summary =  $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('invitemallowancecharge/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('invitemallowancecharge/add', ['inv_item_id' => $inv_item_id]))
     ->addAttributes(['style' => 'text-decoration:none'])
     ->content('➕ ' . $translator->translate('allowance.or.charge.item.add'))
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($backButton)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

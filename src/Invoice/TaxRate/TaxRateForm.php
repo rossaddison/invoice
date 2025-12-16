@@ -39,32 +39,32 @@ final class TaxRateForm extends FormModel
         $this->storecove_tax_type = $taxRate->getStorecoveTaxType();
     }
 
-    public function getTaxRateName(): string|null
+    public function getTaxRateName(): ?string
     {
         return $this->tax_rate_name;
     }
 
-    public function getTaxRatePercent(): float|null
+    public function getTaxRatePercent(): ?float
     {
         return $this->tax_rate_percent;
     }
 
-    public function getTaxRateDefault(): bool|null
+    public function getTaxRateDefault(): ?bool
     {
         return $this->tax_rate_default;
     }
 
-    public function getTaxRateCode(): string|null
+    public function getTaxRateCode(): ?string
     {
         return $this->tax_rate_code;
     }
 
-    public function getPeppolTaxRateCode(): string|null
+    public function getPeppolTaxRateCode(): ?string
     {
         return $this->peppol_tax_rate_code;
     }
 
-    public function getStorecoveTaxType(): string|null
+    public function getStorecoveTaxType(): ?string
     {
         return $this->storecove_tax_type;
     }

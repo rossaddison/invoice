@@ -20,7 +20,9 @@ final readonly class ZugFerdHelper
      * @param IIAR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(private SRepo $s, private IIAR $iiaR, private InvAmount $inv_amount) {}
+    public function __construct(private SRepo $s, private IIAR $iiaR, private InvAmount $inv_amount)
+    {
+    }
 
     /**
      * @param SRepo $sR
@@ -33,12 +35,12 @@ final readonly class ZugFerdHelper
         $folder = $aliases->get('@Uploads');
         // Check if the uploads folder is available
         if (!(is_dir($folder) || is_link($folder))) {
-            FileHelper::ensureDirectory($folder, 0775);
+            FileHelper::ensureDirectory($folder, 0o775);
         }
         // Invoice/Uploads/Temp/Zugferd
         $temp_zugferd_folder = $aliases->get('@Uploads') . $this->s::getTempZugferdfolderRelativeUrl();
         if (!is_dir($temp_zugferd_folder)) {
-            FileHelper::ensureDirectory($temp_zugferd_folder, 0775);
+            FileHelper::ensureDirectory($temp_zugferd_folder, 0o775);
         }
         return $aliases;
     }

@@ -8,7 +8,9 @@ use App\Invoice\Entity\ClientPeppol;
 
 final readonly class ClientPeppolService
 {
-    public function __construct(private ClientPeppolRepository $repository) {}
+    public function __construct(private ClientPeppolRepository $repository)
+    {
+    }
 
     public function saveClientPeppol(ClientPeppol $model, array $array): void
     {

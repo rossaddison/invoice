@@ -8,7 +8,9 @@ use App\Invoice\Entity\PaymentPeppol;
 
 final readonly class PaymentPeppolService
 {
-    public function __construct(private PaymentPeppolRepository $repository) {}
+    public function __construct(private PaymentPeppolRepository $repository)
+    {
+    }
 
     /**
      * @param PaymentPeppol $model

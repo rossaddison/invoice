@@ -13,7 +13,9 @@ use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 
 final readonly class InvAmountService
 {
-    public function __construct(private IAR $repository) {}
+    public function __construct(private IAR $repository)
+    {
+    }
 
     /**
      * @param InvAmount $model

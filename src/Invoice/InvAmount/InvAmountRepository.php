@@ -95,7 +95,7 @@ final class InvAmountRepository extends Select\Repository
      * @param string $inv_id
      * @return InvAmount|null
      */
-    public function repoCreditInvoicequery(string $inv_id): null|InvAmount
+    public function repoCreditInvoicequery(string $inv_id): ?InvAmount
     {
         $query = $this->select()
                       ->load('inv')
@@ -108,7 +108,7 @@ final class InvAmountRepository extends Select\Repository
      * @param int $id
      * @return InvAmount|null
      */
-    public function repoInvAmountquery(int $id): null|InvAmount
+    public function repoInvAmountquery(int $id): ?InvAmount
     {
         $query = $this->select()
                       ->load('inv')
@@ -158,7 +158,7 @@ final class InvAmountRepository extends Select\Repository
      * @param int $inv_id
      * @return InvAmount|null
      */
-    public function repoInvquery(int $inv_id): InvAmount|null
+    public function repoInvquery(int $inv_id): ?InvAmount
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);

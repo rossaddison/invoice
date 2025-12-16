@@ -96,15 +96,15 @@ final class InvAllowanceChargeController extends BaseController
         #[RouteArgument('page')]
         string $page = '1',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterReasonCode')]
-        string $queryFilterReasonCode = null,
+        ?string $queryFilterReasonCode = null,
         #[Query('filterReason')]
-        string $queryFilterReason = null,
+        ?string $queryFilterReason = null,
     ): Response {
         // If the language dropdown changes
         $this->session->set('_language', $_language);
@@ -227,7 +227,7 @@ final class InvAllowanceChargeController extends BaseController
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
      * @return InvAllowanceCharge|null
      */
-    private function invallowancecharge(CurrentRoute $currentRoute, InvAllowanceChargeRepository $invallowancechargeRepository): InvAllowanceCharge|null
+    private function invallowancecharge(CurrentRoute $currentRoute, InvAllowanceChargeRepository $invallowancechargeRepository): ?InvAllowanceCharge
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

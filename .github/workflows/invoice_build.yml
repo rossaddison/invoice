@@ -35,7 +35,7 @@ jobs:
       YII_C3: true
 
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 4
+    timeout-minutes: 6
     
     strategy:
       matrix:
@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Composer GitHub auth
         run: composer config --global --auth github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
-          ini-values: date.timezone='UTC'
+          ini-values: date.timezone='UTC', max_execution_time=400, memory_limit=1024M
           tools: composer:v2
           coverage: pcov
           

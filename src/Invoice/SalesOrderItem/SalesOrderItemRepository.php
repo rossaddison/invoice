@@ -86,7 +86,7 @@ final class SalesOrderItemRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemquery(string $id): SalesOrderItem|null
+    public function repoSalesOrderItemquery(string $id): ?SalesOrderItem
     {
         $query = $this->select()->load(['tax_rate','product','sales_order'])
                                 ->where(['id' => $id]);

@@ -28,6 +28,10 @@ Yii3 Invoice
 * Multiple language compliant – steps to generate new language files included. 
 * Separate Client Console and Company Console. 
 * Install with Composer.
+* SonarQubeCloud / SonarCloud Code Analysis
+* NetBeans 28 && Vs Code IDE Integration
+* Eclipse IDE Integration
+* SonarLint4NetBeans Plugin - Tools ... Options ... Miscellaneous ... php ... Rules
 
 **Installing with Composer in Windows**
 *````composer update````*

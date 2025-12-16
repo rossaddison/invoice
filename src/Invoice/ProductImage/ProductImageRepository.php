@@ -114,7 +114,7 @@ final class ProductImageRepository extends Select\Repository
      * @param string $id
      * @return ProductImage|null
      */
-    public function repoProductImagequery(string $id): ProductImage|null
+    public function repoProductImagequery(string $id): ?ProductImage
     {
         $query = $this->select()
                       ->where(['id' => $id]);

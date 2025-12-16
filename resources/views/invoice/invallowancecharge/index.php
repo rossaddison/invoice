@@ -40,7 +40,7 @@ use Yiisoft\Router\CurrentRoute;
  */
 $vat = $s->getSetting('enable_vat_registration');
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -54,7 +54,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(InvAllowanceCharge $model) => $model->getId(),
+        content: static fn (InvAllowanceCharge $model) => $model->getId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -88,13 +88,13 @@ $columns = [
     new DataColumn(
         property: 'amount',
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static fn(InvAllowanceCharge $model) => $model->getAmount(),
+        content: static fn (InvAllowanceCharge $model) => $model->getAmount(),
         withSorting: true,
     ),
     new DataColumn(
         property: 'vat_or_tax',
         header: $vat ? $translator->translate('vat') : $translator->translate('tax'),
-        content: static fn(InvAllowanceCharge $model) => $model->getVatOrTax(),
+        content: static fn (InvAllowanceCharge $model) => $model->getVatOrTax(),
         withSorting: true,
     ),
     new ActionColumn(buttons: [
@@ -131,9 +131,9 @@ $columns = [
     ]),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('invallowancecharge/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));

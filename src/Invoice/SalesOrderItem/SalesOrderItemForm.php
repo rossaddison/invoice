@@ -20,9 +20,8 @@ final class SalesOrderItemForm extends FormModel
 
     #[Required]
     private ?string $tax_rate_id = '';
-
-    #[Required]
     private ?string $product_id = '';
+    private ?string $task_id = '';
     private mixed $date_added = '';
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $name = '';
@@ -45,104 +44,108 @@ final class SalesOrderItemForm extends FormModel
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $product_unit = '';
 
-    #[Required]
     private ?int $product_unit_id = null;
 
     public function __construct(SoItem $salesOrderItem)
     {
         $this->id = $salesOrderItem->getId();
-
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
         $this->peppol_po_itemid = $salesOrderItem->getPeppol_po_itemid();
 
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
         $this->peppol_po_lineid = $salesOrderItem->getPeppol_po_lineid();
-
-        $this->date_added = $salesOrderItem->getDate_added();
         $this->name = $salesOrderItem->getName();
         $this->description = $salesOrderItem->getDescription();
         $this->quantity = $salesOrderItem->getQuantity();
         $this->price = $salesOrderItem->getPrice();
         $this->discount_amount = $salesOrderItem->getDiscount_amount();
+        $this->charge_amount = $salesOrderItem->getCharge_amount();
         $this->order = $salesOrderItem->getOrder();
-        $this->product_unit = $salesOrderItem->getProduct_unit();
+        $this->product_unit = $salesOrderItem->getProduct_unit();        
         $this->so_id = $salesOrderItem->getSales_order_id();
         $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
         $this->product_id = $salesOrderItem->getProduct_id();
+        $this->task_id = $salesOrderItem->getTask_id();
         $this->product_unit_id = (int) $salesOrderItem->getProduct_unit_id();
+        $this->date_added = $salesOrderItem->getDate_added();
     }
 
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getSo_id(): string|null
+    public function getSo_id(): ?string
     {
         return $this->so_id;
     }
 
-    public function getPeppol_po_itemid(): string|null
+    public function getPeppol_po_itemid(): ?string
     {
         return $this->peppol_po_itemid;
     }
 
-    public function getPeppol_po_lineid(): string|null
+    public function getPeppol_po_lineid(): ?string
     {
         return $this->peppol_po_lineid;
     }
 
-    public function getTax_rate_id(): string|null
+    public function getTax_rate_id(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): string|null
+    public function getProduct_id(): ?string
     {
         return $this->product_id;
     }
+    
+    public function getTask_id(): ?string
+    {
+        return $this->task_id;
+    }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getQuantity(): float|null
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function getDiscount_amount(): float|null
+    public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getCharge_amount(): float|null
+    public function getCharge_amount(): ?float
     {
         return $this->charge_amount;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }
 
-    public function getProduct_unit(): string|null
+    public function getProduct_unit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): int|null
+    public function getProduct_unit_id(): ?int
     {
         return $this->product_unit_id;
     }

@@ -11,6 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 class ContractEntityTest extends TestCase
 {
+    public string $beg2024 = '2024-01-01';
+    
+    public string $end2024 = '2024-12-31';
+    
     public function testConstructorWithDefaults(): void
     {
         $contract = new Contract();
@@ -77,7 +81,7 @@ class ContractEntityTest extends TestCase
     public function testPeriodStartSetterAndGetter(): void
     {
         $contract = new Contract();
-        $startDate = new DateTimeImmutable('2024-01-01');
+        $startDate = new DateTimeImmutable($this->beg2024);
         $contract->setPeriod_start($startDate);
         
         $this->assertSame($startDate, $contract->getPeriod_start());
@@ -86,7 +90,7 @@ class ContractEntityTest extends TestCase
     public function testPeriodEndSetterAndGetter(): void
     {
         $contract = new Contract();
-        $endDate = new DateTimeImmutable('2024-12-31');
+        $endDate = new DateTimeImmutable($this->end2024);
         $contract->setPeriod_end($endDate);
         
         $this->assertSame($endDate, $contract->getPeriod_end());
@@ -142,7 +146,7 @@ class ContractEntityTest extends TestCase
         $contract->setReference('MSC-2024-Q1');
         $contract->setClient_id(789);
         
-        $startDate = new DateTimeImmutable('2024-01-01');
+        $startDate = new DateTimeImmutable($this->beg2024);
         $endDate = new DateTimeImmutable('2024-03-31');
         $contract->setPeriod_start($startDate);
         $contract->setPeriod_end($endDate);
@@ -160,8 +164,8 @@ class ContractEntityTest extends TestCase
         $contract->setName('Hardware Maintenance');
         $contract->setReference('HM-2024-ANNUAL');
         
-        $startDate = new DateTimeImmutable('2024-01-01');
-        $endDate = new DateTimeImmutable('2024-12-31');
+        $startDate = new DateTimeImmutable($this->beg2024);
+        $endDate = new DateTimeImmutable($this->end2024);
         $contract->setPeriod_start($startDate);
         $contract->setPeriod_end($endDate);
         
@@ -240,7 +244,7 @@ class ContractEntityTest extends TestCase
         $contract->setClient($client);
         
         $startDate = new DateTimeImmutable('2024-06-01');
-        $endDate = new DateTimeImmutable('2024-12-31');
+        $endDate = new DateTimeImmutable($this->end2024);
         $contract->setPeriod_start($startDate);
         $contract->setPeriod_end($endDate);
         
@@ -274,7 +278,7 @@ class ContractEntityTest extends TestCase
         $contract = new Contract();
         
         // Monthly contract
-        $monthStart = new DateTimeImmutable('2024-01-01');
+        $monthStart = new DateTimeImmutable($this->beg2024);
         $monthEnd = new DateTimeImmutable('2024-01-31');
         $contract->setPeriod_start($monthStart);
         $contract->setPeriod_end($monthEnd);
@@ -283,8 +287,8 @@ class ContractEntityTest extends TestCase
         $this->assertSame($monthEnd, $contract->getPeriod_end());
         
         // Yearly contract
-        $yearStart = new DateTimeImmutable('2024-01-01');
-        $yearEnd = new DateTimeImmutable('2024-12-31');
+        $yearStart = new DateTimeImmutable($this->beg2024);
+        $yearEnd = new DateTimeImmutable($this->end2024);
         $contract->setPeriod_start($yearStart);
         $contract->setPeriod_end($yearEnd);
         
@@ -410,8 +414,8 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         
-        $startDate = new DateTimeImmutable('2024-01-01');
-        $endDate = new DateTimeImmutable('2024-12-31');
+        $startDate = new DateTimeImmutable($this->beg2024);
+        $endDate = new DateTimeImmutable($this->end2024);
         
         $contract->setPeriod_start($startDate);
         $contract->setPeriod_end($endDate);

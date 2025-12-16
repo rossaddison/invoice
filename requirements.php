@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once('vendor/yiisoft/requirements/src/RequirementsChecker.php');
+require_once 'vendor/yiisoft/requirements/src/RequirementsChecker.php';
 
 use Yiisoft\Requirements\RequirementsChecker;
 

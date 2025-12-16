@@ -19,168 +19,168 @@ $divHeight = (string) 500;
 <?= Carousel::widget()
     ->items(
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/1.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
+                        ->render()
+                    . '</div>',
             active: true,
-            caption: $translator->translate('gallery.caption.slide1'),
+            caption: '1',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/2.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide2'),
+                        ->render()
+                    . '</div>',
+            caption: '2',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/3.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide3'),
+                        ->render()
+                    . '</div>',
+            caption: '3',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/4.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide4'),
+                        ->render()
+                    . '</div>',
+            caption: '4',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/5.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide5'),
+                        ->render()
+                    . '</div>',
+            caption: '5',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/6.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide6'),
+                        ->render()
+                    . '</div>',
+            caption: '6',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/7.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide7'),
+                        ->render()
+                    . '</div>',
+            caption: '7',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/8.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide8'),
+                        ->render()
+                    . '</div>',
+            caption: '8',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/9.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide9'),
+                        ->render()
+                    . '</div>',
+            caption: '9',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/10.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide10'),
+                        ->render()
+                    . '</div>',
+            caption: '10',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/11.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide11'),
+                        ->render()
+                    . '</div>',
+            caption: '11',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/12.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide12'),
+                        ->render()
+                    . '</div>',
+            caption: '12',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/13.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide13'),
+                        ->render()
+                    . '</div>',
+            caption: '13',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/14.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide14'),
+                        ->render()
+                    . '</div>',
+            caption: '14',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>' .
-                        Img::tag()
+            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+                        . Img::tag()
                         ->src('/img/gallery/15.jpeg')
                         ->size($w, $h)
-                        ->render() .
-                    '</div>',
-            caption: $translator->translate('gallery.caption.slide15'),
+                        ->render()
+                    . '</div>',
+            caption: '15',
             encodeCaption: false,
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),

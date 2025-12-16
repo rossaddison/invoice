@@ -38,7 +38,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $statuses = [
     1 => [
@@ -70,7 +70,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Task $model) => Html::encode($model->getId()),
+        content: static fn (Task $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'project_id',
@@ -103,17 +103,17 @@ $columns = [
         'name',
         header: $translator->translate('name'),
         withSorting: true,
-        content: static fn(Task $model): string => Html::encode($model->getName()),
+        content: static fn (Task $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(Task $model): string => Html::encode(ucfirst($model->getDescription())),
+        content: static fn (Task $model): string => Html::encode(ucfirst($model->getDescription())),
     ),
     new DataColumn(
         'price',
         header: $translator->translate('price'),
-        content: static fn(Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
+        content: static fn (Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
     ),
     new DataColumn(
         'finish_date',
@@ -128,7 +128,7 @@ $columns = [
     new DataColumn(
         'tax_rate_id',
         header: $translator->translate('tax.rate'),
-        content: static fn(Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
+        content: static fn (Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -177,14 +177,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('task/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('task/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 /**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering

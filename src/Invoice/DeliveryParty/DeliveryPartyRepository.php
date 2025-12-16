@@ -93,7 +93,7 @@ final class DeliveryPartyRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return DeliveryParty|null
      */
-    public function repoDeliveryPartyquery(string $id): DeliveryParty|null
+    public function repoDeliveryPartyquery(string $id): ?DeliveryParty
     {
         $query = $this->select()
                       ->where(['id' => $id]);

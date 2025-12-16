@@ -83,8 +83,8 @@ use Yiisoft\Html\Tag\A;
                    class="btn btn-danger" style="text-decoration:none">
                     <i class="fa fa-edit"></i><?= $translator->translate('edit'); ?>
                 </a>
-                <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id()) ?
-                            $urlGenerator->generate(
+                <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id())
+                            ? $urlGenerator->generate(
                                 'postaladdress/add',
                                 // Argument parameters
                                 ['client_id' => $clientIdPostalAdd],
@@ -154,7 +154,7 @@ use Yiisoft\Html\Tag\A;
 
         <div id="clientDetails" class="tab-pane tab-rich-content active">
 
-            <?= $alert; ?>
+            <?= $s->getSetting('disable_flash_messages') == '0' ? $alert : ''; ?>
 
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
@@ -164,30 +164,35 @@ use Yiisoft\Html\Tag\A;
                         <?= $partial_client_address; ?>
                     </p>
                     <p>
+                        <table class="table table-bordered no-margin">                        
                         <?php
-                            /**
-                             * @var App\Invoice\Entity\CustomField $custom_field
-                             */
-                            foreach ($custom_fields as $custom_field) : ?>
+                            $i = 1;
+/**
+ * @var App\Invoice\Entity\CustomField $custom_field
+ */
+foreach ($custom_fields as $custom_field) : ?>
                             <?php if ($custom_field->getLocation() != 1) {
                                 continue;
                             } ?>
                             <tr>
                                 <?php
                                     $column = $custom_field->getLabel();
-                                $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
-                                ?>
-                                <th><?= Html::encode($column); ?></th>
-                                <td><?= Html::encode($value); ?></td>
+    $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+    ?>
+                                <th id="<?= 'cf-col' . $i; ?>"><?= Html::encode($column); ?></th>
+                                <td id="<?= 'cf-val' . $i; ?>"><?= Html::encode($value); ?></td>
                             </tr>
-                        <?php endforeach; ?>
+                        </table>    
+                        <?php
+                             $i = $i + 1;
+endforeach; ?>
                     </p>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6">
 
                     <table class="table table-bordered no-margin">
                         <tr>
-                            <th>
+                            <th id="language">
                                 <?= $translator->translate('language'); ?>
                             </th>
                             <td class="td-amount">
@@ -195,7 +200,7 @@ use Yiisoft\Html\Tag\A;
                             </td>
                         </tr>
                         <tr>
-                            <th>
+                            <th id="total-billed">
                                 <?= $translator->translate('total.billed'); ?>
                             </th>
                             <td class="td-amount">
@@ -203,15 +208,15 @@ use Yiisoft\Html\Tag\A;
                             </td>
                         </tr>
                         <tr>
-                            <th>
+                            <th id="total-paid">
                                 <?= $translator->translate('total.paid'); ?>
                             </th>
-                            <th class="td-amount">
+                            <td class="td-amount">
                                 <?= null !== ($clientIdPaid = $client->getClient_id()) ? $s->format_currency($iR->with_total_paid($clientIdPaid, $iaR)) : ''; ?>
-                            </th>
+                            </td>
                         </tr>
                         <tr>
-                            <th>
+                            <th id="total-balance">
                                 <?= $translator->translate('total.balance'); ?>
                             </th>
                             <td class="td-amount">
@@ -275,18 +280,18 @@ use Yiisoft\Html\Tag\A;
                                     </tr>
                                 <?php endif; ?>
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\CustomField $custom_field
-                                     */
-                                    foreach ($custom_fields as $custom_field) : ?>
+       /**
+        * @var App\Invoice\Entity\CustomField $custom_field
+        */
+       foreach ($custom_fields as $custom_field) : ?>
                                     <?php if ($custom_field->getLocation() != 2) {
                                         continue;
                                     } ?>
                                     <tr>
                                         <?php
                                             $column = $custom_field->getLabel();
-                                        $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
-                                        ?>
+           $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+           ?>
                                         <th><?= Html::encode($column); ?></th>
                                         <td><?= Html::encode($value); ?></td>
                                     </tr>
@@ -356,14 +361,14 @@ use Yiisoft\Html\Tag\A;
                                         
                                         <td><?=
                                               !is_string($clientBirthdate = $client->getClient_birthdate())
-                                               && null !== $clientBirthdate ?
-                                                         $clientBirthdate->format('Y-m-d') : '';
+                                               && null !== $clientBirthdate
+                                                         ? $clientBirthdate->format('Y-m-d') : '';
                 ?></td>
                                     </tr>
                                     <tr>
                                         <th><?= $translator->translate('gender'); ?></th>
-                                        <td><?= null !== ($clientGender = $client->getClient_gender()) ?
-                    $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
+                                        <td><?= null !== ($clientGender = $client->getClient_gender())
+                    ? $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
                                     </tr>
                                     <?php if ($s->getSetting('sumex') == '1'): ?>
                                         <tr>
@@ -412,19 +417,25 @@ use Yiisoft\Html\Tag\A;
                             <div class="panel-body table-content">
                                 <table class="table no-margin">
                                     <?php
-                                       /**
-                                         * @var App\Invoice\Entity\CustomField $custom_field
-                                         */
-                                       foreach ($custom_fields as $custom_field) : ?>
+                                       $i = 1;
+                /**
+                  * @var App\Invoice\Entity\CustomField $custom_field
+                  */
+                foreach ($custom_fields as $custom_field) : ?>
                                         <?php if ($custom_field->getLocation() !== 0) {
                                             continue;
                                         } ?>
                                         <tr>
+                                            <th id="client-cf-" . <?= $i; ?>></th>
+                                            <td>    
                                             <?php
                                             $clientCustomForm = new ClientCustomForm(new ClientCustom());
-                                           $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);?>
+                    $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues, $customValues);?>
+                                            </td>    
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php
+                                        $i = $i + 1;
+                endforeach; ?>
                                 </table>
                             </div>
 

@@ -158,7 +158,7 @@ final class FromDropDownController extends BaseController
      * @param FromDropDownRepository $fromRepository
      * @return FromDropDown|null
      */
-    private function from(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): FromDropDown|null
+    private function from(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): ?FromDropDown
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

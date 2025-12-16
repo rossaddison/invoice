@@ -105,7 +105,7 @@ final class ProductPropertyRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return ProductProperty|null
      */
-    public function repoProductPropertyLoadedquery(string $id): ProductProperty|null
+    public function repoProductPropertyLoadedquery(string $id): ?ProductProperty
     {
         $query = $this->select()
                       ->load('product')

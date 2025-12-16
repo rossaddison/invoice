@@ -171,17 +171,17 @@ class MpdfHelper
         string $html,
         string $filename,
         bool $stream,
-        null|string $password,
+        ?string $password,
         SR $sR,
         // ZugferdXml is not created for a quote => null
         // but iiaR is necessary for the invoice item amounts
         // along with the entity InvAmount
-        null|iiaR $iiaR,
-        null|InvAmount $inv_amount,
+        ?iiaR $iiaR,
+        ?InvAmount $inv_amount,
         bool $isInvoice = false,
         bool $zugferd_invoice = false,
         array $associated_files = [],
-        null|object $quote_or_invoice = null,
+        ?object $quote_or_invoice = null,
     ): string {
         $sR->load_settings();
         $aliases = $this->ensure_uploads_folder_exists($sR);
@@ -224,7 +224,7 @@ class MpdfHelper
             $archive_folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '/Invoice';
             $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
             if (!is_dir($archive_folder)) {
-                FileHelper::ensureDirectory($archive_folder, 0775);
+                FileHelper::ensureDirectory($archive_folder, 0o775);
             }
             $mpdf->Output($archived_file, self::DEST_FILE);
             return $archived_file;
@@ -245,7 +245,7 @@ class MpdfHelper
 
         // Check if the Tmp directory exists, if not, create it
         if (!(is_dir($tmpFolder) || is_link($tmpFolder))) {
-            FileHelper::ensureDirectory($tmpFolder, 0775); // Ensure the Tmp directory is created with the correct permissions
+            FileHelper::ensureDirectory($tmpFolder, 0o775); // Ensure the Tmp directory is created with the correct permissions
         }
 
         return $aliases;
@@ -260,7 +260,7 @@ class MpdfHelper
         $folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl();
         // Check if the archive folder is available
         if (!(is_dir($folder) || is_link($folder))) {
-            FileHelper::ensureDirectory($folder, 0775);
+            FileHelper::ensureDirectory($folder, 0o775);
         }
         return $aliases;
     }
@@ -277,7 +277,7 @@ class MpdfHelper
      * @param array $associated_files
      * @return \Mpdf\Mpdf
      */
-    private function initialize_pdf(string|null $password, SR $sR, string $title, object|null $quote_or_invoice, iiaR|null $iiaR, InvAmount|null $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
+    private function initialize_pdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
         $optionsArray = $this->options($sR);
         $mpdf = new \Mpdf\Mpdf($optionsArray);

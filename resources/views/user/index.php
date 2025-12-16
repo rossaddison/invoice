@@ -77,12 +77,12 @@ $toolbar = Div::tag();
         ),
         new DataColumn(
             'login',
-            content: static fn(User $data) => $data->getLogin(),
+            content: static fn (User $data) => $data->getLogin(),
             header: $translator->translate('gridview.login'),
         ),
         new DataColumn(
             'create_at',
-            content: static fn(User $data) => $data->getCreatedAt()->format('r'),
+            content: static fn (User $data) => $data->getCreatedAt()->format('r'),
             header: $translator->translate('gridview.create.at'),
         ),
         new DataColumn(
@@ -116,11 +116,11 @@ $toolbar = Div::tag();
     ];
 ?>
 <?php
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-hover'])

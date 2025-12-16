@@ -93,7 +93,7 @@ final class DeliveryRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return Delivery|null
      */
-    public function repoDeliveryquery(string $id): Delivery|null
+    public function repoDeliveryquery(string $id): ?Delivery
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -104,7 +104,7 @@ final class DeliveryRepository extends Select\Repository
      * @param string $inv_id
      * @return Delivery|null
      */
-    public function repoPartyquery(string $inv_id): Delivery|null
+    public function repoPartyquery(string $inv_id): ?Delivery
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -115,7 +115,7 @@ final class DeliveryRepository extends Select\Repository
      * @param string $inv_id
      * @return Delivery|null
      */
-    public function repoInvoicequery(string $inv_id): Delivery|null
+    public function repoInvoicequery(string $inv_id): ?Delivery
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);

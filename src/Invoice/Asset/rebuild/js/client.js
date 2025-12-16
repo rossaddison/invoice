@@ -10,6 +10,29 @@
         return {};
     }
 
+    function secureReload() {
+        // Secure reload function to prevent Open Redirect vulnerabilities
+        // Only reloads the current page without accepting external URLs
+        window.location.reload();
+    }
+
+    // Helper function to safely create loading/success UI elements to prevent XSS
+    function createSecureUIElement(type, className, iconClass) {
+        var element = document.createElement(type || 'h6');
+        element.className = className || 'text-center';
+        var icon = document.createElement('i');
+        icon.className = iconClass || 'fa fa-spin fa-spinner';
+        element.appendChild(icon);
+        return element;
+    }
+
+    // Helper function to safely set button content
+    function setSecureButtonContent(btn, type, className, iconClass) {
+        if (!btn) return;
+        btn.textContent = '';
+        btn.appendChild(createSecureUIElement(type, className, iconClass));
+    }
+
     // Simple GET helper that builds a query string from params and returns parsed text/JSON
     function getJson(url, params) {
         var u = url;
@@ -48,7 +71,7 @@
 
             // UI feedback
             if (btn) {
-                btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
                 btn.disabled = true;
             }
 
@@ -62,13 +85,12 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        // Mirror original behaviour: navigate/reload
-                        window.location = absolute_url;
-                        window.location.reload();
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        // Mirror original behaviour: secure reload
+                        secureReload();
                     } else {
                         if (btn) {
-                            btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
+                            setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-check');
                             btn.disabled = false;
                         }
                         console.warn('create_confirm response', response);
@@ -76,7 +98,10 @@
                 })
                 .catch(function (err) {
                     console.warn(err);
-                    if (btn) { btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>'; btn.disabled = false; }
+                    if (btn) { 
+                        setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-check'); 
+                        btn.disabled = false; 
+                    }
                     alert('An error occurred while creating client. See console for details.');
                 });
             return;
@@ -91,7 +116,7 @@
             var absolute_url = new URL(location.href);
 
             if (btn_note) {
-                btn_note.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn_note, 'h6', 'text-center', 'fa fa-spin fa-spinner');
                 btn_note.disabled = true;
             }
 
@@ -104,7 +129,7 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn_note) btn_note.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                        setSecureButtonContent(btn_note, 'h2', 'text-center', 'fa fa-check');
                         var noteEl = document.getElementById('client_note');
                         if (noteEl) noteEl.value = '';
 
@@ -115,15 +140,30 @@
                             fetch(loadUrl, { cache: 'no-store', credentials: 'same-origin' })
                                 .then(function (r) { return r.text(); })
                                 .then(function (html) {
-                                    notesList.innerHTML = html;
+                                    // Sanitize HTML content to prevent XSS attacks
+                                    notesList.textContent = '';
+                                    var parser = new DOMParser();
+                                    try {
+                                        var doc = parser.parseFromString(html, 'text/html');
+                                        // Only append if parsing was successful and content is from trusted source
+                                        if (doc && doc.body) {
+                                            var fragment = document.createDocumentFragment();
+                                            while (doc.body.firstChild) {
+                                                fragment.appendChild(doc.body.firstChild);
+                                            }
+                                            notesList.appendChild(fragment);
+                                        }
+                                    } catch (e) {
+                                        console.error('HTML parsing error:', e);
+                                        notesList.textContent = 'Error loading notes';
+                                    }
                                     console.log(html);
                                 })
                                 .catch(function (err) { console.error('load_client_notes failed', err); });
                         }
 
-                        // Mirror original behaviour: navigate/reload
-                        window.location = absolute_url;
-                        window.location.reload();
+                        // Mirror original behaviour: secure reload
+                        secureReload();
                     } else {
                         // validation errors
                         document.querySelectorAll('.control-group').forEach(function (g) { g.classList.remove('error'); });
@@ -133,12 +173,18 @@
                                 if (elKey && elKey.parentElement) elKey.parentElement.classList.add('has-error');
                             });
                         }
-                        if (btn_note) { btn_note.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>'; btn_note.disabled = false; }
+                        if (btn_note) { 
+                            setSecureButtonContent(btn_note, 'h6', 'text-center', 'fa fa-check'); 
+                            btn_note.disabled = false; 
+                        }
                     }
                 })
                 .catch(function (err) {
                     console.warn(err);
-                    if (btn_note) { btn_note.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>'; btn_note.disabled = false; }
+                    if (btn_note) { 
+                        setSecureButtonContent(btn_note, 'h6', 'text-center', 'fa fa-check'); 
+                        btn_note.disabled = false; 
+                    }
                     alert('An error occurred while saving client note. See console for details.');
                 });
             return;

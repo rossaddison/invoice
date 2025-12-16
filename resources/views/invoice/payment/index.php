@@ -30,7 +30,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -52,12 +52,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Payment $model): string => $model->getId(),
+        content: static fn (Payment $model): string => $model->getId(),
     ),
     new DataColumn(
         property: 'paymentDateFilter',
         header: $translator->translate('payment.date'),
-        content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
+        content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
                                                                          ? $date->format('Y-m-d')
                                                                          : '',
         filter: true,
@@ -66,15 +66,15 @@ $columns = [
         property: 'paymentAmountFilter',
         header: $translator->translate('amount'),
         content: static function (Payment $model) use ($s): string {
-            return $s->format_currency($model->getAmount() >= 0.00 ?
-                                       $model->getAmount() : 0.00);
+            return $s->format_currency($model->getAmount() >= 0.00
+                                       ? $model->getAmount() : 0.00);
         },
         filter: true,
     ),
     new DataColumn(
         'note',
         header: $translator->translate('note'),
-        content: static fn(Payment $model): string => Html::encode($model->getNote()),
+        content: static fn (Payment $model): string => Html::encode($model->getNote()),
     ),
     new DataColumn(
         'inv_id',
@@ -172,14 +172,14 @@ $columns = [
     ),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open() .
-$canEdit && $canView ? A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open()
+. $canEdit && $canView ? A::tag()
     ->href($urlGenerator->generate('payment/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() : '' .
-Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-Form::tag()->close();
+    ->render() : ''
+. Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+. Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

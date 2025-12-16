@@ -21,7 +21,9 @@ class UserClient
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null) {}
+        private ?int $client_id = null)
+    {
+    }
 
     public function getUser(): ?User
     {

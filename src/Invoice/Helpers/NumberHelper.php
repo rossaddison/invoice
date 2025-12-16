@@ -30,7 +30,9 @@ use App\Invoice\Payment\PaymentRepository as PYMR;
 
 final readonly class NumberHelper
 {
-    public function __construct(private SRepo $s) {}
+    public function __construct(private SRepo $s)
+    {
+    }
 
     /**
      * @param mixed|null $amount
@@ -57,7 +59,7 @@ final readonly class NumberHelper
      * @param mixed|null $amount
      * @return string|null
      */
-    public function format_amount(mixed $amount = null): null|string
+    public function format_amount(mixed $amount = null): ?string
     {
         $this->s->load_settings();
         if (null !== $amount) {
@@ -166,13 +168,13 @@ final readonly class NumberHelper
         // Invoice Subtotal + Item Tax
         // -------------------------
         $inv_item_amounts = $this->inv_calculateTotalsofItemTotals($inv_id, $iiR, $iiaR);
-        $inv_item_subtotal_discount =
+        $inv_item_subtotal_discount
         // individual inv_item_amount['subtotal'] already includes charges and allowances
-        (float) $inv_item_amounts['subtotal']
+        = (float) $inv_item_amounts['subtotal']
         - (float) $inv_item_amounts['discount'];
 
-        $inv_subtotal_discount_and_charge_and_tax_included =
-        $inv_item_subtotal_discount
+        $inv_subtotal_discount_and_charge_and_tax_included
+        = $inv_item_subtotal_discount
         + (float) $inv_item_amounts['tax_total'];
 
         //----------
@@ -195,11 +197,11 @@ final readonly class NumberHelper
         //-------------------------------------------------
         // Before Early Cash Settlement Discount and Charge
         // ------------------------------------------------
-        $final_discountable_and_chargeable_total =
-                $inv_subtotal_discount_and_charge_and_tax_included +
-                $inv_tax_rate_total +
-                $inv_allowance_charge_amount_total +
-                $inv_allowance_charge_tax_total;
+        $final_discountable_and_chargeable_total
+                = $inv_subtotal_discount_and_charge_and_tax_included
+                + $inv_tax_rate_total
+                + $inv_allowance_charge_amount_total
+                + $inv_allowance_charge_tax_total;
         //-----------------------------------------------
         // Note: Not applicable to VAT system: inv...view
         // ...Edit input boxes will be hidden since Early
@@ -298,8 +300,11 @@ final readonly class NumberHelper
              */
             foreach ($item as $key => $value) {
                 if ($key === 'id') {
-                    /** @var QuoteItemAmount $quote_item_amount */
-                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $value);
+                    /**
+                     * @var QuoteItemAmount $quote_item_amount
+                     * @psalm-suppress RedundantCastGivenDocblockType $value
+                     */
+                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $value);
                     $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
                     $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?? 0.00);
                     $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?? 0.00);
@@ -319,7 +324,7 @@ final readonly class NumberHelper
     /**
      * @psalm-param IR<Inv> $iR
      */
-    private function inv_balance_zero_set_to_read_only_if_fully_paid(IR $iR, SRepo $sR, Inv|null $invoice, float $balance): void
+    private function inv_balance_zero_set_to_read_only_if_fully_paid(IR $iR, SRepo $sR, ?Inv $invoice, float $balance): void
     {
         // draft => 1, sent => 2, viewed => 3, paid => 4
         // As soon as the balance on the invoice is zero and the read-only-toggle is 4 ie. paid,
@@ -457,12 +462,10 @@ final readonly class NumberHelper
                     // If the include item tax has been checked
                     $quote_tax_rate_amount = (
                         (null !== $quote_tax_rate->getInclude_item_tax() && $quote_tax_rate->getInclude_item_tax() === 1)
-                        ?
                             // The quote tax rate should include the applied item tax
-                            ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00)  / 100.00))
-                        :
+                            ? ((($quote_amount->getItem_subtotal() ?? 0.00) + ($quote_amount->getItem_tax_total() ?? 0.00)) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00)  / 100.00))
                             // The quote tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                            (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
+                            : (($quote_amount->getItem_subtotal() ?? 0.00) * (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
                     );
                     // Update the quote tax rate amount
                     $quote_tax_rate->setQuote_tax_rate_amount($quote_tax_rate_amount);
@@ -501,12 +504,10 @@ final readonly class NumberHelper
                     // If the include item tax has been checked ie. value is 1
                     $inv_tax_rate_amount = (
                         (null !== $inv_tax_rate->getInclude_item_tax() && $inv_tax_rate->getInclude_item_tax() === 1)
-                        ?
                             // 'Apply after item tax' => The inv tax rate should include the applied item tax
-                            ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00)
-                        :
+                            ? ((($inv_amount->getItem_subtotal() ?: 0.00) + ($inv_amount->getItem_tax_total() ?: 0.00)) * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00)
                             // The invoice tax rate should not include the applied item tax so get the general tax rate from Tax Rate table
-                            (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
+                            : (($inv_amount->getItem_subtotal() ?: 0.00) * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
                     );
                     // Update the invoice tax rate amount
                     $inv_tax_rate->setInv_tax_rate_amount($inv_tax_rate_amount);

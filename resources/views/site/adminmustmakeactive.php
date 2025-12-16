@@ -16,8 +16,8 @@ use Yiisoft\Bootstrap5\AlertVariant;
 $alert =  Alert::widget()
         ->addClass('shadow')
         ->variant(AlertVariant::INFO)
-        ->body((string) $adminmustmakeactive['adminMustMakeActive'] .
-               "\n", true)
+        ->body((string) $adminmustmakeactive['adminMustMakeActive']
+               . "\n", true)
         ->closeButtonAttributes(['class' => 'btn-lg'])
         ->dismissable(true)
         ->render();

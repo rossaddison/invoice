@@ -8,7 +8,9 @@ use App\Invoice\Entity\FromDropDown;
 
 final readonly class FromDropDownService
 {
-    public function __construct(private FromDropDownRepository $repository) {}
+    public function __construct(private FromDropDownRepository $repository)
+    {
+    }
 
     public function saveFromDropDown(FromDropDown $model, array $array): void
     {

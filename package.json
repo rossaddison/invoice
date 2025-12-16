@@ -5,47 +5,108 @@
     "type": "module",
     "dependencies": {
         "bootstrap": "^5.3.8",
-        "govuk-frontend": "^5.13.0"
+        "bootstrap-icons": "^1.13.1",
+        "bs5-lightbox": "^1.8.5",
+        "clipboard": "^2.0.11",
+        "govuk-frontend": "^6.0.0-beta.1",
+        "rxjs": "^7.8.2",
+        "tslib": "^2.8.1",
+        "zone.js": "^0.16.0"
     },
     "devDependencies": {
-        "@types/jest": "^30.0.0",
-        "@types/node": "^22.0.0",
-        "@typescript-eslint/eslint-plugin": "^8.0.0",
-        "@typescript-eslint/parser": "^8.0.0",
-        "esbuild": "^0.25.0",
-        "eslint": "^8.57.0",
-        "eslint-plugin-deprecation": "^3.0.0",
-        "jest": "^30.2.0",
-        "jscodeshift": "^17.0.0",
-        "npm-check-updates": "^17.0.0",
-        "prettier": "^3.0.0",
-        "typescript": "^5.9.3"
+        "@angular-devkit/build-angular": "^21.0.3",
+        "@angular-eslint/builder": "^21.1.0",
+        "@angular-eslint/eslint-plugin": "^21.1.0",
+        "@angular-eslint/eslint-plugin-template": "^21.1.0",
+        "@angular-eslint/schematics": "^21.1.0",
+        "@angular-eslint/template-parser": "^21.1.0",
+        "@angular/cli": "^21.0.3",
+        "@angular/common": "^21.0.5",
+        "@angular/compiler-cli": "^21.0.5",
+        "@angular/core": "^21.0.5",
+        "@angular/platform-browser": "^21.0.5",
+        "@types/node": "^25.0.2",
+        "@typescript-eslint/eslint-plugin": "^8.50.0",
+        "@typescript-eslint/parser": "^8.50.0",
+        "@typescript/native-preview": "^7.0.0-dev.20251216.1",
+        "esbuild": "^0.27.1",
+        "eslint": "^9.39.2",
+        "npm-check-updates": "^19.2.0",
+        "prettier": "^4.0.0-alpha.13",
+        "typedoc": "^0.28.15"
     },
     "scripts": {
-        "build": "npm run build:prod",
-        "build:dev": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2020 --format=iife --global-name=InvoiceApp --sourcemap",
-        "build:prod": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2020 --format=iife --global-name=InvoiceApp --minify",
-        "build:watch": "npm run build:dev -- --watch",
-        "build-typescript": "npm run build:prod",
+        "//": "=== IMPORTANT WARNING ===",
+        "//preinstall": "⚠️  WARNING: Do not run 'npm install' without reviewing Angular setup! This may conflict with legacy TypeScript configuration.",
+        "//info": "📝 Use 'npx ng new' for fresh Angular projects or 'npx ng add' to add Angular to existing projects",
+        "//migration": "🔄 This setup integrates Angular with existing Yii3 TypeScript. Review tsconfig.json and angular.json before installing.",
+        "build": "npm run build:all",
+        "build:all": "npm run build:typescript && npm run build:angular",
+        "build:typescript": "npm run build:typescript:prod",
+        "build:typescript:dev": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --sourcemap",
+        "build:typescript:prod": "esbuild src/typescript/index.ts --bundle --outfile=src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js --target=es2024 --format=iife --global-name=InvoiceApp --minify",
+        "build:typescript:watch": "npm run build:typescript:dev -- --watch",
+        "build:angular": "ng build --configuration production",
+        "build:angular:dev": "ng build",
+        "build:dev": "npm run build:typescript:dev && npm run build:angular:dev",
+        "build:prod": "npm run build:typescript:prod && npm run build:angular",
+        "build:watch": "npm run build:typescript:watch",
+        "ng": "ng",
+        "ng:build": "ng build",
+        "ng:serve": "ng serve",
+        "ng:test": "ng test",
+        "ng:lint": "ng lint",
+        "angular:setup": "npx ng add @angular/pwa && npx ng add @angular/material",
+        "angular:generate-component": "ng generate component",
+        "angular:generate-service": "ng generate service",
         "type-check": "tsc --noEmit",
         "type-check:watch": "tsc --noEmit --watch",
         "lint": "eslint src/typescript/**/*.ts",
         "lint:fix": "eslint src/typescript/**/*.ts --fix",
+        "lint:angular": "ng lint",
         "format": "prettier --write src/typescript/**/*.ts",
         "format:check": "prettier --check src/typescript/**/*.ts",
         "dev": "npm run build:watch",
         "check": "npm run type-check && npm run lint && npm run format:check",
-        "test": "jest",
-        "upgrade:check": "ncu --target minor",
-        "upgrade:safe": "ncu --target patch -u && npm install",
-        "upgrade:minor": "ncu --target minor -u && npm install && npm test",
-        "analyze:deprecations": "eslint src/typescript/**/*.ts --no-fix --format json | node scripts/analyze-deprecations.js",
-        "analyze:legacy": "node scripts/analyze-legacy-js.js",
-        "migrate:preview": "node scripts/upgrade-automation.js --dry-run",
-        "migrate:auto": "node scripts/upgrade-automation.js",
-        "test:migration": "jest tests/migration.test.ts",
-        "setup:upgrade-tools": "node scripts/setup-upgrade-tools.js",
-        "quick-start": "node scripts/quick-start.js"
+        "upgrade:check": "npx ncu --target minor",
+        "upgrade:safe": "npx ncu --target patch -u && npm install",
+        "upgrade:minor": "npx ncu --target minor -u && npm install",
+        "upgrade:major": "npx ncu --target greatest -i",
+        "generate:docs": "typedoc src/typescript/ --out docs/api",
+        "clean": "rm -rf src/Invoice/Asset/rebuild/js/invoice-typescript-iife.js*",
+        "clean:angular": "rm -rf dist/ && rm -rf .angular/",
+        "es2024:verify": "node -e \"console.log('ES2024 features available:', Object.hasOwn({}, 'test'), Array.prototype.toSorted ? 'toSorted' : 'missing', Object.groupBy ? 'groupBy' : 'missing', Promise.withResolvers ? 'withResolvers' : 'missing')\""
     },
-    "license": "BSD-3-Clause"
+    "license": "BSD-3-Clause",
+    "engines": {
+        "node": ">=22.0.0",
+        "npm": ">=10.0.0"
+    },
+    "overrides": {
+        "@typescript-eslint/utils": {
+            "typescript": "*"
+        },
+        "@typescript-eslint/types": {
+            "typescript": "*"
+        },
+        "@typescript-eslint/typescript-estree": {
+            "typescript": "*"
+        }
+    },
+    "keywords": [
+        "yii3",
+        "invoice",
+        "typescript",
+        "es2024",
+        "bootstrap5",
+        "govuk-frontend"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rossaddison/invoice.git"
+    },
+    "bugs": {
+        "url": "https://github.com/rossaddison/invoice/issues"
+    },
+    "homepage": "https://github.com/rossaddison/invoice#readme"
 }

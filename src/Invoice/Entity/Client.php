@@ -53,7 +53,7 @@ class Client
         private string $client_name = '',
         #[Column(type: 'string(151)', nullable: true)]
         private ?string $client_surname = '',
-        #[Column(type: 'string(3)', nullable: true)]
+        #[Column(type: 'string(50)', nullable: true)]
         private ?string $client_group = '',
         #[Column(type: 'string(15)', nullable: true)]
         private ?string $client_frequency = '',
@@ -360,7 +360,7 @@ class Client
     {
         return $this->client_active;
     }
-
+    
     public function setClient_active(bool $client_active): void
     {
         $this->client_active = $client_active;
@@ -428,7 +428,7 @@ class Client
         $this->client_number = $client_number;
     }
 
-    public function getClient_gender(): int|null
+    public function getClient_gender(): ?int
     {
         return $this->client_gender;
     }
@@ -443,7 +443,7 @@ class Client
         $this->postaladdress_id = $postaladdress_id;
     }
 
-    public function getPostaladdress_id(): int|null
+    public function getPostaladdress_id(): ?int
     {
         return $this->postaladdress_id;
     }

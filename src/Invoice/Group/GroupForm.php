@@ -27,22 +27,22 @@ final class GroupForm extends FormModel
         $this->left_pad = (int) $group->getLeft_pad();
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getIdentifier_format(): string|null
+    public function getIdentifier_format(): ?string
     {
         return $this->identifier_format;
     }
 
-    public function getNext_id(): int|null
+    public function getNext_id(): ?int
     {
         return $this->next_id;
     }
 
-    public function getLeft_pad(): int|null
+    public function getLeft_pad(): ?int
     {
         return $this->left_pad;
     }

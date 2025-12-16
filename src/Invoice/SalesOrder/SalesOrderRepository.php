@@ -113,7 +113,7 @@ final class SalesOrderRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return SalesOrder|null
      */
-    public function repoSalesOrderUnLoadedquery(string $id): SalesOrder|null
+    public function repoSalesOrderUnLoadedquery(string $id): ?SalesOrder
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -125,7 +125,7 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderLoadedquery(string $id): SalesOrder|null
+    public function repoSalesOrderLoadedquery(string $id): ?SalesOrder
     {
         $query = $this->select()
                       ->load(['client','group','user'])
@@ -138,7 +138,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param int $status_id
      * @return SalesOrder|null
      */
-    public function repoSalesOrderStatusquery(string|null $salesorder_id, int $status_id): SalesOrder|null
+    public function repoSalesOrderStatusquery(?string $salesorder_id, int $status_id): ?SalesOrder
     {
         $query = $this->select()->where(['id' => $salesorder_id])
                                 ->where(['status_id' => $status_id]);
@@ -150,7 +150,7 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @param string|null $salesorder_id
      */
-    public function repoSalesOrderStatuscount(string|null $salesorder_id, int $status_id): int
+    public function repoSalesOrderStatuscount(?string $salesorder_id, int $status_id): int
     {
         return $this->select()->where(['id' => $salesorder_id])
                                 ->where(['status_id' => $status_id])
@@ -161,7 +161,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param string $url_key
      * @return SalesOrder|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): SalesOrder|null
+    public function repoUrl_key_guest_loaded(string $url_key): ?SalesOrder
     {
         $query = $this->select()
                        ->load('client')
@@ -398,7 +398,7 @@ final class SalesOrderRepository extends Select\Repository
     /**
      * @param string|null $salesorder_id
      */
-    public function repoCount(string|null $salesorder_id): int
+    public function repoCount(?string $salesorder_id): int
     {
         return $this->select()
                       ->where(['id' => $salesorder_id])

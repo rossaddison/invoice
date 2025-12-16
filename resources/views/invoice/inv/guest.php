@@ -188,7 +188,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Inv $model) => (string) $model->getId(),
+        content: static fn (Inv $model) => (string) $model->getId(),
         withSorting: true,
     ),
     new ActionColumn(
@@ -263,13 +263,13 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn(Inv $model): string => $model->getClient()?->getClient_name() ?? '',
+        content: static fn (Inv $model): string => $model->getClient()?->getClient_name() ?? '',
         withSorting: false,
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
+        content: static fn (Inv $model): string => (!is_string($dateCreated = $model->getDate_created()) ? $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
     new DataColumn(
@@ -341,11 +341,11 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                     ->withToken(PageToken::next((string) $page));
 
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open() .
-        $statusBar .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), true))->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
+        . $statusBar
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), true))->encode(false)->render()
+        . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
@@ -379,9 +379,9 @@ echo GridView::widget()
     ->id('w9-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate(($viewInv ?
-                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '') . ' ' .
-                       $grid_summary)
+    ->summaryTemplate(($viewInv
+                       ? $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'inv', $defaultPageSizeOffsetPaginator) : '') . ' '
+                       . $grid_summary)
     ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
     ->noResultsText($translator->translate('no.records'))
     ->toolbar($toolbarString);

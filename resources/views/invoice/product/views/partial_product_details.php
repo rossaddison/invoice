@@ -134,8 +134,8 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
     ])
-    ->value($s->format_amount($form->getPurchase_price() >= 0.00 ?
-                              $form->getPurchase_price() : 0.00))
+    ->value($s->format_amount($form->getPurchase_price() >= 0.00
+                              ? $form->getPurchase_price() : 0.00))
     ->placeholder($translator->translate('purchase.price'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.required')); ?>         
@@ -147,8 +147,8 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
     ])
     ->disabled(true)
-    ->value($s->format_amount(($form->getProduct_price() >= 0.00 ?
-                               $form->getProduct_price() : 0.00)))
+    ->value($s->format_amount(($form->getProduct_price() >= 0.00
+                               ? $form->getProduct_price() : 0.00)))
     ->placeholder($translator->translate('product.price'))
 
         ->hint($translator->translate('hint.this.field.is.required')); ?>         
@@ -160,8 +160,8 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
     ])
     ->disabled(true)
-    ->value($s->format_amount(($form->getProduct_price_base_quantity() >= 0.00 ?
-                               $form->getProduct_price_base_quantity() : 0.00)))
+    ->value($s->format_amount(($form->getProduct_price_base_quantity() >= 0.00
+                               ? $form->getProduct_price_base_quantity() : 0.00)))
     ->placeholder($translator->translate('product.price.base.quantity'))
     ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
@@ -172,8 +172,8 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
     ])
     ->disabled(true)
-    ->value($s->format_amount(($form->getProduct_tariff() >= 0.00 ?
-                               $form->getProduct_tariff() : 0.00)))
+    ->value($s->format_amount(($form->getProduct_tariff() >= 0.00
+                               ? $form->getProduct_tariff() : 0.00)))
     ->placeholder($translator->translate('product.tariff'))
     ->hint($translator->translate('hint.this.field.is.required')); ?>
         <?= Html::closeTag('div'); ?>

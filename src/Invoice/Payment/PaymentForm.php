@@ -35,12 +35,12 @@ final class PaymentForm extends FormModel
         $this->inv = $payment->getInv();
     }
 
-    public function getPayment_method_id(): int|null
+    public function getPayment_method_id(): ?int
     {
         return $this->payment_method_id;
     }
 
-    public function getPayment_date(): null|string|DateTimeImmutable
+    public function getPayment_date(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->payment_date
@@ -48,22 +48,22 @@ final class PaymentForm extends FormModel
         return $this->payment_date;
     }
 
-    public function getAmount(): float|null
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function getNote(): string|null
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getInv(): Inv|null
+    public function getInv(): ?Inv
     {
         return $this->inv;
     }

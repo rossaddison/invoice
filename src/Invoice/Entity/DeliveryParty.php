@@ -13,9 +13,11 @@ class DeliveryParty
 {
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $party_name = '') {}
+        private ?string $party_name = '')
+    {
+    }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -25,7 +27,7 @@ class DeliveryParty
         $this->id = $id;
     }
 
-    public function getPartyName(): string|null
+    public function getPartyName(): ?string
     {
         return $this->party_name;
     }

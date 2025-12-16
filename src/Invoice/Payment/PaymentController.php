@@ -138,8 +138,8 @@ final class PaymentController extends BaseController
             // jquery script at bottom of _from to load all amounts
             'amounts' => Json::encode($amounts),
             'invoicePaymentMethods' => Json::encode($invoice_payment_methods),
-            'paymentMethods' => $payment_methodRepository->count() > 0 ?
-                                $payment_methodRepository->findAllPreloaded() : null,
+            'paymentMethods' => $payment_methodRepository->count() > 0
+                                ? $payment_methodRepository->findAllPreloaded() : null,
             'cR' => $cR,
             'iaR' => $iaR,
             'cvH' => new CustomValuesHelper($this->sR, $cvR),
@@ -410,7 +410,7 @@ final class PaymentController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         PaymentRepository $pmtR,
-    ): null|PaymentForm {
+    ): ?PaymentForm {
         $payment = $this->payment($currentRoute, $pmtR);
         if (null !== $payment) {
             $form = new PaymentForm($payment);
@@ -554,7 +554,7 @@ final class PaymentController extends BaseController
              ->withCurrentPage($currentPageNeverZero)
              ->withToken(PageToken::next((string) $page));
             // No need for rbac here since the route accessChecker for payment/online_log
-            // includes 'viewPayment' Related logic: see config/routes.php
+            // includes Permissions::VIEW_PAYMENT Related logic: see config/routes.php
             $parameters = [
                 'alert' => $this->alert(),
                 'page' => $page,
@@ -605,8 +605,8 @@ final class PaymentController extends BaseController
         if (isset($query_params['paymentDateFilter']) && !empty($query_params['paymentDateFilter'])) {
             $payments = $paymentRepository->repoPaymentDateFilter((string) $query_params['paymentDateFilter']);
         }
-        if (isset($query_params['paymentAmountFilter']) && !empty($query_params['paymentAmountFilter']) &&
-            isset($query_params['paymentDateFilter']) && !empty($query_params['paymentDateFilter'])) {
+        if (isset($query_params['paymentAmountFilter']) && !empty($query_params['paymentAmountFilter'])
+            && isset($query_params['paymentDateFilter']) && !empty($query_params['paymentDateFilter'])) {
             $payments = $paymentRepository->repoPaymentAmountWithDateFilter(
                 (string) $query_params['paymentAmountFilter'],
                 (string) $query_params['paymentDateFilter'],
@@ -711,7 +711,7 @@ final class PaymentController extends BaseController
          ->withCurrentPage($currentPageNeverZero)
          ->withToken(PageToken::next((string) $page));
         // No need for rbac here since the route accessChecker for payment/online_log
-        // includes 'viewPayment' Related logic: see config/routes.php
+        // includes Permissions::VIEW_PAYMENT Related logic: see config/routes.php
         $parameters = [
             'alert' => $this->alert(),
             'page' => $page,
@@ -751,7 +751,7 @@ final class PaymentController extends BaseController
      * @param PaymentRepository $paymentRepository
      * @return Payment|null
      */
-    private function payment(CurrentRoute $currentRoute, PaymentRepository $paymentRepository): Payment|null
+    private function payment(CurrentRoute $currentRoute, PaymentRepository $paymentRepository): ?Payment
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

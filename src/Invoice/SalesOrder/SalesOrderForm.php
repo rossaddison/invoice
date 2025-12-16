@@ -83,47 +83,47 @@ final class SalesOrderForm extends FormModel
     // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form
     // get => string ;
 
-    public function getQuote_id(): string|null
+    public function getQuote_id(): ?string
     {
         return $this->quote_id;
     }
 
-    public function getInv_id(): string|null
+    public function getInv_id(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getClient_po_number(): string|null
+    public function getClient_po_number(): ?string
     {
         return $this->client_po_number;
     }
 
-    public function getClient_po_line_number(): string|null
+    public function getClient_po_line_number(): ?string
     {
         return $this->client_po_line_number;
     }
 
-    public function getClient_po_person(): string|null
+    public function getClient_po_person(): ?string
     {
         return $this->client_po_person;
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
 
-    public function getGroup_id(): int|null
+    public function getGroup_id(): ?int
     {
         return $this->group_id;
     }
 
-    public function getStatus_id(): int|null
+    public function getStatus_id(): ?int
     {
         return $this->status_id;
     }
 
-    public function getDate_created(): string|null|DateTimeImmutable
+    public function getDate_created(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -131,37 +131,37 @@ final class SalesOrderForm extends FormModel
         return $this->date_created;
     }
 
-    public function getNumber(): string|null
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    public function getDiscount_amount(): float|null
+    public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getDiscount_percent(): float|null
+    public function getDiscount_percent(): ?float
     {
         return $this->discount_percent;
     }
 
-    public function getUrl_key(): string|null
+    public function getUrl_key(): ?string
     {
         return $this->url_key;
     }
 
-    public function getPassword(): string|null
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function getNotes(): string|null
+    public function getNotes(): ?string
     {
         return $this->notes;
     }
 
-    public function getPaymentTerm(): string|null
+    public function getPaymentTerm(): ?string
     {
         return $this->payment_term;
     }

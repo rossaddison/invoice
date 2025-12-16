@@ -28,7 +28,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var WebView $this
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -42,17 +42,17 @@ $columns = [
     new DataColumn(
         property: 'unit_id',
         header: $translator->translate('id'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_id()),
+        content: static fn (Unit $model) => Html::encode($model->getUnit_id()),
     ),
     new DataColumn(
         property: 'unit_name',
         header: $translator->translate('unit.name'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_name()),
+        content: static fn (Unit $model) => Html::encode($model->getUnit_name()),
     ),
     new DataColumn(
         property: 'unit_name_plrl',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn(Unit $model) => Html::encode($model->getUnit_name_plrl()),
+        content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl()),
     ),
 
     new ActionColumn(buttons: [
@@ -97,14 +97,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('unit/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('unit/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

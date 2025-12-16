@@ -9,7 +9,7 @@ use Yiisoft\Strings\Inflector;
  */
 
 echo "<?php\n";
-$random = rand(1000, 9999);
+$random = (new DateTimeImmutable())->getTimestamp();
 ?>
 
 declare(strict_types=1);
@@ -39,7 +39,7 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
  * @var string $csrf 
  */
  
- echo $alert;
+ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 ?>
 <?php

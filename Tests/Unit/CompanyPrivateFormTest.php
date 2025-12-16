@@ -21,6 +21,8 @@ final class CompanyPrivateFormTest extends TestCase
     private ValidatorInterface $validator;
     private CompanyPrivate $companyPrivate;
 
+    public string $gln = '1234567890123';
+    
     protected function setUp(): void
     {
         $this->validator = new Validator();
@@ -225,7 +227,7 @@ final class CompanyPrivateFormTest extends TestCase
             'vat_id' => 'GB123456789', // Realistic UK VAT ID
             'tax_code' => 'TC12345', // Realistic tax code
             'iban' => 'GB82WEST12345698765432', // Realistic IBAN
-            'gln' => '1234567890123', // Realistic GLN (13 digits)
+            'gln' => $this->gln, // Realistic GLN (13 digits)
             'rcc' => 'RCC001', // Realistic RCC
             'logo_filename' => 'company_logo.png', // Realistic filename
             'logo_width' => '200',
@@ -249,7 +251,7 @@ final class CompanyPrivateFormTest extends TestCase
         $this->assertEquals('GB123456789', $form->getVat_id());
         $this->assertEquals('TC12345', $form->getTax_code());
         $this->assertEquals('GB82WEST12345698765432', $form->getIban());
-        $this->assertEquals('1234567890123', $form->getGln());
+        $this->assertEquals($this->gln, $form->getGln());
         $this->assertEquals('RCC001', $form->getRcc());
         $this->assertEquals('company_logo.png', $form->getLogo_filename());
         $this->assertEquals('200', $form->getLogo_width());
@@ -317,16 +319,31 @@ final class CompanyPrivateFormTest extends TestCase
     private function createFormWithData(array $data): CompanyPrivateForm
     {
         $companyPrivate = $this->createMockCompanyPrivate();
+        
         $form = new CompanyPrivateForm($companyPrivate);
         
-        // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);
         
         foreach ($data as $property => $value) {
-            if ($reflection->hasProperty($property)) {
-                $prop = $reflection->getProperty($property);
+            
+            if (! $reflection->hasProperty($property)) {
+                throw new RuntimeException('Property missing');
+            }
+            
+            $prop = $reflection->getProperty($property);
+            
+            $wasAccessible = $prop->isPublic();
+            
+            try {
+                
                 $prop->setAccessible(true);
+                
                 $prop->setValue($form, $value);
+                
+            } finally {
+                
+                $prop->setAccessible($wasAccessible);
+                
             }
         }
         

@@ -4,7 +4,6 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Libraries\Crypt $crypt
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $body
@@ -121,7 +120,7 @@ foreach ($gateway_drivers as $driver => $fields) :
                                     <?php
                                         if ($setting['type'] == 'password') : ?>
                                         value="<?= (string) (strlen((string) $body['settings[gateway_' . $d . '_' . $key . ']']) > 0
-                                                ? $crypt->decode((string) $body['settings[gateway_' . $d . '_' . $key . ']'])
+                                                ? $s->decode((string) $body['settings[gateway_' . $d . '_' . $key . ']'])
                                                 : ''); ?>"
                                     <?php else : ?>
                                         value="<?= (string) $body['settings[gateway_' . $d . '_' . $key . ']']; ?>"

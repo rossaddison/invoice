@@ -15,8 +15,8 @@ final class Installer
      */
     public static function postUpdate(): void
     {
-        self::chmodRecursive('runtime', 0777);
-        self::chmodRecursive('public/assets', 0777);
+        self::chmodRecursive('runtime', 0o777);
+        self::chmodRecursive('public/assets', 0o777);
     }
 
     private static function chmodRecursive(string $path, int $mode): void

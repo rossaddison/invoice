@@ -87,7 +87,7 @@ final class QuoteTaxRateRepository extends Select\Repository
     /**
      * @param string|null $quote_id
      */
-    public function repoCount(string|null $quote_id): int
+    public function repoCount(?string $quote_id): int
     {
         return $this->select()
                       ->where(['quote_id' => $quote_id])
@@ -100,7 +100,7 @@ final class QuoteTaxRateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteTaxRatequery(string $id): QuoteTaxRate|null
+    public function repoQuoteTaxRatequery(string $id): ?QuoteTaxRate
     {
         $query = $this->select()
                       ->load('quote')
@@ -132,7 +132,7 @@ final class QuoteTaxRateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): QuoteTaxRate|null
+    public function repoTaxRatequery(string $tax_rate_id): ?QuoteTaxRate
     {
         $query = $this->select()
                       ->load('tax_rate')

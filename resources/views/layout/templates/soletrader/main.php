@@ -64,6 +64,36 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var string $brandLabel
  * @var string $logoPath
  * @var string $title
+ * @var DropdownItem $afZA
+ * @var DropdownItem $arBH
+ * @var DropdownItem $az
+ * @var DropdownItem $beBY
+ * @var DropdownItem $bs
+ * @var DropdownItem $zhCN
+ * @var DropdownItem $zhTW
+ * @var DropdownItem $en
+ * @var DropdownItem $fil
+ * @var DropdownItem $fr
+ * @var DropdownItem $gdGB
+ * @var DropdownItem $haNG
+ * @var DropdownItem $heIL
+ * @var DropdownItem $igNG
+ * @var DropdownItem $nl
+ * @var DropdownItem $de
+ * @var DropdownItem $id
+ * @var DropdownItem $it
+ * @var DropdownItem $ja
+ * @var DropdownItem $pl
+ * @var DropdownItem $ptBR
+ * @var DropdownItem $ru
+ * @var DropdownItem $sk
+ * @var DropdownItem $sl
+ * @var DropdownItem $es
+ * @var DropdownItem $uk
+ * @var DropdownItem $uz
+ * @var DropdownItem $vi
+ * @var DropdownItem $yoNG
+ * @var DropdownItem $zuZA
  */
 $assetManager->register(AppAsset::class);
 $assetManager->register(AuthAegisTotpKeypadAsset::class);
@@ -129,28 +159,11 @@ $this->setTitle($title);
             ->togglerContent('')
             ->togglerSize(ButtonSize::SMALL)
             ->items(
-                DropdownItem::link('Afrikaans South African', $urlGenerator->generateFromCurrent(['_language' => 'af-ZA'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Arabic Bahrainian/ عربي', $urlGenerator->generateFromCurrent(['_language' => 'ar-BH'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Azerbaijani / Azərbaycan', $urlGenerator->generateFromCurrent(['_language' => 'az'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Chinese Simplified / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-CN'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Taiwanese Mandarin / 简体中文', $urlGenerator->generateFromCurrent(['_language' => 'zh-TW'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('English', $urlGenerator->generateFromCurrent(['_language' => 'en'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Filipino / Filipino', $urlGenerator->generateFromCurrent(['_language' => 'fil'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('French / Français', $urlGenerator->generateFromCurrent(['_language' => 'fr'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Dutch / Nederlands', $urlGenerator->generateFromCurrent(['_language' => 'nl'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('German / Deutsch', $urlGenerator->generateFromCurrent(['_language' => 'de'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Indonesian / bahasa Indonesia', $urlGenerator->generateFromCurrent(['_language' => 'id'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Italian / Italiano', $urlGenerator->generateFromCurrent(['_language' => 'it'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Japanese / 日本', $urlGenerator->generateFromCurrent(['_language' => 'ja'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Polish / Polski', $urlGenerator->generateFromCurrent(['_language' => 'pl'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Portugese Brazilian / Português Brasileiro', $urlGenerator->generateFromCurrent(['_language' => 'pt-BR'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Russian / Русский', $urlGenerator->generateFromCurrent(['_language' => 'ru'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Slovakian / Slovenský', $urlGenerator->generateFromCurrent(['_language' => 'sk'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Spanish /  Española x', $urlGenerator->generateFromCurrent(['_language' => 'es'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Ukrainian / українська', $urlGenerator->generateFromCurrent(['_language' => 'uk'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Uzbek / o' . "'" . 'zbek', $urlGenerator->generateFromCurrent(['_language' => 'uz'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Vietnamese / Tiếng Việt', $urlGenerator->generateFromCurrent(['_language' => 'vi'], fallbackRouteName: 'site/index')),
-                DropdownItem::link('Zulu South African/ Zulu South African', $urlGenerator->generateFromCurrent(['_language' => 'zu-ZA'], fallbackRouteName: 'site/index')),
+                $afZA, $arBH, $az,
+                $beBY, $bs, $zhCN, $zhTW, $en,
+                $fil, $fr, $gdGB, $haNG, $heIL,
+                $igNG, $nl, $de, $id, $it, $ja, $pl, $ptBR,
+                $ru, $sk, $sl, $es, $uk, $uz, $vi, $yoNG, $zuZA
             )->render();
 ?>
         <?php

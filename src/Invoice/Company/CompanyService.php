@@ -8,7 +8,9 @@ use App\Invoice\Entity\Company;
 
 final readonly class CompanyService
 {
-    public function __construct(private CompanyRepository $repository) {}
+    public function __construct(private CompanyRepository $repository)
+    {
+    }
 
     /**
      * @param Company $model

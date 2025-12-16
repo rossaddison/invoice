@@ -176,7 +176,7 @@ final class ProductPropertyController extends BaseController
      * @param ProductPropertyRepository $productpropertyRepository
      * @return ProductProperty|null
      */
-    private function productproperty(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): ProductProperty|null
+    private function productproperty(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): ?ProductProperty
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

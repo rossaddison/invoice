@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\CustomValue;
 use PHPUnit\Framework\TestCase;
 
 class CustomValueEntityTest extends TestCase
 {
+    public string $beg2024 = '2024-01-01';
+    
     public function testConstructorWithDefaults(): void
     {
         $customValue = new CustomValue();
@@ -220,7 +221,7 @@ class CustomValueEntityTest extends TestCase
         $customValue = new CustomValue();
         
         $dateValues = [
-            '2024-01-01',
+            $this->beg2024,
             '2024-12-31 23:59:59',
             '01/01/2024',
             '12-31-2024',
@@ -481,7 +482,7 @@ class CustomValueEntityTest extends TestCase
             [1, 'Text field value'],
             [2, '42'],
             [3, 'true'],
-            [4, '2024-01-01'],
+            [4, $this->beg2024],
             [5, 'user@example.com'],
             [6, 'https://example.com'],
             [7, '{"key": "value"}'],
@@ -554,7 +555,7 @@ class CustomValueEntityTest extends TestCase
             'null',
             '[]',
             '{}',
-            '2024-01-01',
+            $this->beg2024,
             '12:30:45'
         ];
         
@@ -652,9 +653,9 @@ class CustomValueEntityTest extends TestCase
         
         // Date field
         $customValue->setCustom_field_id(3);
-        $customValue->setValue('2024-01-01');
+        $customValue->setValue($this->beg2024);
         $this->assertSame(3, $customValue->getCustom_field_id());
-        $this->assertSame('2024-01-01', $customValue->getValue());
+        $this->assertSame($this->beg2024, $customValue->getValue());
         
         // Boolean field
         $customValue->setCustom_field_id(4);
@@ -695,3 +696,4 @@ class CustomValueEntityTest extends TestCase
         $this->assertSame('Special delivery instructions: Leave at front door, ring doorbell twice', $customValue->getValue());
     }
 }
+

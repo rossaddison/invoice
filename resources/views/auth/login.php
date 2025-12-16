@@ -76,9 +76,9 @@ foreach ($selectedIdentityProviders as $provider => $info) {
                         <?=
         Html::tag(
             'span',
-            $s->getSetting('enable_tfa_with_disabling') == '1' ?
-                $translator->translate('two.factor.authentication.enabled.with.disabling') :
-                $translator->translate('two.factor.authentication.enabled.without.disabling'),
+            $s->getSetting('enable_tfa_with_disabling') == '1'
+                ? $translator->translate('two.factor.authentication.enabled.with.disabling')
+                : $translator->translate('two.factor.authentication.enabled.without.disabling'),
             [
                 'class' => 'badge bg-primary',
                 'style' => 'white-space:normal;word-break:break-word;max-width:100%;display:inline-block;',

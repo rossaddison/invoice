@@ -76,82 +76,82 @@ final class ClientPeppolForm extends FormModel
         $this->supplier_assigned_accountid = $client_peppol->getSupplierAssignedAccountId();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
 
-    public function getAccounting_cost(): string|null
+    public function getAccounting_cost(): ?string
     {
         return $this->accounting_cost;
     }
 
-    public function getBuyer_reference(): string|null
+    public function getBuyer_reference(): ?string
     {
         return $this->buyer_reference;
     }
 
-    public function getEndpointid(): string|null
+    public function getEndpointid(): ?string
     {
         return $this->endpointid;
     }
 
-    public function getEndpointid_schemeid(): string|null
+    public function getEndpointid_schemeid(): ?string
     {
         return $this->endpointid_schemeid;
     }
 
-    public function getFinancial_institution_branchid(): string|null
+    public function getFinancial_institution_branchid(): ?string
     {
         return $this->financial_institution_branchid;
     }
 
-    public function getIdentificationid(): string|null
+    public function getIdentificationid(): ?string
     {
         return $this->identificationid;
     }
 
-    public function getIdentificationid_schemeid(): string|null
+    public function getIdentificationid_schemeid(): ?string
     {
         return $this->identificationid_schemeid;
     }
 
-    public function getLegal_entity_registration_name(): string|null
+    public function getLegal_entity_registration_name(): ?string
     {
         return $this->legal_entity_registration_name;
     }
 
-    public function getLegal_entity_companyid(): string|null
+    public function getLegal_entity_companyid(): ?string
     {
         return $this->legal_entity_companyid;
     }
 
-    public function getLegal_entity_companyid_schemeid(): string|null
+    public function getLegal_entity_companyid_schemeid(): ?string
     {
         return $this->legal_entity_companyid_schemeid;
     }
 
-    public function getLegal_entity_company_legal_form(): string|null
+    public function getLegal_entity_company_legal_form(): ?string
     {
         return $this->legal_entity_company_legal_form;
     }
 
-    public function getTaxschemecompanyid(): string|null
+    public function getTaxschemecompanyid(): ?string
     {
         return $this->taxschemecompanyid;
     }
 
-    public function getTaxschemeid(): string|null
+    public function getTaxschemeid(): ?string
     {
         return $this->taxschemeid;
     }
 
-    public function getSupplierAssignedAccountId(): string|null
+    public function getSupplierAssignedAccountId(): ?string
     {
         return $this->supplier_assigned_accountid;
     }

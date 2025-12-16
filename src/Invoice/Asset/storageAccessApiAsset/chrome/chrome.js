@@ -11,6 +11,11 @@
         return {};
     }
 
+    // Secure reload helper to prevent Open Redirect vulnerabilities
+    function secureReload() {
+        window.location.reload();
+    }
+
     // Run when DOM is ready (mirrors $(function(){...}) )
     function init() {
 
@@ -88,15 +93,13 @@
                             window.location = location.origin + "/invoice/inv/view/" + response.new_invoice_id;
                         } else {
                             // Fallback to reload current page if new_invoice_id not provided
-                            window.location = absolute_url;
-                            window.location.reload();
+                            secureReload();
                         }
                     } else if (response.success === 0) {
                         btns.forEach(function (b) {
                             b.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
                         });
-                        window.location = absolute_url;
-                        window.location.reload();
+                        secureReload();
                     } else {
                         // Unexpected response shape — restore button UI and log
                         btns.forEach(function (b) {

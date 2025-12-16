@@ -14,6 +14,8 @@ class DeliveryEntityTest extends Unit
 {
     private MockObject $deliveryLocation;
     
+    public string $ymdHis = 'Y-m-d H:i:s';
+    
     protected function setUp(): void
     {
         parent::setUp();
@@ -113,7 +115,7 @@ class DeliveryEntityTest extends Unit
         
         $delivery->setStart_date($startDate);
         $this->assertSame($startDate, $delivery->getStart_date());
-        $this->assertSame('2023-01-15 10:00:00', $delivery->getStart_date()->format('Y-m-d H:i:s'));
+        $this->assertSame('2023-01-15 10:00:00', $delivery->getStart_date()->format($this->ymdHis));
     }
 
     public function testActualDeliveryDateSetterAndGetter(): void
@@ -123,7 +125,7 @@ class DeliveryEntityTest extends Unit
         
         $delivery->setActual_delivery_date($actualDate);
         $this->assertSame($actualDate, $delivery->getActual_delivery_date());
-        $this->assertSame('2023-02-20 15:30:00', $delivery->getActual_delivery_date()->format('Y-m-d H:i:s'));
+        $this->assertSame('2023-02-20 15:30:00', $delivery->getActual_delivery_date()->format($this->ymdHis));
         
         // Test setting to null
         $delivery->setActual_delivery_date(null);
@@ -137,7 +139,7 @@ class DeliveryEntityTest extends Unit
         
         $delivery->setEnd_date($endDate);
         $this->assertSame($endDate, $delivery->getEnd_date());
-        $this->assertSame('2023-03-31 23:59:59', $delivery->getEnd_date()->format('Y-m-d H:i:s'));
+        $this->assertSame('2023-03-31 23:59:59', $delivery->getEnd_date()->format($this->ymdHis));
     }
 
     public function testDateCreatedSetterAndGetter(): void
@@ -147,7 +149,7 @@ class DeliveryEntityTest extends Unit
         
         $delivery->setDate_created($dateCreated);
         $this->assertSame($dateCreated, $delivery->getDate_created());
-        $this->assertSame('2023-01-01 12:00:00', $delivery->getDate_created()->format('Y-m-d H:i:s'));
+        $this->assertSame('2023-01-01 12:00:00', $delivery->getDate_created()->format($this->ymdHis));
     }
 
     public function testDateModifiedSetterAndGetter(): void
@@ -157,7 +159,7 @@ class DeliveryEntityTest extends Unit
         
         $delivery->setDate_modified($dateModified);
         $this->assertSame($dateModified, $delivery->getDate_modified());
-        $this->assertSame('2023-12-31 18:45:30', $delivery->getDate_modified()->format('Y-m-d H:i:s'));
+        $this->assertSame('2023-12-31 18:45:30', $delivery->getDate_modified()->format($this->ymdHis));
     }
 
     public function testGetDeliveryLocation(): void

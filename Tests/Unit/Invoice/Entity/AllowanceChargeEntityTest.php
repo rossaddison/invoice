@@ -10,6 +10,14 @@ use PHPUnit\Framework\TestCase;
 
 class AllowanceChargeEntityTest extends TestCase
 {
+    public string $volumeDiscount = 'Volume discount';
+    
+    public string $earlyPaymentDiscount = 'Early payment discount';
+    
+    public string $serviceCharge = 'Service charge';
+    
+    public string $lineItemDiscount = 'Line item discount';
+    
     public function testConstructorWithDefaults(): void
     {
         $allowanceCharge = new AllowanceCharge();
@@ -33,7 +41,7 @@ class AllowanceChargeEntityTest extends TestCase
             identifier: true,
             level: 1,
             reason_code: 'DIS',
-            reason: 'Volume discount',
+            reason: $this->volumeDiscount,
             multiplier_factor_numeric: 10,
             amount: 5000,
             base_amount: 50000,
@@ -44,7 +52,7 @@ class AllowanceChargeEntityTest extends TestCase
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());
         $this->assertSame('DIS', $allowanceCharge->getReasonCode());
-        $this->assertSame('Volume discount', $allowanceCharge->getReason());
+        $this->assertSame($this->volumeDiscount, $allowanceCharge->getReason());
         $this->assertSame(10, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(5000, $allowanceCharge->getAmount());
         $this->assertSame(50000, $allowanceCharge->getBaseAmount());
@@ -95,9 +103,9 @@ class AllowanceChargeEntityTest extends TestCase
     public function testReasonSetterAndGetter(): void
     {
         $allowanceCharge = new AllowanceCharge();
-        $allowanceCharge->setReason('Early payment discount');
+        $allowanceCharge->setReason($this->earlyPaymentDiscount);
         
-        $this->assertSame('Early payment discount', $allowanceCharge->getReason());
+        $this->assertSame($this->earlyPaymentDiscount, $allowanceCharge->getReason());
     }
 
     public function testMultiplierFactorNumericSetterAndGetter(): void
@@ -242,7 +250,7 @@ class AllowanceChargeEntityTest extends TestCase
             'FEE' => 'Fee',
             'TAX' => 'Tax',
             'VAT' => 'VAT',
-            'SER' => 'Service charge',
+            'SER' => $this->serviceCharge,
             'DEL' => 'Delivery charge',
             'HAN' => 'Handling fee',
             'INS' => 'Insurance'
@@ -265,7 +273,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setIdentifier(false); // Allowance
         $allowanceCharge->setLevel(0); // Overall
         $allowanceCharge->setReasonCode('95');
-        $allowanceCharge->setReason('Volume discount');
+        $allowanceCharge->setReason($this->volumeDiscount);
         $allowanceCharge->setMultiplierFactorNumeric(10); // 10%
         $allowanceCharge->setBaseAmount(100000); // $1000.00
         $allowanceCharge->setAmount(10000); // $100.00 discount
@@ -273,7 +281,7 @@ class AllowanceChargeEntityTest extends TestCase
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('95', $allowanceCharge->getReasonCode());
-        $this->assertSame('Volume discount', $allowanceCharge->getReason());
+        $this->assertSame($this->volumeDiscount, $allowanceCharge->getReason());
         $this->assertSame(10, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(100000, $allowanceCharge->getBaseAmount());
         $this->assertSame(10000, $allowanceCharge->getAmount());
@@ -309,7 +317,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setIdentifier(false); // Allowance
         $allowanceCharge->setLevel(1); // InvoiceLine
         $allowanceCharge->setReasonCode('100');
-        $allowanceCharge->setReason('Line item discount');
+        $allowanceCharge->setReason($this->lineItemDiscount);
         $allowanceCharge->setMultiplierFactorNumeric(5); // 5%
         $allowanceCharge->setBaseAmount(50000); // $500.00
         $allowanceCharge->setAmount(2500); // $25.00 discount
@@ -317,7 +325,7 @@ class AllowanceChargeEntityTest extends TestCase
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());
         $this->assertSame('100', $allowanceCharge->getReasonCode());
-        $this->assertSame('Line item discount', $allowanceCharge->getReason());
+        $this->assertSame($this->lineItemDiscount, $allowanceCharge->getReason());
         $this->assertSame(5, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(50000, $allowanceCharge->getBaseAmount());
         $this->assertSame(2500, $allowanceCharge->getAmount());
@@ -362,7 +370,7 @@ class AllowanceChargeEntityTest extends TestCase
             ['Documentation fee', 750],
             ['Express delivery', 5000],
             ['Insurance premium', 1250],
-            ['Service charge', 300],
+            [$this->serviceCharge, 300],
             ['Administrative fee', 200]
         ];
         
@@ -384,9 +392,9 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge = new AllowanceCharge();
         
         $discountTypes = [
-            'Early payment discount',
-            'Volume discount',
-            'Loyalty discount', 
+            $this->earlyPaymentDiscount,
+            $this->volumeDiscount,
+            'Loyalty discount',
             'Seasonal discount',
             'New customer discount',
             'Bulk order discount',
@@ -468,7 +476,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setIdentifier(false);
         $allowanceCharge->setLevel(0);
         $allowanceCharge->setReasonCode('DIS');
-        $allowanceCharge->setReason('Volume discount');
+        $allowanceCharge->setReason($this->volumeDiscount);
         $allowanceCharge->setMultiplierFactorNumeric(10);
         $allowanceCharge->setAmount(5000);
         $allowanceCharge->setBaseAmount(50000);
@@ -479,7 +487,7 @@ class AllowanceChargeEntityTest extends TestCase
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('DIS', $allowanceCharge->getReasonCode());
-        $this->assertSame('Volume discount', $allowanceCharge->getReason());
+        $this->assertSame($this->volumeDiscount, $allowanceCharge->getReason());
         $this->assertSame(10, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(5000, $allowanceCharge->getAmount());
         $this->assertSame(50000, $allowanceCharge->getBaseAmount());
@@ -494,7 +502,7 @@ class AllowanceChargeEntityTest extends TestCase
             identifier: true,
             level: 1,
             reason_code: 'CHG',
-            reason: 'Service charge',
+            reason: $this->serviceCharge,
             multiplier_factor_numeric: 5,
             amount: 1000,
             base_amount: 20000,
@@ -673,9 +681,9 @@ class AllowanceChargeEntityTest extends TestCase
         
         // Line level allowance
         $allowanceCharge->setLevel(1);
-        $allowanceCharge->setReason('Line item discount');
+        $allowanceCharge->setReason($this->lineItemDiscount);
         $this->assertSame(1, $allowanceCharge->getLevel());
-        $this->assertSame('Line item discount', $allowanceCharge->getReason());
+        $this->assertSame($this->lineItemDiscount, $allowanceCharge->getReason());
     }
 
     public function testConstructorParameterCombinations(): void

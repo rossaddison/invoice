@@ -450,8 +450,8 @@ final class ProductController extends BaseController
         if (isset($query_params['product_price']) && !empty($query_params['product_price'])) {
             $products = $pR->filter_product_price((string) $query_params['product_price']);
         }
-        if ((isset($query_params['product_sku']) && !empty($query_params['product_sku'])) &&
-           (isset($query_params['product_price']) && !empty($query_params['product_price']))) {
+        if ((isset($query_params['product_sku']) && !empty($query_params['product_sku']))
+           && (isset($query_params['product_price']) && !empty($query_params['product_price']))) {
             $products = $pR->filter_product_sku_price((string) $query_params['product_price'], (string) $query_params['product_sku']);
         }
 
@@ -548,8 +548,8 @@ final class ProductController extends BaseController
             'product_id' => $product->getProduct_id(),
             'date_added' => new \DateTimeImmutable(),
             'description' => $product->getProduct_description(),
-            // A default quantity of 1 is used to initialize the item
-            'quantity' => (float) 1,
+            // A default quantity of 1 is used to initialize the item if there is no existing product_price_base_quantity
+            'quantity' => $product->getProduct_price_base_quantity() > 0 ? $product->getProduct_price_base_quantity() : (float) 1,
             'price' => $product->getProduct_price(),
             // The user will determine how much discount to give on this item later
             'discount_amount' => (float) 0,
@@ -559,7 +559,7 @@ final class ProductController extends BaseController
             'product_unit_id' => $product->getUnit_id(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->quoteitemService->addQuoteItem($quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
+            $this->quoteitemService->addQuoteItemProduct($quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS, $unR, $trR, $this->translator);
         }
     }
 
@@ -585,8 +585,8 @@ final class ProductController extends BaseController
             'product_id' => $product->getProduct_id(),
             'task_id' => null,
             'description' => $product->getProduct_description(),
-            // A default quantity of 1 is used to initialize the item
-            'quantity' => (float) 1,
+            // A default quantity of 1 is used to initialize the item if there is no existing product_price_base_quantity
+            'quantity' => $product->getProduct_price_base_quantity() > 0 ? $product->getProduct_price_base_quantity() : (float) 1,
             'price' => $product->getProduct_price(),
             // Vat: Early Settlement Cash Discount subtracted before VAT is calculated
             'discount_amount' => (float) 0,
@@ -694,7 +694,7 @@ final class ProductController extends BaseController
      * @param pR $pR
      * @return Product|null
      */
-    private function product(string $id, pR $pR): Product|null
+    private function product(string $id, pR $pR): ?Product
     {
         if ($id) {
             return $pR->repoProductquery($id);

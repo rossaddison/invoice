@@ -24,17 +24,17 @@ final class PaymentCustomForm extends FormModel
         $this->value = $paymentCustom->getValue();
     }
 
-    public function getPayment_id(): int|null
+    public function getPayment_id(): ?int
     {
         return $this->payment_id;
     }
 
-    public function getCustom_field_id(): int|null
+    public function getCustom_field_id(): ?int
     {
         return $this->custom_field_id;
     }
 
-    public function getValue(): string|null
+    public function getValue(): ?string
     {
         return $this->value;
     }

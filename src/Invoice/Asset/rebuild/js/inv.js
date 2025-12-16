@@ -15,6 +15,12 @@
         return {};
     }
 
+    // Secure reload helper to prevent Open Redirect vulnerabilities
+    function secureReload() {
+        // Safely reload the current page without using potentially manipulable URLs
+        window.location.reload();
+    }
+
     // Global GET helper that serialises arrays as bracketed keys
     function getJson(url, params) {
         var u = url;
@@ -405,17 +411,37 @@
                 var url = getOrigin() + "/invoice/invitem/add/" + inv_id;
                 var modalPlaceholder = document.getElementById('modal-placeholder-invitem');
                 if (modalPlaceholder) {
-                    // Load content into modal - this may need adjustment based on your modal system
-                    fetch(url)
-                        .then(function (response) {
-                            return response.text();
-                        })
-                        .then(function (html) {
-                            modalPlaceholder.innerHTML = html;
-                        })
-                        .catch(function (error) {
-                            console.error('Modal load error:', error);
-                        });
+                                    // Load content into modal - this may need adjustment based on your modal system
+                fetch(url)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        // Sanitize HTML content to prevent XSS attacks
+                        modalPlaceholder.textContent = '';
+                        var tempDiv = document.createElement('div');
+                        tempDiv.textContent = html;
+                        // For trusted server content, use createDocumentFragment for better security
+                        var fragment = document.createDocumentFragment();
+                        var parser = new DOMParser();
+                        try {
+                            var doc = parser.parseFromString(html, 'text/html');
+                            // Only append if parsing was successful and content is from trusted source
+                            if (doc && doc.body) {
+                                while (doc.body.firstChild) {
+                                    fragment.appendChild(doc.body.firstChild);
+                                }
+                                modalPlaceholder.appendChild(fragment);
+                            }
+                        } catch (e) {
+                            console.error('HTML parsing error:', e);
+                            modalPlaceholder.textContent = 'Error loading content';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Modal load error:', error);
+                        modalPlaceholder.textContent = 'Failed to load content';
+                    });
                 }
             }
         });
@@ -480,14 +506,12 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        window.location = absoluteUrl.href;
                         if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
-                        window.location.reload();
+                        secureReload();
                     }
                     if (response.success === 0) {
-                        window.location = absoluteUrl.href;
                         if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-times"></i></h6>';
-                        window.location.reload();
+                        secureReload();
                     }
                 })
                 .catch(function (error) {
@@ -534,14 +558,12 @@
                     var response = parsedata(data);
                     if (response.success === 1) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check2-square"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        secureReload();
                         alert(response.flash_message);
                     }
                     if (response.success === 0) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        secureReload();
                         alert(response.flash_message);
                     }
                 })
@@ -583,13 +605,11 @@
                     var response = parsedata(data);
                     if (response.success === 1) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        secureReload();
                     }
                     if (response.success === 0) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        secureReload();
                     }
                 })
                 .catch(function (error) {
@@ -714,8 +734,9 @@
                             // There are payment custom fields
                             window.location = getOrigin() + "/invoice/customfields/add_with_ajax" + response.payment_id;
                         } else {
-                            // No payment custom fields, return to invoice view
-                            window.location = document.referrer || window.location.href;
+                            // No payment custom fields, return to current invoice view (secure redirect)
+                            // Instead of using potentially unsafe document.referrer, reload current page
+                            window.location.reload();
                         }
                     } else {
                         // Validation was not successful

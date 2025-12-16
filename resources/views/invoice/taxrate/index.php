@@ -33,7 +33,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -48,34 +48,34 @@ $columns = [
     new DataColumn(
         'tax_rate_id',
         header: $translator->translate('id'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateId()),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRateId()),
     ),
     new DataColumn(
         'tax_rate_name',
         header: $translator->translate('tax.rate.name'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateName()),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRateName()),
     ),
     new DataColumn(
         'tax_rate_percent',
         header: $translator->translate('tax.rate.percent'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRatePercent()),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRatePercent()),
     ),
     new DataColumn(
         'peppol_tax_rate_code',
         header: $translator->translate('peppol.tax.rate.code'),
-        content: static fn(TaxRate $model) => Html::encode($model->getPeppolTaxRateCode()),
+        content: static fn (TaxRate $model) => Html::encode($model->getPeppolTaxRateCode()),
     ),
     new DataColumn(
         'storecove_tax_type',
         header: $translator->translate('storecove.tax.rate.code'),
-        content: static fn(TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))),
+        content: static fn (TaxRate $model) => Html::encode(ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))),
     ),
     new DataColumn(
         'tax_rate_default',
         header: $translator->translate('default'),
-        content: static fn(TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1' ?
-                                                          ($translator->translate('active') . ' ' . '✔️') :
-                                                           $translator->translate('inactive') . ' ' . '❌'),
+        content: static fn (TaxRate $model) => Html::encode($model->getTaxRateDefault() == '1'
+                                                          ? ($translator->translate('active') . ' ' . '✔️')
+                                                           : $translator->translate('inactive') . ' ' . '❌'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -124,14 +124,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('taxrate/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('taxrate/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

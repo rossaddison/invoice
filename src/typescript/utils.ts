@@ -147,3 +147,80 @@ export function getInputValue(id: string): string {
     const element = getElementById<HTMLInputElement>(id);
     return element?.value || '';
 }
+
+/**
+ * ES2024: Advanced Promise.withResolvers for batch data processing
+ * Processes multiple async operations with timeout, retry, and progress tracking
+ */
+export async function processBatchWithProgress<T, R>(
+    items: T[],
+    processor: (item: T, index: number) => Promise<R>,
+    options: {
+        batchSize?: number;
+        timeoutMs?: number;
+        maxRetries?: number;
+        onProgress?: (completed: number, total: number) => void;
+    } = {}
+): Promise<R[]> {
+    const { batchSize = 5, timeoutMs = 30000, maxRetries = 3, onProgress } = options;
+    const { promise, resolve, reject } = Promise.withResolvers<R[]>();
+    
+    const results: R[] = [];
+    let completed = 0;
+    
+    // Process items in batches to avoid overwhelming the system
+    const processBatch = async (batch: T[], startIndex: number): Promise<R[]> => {
+        const batchPromises = batch.map(async (item, batchIndex) => {
+            const globalIndex = startIndex + batchIndex;
+            let lastError: Error | null = null;
+            
+            // Retry logic with exponential backoff
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    const timeoutPromise = new Promise<never>((_, timeoutReject) => {
+                        setTimeout(() => timeoutReject(
+                            new Error(`Processing timeout for item ${globalIndex}`)
+                        ), timeoutMs);
+                    });
+                    
+                    const result = await Promise.race([
+                        processor(item, globalIndex),
+                        timeoutPromise
+                    ]);
+                    
+                    completed++;
+                    onProgress?.(completed, items.length);
+                    return result;
+                } catch (error) {
+                    lastError = error as Error;
+                    if (attempt < maxRetries) {
+                        // Exponential backoff: 100ms, 200ms, 400ms
+                        await new Promise(r => setTimeout(r, 100 * Math.pow(2, attempt)));
+                    }
+                }
+            }
+            
+            throw new Error(
+                `Failed to process item ${globalIndex} after ${maxRetries + 1} attempts`,
+                { cause: lastError }
+            );
+        });
+        
+        return Promise.all(batchPromises);
+    };
+    
+    try {
+        // Process all batches sequentially to control load
+        for (let i = 0; i < items.length; i += batchSize) {
+            const batch = items.slice(i, i + batchSize);
+            const batchResults = await processBatch(batch, i);
+            results.push(...batchResults);
+        }
+        
+        resolve(results);
+    } catch (error) {
+        reject(error);
+    }
+    
+    return promise;
+}

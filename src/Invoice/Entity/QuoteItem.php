@@ -22,9 +22,13 @@ class QuoteItem
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
-    // Mandatory: The item MUST have a product however psalm testing requires it to be in the constructor => nullable
-    #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
+    // Task relation - nullable because quote items can be either products or tasks
+    #[BelongsTo(target: Product::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Product $product = null;
+
+    // Task relation - nullable because quote items can be either products or tasks
+    #[BelongsTo(target: Task::class, nullable: true, fkAction: 'NO ACTION')]
+    private ?Task $task = null;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -34,11 +38,11 @@ class QuoteItem
         #[Column(type: 'text', nullable: true)]
         private ?string $description = '',
         #[Column(type: 'decimal(20,2)', nullable: false, default: 1.00)]
-        private ?float $quantity = 1.00,
+        private ?float $quantity = null,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $price = 0.00,
+        private ?float $price = null,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $discount_amount = 0.00,
+        private ?float $discount_amount = null,
         #[Column(type: 'integer(2)', nullable: false, default: 0)]
         private ?int $order = null,
         #[Column(type: 'string(50)', nullable: true)]
@@ -51,6 +55,8 @@ class QuoteItem
         private ?int $product_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $product_unit_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $task_id = null,
     ) {
         $this->date_added = new DateTimeImmutable();
     }
@@ -67,7 +73,7 @@ class QuoteItem
         $this->tax_rate = $taxrate;
     }
 
-    public function getProduct(): Product|null
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -78,7 +84,7 @@ class QuoteItem
         $this->product = $product;
     }
 
-    public function getQuote(): Quote|null
+    public function getQuote(): ?Quote
     {
         return $this->quote;
     }
@@ -87,6 +93,17 @@ class QuoteItem
     public function setQuote(?Quote $quote): void
     {
         $this->quote = $quote;
+    }
+
+    public function getTask(): ?Task
+    {
+        return $this->task;
+    }
+
+    //set relation $task
+    public function setTask(?Task $task): void
+    {
+        $this->task = $task;
     }
 
     public function getId(): string
@@ -190,7 +207,7 @@ class QuoteItem
         $this->discount_amount = $discount_amount;
     }
 
-    public function getOrder(): int|null
+    public function getOrder(): ?int
     {
         return $this->order;
     }
@@ -218,5 +235,15 @@ class QuoteItem
     public function setProduct_unit_id(int $product_unit_id): void
     {
         $this->product_unit_id = $product_unit_id;
+    }
+
+    public function getTask_id(): string
+    {
+        return (string) $this->task_id;
+    }
+
+    public function setTask_id(int $task_id): void
+    {
+        $this->task_id = $task_id;
     }
 }

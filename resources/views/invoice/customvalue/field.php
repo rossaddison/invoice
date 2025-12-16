@@ -124,9 +124,9 @@ foreach ($custom_values_types as $type) {
                                         ); ?>
 
                                         <?= Html::openTag('ul', [
-                                                        'class' => 'dropdown-menu',
-                                                        'aria-labelledby' => 'dropdownMenuButton' . $custom_value->getId(),
-                                                    ]); ?>
+                                                                            'class' => 'dropdown-menu',
+                                                                            'aria-labelledby' => 'dropdownMenuButton' . $custom_value->getId(),
+                                                                        ]); ?>
 
                                             <?= Html::openTag('li'); ?>
                                                 <?= Html::tag(

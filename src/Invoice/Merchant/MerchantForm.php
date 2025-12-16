@@ -36,17 +36,17 @@ final class MerchantForm extends FormModel
         $this->inv = $merchant->getInv();
     }
 
-    public function getInv(): Inv|null
+    public function getInv(): ?Inv
     {
         return $this->inv;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getSuccessful(): bool|null
+    public function getSuccessful(): ?bool
     {
         return $this->successful;
     }
@@ -59,17 +59,17 @@ final class MerchantForm extends FormModel
         return $this->date;
     }
 
-    public function getDriver(): string|null
+    public function getDriver(): ?string
     {
         return $this->driver;
     }
 
-    public function getResponse(): string|null
+    public function getResponse(): ?string
     {
         return $this->response;
     }
 
-    public function getReference(): string|null
+    public function getReference(): ?string
     {
         return $this->reference;
     }

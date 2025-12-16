@@ -13,7 +13,8 @@ final readonly class Bootstrap5ModalPdf
         private Translator $translator,
         private ViewRenderer $viewRenderer,
         private string $type,
-    ) {}
+    ) {
+    }
 
     public function renderPartialLayoutWithPdfAsString(): string
     {

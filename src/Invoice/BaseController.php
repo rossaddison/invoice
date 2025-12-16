@@ -10,6 +10,7 @@ use App\Invoice\Setting\SettingRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\CustomFieldProcessor;
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -236,5 +237,38 @@ abstract class BaseController
         }
 
         return $processedCustom;
+    }
+    
+    /**
+     * @param string $_language
+     * @param DeliveryLocationRepository $dlr
+     * @param string $delivery_location_id
+     * @return string
+     */
+    protected function view_partial_delivery_location(
+            string $_language, 
+            DeliveryLocationRepository $dlr, 
+            string $delivery_location_id): string
+    {
+        if (!empty($delivery_location_id)) {
+            $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
+            if (null !== $del) {
+                return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
+                    'actionName' => 'del/view',
+                    'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
+                    'title' => $this->translator->translate('delivery.location'),
+                    'building_number' => $del->getBuildingNumber(),
+                    'address_1' => $del->getAddress_1(),
+                    'address_2' => $del->getAddress_2(),
+                    'city' => $del->getCity(),
+                    'state' => $del->getZip(),
+                    'country' => $del->getCountry(),
+                    'global_location_number' => $del->getGlobal_location_number(),
+                ]);
+            } //null!==$del
+        } else {
+            return '';
+        }
+        return '';
     }
 }

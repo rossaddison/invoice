@@ -93,7 +93,7 @@ final class PostalAddressRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return PostalAddress|null
      */
-    public function repoPostalAddressLoadedquery(string $id): PostalAddress|null
+    public function repoPostalAddressLoadedquery(string $id): ?PostalAddress
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -116,7 +116,7 @@ final class PostalAddressRepository extends Select\Repository
      * @param string $client_id
      * @return PostalAddress|null
      */
-    public function repoClient(string $client_id): PostalAddress|null
+    public function repoClient(string $client_id): ?PostalAddress
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);

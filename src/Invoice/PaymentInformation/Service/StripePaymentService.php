@@ -14,10 +14,7 @@ class StripePaymentService
 {
     public function __construct(
         private readonly SettingRepository $settings,
-        private readonly Crypt $crypt,
-        private string $salt,
     ) {
-        $this->salt = (new Crypt())->salt();
         $this->setApiKey();
     }
 
@@ -25,9 +22,9 @@ class StripePaymentService
     {
         $secretKeySetting = $this->settings->getSetting('gateway_stripe_secretKey');
 
-        $sk_test = (string) $this->crypt->decode($secretKeySetting);
-        if (!empty($sk_test)) {
-            Stripe::setApiKey($sk_test);
+        $skTest = (string) $this->settings->decode($secretKeySetting);
+        if (!empty($skTest)) {
+            Stripe::setApiKey($skTest);
         }
     }
 
@@ -35,12 +32,12 @@ class StripePaymentService
     {
         $publishableKey = $this->settings->getSetting('gateway_stripe_publishableKey');
 
-        return (string) $this->crypt->decode($publishableKey ?: '');
+        return (string) $this->settings->decode($publishableKey ?: '');
     }
 
     public function createPaymentIntent(array $invoiceData): ?string
     {
-        $payment_intent = PaymentIntent::create([
+        $paymentIntent = PaymentIntent::create([
             // convert the float amount to cents
             'amount' => (int) round(((float) $invoiceData['balance'] ?: 0.00) * 100),
             'currency' => (string) $invoiceData['currency'],
@@ -60,7 +57,7 @@ class StripePaymentService
                 'invoice_url_key' => (string) $invoiceData['url_key'],
             ],
         ]);
-        return $payment_intent->client_secret;
+        return $paymentIntent->client_secret;
     }
 
     /**
@@ -68,6 +65,9 @@ class StripePaymentService
      */
     public function handleCompletion(Inv $invoice, string $redirectStatus): array
     {
+        $total = $invoice->getInvAmount()->getTotal();
+        $paid = $invoice->getInvAmount()->getPaid();
+        $balance = $invoice->getInvAmount()->getBalance();
         $result = [
             'status_id' => null,
             'payment_method' => null,
@@ -75,21 +75,21 @@ class StripePaymentService
             'message' => '',
         ];
 
-        if ($redirectStatus === 'succeeded') {
+        if ($redirectStatus === 'succeeded' && null!==$paid && null!==$balance && null!==$total) {
             $result['status_id'] = 4; // paid
             $result['payment_method'] = 4;
             $result['success'] = true;
-            $result['message'] = 'Payment successful';
+            $result['message'] = 'Payment successful. Total/Paid/Balance: ' . $total . '/' . $paid . '/' . $balance;
         } elseif ($redirectStatus === 'requires_payment_method') {
             $result['status_id'] = 3; // viewed
             $result['payment_method'] = 5;
             $result['success'] = false;
-            $result['message'] = 'Requires a payment method';
+            $result['message'] = 'Requires a payment method. ';
         } else {
             $result['status_id'] = 3;
             $result['payment_method'] = 5;
             $result['success'] = false;
-            $result['message'] = 'Payment failed';
+            $result['message'] = 'Payment failed. ';
         }
 
         return $result;

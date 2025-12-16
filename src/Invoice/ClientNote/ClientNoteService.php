@@ -9,7 +9,9 @@ use DateTime;
 
 final readonly class ClientNoteService
 {
-    public function __construct(private ClientNoteRepository $repository) {}
+    public function __construct(private ClientNoteRepository $repository)
+    {
+    }
 
     public function addClientNote(ClientNote $model, array $array): void
     {

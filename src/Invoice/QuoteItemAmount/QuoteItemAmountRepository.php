@@ -84,7 +84,7 @@ final class QuoteItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemAmountquery(int $quote_item_id): QuoteItemAmount|null
+    public function repoQuoteItemAmountquery(string $quote_item_id): ?QuoteItemAmount
     {
         $query = $this->select()
                       ->load(['quote_item'])

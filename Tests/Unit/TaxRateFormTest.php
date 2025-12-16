@@ -21,7 +21,7 @@ class TaxRateFormTest extends Unit
         $this->taxRate = new TaxRate(
             tax_rate_code: 'VT',
             peppol_tax_rate_code: 'S',
-            storecove_tax_type: 'standard', 
+            storecove_tax_type: 'standard',
             tax_rate_name: 'VAT Standard',
             tax_rate_percent: 20.00,
             tax_rate_default: true

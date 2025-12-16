@@ -91,7 +91,7 @@ final class PaymentMethodRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentMethodquery(string $id): PaymentMethod|null
+    public function repoPaymentMethodquery(string $id): ?PaymentMethod
     {
         $query = $this->select()
                       ->where(['id' => $id]);

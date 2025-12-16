@@ -56,11 +56,11 @@ final class InvSentLogController extends BaseController
         #[RouteArgument('page')]
         string $page = '1',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        string $queryFilterClient = null,
+        ?string $queryFilterClient = null,
     ): Response {
         $user = $this->userService->getUser();
         if ($user instanceof User && null !== $user->getId()) {
@@ -116,11 +116,11 @@ final class InvSentLogController extends BaseController
         #[RouteArgument('page')]
         string $page = '1',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        string $queryFilterClientId = null,
+        ?string $queryFilterClientId = null,
     ): Response {
         $invsentlogs = $islR->findAllPreloaded();
         $finalPage = $queryPage ?? $page;
@@ -156,7 +156,7 @@ final class InvSentLogController extends BaseController
      * @param int $id
      * @return InvSentLog|null
      */
-    private function invsentlog(ISLR $islR, int $id): InvSentLog|null
+    private function invsentlog(ISLR $islR, int $id): ?InvSentLog
     {
         if ($id) {
             /**

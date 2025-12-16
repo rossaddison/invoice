@@ -24,17 +24,17 @@ final class QuoteTaxRateForm extends FormModel
         $this->quote_tax_rate_amount = $quoteTaxRate->getQuote_tax_rate_amount();
     }
 
-    public function getQuote_id(): int|null
+    public function getQuote_id(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getTax_rate_id(): int|null
+    public function getTax_rate_id(): ?int
     {
         return $this->tax_rate_id;
     }
 
-    public function getInclude_item_tax(): int|null
+    public function getInclude_item_tax(): ?int
     {
         return $this->include_item_tax;
     }

@@ -127,7 +127,7 @@ $statusBar =  Div::tag()
     ->encode(false)
     ->render();
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $columns = [
     new DataColumn(
@@ -156,7 +156,7 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']);
         },
-        encodeContent: true,
+        encodeContent: false,
     ),
     new DataColumn(
         'date_created',
@@ -198,8 +198,8 @@ $columns = [
     ),
 ];
 
-$grid_summary =
-    $s->grid_summary(
+$grid_summary
+    = $s->grid_summary(
         $paginator,
         $translator,
         (int) $s->getSetting('default_list_limit'),
@@ -207,11 +207,11 @@ $grid_summary =
         (string) $so_statuses[$status]['label'],
     );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open() .
-    $statusBar .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open()
+    . $statusBar
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

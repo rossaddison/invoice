@@ -94,7 +94,7 @@ final class InvTaxRateRepository extends Select\Repository
     /**
      * @param string|null $inv_id
      */
-    public function repoCount(string|null $inv_id): int
+    public function repoCount(?string $inv_id): int
     {
         return $this->select()
                       ->where(['inv_id' => $inv_id])

@@ -8,7 +8,9 @@ use App\Invoice\Entity\InvCustom;
 
 final readonly class InvCustomService
 {
-    public function __construct(private InvCustomRepository $repository) {}
+    public function __construct(private InvCustomRepository $repository)
+    {
+    }
 
     /**
      * @param InvCustom $model

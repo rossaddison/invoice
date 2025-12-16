@@ -19,7 +19,7 @@ final class ClientForm extends FormModel
     #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $client_name = '';
-    #[Length(min: 0, max: 3, skipOnEmpty: true)]
+    #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $client_group = '';
     #[Length(min: 0, max: 15, skipOnEmpty: true)]
     private ?string $client_frequency = '';
@@ -113,137 +113,137 @@ final class ClientForm extends FormModel
         return [];
     }
 
-    public function getClient_active(): bool|null
+    public function getClient_active(): ?bool
     {
         return $this->client_active;
     }
 
-    public function getClient_age(): int|null
+    public function getClient_age(): ?int
     {
         return $this->client_age;
     }
 
-    public function getClient_title(): string|null
+    public function getClient_title(): ?string
     {
         return $this->client_title;
     }
 
-    public function getClient_name(): string|null
+    public function getClient_name(): ?string
     {
         return $this->client_name;
     }
 
-    public function getClient_frequency(): string|null
+    public function getClient_frequency(): ?string
     {
         return $this->client_frequency;
     }
 
-    public function getClient_group(): string|null
+    public function getClient_group(): ?string
     {
         return $this->client_group;
     }
 
-    public function getClient_number(): string|null
+    public function getClient_number(): ?string
     {
         return $this->client_number;
     }
 
-    public function getClient_address_1(): string|null
+    public function getClient_address_1(): ?string
     {
         return $this->client_address_1;
     }
 
-    public function getClient_address_2(): string|null
+    public function getClient_address_2(): ?string
     {
         return $this->client_address_2;
     }
 
-    public function getClient_building_number(): string|null
+    public function getClient_building_number(): ?string
     {
         return $this->client_building_number;
     }
 
-    public function getClient_city(): string|null
+    public function getClient_city(): ?string
     {
         return $this->client_city;
     }
 
-    public function getClient_state(): string|null
+    public function getClient_state(): ?string
     {
         return $this->client_state;
     }
 
-    public function getClient_zip(): string|null
+    public function getClient_zip(): ?string
     {
         return $this->client_zip;
     }
 
-    public function getClient_country(): string|null
+    public function getClient_country(): ?string
     {
         return $this->client_country;
     }
 
-    public function getClient_phone(): string|null
+    public function getClient_phone(): ?string
     {
         return $this->client_phone;
     }
 
-    public function getClient_fax(): string|null
+    public function getClient_fax(): ?string
     {
         return $this->client_fax;
     }
 
-    public function getClient_mobile(): string|null
+    public function getClient_mobile(): ?string
     {
         return $this->client_mobile;
     }
 
-    public function getClient_email(): string|null
+    public function getClient_email(): ?string
     {
         return $this->client_email;
     }
 
-    public function getClient_web(): string|null
+    public function getClient_web(): ?string
     {
         return $this->client_web;
     }
 
-    public function getClient_vat_id(): string|null
+    public function getClient_vat_id(): ?string
     {
         return $this->client_vat_id;
     }
 
-    public function getClient_tax_code(): string|null
+    public function getClient_tax_code(): ?string
     {
         return $this->client_tax_code;
     }
 
-    public function getClient_language(): string|null
+    public function getClient_language(): ?string
     {
         return $this->client_language;
     }
 
-    public function getClient_surname(): string|null
+    public function getClient_surname(): ?string
     {
         return $this->client_surname;
     }
 
-    public function getClient_avs(): string|null
+    public function getClient_avs(): ?string
     {
         return $this->client_avs;
     }
 
-    public function getClient_insurednumber(): string|null
+    public function getClient_insurednumber(): ?string
     {
         return $this->client_insurednumber;
     }
 
-    public function getClient_veka(): string|null
+    public function getClient_veka(): ?string
     {
         return $this->client_veka;
     }
 
-    public function getClient_birthdate(): string|null|DateTimeImmutable
+    public function getClient_birthdate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->client_birthdate
@@ -251,12 +251,12 @@ final class ClientForm extends FormModel
         return $this->client_birthdate;
     }
 
-    public function getClient_gender(): int|null
+    public function getClient_gender(): ?int
     {
         return $this->client_gender;
     }
 
-    public function getPostaladdress_id(): int|null
+    public function getPostaladdress_id(): ?int
     {
         return $this->postaladdress_id;
     }

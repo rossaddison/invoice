@@ -26,7 +26,6 @@ use App\Invoice\Helpers\NumberHelper;
  * @var Yiisoft\View\WebView $this
  * @var array $soItems
  * @var array $soStatuses
- * @var array $body
  * @var array $customFields
  * @var array $customValues
  * @var array $salesOrderCustomValues
@@ -36,6 +35,7 @@ use App\Invoice\Helpers\NumberHelper;
  * @var string $modal_salesorder_to_pdf
  * @var string $modal_so_to_invoice
  * @var string $partial_item_table
+ * @var string $partial_quote_delivery_location
  * @var string $view_custom_fields
  * @var string $title
  * @var bool $invEdit
@@ -52,12 +52,12 @@ $vat = $s->getSetting('enable_vat_registration');
 </div>
     <?php
         $clienthelper = new ClientHelper($s);
-$countryhelper = new CountryHelper();
-$datehelper = new DateHelper($s);
-$numberhelper = new NumberHelper($s);
-echo $modal_salesorder_to_pdf;
-echo $modal_so_to_invoice;
-?>
+        $countryhelper = new CountryHelper();
+        $datehelper = new DateHelper($s);
+        $numberhelper = new NumberHelper($s);
+        echo $modal_salesorder_to_pdf;
+        echo $modal_so_to_invoice;
+    ?>
 <div>
 <br>
 <br>
@@ -66,12 +66,12 @@ echo $modal_so_to_invoice;
 <div id="headerbar">
     <h1 class="headerbar-title">
     <?php
-    echo $translator->translate('salesorder');
-$soNumber = $so->getNumber();
-echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
-?>
+        echo $translator->translate('salesorder');
+        $soNumber = $so->getNumber();
+        echo null !== $soNumber ? '#' . $soNumber : $so->getId();
+    ?>
     </h1>
-        <div class="headerbar-item pull-right">
+        <div class="headerbar-item pull-right btn-group">
         <div class="options btn-group">
             <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
                 <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
@@ -127,20 +127,23 @@ echo(null !== $soNumber ? '#' . $soNumber : $so->getId());
                     <div id="pre_save_client_id" value="<?php echo $so->getClient()?->getClient_id(); ?>" hidden></div>
                     <div class="client-address">
                         <span class="client-address-street-line-1">
-                            <?php echo(null !== ($so->getClient()?->getClient_address_1()) ? Html::encode($so->getClient()?->getClient_address_1()) . '<br>' : ''); ?>
+                            <?php echo null !== ($so->getClient()?->getClient_address_1()) ? Html::encode($so->getClient()?->getClient_address_1()) . '<br>' : ''; ?>
                         </span>
                         <span class="client-address-street-line-2">
-                            <?php echo(null !== $so->getClient()?->getClient_address_2() ? Html::encode($so->getClient()?->getClient_address_2()) . '<br>' : ''); ?>
+                            <?php echo null !== $so->getClient()?->getClient_address_2() ? Html::encode($so->getClient()?->getClient_address_2()) . '<br>' : ''; ?>
                         </span>
                         <span class="client-address-town-line">
-                            <?php echo(null !== $so->getClient()?->getClient_city() ? Html::encode($so->getClient()?->getClient_city()) . '<br>' : ''); ?>
-                            <?php echo(null !== $so->getClient()?->getClient_state() ? Html::encode($so->getClient()?->getClient_state()) . '<br>' : ''); ?>
-                            <?php echo(null !== $so->getClient()?->getClient_zip() ? Html::encode($so->getClient()?->getClient_zip()) : ''); ?>
+                            <?php echo null !== $so->getClient()?->getClient_city() ? Html::encode($so->getClient()?->getClient_city()) . '<br>' : ''; ?>
+                            <?php echo null !== $so->getClient()?->getClient_state() ? Html::encode($so->getClient()?->getClient_state()) . '<br>' : ''; ?>
+                            <?php echo null !== $so->getClient()?->getClient_zip() ? Html::encode($so->getClient()?->getClient_zip()) : ''; ?>
                         </span>
                         <span class="client-address-country-line">
                             <?php
                             $soCountry = $so->getClient()?->getClient_country();
-echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator->translate('cldr'), $soCountry) : ''); ?>
+                            echo null !== $soCountry ?
+                            '<br>' . $countryhelper->get_country_name($translator->translate('cldr'),
+                                     $soCountry) :
+                            ''; ?>
                         </span>
                     </div>
                     <hr>
@@ -181,7 +184,7 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                         <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
                                         <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                                         <?php endif; ?>>
-                                </div>
+                                </div>                                
                                 <div has-feedback">
                                     <label for="salesorder_date_created">
                                         <?= $vat == '0' ? $translator->translate('date.issued') : $translator->translate('salesorder.date.created'); ?>
@@ -189,11 +192,11 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                     <div class="input-group">
                                         <input name="salesorder_date_created" id="salesorder_date_created" disabled
                                                class="form-control"
-                                               value="<?= Html::encode($so->getDate_created() instanceof \DateTimeImmutable ?
-                                       $so->getDate_created()->format('Y-m-d') : (is_string(
+                                               value="<?= Html::encode($so->getDate_created() instanceof \DateTimeImmutable
+                                       ? $so->getDate_created()->format('Y-m-d') : (is_string(
                                            $so->getDate_created(),
-                                       ) ?
-                                       $so->getDate_created() : '')); ?>"/>
+                                       )
+                                       ? $so->getDate_created() : '')); ?>"/>
                                         <span class="input-group-text">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
@@ -235,8 +238,8 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                              * @var string $status['label']
                                              */
                                             foreach ($soStatuses as $key => $status) { ?>
-                                            <option value="<?php echo $key; ?>" <?php if ($key === $body['status_id']) {
-                                                $s->check_select(Html::encode($body['status_id'] ?? ''), $key);
+                                            <option value="<?php echo $key; ?>" <?php if ($key == $so->getStatus_id()) {
+                                                $s->check_select(Html::encode($so->getStatus_id() ?? ''), $key);
                                             } ?>>
                                                 <?= Html::encode($status['label']); ?> 
                                             </option>
@@ -247,19 +250,19 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                                     <label for="salesorder_password" hidden>
                                         <?= $translator->translate('salesorder.password'); ?>
                                     </label>
-                                    <input type="text" id="salesorder_password" class="form-control" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
+                                    <input type="text" id="salesorder_password" class="form-control" disabled value="<?= Html::encode($so->getPassword() ?? ''); ?>" hidden>
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_number">
                                         <?= $translator->translate('salesorder.clients.purchase.order.number'); ?>
                                     </label>
-                                    <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($body['client_po_number'] ?? ''); ?>">
+                                    <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($so->getClient_po_number() ?? ''); ?>">
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_person">
                                         <?= $translator->translate('salesorder.clients.purchase.order.person'); ?>
                                     </label>
-                                    <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($body['client_po_person'] ?? ''); ?>">
+                                    <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($so->getClient_po_person() ?? ''); ?>">
                                 </div>
                                
                                     <?php
@@ -283,7 +286,7 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
    <div id="partial_item_table_parameters" quote_items="<?php $soItems; ?>" disabled>
     <?=
        $partial_item_table;
-?>     
+    ?>     
    </div>
     
    <div class = 'row'>
@@ -299,8 +302,10 @@ echo(null !== $soCountry ? '<br>' . $countryhelper->get_country_name($translator
                 </div>
                 <br>
                 <div class="col-xs-12 visible-xs visible-sm"><br></div>
-
             </div>
+            <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
+                <?= $partial_quote_delivery_location; ?>                
+            </div> 
             <div id="view_custom_fields" class="col-xs-12 col-md-6">
                  <?php echo $view_custom_fields; ?>
             </div>

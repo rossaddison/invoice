@@ -85,7 +85,7 @@ final class ChangePasswordController
      * @param string $message
      * @return Flash|null
      */
-    private function flashMessage(string $level, string $message): Flash|null
+    private function flashMessage(string $level, string $message): ?Flash
     {
         /**
          * Related logic: see Prevent empty messages from being added to the queue

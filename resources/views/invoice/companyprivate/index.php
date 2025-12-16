@@ -26,7 +26,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $id
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -40,11 +40,11 @@ $columns = [
     new DataColumn(
         'company_public_name',
         header: $translator->translate('company.public'),
-        content: static fn(CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getCompany()?->getName()),
     ),
     new DataColumn(
         'logo_filename',
-        content: static fn(CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -80,15 +80,15 @@ $columns = [
     ]),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('companyprivate/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('companyprivate/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('companyprivate/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

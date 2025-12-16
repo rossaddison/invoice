@@ -25,7 +25,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -39,27 +39,27 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Company $model) => Html::encode($model->getId()),
+        content: static fn (Company $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'current',
         header: $translator->translate('active'),
-        content: static fn(Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active') . ' ' . '✔️') : $translator->translate('inactive') . ' ' . '❌'),
+        content: static fn (Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active') . ' ' . '✔️') : $translator->translate('inactive') . ' ' . '❌'),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(Company $model) => Html::encode($model->getName()),
+        content: static fn (Company $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'email',
         header: $translator->translate('email.address'),
-        content: static fn(Company $model) => Html::encode($model->getEmail()),
+        content: static fn (Company $model) => Html::encode($model->getEmail()),
     ),
     new DataColumn(
         'phone',
         header: $translator->translate('phone'),
-        content: static fn(Company $model) => Html::encode($model->getPhone()),
+        content: static fn (Company $model) => Html::encode($model->getPhone()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -95,15 +95,15 @@ $columns = [
     ]),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('company/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('company/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

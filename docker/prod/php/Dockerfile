@@ -4,7 +4,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-FROM php:8.5.0RC3-fpm-alpine as stage
+FROM php:8.5.0RC4-fpm-alpine as stage
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -34,7 +34,7 @@ RUN set -eux  \
     && apk add oniguruma-dev \
     && docker-php-ext-install mbstring \
     \
-    && apk add --repository http://dl-3.alpinelinux.org/alpine/edge/community  \
+    && apk add --repository https://dl-3.alpinelinux.org/alpine/edge/community  \
        rabbitmq-c-dev \
     && pecl install amqp-1.11.0 \
     && docker-php-ext-enable amqp \

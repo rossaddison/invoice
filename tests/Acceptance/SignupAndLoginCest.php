@@ -11,15 +11,16 @@ final class SignupAndLoginCest
     public function __construct(
         private readonly string $emptyLogin = '',
         private readonly string $emptyPassword = '',
-        // If failing try the actual login name here    
+        // If failing try the actual login name here
         private readonly string $liveAdminUserLogin = 'admin',
-        // If failing try the actual login password here    
+        // If failing try the actual login password here
         private readonly string $liveAdminUserPassword = 'admin',
         private readonly string $firstUserLogin = 'firstUserLogin',
         private readonly string $firstUserWrongLogin = 'firstUserWrongLogin',
         private readonly string $firstUserPassword = 'firstUserPassword',
         private readonly string $firstUserWrongPassword = 'firstUserWrongPassword',
-    ) {}
+    ) {
+    }
 
     public function testSignupPage(AcceptanceTester $I): void
     {
@@ -142,7 +143,7 @@ final class SignupAndLoginCest
 
         $I->expectTo('see log in page.');
         $I->see('Login');
-    }    
+    }
 
     public function testLoginEmptyDataTest(AcceptanceTester $I): void
     {

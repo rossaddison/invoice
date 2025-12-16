@@ -10,7 +10,7 @@ use InvalidArgumentException;
 
 class TaxCategory implements XmlSerializable
 {
-    private null|string $id = '';
+    private ?string $id = '';
     private array $idAttributes = [
         'schemeID' => self::UNCL5305,
         'schemeName' => 'Duty or tax or fee category',
@@ -36,7 +36,7 @@ class TaxCategory implements XmlSerializable
     /**
      * @return string
      */
-    public function getId(): null|string
+    public function getId(): ?string
     {
         if (null !== $this->id) {
             return $this->id;

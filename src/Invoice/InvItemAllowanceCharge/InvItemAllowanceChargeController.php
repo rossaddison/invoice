@@ -337,7 +337,7 @@ final class InvItemAllowanceChargeController extends BaseController
      * @param InvItemAllowanceChargeRepository $aciiRepository
      * @return InvItemAllowanceCharge|null
      */
-    private function acii(CurrentRoute $currentRoute, InvItemAllowanceChargeRepository $aciiRepository): InvItemAllowanceCharge|null
+    private function acii(CurrentRoute $currentRoute, InvItemAllowanceChargeRepository $aciiRepository): ?InvItemAllowanceCharge
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

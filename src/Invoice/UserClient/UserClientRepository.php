@@ -90,7 +90,7 @@ final class UserClientRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUserClientquery(string $id): UserClient|null
+    public function repoUserClientquery(string $id): ?UserClient
     {
         $query = $this->select()
                       ->load('user')
@@ -103,7 +103,7 @@ final class UserClientRepository extends Select\Repository
      * @param string $client_id
      * @return UserClient|null
      */
-    public function repoUserquery(string $client_id): UserClient|null
+    public function repoUserquery(string $client_id): ?UserClient
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);

@@ -44,7 +44,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
-                'title' => $s->isDebugMode(14),
+                'title' => $s->isDebugMode(15),
             ])
             ->content(' ' . $translator->translate('product'));
 ?>
@@ -167,7 +167,7 @@ foreach ($products as $product) {
                                             '  ' . $add,
                                             $url,
                                             ['class' => 'btn btn-primary',
-                                                'style' => 'font-family:Arial'],
+                                              'style' => 'font-family:Arial'],
                                         ),
                                         ['class' => 'btn btn-primary fa fa-item'],
                                     ); ?>

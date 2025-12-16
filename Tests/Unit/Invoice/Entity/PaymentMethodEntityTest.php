@@ -9,6 +9,12 @@ use PHPUnit\Framework\TestCase;
 
 class PaymentMethodEntityTest extends TestCase
 {
+    public string $creditCard = 'Credit Card';
+    
+    public string $bankTransfer = 'Bank Transfer';
+    
+    public string $testMethod = 'Test Method';
+    
     public function testConstructorWithDefaults(): void
     {
         $paymentMethod = new PaymentMethod();
@@ -22,12 +28,12 @@ class PaymentMethodEntityTest extends TestCase
     {
         $paymentMethod = new PaymentMethod(
             id: 1,
-            name: 'Credit Card',
+            name: $this->creditCard,
             active: true
         );
         
         $this->assertSame('1', $paymentMethod->getId());
-        $this->assertSame('Credit Card', $paymentMethod->getName());
+        $this->assertSame($this->creditCard, $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }
 
@@ -55,9 +61,9 @@ class PaymentMethodEntityTest extends TestCase
     public function testNameSetterAndGetter(): void
     {
         $paymentMethod = new PaymentMethod();
-        $paymentMethod->setName('Bank Transfer');
+        $paymentMethod->setName($this->bankTransfer);
         
-        $this->assertSame('Bank Transfer', $paymentMethod->getName());
+        $this->assertSame($this->bankTransfer, $paymentMethod->getName());
     }
 
     public function testActiveSetterAndGetter(): void
@@ -118,9 +124,9 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod = new PaymentMethod();
         
         $commonMethods = [
-            'Credit Card',
+            $this->creditCard,
             'Debit Card',
-            'Bank Transfer',
+            $this->bankTransfer,
             'PayPal',
             'Cash',
             'Check',
@@ -325,7 +331,7 @@ class PaymentMethodEntityTest extends TestCase
     {
         $paymentMethod = new PaymentMethod(
             id: 1,
-            name: 'Test Method',
+            name: $this->testMethod,
             active: true
         );
         
@@ -403,7 +409,7 @@ class PaymentMethodEntityTest extends TestCase
             'Electronic Check',
             
             // Card-based
-            'Credit Card',
+            $this->creditCard,
             'Debit Card',
             'Prepaid Card',
             
@@ -589,9 +595,9 @@ class PaymentMethodEntityTest extends TestCase
         $this->assertFalse($method3->getActive());
         
         // Name and active status
-        $method4 = new PaymentMethod(name: 'Test Method', active: false);
+        $method4 = new PaymentMethod(name: $this->testMethod, active: false);
         $this->assertSame('', $method4->getId());
-        $this->assertSame('Test Method', $method4->getName());
+        $this->assertSame($this->testMethod, $method4->getName());
         $this->assertFalse($method4->getActive());
     }
 }

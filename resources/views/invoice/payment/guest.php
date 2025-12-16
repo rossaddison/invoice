@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -40,12 +40,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Payment $model): string => Html::encode($model->getId()),
+        content: static fn (Payment $model): string => Html::encode($model->getId()),
     ),
     new DataColumn(
         property: 'paymentDateFilter',
         header: $translator->translate('payment.date'),
-        content: static fn(Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
+        content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPayment_date())
                                                                         ? $date->format('Y-m-d') : '',
         filter: true,
     ),
@@ -53,8 +53,8 @@ $columns = [
         property: 'paymentAmountFilter',
         header: $translator->translate('amount'),
         content: static function (Payment $model) use ($s): string {
-            return $s->format_currency($model->getAmount() >= 0.00 ?
-                                       $model->getAmount() : 0.00);
+            return $s->format_currency($model->getAmount() >= 0.00
+                                       ? $model->getAmount() : 0.00);
         },
         encodeContent: false,
         filter: true,
@@ -62,7 +62,7 @@ $columns = [
     new DataColumn(
         'note',
         header: $translator->translate('note'),
-        content: static fn(Payment $model): string => Html::encode($model->getNote()),
+        content: static fn (Payment $model): string => Html::encode($model->getNote()),
         encodeContent: false,
     ),
     new DataColumn(
@@ -109,9 +109,9 @@ $columns = [
     ),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('payment/guest'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

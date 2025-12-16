@@ -63,7 +63,7 @@ final class PaymentInformationController
 
     use OpenBankingProviders;
 
-    private string $salt;
+    private ?string $salt = null;
 
     private string $telegramToken;
 
@@ -89,7 +89,6 @@ final class PaymentInformationController
         private compR $compR,
         private cPR $cPR,
         private Logger $logger,
-        private Crypt $crypt,
     ) {
         $this->factory                   = $factory;
         $this->flash                     = $flash;
@@ -117,8 +116,6 @@ final class PaymentInformationController
                 ->withLayout('@views/layout/invoice.php');
         }
         $this->webService    = $webService;
-        $this->crypt         = $crypt;
-        $this->salt          = $crypt->salt();
         $this->compR         = $compR;
         $this->cPR           = $cPR;
         $this->logger        = $logger;
@@ -633,7 +630,7 @@ final class PaymentInformationController
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
             'client_on_invoice'      => $cR->repoClientquery($invoice->getClient_id()),
-            'crypt'                  => $this->crypt,
+            'crypt'                  => $this->sR,
             'disable_form'           => $disable_form,
             'invoice'                => $invoice,
             'inv_url_key'            => $url_key,
@@ -860,7 +857,7 @@ final class PaymentInformationController
             'return_url'                 => ['inv/url_key', ['url_key' => $url_key]],
             'balance'                    => $balance,
             'client_on_invoice'          => $cR->repoClientquery($invoice->getClient_id()),
-            'pci_client_publishable_key' => $this->crypt->decode($this->sR->getSetting('gateway_mollie_publishableKey')),
+            'pci_client_publishable_key' => $this->sR->decode($this->sR->getSetting('gateway_mollie_publishableKey')),
             'json_encoded_items'         => Json::encode($items_array),
             'disable_form'               => $disable_form,
             'client_chosen_gateway'      => $client_chosen_gateway,
@@ -888,7 +885,7 @@ final class PaymentInformationController
     private function mollieSetTestOrLiveApiKey(MollieClient $mollieClient): bool
     {
         /** @var string $testOrLiveApiKey */
-        $testOrLiveApiKey = !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? $this->crypt->decode($this->sR->getSetting('gateway_mollie_testOrLiveApiKey'))
+        $testOrLiveApiKey = !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? $this->sR->decode($this->sR->getSetting('gateway_mollie_testOrLiveApiKey'))
                        : '';
         !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? $mollieClient->setApiKey($testOrLiveApiKey) : '';
 
@@ -1070,10 +1067,10 @@ final class PaymentInformationController
                     $invoice->setPayment_method(5);
                     $heading = sprintf(
                         $this->translator->translate('online.payment.payment.failed'),
-                        (string) $invoiceNumber .
-                                       ' ' .
-                                       $this->translator->translate('payment.gateway.mollie.api.payment.id') .
-                                       $paymentId,
+                        (string) $invoiceNumber
+                                       . ' '
+                                       . $this->translator->translate('payment.gateway.mollie.api.payment.id')
+                                       . $paymentId,
                     );
                     $this->iR->save($invoice);
                     $view_data = [
@@ -1180,8 +1177,8 @@ final class PaymentInformationController
                     true,
                     $sandbox_url_array,
                 );
-                $heading = 'succeeded' == $redirect_status_from_stripe ?
-                  sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber)
+                $heading = 'succeeded' == $redirect_status_from_stripe
+                  ? sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber)
                   : sprintf($this->translator->translate('online.payment.payment.failed'), (string) $invoiceNumber . ' ' . ((string) $result['message'] ?: ''));
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(

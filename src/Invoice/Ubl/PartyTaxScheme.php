@@ -9,7 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class PartyTaxScheme implements XmlSerializable
 {
-    public function __construct(private readonly string $companyId, private readonly TaxScheme $taxScheme) {}
+    public function __construct(private readonly string $companyId, private readonly TaxScheme $taxScheme)
+    {
+    }
 
     public function getCompanyId(): string
     {

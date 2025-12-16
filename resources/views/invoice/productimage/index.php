@@ -22,7 +22,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -36,27 +36,27 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(ProductImage $model) => Html::encode($model->getId()),
+        content: static fn (ProductImage $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'product_id',
         header: $translator->translate('product'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? ''),
+        content: static fn (ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
         header: $translator->translate('upload.filename.original'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_original()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original()),
     ),
     new DataColumn(
         'file_name_new',
         header: $translator->translate('upload.filename.new'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getFile_name_new()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_new()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('upload.filename.description'),
-        content: static fn(ProductImage $model): string => Html::encode($model->getDescription()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -98,9 +98,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('upload/index'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

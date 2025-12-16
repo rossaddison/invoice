@@ -29,7 +29,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  * @var string $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $columns = [
     new DataColumn(
@@ -122,20 +122,20 @@ $columns = [
     ]),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
                ->csrf($csrf)
-               ->open() .
-                A::tag()
+               ->open()
+                . A::tag()
                     ->href($urlGenerator->generate('customfield/add'))
                     ->addClass('btn btn-info')
                     ->content('➕')
-                    ->render() .
-                Div::tag()
+                    ->render()
+                . Div::tag()
                     ->addClass('float-end m-3')
                     ->content($gridComponents->toolbarReset($urlGenerator))
-                    ->encode(false)->render() .
-                Form::tag()->close();
+                    ->encode(false)->render()
+                . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

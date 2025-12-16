@@ -166,7 +166,7 @@ final class CategoryPrimaryController extends BaseController
      * @param int $id
      * @return CategoryPrimary|null
      */
-    private function categoryprimary(CategoryPrimaryRepository $categoryPrimaryRepository, int $id): CategoryPrimary|null
+    private function categoryprimary(CategoryPrimaryRepository $categoryPrimaryRepository, int $id): ?CategoryPrimary
     {
         if ($id) {
             $categoryPrimary = $categoryPrimaryRepository->repoCategoryPrimaryQuery((string) $id);

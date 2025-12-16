@@ -8,7 +8,9 @@ use App\Invoice\Entity\QuoteAmount;
 
 final readonly class QuoteAmountService
 {
-    public function __construct(private QuoteAmountRepository $repository) {}
+    public function __construct(private QuoteAmountRepository $repository)
+    {
+    }
 
     /**
      * @param QuoteAmount $model
@@ -22,24 +24,6 @@ final readonly class QuoteAmountService
         $model->setTax_total(0.00);
         $model->setTotal(0.00);
         $this->repository->save($model);
-    }
-
-    /**
-     * @param QuoteAmount $model
-     * @param string $basis_quote_id
-     * @param string|null $new_quote_id
-     */
-    public function initializeCopyQuoteAmount(QuoteAmount $model, string $basis_quote_id, string|null $new_quote_id): void
-    {
-        $basis_quote = $this->repository->repoQuotequery($basis_quote_id);
-        if ($basis_quote) {
-            $model->setQuote_id((int) $new_quote_id);
-            $model->setItem_subtotal($basis_quote->getItem_subtotal() ?? 0.00);
-            $model->setItem_tax_total($basis_quote->getItem_tax_total() ?? 0.00);
-            $model->setTax_total($basis_quote->getTax_total() ?? 0.00);
-            $model->setTotal($basis_quote->getTotal() ?? 0.00);
-            $this->repository->save($model);
-        }
     }
 
     /**
@@ -80,7 +64,7 @@ final readonly class QuoteAmountService
     /**
      * @param QuoteAmount|null $model
      */
-    public function deleteQuoteAmount(QuoteAmount|null $model): void
+    public function deleteQuoteAmount(?QuoteAmount $model): void
     {
         $this->repository->delete($model);
     }

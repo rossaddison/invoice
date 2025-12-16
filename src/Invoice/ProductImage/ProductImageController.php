@@ -224,7 +224,7 @@ final class ProductImageController extends BaseController
      * @param ProductImageRepository $productimageRepository
      * @return ProductImage|null
      */
-    public function productimage(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): ProductImage|null
+    public function productimage(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): ?ProductImage
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

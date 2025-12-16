@@ -23,17 +23,17 @@ final class CategorySecondaryForm extends FormModel
         $this->id = $categorySecondary->getId();
     }
 
-    public function getCategory_primary_id(): int|null
+    public function getCategory_primary_id(): ?int
     {
         return $this->category_primary_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }

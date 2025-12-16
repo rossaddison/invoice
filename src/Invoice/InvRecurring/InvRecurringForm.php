@@ -33,7 +33,7 @@ final class InvRecurringForm extends FormModel
         return $this->inv_id;
     }
 
-    public function getStart(): null|string|DateTimeImmutable
+    public function getStart(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->start
@@ -41,7 +41,7 @@ final class InvRecurringForm extends FormModel
         return $this->start;
     }
 
-    public function getEnd(): null|string|DateTimeImmutable
+    public function getEnd(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->end
@@ -54,7 +54,7 @@ final class InvRecurringForm extends FormModel
         return $this->frequency;
     }
 
-    public function getNext(): null|string|DateTimeImmutable
+    public function getNext(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->next

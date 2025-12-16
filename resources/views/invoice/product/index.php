@@ -39,7 +39,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -64,23 +64,31 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Product $model) => Html::encode($model->getProduct_id()),
+        content: static fn (Product $model) => Html::encode($model->getProduct_id()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_id',
         header: $translator->translate('family.name'),
         encodeHeader: true,
-        content: static fn(Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
+        content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
         filter: (new DropdownFilter())->optionsData($optionsDataFamiliesDropdownFilter),
         visible: true,
         withSorting: true,
     ),
     new DataColumn(
+        property: 'product_name',
+        header: $translator->translate('product.name'),
+        encodeHeader: true,
+        content: static fn (Product $model): string => Html::encode($model->getProduct_name()),
+        visible: true,
+        withSorting: false,
+    ),
+    new DataColumn(
         property: 'product_sku',
         header: $translator->translate('product.sku'),
         encodeHeader: true,
-        content: static fn(Product $model): string => Html::encode($model->getProduct_sku()),
+        content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
         filter: (new DropdownFilter())->optionsData($optionsDataProductsDropdownFilter),
         visible: true,
         withSorting: false,
@@ -88,31 +96,31 @@ $columns = [
     new DataColumn(
         property: 'product_description',
         header: $translator->translate('product.description'),
-        content: static fn(Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
+        content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_price',
         header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
-        content: static fn(Product $model): string => Html::encode($model->getProduct_price()),
+        content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
         filter: true,
         withSorting: false,
     ),
     new DataColumn(
         property: 'product_price_base_quantity',
         header: $translator->translate('product.price.base.quantity'),
-        content: static fn(Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
+        content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_unit',
         header: $translator->translate('product.unit'),
-        content: static fn(Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
+        content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
     ),
     new DataColumn(
         property: 'tax_rate_id',
         header: $translator->translate('tax.rate'),
-        content: static fn(Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
+        content: static fn (Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
                     ? Html::encode($model->getTaxrate()?->getTaxRateName())
                     : $translator->translate('none'),
         withSorting: true,
@@ -120,7 +128,7 @@ $columns = [
     new DataColumn(
         property: 'product_tariff',
         header: $s->getSetting('sumex') ? $translator->translate('product.tariff') . '(' . $s->getSetting('currency_symbol') . ')' : '',
-        content: static fn(Product $model): string => ($s->getSetting('sumex')
+        content: static fn (Product $model): string => ($s->getSetting('sumex')
                     ? Html::encode($model->getProduct_tariff())
                     : Html::encode($translator->translate('none'))),
         visible: $s->getSetting('sumex') ? true : false,
@@ -194,15 +202,15 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('product/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

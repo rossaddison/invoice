@@ -190,11 +190,11 @@ final class UserInvController extends BaseController
         #[RouteArgument('active')]
         string $active = '2',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterUser')]
-        string $queryFilterUser = null,
+        ?string $queryFilterUser = null,
     ): \Yiisoft\DataResponse\DataResponse {
         $canEdit = $this->rbac();
         $page = $queryPage ?? $page;
@@ -570,8 +570,8 @@ final class UserInvController extends BaseController
                                             $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
                                         }
                                     } else {
-                                        $this->flashMessage('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' . ' ' .
-                                            Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
+                                        $this->flashMessage('warning', 'Client not signed up automatically because setting not on. As Admin you should click on this button to enable clients to be assigned to users automatically.' . ' '
+                                            . Button::setOrUnsetAssignClientToUserAutomatically($this->urlGenerator, $_language));
                                     }
                                 }
                             }
@@ -650,7 +650,7 @@ final class UserInvController extends BaseController
      * @param UserInvRepository $userinvRepository
      * @return UserInv|null
      */
-    private function userinv(int $id, uiR $userinvRepository): UserInv|null
+    private function userinv(int $id, uiR $userinvRepository): ?UserInv
     {
         if ($id) {
             return $userinvRepository->repoUserInvquery((string) $id);

@@ -27,7 +27,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataGuestInvNumberDropDownFilter
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 /*
  * Related logic: see https://emojipedia.org/incoming-envelope
@@ -65,17 +65,17 @@ $columns = [
     new DataColumn(
         'inv_id',
         header: $translator->translate('setup.db.username.info'),
-        content: static fn(InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
+        content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn(InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
+        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
     ),
     new DataColumn(
         'date_sent',
         header: $translator->translate('email.date'),
-        content: static fn(InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+        content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
 
@@ -87,9 +87,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open() .
-                 Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-                 Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('invsentlog/guest'))->csrf($csrf)->open()
+                 . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+                 . Form::tag()->close();
 
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
@@ -101,8 +101,8 @@ echo GridView::widget()
   ->id('w10463-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate(($viewInv ?
-                       $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '') . ' ' .
-                       $grid_summary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+  ->summaryTemplate(($viewInv
+                       ? $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '') . ' '
+                       . $grid_summary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

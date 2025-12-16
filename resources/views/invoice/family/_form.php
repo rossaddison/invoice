@@ -6,21 +6,35 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
+// Include CSS for the number picker
+echo Html::cssFile('/assets/css/family-commalist-picker.css');
+
 /**
  * @var App\Invoice\Family\FamilyForm $form
+ * @var App\Invoice\FamilyCustom\FamilyCustomForm $familyCustomForm
+ * @var App\Invoice\Entity\Family $family
+ * 
+ * Related logic: see config\common\params.php 'cvH'
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH 
+ *
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $customValues
+ * @var array $customFields
  * @var string $csrf
+ * @var array $familyCustomValues
  * @var string $actionName
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
+ * @psalm-var array<string,list<string>> $errorsCustom
  * @psalm-var array<array-key, array<array-key, string>|string> $categoryPrimaries
  * @psalm-var array<array-key, array<array-key, string>|string> $categorySecondaries
  *
  */
+
 ?>
 
 <?= Form::tag()
@@ -52,15 +66,15 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'family_name')
-  ->label($translator->translate('family.name'))
-  ->addInputAttributes([
-      'placeholder' => $translator->translate('family.name'),
-      'value' => Html::encode($form->getFamily_name() ?? ''),
-      'class' => 'form-control',
-      'id' => 'family_name',
-  ])
-  ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                    ->label($translator->translate('family.name'))
+                    ->addInputAttributes([
+                        'placeholder' => $translator->translate('family.name'),
+                        'value' => Html::encode($form->getFamily_name() ?? ''),
+                        'class' => 'form-control',
+                        'id' => 'family_name',
+                    ])
+                    ->hint($translator->translate('hint.this.field.is.required'));
+                  ?>
                 <?= Html::closeTag('div'); ?>  
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_primary_id')
@@ -83,6 +97,66 @@ use Yiisoft\Html\Tag\Form;
     ->prompt($translator->translate('none'))
     ->optionsData($categorySecondaries);
 ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::textarea($form, 'family_commalist')
+                    ->label($translator->translate('family.comma.list'))
+                    ->addInputAttributes([
+                        'placeholder' => $translator->translate('family.comma.list'),
+                        'value' => Html::encode($form->getFamily_commalist() ?? ''),
+                        'class' => 'form-control',
+                        'id' => 'family_commalist',
+                        'rows' => '3',
+                    ])
+                    ->hint($translator->translate('hint.this.field.is.not.required'));
+                  ?>
+                  
+                  <!-- Angular Number Picker Container -->
+                  <div class="mt-2">
+                    <button type="button" class="btn btn-outline-primary btn-sm" 
+                            onclick="toggleCommalistPicker()" id="toggle-picker-btn">
+                      <i class="bi bi-grid-3x3-gap"></i> Show Number Picker
+                    </button>
+                  </div>
+                  
+                  <div id="commalist-picker-container" class="mt-3" style="display: none;">
+                    <div class="alert alert-info">
+                      <small><i class="bi bi-info-circle"></i> Click numbers below to add them to your comma list. The textarea above will be automatically updated.</small>
+                    </div>
+                    <!-- Angular app will be mounted here -->
+                  </div>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'family_productprefix')
+                    ->label($translator->translate('family.product.prefix'))
+                    ->addInputAttributes([
+                        'placeholder' => $translator->translate('family.product.prefix'),
+                        'value' => Html::encode($form->getFamily_productprefix() ?? ''),
+                        'class' => 'form-control',
+                        'id' => 'family_productprefix',
+                    ])
+                    ->hint($translator->translate('hint.this.field.is.not.required'));
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                <?php
+                    /**
+                     * @var App\Invoice\Entity\CustomField $customField
+                     */
+                    foreach ($customFields as $customField): ?>
+                        <?php
+                            if ($customField->getLocation() !== 0) {
+                                continue;
+                            }
+                        ?>
+                        <?php $cvH->print_field_for_form(
+                            $customField,
+                            $familyCustomForm,
+                            $translator,
+                            $urlGenerator,
+                            $familyCustomValues,
+                            $customValues); ?>
+                    <?php endforeach; ?>
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

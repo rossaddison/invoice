@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
+use App\Invoice\FamilyCustom\FamilyCustomForm;
+use App\Invoice\Entity\FamilyCustom;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Th;
 use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Family\FamilyForm $form
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var array $familyCustomValues
+ * @var array $customValues
+ * @var array $custom_fields
  * @var string $csrf
  * @var string $actionName
  * @var string $title
@@ -51,40 +58,84 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'family_name')
-  ->label($translator->translate('family.name'))
-  ->addInputAttributes([
-      'placeholder' => $translator->translate('family.name'),
-      'value' => Html::encode($form->getFamily_name() ?? ''),
-      'class' => 'form-control',
-      'id' => 'family_name',
-  ])
-  ->readonly(true);
-?>
+                        ->label($translator->translate('family.name'))
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('family.name'),
+                            'value' => Html::encode($form->getFamily_name() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'family_name',
+                        ])
+                        ->readonly(true);
+                  ?>
                 <?= Html::closeTag('div'); ?>  
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                  <?= Field::select($form, 'category_primary_id')
-    ->label($translator->translate('category.primary'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->value($form->getCategory_primary_id())
-    ->prompt($translator->translate('none'))
-    ->optionsData($categoryPrimaries)
-    ->disabled(true);
-?>
+                    <?= Field::select($form, 'category_primary_id')
+                        ->label($translator->translate('category.primary'))
+                        ->addInputAttributes([
+                            'class' => 'form-control  alert alert-warning',
+                        ])
+                        ->value($form->getCategory_primary_id())
+                        ->prompt($translator->translate('none'))
+                        ->optionsData($categoryPrimaries)
+                        ->disabled(true);
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_secondary_id')
-    ->label($translator->translate('category.secondary'))
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->value($form->getCategory_secondary_id())
-    ->prompt($translator->translate('none'))
-    ->optionsData($categorySecondaries)
-    ->disabled(true)
-?>
+                        ->label($translator->translate('category.secondary'))
+                        ->addInputAttributes([
+                            'class' => 'form-control  alert alert-warning',
+                        ])
+                        ->value($form->getCategory_secondary_id())
+                        ->prompt($translator->translate('none'))
+                        ->optionsData($categorySecondaries)
+                        ->disabled(true)
+                    ?>
                 <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'family_commalist')
+                        ->label($translator->translate('family.comma.list'))
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('family.comma.list'),
+                            'value' => Html::encode($form->getFamily_commalist() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'family_commalist',
+                        ])
+                        ->disabled(true);
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'family_productprefix')
+                        ->label($translator->translate('family.product.prefix'))
+                        ->addInputAttributes([
+                            'placeholder' => $translator->translate('family.product.prefix'),
+                            'value' => Html::encode($form->getFamily_productprefix() ?? ''),
+                            'class' => 'form-control',
+                            'id' => 'family_productprefix',
+                        ])
+                        ->disabled(true);
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                <?php
+                $i = 1;
+                /**
+                  * @var App\Invoice\Entity\CustomField $custom_field
+                  */
+                foreach ($custom_fields as $custom_field) : ?>
+                    <?php if ($custom_field->getLocation() !== 0) {
+                        continue;
+                    } ?>
+                    <?= Html::openTag('tr'); ?>
+                        <?= Th::tag()->addAttributes(['id' => 'family-cf-'. $i]); ?> 
+                        <?= Html::openTag('td'); ?>    
+                    <?php
+                        $familyCustomForm = new FamilyCustomForm(new FamilyCustom());
+$cvH->print_field_for_view($custom_field, $familyCustomForm, $familyCustomValues, $customValues);?>
+                        <?= Html::closeTag('td'); ?>    
+                    <?= Html::closeTag('tr'); ?>
+                <?php
+                    $i = $i + 1;
+                endforeach; ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
           <?= Html::closeTag('div'); ?>

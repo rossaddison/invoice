@@ -85,7 +85,7 @@ final class ClientCustomRepository extends Select\Repository
      * @param string $id
      * @return ClientCustom|null
      */
-    public function repoClientCustomquery(string $id): ClientCustom|null
+    public function repoClientCustomquery(string $id): ?ClientCustom
     {
         $query = $this->select()
                       ->load('client')
@@ -110,7 +110,7 @@ final class ClientCustomRepository extends Select\Repository
      * @param string $custom_field_id
      * @return ClientCustom|null
      */
-    public function repoFormValuequery(string $client_id, string $custom_field_id): ClientCustom|null
+    public function repoFormValuequery(string $client_id, string $custom_field_id): ?ClientCustom
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])

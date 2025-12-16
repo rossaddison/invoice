@@ -224,7 +224,7 @@ final class DeliveryController extends BaseController
      * @param DeliveryRepository $deliveryRepository
      * @return Delivery|null
      */
-    private function delivery(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): Delivery|null
+    private function delivery(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): ?Delivery
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

@@ -28,7 +28,7 @@ use Yiisoft\Router\CurrentRoute;
  * @var WebView $this
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -42,32 +42,32 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getId()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
     ),
     new DataColumn(
         'code',
         header: $translator->translate('code'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getCode()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getCode()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getName()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(UnitPeppol $model) => Html::encode($model->getDescription()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -112,14 +112,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('unitpeppol/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('unitpeppol/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->columns(...$columns)

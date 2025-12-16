@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -34,7 +35,7 @@ declare(strict_types=1);
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 
 <div id="headerbar">

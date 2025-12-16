@@ -304,7 +304,7 @@ final class HmrcController extends BaseController
      */
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
-        return fn(callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
+        return fn (callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
             $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
             // Prevent log corruption if encoding fails

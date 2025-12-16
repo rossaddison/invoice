@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentInformation\Service;
 
 use App\Invoice\Entity\Inv;
-use App\Invoice\Libraries\Crypt;
 use App\Invoice\Setting\SettingRepository;
 use Braintree\Gateway;
 use Braintree\CustomerGateway;
@@ -21,11 +20,8 @@ class BraintreePaymentService
 {
     public function __construct(
         private readonly SettingRepository $settings,
-        private readonly Crypt $crypt,
         private readonly LoggerInterface $logger,
-        private string $salt,
     ) {
-        $this->salt = (new Crypt())->salt();
     }
 
     /**
@@ -198,8 +194,10 @@ class BraintreePaymentService
      */
     public function getMerchantId(): string
     {
-        $merchantId = $this->settings->getSetting('gateway_braintree_merchantId');
-        return (string) $this->crypt->decode($merchantId ?: '');
+        $merchantId = $this->settings
+                           ->getSetting('gateway_braintree_merchantId');
+        return (string) $this->settings
+                             ->decode($merchantId ?: '');
     }
 
     /**
@@ -207,7 +205,9 @@ class BraintreePaymentService
      */
     public function getEnvironment(): string
     {
-        return $this->settings->getSetting('gateway_braintree_sandbox') === '1' ? 'sandbox' : 'production';
+        return $this->settings
+                    ->getSetting('gateway_braintree_sandbox') === '1'
+                      ? 'sandbox' : 'production';
     }
 
     /**
@@ -215,8 +215,10 @@ class BraintreePaymentService
      */
     private function getPublicKey(): string
     {
-        $publicKey = $this->settings->getSetting('gateway_braintree_publicKey');
-        return (string) $this->crypt->decode($publicKey ?: '');
+        $publicKey = $this->settings
+                          ->getSetting('gateway_braintree_publicKey');
+        return (string) $this->settings
+                             ->decode($publicKey ?: '');
     }
 
     /**
@@ -224,8 +226,10 @@ class BraintreePaymentService
      */
     private function getPrivateKey(): string
     {
-        $privateKey = $this->settings->getSetting('gateway_braintree_privateKey');
-        return (string) $this->crypt->decode($privateKey ?: '');
+        $privateKey = $this->settings
+                           ->getSetting('gateway_braintree_privateKey');
+        return (string) $this->settings
+                             ->decode($privateKey ?: '');
     }
 
     /**
@@ -233,9 +237,9 @@ class BraintreePaymentService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->getMerchantId()) &&
-               !empty($this->getPublicKey()) &&
-               !empty($this->getPrivateKey());
+        return !empty($this->getMerchantId())
+               && !empty($this->getPublicKey())
+               && !empty($this->getPrivateKey());
     }
 
     /**

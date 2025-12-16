@@ -60,18 +60,6 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * Check if there are any products with zero prices
-     * @return bool
-     */
-    public function hasZeroPricedProducts(): bool
-    {
-        $count = $this->select()
-            ->where(['product_price' => 0])
-            ->count();
-        return $count > 0;
-    }
-
-    /**
      * @psalm-return EntityReader
      */
     public function getReader(): EntityReader
@@ -168,7 +156,7 @@ final class ProductRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoProductquery(string|null $product_id): Product|null
+    public function repoProductquery(?string $product_id): ?Product
     {
         $query = $this
             ->select()
@@ -183,12 +171,31 @@ final class ProductRepository extends Select\Repository
      * @param string $product_name
      * @return Product|null
      */
-    public function withName(string $product_name): Product|null
+    public function withName(string $product_name): ?Product
     {
         $query = $this
             ->select()
             ->where(['product_name' => $product_name]);
         return  $query->fetchOne() ?: null;
+    }
+
+    /**
+     * Assist in checking for existing products when generating from family
+     * @psalm-return EntityReader
+     */
+    public function repoProductWithFamilyIdQuery(string $product_name, string $family_id): EntityReader
+    {
+        $query = $this
+            ->select()
+            ->load('family')
+            ->load('tax_rate')
+            ->load('unit');
+
+        if (!empty($product_name) && ($family_id > (string) 0)) {
+            $query = $query->andWhere(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+        }
+
+        return $this->prepareDataReader($query);
     }
 
     /**

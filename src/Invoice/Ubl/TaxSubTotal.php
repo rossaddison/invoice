@@ -15,7 +15,9 @@ class TaxSubTotal
     // Used in src\Invoice\Ubl\Invoice.php function build_tax_sub_totals_array()
     // The array passed here is a sub-array ie. one of many subtotals
     // - a subtotal is generated for each tax category.
-    public function __construct(private readonly array $taxSubtotal) {}
+    public function __construct(private readonly array $taxSubtotal)
+    {
+    }
 
     public function load_values_from_array(): void
     {

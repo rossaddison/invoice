@@ -134,7 +134,7 @@ class Quote
     /**
      * @return numeric-string|null
      */
-    public function getId(): string|null
+    public function getId(): ?string
     {
         return $this->id === null ? null : (string) $this->id;
     }
@@ -220,7 +220,7 @@ class Quote
         $this->contract_id = $contract_id;
     }
 
-    public function getStatus_id(): int|null
+    public function getStatus_id(): ?int
     {
         return $this->status_id;
     }

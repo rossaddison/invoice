@@ -1,5 +1,20 @@
 import { parsedata, getJson, ApiResponse } from './utils.js';
 
+// Secure HTML insertion helper to prevent XSS vulnerabilities
+function secureInsertHTML(element: Element, html: string): void {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const fragment = document.createDocumentFragment();
+    Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+    element.innerHTML = '';
+    element.appendChild(fragment);
+}
+
+// Secure reload helper to prevent Open Redirect vulnerabilities
+function secureReload(): void {
+    window.location.reload();
+}
+
 interface SalesOrderConversionResponse {
     success?: number;
     validation_errors?: Record<string, any>;
@@ -116,7 +131,8 @@ export class SalesOrderHandler {
             const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin' });
             const html = await response.text();
 
-            target.innerHTML = html;
+            // Secure HTML insertion to prevent XSS
+            secureInsertHTML(target, html);
 
             // Show modal using Bootstrap if available
             const modalEl = target.querySelector('.modal') as HTMLElement;
@@ -179,16 +195,14 @@ export class SalesOrderHandler {
                     btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
                 }
                 // Navigate to the new invoice or reload
-                const absolute_url = new URL(location.href);
-                window.location.href = absolute_url.toString();
-                window.location.reload();
+                secureReload();
             } else {
                 // Handle validation errors or failures
                 if (response?.validation_errors) {
                     document.querySelectorAll('.control-group').forEach(group => {
                         group.classList.remove('error');
                     });
-                    Object.keys(response.validation_errors).forEach(key => {
+                    Object.entries(response.validation_errors).forEach(([key, error]) => {
                         const field = document.getElementById(key);
                         if (field?.parentElement) {
                             field.parentElement.classList.add('has-error');

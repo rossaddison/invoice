@@ -166,8 +166,6 @@ class CategorySecondaryEntityTest extends Unit
 
     public function testNullNameHandling(): void
     {
-        $categorySecondary = new CategorySecondary();
-        
         // Constructor accepts null
         $categorySecondary = new CategorySecondary(1, 2, null);
         $this->assertNull($categorySecondary->getName());

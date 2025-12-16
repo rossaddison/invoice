@@ -16,7 +16,8 @@ final class ClientCustomFieldProcessor implements CustomFieldProcessor
     public function __construct(
         private readonly ClientCustomRepository $clientCustomRepository,
         private readonly ClientCustomService $clientCustomService,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function exists(string $entityId, string $customFieldId): bool

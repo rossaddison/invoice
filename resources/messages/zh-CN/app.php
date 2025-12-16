@@ -35,20 +35,28 @@ return [
 'allowance.or.charge' => '津贴或费用',
 'allowance.or.charge.add' => '文件级别（即非发票行级别）津贴或费用添加',
 'allowance.or.charge.allowance' => '津贴',
-'allowance.or.charge.allowance.vat' => '津贴增值税',
+'allowance.or.charge.allowance.vat' =>
+	'津贴增值税',
 'allowance.or.charge.amount' => '津贴收费金额（乘数因子以百分比乘以基准金额）',
-'allowance.or.charge.base.amount' => '基数',
+'allowance.or.charge.base.amount' =>
+	'基数',
 'allowance.or.charge.charge' => '收费',
-'allowance.or.charge.charge.vat' => '增值税征收',
-'allowance.or.charge.edit.allowance' => '文档级别（即非发票行级别）津贴编辑',
-'allowance.or.charge.edit.charge' => '文档级别（即非发票行级别）费用编辑',
+'allowance.or.charge.charge.vat' =>
+	'增值税征收',
+'allowance.or.charge.edit.allowance' =>
+	'文档级别（即非发票行级别）津贴编辑',
+'allowance.or.charge.edit.charge' =>
+	'文档级别（即非发票行级别）费用编辑',
 'allowance.or.charge.index' => '相对于项目的津贴或费用指数',
 'allowance.or.charge.inv' => '发票折扣或费用',
 'allowance.or.charge.item' => '发票项目折让或费用',
-'allowance.or.charge.item.add' => '津贴/费用添加',
-'allowance.or.charge.multiplier.factor.numeric' => '乘数因子数值',
+'allowance.or.charge.item.add' =>
+	'津贴/费用添加',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'乘数因子数值',
 'allowance.or.charge.reason' => '原因',
-'allowance.or.charge.reason.code' => '原因码',
+'allowance.or.charge.reason.code' =>
+	'原因码',
 'already.paid' => '该发票已经付款。',
 'amount' => '发票项目金额',
 'amount.add' => '发票项目金额添加',
@@ -65,30 +73,38 @@ return [
 'archive' => '将 PDF 存档在 Uploads/Archive',
 'assign.client' => '分配客户',
 'assign.client.on.signup' => '注册时为用户分配客户。',
-'assign.client.on.signup.default.age.minimum.eighteen' => '在用户注册时为其分配一个默认最低年龄为十八岁的客户。',
-'assign.client.on.signup.done' => '在用户注册时为其分配一个客户。',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'在用户注册时为其分配一个默认最低年龄为十八岁的客户。',
+'assign.client.on.signup.done' =>
+	'在用户注册时为其分配一个客户。',
 'assigned.clients' => '指定客户',
 'attachment.list' => '附件列表',
 'attachments' => '附件',
 'automatic.email.on.recur' => '自动通过电子邮件发送定期发票',
 'back' => '后退',
 'balance' => '平衡',
-'balance.does.not.equal.zero' => '余额不为零。状态为“已付款” =&gt; 余额应为零。 ',
+'balance.does.not.equal.zero' =>
+	'余额不为零。状态为“已付款” =&gt; 余额应为零。',
 'base.invoice' => '基本发票',
 'bcc' => '密件抄送',
 'bcc.mails.to.admin' => '将所有外发电子邮件作为密件抄送给管理员帐户',
-'bcc.mails.to.admin.hint' => '管理员帐户是安装 InvoicePlane 时创建的帐户。',
+'bcc.mails.to.admin.hint' =>
+	'管理员帐户是安装 InvoicePlane 时创建的帐户。',
 'before.amount' => '之前金额',
 'bill.to' => '记账到',
 'birthdate' => '出生日期',
 'body' => '身体',
 'boolean' => '布尔值',
 'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' => '警报关闭按钮字体大小',
+'bootstrap5.alert.close.button.font.size' =>
+	'警报关闭按钮字体大小',
 'bootstrap5.alert.message.font' => '警报消息字体',
-'bootstrap5.alert.message.font.size' => '警报消息字体大小',
-'bootstrap5.layout.invoice.navbar.font' => '发票导航栏字体布局',
-'bootstrap5.layout.invoice.navbar.font.size' => '布局发票导航栏字体大小',
+'bootstrap5.alert.message.font.size' =>
+	'警报消息字体大小',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'发票导航栏字体布局',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'布局发票导航栏字体大小',
 'bootstrap5.offcanvas.enable' => '启用 Offcanvas',
 'bootstrap5.offcanvas.placement' => '画布外放置，例如顶部、底部、起始（左侧）、结束（右侧）',
 'breadcrumb.product.index' => '产品索引',
@@ -153,18 +169,27 @@ return [
 'client.contract.reference' => '合约编号',
 'client.custom' => '客户定制',
 'client.custom.add' => '客户自定义添加',
-'client.delete.history.exits.no' => '无法删除。客户历史记录已存在。',
+'client.delete.history.exits.no' =>
+	'无法删除。客户历史记录已存在。',
 'client.detail.changes' => '如果此详细信息发生变化，请向我们发送电子邮件。',
 'client.error.summary' => '错误摘要',
 'client.form' => '客户表格',
 'client.frequency' => '客户端频率',
 'client.group' => '客户群',
 'client.has.not.assigned' => '这些客户端尚未分配给用户帐户。每个用户帐户可以有一个或多个客户端。',
-'client.has.not.user.account' => '此客户没有用户帐户或当前未分配给用户。1. 确保客户已注册，即拥有用户帐户或将此客户分配给当前注册的用户。2. 设置...发票用户帐户...添加用户帐户3. 将此客户分配给用户帐户4. 在当前状态下，无法为此客户创建发票和报价单。',
+'client.has.not.user.account' =>
+	'此客户没有用户帐户或当前未分配给用户。1.'
+	. '确保客户已注册，即拥有用户帐户或将此客户分配给当前注册的用户。2.'
+	. '设置.'
+	. '发票用户帐户.'
+	. '添加用户帐户3.'
+	. '将此客户分配给用户帐户4.'
+	. '在当前状态下，无法为此客户创建发票和报价单。',
 'client.has.user.account' => '用户帐户',
 'client.import.list.blank' => '客户导入清单空白',
 'client.name' => '客户名称',
-'client.not.allocated.to.user' => '客户端未分配给用户',
+'client.not.allocated.to.user' =>
+	'客户端未分配给用户',
 'client.note' => '客户备注',
 'client.note.add' => '客户备注添加',
 'client.note.date' => '客户日期',
@@ -174,38 +199,60 @@ return [
 'client.peppol' => '客户 Peppol 详细信息',
 'client.peppol.accounting.cost' => '簿记的客户会计成本代码',
 'client.peppol.add' => '为电子发票添加 Peppol 详细信息',
-'client.peppol.buyer.reference.default' => '买方参考：如果客户未指定客户采购订单联系人，则这是默认的买方参考或订购人。',
-'client.peppol.buyer.reference.example' => '例如，正常下单人员的姓名、正常下单人员的员工编号或识别此人或部门/团体的代码',
+'client.peppol.buyer.reference.default' =>
+	'买方参考：如果客户未指定客户采购订单联系人，则这是默认的买方参考或订购人。',
+'client.peppol.buyer.reference.example' =>
+	'例如，正常下单人员的姓名、正常下单人员的员工编号或识别此人或部门/团体的代码',
 'client.peppol.clientpeppols.form' => '会计客户/客户方表格',
 'client.peppol.edit' => '编辑电子发票的 Peppol 详细信息',
 'client.peppol.endpointid' => '端点 ID：电子邮件地址',
-'client.peppol.endpointid.schemeid' => '端点 ID - 基于 EAS（电子地址方案）4 位代码的 schemeID，例如 0192',
-'client.peppol.financial.institution.branchid' => '金融机构分支机构 ID',
+'client.peppol.endpointid.schemeid' => '端点 ID - 基于 EAS（电子地址方案）4 '
+	. '位代码的 schemeID，例如 0192',
+'client.peppol.financial.institution.branchid' =>
+	'金融机构分支机构 ID',
 'client.peppol.identificationid' => '身份识别号',
 'client.peppol.identificationid.schemeid' => '识别ID-schemeID',
-'client.peppol.legal.entity.company.legal.form' => '法人实体公司法律形式 - 与卖方相关的其他法律信息，例如股本',
-'client.peppol.legal.entity.companyid' => '法人实体公司 ID',
-'client.peppol.legal.entity.companyid.schemeid' => '法人实体公司 ID - schemeID',
-'client.peppol.legal.entity.registration.name' => '法人实体注册名称',
+'client.peppol.legal.entity.company.legal.form' =>
+	'法人实体公司法律形式 - 与卖方相关的其他法律信息，例如股本',
+'client.peppol.legal.entity.companyid' =>
+	'法人实体公司 ID',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'法人实体公司 ID - schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'法人实体注册名称',
 'client.peppol.not.found' => '客户或顾客尚未设置他们的 Peppol 详细信息。',
-'client.peppol.not.found.accounting.cost' => '未找到：会计成本或指定将相关数据记入买方财务账户的文本值。',
-'client.peppol.not.found.delivery.location' => '未找到送货地点国家/地区名称',
-'client.peppol.not.found.id' => '客户尚未在线填写其客户 Peppol 详细信息下的帐户 ID。',
-'client.peppol.not.found.id.supplier.assigned' => '未找到客户 Peppol 供应商分配的账户 ID',
-'client.peppol.not.found.invoice' => '未找到链接发票',
-'client.peppol.not.found.purchase.order' => '销售订单没有关联的采购订单编号',
-'client.peppol.not.found.purchase.order.item.number' => '销售订单行项目没有匹配的采购订单行项目识别号（买方项目识别号）。管理员：编辑发票的销售订单项目编号。',
-'client.peppol.not.found.purchase.order.line.number' => '销售订单行号没有与之匹配的采购订单行号 (OrderLineReference LineID)。管理员：编辑发票的销售订单行号。 ',
-'client.peppol.not.found.sales.order' => '销售订单不存在',
-'client.peppol.payee.financial.account.name' => '收款人财务账户名称',
-'client.peppol.payee.financial.accountid' => '收款人财务账户 ID',
-'client.peppol.record.updated.successfully' => 'Peppol 记录更新成功',
-'client.peppol.supplier.assigned.account.id' => '供应商分配的帐户 ID',
+'client.peppol.not.found.accounting.cost' =>
+	'未找到：会计成本或指定将相关数据记入买方财务账户的文本值。',
+'client.peppol.not.found.delivery.location' =>
+	'未找到送货地点国家/地区名称',
+'client.peppol.not.found.id' =>
+	'客户尚未在线填写其客户 Peppol 详细信息下的帐户 ID。',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'未找到客户 Peppol 供应商分配的账户 ID',
+'client.peppol.not.found.invoice' =>
+	'未找到链接发票',
+'client.peppol.not.found.purchase.order' =>
+	'销售订单没有关联的采购订单编号',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'销售订单行项目没有匹配的采购订单行项目识别号（买方项目识别号）。管理员：编辑发票的销售订单项目编号。',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'销售订单行号没有与之匹配的采购订单行号 (OrderLineReference LineID)。管理员：编辑发票的销售订单行号。',
+'client.peppol.not.found.sales.order' =>
+	'销售订单不存在',
+'client.peppol.payee.financial.account.name' =>
+	'收款人财务账户名称',
+'client.peppol.payee.financial.accountid' =>
+	'收款人财务账户 ID',
+'client.peppol.record.updated.successfully' =>
+	'Peppol 记录更新成功',
+'client.peppol.supplier.assigned.account.id' =>
+	'供应商分配的帐户 ID',
 'client.peppol.taxschemecompanyid' => '税务方案公司 ID',
 'client.peppol.taxschemeid' => '税务方案编号',
 'client.postaladdress' => '邮政地址',
 'client.postaladdress.add' => '添加客户邮政地址',
-'client.postaladdress.additional.street.name' => '附加街道名称',
+'client.postaladdress.additional.street.name' =>
+	'附加街道名称',
 'client.postaladdress.available' => '可用的邮政地址',
 'client.postaladdress.building.number' => '建筑物编号',
 'client.postaladdress.city.name' => '城市名称',
@@ -240,14 +287,16 @@ return [
 'company.private.logo.height' => '徽标高度',
 'company.private.logo.margin' => '徽标边距',
 'company.private.logo.width' => '标志宽度',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => '徽标将从上传和公共文件夹中删除',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'徽标将从上传和公共文件夹中删除',
 'company.public' => '公司公众',
 'complete' => '完全的',
 'confirm' => '确认',
 'confirm.deletion' => '确认删除',
 'contact.information' => '联系信息',
 'continue' => '继续',
-'continue.with.developer.sandbox.hmrc' => '继续使用 Developer Gov Sandbox UK',
+'continue.with.developer.sandbox.hmrc' =>
+	'继续使用 Developer Gov Sandbox UK',
 'continue.with.facebook' => '继续使用 Facebook',
 'continue.with.github' => '继续使用 Github',
 'continue.with.google' => '继续使用 Google',
@@ -295,9 +344,13 @@ return [
 'creditcard.expiry.year' => '到期年份',
 'creditcard.number' => '信用卡号码',
 'cron.key' => 'CRON 键',
-'curl.store.cove.api.get.legal.entity.id.successful' => '获得法人实体成功',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Store Cove 设置 Api 调用 - 法人实体成功',
-'curl.store.cove.api.setup.successful' => 'Store Cove 设置 Api 调用成功',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'获得法人实体成功',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Store Cove 设置 Api 调用 '
+	. '- 法人实体成功',
+'curl.store.cove.api.setup.successful' =>
+	'Store Cove 设置 Api 调用成功',
 'currency' => '货币',
 'currency.code' => '货币代码',
 'currency.symbol' => '货币符号',
@@ -335,7 +388,8 @@ return [
 'date.supplied' => '供应日期',
 'dates' => '发票日期',
 'datetime.immutable.date.created' => '创造',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
 'datetime.immutable.date.modified' => '反对',
 'datetime.immutable.time.created' => '时间',
 'days' => '天',
@@ -347,7 +401,8 @@ return [
 'default.hourly.rate' => '默认小时费率',
 'default.invoice.group' => '默认发票组',
 'default.invoice.tax.rate' => '默认发票税率',
-'default.invoice.tax.rate.placement' => '默认发票税率设置',
+'default.invoice.tax.rate.placement' =>
+	'默认发票税率设置',
 'default.item.tax.rate' => '默认项目税率',
 'default.list.limit' => '列表中的项目数',
 'default.notes' => '默认注释',
@@ -378,15 +433,23 @@ return [
 'delivery.end.date' => '交货/发票期限的结束日期',
 'delivery.location' => '送货地点',
 'delivery.location.add' => '送货地点添加',
-'delivery.location.add.in.invoice' => '在发票下添加交货地点...查看...选项...编辑',
+'delivery.location.add.in.invoice' =>
+	'在发票下添加交货地点.'
+	. '查看.'
+	. '选项.'
+	. '编辑',
 'delivery.location.building.number' => '建筑物编号',
 'delivery.location.client' => '客户交货地点',
 'delivery.location.delete' => '删除送货地点',
 'delivery.location.edit' => '送货地点 编辑',
-'delivery.location.electronic.address.scheme' => '电子地址方案（代码列表）默认值：0088 欧洲商品编号（EAN）位置代码，又名（GLN）全球位置编号',
-'delivery.location.global.location.number' => '全球位置编号（13 位数字）',
-'delivery.location.id.not.found' => '未找到交货地点全球位置编号 ID',
-'delivery.location.index.button.list' => '发票',
+'delivery.location.electronic.address.scheme' =>
+	'电子地址方案（代码列表）默认值：0088 欧洲商品编号（EAN）位置代码，又名（GLN）全球位置编号',
+'delivery.location.global.location.number' =>
+	'全球位置编号（13 位数字）',
+'delivery.location.id.not.found' =>
+	'未找到交货地点全球位置编号 ID',
+'delivery.location.index.button.list' =>
+	'发票',
 'delivery.location.none' => '此发票未关联任何交货地点',
 'delivery.location.peppol.output' => '此发票没有关联的交货地点。因此没有 Peppol 输出',
 'delivery.location.plural' => '送货地点',
@@ -444,19 +507,29 @@ return [
 'email.send.method.sendmail' => 'Sendmail',
 'email.send.method.smtp' => 'SMTP',
 'email.settings' => '电子邮件设置',
-'email.source.email.template' => ' 从设置中检索...电子邮件模板',
-'email.source.user.account' => ' 从设置中检索...发票用户帐户',
+'email.source.email.template' => '从设置中检索.'
+	. '电子邮件模板',
+'email.source.user.account' => '从设置中检索.'
+	. '发票用户帐户',
 'email.successfully.sent' => '电子邮件已成功发送',
 'email.template' => '电子邮件模板',
 'email.template.add' => '电子邮件模板添加',
 'email.template.already.exists' => '电子邮件模板已存在！',
 'email.template.form' => '电子邮件模板表格',
-'email.template.from.email.leave.blank' => '：如果您将此字段留空，用户帐户的电子邮件地址将作为可编辑值插入到邮件表单中。例如，会计师的服务器电子邮件地址。最好在此处使用与服务器相关的电子邮件地址。',
+'email.template.from.email.leave.blank' =>
+	'：如果您将此字段留空，用户帐户的电子邮件地址将作为可编辑值插入到邮件表单中。例如，会计师的服务器电子邮件地址。最好在此处使用与服务器相关的电子邮件地址。',
 'email.template.from.source' => '电子邮件来源',
-'email.template.from.source.admin.email' => '管理员的电子邮件地址（config/common/params）',
-'email.template.from.source.froms.email' => '来自表格默认（设置...来自电子邮件下拉电子邮件地址）',
-'email.template.from.source.sender.email' => '发件人的电子邮件地址（config/common/params）',
-'email.template.not.configured' => '未配置电子邮件模板。设置...发票...发票模板...默认电子邮件模板',
+'email.template.from.source.admin.email' =>
+	'管理员的电子邮件地址（config/common/params）',
+'email.template.from.source.froms.email' =>
+	'来自表格默认（设置.'
+	. '来自电子邮件下拉电子邮件地址）',
+'email.template.from.source.sender.email' =>
+	'发件人的电子邮件地址（config/common/params）',
+'email.template.not.configured' => '未配置电子邮件模板。设置.'
+	. '发票.'
+	. '发票模板.'
+	. '默认电子邮件模板',
 'email.template.overdue' => '逾期电子邮件模板',
 'email.template.paid' => '付费电子邮件模板',
 'email.template.successfully.added' => '电子邮件模板已成功添加',
@@ -474,10 +547,18 @@ return [
 'enable.projects' => '启用项目模块',
 'enable.vat' => '启用增值税',
 'enable.vat.message' => '在视图上的选项按钮上方显示增值税提醒消息',
-'enable.vat.warning.line.1' => '1. 启用增值税后，只有发票上的个别项目才需要缴纳增值税。即，报价/发票税将不会出现在发票上，并将减少为 0。',
-'enable.vat.warning.line.2' => '2. 启用增值税后，如上所述，非项目税不构成税额。 ',
-'enable.vat.warning.line.3' => '3. 在单独的数据库上创建增值税报价/发票。',
-'enable.vat.warning.line.4' => '4. 所有新的增值税发票行项目都标有belongs_to_vat_invoice标志。',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. '启用增值税后，只有发票上的个别项目才需要缴纳增值税。即，报价/发票税将不会出现在发票上，并将减少为 0。',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. '启用增值税后，如上所述，非项目税不构成税额。',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. '在单独的数据库上创建增值税报价/发票。',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. '所有新的增值税发票行项目都标有belongs_to_vat_invoice标志。',
 'enabled' => '已启用',
 'end' => '结尾',
 'end.date' => '结束日期',
@@ -501,10 +582,15 @@ return [
 'family.name' => '姓',
 'family.search' => '家庭搜寻',
 'faq' => '常见问题解答',
-'faq.ai.callback.session' => '副驾驶：我如何包含 https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php 来改进 `callbackGithub` 函数中的状态管理？',
+'faq.ai.callback.session' => '副驾驶：我如何包含 https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php 来改进 `callbackGithub` 函数中的状态管理？',
 'faq.business.rules' => 'Peppol 商业规则是什么？',
-'faq.gov.developer.sandbox.hmrc' => '如何将此存储库连接到 HMRC 开发人员沙盒？',
-'faq.lamp.alpine' => '如何将此存储库设置到 Linux Alpine、Apache2、mySql/mariadb 和 php 上？',
+'faq.gov.developer.sandbox.hmrc' =>
+	'如何将此存储库连接到 HMRC 开发人员沙盒？',
+'faq.lamp.alpine' => '如何将此存储库设置到 Linux Alpine、Apache2、mySql/mariadb 和 php '
+	. '上？',
 'faq.oauth2' => '如何设置 OAuth2 身份提供者，例如使用 Facebook 注册和登录',
 'faq.payment.provider' => '如何设置在线支付提供商？',
 'faq.php.info.all' => '全部',
@@ -541,21 +627,6 @@ return [
 'from.include.in.dropdown' => '在下拉列表中添加此电子邮件',
 'from.name' => '发件人姓名',
 'front.page' => '头版',
-'gallery.caption.slide1' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide10' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide11' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide12' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide13' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide14' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide15' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide2' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide3' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide4' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide5' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide6' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide7' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide8' => '您可以从../resources/messages/en/app.php 更改此文本。',
-'gallery.caption.slide9' => '您可以从../resources/messages/en/app.php 更改此文本。',
 'gateway.online.payment' => '网上支付',
 'gender' => '性别',
 'gender.female' => '女性',
@@ -567,59 +638,102 @@ return [
 'general.yes' => '是的',
 'generate' => '产生',
 'generate.copy' => '生成副本',
-'generate.invoice.number.for.draft' => '生成草稿发票的发票号码',
-'generate.quote.number.for.draft' => '生成草稿报价的报价编号',
+'generate.invoice.number.for.draft' =>
+	'生成草稿发票的发票号码',
+'generate.quote.number.for.draft' =>
+	'生成草稿报价的报价编号',
 'generate.sumex' => '生成 Sumex PDF',
 'generator' => '发电机',
 'generator.add' => '发电机添加',
-'generator.camelcase.capital.name' => '控制器和存储库名称中使用的驼峰式大写名称，例如 TaxRate。如果使用上述“产品”示例，请使用“产品”',
-'generator.camelcase.capital.name.product' => '产品',
+'generator.camelcase.capital.name' =>
+    '控制器和存储库名称中使用的驼峰式大写名称，例如'
+    . ' TaxRate。如果使用上述“产品”示例，请使用“产品”',
+'generator.camelcase.capital.name.product' =>
+	'产品',
 'generator.controller.and.repository' => '控制器和存储库',
-'generator.controller.layout.directory' => '控制器布局目录，例如，dirname(dirname(__DIR__))，它出现在控制器构造之后。控制器文件位于 (__DIR__) 中，并且位于“src”目录下两个目录中，“src”目录将用作“基础”，用于将路径附加到布局目录。',
-'generator.controller.layout.directory.dot.path' => '控制器布局目录点路径，例如“/views/layout/invoice.php”，它出现在控制器构造之后（不包括撇号），并附加到上述 src 目录位置。',
-'generator.controller.layout.directory.dot.path.placeholder' => '控制器布局目录点路径',
-'generator.controller.layout.directory.placeholder' => '控制器布局目录，例如 dirname(dirname(__DIR__))',
+'generator.controller.layout.directory' => '控制器布局目录，例如，'
+    . 'dirname(dirname(__DIR__))，它出现在控制器构造之后。控制器文件位于 '
+    . '(__DIR__) 中，并且位于“src”目录下两个目录中，'
+    . '“src”目录将用作“基础”，用于将路径附加到布局目录。',
+'generator.controller.layout.directory.dot.path' =>
+	'控制器布局目录点路径，例如“/views/layout/invoice.'
+	. 'php”，它出现在控制器构造之后（不包括撇号），并附加到上述 src 目录位置。',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'控制器布局目录点路径',
+'generator.controller.layout.directory.placeholder' =>
+	'控制器布局目录，例如 dirname(dirname(__DIR__))',
 'generator.controller.path.layout' => '布局文件路径',
 'generator.created.at.include' => '在实体中包含 created_at 字段',
 'generator.deleted.at.include' => '在实体中包含deleted_at字段',
-'generator.external.entity' => '此实体中使用的外部实体。设置实体是一个简单的键 =&gt; 值对 ID 索引数据库。',
-'generator.external.entity.default' => '外部实体，例如 MyEntity，不包括路径。路径由生成器内置。默认值：设置',
-'generator.external.entity.placeholder' => '外部实体，例如：MyEntity（不包括路径）。路径由生成器内置。默认值：Setting。附加存储库，例如：除主存储库之外的“Setting”存储库。',
-'generator.file.type.not.found' => '未找到文件类型。',
+'generator.external.entity' => '此实体中使用的外部实体。设置实体是一个简单的键 '
+    . '=> 值对 ID 索引数据库。',
+'generator.external.entity.default' => '外部实体，例如 MyEntity，'
+    . '不包括路径。路径由生成器内置。默认值：设置',
+'generator.external.entity.placeholder' => '外部实体，例如：'
+    . 'MyEntity（不包括路径）。路径由生成器内置。默认值：'
+    . 'Setting。附加存储库，例如：除主存储库之外的“Setting”存储库。',
+'generator.file.type.not.found' =>
+	'未找到文件类型。',
 'generator.flash.include' => '在控制器的添加/编辑/查看/删除功能中包含 Flash 消息',
 'generator.generate' => '产生',
 'generator.generated' => ' 生成于 ',
-'generator.google.translate.any' => '翻译英语\any_lang.php',
-'generator.google.translate.app' => '翻译英语\app_lang.php',
-'generator.google.translate.common' => '翻译英语\common_lang.php',
-'generator.google.translate.diff' => '翻译英语\diff_lang.php',
-'generator.google.translate.gateway' => '翻译英语\gateway_lang.php',
-'generator.google.translate.ip' => '翻译英语\ip_lang.php',
-'generator.google.translate.latest.a' => '翻译英语\a_latest_lang.php',
-'generator.google.translate.latest.b' => '翻译英语\b_latest_lang.php',
+'generator.google.translate.any' => '翻译英语\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => '翻译英语\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => '翻译英语\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => '翻译英语\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => '翻译英语\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => '翻译英语\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'翻译英语\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'翻译英语\\b_latest_lang.'
+	. 'php',
 'generator.headerline.include' => '如果需要 Ajax，请包含标题',
 'generator.history' => '此记录已存在生成器关系，因此无法删除。请先删除这些关系。',
 'generator.modified.at.include' => '在实体中包含modified_at字段',
 'generator.namespace' => '命名空间',
-'generator.namespace.before.entity' => '实体路径之前的命名空间，例如 App\Invoice（不是 App\Invoice\Entity）',
+'generator.namespace.before.entity' => '实体路径之前的命名空间，例如'
+    . ' App\Invoice（不是 App\Invoice\Entity）',
 'generator.relation.form' => '生成器关系形式',
-'generator.relation.form.camelcase.name' => '驼峰式名称（不包括 ID）（例如，产品表中的 tax_rate_id“外键/关系”简化为 TaxRate 并且是实体的名称）',
-'generator.relation.form.entity.generator' => '实体生成器',
-'generator.relation.form.lowercase.name' => '不包括 ID 的小写名称（例如，产品表中的 tax_rate_id“外键/关系”简化为 tax.rate） ',
-'generator.relation.form.view.field.name' => '查看字段名称',
+'generator.relation.form.camelcase.name' =>
+	'驼峰式名称（不包括 ID）（例如，产品表中的 tax_rate_id“外键/关系”简化为 '
+    . 'TaxRate 并且是实体的名称）',
+'generator.relation.form.entity.generator' =>
+	'实体生成器',
+'generator.relation.form.lowercase.name' =>
+	'不包括 ID 的小写名称（例如，产品表中的 tax_rate_id“外键/关系”简化为 tax.'
+	. 'rate）',
+'generator.relation.form.view.field.name' =>
+	'查看字段名称',
 'generator.relations' => '生成器关系',
 'generator.relations.add' => '生成器关系添加',
 'generator.route.prefix' => '路由前缀，例如控制器构造后出现的“invoice/product”中的发票。',
 'generator.route.suffix' => '路由后缀，例如控制器构造后出现的“invoice/product”中的产品。',
-'generator.small.plural.name' => '控制器中用于索引控制器功能的短复数名称，用于列出所有实体生成器。通常为上述值末尾带 s。',
-'generator.small.plural.name.placeholder' => '小复数名称',
-'generator.small.plural.name.products' => '产品',
-'generator.small.singular.name' => '用于编辑和查看控制器功能的控制器的简短单数名称。通常与路由后缀相同。例如：product',
-'generator.small.singular.name.placeholder' => '小单数名称',
-'generator.small.singular.name.product' => '产品',
+'generator.small.plural.name' =>
+    '控制器中用于索引控制器功能的短复数名称，用于列出所有实体生成器。通常为上述值末尾带 s。',
+'generator.small.plural.name.placeholder' =>
+	'小复数名称',
+'generator.small.plural.name.products' =>
+	'产品',
+'generator.small.singular.name' =>
+    '用于编辑和查看控制器功能的控制器的简短单数名称。通常与路由后缀相同。例如：'
+    . 'product',
+'generator.small.singular.name.placeholder' =>
+	'小单数名称',
+'generator.small.singular.name.product' =>
+	'产品',
 'generator.table' => '桌子',
-'generator.table.used.to.generate.entity.controller.repository' => '用于生成实体的表、控制器添加编辑删除视图、存储库、服务、映射器',
-'generator.updated.at.include' => '在实体中包含 updated.at 字段',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'用于生成实体的表、控制器添加编辑删除视图、存储库、服务、映射器',
+'generator.updated.at.include' => '在实体中包含 updated.'
+	. 'at 字段',
 'generators' => '生成器',
 'generators.relation' => '生成器关系',
 'gln' => '谷氨酰胺',
@@ -640,36 +754,64 @@ return [
 'guest.read.only' => '访客（只读）',
 'guest.url' => '访客网址',
 'hide.or.unhide.columns' => '隐藏或取消隐藏列',
-'hint.greater.than.zero.please' => '请大于 0.00！',
-'hint.this.field.is.not.required' => '此字段不是必填项',
-'hint.this.field.is.required' => '此字段是必需的',
+'hint.greater.than.zero.please' =>
+	'请大于 0.'
+	. '00！',
+'hint.this.field.is.not.required' =>
+	'此字段不是必填项',
+'hint.this.field.is.required' =>
+	'此字段是必需的',
 'home' => '家',
 'home.caption.slide1' => '以管理员身份注册并登录。没有网络……忽略电子邮件错误连接。',
-'home.caption.slide2' => '以管理员身份注册一个用户。请验证邮箱地址是否合法，网络连接是否正常。用户将获得一个客户账户。',
-'home.caption.slide3' => '电子邮件账户不合法，且没有网络连接……请管理员登录，并在“设置”下激活用户的发票用户账户。创建客户账户。将其分配给用户。',
-'home.caption.slides.location.debug.mode' => '内容位置：./resources/views/site/index.php 在 ./resources/views/layout/ 内。... 和翻译幻灯片位置 ./resources/messages/app.php',
+'home.caption.slide2' => 
+    '以管理员身份注册一个用户。请验证邮箱地址是否合法，'
+    . '网络连接是否正常。用户将获得一个客户账户。',
+'home.caption.slide3' => 
+    '电子邮件账户不合法，且没有网络连接……请管理员登录，'
+    . '并在“设置”下激活用户的发票用户账户。创建客户账户。将其分配给用户。',
+'home.caption.slides.location.debug.mode' =>
+	'内容位置：.'
+	. '/resources/views/site/index.'
+	. 'php 在 .'
+	. '/resources/views/layout/ 内。.'
+	. '和翻译幻灯片位置 .'
+	. '/resources/messages/app.'
+	. 'php',
 'hostname' => '主机名',
 'html.sumex.no' => '不带 Sumex 的 HTML',
 'html.sumex.yes' => '使用 Sumex 的 HTML',
 'id' => 'ID',
 'identifier.format' => '标识符格式',
 'identifier.format.template.tags' => '标识符的模板标签',
-'identifier.format.template.tags.instructions' => '模板标签可用于向电子邮件模板添加动态信息，例如客户名称或发票号码。点击<b>“标识符”格式</b>字段，然后从下拉菜单中选择一个标签。它将自动插入到文本字段中。',
-'identity.provider.authentication.successful' => '您已成功通过所选身份提供商进行身份验证、注册并分配了客户账户。请在接下来的一小时内点击此处激活您的账户。首次登录需一小时。',
-'image.overdue' => '  图片位置：./invoice/public/img/overdue.png',
-'image.paid' => '  图片位置：./invoice/public/img/paid.png',
+'identifier.format.template.tags.instructions' =>
+	'模板标签可用于向电子邮件模板添加动态信息，'
+    . '例如客户名称或发票号码。点击<b>“标识符”格式</b>字段，'
+    . '然后从下拉菜单中选择一个标签。它将自动插入到文本字段中。',
+'identity.provider.authentication.successful' =>
+    '您已成功通过所选身份提供商进行身份验证、注册并分配了客户账户。请在接下来的一小时内点击此处激活您的账户。首次登录需一小时。',
+'image.overdue' => '图片位置：.'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => '图片位置：.'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => '进口',
 'import.data' => '导入数据',
 'import.from.csv' => '从 CSV 导入',
 'in.progress' => '进行中',
 'inactive' => '不活跃',
-'index.checkbox.add.some.items.to.enable' => '发票中没有项目。请添加项目以启用复选框',
+'index.checkbox.add.some.items.to.enable' =>
+	'发票中没有项目。请添加项目以启用复选框',
 'index.footer.showing' => '显示 %s（共 %s）',
 'index.showing' => '显示 %s（共 %s）',
 'info.task.readonly' => '此任务无法再更改，因为已开具发票。',
 'install.test.data' => '现在可以安装测试数据',
-'install.test.data.exists.already' => '发票测试数据已存在',
-'install.test.data.goto.tab.index' => '转到设置...常规...安装测试数据',
+'install.test.data.exists.already' =>
+	'发票测试数据已存在',
+'install.test.data.goto.tab.index' =>
+	'转到设置.'
+	. '常规.'
+	. '安装测试数据',
 'interface' => '界面',
 'invalid.amount' => '无效金额',
 'invalid.subscriber.number' => '无效用户号码',
@@ -682,14 +824,16 @@ return [
 'invoiceplane.database.username' => '用户名',
 'invoiceplane.families' => '插入家庭',
 'invoiceplane.import' => '测试连接',
-'invoiceplane.import.complete.connection.closed' => '导入完成！连接已关闭！',
+'invoiceplane.import.complete.connection.closed' =>
+	'导入完成！连接已关闭！',
 'invoiceplane.import.connected' => '您有連線！',
 'invoiceplane.import.proceed' => '继续导入过程',
 'invoiceplane.import.proceed.alert' => '您确定要继续吗？',
 'invoiceplane.imported' => '表格已导入',
 'invoiceplane.news' => 'InvoicePlane新闻',
 'invoiceplane.no.connection' => '无连接',
-'invoiceplane.no.username.or.password' => '请保存 InvoicePlane 的数据库名称、用户名和密码',
+'invoiceplane.no.username.or.password' =>
+	'请保存 InvoicePlane 的数据库名称、用户名和密码',
 'invoiceplane.products' => '已插入产品',
 'invoiceplane.tables' => '将 InvoicePlane 表的客户、产品、单位、家庭、税率导入到空白表中。导入前，这些表中不应存在任何数据，也不应存在任何文档（例如发票）。',
 'invoiceplane.tables.not.empty' => '导入前，您的客户、产品、单位、家庭和税率表必须为空',
@@ -743,7 +887,8 @@ return [
 'layout.not-found' => '未找到',
 'layout.page.not-authorised' => '未授权：身份验证凭证不正确。',
 'layout.page.not-found' => '找不到页面 {url}。',
-'layout.page.user-cancelled-oauth2' => '用户已取消通过身份提供商（例如 Facebook）登录/注册',
+'layout.page.user-cancelled-oauth2' =>
+    '用户已取消通过身份提供商（例如 Facebook）登录/注册',
 'layout.pagination-summary' => '显示 {pageSize} 个帖子（共 {total} 个）',
 'layout.password' => '密码',
 'layout.password-verify' => '确认您的密码',
@@ -775,8 +920,10 @@ return [
 'mark.invoices.sent.pdf' => '生成 PDF 时将发票标记为已发送',
 'mark.quotes.sent.pdf' => '生成 PDF 时将报价标记为已发送',
 'mark.sent.copy.on' => '复制发票时将发票标记为已发送已启用。该功能仅在开发过程中启用',
-'mark.sent.off' => '复制发票时将发票标记为已发送……目前处于关闭状态。仅在开发期间设置为开启。点击此处将其开启',
-'mark.sent.on' => '复印发票时将发票标记为已发送……当前处于开启状态。生产过程中请始终将其关闭。点击此处关闭',
+'mark.sent.off' =>
+    '复制发票时将发票标记为已发送……目前处于关闭状态。仅在开发期间设置为开启。点击此处将其开启',
+'mark.sent.on' =>
+    '复印发票时将发票标记为已发送……当前处于开启状态。生产过程中请始终将其关闭。点击此处关闭',
 'max' => '最大限度',
 'max.quantity' => '最大数量',
 'menu' => '菜单',
@@ -814,8 +961,10 @@ return [
 'mpdf' => '平均概率密度函数',
 'mpdf.allow.charset.conversion' => '允许字符集转换',
 'mpdf.auto.arabic' => '自动阿拉伯语',
-'mpdf.auto.language.to.font' => '自动语言到字体',
-'mpdf.auto.script.to.lang' => '自动脚本化语言',
+'mpdf.auto.language.to.font' =>
+	'自动语言到字体',
+'mpdf.auto.script.to.lang' =>
+	'自动脚本化语言',
 'mpdf.auto.vietnamese' => '越南车',
 'mpdf.cjk' => '中文、日文、韩文字体',
 'mpdf.ltr' => '从左到右',
@@ -825,40 +974,73 @@ return [
 'mtd.fph.all.valid' => '所有欺诈预防标头均有效',
 'mtd.fph.generate' => '产生',
 'mtd.fph.no.provided' => '未提供欺诈预防标头',
-'mtd.fph.record.alert' => '您确定要记录新的欺诈预防标头详细信息吗？保存后，先前的详细信息将被覆盖！',
+'mtd.fph.record.alert' =>
+    '您确定要记录新的欺诈预防标头详细信息吗？保存后，先前的详细信息将被覆盖！',
 'mtd.fph.screen.timestamp' => '时间戳',
 'mtd.fph.some.advisories' => '至少一个标头可能无效',
 'mtd.fph.some.invalid' => '至少一个标头无效',
-'mtd.gov.client.browser.do.not.track' => '指示浏览器中是否启用“不跟踪”选项的值',
-'mtd.gov.client.browser.do.not.track.eg' => '例如假',
-'mtd.gov.client.browser.js.user.agent' => 'Gov-客户端-浏览器-JS-用户代理',
-'mtd.gov.client.browser.js.user.agent.eg' => '例如 Mozilla/5.0（iPad；U；CPU OS 3 2.1，如 Mac OS X；en-us）（KHTML，如 Gecko）Mobile/7B405',
-'mtd.gov.client.browser.plugins' => '原始设备上的浏览器插件列表',
-'mtd.gov.client.browser.plugins.eg' => '例如 Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Gov-Client-连接方法',
-'mtd.gov.client.device.id' => '设备 ID',
-'mtd.gov.client.device.id.eg' => '例如beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => '本地 IP',
-'mtd.gov.client.multi.factor' => '多因素',
-'mtd.gov.client.multi.factor.eg' => '例如类型=OTP；状态=成功，类型=SMS；状态=失败，类型=生物识别，类型=SMS；时间戳=2023-04-01T12：34：56Z；唯一参考=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => '一次性密码 (OTP)： ',
-'mtd.gov.client.public.ip' => '公网IP',
-'mtd.gov.client.public.port' => '公共端口（不是 http 80，也不是 https 443，例如 57961）',
+'mtd.gov.client.browser.do.not.track' =>
+	'指示浏览器中是否启用“不跟踪”选项的值',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'例如假',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov-客户端-浏览器-JS-用户代理',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'例如 Mozilla/5.'
+	. '0（iPad；U；CPU OS 3 2.'
+	. '1，如 Mac OS X；en-us）（KHTML，如 Gecko）Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'原始设备上的浏览器插件列表',
+'mtd.gov.client.browser.plugins.eg' =>
+	'例如 Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'Gov-Client-连接方法',
+'mtd.gov.client.device.id' =>
+	'设备 ID',
+'mtd.gov.client.device.id.eg' =>
+	'例如beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'本地 IP',
+'mtd.gov.client.multi.factor' =>
+	'多因素',
+'mtd.gov.client.multi.factor.eg' =>
+	'例如类型=OTP；'
+    . '状态=成功，类型=SMS；状态=失败，类型=生物识别，类型=SMS；'
+    . '时间戳=2023-04-01T12：34：56Z；唯一参考=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'一次性密码 (OTP)：',
+'mtd.gov.client.public.ip' =>
+	'公网IP',
+'mtd.gov.client.public.port' =>
+	'公共端口（不是 http 80，也不是 https 443，例如 '
+	. '57961）',
 'mtd.gov.client.screens' => '政府客户端屏幕',
-'mtd.gov.client.screens.colour.depth' => '颜色深度',
-'mtd.gov.client.screens.height' => '屏幕高度',
-'mtd.gov.client.screens.pixels' => '像素',
-'mtd.gov.client.screens.scaling.factor' => '缩放因子',
-'mtd.gov.client.screens.scaling.factor.bits' => '位',
-'mtd.gov.client.screens.width' => '屏幕宽度',
+'mtd.gov.client.screens.colour.depth' =>
+	'颜色深度',
+'mtd.gov.client.screens.height' =>
+	'屏幕高度',
+'mtd.gov.client.screens.pixels' =>
+	'像素',
+'mtd.gov.client.screens.scaling.factor' =>
+	'缩放因子',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'位',
+'mtd.gov.client.screens.width' =>
+	'屏幕宽度',
 'mtd.gov.client.timezone' => '时区',
-'mtd.gov.client.user.ids' => '用户 ID',
-'mtd.gov.client.user.ids.uuid' => '唯一标识符',
-'mtd.gov.client.window.size' => '窗口大小',
-'mtd.gov.client.window.size.pixels' => '像素',
+'mtd.gov.client.user.ids' =>
+	'用户 ID',
+'mtd.gov.client.user.ids.uuid' =>
+	'唯一标识符',
+'mtd.gov.client.window.size' =>
+	'窗口大小',
+'mtd.gov.client.window.size.pixels' =>
+	'像素',
 'mtd.gov.vendor.forwarded' => '详细列出终止传输层安全性 (TLS) 的服务之间的互联网跳数',
-'mtd.gov.vendor.license.ids' => '与在原始设备上发起 API 请求的供应商软件相关的散列许可证密钥的键值数据结构',
-'mtd.gov.vendor.public.ip' => '发起设备向其发送请求的服务器的公共 IP 地址',
+'mtd.gov.vendor.license.ids' =>
+	'与在原始设备上发起 API 请求的供应商软件相关的散列许可证密钥的键值数据结构',
+'mtd.gov.vendor.public.ip' =>
+	'发起设备向其发送请求的服务器的公共 IP 地址',
 'mtd.gov.vendor.version' => '处理请求所涉及的软件版本的键值数据结构',
 'multiple.choice' => '多项选择',
 'name' => '姓名',
@@ -887,17 +1069,28 @@ return [
 'number' => '#',
 'number.format' => '数字格式',
 'number.format.compact.comma' => '1000000,00（带小数点的紧凑格式）',
-'number.format.compact.point' => '1000000.00（带小数点的紧凑格式）',
-'number.format.european' => '1.000.000,00（欧洲格式）',
-'number.format.iso.80k.1' => '1 000 000.00（ISO 80000-1）',
+'number.format.compact.point' => '1000000.'
+	. '00（带小数点的紧凑格式）',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00（欧洲格式）',
+'number.format.iso.80k.1' =>
+	'1 000 000.'
+	. '00（ISO 80000-1）',
 'number.format.iso80k1.comma' => '1 000 000,00（ISO 80000-1，带小数点逗号）',
-'number.format.iso80k1.point' => '1 000 000.00（ISO 80000-1，带小数点）',
-'number.format.us.uk' => '1,000,000.00（美国/英国格式）',
-'number.missing.therefore.use.invoice.id' => '缺少发票号码，因此缺少发票 ID',
+'number.format.iso80k1.point' => '1 000 000.'
+	. '00（ISO 80000-1，带小数点）',
+'number.format.us.uk' => '1,000,000.'
+	. '00（美国/英国格式）',
+'number.missing.therefore.use.invoice.id' =>
+	'缺少发票号码，因此缺少发票 ID',
 'number.no' => '无发票号码',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => '客户端 ID',
-'oauth2.google.people.api.v1.client.secret' => '客户端机密',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'客户端 ID',
+'oauth2.google.people.api.v1.client.secret' =>
+	'客户端机密',
 'online.log' => '在线日志',
 'online.payment' => '网上支付',
 'online.payment.3dauth.redirect' => '请稍候，我们将把您重定向至您的发卡机构进行身份验证...',
@@ -913,7 +1106,9 @@ return [
 'online.payment.card.invalid' => '此信用卡无效。请检查提供的信息。',
 'online.payment.clientId' => '客户端 ID',
 'online.payment.clientSecret' => '客户端机密',
-'online.payment.creditcard.hint' => '如果您想通过信用卡付款，请输入以下信息。<br/>信用卡信息不会存储在我们的服务器上，而是通过安全连接传输到在线支付网关。',
+'online.payment.creditcard.hint' =>
+    '如果您想通过信用卡付款，请输入以下信息。<br/>'
+    . '信用卡信息不会存储在我们的服务器上，而是通过安全连接传输到在线支付网关。',
 'online.payment.developerMode' => '开发者模式',
 'online.payment.for' => '在线支付',
 'online.payment.for.invoice' => '发票在线支付',
@@ -955,19 +1150,22 @@ return [
 'online.payment.storePassword' => '商店密码',
 'online.payment.subAccountId' => '子账户ID',
 'online.payment.testMode' => '测试模式',
-'online.payment.testOrLiveApiKey' => '测试或实时 Api 密钥，即以 test_ 或 live_ 开头的密钥',
+'online.payment.testOrLiveApiKey' => '测试或实时 Api 密钥，即以 test_ 或 '
+	. 'live_ 开头的密钥',
 'online.payment.transactionKey' => '交易密钥',
 'online.payment.transactionPassword' => '交易密码',
 'online.payment.username' => '用户名',
 'online.payment.vendor' => '小贩',
-'online.payment.version' => 'Omnipay 版本（已选中）/ PCI 兼容（此数据库中未存储信用卡详细信息）（未选中）',
+'online.payment.version' => 'Omnipay 版本（已选中）/ PCI'
+    . ' 兼容（此数据库中未存储信用卡详细信息）（未选中）',
 'online.payment.webhookId' => 'Webhook ID',
 'online.payment.websiteKey' => '网站密钥',
 'online.payments' => '在线支付',
 'open' => '打开',
 'open.invoices' => '开具发票',
 'open.quotes' => '打开引号',
-'open.reports.in.new.tab' => '在新浏览器选项卡中打开报告',
+'open.reports.in.new.tab' =>
+	'在新浏览器选项卡中打开报告',
 'optional' => '选修的',
 'options' => '选项',
 'order' => '命令',
@@ -984,7 +1182,8 @@ return [
 'password.changed' => '密码修改成功',
 'password.reset' => '重置密码',
 'password.reset.email' => '您已请求为安装设置新密码。请点击收件箱中的链接重置密码。',
-'password.reset.failed' => '尝试发送您的密码重置电子邮件时发生错误。请查看应用程序日志或联系系统管理员。',
+'password.reset.failed' =>
+    '尝试发送您的密码重置电子邮件时发生错误。请查看应用程序日志或联系系统管理员。',
 'password.reset.info' => '您将收到一封包含重置密码链接的电子邮件。',
 'password.reset.request.token' => '请求密码重置令牌',
 'past.month' => '过去一个月',
@@ -1001,22 +1200,43 @@ return [
 'payment.deleted' => '付款已删除',
 'payment.description' => '发票 %s 付款',
 'payment.form' => '付款表格',
-'payment.gateway.default.locale' => '默认语言环境，例如 en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Mollie 支付网关测试或 Live Api Key 已设置。',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => '需要设置 Mollie 支付网关测试或 Live Api Key。',
-'payment.gateway.mollie.api.payment.id' => 'Mollie 付款 ID： ',
-'payment.gateway.no' => '设置下尚未设置任何支付网关...查看...在线支付',
+'payment.gateway.default.locale' => '默认语言环境，例如 en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Mollie 支付网关测试或 Live Api Key '
+	. '已设置。',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'需要设置 Mollie 支付网关测试或 Live Api '
+	. 'Key。',
+'payment.gateway.mollie.api.payment.id' =>
+	'Mollie 付款 ID：',
+'payment.gateway.no' => '设置下尚未设置任何支付网关.'
+	. '查看.'
+	. '在线支付',
 'payment.history' => '付款历史记录',
-'payment.information.amazon.no.omnipay.version' => '目前没有 Amazon Pay Omnipay 版本。在“设置视图”下取消勾选“Omnipay 版本”即可使用符合 PCI 标准的版本。',
-'payment.information.amazon.payment.session.complete' => '亚马逊付款会话完成 - 会话 ID： ',
-'payment.information.amazon.payment.session.incomplete' => '亚马逊付款会话未完成 - 请重试',
-'payment.information.braintree.braintree.no.omnipay.version' => '目前没有与 Braintree 6.9.1 版本兼容的 Braintree Omnipay 版本。请在“设置视图”下取消勾选“Omnipay 版本”，即可使用符合 PCI 标准的版本。',
-'payment.information.invoice.number.not.provided' => '未提供发票号码',
-'payment.information.no.information.provided' => '未提供任何信息',
+'payment.information.amazon.no.omnipay.version' =>
+	'目前没有 Amazon Pay Omnipay 版本。在“设置视图”下取消勾选“Omnipay '
+	. '版本”即可使用符合 PCI 标准的版本。',
+'payment.information.amazon.payment.session.complete' =>
+	'亚马逊付款会话完成 - 会话 ID：',
+'payment.information.amazon.payment.session.incomplete' =>
+	'亚马逊付款会话未完成 - 请重试',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'目前没有与 Braintree 6.'
+	. '9.'
+	. '1 版本兼容的 Braintree Omnipay 版本。请在“设置视图”下取消勾选“Omnipay '
+	. '版本”，即可使用符合 PCI 标准的版本。',
+'payment.information.invoice.number.not.provided' =>
+	'未提供发票号码',
+'payment.information.no.information.provided' =>
+	'未提供任何信息',
 'payment.information.none' => '没有任何',
-'payment.information.omnipay.driver.being.used' => '正在使用来自 Omnipay 的驱动程序 {{$d}}。',
-'payment.information.payment.method.required' => '此发票需要一种付款方式。',
-'payment.information.stripe.api.key' => '需要设置 Stripe 支付网关密钥/Api 密钥。',
+'payment.information.omnipay.driver.being.used' =>
+	'正在使用来自 Omnipay 的驱动程序 {{$d}}。',
+'payment.information.payment.method.required' =>
+	'此发票需要一种付款方式。',
+'payment.information.stripe.api.key' =>
+	'需要设置 Stripe 支付网关密钥/Api 密钥。',
 'payment.logs' => '付款日志',
 'payment.method' => '付款方式',
 'payment.method.add' => '付款方式添加',
@@ -1028,19 +1248,30 @@ return [
 'payment.provider' => '支付提供商',
 'payment.term' => '付款条款',
 'payment.term.0.days' => '请使用提供的付款方式之一',
-'payment.term.add.additional.terms.at.setting.repository' => '在设置存储库 getPaymentTerms 函数中添加附加条款。',
-'payment.term.eom.120.days' => 'EOM(120)：请在发行日期当月月底前 120 天内付款',
-'payment.term.eom.15.days' => 'EOM(15)：请在发行日当月结束后 15 天内付款',
-'payment.term.eom.30.days' => 'EOM(30)：请在发行日当月结束后 30 天内付款',
-'payment.term.eom.60.days' => 'EOM(60)：请在发行日当月结束后 60 天内付款',
-'payment.term.eom.90.days' => 'EOM(90)：请在发行日当月结束后 90 天内付款',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'在设置存储库 getPaymentTerms 函数中添加附加条款。',
+'payment.term.eom.120.days' =>
+	'EOM(120)：请在发行日期当月月底前 120 天内付款',
+'payment.term.eom.15.days' =>
+	'EOM(15)：请在发行日当月结束后 15 天内付款',
+'payment.term.eom.30.days' =>
+	'EOM(30)：请在发行日当月结束后 30 天内付款',
+'payment.term.eom.60.days' =>
+	'EOM(60)：请在发行日当月结束后 60 天内付款',
+'payment.term.eom.90.days' =>
+	'EOM(90)：请在发行日当月结束后 90 天内付款',
 'payment.term.general' => '30天内付款',
 'payment.term.mfi.15' => 'MFI(15)：请在发卡行次月 15 日付款',
-'payment.term.net.120.days' => '净额（120）：请在出票日起 120 天内付款',
-'payment.term.net.15.days' => '净额（15）：请在发行日期后 15 天内付款。',
-'payment.term.net.30.days' => '净额（30）：请在出票日起 30 天内付款',
-'payment.term.net.60.days' => '净额（60）：请在出票日起 60 天内付款',
-'payment.term.net.90.days' => '净额（90）：请在出票日起 90 天内付款',
+'payment.term.net.120.days' =>
+	'净额（120）：请在出票日起 120 天内付款',
+'payment.term.net.15.days' =>
+	'净额（15）：请在发行日期后 15 天内付款。',
+'payment.term.net.30.days' =>
+	'净额（30）：请在出票日起 30 天内付款',
+'payment.term.net.60.days' =>
+	'净额（60）：请在出票日起 60 天内付款',
+'payment.term.net.90.days' =>
+	'净额（90）：请在出票日起 90 天内付款',
 'payment.term.pia' => '需提前付款（PIA）',
 'payment.term.polite' => '感谢您的惠顾。请在收到此发票后 30 天内付款。',
 'payment.terms.default' => '14天内付款',
@@ -1052,7 +1283,11 @@ return [
 'pdf.archived.no' => 'PDF 未在上传/存档/发票中存档',
 'pdf.archived.yes' => 'PDF 存档于上传/存档/发票',
 'pdf.include.zugferd' => '包括 ZUGFeRD',
-'pdf.include.zugferd.help' => '启用此选项将在发票 PDF 中包含 ZUGFeRD XML，这是发票的 XML 标准。<a href="https://www.ferd-net.de/">更多信息</a>',
+'pdf.include.zugferd.help' => '启用此选项将在发票 PDF 中包含 ZUGFeRD XML，这是发票的 '
+	. 'XML 标准。<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">更多信息</a>',
 'pdf.invoice.footer' => 'PDF页脚',
 'pdf.invoice.footer.hint' => '您可以在此处输入任何 HTML，它将显示在您的 PDF 发票底部。',
 'pdf.modal' => '模态PDF',
@@ -1063,55 +1298,111 @@ return [
 'pdf.template.overdue' => '逾期 PDF 模板',
 'pdf.template.paid' => '付费PDF模板',
 'pdf.watermark' => '启用 PDF 水印',
-'peppol' => 'Peppol 通用商业语言 (UBL) 2.1 发票 - Ecosio 验证',
+'peppol' => 'Peppol 通用商业语言 (UBL) 2.'
+	. '1 发票 - Ecosio 验证',
 'peppol.abbreviation' => '佩波尔',
-'peppol.allowance.or.charge.inherit' => '发票限额费用和发票项目限额费用继承自已完成的 Peppol 文档级别限额费用',
-'peppol.client.check' => '此客户的 Peppol 详细信息不足。至少缺少一项。请参阅“查看...客户...选项...编辑 Peppol 详细信息以进行电子发票”',
-'peppol.client.defaults' => '使用 OpenPeppol 默认设置填写客户端 Peppol 表单以进行测试。',
-'peppol.currency.code.from' => '来自货币，即原产国税收货币（要更改，请参阅 config/common/params.php TaxCurrencyCode）',
-'peppol.currency.code.to' => '货币，即文档货币：参见函数 get.setting(&#39;currency.code.to&#39;)',
+'peppol.allowance.or.charge.inherit' =>
+	'发票限额费用和发票项目限额费用继承自已完成的 Peppol 文档级别限额费用',
+'peppol.client.check' => '此客户的 Peppol 详细信息不足。至少缺少一项。请参阅“查看.'
+	. '客户.'
+	. '选项.'
+	. '编辑 Peppol 详细信息以进行电子发票”',
+'peppol.client.defaults' => '使用 OpenPeppol 默认设置填写客户端 '
+    . 'Peppol 表单以进行测试。',
+'peppol.currency.code.from' => '来自货币，即原产国税收货币（要更改，请参阅 '
+    . 'config/common/params.'
+	. 'php TaxCurrencyCode）',
+'peppol.currency.code.to' => '货币，即文档货币：参见函数 get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
 'peppol.currency.from.to' => '今天从货币之一转换为目标货币',
 'peppol.currency.to.from' => '今天将其中一种目标货币转换为此种来源货币',
 'peppol.document.reference.null' => '库存号-空库存号',
-'peppol.ecosio.validator' => 'OpenPeppol UBL 发票的 Ecosio 验证器（3.15.0）（又名 BIS Billing 3.0.14）',
+'peppol.ecosio.validator' => 'OpenPeppol UBL 发票的 Ecosio 验证器（3.'
+	. '15.'
+	. '0）（又名 BIS Billing 3.'
+	. '0.'
+	. '14）',
 'peppol.electronic.invoicing' => 'Peppol电子发票',
-'peppol.enable' => '使用通用商业语言 (UBL) 2.1 启用 Peppol',
+'peppol.enable' => '使用通用商业语言 (UBL) 2.'
+	. '1 启用 Peppol',
 'peppol.include.delivery.period' => '包括交货期',
-'peppol.invoice.note.not.found' => '未找到发票',
+'peppol.invoice.note.not.found' =>
+	'未找到发票',
 'peppol.label.switch.off' => 'Peppol 默认设置已启用',
 'peppol.label.switch.on' => 'Peppol 默认设置已禁用',
 'peppol.mandatory' => ' （强制的）',
 'peppol.optional' => ' （选修的）',
-'peppol.stand.in.code' => '描述代码 - 指示货物供应/付款时未来税点日期将使用的基准。如果可以确定税点，则描述代码在发票期间内互斥。',
-'peppol.store.cove.1.1.1' => '在 Store Cove 网站上注册 API 访问权限',
-'peppol.store.cove.1.1.2' => '从 Store Cove 网站创建您的 API 密钥并存储在“设置”...“查看”...“在线支付”...“Store Cove”...“Api 密钥”中',
-'peppol.store.cove.1.1.3' => '进行第一次 API 调用以获取 JSON 响应。',
-'peppol.store.cove.1.1.4' => '发送您通过单击绿色按钮 World=&gt;DE 获取的第一个测试 Json 发票',
+'peppol.stand.in.code' => 
+    '描述代码 - 指示货物供应/付款时未来税点日期将使用的基准。如果可以确定税点，则描述代码在发票期间内互斥。',
+'peppol.store.cove.1.1.1' =>
+	'在 Store Cove 网站上注册 API '
+	. '访问权限',
+'peppol.store.cove.1.1.2' =>
+	'从 Store Cove 网站创建您的 API '
+	. '密钥并存储在“设置”.'
+	. '“查看”.'
+	. '“在线支付”.'
+	. '“Store Cove”.'
+	. '“Api 密钥”中',
+'peppol.store.cove.1.1.3' =>
+	'进行第一次 API 调用以获取 JSON 响应。',
+'peppol.store.cove.1.1.4' =>
+	'发送您通过单击绿色按钮 World=&gt;DE 获取的第一个测试 Json 发票',
 'peppol.stream.toggle' => 'Peppol - “流”或“保存到文件”切换按钮',
-'peppol.tax.category.not.found' => 'Peppol 税务类别代码（https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/）缺失。',
-'peppol.tax.category.percent.not.found' => 'Peppol 税务类别百分比（https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/）缺失。',
+'peppol.tax.category.not.found' =>
+	'Peppol 税务类别代码（https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/）缺失。',
+'peppol.tax.category.percent.not.found' =>
+	'Peppol 税务类别百分比（https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/）缺失。',
 'peppol.tax.rate.code' => 'Peppol 税率代码',
-'peppol.trying.to.send.non.pdf.file' => '目前仅使用 Peppol 发票发送 PDF 文件',
+'peppol.trying.to.send.non.pdf.file' =>
+	'目前仅使用 Peppol 发票发送 PDF 文件',
 'peppol.unit' => '使用 Peppol 进行单位分类',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => '来源：src/Invoice/Ubl/Invoice：缺少文档描述 - Ecosio：文档不得包含空元素。解决方案：在发票视图中：选项...编辑...文档描述',
-'peppol.validator.Invoice.cac.Note' => '来源：src/Invoice/Ubl/Invoice：缺少发票注释 - Ecosio：文档不得包含空元素。',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party：缺少电子邮件地址 - Ecosio：必须提供电子地址。解决方案：客户端...查看...选项...编辑电子发票的 Peppol 详细信息...EndPointID',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'来源：'
+    . 'src/Invoice/Ubl/Invoice：缺少文档描述 - Ecosio：'
+    . '文档不得包含空元素。解决方案：在发票视图中：选项.'
+	. '编辑.'
+	. '文档描述',
+'peppol.validator.Invoice.cac.Note' =>
+	'来源：src/Invoice/Ubl/Invoice：缺少发票注释 - Ecosio：文档不得包含空元素。',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party：'
+    . '缺少电子邮件地址 - Ecosio：'
+    . '必须提供电子地址。解决方案：客户端.'
+	. '查看.'
+	. '选项.'
+	. '编辑电子发票的 Peppol 详细信息.'
+	. 'EndPointID',
 'peppol.version' => 'Peppol 版本',
 'peppol.xml.stream' => '流式传输，即显示在浏览器屏幕上，而不是下载文件夹中。',
 'per.item' => '每件商品',
 'per.page.total' => ' 每页。总计 ',
 'performance' => '表现',
-'performance.label.switch.off' => '更快的读写模式 - 参考 config/common/params.php 搜索“mode” ',
-'performance.label.switch.on' => '较慢的只写模式 - 请参阅 config/common/params.php 搜索“mode” ',
+'performance.label.switch.off' => '更快的读写模式 - 参考 config/common/params.'
+	. 'php 搜索“mode”',
+'performance.label.switch.on' => '较慢的只写模式 - 请参阅 config/common/params.'
+	. 'php 搜索“mode”',
 'period' => '时期',
 'permission' => '您没有所需的权限。',
 'personal.information' => '个人信息',
 'phone' => '电话',
 'phone.abbr' => '磷',
 'phone.number' => '电话号码',
-'php.timezone.fail' => '似乎未配置时区。请检查 PHP 配置中的 date.timezone。否则将选择<strong>%s</strong> 。',
+'php.timezone.fail' => '似乎未配置时区。请检查 PHP 配置中的 date.'
+	. 'timezone。否则将选择<strong>%s</strong> 。',
 'php.timezone.success' => '已配置有效的时区。',
-'php.version.fail' => '已安装 PHP 版本 %s，但 InvoicePlane 需要 PHP 版本 %s 或更高版本',
+'php.version.fail' => '已安装 PHP 版本 %s，但 InvoicePlane '
+	. '需要 PHP 版本 %s 或更高版本',
 'php.version.success' => 'PHP 似乎满足安装要求',
 'platform' => '平台',
 'platform.PhpMyAdmin' => 'PhpMyAdmin 版本',
@@ -1138,25 +1429,36 @@ return [
 'price' => '价格',
 'product' => '产品',
 'product.add' => '产品添加',
-'product.additional.item.property.name' => 'Peppol 附加属性项目名称，例如颜色',
-'product.additional.item.property.value' => 'Peppol 附加属性项目值，例如黑色',
-'product.country.of.origin.code' => 'Peppol 原产国代码采用 ISO-3166-1:Alpha2 国家代码',
-'product.custom.fields' => '产品自定义字段（例如 Peppol：AdditionalItemProperty 多选字段颜色值黑色）',
+'product.additional.item.property.name' =>
+	'Peppol 附加属性项目名称，例如颜色',
+'product.additional.item.property.value' =>
+	'Peppol 附加属性项目值，例如黑色',
+'product.country.of.origin.code' =>
+	'Peppol 原产国代码采用 ISO-3166-1:'
+	. 'Alpha2 国家代码',
+'product.custom.fields' => '产品自定义字段（例如 '
+    . 'Peppol：AdditionalItemProperty 多选字段颜色值黑色）',
 'product.description' => '产品描述',
 'product.edit' => '编辑产品',
 'product.error.summary' => '产品错误摘要',
 'product.families' => '产品系列',
 'product.form.tab.category' => '类别',
-'product.form.tab.not.required' => '非必填字段',
+'product.form.tab.not.required' =>
+	'非必填字段',
 'product.form.tab.required' => '必填字段',
 'product.found' => '找到产品',
 'product.history' => '无法删除。该产品已在发票或报价单上。',
 'product.icc.id' => 'Peppol 商品分类代码 ID，例如 9873242',
-'product.icc.listid' => 'Peppol 物品分类代码列表 ID - 例如 SRV',
-'product.icc.listversionid' => 'Peppol 物品分类代码列表版本 ID（可选）- 例如，如果 ItemClassification 由丹麦供应商提供，则应使用 UNSPSC 版本 19.0501。',
+'product.icc.listid' => 'Peppol 物品分类代码列表 ID - 例如 '
+	. 'SRV',
+'product.icc.listversionid' => 'Peppol 物品分类代码列表版本 '
+    . 'ID（可选）- 例如，如果 ItemClassification '
+	. '由丹麦供应商提供，则应使用 UNSPSC 版本 19.'
+	. '0501。',
 'product.id' => '产品编号',
 'product.image' => '图像',
-'product.item.classification.code.scheme.id.not.found' => '未找到产品项目分类代码方案 ID',
+'product.item.classification.code.scheme.id.not.found' =>
+	'未找到产品项目分类代码方案 ID',
 'product.name' => '产品名称',
 'product.not.found' => '未找到产品',
 'product.peppol.unit' => '配备 Peppol 的单位',
@@ -1170,12 +1472,17 @@ return [
 'product.property.table' => '产品物性表',
 'product.property.value' => '价值',
 'product.record.successfully.added' => '产品记录添加成功',
-'product.sii.id' => '与上述方案相关的 Peppol 标准项目识别 ID - 例如全球贸易项目编号数据库中的 14 位零填充标识符（出现在条形码下）',
-'product.sii.schemeid' => 'Peppol 标准项目识别方案 ID - 例如 0160',
+'product.sii.id' => '与上述方案相关的 Peppol 标准项目识别 ID - '
+	. '例如全球贸易项目编号数据库中的 14 位零填充标识符（出现在条形码下）',
+'product.sii.schemeid' => 'Peppol 标准项目识别方案 ID - 例如 '
+	. '0160',
 'product.sku' => '库存单位',
 'product.tariff' => '关税',
 'product.unit' => '产品单位',
-'product.unit.code.not.found' => '产品没有关联的单位代码。产品...编辑...带有 Peppol 的单位。',
+'product.unit.code.not.found' =>
+	'产品没有关联的单位代码。产品.'
+	. '编辑.'
+	. '带有 Peppol 的单位。',
 'product.units' => '产品单位',
 'product.view.tab.details' => '产品详情',
 'product.view.tab.gallery' => '产品图库',
@@ -1189,7 +1496,8 @@ return [
 'productimage.list' => '与该产品相关的图像列表',
 'productimage.no.file.uploaded' => '尚未上传图片。可能存在重复。',
 'productimage.plural' => '产品图片',
-'productimage.possible.file.upload.attack' => '可能的文件上传攻击： ',
+'productimage.possible.file.upload.attack' =>
+	'可能的文件上传攻击：',
 'productimage.upload' => '上传产品图片',
 'productimage.uploaded.to' => '图像已上传至以下目录： ',
 'productimage.view' => '可以在产品视图下添加与产品相关的多张图片',
@@ -1197,7 +1505,8 @@ return [
 'products.form' => '产品形式',
 'profile.deleted' => '个人资料已删除',
 'profile.history' => '无法删除个人资料。存在历史记录',
-'profile.new' => '使用新的电子邮件地址或手机号码创建个人资料，激活后，选择您想要关联的公司信息。这些信息将自动显示在文档中，例如报价单和发票。',
+'profile.new' => '使用新的电子邮件地址或手机号码创建个人资料，激活后，'
+    . '选择您想要关联的公司信息。这些信息将自动显示在文档中，例如报价单和发票。',
 'profile.not.deleted' => '个人资料未被删除',
 'profile.plural' => '个人资料',
 'profile.property.label.company' => '公司',
@@ -1229,23 +1538,37 @@ return [
 'qr.code.settings' => '二维码设置',
 'qr.code.settings.bic' => '比克',
 'qr.code.settings.effect' => '上述设置对这个二维码有什么影响？',
-'qr.code.settings.effect.explanation' => '在实际代码中...没有。所有代码都使用默认值，因为上面使用了非常基本的实际代码。',
+'qr.code.settings.effect.explanation' =>
+	'在实际代码中.'
+	. '没有。所有代码都使用默认值，因为上面使用了非常基本的实际代码。',
 'qr.code.settings.enable' => '启用二维码',
-'qr.code.settings.enable.hint' => '启用此选项将在发票 PDF 中包含二维码。您必须填写收款人、IBAN 和 BIC 才能正常工作。否则二维码将不会显示。',
+'qr.code.settings.enable.hint' =>
+	'启用此选项将在发票 PDF 中包含二维码。您必须填写收款人、IBAN 和 BIC '
+	. '才能正常工作。否则二维码将不会显示。',
 'qr.code.settings.iban' => 'IBAN',
 'qr.code.settings.recipient' => '接受者',
-'qr.code.settings.remittance.text' => '汇款文本',
-'qr.code.settings.remittance.text.tags' => '汇款文本标签',
+'qr.code.settings.remittance.text' =>
+	'汇款文本',
+'qr.code.settings.remittance.text.tags' =>
+	'汇款文本标签',
 'qr.code.source' => '二维码来源',
-'qr.code.source.path' => '资源\视图\发票\设置\company.logo.and.address.php',
+'qr.code.source.path' => '资源\\视图\\发票\\设置\\company.'
+	. 'logo.'
+	. 'and.'
+	. 'address.'
+	. 'php',
 'qr.code.type' => '二维码类型',
-'qr.code.type.absolute.url' => '绝对（整个）基于 URL',
+'qr.code.type.absolute.url' =>
+	'绝对（整个）基于 URL',
 'qr.code.widget.used' => '使用的小部件',
 'qr.ecc.level' => 'QR 码 Ecc 级别（默认值：L）',
 'qr.height.and.width' => 'QR码高度和宽度（默认值：60）',
 'qr.meaning' => '意义',
-'qr.meaning.benefit' => '扫描后返回查看（无需输入网址），即可打印 PDF 格式的发票。适用于所有拥有活跃客户账户的用户。',
-'qr.output.type' => 'QR 码输出类型（例如 .svg、.png）（默认：png）',
+'qr.meaning.benefit' => '扫描后返回查看（无需输入网址），'
+    . '即可打印 PDF 格式的发票。适用于所有拥有活跃客户账户的用户。',
+'qr.output.type' => 'QR 码输出类型（例如 .'
+	. 'svg、.'
+	. 'png）（默认：png）',
 'qr.version' => 'QR 码版本号（最早 0 最新 40）（默认值：40）',
 'qty' => '数量',
 'quantity' => '数量',
@@ -1266,10 +1589,15 @@ return [
 'quote.date' => '报价日期',
 'quote.dates' => '报价日期',
 'quote.delete.not' => '发票尚未删除。',
-'quote.delivery.location.index.button.list' => '引号',
+'quote.delivery.location.index.button.list' =>
+	'引号',
 'quote.delivery.location.none' => '此报价尚未关联交货地点。',
 'quote.disable.flash.messages' => '禁用引用 Flash 消息',
-'quote.email.templates.not.configured' => '未配置电子邮件模板。设置...报价...报价模板...默认电子邮件模板',
+'quote.email.templates.not.configured' =>
+	'未配置电子邮件模板。设置.'
+	. '报价.'
+	. '报价模板.'
+	. '默认电子邮件模板',
 'quote.group' => '报价组',
 'quote.id' => '报价编号 ',
 'quote.item' => '报价项目',
@@ -1279,7 +1607,9 @@ return [
 'quote.item.cannot.delete' => '无法删除报价项目',
 'quote.label.switch.off' => '增值税报价',
 'quote.label.switch.on' => '非增值税报价',
-'quote.not.copied.to.invoice' => '发票并非根据报价单创建！发票重复。请将您的报价单复制到另一个报价单，然后再复制到发票。每个报价单必须有匹配的发票。',
+'quote.not.copied.to.invoice' =>
+	'发票并非根据报价单创建！发票重复。请将您的报价单复制到另一个报价单，'
+    . '然后再复制到发票。每个报价单必须有匹配的发票。',
 'quote.number' => '报价编号',
 'quote.number.status' => '报价编号状态',
 'quote.overview' => '报价概览',
@@ -1288,15 +1618,21 @@ return [
 'quote.pre.password' => '引用标准 PDF 密码（可选）',
 'quote.reject' => '拒绝',
 'quote.rejected' => '此报价已被拒绝',
-'quote.sales.order.created.from.quote' => '销售订单由报价创建，您输入了采购订单号！',
-'quote.sales.order.not.created.from.quote' => '销售订单未根据报价创建！销售订单重复。请将您的报价复制到另一个报价，然后再复制到销售订单。每个报价必须有一个匹配的销售订单。',
-'quote.status.email.body' => '客户 %1$s 有 %2$s 的报价 %3$s 链接至报价：%4$s',
+'quote.sales.order.created.from.quote' =>
+	'销售订单由报价创建，您输入了采购订单号！',
+'quote.sales.order.not.created.from.quote' =>
+	'销售订单未根据报价创建！销售订单重复。请将您的报价复制到另一个报价，'
+    . '然后再复制到销售订单。每个报价必须有一个匹配的销售订单。',
+'quote.status.email.body' => '客户 %1$s 有 %2$s 的报价 '
+	. '%3$s 链接至报价：%4$s',
 'quote.status.email.subject' => '客户 %1$s %2$s 报价 %3$s',
 'quote.tax' => '报价税',
 'quote.tax.rate' => '报价税率',
 'quote.tax.rate.add' => '报价税率添加',
-'quote.tax.rate.cannot.delete' => '无法删除报价税率',
-'quote.tax.rate.incomplete.fields' => '字段不完整：必须填写税率。提示：请填写零税率。',
+'quote.tax.rate.cannot.delete' =>
+	'无法删除报价税率',
+'quote.tax.rate.incomplete.fields' =>
+	'字段不完整：必须填写税率。提示：请填写零税率。',
 'quote.tax.rate.saved' => '报价税率已保存',
 'quote.template' => '报价模板',
 'quote.templates' => '报价模板',
@@ -1304,9 +1640,12 @@ return [
 'quote.to.so' => '报价至销售订单',
 'quote.to.so.password' => '销售订单密码',
 'quote.vat.quote' => '增值税报价',
-'quote.with.purchase.order.line.number' => '采购订单行号（Peppol 要求）- 与销售订单行号匹配',
-'quote.with.purchase.order.number' => '采购订单号 - 与销售订单号匹配',
-'quote.with.purchase.order.person' => '下订单的个人/部门',
+'quote.with.purchase.order.line.number' =>
+	'采购订单行号（Peppol 要求）- 与销售订单行号匹配',
+'quote.with.purchase.order.number' =>
+	'采购订单号 - 与销售订单号匹配',
+'quote.with.purchase.order.person' =>
+	'下订单的个人/部门',
 'quotes' => '引号',
 'quotes.expire.after' => '报价到期日（天）',
 'quotes.requiring.approval' => '需要批准的报价',
@@ -1345,14 +1684,18 @@ return [
 'report' => '报告',
 'report.options' => '报告选项',
 'report.sales.by.product' => '按产品划分的销售额',
-'report.sales.by.product.info' => '本报告显示产品销售总额及其商品税，不包括与这些产品相关的额外发票税。',
+'report.sales.by.product.info' =>
+	'本报告显示产品销售总额及其商品税，不包括与这些产品相关的额外发票税。',
 'report.sales.by.task' => '按任务销售',
-'report.sales.by.task.info' => '此报告提供任务销售总额及其商品税。不包括与这些任务相关的额外发票税。',
-'report.test.fraud.prevention.headers.api' => '测试欺诈预防标头 API',
+'report.sales.by.task.info' =>
+	'此报告提供任务销售总额及其商品税。不包括与这些任务相关的额外发票税。',
+'report.test.fraud.prevention.headers.api' =>
+	'测试欺诈预防标头 API',
 'reports' => '报告',
 'reset' => '重置',
 'reset.password' => '重置密码',
-'rules.peppol.en16931.001' => '必须提供业务流程或配置文件 ID。请参阅 config/common/params.php 中的“搜索 ProfileID”',
+'rules.peppol.en16931.001' => '必须提供业务流程或配置文件 ID。请参阅 config/common/params.'
+	. 'php 中的“搜索 ProfileID”',
 'run.report' => '运行报告',
 'sales' => '销售量',
 'sales.by.client' => '按客户销售',
@@ -1363,10 +1706,14 @@ return [
 'salesorder.assembled.packaged.prepared' => '组装/包装/准备',
 'salesorder.cancelled' => '销售订单已取消',
 'salesorder.client.confirmed.terms' => '客户确认条款',
-'salesorder.clients.purchase.order.number' => '客户采购订单号',
-'salesorder.clients.purchase.order.person' => '客户的采购订单处理人员',
+'salesorder.clients.purchase.order.number' =>
+	'客户采购订单号',
+'salesorder.clients.purchase.order.person' =>
+	'客户的采购订单处理人员',
 'salesorder.copied.to.invoice' => '销售订单复制到发票',
-'salesorder.copied.to.invoice.not' => '发票并非由销售订单创建！发票重复。请将您的销售订单复制到另一个销售订单，然后再复制到发票。每个销售订单必须有匹配的发票。',
+'salesorder.copied.to.invoice.not' =>
+	'发票并非由销售订单创建！发票重复。请将您的销售订单复制到另一个销售订单，'
+    . '然后再复制到发票。每个销售订单必须有匹配的发票。',
 'salesorder.date.created' => '销售订单创建日期',
 'salesorder.default.group' => '销售订单默认组',
 'salesorder.goods.services.confirmed' => '客户确认发货',
@@ -1390,12 +1737,21 @@ return [
 'save.item.as.lookup' => '将项目保存为查找',
 'search.family' => '搜索家庭',
 'search.product' => '搜索产品',
-'security.disable.read.only.empty' => '禁用只读设置目前没有值 0 或 1。合法的做法是默认将其设置为 0，以便使用只读功能来防止发票被删除。',
-'security.disable.read.only.info' => '警告：发票保护和删除防护的只读功能已启用。禁用“disable.read.only”功能，可将已发送的发票重置为草稿。',
-'security.disable.read.only.success' => '成功：发票保护和删除预防的只读功能已重新启用',
-'security.disable.read.only.true.draft.check.and.mark' => '警告：您正在编辑草稿，并且禁用只读设置处于 true',
-'security.disable.read.only.true.sent.check.and.mark' => '警告：您正在编辑已发送的发票，并且禁用只读设置为 true',
-'security.disable.read.only.warning' => '警告：发票保护和删除预防的只读功能已被禁用',
+'security.disable.read.only.empty' =>
+	'禁用只读设置目前没有值 0 或 1。合法的做法是默认将其设置为 0，'
+    . '以便使用只读功能来防止发票被删除。',
+'security.disable.read.only.info' =>
+	'警告：发票保护和删除防护的只读功能已启用。禁用“disable.'
+	. 'read.'
+	. 'only”功能，可将已发送的发票重置为草稿。',
+'security.disable.read.only.success' =>
+	'成功：发票保护和删除预防的只读功能已重新启用',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'警告：您正在编辑草稿，并且禁用只读设置处于 true',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'警告：您正在编辑已发送的发票，并且禁用只读设置为 true',
+'security.disable.read.only.warning' =>
+	'警告：发票保护和删除预防的只读功能已被禁用',
 'select.family' => '选择家庭',
 'select.payment.method' => '选择付款方式',
 'select.project' => '选择项目',
@@ -1407,30 +1763,44 @@ return [
 'set.to.read.only' => '将发票设置为只读',
 'setting' => '环境',
 'setting.add' => '设置添加',
-'setting.as.a.result.of ' => ' 后果 ',
+'setting.as.a.result.of ' =>
+	'后果',
 'setting.assets.cleared.at' => '资产清算于 ',
-'setting.assets.were.not.cleared.at' => '资产未在 ',
+'setting.assets.were.not.cleared.at' =>
+	'资产未在',
 'setting.company' => '公司公开信息',
 'setting.company.private' => '公司私人详细信息',
 'setting.company.profile' => '更改个人资料，例如手机和电子邮件地址',
 'setting.duplicate.key' => '无法完成保存。您有一个具有以下键的重复项： ',
-'setting.error.on.the.public.assets.folder' => ' 公共资产文件夹出现错误。',
+'setting.error.on.the.public.assets.folder' =>
+	'公共资产文件夹出现错误。',
 'setting.form' => '设置表单',
 'setting.key' => '设置键',
 'setting.section' => '部分',
 'setting.subsection' => '子节',
 'setting.translator.key' => '翻译键',
 'setting.value' => '设定值',
-'setting.you.have.cleared.the.cache' => '您已清除缓存。',
-'setting.you.have.not.cleared.the.cache.due.to.a' => '您尚未清除缓存 ',
+'setting.you.have.cleared.the.cache' =>
+	'您已清除缓存。',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'您尚未清除缓存',
 'settings' => '设置',
 'settings.successfully.saved' => '设置已成功保存',
 'setup.choose.language' => '选择语言',
 'setup.choose.language.message' => '选择一种语言以继续安装。',
 'setup.complete' => '安装完成',
 'setup.complete.message' => 'InvoicePlane 已成功安装。您现在可以登录了。',
-'setup.complete.secure.setup' => '如果您想确保安装安全，可以暂时禁用该设置。具体操作如下：在<code>ipconfig.php</code>文件中，将<code>DISABLE_SETUP=false</code>替换为<code>DISABLE_SETUP=true</code> 。',
-'setup.complete.support.note' => '如果您遇到任何问题或需要帮助，请查看<a href="https://wiki.invoiceplane.com">官方 wiki</a>或<a href="https://community.invoiceplane.com/">社区论坛</a>。',
+'setup.complete.secure.setup' => '如果您想确保安装安全，'
+    . '可以暂时禁用该设置。具体操作如下：在<code>ipconfig.'
+	. 'php</code>文件中，将<code>DISABLE_SETUP=false</code>'
+    . '替换为<code>DISABLE_SETUP=true</code> 。',
+'setup.complete.support.note' => '如果您遇到任何问题或需要帮助，请查看<a href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">官方 wiki</a>或<a href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">社区论坛</a>。',
 'setup.create.user' => '创建用户帐户',
 'setup.create.user.message' => '这是您登录 InvoicePlane 所需的信息。',
 'setup.database.configured.message' => '数据库配置成功。',
@@ -1456,14 +1826,24 @@ return [
 'setup.user.email.info' => '您的电子邮件地址将用于登录 InvoicePlane。',
 'setup.user.name.info' => '您的公司名称或您的名字和姓氏。',
 'setup.user.password.info' => '请务必使用强密码。建议使用大小写字母、数字和符号的组合。最小长度：8 个字符',
-'setup.user.password.verify.info' => '再次提供相同的密码来验证您的密码。',
-'setup.v120.alert' => '<strong>注意力！</strong><br>阅读有关 InvoicePlane 应用程序的一些重大变化的<a href="https://go.invoiceplane.com/v120update" target="_blank">更新通知</a>非常重要。',
-'setup.v147.alert' => '<strong>注意力！</strong><br>请打开文件<code>application/config/config.php</code>并将行<code>$config[&#39;sess_use_database&#39;] = false;</code>更改为<code>$config[&#39;sess_use_database&#39;] = true;</code> 。<br>更多详情请见<a href="https://go.invoiceplane.com/v147update" target="_blank">此处</a>',
+'setup.user.password.verify.info' =>
+	'再次提供相同的密码来验证您的密码。',
+'setup.v120.alert' => '<strong>注意力！</strong><br>阅读有关 InvoicePlane 应用程序的一些重大变化的<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">更新通知</a>非常重要。',
+'setup.v147.alert' => '<strong>注意力！</strong><br>请打开文件<code>application/config/config.'
+	. 'php</code>并将行<code>$config[\'sess_use_database\'] = false;</code>更改为<code>$config[\'sess_use_database\'] = true;</code> '
+	. '。<br>更多详情请见<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">此处</a>',
 'showing.of' => '显示 %s（共 %s） ',
 'signup' => '报名',
 'single.choice' => '单选',
 'site.soletrader.about.choose' => '以下是选择我们的一些有吸引力的理由：',
-'site.soletrader.about.competitive.rates' => '有竞争力的价格',
+'site.soletrader.about.competitive.rates' =>
+	'有竞争力的价格',
 'site.soletrader.about.contemporary' => '当代技能',
 'site.soletrader.about.dissatisfaction' => '如果您对服务不满意，我们将免费重新提供服务。',
 'site.soletrader.about.finished' => '已完成的项目',
@@ -1519,28 +1899,53 @@ return [
 'stop.logging.in' => '停止登录',
 'stop.signing.up' => '停止注册',
 'storecove' => '斯托尔科夫',
-'storecove.advisory.to.developer.field.easily.missed' => '客户容易忽略的字段',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. 创建发件人 - 法人实体国家',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'客户容易忽略的字段',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. '创建发件人 - 法人实体国家',
 'storecove.invoice.json.encoded' => 'StoreCove Json 编码发票',
 'storecove.legal' => '合法的',
-'storecove.legal.entity.id.for.json' => '1.1.4. 创建发件人 - Store Cove 法人实体 ID 插入到 invoice.json 中',
-'storecove.legal.entity.identifier.id.not.found' => '未找到配置参数会计供应商方法人实体公司 ID。',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. '创建发件人 - Store Cove 法人实体 '
+	. 'ID 插入到 invoice.'
+	. 'json 中',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'未找到配置参数会计供应商方法人实体公司 ID。',
 'storecove.no.contract.exists' => '不存在合同',
 'storecove.not.available' => '无法使用',
-'storecove.purchase.order.item.id.null' => 'po-item-id-null',
-'storecove.receiver.identifier' => '接收方标识符 - 参见 StoreCove 6.3',
-'storecove.region.country.legal.tax' => '地区 ---------- 国家 --------- 法律 --------- 税务',
-'storecove.salesorder.number.not.exist' => '销售订单号不存在',
-'storecove.sender.identifier' => '6.2 发件人标识符',
-'storecove.sender.identifier.basis' => '6.2 发送者标识符基础 - 法律或税务',
-'storecove.supplier.contact.email.not.found' => '未找到供应商联系邮箱。请参阅配置参数数组。',
-'storecove.supplier.contact.firstname.not.found' => '未找到供应商联系人名字。请参阅配置参数数组。',
-'storecove.supplier.contact.lastname.not.found' => '未找到供应商联系人姓氏。请参阅配置参数数组。',
-'storecove.supplier.contact.name.not.found' => '未找到供应商联系人姓名。请参阅配置参数数组。',
-'storecove.supplier.contact.telephone.not.found' => '未找到供应商联系电话。请参阅配置参数数组。',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-null',
+'storecove.receiver.identifier' => '接收方标识符 - 参见 StoreCove 6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'地区 ---------- 国家 --------- 法律 '
+	. '--------- 税务',
+'storecove.salesorder.number.not.exist' =>
+	'销售订单号不存在',
+'storecove.sender.identifier' => '6.'
+	. '2 发件人标识符',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 发送者标识符基础 - 法律或税务',
+'storecove.supplier.contact.email.not.found' =>
+	'未找到供应商联系邮箱。请参阅配置参数数组。',
+'storecove.supplier.contact.firstname.not.found' =>
+	'未找到供应商联系人名字。请参阅配置参数数组。',
+'storecove.supplier.contact.lastname.not.found' =>
+	'未找到供应商联系人姓氏。请参阅配置参数数组。',
+'storecove.supplier.contact.name.not.found' =>
+	'未找到供应商联系人姓名。请参阅配置参数数组。',
+'storecove.supplier.contact.telephone.not.found' =>
+	'未找到供应商联系电话。请参阅配置参数数组。',
 'storecove.tax' => '税',
 'storecove.tax.rate.code' => 'Storecove 税率代码',
-'storecove.tax.scheme.identifier.id.not.found' => '未找到配置参数会计供应商方税收计划公司 ID。',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'未找到配置参数会计供应商方税收计划公司 ID。',
 'stream' => '在浏览器/模态框中流式传输 PDF',
 'street.address' => '街道地址',
 'street.address.2' => '街道地址（续）',
@@ -1555,7 +1960,10 @@ return [
 'sumex.canton' => '广州',
 'sumex.diagnosis' => '诊断',
 'sumex.edit' => 'Sumex 编辑',
-'sumex.help' => '此选项在发票中添加菜单项，用于生成 TARMED / SUMEX1 半兼容发票。TARMED / SUMEX1 是瑞士医疗保健标准。<a href="http://sumex1.net/">更多信息</a>',
+'sumex.help' => '此选项在发票中添加菜单项，用于生成 TARMED / SUMEX1 半兼容发票。TARMED '
+	. '/ SUMEX1 是瑞士医疗保健标准。<a href="http:'
+	. '//sumex1.'
+	. 'net/">更多信息</a>',
 'sumex.information' => 'Sumex 信息',
 'sumex.insurednumber' => '受保人号码',
 'sumex.observations' => '观察',
@@ -1592,7 +2000,8 @@ return [
 'sumex.sliptype' => 'Sumex 滑套类型',
 'sumex.sliptype-esr9' => 'ESR 9（橙色滑套）',
 'sumex.sliptype-esrRed' => '红色滑倒',
-'sumex.sliptype.help' => '此选项将更改 Sumex 中的单据类型。请注意，如果您选择橙色单据，则需要以“01-”开头的用户号码。',
+'sumex.sliptype.help' =>
+    '此选项将更改 Sumex 中的单据类型。请注意，如果您选择橙色单据，则需要以“01-”开头的用户号码。',
 'sumex.ssn' => '音频视频系统',
 'sumex.veka' => '星期',
 'sunday' => '星期日',
@@ -1624,44 +2033,92 @@ return [
 'tax.rates' => '税率',
 'taxes' => '税收',
 'telegram' => '电报',
-'telegram.bot.api.chat.id' => '电报：非机器人：个人账户：Hello World：测试消息：消息收件人：<b>聊天 ID</b>',
-'telegram.bot.api.chat.id.not.set' => '向机器人发送第一条消息并接收“Hello”、“World”测试消息的非机器人个人电报帐户持有者的聊天 ID 尚未设置。',
-'telegram.bot.api.current.status' => '<b>当前用途：</b>不需要 webhook，因为客户端没有聊天 ID，也不会向机器人发送消息。',
+'telegram.bot.api.chat.id' =>
+	'电报：非机器人：个人账户：Hello World：测试消息：消息收件人：<b>聊天 ID</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'向机器人发送第一条消息并接收“Hello”、“World”测试消息的非机器人个人电报帐户持有者的聊天 ID 尚未设置。',
+'telegram.bot.api.current.status' =>
+	'<b>当前用途：</b>不需要 webhook，因为客户端没有聊天 ID，也不会向机器人发送消息。',
 'telegram.bot.api.enable' => '启用电报',
-'telegram.bot.api.enabled.not' => '电报未启用',
-'telegram.bot.api.future.use' => '<b>未来用途：</b>具有聊天 ID 的客户将收到电报发票，并通过向 webhook 发送确认来确认收到',
-'telegram.bot.api.general.purpose' => '<b>通过令牌识别的注册机器人将客户付款通知发送到以下注册聊天 ID（通常是管理员的个人非机器人电报帐户）。</b>',
-'telegram.bot.api.get.updates.failed' => '您的电报更新失败。',
-'telegram.bot.api.get.updates.success' => '您的 Telegram 更新已使用 api 方法 getUpdates 成功。',
-'telegram.bot.api.hello.world.test.message' => '来自 Telegram Bot Api 的 Hello World。感谢 yiisoft 开发人员！',
-'telegram.bot.api.hello.world.test.message.sent' => '“Hello World”消息已发送。',
-'telegram.bot.api.hello.world.test.message.sent.not' => '“Hello World”消息未发送。',
-'telegram.bot.api.hello.world.test.message.use' => '向外部聊天 ID 发送基本测试消息“Hello World from Telegram Bot Api”',
-'telegram.bot.api.payment.notification.success' => 'Telegram 付款通知成功',
-'telegram.bot.api.payment.notifications' => '电报付款通知',
+'telegram.bot.api.enabled.not' =>
+	'电报未启用',
+'telegram.bot.api.future.use' =>
+	'<b>未来用途：</b>具有聊天 ID 的客户将收到电报发票，并通过向 webhook 发送确认来确认收到',
+'telegram.bot.api.general.purpose' =>
+	'<b>通过令牌识别的注册机器人将客户付款通知发送到以下注册聊天 ID（通常是管理员的个人非机器人电报帐户）。</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'您的电报更新失败。',
+'telegram.bot.api.get.updates.success' =>
+	'您的 Telegram 更新已使用 api 方法 '
+	. 'getUpdates 成功。',
+'telegram.bot.api.hello.world.test.message' =>
+	'来自 Telegram Bot Api 的 '
+	. 'Hello World。感谢 yiisoft 开发人员！',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'“Hello World”消息已发送。',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'“Hello World”消息未发送。',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'向外部聊天 ID 发送基本测试消息“Hello World from '
+	. 'Telegram Bot Api”',
+'telegram.bot.api.payment.notification.success' =>
+	'Telegram 付款通知成功',
+'telegram.bot.api.payment.notifications' =>
+	'电报付款通知',
 'telegram.bot.api.token' => 'Telegram 机器人 API 令牌',
-'telegram.bot.api.token.not.set' => 'Telegram Bot Api 令牌未设置',
-'telegram.bot.api.webhook.delete' => '删除 Webhook',
-'telegram.bot.api.webhook.deleted' => 'Webhook 刚刚被禁用，因此可以使用手动 api 获取方法 getUpdates。',
-'telegram.bot.api.webhook.secret.token' => 'Webhook Secret Token 用于额外的安全性（用作 setWebhook 函数中的参数，而不是作为 queryParameter）',
-'telegram.bot.api.webhook.setup' => 'Webhook 已设置。',
-'telegram.bot.api.webhook.setup.already' => 'Webhook 已经设置完毕。',
-'telegram.bot.api.webhook.url.this.site' => '此站点的 Telegram Webhook Url 用于 TelegramHelper 的 setWebhook 函数。',
+'telegram.bot.api.token.not.set' =>
+	'Telegram Bot Api 令牌未设置',
+'telegram.bot.api.webhook.delete' =>
+	'删除 Webhook',
+'telegram.bot.api.webhook.deleted' =>
+	'Webhook 刚刚被禁用，因此可以使用手动 api 获取方法 getUpdates。',
+'telegram.bot.api.webhook.secret.token' =>
+	'Webhook Secret Token 用于额外的安全性（用作 setWebhook '
+	. '函数中的参数，而不是作为 queryParameter）',
+'telegram.bot.api.webhook.setup' =>
+	'Webhook 已设置。',
+'telegram.bot.api.webhook.setup.already' =>
+	'Webhook 已经设置完毕。',
+'telegram.bot.api.webhook.url.this.site' =>
+	'此站点的 Telegram Webhook Url 用于 '
+	. 'TelegramHelper 的 setWebhook 函数。',
 'template' => '发票模板',
 'templates' => '发票模板',
 'term' => '条款和条件',
 'term.1' => '我还没有阅读条款和条件。',
 'term.2' => '我已阅读并同意条款和条件。',
-'term.add.additional.terms.at.setting.repository' => '在设置存储库 getPaymentTerms 函数中添加附加条款。',
+'term.add.additional.terms.at.setting.repository' =>
+	'在设置存储库 getPaymentTerms 函数中添加附加条款。',
 'terms' => '条款',
 'test.data.install' => '安装测试数据',
 'test.data.use' => '使用测试数据',
 'test.remove' => '删除测试数据',
-'test.remove.tooltip' => '查看..设置..常规..安装测试数据..否和查看..设置..常规..使用测试数据..否',
+'test.remove.tooltip' => '查看.'
+	. '设置.'
+	. '常规.'
+	. '安装测试数据.'
+	. '否和查看.'
+	. '设置.'
+	. '常规.'
+	. '使用测试数据.'
+	. '否',
 'test.reset' => '重置测试数据',
 'test.reset.setting' => '重新安装设置',
-'test.reset.setting.tooltip' => '这将删除所有当前设置并重新安装 InvoiceController/install.default.settings.on.first.run 中的默认设置',
-'test.reset.tooltip' => '查看..设置..常规..安装测试数据..是和查看..设置..常规..使用测试数据..是',
+'test.reset.setting.tooltip' => '这将删除所有当前设置并重新安装 InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run 中的默认设置',
+'test.reset.tooltip' => '查看.'
+	. '设置.'
+	. '常规.'
+	. '安装测试数据.'
+	. '是和查看.'
+	. '设置.'
+	. '常规.'
+	. '使用测试数据.'
+	. '是',
 'text' => '文本',
 'theme' => '主题',
 'this.month' => '本月',
@@ -1685,20 +2142,31 @@ return [
 'true' => '真的',
 'try.again' => '再试一次',
 'two.factor.authentication' => '双因素身份验证',
-'two.factor.authentication.attempt.failure' => '双因素身份验证尝试失败',
-'two.factor.authentication.attempt.failure.must.setup' => '双因素身份验证尝试失败：您必须设置一个带有密钥 (+) 的新二维码，并在出现提示时选择覆盖之前的条目',
-'two.factor.authentication.attempt.success' => '双因素身份验证尝试成功',
+'two.factor.authentication.attempt.failure' =>
+	'双因素身份验证尝试失败',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'双因素身份验证尝试失败：您必须设置一个带有密钥 (+) 的新二维码，并在出现提示时选择覆盖之前的条目',
+'two.factor.authentication.attempt.success' =>
+	'双因素身份验证尝试成功',
 'two.factor.authentication.disabled' => '为了提高安全性，双因素身份验证现已被禁用。',
 'two.factor.authentication.enable' => '启用双因素身份验证',
-'two.factor.authentication.enabled.with.disabling' => '双重身份验证目前已启用，以增强安全性。身份验证成功后，身份验证将禁用，直至下次登录，以提供额外的安全保障。每次登录后，必须扫描二维码，获取新的密码。',
-'two.factor.authentication.enabled.without.disabling' => '当前已启用双因素身份验证以增加安全性，并且在身份验证成功后不会被禁用。设置双因素身份验证后，登录后将不会再次看到二维码进行扫描。',
+'two.factor.authentication.enabled.with.disabling' =>
+	'双重身份验证目前已启用，以增强安全性。身份验证成功后，身份验证将禁用，直至下次登录，以提供额外的安全保障。每次登录后，必须扫描二维码，获取新的密码。',
+'two.factor.authentication.enabled.without.disabling' =>
+	'当前已启用双因素身份验证以增加安全性，并且在身份验证成功后不会被禁用。设置双因素身份验证后，登录后将不会再次看到二维码进行扫描。',
 'two.factor.authentication.error' => '双因素身份验证错误',
-'two.factor.authentication.form.verify.login' => '验证登录',
-'two.factor.authentication.invalid.code.format' => '代码格式无效。请输入应用中的 6 位数代码。',
-'two.factor.authentication.missing.code.or.secret' => '缺少身份验证码或 2FA 密钥。',
-'two.factor.authentication.new.six.digit.code' => '请从您的应用程序中输入新的 6 位数验证码（与设置码不同）。',
-'two.factor.authentication.no.secret.generated' => '未生成密钥。请重新启动安装程序。',
-'two.factor.authentication.qr.code.enter.manually' => '或者手动将此代码输入到 Android 应用程序中： ',
+'two.factor.authentication.form.verify.login' =>
+	'验证登录',
+'two.factor.authentication.invalid.code.format' =>
+	'代码格式无效。请输入应用中的 6 位数代码。',
+'two.factor.authentication.missing.code.or.secret' =>
+	'缺少身份验证码或 2FA 密钥。',
+'two.factor.authentication.new.six.digit.code' =>
+	'请从您的应用程序中输入新的 6 位数验证码（与设置码不同）。',
+'two.factor.authentication.no.secret.generated' =>
+	'未生成密钥。请重新启动安装程序。',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'或者手动将此代码输入到 Android 应用程序中：',
 'two.factor.authentication.scan' => '使用您的 Aegis 应用程序扫描此二维码：',
 'two.factor.authentication.setup' => '设置双因素身份验证',
 'type' => '类型',
@@ -1746,23 +2214,37 @@ return [
 'user.iban' => 'IBAN',
 'user.inv.active.not' => '用户帐户未激活',
 'user.inv.list.limit' => '每页列出的记录数（注意：覆盖默认值）',
-'user.inv.more.than.one.assigned' => '发票创建失败：请查阅您的“设置”...用户帐户。此客户已分配多个用户。',
+'user.inv.more.than.one.assigned' =>
+	'发票创建失败：请查阅您的“设置”.'
+	. '用户帐户。此客户已分配多个用户。',
 'user.inv.refer.to' => '单击此处可以覆盖每页 10 条记录的默认值。',
 'user.inv.role.accountant' => '会计',
-'user.inv.role.accountant.assigned' => '会计角色分配',
-'user.inv.role.accountant.default' => '默认情况下，客户的会计可以查看发票、支付发票、查看发票付款以及编辑发票付款。',
+'user.inv.role.accountant.assigned' =>
+	'会计角色分配',
+'user.inv.role.accountant.default' =>
+	'默认情况下，客户的会计可以查看发票、支付发票、查看发票付款以及编辑发票付款。',
 'user.inv.role.administrator' => '行政人员',
-'user.inv.role.administrator.already.assigned' => '管理员角色已分配',
-'user.inv.role.administrator.assigned' => '管理员角色现已分配。 ',
-'user.inv.role.all.new' => '所有新用户将默认承担观察员角色，即可以查看文档但不能编辑发送给他们的文档，即观察或查看文档。',
+'user.inv.role.administrator.already.assigned' =>
+	'管理员角色已分配',
+'user.inv.role.administrator.assigned' =>
+	'管理员角色现已分配。',
+'user.inv.role.all.new' =>
+	'所有新用户将默认承担观察员角色，即可以查看文档但不能编辑发送给他们的文档，即观察或查看文档。',
 'user.inv.role.observer' => '观察者',
-'user.inv.role.observer.assigned' => '观察员角色分配',
-'user.inv.role.observer.assigned.already' => '观察员角色已被分配。',
-'user.inv.role.revoke.all' => '撤销所有角色',
-'user.inv.role.warning.revoke.all' => '您确定要撤销所有角色吗',
-'user.inv.role.warning.role' => '您确定要担任这个角色吗？',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => '无法将下拉菜单的管理员类型分配给非管理员',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => '无法将下拉菜单的访客类型分配给管理员',
+'user.inv.role.observer.assigned' =>
+	'观察员角色分配',
+'user.inv.role.observer.assigned.already' =>
+	'观察员角色已被分配。',
+'user.inv.role.revoke.all' =>
+	'撤销所有角色',
+'user.inv.role.warning.revoke.all' =>
+	'您确定要撤销所有角色吗',
+'user.inv.role.warning.role' =>
+	'您确定要担任这个角色吗？',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'无法将下拉菜单的管理员类型分配给非管理员',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'无法将下拉菜单的访客类型分配给管理员',
 'user.signup.please' => '请注册！',
 'user.subscriber.number' => '用户号码',
 'user.type' => '用户类型',
@@ -1773,7 +2255,8 @@ return [
 'validator.invalid.login.password' => '登录名或密码无效',
 'validator.password.change' => '您的密码已更改',
 'validator.password.not.match' => '密码不匹配',
-'validator.password.not.match.new' => '您的新密码不匹配',
+'validator.password.not.match.new' =>
+	'您的新密码不匹配',
 'validator.password.reset' => '您的密码已重置',
 'validator.user.exist' => '具有此登录名的用户已存在',
 'validator.user.exist.not' => '具有此登录名的用户不存在',
@@ -1822,4 +2305,78 @@ return [
 'yes' => '是的',
 'zip' => '邮政编码',
 'zip.code' => '邮政编码',
+    
+'allowance.or.charge.allowance.tax' =>
+	'津贴税',
+'allowance.or.charge.charge.tax' =>
+	'税费',
+'allowance.or.charge.inv.add' =>
+	'添加发票津贴或费用',
+'allowance.or.charge.level' => '级别（⬅️总体，明细项➡）',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'运输/处理/包装',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'运输/处理/包装增值税',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'运输/处理/包装税',
+'amount.payment' => '应付金额',
+'calendar' => '日历',
+'continue.with.developersandboxhmrc' => '继续参与英国开发者政府沙盒计划',
+'continue.with.oidc' => '继续使用 OpenID Connect',
+'continue.with.openbanking' => '继续推进开放银行',
+'converted.to.invoice' => '已转换为发票',
+'converted.to.so' => '已转换为销售订单',
+'custom.field.edit' => '自定义字段编辑',
+'delete.quote.single' => '此报价单可以删除，因为它没有关联的销售订单或发票。',
+'delete.quote.derived' => '此报价单关联着销售订单或发票，因此无法删除。',
+'extended' => '扩展',
+'extended.language' => '扩展语言',
+'file' => '文件',
+'grand.fathered' => '祖父',
+'layout.password.otp.6' => '一次性密码（6 位数字）',
+'layout.password.otp.6.8' =>
+	'一次性密码（6 位数字）/ 备份恢复码（8 位数字）',
+'oauth2.account.locked' => '账户已锁定',
+'oauth2.backup.recovery.codes' => '备份恢复代码。请妥善保管。',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'重新生成备份恢复代码',
+'oauth2.consent.required' => '需要征得同意',
+'oauth2.default' => '使用的默认 OAuth 2.'
+	. '0 配置',
+'oauth2.invalid.request' => '无效请求',
+'oauth2.invalid.client' => '无效客户端',
+'oauth2.invalid.grant' => '无效授权',
+'oauth2.login.required' => '需要登录',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'缺少身份验证码或状态参数。',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'状态参数缺失。可能遭受 CSRF 攻击',
+'oauth2.server.error' => '服务器错误',
+'oauth2.temporarily.unavailable' => '暂时无法使用',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'生产环境中不允许创建测试用户。',
+'oauth2.unauthorized.client' => '未经授权的客户端',
+'oauth2.unsupported.response.type' => '不支持的响应类型',
+'oauth2.unsupported.grant.type' => '不支持的拨款类型',
+'online.payment.apiToken' => 'API令牌',
+'online.payment.thirdPartyProvider' => '第三方供应商，例如 Wonderful',
+'open.banking.pay.with' => '使用开放银行支付： ',
+'open.banking.not.configured' => '开放银行功能尚未配置。请联系技术支持。',
+'radiolist.choice' => '电台列表选择',
+'region' => '地区',
+'script' => '脚本',
+'tax.rate.active.not' => '警告：尚未激活任何税率。请至少激活一个税率。设置…税率',
+'textarea' => '文本区域',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'无效的 8 位备份恢复代码',
+'two.factor.authentication.invalid.totp.code' =>
+	'无效的6位定时一次性身份验证码',
+'two.factor.authentication.rate.limit.reached' =>
+	'已达到速率限制，请稍候10秒。',
+'url' => '网址',
+'variant' => '变体',
+'approval.required' => '需要审批',
+'quote.approval.required' => '报价需经审批',
+'quote.must.be.approved.first' =>
+	'报价必须先获得批准才能转换。',    
 ];

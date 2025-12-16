@@ -167,8 +167,8 @@ foreach ($invoices as $invoice) {
                                 </a>
                             </li>
                             <?php if (
-                                $invoice->getStatus_id() === 1 ||
-                                ($s->getSetting('enable_invoice_deletion') == 1  && $invoice->getIs_read_only() !== true)
+                                $invoice->getStatus_id() === 1
+                                || ($s->getSetting('enable_invoice_deletion') == 1  && $invoice->getIs_read_only() !== true)
                             ) { ?>
                                 <li>
                                     <form action="<?= $urlGenerator->generate('inv/delete', $actionDeleteArguments); ?>" method="POST">

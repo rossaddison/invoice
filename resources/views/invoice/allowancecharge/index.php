@@ -61,7 +61,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(AllowanceCharge $model) => $model->getId(),
+        content: static fn (AllowanceCharge $model) => $model->getId(),
     ),
     new DataColumn(
         property: 'level',
@@ -73,17 +73,17 @@ $columns = [
     new DataColumn(
         'reason_code',
         header: $translator->translate('allowance.or.charge.reason.code'),
-        content: static fn(AllowanceCharge $model) => $model->getReasonCode(),
+        content: static fn (AllowanceCharge $model) => $model->getReasonCode(),
     ),
     new DataColumn(
         'reason',
         header: $translator->translate('allowance.or.charge.reason'),
-        content: static fn(AllowanceCharge $model) => $model->getReason(),
+        content: static fn (AllowanceCharge $model) => $model->getReason(),
     ),
     new DataColumn(
         'base_amount',
         header: $translator->translate('allowance.or.charge.base.amount'),
-        content: static fn(AllowanceCharge $model) => $model->getBaseAmount(),
+        content: static fn (AllowanceCharge $model) => $model->getBaseAmount(),
     ),
     new DataColumn(
         'multiplier_factor_numeric',
@@ -95,7 +95,7 @@ $columns = [
     new DataColumn(
         'amount',
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static fn(AllowanceCharge $model) => $model->getAmount(),
+        content: static fn (AllowanceCharge $model) => $model->getAmount(),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -112,8 +112,8 @@ $columns = [
         'identifier',
         header: $translator->translate('allowance.or.charge.allowance'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
-            return !$model->getIdentifier() ?
-                  Html::a(
+            return !$model->getIdentifier()
+                  ? Html::a(
                       Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                       $urlGenerator->generate(
                           'allowancecharge/edit_allowance',
@@ -128,8 +128,8 @@ $columns = [
         'identifier',
         header: $translator->translate('allowance.or.charge.charge'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
-            return $model->getIdentifier() ?
-                Html::a(
+            return $model->getIdentifier()
+                ? Html::a(
                     Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                     $urlGenerator->generate(
                         'allowancecharge/edit_charge',
@@ -161,7 +161,7 @@ $columns = [
     ),
 ];
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $grid_summary = $s->grid_summary(
     $paginator,
@@ -171,13 +171,13 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()
+$toolbarString
+    = Form::tag()
     ->post($urlGenerator->generate('allowancecharge/index'))
     ->csrf($csrf)
-    ->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
     ->columns(...$columns)

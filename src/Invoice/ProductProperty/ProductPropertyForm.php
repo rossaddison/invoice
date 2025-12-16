@@ -31,17 +31,17 @@ final class ProductPropertyForm extends FormModel
         return $this->product;
     }
 
-    public function getProduct_id(): int|null
+    public function getProduct_id(): ?int
     {
         return $this->product_id;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getValue(): string|null
+    public function getValue(): ?string
     {
         return $this->value;
     }

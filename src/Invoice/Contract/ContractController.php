@@ -233,7 +233,7 @@ final class ContractController extends BaseController
      * @param contractR $contractRepository
      * @return Contract|null
      */
-    private function contract(CurrentRoute $currentRoute, contractR $contractRepository): Contract|null
+    private function contract(CurrentRoute $currentRoute, contractR $contractRepository): ?Contract
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

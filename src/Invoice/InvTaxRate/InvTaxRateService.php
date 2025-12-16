@@ -8,7 +8,9 @@ use App\Invoice\Entity\InvTaxRate;
 
 final readonly class InvTaxRateService
 {
-    public function __construct(private InvTaxRateRepository $repository) {}
+    public function __construct(private InvTaxRateRepository $repository)
+    {
+    }
 
     /**
      * Related logic: see resources/views/invoice/inv/modal_add_inv_tax.php
@@ -30,7 +32,7 @@ final readonly class InvTaxRateService
     /**
      * @param string|null $new_inv_id
      */
-    public function initializeCreditInvTaxRate(int $basis_inv_id, string|null $new_inv_id): void
+    public function initializeCreditInvTaxRate(int $basis_inv_id, ?string $new_inv_id): void
     {
         $basis_invoice_tax_rates = $this->repository->repoInvquery((string) $basis_inv_id);
         /** @var InvTaxRate $basis_invoice_tax_rate */

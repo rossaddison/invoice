@@ -70,7 +70,7 @@ final class GeneratorRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGentorQuery(string $id): Gentor|null
+    public function repoGentorQuery(string $id): ?Gentor
     {
         $query = $this
             ->select()

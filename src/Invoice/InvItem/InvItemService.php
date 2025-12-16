@@ -19,7 +19,9 @@ use App\Invoice\Unit\UnitRepository as UNR;
 
 final readonly class InvItemService
 {
-    public function __construct(private InvItemRepository $repository) {}
+    public function __construct(private InvItemRepository $repository)
+    {
+    }
 
     /**
      * Related logic: see InvController function inv_to_inv_items
@@ -34,7 +36,7 @@ final readonly class InvItemService
      * @param UNR $unR
      * @return int|null
      */
-    public function addInvItem_product(InvItem $model, array $array, string $inv_id, PR $pr, TRR $trr, IIAS $iias, IIAR $iiar, SR $s, UNR $unR): int|null
+    public function addInvItem_product(InvItem $model, array $array, string $inv_id, PR $pr, TRR $trr, IIAS $iias, IIAR $iiar, SR $s, UNR $unR): ?int
     {
         // This function is used in product/save_product_lookup_item_product when adding a product using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
@@ -206,7 +208,7 @@ final readonly class InvItemService
      * @param SR $s
      * @return int|null
      */
-    public function addInvItem_task(InvItem $model, array $array, string $inv_id, taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar, SR $s): int|null
+    public function addInvItem_task(InvItem $model, array $array, string $inv_id, taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar, SR $s): ?int
     {
         // This function is used in task/selection_inv when adding a new task from the modal
         // see https://github.com/cycle/orm/issues/348
@@ -268,8 +270,8 @@ final readonly class InvItemService
         $model->setTax_rate_id((int) $tax_rate_id);
 
         isset($array['task_id']) ? $model->setTask($model->getTask()?->getId() == (int) $array['task_id'] ? $model->getTask() : null) : '';
-        $task_id = ((isset($array['task_id'])) ?
-                (int) $array['task_id'] : '');
+        $task_id = ((isset($array['task_id']))
+                ? (int) $array['task_id'] : '');
         // Product id and task id are mutually exclusive
         $model->setTask_id((int) $task_id);
 
@@ -383,7 +385,7 @@ final readonly class InvItemService
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): float|null
+    public function taxrate_percentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {

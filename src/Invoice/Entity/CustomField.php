@@ -53,7 +53,8 @@ class CustomField
         private ?int $text_area_rows = null,
         #[Column(type: 'string(4)', nullable: true)]
         private ?string $text_area_wrap = 'hard',
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {

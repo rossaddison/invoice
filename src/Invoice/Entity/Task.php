@@ -27,7 +27,9 @@ class Task
         private ?float $price = null, #[Column(type: 'date', nullable: true)]
         private mixed $finish_date = '', #[Column(type: 'int', nullable: false)]
         private ?int $status = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null) {}
+        private ?int $tax_rate_id = null)
+    {
+    }
 
     public function getTaxRate(): ?TaxRate
     {

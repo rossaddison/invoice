@@ -20,7 +20,9 @@ class PostalAddress
         private string $city_name = '', #[Column(type: 'string(7)', nullable: false)]
         private string $postalzone = '', #[Column(type: 'string(50)', nullable: false)]
         private string $countrysubentity = '', #[Column(type: 'string(50)', nullable: false)]
-        private string $country = '') {}
+        private string $country = '')
+    {
+    }
 
     public function getId(): string
     {

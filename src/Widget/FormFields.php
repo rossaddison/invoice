@@ -22,7 +22,8 @@ final readonly class FormFields
     public function __construct(
         private TranslatorInterface $translator,
         private SettingRepository $settingRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Client selection dropdown field
@@ -39,16 +40,16 @@ final readonly class FormFields
         /** @var array<array-key, array<array-key, string>|string> $clientOptions */
         $clientOptions = $optionsData['client'] ?? [];
 
-        return Html::openTag('div') .
-            Field::select($form, 'client_id')
+        return Html::openTag('div')
+            . Field::select($form, 'client_id')
                 ->label($this->translator->translate($labelKey))
                 ->addInputAttributes(['class' => 'form-control'])
                 ->value($form->getClient_id())
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($clientOptions)
                 ->hint($this->translator->translate($hintKey))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**
@@ -66,16 +67,16 @@ final readonly class FormFields
         /** @var array<array-key, array<array-key, string>|string> $groupOptions */
         $groupOptions = $optionsData['group'] ?? [];
 
-        return Html::openTag('div') .
-            Field::select($form, 'group_id')
+        return Html::openTag('div')
+            . Field::select($form, 'group_id')
                 ->label($this->translator->translate('group'))
                 ->addInputAttributes(['class' => 'form-control'])
                 ->value($form->getGroup_id() ?? $defaultValue)
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($groupOptions)
                 ->hint($this->translator->translate($hintKey))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**
@@ -93,16 +94,16 @@ final readonly class FormFields
         /** @var array<array-key, array<array-key, string>|string> $statusOptions */
         $statusOptions = $optionsData[$statusKey] ?? [];
 
-        return Html::openTag('div') .
-            Field::select($form, 'status_id')
+        return Html::openTag('div')
+            . Field::select($form, 'status_id')
                 ->label($this->translator->translate('status'))
                 ->addInputAttributes(['class' => 'form-control'])
                 ->value($form->getStatus_id())
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($statusOptions)
                 ->hint($this->translator->translate($hintKey))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**
@@ -110,25 +111,25 @@ final readonly class FormFields
      */
     public function discountFields(InvForm|QuoteForm|SalesOrderForm $form): string
     {
-        return Html::openTag('div') .
-            Field::text($form, 'discount_amount')
+        return Html::openTag('div')
+            . Field::text($form, 'discount_amount')
                 ->hideLabel(false)
                 ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00)
                 ->label($this->translator->translate('discount.amount') . ' ' . $this->settingRepository->getSetting('currency_symbol'))
                 ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
                 ->value(Html::encode($this->settingRepository->format_amount($form->getDiscount_amount() ?? 0.00)))
                 ->placeholder($this->translator->translate('discount.amount'))
-                ->render() .
-            Html::closeTag('div') .
-            Html::openTag('div') .
-            Field::text($form, 'discount_percent')
+                ->render()
+            . Html::closeTag('div')
+            . Html::openTag('div')
+            . Field::text($form, 'discount_percent')
                 ->label($this->translator->translate('discount.percent'))
                 ->disabled(($form->getDiscount_amount() > 0.00 && $form->getDiscount_percent() == 0.00))
                 ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_percent'])
                 ->value(Html::encode($this->settingRepository->format_amount($form->getDiscount_percent() ?? 0.00)))
                 ->placeholder($this->translator->translate('discount.percent'))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**
@@ -139,13 +140,13 @@ final readonly class FormFields
         $value = $form->getDate_created();
         $dateValue = $value instanceof \DateTimeImmutable ? $value->format('Y-m-d') : '';
 
-        return Html::openTag('div') .
-            Field::date($form, 'date_created')
+        return Html::openTag('div')
+            . Field::date($form, 'date_created')
                 ->label($this->translator->translate($labelKey))
                 ->value($dateValue)
                 ->hint($this->translator->translate('hint.this.field.is.required'))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**
@@ -153,15 +154,15 @@ final readonly class FormFields
      */
     public function passwordField(InvForm|QuoteForm|SalesOrderForm $form): string
     {
-        return Html::openTag('div') .
-            Field::password($form, 'password')
+        return Html::openTag('div')
+            . Field::password($form, 'password')
                 ->label($this->translator->translate('password'))
                 ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
                 ->value(Html::encode($form->getPassword()))
                 ->placeholder($this->translator->translate('password'))
                 ->hint($this->translator->translate('hint.this.field.is.not.required'))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**
@@ -173,15 +174,15 @@ final readonly class FormFields
         $fieldName = $form instanceof InvForm ? 'note' : 'notes';
         $value = $form instanceof InvForm ? $form->getNote() : $form->getNotes();
 
-        return Html::openTag('div') .
-            Field::textarea($form, $fieldName)
+        return Html::openTag('div')
+            . Field::textarea($form, $fieldName)
                 ->label($this->translator->translate('note'))
                 ->addInputAttributes(['class' => 'form-control'])
                 ->value(Html::encode($value ?? ''))
                 ->placeholder($this->translator->translate('note'))
                 ->hint($this->translator->translate('hint.this.field.is.not.required'))
-                ->render() .
-            Html::closeTag('div');
+                ->render()
+            . Html::closeTag('div');
     }
 
     /**

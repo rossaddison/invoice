@@ -94,7 +94,7 @@ final class ClientPeppolRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return ClientPeppol|null
      */
-    public function repoClientPeppolLoadedquery(string $client_id): ClientPeppol|null
+    public function repoClientPeppolLoadedquery(string $client_id): ?ClientPeppol
     {
         $query = $this->select()
                       ->load('client')

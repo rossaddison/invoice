@@ -81,47 +81,47 @@ final class PostalAddressForm extends FormModel
         ];
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
 
-    public function getStreet_name(): string|null
+    public function getStreet_name(): ?string
     {
         return $this->street_name;
     }
 
-    public function getAdditional_street_name(): string|null
+    public function getAdditional_street_name(): ?string
     {
         return $this->additional_street_name;
     }
 
-    public function getBuilding_number(): string|null
+    public function getBuilding_number(): ?string
     {
         return $this->building_number;
     }
 
-    public function getCity_name(): string|null
+    public function getCity_name(): ?string
     {
         return $this->city_name;
     }
 
-    public function getPostalzone(): string|null
+    public function getPostalzone(): ?string
     {
         return $this->postalzone;
     }
 
-    public function getCountrysubentity(): string|null
+    public function getCountrysubentity(): ?string
     {
         return $this->countrysubentity;
     }
 
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }

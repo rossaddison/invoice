@@ -28,7 +28,7 @@ use Yiisoft\Router\CurrentRoute;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -42,22 +42,22 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Profile $model) => Html::encode($model->getId()),
+        content: static fn (Profile $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'company_id',
         header: $translator->translate('company'),
-        content: static fn(Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
+        content: static fn (Profile $model): string => Html::encode($model->getCompany()?->getName() ?? ''),
     ),
     new DataColumn(
         'email',
         header: $translator->translate('email.address'),
-        content: static fn(Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
+        content: static fn (Profile $model): string => Html::encode(ucfirst($model->getEmail() ?? '')),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
+        content: static fn (Profile $model): string => Html::encode(ucfirst($model->getDescription() ?? '')),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -101,9 +101,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('profile/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('profile/index'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

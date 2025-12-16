@@ -85,7 +85,7 @@ final class InvItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvItemAmountquery(string $inv_item_id): InvItemAmount|null
+    public function repoInvItemAmountquery(string $inv_item_id): ?InvItemAmount
     {
         $query = $this->select()
                       ->load(['inv_item'])

@@ -51,10 +51,10 @@ use Yiisoft\Html\Html;
                 </div>    
                 <div class="col-8">
                     <?= $translator->translate('online.payment.for.invoice'); ?> #
-                    <?= Html::encode($invoice->getNumber() ?? '') . ' => ' .
-                     Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' ' .
-                     Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' ' .
-                     $numberHelper->format_currency($balance); ?>
+                    <?= Html::encode($invoice->getNumber() ?? '') . ' => '
+                     . Html::encode($invoice->getClient()?->getClient_name() ?? '') . ' '
+                     . Html::encode($invoice->getClient()?->getClient_surname() ?? '') . ' '
+                     . $numberHelper->format_currency($balance); ?>
                 </div>
             </div>    
         </h2>
@@ -69,51 +69,50 @@ use Yiisoft\Html\Html;
 <div class="card-body p-5 text-center">  
     <?= $alert; ?>
     <div id="dropin-container"></div>
-    <div id="dropin-container"></div>
     <input type="submit" />
     <input type="hidden" id="nonce" name="payment_method_nonce"/>
     <?= $companyLogo; ?>
     <br>
-<br>    
-<?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
-<?= $partial_client_address; ?>
-<br>
-<div class="table-responsive">
-    <table class="table table-bordered table-condensed no-margin">
-    <tbody>
-    <tr>
-        <td><?= $translator->translate('date'); ?></td>
-        <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
-    </tr>
-    <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
-        <td><?= $translator->translate('due.date'); ?></td>
-        <td class="text-right">
-            <?= Html::encode($invoice->getDate_due()->format('Y-m-d')); ?>
-        </td>
-    </tr>
-    <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
-        <td><?= $translator->translate('total'); ?></td>
-        <td class="text-right"><?= Html::encode($numberHelper->format_currency($total)); ?></td>
-    </tr>
-    <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
-        <td><?= $translator->translate('balance'); ?></td>
-        <td class="text-right"><?= Html::encode($numberHelper->format_currency($balance)); ?></td>
-    </tr>
-    <?php if ($payment_method): ?>
-        <tr>
-            <td><?= $translator->translate('payment.method') . ': '; ?></td>
-            <td class="text-right"><?= $payment_method; ?></td>
-        </tr>
-    <?php endif; ?>
-    </tbody>
-</table>
-</div>
-<?php if (!empty($invoice->getTerms())) : ?>
-    <div class="col-xs-12 text-muted">
-        <br>
-        <h4><?= $translator->translate('terms'); ?></h4>
-        <div><?= nl2br(Html::encode($invoice->getTerms())); ?></div>
+    <br>    
+    <?= Html::encode($clientHelper->format_client($client_on_invoice)) ?>
+    <?= $partial_client_address; ?>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed no-margin">
+            <tbody>
+            <tr>
+                <td><?= $translator->translate('date'); ?></td>
+                <td class="text-right"><?= Html::encode($invoice->getDate_created()->format('Y-m-d')); ?></td>
+            </tr>
+            <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
+                <td><?= $translator->translate('due.date'); ?></td>
+                <td class="text-right">
+                    <?= Html::encode($invoice->getDate_due()->format('Y-m-d')); ?>
+                </td>
+            </tr>
+            <tr class="<?php echo($is_overdue ? 'overdue' : '') ?>">
+                <td><?= $translator->translate('total'); ?></td>
+                <td class="text-right"><?= Html::encode($numberHelper->format_currency($total)); ?></td>
+            </tr>
+            <tr class="<?= ($is_overdue ? 'overdue' : '') ?>">
+                <td><?= $translator->translate('balance'); ?></td>
+                <td class="text-right"><?= Html::encode($numberHelper->format_currency($balance)); ?></td>
+            </tr>
+            <?php if ($payment_method): ?>
+                <tr>
+                    <td><?= $translator->translate('payment.method') . ': '; ?></td>
+                    <td class="text-right"><?= $payment_method; ?></td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
     </div>
+    <?php if (!empty($invoice->getTerms())) : ?>
+        <div class="col-xs-12 text-muted">
+            <br>
+            <h4><?= $translator->translate('terms'); ?></h4>
+            <div><?= nl2br(Html::encode($invoice->getTerms())); ?></div>
+        </div>
 <?php endif; ?>
 </div>
 </div>

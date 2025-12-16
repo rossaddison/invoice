@@ -38,7 +38,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataFilterUserInvLoginDropDown
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -51,10 +51,10 @@ $toolbarReset = A::tag()
 echo A::tag()->content(H4::tag()->content($translator->translate('client.has.not.assigned')))->href($urlGenerator->generate('client/index'))->render();
 echo '<table class="table table-responsive">';
 echo '<thead>';
-echo '<tr><th scope="row">' . $translator->translate('client.name') . ' ' .
-                             $translator->translate('client.surname') .
-     '</th><th scope="row">' . $translator->translate('phone') . '</th>' .
-     '<th scope="row">' . $translator->translate('email.address') . '</th></tr>';
+echo '<tr><th scope="row">' . $translator->translate('client.name') . ' '
+                             . $translator->translate('client.surname')
+     . '</th><th scope="row">' . $translator->translate('phone') . '</th>'
+     . '<th scope="row">' . $translator->translate('email.address') . '</th></tr>';
 echo '</thead>';
 echo '<tbody>';
 ?> 
@@ -350,9 +350,9 @@ $grid_summary = $s->grid_summary(
     $translator->translate('user.accounts'),
     '',
 );
-$toolbarString = Form::tag()->post($urlGenerator->generate('userinv/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('userinv/index'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 /**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */

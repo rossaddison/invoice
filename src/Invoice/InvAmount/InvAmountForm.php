@@ -52,52 +52,52 @@ final class InvAmountForm extends FormModel
         $this->balance = $invAmount->getBalance();
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getSign(): int|null
+    public function getSign(): ?int
     {
         return $this->sign;
     }
 
-    public function getItem_subtotal(): float|null
+    public function getItem_subtotal(): ?float
     {
         return $this->item_subtotal;
     }
 
-    public function getItem_tax_total(): float|null
+    public function getItem_tax_total(): ?float
     {
         return $this->item_tax_total;
     }
 
-    public function getPackhandleship_total(): float|null
+    public function getPackhandleship_total(): ?float
     {
         return $this->packhandleship_total;
     }
 
-    public function getPackhandleship_tax(): float|null
+    public function getPackhandleship_tax(): ?float
     {
         return $this->packhandleship_tax;
     }
 
-    public function getTax_total(): float|null
+    public function getTax_total(): ?float
     {
         return $this->tax_total;
     }
 
-    public function getTotal(): float|null
+    public function getTotal(): ?float
     {
         return $this->total;
     }
 
-    public function getPaid(): float|null
+    public function getPaid(): ?float
     {
         return $this->paid;
     }
 
-    public function getBalance(): float|null
+    public function getBalance(): ?float
     {
         return $this->balance;
     }

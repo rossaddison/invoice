@@ -11,8 +11,6 @@ use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
 
-//use Yiisoft\Yii\Sentry\SentryMiddleware;
-
 // yii3-i
 return [
     'locale' => [
@@ -24,12 +22,17 @@ return [
             'af-ZA' => 'af-ZA',
             'ar-BH' => 'ar-BH',
             'az' => 'az-AZ',
+            'be-BY' => 'be-BY',
             'bs' => 'bs-BS',
             'de' => 'de-DE',
             'en' => 'en-US',
             'es' => 'es-ES',
             'fil' => 'fil-PH',
             'fr' => 'fr-FR',
+            'gd-GB' => 'gd-GB',
+            'ha-NG' => 'ha-NG',
+            'he-IL' => 'he-IL', 
+            'ig-NG' => 'ig-NG',
             'id' => 'id-ID',
             'it' => 'it-IT',
             'ja' => 'ja-JP',
@@ -42,6 +45,7 @@ return [
             'uk' => 'uk-UA',
             'uz' => 'uz-UZ',
             'vi' => 'vi-VN',
+            'yo-NG' => 'yo-NG',
             'zh-CN' => 'zh-CN',
             'zh-TW' => 'zh-TW',
             'zu-ZA' => 'zu-ZA',
@@ -55,7 +59,6 @@ return [
     'middlewares' => [
         RequestCatcherMiddleware::class,
         ErrorCatcher::class,
-        //SentryMiddleware::class,
         SessionMiddleware::class,
         CsrfTokenMiddleware::class,
         CookieMiddleware::class,

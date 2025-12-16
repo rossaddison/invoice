@@ -39,7 +39,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -62,20 +62,20 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_id()),
+        content: static fn (Setting $model) => Html::encode($model->getSetting_id()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'setting_key',
         header: $translator->translate('setting.key'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_key()),
+        content: static fn (Setting $model) => Html::encode($model->getSetting_key()),
         withSorting: true,
         filter: (new DropdownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
     ),
     new DataColumn(
         property: 'setting_value',
         header: $translator->translate('setting.value'),
-        content: static fn(Setting $model) => Html::encode($model->getSetting_value()),
+        content: static fn (Setting $model) => Html::encode($model->getSetting_value()),
         withSorting: true,
         filter: (new DropdownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
     ),
@@ -132,15 +132,15 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('setting/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

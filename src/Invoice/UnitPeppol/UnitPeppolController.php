@@ -203,7 +203,7 @@ final class UnitPeppolController extends BaseController
      * @param UnitPeppolRepository $unitpeppolRepository
      * @return UnitPeppol|null
      */
-    private function unitpeppol(CurrentRoute $currentRoute, UnitPeppolRepository $unitpeppolRepository): UnitPeppol|null
+    private function unitpeppol(CurrentRoute $currentRoute, UnitPeppolRepository $unitpeppolRepository): ?UnitPeppol
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

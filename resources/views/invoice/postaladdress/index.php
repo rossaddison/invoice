@@ -28,7 +28,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $id
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(PostalAddress $model) => $model->getId(),
+        content: static fn (PostalAddress $model) => $model->getId(),
     ),
     new DataColumn(
         'client_id',
@@ -117,9 +117,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('postaladdress/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

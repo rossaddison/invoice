@@ -14,7 +14,9 @@ final readonly class InvRecurringService
     /**
      * @param InvRecurringRepository $repository
      */
-    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s) {}
+    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s)
+    {
+    }
 
     /**
      * @param InvRecurring $model

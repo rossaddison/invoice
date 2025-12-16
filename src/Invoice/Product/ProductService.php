@@ -8,7 +8,9 @@ use App\Invoice\Entity\Product;
 
 final readonly class ProductService
 {
-    public function __construct(private ProductRepository $repository) {}
+    public function __construct(private ProductRepository $repository)
+    {
+    }
 
     /**
      * @param Product $model

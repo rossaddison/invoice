@@ -85,7 +85,7 @@ class UserInv
         $this->date_modified = new DateTimeImmutable();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -124,7 +124,7 @@ class UserInv
         return $this->web;
     }
 
-    public function getType(): int|null
+    public function getType(): ?int
     {
         return $this->type;
     }
@@ -134,7 +134,7 @@ class UserInv
         $this->type = $type;
     }
 
-    public function getActive(): bool|null
+    public function getActive(): ?bool
     {
         return $this->active;
     }
@@ -304,7 +304,7 @@ class UserInv
         $this->tax_code = $tax_code;
     }
 
-    public function getAll_clients(): bool|null
+    public function getAll_clients(): ?bool
     {
         return $this->all_clients;
     }

@@ -84,7 +84,7 @@ final class InvCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoInvCustomquery(string $id): InvCustom|null
+    public function repoInvCustomquery(string $id): ?InvCustom
     {
         $query = $this->select()->load('custom_field')
                                 ->load('inv')
@@ -97,7 +97,7 @@ final class InvCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $inv_id, string $custom_field_id): InvCustom|null
+    public function repoFormValuequery(string $inv_id, string $custom_field_id): ?InvCustom
     {
         $query = $this->select()->where(['inv_id' => $inv_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);

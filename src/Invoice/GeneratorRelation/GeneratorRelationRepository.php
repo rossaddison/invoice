@@ -76,7 +76,7 @@ final class GeneratorRelationRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGeneratorRelationquery(string $id): GentorRelation|null
+    public function repoGeneratorRelationquery(string $id): ?GentorRelation
     {
         $query = $this
             ->select()
@@ -101,7 +101,7 @@ final class GeneratorRelationRepository extends Select\Repository
      * @param string $generatorrelation_lowercase_name
      * @return object|null
      */
-    public function withLowercaseName(string $generatorrelation_lowercase_name): object|null
+    public function withLowercaseName(string $generatorrelation_lowercase_name): ?object
     {
         $query = $this
             ->select()

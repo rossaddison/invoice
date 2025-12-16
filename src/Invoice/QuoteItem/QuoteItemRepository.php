@@ -86,7 +86,7 @@ final class QuoteItemRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemquery(string $id): QuoteItem|null
+    public function repoQuoteItemquery(string $id): ?QuoteItem
     {
         $query = $this->select()->load(['tax_rate','product','quote'])->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
@@ -140,6 +140,11 @@ final class QuoteItemRepository extends Select\Repository
      */
     public function findinQuoteItems(array $item_ids): EntityReader
     {
+        // Return empty result if no items are provided to avoid SQL syntax error
+        if (empty($item_ids)) {
+            return $this->prepareDataReader($this->select()->where('1=0'));
+        }
+
         $query = $this->select()->where(['id' => ['in' => new Parameter($item_ids)]]);
         return $this->prepareDataReader($query);
     }

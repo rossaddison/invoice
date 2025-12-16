@@ -35,20 +35,28 @@ return [
 'allowance.or.charge' => '津貼或費用',
 'allowance.or.charge.add' => '文件級別（即非發票行級別）津貼或費用添加',
 'allowance.or.charge.allowance' => '津貼',
-'allowance.or.charge.allowance.vat' => '津貼增值稅',
+'allowance.or.charge.allowance.vat' =>
+	'津貼增值稅',
 'allowance.or.charge.amount' => '津貼收費金額（乘數因子以百分比乘以基準金額）',
-'allowance.or.charge.base.amount' => '基數',
+'allowance.or.charge.base.amount' =>
+	'基數',
 'allowance.or.charge.charge' => '收費',
-'allowance.or.charge.charge.vat' => '增值稅徵收',
-'allowance.or.charge.edit.allowance' => '文件等級（即非發票行級別）津貼編輯',
-'allowance.or.charge.edit.charge' => '文件等級（即非發票行等級）費用編輯',
+'allowance.or.charge.charge.vat' =>
+	'增值稅徵收',
+'allowance.or.charge.edit.allowance' =>
+	'文件等級（即非發票行級別）津貼編輯',
+'allowance.or.charge.edit.charge' =>
+	'文件等級（即非發票行等級）費用編輯',
 'allowance.or.charge.index' => '相對於項目的津貼或費用指數',
 'allowance.or.charge.inv' => '發票折扣或費用',
 'allowance.or.charge.item' => '發票項目折讓或費用',
-'allowance.or.charge.item.add' => '津貼/費用添加',
-'allowance.or.charge.multiplier.factor.numeric' => '乘數因子數值',
+'allowance.or.charge.item.add' =>
+	'津貼/費用添加',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'乘數因子數值',
 'allowance.or.charge.reason' => '原因',
-'allowance.or.charge.reason.code' => '原因碼',
+'allowance.or.charge.reason.code' =>
+	'原因碼',
 'already.paid' => '該發票已經付款。',
 'amount' => '發票項目金額',
 'amount.add' => '發票項目金額添加',
@@ -65,30 +73,38 @@ return [
 'archive' => '將 PDF 存檔在 Uploads/Archive',
 'assign.client' => '分配客戶',
 'assign.client.on.signup' => '註冊時為用戶分配客戶。',
-'assign.client.on.signup.default.age.minimum.eighteen' => '在使用者註冊時為其分配一個預設最低年齡為十八歲的客戶。',
-'assign.client.on.signup.done' => '在用戶註冊時為其分配一個客戶。',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'在使用者註冊時為其分配一個預設最低年齡為十八歲的客戶。',
+'assign.client.on.signup.done' =>
+	'在用戶註冊時為其分配一個客戶。',
 'assigned.clients' => '指定客戶',
 'attachment.list' => '附件列表',
 'attachments' => '附件',
 'automatic.email.on.recur' => '自動透過電子郵件發送定期發票',
 'back' => '後退',
 'balance' => '平衡',
-'balance.does.not.equal.zero' => '餘額不為零。狀態為「已付款」 =&gt; 餘額應為零。 ',
+'balance.does.not.equal.zero' =>
+	'餘額不為零。狀態為「已付款」 =&gt; 餘額應為零。',
 'base.invoice' => '基本發票',
 'bcc' => '密件副本',
 'bcc.mails.to.admin' => '將所有外寄電子郵件作為密件副本給管理員帳戶',
-'bcc.mails.to.admin.hint' => '管理員帳戶是安裝 InvoicePlane 時建立的帳戶。',
+'bcc.mails.to.admin.hint' =>
+	'管理員帳戶是安裝 InvoicePlane 時建立的帳戶。',
 'before.amount' => '之前金額',
 'bill.to' => '記帳到',
 'birthdate' => '出生日期',
 'body' => '身體',
 'boolean' => '布林值',
 'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' => '警報關閉按鈕字體大小',
+'bootstrap5.alert.close.button.font.size' =>
+	'警報關閉按鈕字體大小',
 'bootstrap5.alert.message.font' => '警報訊息字體',
-'bootstrap5.alert.message.font.size' => '警報訊息字體大小',
-'bootstrap5.layout.invoice.navbar.font' => '發票導航欄字體佈局',
-'bootstrap5.layout.invoice.navbar.font.size' => '佈局發票導航列字體大小',
+'bootstrap5.alert.message.font.size' =>
+	'警報訊息字體大小',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'發票導航欄字體佈局',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'佈局發票導航列字體大小',
 'bootstrap5.offcanvas.enable' => '啟用 Offcanvas',
 'bootstrap5.offcanvas.placement' => '畫布外放置，例如頂部、底部、起始（左側）、結束（右側）',
 'breadcrumb.product.index' => '產品索引',
@@ -153,18 +169,27 @@ return [
 'client.contract.reference' => '合約編號',
 'client.custom' => '客戶客製化',
 'client.custom.add' => '客戶自訂添加',
-'client.delete.history.exits.no' => '無法刪除。客戶歷史記錄已存在。',
+'client.delete.history.exits.no' =>
+	'無法刪除。客戶歷史記錄已存在。',
 'client.detail.changes' => '如果此詳細資訊發生變化，請向我們發送電子郵件。',
 'client.error.summary' => '錯誤摘要',
 'client.form' => '客戶表格',
 'client.frequency' => '客戶端頻率',
 'client.group' => '客戶群',
 'client.has.not.assigned' => '這些客戶端尚未指派給使用者帳戶。每個使用者帳戶可以有一個或多個客戶端。',
-'client.has.not.user.account' => '此客戶沒有使用者帳戶或目前未指派給使用者。 1. 確保客戶已註冊，即擁有使用者帳戶或將此客戶指派給目前註冊的使用者。 2. 設定...發票使用者帳戶...新增使用者帳戶3. 將此客戶指派給使用者帳戶4. 在目前狀態下，無法為此客戶建立發票和報價單。',
+'client.has.not.user.account' =>
+	'此客戶沒有使用者帳戶或目前未指派給使用者。 1.'
+	. '確保客戶已註冊，即擁有使用者帳戶或將此客戶指派給目前註冊的使用者。 2.'
+	. '設定.'
+	. '發票使用者帳戶.'
+	. '新增使用者帳戶3.'
+	. '將此客戶指派給使用者帳戶4.'
+	. '在目前狀態下，無法為此客戶建立發票和報價單。',
 'client.has.user.account' => '使用者帳戶',
 'client.import.list.blank' => '客戶導入清單空白',
 'client.name' => '客戶名稱',
-'client.not.allocated.to.user' => '客戶端未分配給用戶',
+'client.not.allocated.to.user' =>
+	'客戶端未分配給用戶',
 'client.note' => '客戶備註',
 'client.note.add' => '客戶備註添加',
 'client.note.date' => '客戶日期',
@@ -174,38 +199,60 @@ return [
 'client.peppol' => '客戶 Peppol 詳細信息',
 'client.peppol.accounting.cost' => '簿記的客戶會計成本代碼',
 'client.peppol.add' => '為電子發票添加 Peppol 詳細信息',
-'client.peppol.buyer.reference.default' => '買方參考：如果客戶未指定客戶採購訂單聯絡人，則這是預設的買方參考或訂購人。',
-'client.peppol.buyer.reference.example' => '例如，正常下單人員的姓名、正常下單人員的員工編號或識別此人或部門/團體的代碼',
+'client.peppol.buyer.reference.default' =>
+	'買方參考：如果客戶未指定客戶採購訂單聯絡人，則這是預設的買方參考或訂購人。',
+'client.peppol.buyer.reference.example' =>
+	'例如，正常下單人員的姓名、正常下單人員的員工編號或識別此人或部門/團體的代碼',
 'client.peppol.clientpeppols.form' => '會計客戶/客戶方表格',
 'client.peppol.edit' => '編輯電子發票的 Peppol 詳細信息',
 'client.peppol.endpointid' => '端點 ID：電子郵件地址',
-'client.peppol.endpointid.schemeid' => '端點 ID - 基於 EAS（電子位址方案）4 位元代碼的 schemeID，例如 0192',
-'client.peppol.financial.institution.branchid' => '金融機構分公司 ID',
+'client.peppol.endpointid.schemeid' => '端點 ID - 基於 EAS（電子位址方案）4 '
+	. '位元代碼的 schemeID，例如 0192',
+'client.peppol.financial.institution.branchid' =>
+	'金融機構分公司 ID',
 'client.peppol.identificationid' => '識別號碼',
 'client.peppol.identificationid.schemeid' => '識別ID-schemeID',
-'client.peppol.legal.entity.company.legal.form' => '法人實體公司法律形式 - 與賣方相關的其他法律訊息，例如股本',
-'client.peppol.legal.entity.companyid' => '法人實體公司 ID',
-'client.peppol.legal.entity.companyid.schemeid' => '法人實體公司 ID - schemeID',
-'client.peppol.legal.entity.registration.name' => '法人實體註冊名稱',
+'client.peppol.legal.entity.company.legal.form' =>
+	'法人實體公司法律形式 - 與賣方相關的其他法律訊息，例如股本',
+'client.peppol.legal.entity.companyid' =>
+	'法人實體公司 ID',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'法人實體公司 ID - schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'法人實體註冊名稱',
 'client.peppol.not.found' => '客戶或顧客尚未設定他們的 Peppol 詳細資料。',
-'client.peppol.not.found.accounting.cost' => '未找到：會計成本或指定將相關資料記入買方財務帳戶的文字值。',
-'client.peppol.not.found.delivery.location' => '未找到送貨地點國家名稱',
-'client.peppol.not.found.id' => '客戶尚未在線上填寫其客戶 Peppol 詳細資料下的帳戶 ID。',
-'client.peppol.not.found.id.supplier.assigned' => '未找到客戶 Peppol 供應商分配的帳戶 ID',
-'client.peppol.not.found.invoice' => '未找到連結發票',
-'client.peppol.not.found.purchase.order' => '銷售訂單沒有關聯的採購訂單編號',
-'client.peppol.not.found.purchase.order.item.number' => '銷售訂單行項目沒有相符的採購訂單行項目識別號碼（買方項目識別號碼）。管理者：編輯發票的銷售訂單項目編號。',
-'client.peppol.not.found.purchase.order.line.number' => '銷售訂單行號沒有與之相符的採購訂單行號 (OrderLineReference LineID)。管理者：編輯發票的銷售訂單行號。 ',
-'client.peppol.not.found.sales.order' => '銷售訂單不存在',
-'client.peppol.payee.financial.account.name' => '收款人財務帳戶名稱',
-'client.peppol.payee.financial.accountid' => '收款人財務帳戶 ID',
-'client.peppol.record.updated.successfully' => 'Peppol 記錄更新成功',
-'client.peppol.supplier.assigned.account.id' => '供應商指派的帳號 ID',
+'client.peppol.not.found.accounting.cost' =>
+	'未找到：會計成本或指定將相關資料記入買方財務帳戶的文字值。',
+'client.peppol.not.found.delivery.location' =>
+	'未找到送貨地點國家名稱',
+'client.peppol.not.found.id' =>
+	'客戶尚未在線上填寫其客戶 Peppol 詳細資料下的帳戶 ID。',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'未找到客戶 Peppol 供應商分配的帳戶 ID',
+'client.peppol.not.found.invoice' =>
+	'未找到連結發票',
+'client.peppol.not.found.purchase.order' =>
+	'銷售訂單沒有關聯的採購訂單編號',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'銷售訂單行項目沒有相符的採購訂單行項目識別號碼（買方項目識別號碼）。管理者：編輯發票的銷售訂單項目編號。',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'銷售訂單行號沒有與之相符的採購訂單行號 (OrderLineReference LineID)。管理者：編輯發票的銷售訂單行號。',
+'client.peppol.not.found.sales.order' =>
+	'銷售訂單不存在',
+'client.peppol.payee.financial.account.name' =>
+	'收款人財務帳戶名稱',
+'client.peppol.payee.financial.accountid' =>
+	'收款人財務帳戶 ID',
+'client.peppol.record.updated.successfully' =>
+	'Peppol 記錄更新成功',
+'client.peppol.supplier.assigned.account.id' =>
+	'供應商指派的帳號 ID',
 'client.peppol.taxschemecompanyid' => '稅務方案公司 ID',
 'client.peppol.taxschemeid' => '稅務方案編號',
 'client.postaladdress' => '郵寄地址',
 'client.postaladdress.add' => '新增客戶郵政地址',
-'client.postaladdress.additional.street.name' => '附加街道名稱',
+'client.postaladdress.additional.street.name' =>
+	'附加街道名稱',
 'client.postaladdress.available' => '可用的郵政地址',
 'client.postaladdress.building.number' => '樓宇編號',
 'client.postaladdress.city.name' => '城市名稱',
@@ -240,14 +287,16 @@ return [
 'company.private.logo.height' => '徽標高度',
 'company.private.logo.margin' => '徽標邊距',
 'company.private.logo.width' => '標誌寬度',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => '徽標將從上傳和公共資料夾中刪除',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'徽標將從上傳和公共資料夾中刪除',
 'company.public' => '公司公眾',
 'complete' => '完全的',
 'confirm' => '確認',
 'confirm.deletion' => '確認刪除',
 'contact.information' => '聯絡資訊',
 'continue' => '繼續',
-'continue.with.developer.sandbox.hmrc' => '繼續使用 Developer Gov Sandbox UK',
+'continue.with.developer.sandbox.hmrc' =>
+	'繼續使用 Developer Gov Sandbox UK',
 'continue.with.facebook' => '繼續使用 Facebook',
 'continue.with.github' => '繼續使用 Github',
 'continue.with.google' => '繼續使用 Google',
@@ -260,7 +309,8 @@ return [
 'contract' => '合約',
 'contract.add' => '新增合約',
 'contract.contracts' => '合約',
-'contract.create' => '透過以下方式建立您的合約：發票→檢視→選項→編輯。系統將為發票開立給的客戶建立合約。將此合約關聯到未來的發票。',
+'contract.create' =>
+    '透過以下方式建立您的合約：發票→檢視→選項→編輯。系統將為發票開立給的客戶建立合約。將此合約關聯到未來的發票。',
 'contract.index.button.list' => '發票',
 'contract.name' => '姓名',
 'contract.none' => '提醒：此發票尚未設定合約',
@@ -295,9 +345,13 @@ return [
 'creditcard.expiry.year' => '到期年份',
 'creditcard.number' => '信用卡號碼',
 'cron.key' => 'CRON 鍵',
-'curl.store.cove.api.get.legal.entity.id.successful' => '獲得法人實體成功',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Store Cove 設定 Api 呼叫 - 法人實體成功',
-'curl.store.cove.api.setup.successful' => 'Store Cove 設定 Api 呼叫成功',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'獲得法人實體成功',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Store Cove 設定 Api 呼叫 '
+	. '- 法人實體成功',
+'curl.store.cove.api.setup.successful' =>
+	'Store Cove 設定 Api 呼叫成功',
 'currency' => '貨幣',
 'currency.code' => '貨幣代碼',
 'currency.symbol' => '貨幣符號',
@@ -335,7 +389,8 @@ return [
 'date.supplied' => '供應日期',
 'dates' => '發票日期',
 'datetime.immutable.date.created' => '創造',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
 'datetime.immutable.date.modified' => '反對',
 'datetime.immutable.time.created' => '時間',
 'days' => '天',
@@ -347,7 +402,8 @@ return [
 'default.hourly.rate' => '預設小時費率',
 'default.invoice.group' => '預設發票組',
 'default.invoice.tax.rate' => '預設發票稅率',
-'default.invoice.tax.rate.placement' => '預設發票稅率設定',
+'default.invoice.tax.rate.placement' =>
+	'預設發票稅率設定',
 'default.item.tax.rate' => '預設項目稅率',
 'default.list.limit' => '清單中的項目數',
 'default.notes' => '預設註釋',
@@ -378,15 +434,23 @@ return [
 'delivery.end.date' => '交貨/發票期限的結束日期',
 'delivery.location' => '送貨地點',
 'delivery.location.add' => '送貨地點添加',
-'delivery.location.add.in.invoice' => '在發票下方新增交貨地點...查看...選項...編輯',
+'delivery.location.add.in.invoice' =>
+	'在發票下方新增交貨地點.'
+	. '查看.'
+	. '選項.'
+	. '編輯',
 'delivery.location.building.number' => '建築物編號',
 'delivery.location.client' => '客戶交貨地點',
 'delivery.location.delete' => '刪除送貨地點',
 'delivery.location.edit' => '送貨地點 編輯',
-'delivery.location.electronic.address.scheme' => '電子位址方案（代碼清單）預設值：0088 歐洲商品編號（EAN）位置代碼，又稱（GLN）全球位置編號',
-'delivery.location.global.location.number' => '全球位置編號（13 位數字）',
-'delivery.location.id.not.found' => '未找到交貨地點全球位置編號 ID',
-'delivery.location.index.button.list' => '發票',
+'delivery.location.electronic.address.scheme' =>
+	'電子位址方案（代碼清單）預設值：0088 歐洲商品編號（EAN）位置代碼，又稱（GLN）全球位置編號',
+'delivery.location.global.location.number' =>
+	'全球位置編號（13 位數字）',
+'delivery.location.id.not.found' =>
+	'未找到交貨地點全球位置編號 ID',
+'delivery.location.index.button.list' =>
+	'發票',
 'delivery.location.none' => '此發票未關聯任何交貨地點',
 'delivery.location.peppol.output' => '此發票沒有關聯的交貨地點。因此沒有 Peppol 輸出',
 'delivery.location.plural' => '送貨地點',
@@ -444,19 +508,29 @@ return [
 'email.send.method.sendmail' => 'Sendmail',
 'email.send.method.smtp' => 'SMTP',
 'email.settings' => '電子郵件設定',
-'email.source.email.template' => ' 從設定中檢索...電子郵件模板',
-'email.source.user.account' => ' 從設定中檢索...發票使用者帳戶',
+'email.source.email.template' => '從設定中檢索.'
+	. '電子郵件模板',
+'email.source.user.account' => '從設定中檢索.'
+	. '發票使用者帳戶',
 'email.successfully.sent' => '電子郵件已成功傳送',
 'email.template' => '電子郵件模板',
 'email.template.add' => '電子郵件範本新增',
 'email.template.already.exists' => '電子郵件範本已存在！',
 'email.template.form' => '電子郵件範本表格',
-'email.template.from.email.leave.blank' => '：如果您將此欄位留空，使用者帳戶的電子郵件地址將作為可編輯值插入郵件表單中。例如，會計師的伺服器電子郵件地址。最好在此處使用與伺服器相關的電子郵件地址。',
+'email.template.from.email.leave.blank' =>
+	'：如果您將此欄位留空，使用者帳戶的電子郵件地址將作為可編輯值插入郵件表單中。例如，會計師的伺服器電子郵件地址。最好在此處使用與伺服器相關的電子郵件地址。',
 'email.template.from.source' => '電子郵件來源',
-'email.template.from.source.admin.email' => '管理員的電子郵件地址（config/common/params）',
-'email.template.from.source.froms.email' => '來自表格預設（設定...來自電子郵件下拉電子郵件地址）',
-'email.template.from.source.sender.email' => '寄件者的電子郵件地址（config/common/params）',
-'email.template.not.configured' => '未配置電子郵件範本。設定...發票...發票範本...預設電子郵件模板',
+'email.template.from.source.admin.email' =>
+	'管理員的電子郵件地址（config/common/params）',
+'email.template.from.source.froms.email' =>
+	'來自表格預設（設定.'
+	. '來自電子郵件下拉電子郵件地址）',
+'email.template.from.source.sender.email' =>
+	'寄件者的電子郵件地址（config/common/params）',
+'email.template.not.configured' => '未配置電子郵件範本。設定.'
+	. '發票.'
+	. '發票範本.'
+	. '預設電子郵件模板',
 'email.template.overdue' => '逾期電子郵件模板',
 'email.template.paid' => '付費電子郵件模板',
 'email.template.successfully.added' => '電子郵件範本已成功新增',
@@ -474,10 +548,18 @@ return [
 'enable.projects' => '啟用專案模組',
 'enable.vat' => '啟用增值稅',
 'enable.vat.message' => '在視圖上的選項按鈕上方顯示增值稅提醒訊息',
-'enable.vat.warning.line.1' => '1. 啟用增值稅後，只有發票上的個別項目才需要繳增值稅。即，報價/發票稅將不會出現在發票上，並將減少為 0。',
-'enable.vat.warning.line.2' => '2. 啟用增值稅後，如上所述，非項目稅不構成稅額。 ',
-'enable.vat.warning.line.3' => '3. 在單獨的資料庫上建立增值稅報價/發票。',
-'enable.vat.warning.line.4' => '4. 所有新的增值稅發票行項目都標示為belongs_to_vat_invoice標誌。',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. '啟用增值稅後，只有發票上的個別項目才需要繳增值稅。即，報價/發票稅將不會出現在發票上，並將減少為 0。',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. '啟用增值稅後，如上所述，非項目稅不構成稅額。',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. '在單獨的資料庫上建立增值稅報價/發票。',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. '所有新的增值稅發票行項目都標示為belongs_to_vat_invoice標誌。',
 'enabled' => '已啟用',
 'end' => '結尾',
 'end.date' => '結束日期',
@@ -501,10 +583,15 @@ return [
 'family.name' => '姓',
 'family.search' => '家庭搜尋',
 'faq' => '常見問題解答',
-'faq.ai.callback.session' => '副駕駛：我如何包含 https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php 來改進 `callbackGithub` 函數中的狀態管理？',
+'faq.ai.callback.session' => '副駕駛：我如何包含 https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php 來改進 `callbackGithub` 函數中的狀態管理？',
 'faq.business.rules' => 'Peppol 商業規則是什麼？',
-'faq.gov.developer.sandbox.hmrc' => '如何將此儲存庫連接到 HMRC 開發人員沙盒？',
-'faq.lamp.alpine' => '如何將此儲存庫設定到 Linux Alpine、Apache2、mySql/mariadb 和 php 上？',
+'faq.gov.developer.sandbox.hmrc' =>
+	'如何將此儲存庫連接到 HMRC 開發人員沙盒？',
+'faq.lamp.alpine' => '如何將此儲存庫設定到 Linux Alpine、Apache2、mySql/mariadb 和 php '
+	. '上？',
 'faq.oauth2' => '如何設定 OAuth2 身分提供者，例如使用 Facebook 註冊和登入',
 'faq.payment.provider' => '如何設定線上支付提供者？',
 'faq.php.info.all' => '全部',
@@ -541,21 +628,6 @@ return [
 'from.include.in.dropdown' => '將此電子郵件新增到下拉清單中',
 'from.name' => '寄件人姓名',
 'front.page' => '頭版',
-'gallery.caption.slide1' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide10' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide11' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide12' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide13' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide14' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide15' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide2' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide3' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide4' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide5' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide6' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide7' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide8' => '您可以從../resources/messages/en/app.php 更改此文字。',
-'gallery.caption.slide9' => '您可以從../resources/messages/en/app.php 更改此文字。',
 'gateway.online.payment' => '網上支付',
 'gender' => '性別',
 'gender.female' => '女性',
@@ -567,59 +639,101 @@ return [
 'general.yes' => '是的',
 'generate' => '產生',
 'generate.copy' => '生成副本',
-'generate.invoice.number.for.draft' => '產生草稿發票的發票號碼',
-'generate.quote.number.for.draft' => '產生草稿報價的報價編號',
+'generate.invoice.number.for.draft' =>
+	'產生草稿發票的發票號碼',
+'generate.quote.number.for.draft' =>
+	'產生草稿報價的報價編號',
 'generate.sumex' => '產生 Sumex PDF',
 'generator' => '發電機',
 'generator.add' => '發電機添加',
-'generator.camelcase.capital.name' => '控制器和儲存庫名稱中使用的駝峰式大寫名稱，例如 TaxRate。如果使用上述“產品”範例，請使用“產品”',
-'generator.camelcase.capital.name.product' => '產品',
+'generator.camelcase.capital.name' => '控制器和儲存庫名稱中使用的駝峰式大寫名稱，例如 '
+    . 'TaxRate。如果使用上述“產品”範例，請使用“產品”',
+'generator.camelcase.capital.name.product' =>
+	'產品',
 'generator.controller.and.repository' => '控制器和儲存庫',
-'generator.controller.layout.directory' => '控制器佈局目錄，例如，dirname(dirname(__DIR__))，它出現在控制器建構之後。控制器檔案位於 (__DIR__) 中，並且位於“src”目錄下兩個目錄中，“src”目錄將用作“基礎”，用於將路徑附加到佈局目錄。',
-'generator.controller.layout.directory.dot.path' => '控制器佈局目錄點路徑，例如“/views/layout/invoice.php”，它出現在控制器構造之後（不包括撇號），並附加到上述 src 目錄位置。',
-'generator.controller.layout.directory.dot.path.placeholder' => '控制器佈局目錄點路徑',
-'generator.controller.layout.directory.placeholder' => '控制器佈局目錄，例如 dirname(dirname(__DIR__))',
+'generator.controller.layout.directory' =>
+    '控制器佈局目錄，例如，dirname(dirname(__DIR__))，'
+    . '它出現在控制器建構之後。控制器檔案位於 (__DIR__) 中，'
+    . '並且位於“src”目錄下兩個目錄中，'
+    . '“src”目錄將用作“基礎”，用於將路徑附加到佈局目錄。',
+'generator.controller.layout.directory.dot.path' =>
+	'控制器佈局目錄點路徑，例如“/views/layout/invoice.'
+	. 'php”，它出現在控制器構造之後（不包括撇號），並附加到上述 src 目錄位置。',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'控制器佈局目錄點路徑',
+'generator.controller.layout.directory.placeholder' =>
+	'控制器佈局目錄，例如 dirname(dirname(__DIR__))',
 'generator.controller.path.layout' => '佈局文件路徑',
 'generator.created.at.include' => '在實體中包含 created_at 字段',
 'generator.deleted.at.include' => '在實體中包含deleted_at字段',
-'generator.external.entity' => '此實體中使用的外部實體。設定實體是一個簡單的鍵 =&gt; 值對 ID 索引資料庫。',
-'generator.external.entity.default' => '外部實體，例如 MyEntity，不包括路徑。路徑由生成器內建。預設值：設定',
-'generator.external.entity.placeholder' => '外部實體，例如：MyEntity（不包括路徑）。路徑由生成器內建。預設值：Setting。附加儲存庫，例如：除主儲存庫之外的“Setting”儲存庫。',
-'generator.file.type.not.found' => '未找到文件類型。',
+'generator.external.entity' => '此實體中使用的外部實體。設定實體是一個簡單的鍵'
+    . ' => 值對 ID 索引資料庫。',
+'generator.external.entity.default' => '外部實體，例如 MyEntity，'
+    . '不包括路徑。路徑由生成器內建。預設值：設定',
+'generator.external.entity.placeholder' => '外部實體，例如：'
+    . 'MyEntity（不包括路徑）。路徑由生成器內建。預設值：'
+    . 'Setting。附加儲存庫，例如：除主儲存庫之外的“Setting”儲存庫。',
+'generator.file.type.not.found' =>
+	'未找到文件類型。',
 'generator.flash.include' => '在控制器的新增/編輯/檢視/刪除功能中包含 Flash 訊息',
 'generator.generate' => '產生',
 'generator.generated' => ' 生成於 ',
-'generator.google.translate.any' => '翻譯英文\any_lang.php',
-'generator.google.translate.app' => '翻譯英文\app_lang.php',
-'generator.google.translate.common' => '翻譯英文\common_lang.php',
-'generator.google.translate.diff' => '翻譯英文\diff_lang.php',
-'generator.google.translate.gateway' => '翻譯英文\gateway_lang.php',
-'generator.google.translate.ip' => '翻譯英文\ip_lang.php',
-'generator.google.translate.latest.a' => '翻譯英文\a_latest_lang.php',
-'generator.google.translate.latest.b' => '翻譯英文\b_latest_lang.php',
+'generator.google.translate.any' => '翻譯英文\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => '翻譯英文\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => '翻譯英文\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => '翻譯英文\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => '翻譯英文\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => '翻譯英文\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'翻譯英文\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'翻譯英文\\b_latest_lang.'
+	. 'php',
 'generator.headerline.include' => '如果需要 Ajax，請包含標題',
 'generator.history' => '此記錄已存在生成器關係，因此無法刪除。請先刪除這些關係。',
 'generator.modified.at.include' => '在實體中包含modified_at字段',
 'generator.namespace' => '命名空間',
-'generator.namespace.before.entity' => '實體路徑之前的命名空間，例如 App\Invoice（不是 App\Invoice\Entity）',
+'generator.namespace.before.entity' => '實體路徑之前的命名空間，'
+    . '例如 App\Invoice（不是 App\Invoice\Entity）',
 'generator.relation.form' => '生成器關係形式',
-'generator.relation.form.camelcase.name' => '駝峰式名稱（不包括 ID）（例如，產品表中的 tax_rate_id「外鍵/關係」簡化為 TaxRate 並且是實體的名稱）',
-'generator.relation.form.entity.generator' => '實體產生器',
-'generator.relation.form.lowercase.name' => '不包括 ID 的小寫名稱（例如，產品表中的 tax_rate_id「外鍵/關係」簡化為 tax.rate） ',
-'generator.relation.form.view.field.name' => '查看欄位名稱',
+'generator.relation.form.camelcase.name' =>
+	'駝峰式名稱（不包括 ID）（例如，產品表中的 tax_rate_id「外鍵/關係」簡化為 '
+    . 'TaxRate 並且是實體的名稱）',
+'generator.relation.form.entity.generator' =>
+	'實體產生器',
+'generator.relation.form.lowercase.name' =>
+	'不包括 ID 的小寫名稱（例如，產品表中的 tax_rate_id「外鍵/關係」簡化為 tax.'
+	. 'rate）',
+'generator.relation.form.view.field.name' =>
+	'查看欄位名稱',
 'generator.relations' => '生成器關係',
 'generator.relations.add' => '生成器關係添加',
 'generator.route.prefix' => '路由前綴，例如控制器建構後出現的「invoice/product」中的發票。',
 'generator.route.suffix' => '路由後綴，例如控制器建構後出現的「invoice/product」中的產品。',
-'generator.small.plural.name' => '控制器中用於索引控制器功能的短複數名稱，用於列出所有實體產生器。通常為上述值末尾帶 s。',
-'generator.small.plural.name.placeholder' => '小複數名稱',
-'generator.small.plural.name.products' => '產品',
-'generator.small.singular.name' => '用於編輯和查看控制器功能的控制器的簡短單數名稱。通常與路由後綴相同。例如：product',
-'generator.small.singular.name.placeholder' => '小單數名稱',
-'generator.small.singular.name.product' => '產品',
+'generator.small.plural.name' => '控制器中用於索引控制器功能的短複數名稱，'
+    . '用於列出所有實體產生器。通常為上述值末尾帶 s。',
+'generator.small.plural.name.placeholder' =>
+	'小複數名稱',
+'generator.small.plural.name.products' =>
+	'產品',
+'generator.small.singular.name' =>
+    '用於編輯和查看控制器功能的控制器的簡短單數名稱。通常與路由後綴相同。例如：product',
+'generator.small.singular.name.placeholder' =>
+	'小單數名稱',
+'generator.small.singular.name.product' =>
+	'產品',
 'generator.table' => '桌子',
-'generator.table.used.to.generate.entity.controller.repository' => '用於產生實體的表、控制器新增編輯刪除視圖、儲存庫、服務、映射器',
-'generator.updated.at.include' => '在實體中包含 updated.at 字段',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'用於產生實體的表、控制器新增編輯刪除視圖、儲存庫、服務、映射器',
+'generator.updated.at.include' => '在實體中包含 updated.'
+	. 'at 字段',
 'generators' => '產生器',
 'generators.relation' => '生成器關係',
 'gln' => '麩醯胺酸',
@@ -640,36 +754,64 @@ return [
 'guest.read.only' => '訪客（唯讀）',
 'guest.url' => '訪客網址',
 'hide.or.unhide.columns' => '隱藏或取消隱藏列',
-'hint.greater.than.zero.please' => '請大於 0.00！',
-'hint.this.field.is.not.required' => '此欄位不是必填項',
-'hint.this.field.is.required' => '此欄位是必需的',
+'hint.greater.than.zero.please' =>
+	'請大於 0.'
+	. '00！',
+'hint.this.field.is.not.required' =>
+	'此欄位不是必填項',
+'hint.this.field.is.required' =>
+	'此欄位是必需的',
 'home' => '家',
 'home.caption.slide1' => '以管理員身份註冊並登入。沒有網路…忽略電子郵件錯誤連線。',
-'home.caption.slide2' => '以管理員身分註冊一個使用者。請驗證郵件地址是否合法，網路連線是否正常。用戶將獲得一個客戶帳戶。',
-'home.caption.slide3' => '電子郵件帳號不合法，且沒有網路連線…請管理員登錄，並在「設定」下啟動使用者的發票使用者帳號。建立客戶帳戶。將其分配給用戶。',
-'home.caption.slides.location.debug.mode' => '內容位置：./resources/views/site/index.php 在 ./resources/views/layout/ 內。 ... 和翻譯幻燈片位置 ./resources/messages/app.php',
+'home.caption.slide2' => 
+    '以管理員身分註冊一個使用者。請驗證郵件地址是否合法，網路連線是否正常。用戶將獲得一個客戶帳戶。',
+'home.caption.slide3' => 
+    '電子郵件帳號不合法，'
+    . '且沒有網路連線…請管理員登錄，'
+    . '並在「設定」下啟動使用者的發票使用者帳號。建立客戶帳戶。將其分配給用戶。',
+'home.caption.slides.location.debug.mode' =>
+	'內容位置：.'
+	. '/resources/views/site/index.'
+	. 'php 在 .'
+	. '/resources/views/layout/ 內。 .'
+	. '和翻譯幻燈片位置 .'
+	. '/resources/messages/app.'
+	. 'php',
 'hostname' => '主機名稱',
 'html.sumex.no' => '不帶 Sumex 的 HTML',
 'html.sumex.yes' => '使用 Sumex 的 Html',
 'id' => 'ID',
 'identifier.format' => '識別符格式',
 'identifier.format.template.tags' => '標識符的模板標籤',
-'identifier.format.template.tags.instructions' => '範本標籤可用於向電子郵件範本新增動態訊息，例如客戶名稱或發票號碼。點擊<b>“標識符”格式</b>字段，然後從下拉式選單中選擇一個標籤。它將自動插入到文字欄位中。',
-'identity.provider.authentication.successful' => '您已成功透過所選身分提供者進行驗證、註冊並指派了客戶帳戶。請在接下來的一小時內點擊此處啟動您的帳戶。首次登入需一小時。',
-'image.overdue' => '  圖片位置：./invoice/public/img/overdue.png',
-'image.paid' => '  圖片位置：./invoice/public/img/paid.png',
+'identifier.format.template.tags.instructions' =>
+	'範本標籤可用於向電子郵件範本新增動態訊息，'
+    . '例如客戶名稱或發票號碼。點擊<b>“標識符”格式</b>字段，'
+    . '然後從下拉式選單中選擇一個標籤。它將自動插入到文字欄位中。',
+'identity.provider.authentication.successful' =>
+    '您已成功透過所選身分提供者進行驗證、註冊並指派了客戶帳戶。請在接下來的一小時內點擊此處啟動您的帳戶。首次登入需一小時。',
+'image.overdue' => '圖片位置：.'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => '圖片位置：.'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => '進口',
 'import.data' => '導入數據',
 'import.from.csv' => '從 CSV 匯入',
 'in.progress' => '進行中',
 'inactive' => '不活躍',
-'index.checkbox.add.some.items.to.enable' => '發票中沒有項目。請新增項目以啟用複選框',
+'index.checkbox.add.some.items.to.enable' =>
+	'發票中沒有項目。請新增項目以啟用複選框',
 'index.footer.showing' => '顯示 %s（共 %s）',
 'index.showing' => '顯示 %s（共 %s）',
 'info.task.readonly' => '此任務無法再更改，因為已開立發票。',
 'install.test.data' => '現在可以安裝測試數據',
-'install.test.data.exists.already' => '發票測試數據已存在',
-'install.test.data.goto.tab.index' => '前往設定...常規...安裝測試數據',
+'install.test.data.exists.already' =>
+	'發票測試數據已存在',
+'install.test.data.goto.tab.index' =>
+	'前往設定.'
+	. '常規.'
+	. '安裝測試數據',
 'interface' => '介面',
 'invalid.amount' => '無效金額',
 'invalid.subscriber.number' => '無效用戶號碼',
@@ -682,16 +824,19 @@ return [
 'invoiceplane.database.username' => '使用者名稱',
 'invoiceplane.families' => '插入家庭',
 'invoiceplane.import' => '測試連接',
-'invoiceplane.import.complete.connection.closed' => '導入完成！連線已關閉！',
+'invoiceplane.import.complete.connection.closed' =>
+	'導入完成！連線已關閉！',
 'invoiceplane.import.connected' => '您有連線！',
 'invoiceplane.import.proceed' => '繼續導入過程',
 'invoiceplane.import.proceed.alert' => '您確定要繼續嗎？',
 'invoiceplane.imported' => '表格已匯入',
 'invoiceplane.news' => 'InvoicePlane新聞',
 'invoiceplane.no.connection' => '無連接',
-'invoiceplane.no.username.or.password' => '請儲存 InvoicePlane 的資料庫名稱、使用者名稱和密碼',
+'invoiceplane.no.username.or.password' =>
+	'請儲存 InvoicePlane 的資料庫名稱、使用者名稱和密碼',
 'invoiceplane.products' => '已插入產品',
-'invoiceplane.tables' => '將 InvoicePlane 表的客戶、產品、單位、家庭、稅率匯入空白表。導入前，這些表中不應存在任何數據，也不應存在任何文件（例如發票）。',
+'invoiceplane.tables' => 
+    '將 InvoicePlane 表的客戶、產品、單位、家庭、稅率匯入空白表。導入前，這些表中不應存在任何數據，也不應存在任何文件（例如發票）。',
 'invoiceplane.tables.not.empty' => '匯入前，您的客戶、產品、單位、家庭和稅率表必須為空',
 'invoiceplane.taxrates' => '稅率插入強制零稅率和標準稅率。',
 'invoiceplane.units' => '插入單位',
@@ -814,8 +959,10 @@ return [
 'mpdf' => '平均機率密度函數',
 'mpdf.allow.charset.conversion' => '允許字符集轉換',
 'mpdf.auto.arabic' => '自動阿拉伯語',
-'mpdf.auto.language.to.font' => '自動語言到字體',
-'mpdf.auto.script.to.lang' => '自動腳本化語言',
+'mpdf.auto.language.to.font' =>
+	'自動語言到字體',
+'mpdf.auto.script.to.lang' =>
+	'自動腳本化語言',
 'mpdf.auto.vietnamese' => '越南車',
 'mpdf.cjk' => '中文、日文、韓文字體',
 'mpdf.ltr' => '從左到右',
@@ -829,36 +976,68 @@ return [
 'mtd.fph.screen.timestamp' => '時間戳',
 'mtd.fph.some.advisories' => '至少一個標頭可能無效',
 'mtd.fph.some.invalid' => '至少一個標頭無效',
-'mtd.gov.client.browser.do.not.track' => '指示瀏覽器中是否啟用「不追蹤」選項的值',
-'mtd.gov.client.browser.do.not.track.eg' => '例如假',
-'mtd.gov.client.browser.js.user.agent' => 'Gov-客戶端-瀏覽器-JS-用戶代理',
-'mtd.gov.client.browser.js.user.agent.eg' => '例如 Mozilla/5.0（iPad；U；CPU OS 3 2.1，如 Mac OS X；en-us）（KHTML，如 Gecko）Mobile/7B405',
-'mtd.gov.client.browser.plugins' => '原始裝置上的瀏覽器插件列表',
-'mtd.gov.client.browser.plugins.eg' => '例如 Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Gov-Client-連線方法',
-'mtd.gov.client.device.id' => '設備 ID',
-'mtd.gov.client.device.id.eg' => '例如beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => '本地 IP',
-'mtd.gov.client.multi.factor' => '多因素',
-'mtd.gov.client.multi.factor.eg' => '例如類型=OTP；狀態=成功，類型=SMS；狀態=失敗，類型=生物識別，類型=SMS；時間戳=2023-04-01T12：34：56Z；唯一參考=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => '一次性密碼 (OTP)： ',
-'mtd.gov.client.public.ip' => '公網IP',
-'mtd.gov.client.public.port' => '公共連接埠（不是 http 80，也不是 https 443，例如 57961）',
+'mtd.gov.client.browser.do.not.track' =>
+	'指示瀏覽器中是否啟用「不追蹤」選項的值',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'例如假',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov-客戶端-瀏覽器-JS-用戶代理',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'例如 Mozilla/5.'
+	. '0（iPad；U；CPU OS 3 2.'
+	. '1，如 Mac OS X；en-us）（KHTML，如 Gecko）Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'原始裝置上的瀏覽器插件列表',
+'mtd.gov.client.browser.plugins.eg' =>
+	'例如 Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'Gov-Client-連線方法',
+'mtd.gov.client.device.id' =>
+	'設備 ID',
+'mtd.gov.client.device.id.eg' =>
+	'例如beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'本地 IP',
+'mtd.gov.client.multi.factor' =>
+	'多因素',
+'mtd.gov.client.multi.factor.eg' =>
+	'例如類型=OTP；狀態=成功，類型=SMS；'
+    . '狀態=失敗，類型=生物識別，類型=SMS；'
+    . '時間戳=2023-04-01T12：34：56Z；唯一參考=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'一次性密碼 (OTP)：',
+'mtd.gov.client.public.ip' =>
+	'公網IP',
+'mtd.gov.client.public.port' =>
+	'公共連接埠（不是 http 80，也不是 https 443，例如 '
+	. '57961）',
 'mtd.gov.client.screens' => '政府客戶端螢幕',
-'mtd.gov.client.screens.colour.depth' => '色彩深度',
-'mtd.gov.client.screens.height' => '螢幕高度',
-'mtd.gov.client.screens.pixels' => '像素',
-'mtd.gov.client.screens.scaling.factor' => '縮放因子',
-'mtd.gov.client.screens.scaling.factor.bits' => '位元',
-'mtd.gov.client.screens.width' => '螢幕寬度',
+'mtd.gov.client.screens.colour.depth' =>
+	'色彩深度',
+'mtd.gov.client.screens.height' =>
+	'螢幕高度',
+'mtd.gov.client.screens.pixels' =>
+	'像素',
+'mtd.gov.client.screens.scaling.factor' =>
+	'縮放因子',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'位元',
+'mtd.gov.client.screens.width' =>
+	'螢幕寬度',
 'mtd.gov.client.timezone' => '時區',
-'mtd.gov.client.user.ids' => '使用者 ID',
-'mtd.gov.client.user.ids.uuid' => '唯一識別符',
-'mtd.gov.client.window.size' => '視窗大小',
-'mtd.gov.client.window.size.pixels' => '像素',
+'mtd.gov.client.user.ids' =>
+	'使用者 ID',
+'mtd.gov.client.user.ids.uuid' =>
+	'唯一識別符',
+'mtd.gov.client.window.size' =>
+	'視窗大小',
+'mtd.gov.client.window.size.pixels' =>
+	'像素',
 'mtd.gov.vendor.forwarded' => '詳細列出終止傳輸層安全性 (TLS) 的服務之間的互聯網跳數',
-'mtd.gov.vendor.license.ids' => '與在原始裝置上發起 API 請求的供應商軟體相關的雜湊許可證金鑰的鍵值資料結構',
-'mtd.gov.vendor.public.ip' => '發起設備向其發送請求的伺服器的公共 IP 位址',
+'mtd.gov.vendor.license.ids' =>
+	'與在原始裝置上發起 API 請求的供應商軟體相關的雜湊許可證金鑰的鍵值資料結構',
+'mtd.gov.vendor.public.ip' =>
+	'發起設備向其發送請求的伺服器的公共 IP 位址',
 'mtd.gov.vendor.version' => '處理請求所涉及的軟體版本的鍵值資料結構',
 'multiple.choice' => '多項選擇',
 'name' => '姓名',
@@ -887,17 +1066,28 @@ return [
 'number' => '#',
 'number.format' => '數字格式',
 'number.format.compact.comma' => '1000000,00（具有小數點的緊湊格式）',
-'number.format.compact.point' => '1000000.00（帶有小數點的緊湊格式）',
-'number.format.european' => '1.000.000,00（歐洲格式）',
-'number.format.iso.80k.1' => '1 000 000.00（ISO 80000-1）',
+'number.format.compact.point' => '1000000.'
+	. '00（帶有小數點的緊湊格式）',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00（歐洲格式）',
+'number.format.iso.80k.1' =>
+	'1 000 000.'
+	. '00（ISO 80000-1）',
 'number.format.iso80k1.comma' => '1 000 000,00（ISO 80000-1，附小數點逗號）',
-'number.format.iso80k1.point' => '1 000 000.00（ISO 80000-1，附小數點）',
-'number.format.us.uk' => '1,000,000.00（美國/英國格式）',
-'number.missing.therefore.use.invoice.id' => '缺少發票號碼，因此缺少發票 ID',
+'number.format.iso80k1.point' => '1 000 000.'
+	. '00（ISO 80000-1，附小數點）',
+'number.format.us.uk' => '1,000,000.'
+	. '00（美國/英國格式）',
+'number.missing.therefore.use.invoice.id' =>
+	'缺少發票號碼，因此缺少發票 ID',
 'number.no' => '無發票號碼',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => '客戶端 ID',
-'oauth2.google.people.api.v1.client.secret' => '客戶端機密',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'客戶端 ID',
+'oauth2.google.people.api.v1.client.secret' =>
+	'客戶端機密',
 'online.log' => '線上日誌',
 'online.payment' => '網上支付',
 'online.payment.3dauth.redirect' => '請稍候，我們將把您重新導向至您的發卡機構進行身分驗證...',
@@ -913,7 +1103,9 @@ return [
 'online.payment.card.invalid' => '此信用卡無效。請檢查提供的資訊。',
 'online.payment.clientId' => '客戶端 ID',
 'online.payment.clientSecret' => '客戶端機密',
-'online.payment.creditcard.hint' => '如果您想透過信用卡付款，請輸入以下資訊。<br/>信用卡資訊不會儲存在我們的伺服器上，而是透過安全連線傳輸到線上支付網關。',
+'online.payment.creditcard.hint' =>
+    '如果您想透過信用卡付款，請輸入以下資訊。<br/>信用卡資訊不會儲存在我們的伺服器上，'
+    . '而是透過安全連線傳輸到線上支付網關。',
 'online.payment.developerMode' => '開發者模式',
 'online.payment.for' => '線上支付',
 'online.payment.for.invoice' => '發票線上支付',
@@ -955,19 +1147,22 @@ return [
 'online.payment.storePassword' => '商店密碼',
 'online.payment.subAccountId' => '子帳戶ID',
 'online.payment.testMode' => '測試模式',
-'online.payment.testOrLiveApiKey' => '測試或即時 Api 金鑰，即以 test_ 或 live_ 開頭的金鑰',
+'online.payment.testOrLiveApiKey' => '測試或即時 Api 金鑰，即以 test_ 或 '
+	. 'live_ 開頭的金鑰',
 'online.payment.transactionKey' => '交易金鑰',
 'online.payment.transactionPassword' => '交易密碼',
 'online.payment.username' => '使用者名稱',
 'online.payment.vendor' => '小販',
-'online.payment.version' => 'Omnipay 版本（已選取）/ PCI 相容（此資料庫中未儲存信用卡詳細資料）（未選取）',
+'online.payment.version' => 'Omnipay 版本（已選取）/ PCI'
+    . ' 相容（此資料庫中未儲存信用卡詳細資料）（未選取）',
 'online.payment.webhookId' => 'Webhook ID',
 'online.payment.websiteKey' => '網站金鑰',
 'online.payments' => '線上支付',
 'open' => '打開',
 'open.invoices' => '開立發票',
 'open.quotes' => '打開引號',
-'open.reports.in.new.tab' => '在新瀏覽器標籤中開啟報告',
+'open.reports.in.new.tab' =>
+	'在新瀏覽器標籤中開啟報告',
 'optional' => '選修的',
 'options' => '選項',
 'order' => '命令',
@@ -984,7 +1179,8 @@ return [
 'password.changed' => '密碼修改成功',
 'password.reset' => '重設密碼',
 'password.reset.email' => '您已要求為安裝設定新密碼。請點選收件匣中的連結重設密碼。',
-'password.reset.failed' => '嘗試傳送您的密碼重設電子郵件時發生錯誤。請查看應用程式日誌或聯絡系統管理員。',
+'password.reset.failed' =>
+    '嘗試傳送您的密碼重設電子郵件時發生錯誤。請查看應用程式日誌或聯絡系統管理員。',
 'password.reset.info' => '您將收到一封包含重設密碼連結的電子郵件。',
 'password.reset.request.token' => '請求密碼重設令牌',
 'past.month' => '過去一個月',
@@ -1001,22 +1197,43 @@ return [
 'payment.deleted' => '付款已刪除',
 'payment.description' => '發票 %s 付款',
 'payment.form' => '付款表格',
-'payment.gateway.default.locale' => '預設語言環境，例如 en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Mollie 支付網關測試或 Live Api Key 已設定。',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => '需要設定 Mollie 支付網關測試或 Live Api Key。',
-'payment.gateway.mollie.api.payment.id' => 'Mollie 付款 ID： ',
-'payment.gateway.no' => '設定下尚未設定任何支付網關...查看...線上支付',
+'payment.gateway.default.locale' => '預設語言環境，例如 en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Mollie 支付網關測試或 Live Api Key '
+	. '已設定。',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'需要設定 Mollie 支付網關測試或 Live Api '
+	. 'Key。',
+'payment.gateway.mollie.api.payment.id' =>
+	'Mollie 付款 ID：',
+'payment.gateway.no' => '設定下尚未設定任何支付網關.'
+	. '查看.'
+	. '線上支付',
 'payment.history' => '付款記錄',
-'payment.information.amazon.no.omnipay.version' => '目前沒有 Amazon Pay Omnipay 版本。在「設定檢視」下取消勾選「Omnipay 版本」即可使用符合 PCI 標準的版本。',
-'payment.information.amazon.payment.session.complete' => '亞馬遜付款會話完成 - 會話 ID： ',
-'payment.information.amazon.payment.session.incomplete' => '亞馬遜付款會話未完成 - 請重試',
-'payment.information.braintree.braintree.no.omnipay.version' => '目前沒有與 Braintree 6.9.1 版本相容的 Braintree Omnipay 版本。請在「設定檢視」下取消勾選“Omnipay 版本”，即可使用符合 PCI 標準的版本。',
-'payment.information.invoice.number.not.provided' => '未提供發票號碼',
-'payment.information.no.information.provided' => '未提供任何信息',
+'payment.information.amazon.no.omnipay.version' =>
+	'目前沒有 Amazon Pay Omnipay 版本。在「設定檢視」下取消勾選「Omnipay '
+	. '版本」即可使用符合 PCI 標準的版本。',
+'payment.information.amazon.payment.session.complete' =>
+	'亞馬遜付款會話完成 - 會話 ID：',
+'payment.information.amazon.payment.session.incomplete' =>
+	'亞馬遜付款會話未完成 - 請重試',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'目前沒有與 Braintree 6.'
+	. '9.'
+	. '1 版本相容的 Braintree Omnipay 版本。請在「設定檢視」下取消勾選“Omnipay '
+	. '版本”，即可使用符合 PCI 標準的版本。',
+'payment.information.invoice.number.not.provided' =>
+	'未提供發票號碼',
+'payment.information.no.information.provided' =>
+	'未提供任何信息',
 'payment.information.none' => '沒有任何',
-'payment.information.omnipay.driver.being.used' => '正在使用來自 Omnipay 的驅動程式 {{$d}}。',
-'payment.information.payment.method.required' => '此發票需要一種付款方式。',
-'payment.information.stripe.api.key' => '需要設定 Stripe 支付網關密鑰/Api 密鑰。',
+'payment.information.omnipay.driver.being.used' =>
+	'正在使用來自 Omnipay 的驅動程式 {{$d}}。',
+'payment.information.payment.method.required' =>
+	'此發票需要一種付款方式。',
+'payment.information.stripe.api.key' =>
+	'需要設定 Stripe 支付網關密鑰/Api 密鑰。',
 'payment.logs' => '付款日誌',
 'payment.method' => '付款方式',
 'payment.method.add' => '付款方式添加',
@@ -1028,19 +1245,30 @@ return [
 'payment.provider' => '支付提供者',
 'payment.term' => '付款條款',
 'payment.term.0.days' => '請使用提供的付款方式之一',
-'payment.term.add.additional.terms.at.setting.repository' => '在設定儲存庫 getPaymentTerms 函數中新增附加條款。',
-'payment.term.eom.120.days' => 'EOM(120)：請在發行日期當月月底前 120 天內付款',
-'payment.term.eom.15.days' => 'EOM(15)：請在發行日當月結束後 15 天內付款',
-'payment.term.eom.30.days' => 'EOM(30)：請在發行日當月結束後 30 天內付款',
-'payment.term.eom.60.days' => 'EOM(60)：請在發行日當月結束後 60 天內付款',
-'payment.term.eom.90.days' => 'EOM(90)：請在發行日當月結束後 90 天內付款',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'在設定儲存庫 getPaymentTerms 函數中新增附加條款。',
+'payment.term.eom.120.days' =>
+	'EOM(120)：請在發行日期當月月底前 120 天內付款',
+'payment.term.eom.15.days' =>
+	'EOM(15)：請在發行日當月結束後 15 天內付款',
+'payment.term.eom.30.days' =>
+	'EOM(30)：請在發行日當月結束後 30 天內付款',
+'payment.term.eom.60.days' =>
+	'EOM(60)：請在發行日當月結束後 60 天內付款',
+'payment.term.eom.90.days' =>
+	'EOM(90)：請在發行日當月結束後 90 天內付款',
 'payment.term.general' => '30天內付款',
 'payment.term.mfi.15' => 'MFI(15)：請於發卡銀行次月 15 日付款',
-'payment.term.net.120.days' => '淨額（120）：請於出票日起 120 天內付款',
-'payment.term.net.15.days' => '淨額（15）：請在發行日期後 15 天內付款。',
-'payment.term.net.30.days' => '淨額（30）：請於出票日起 30 天內付款',
-'payment.term.net.60.days' => '淨額（60）：請於出票日起 60 天內付款',
-'payment.term.net.90.days' => '淨額（90）：請於出票日起 90 天內付款',
+'payment.term.net.120.days' =>
+	'淨額（120）：請於出票日起 120 天內付款',
+'payment.term.net.15.days' =>
+	'淨額（15）：請在發行日期後 15 天內付款。',
+'payment.term.net.30.days' =>
+	'淨額（30）：請於出票日起 30 天內付款',
+'payment.term.net.60.days' =>
+	'淨額（60）：請於出票日起 60 天內付款',
+'payment.term.net.90.days' =>
+	'淨額（90）：請於出票日起 90 天內付款',
 'payment.term.pia' => '需提前付款（PIA）',
 'payment.term.polite' => '感謝您的惠顧。請在收到此發票後 30 天內付款。',
 'payment.terms.default' => '14天內付款',
@@ -1052,7 +1280,11 @@ return [
 'pdf.archived.no' => 'PDF 未在上傳/存檔/發票中存檔',
 'pdf.archived.yes' => 'PDF 存檔於上傳/存檔/發票',
 'pdf.include.zugferd' => '包括 ZUGFeRD',
-'pdf.include.zugferd.help' => '啟用此選項將在發票 PDF 中包含 ZUGFeRD XML，這是發票的 XML 標準。<a href="https://www.ferd-net.de/">更多資訊</a>',
+'pdf.include.zugferd.help' => '啟用此選項將在發票 PDF 中包含 ZUGFeRD XML，這是發票的 '
+	. 'XML 標準。<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">更多資訊</a>',
 'pdf.invoice.footer' => 'PDF頁尾',
 'pdf.invoice.footer.hint' => '您可以在此輸入任何 HTML，它將顯示在您的 PDF 發票底部。',
 'pdf.modal' => '模態PDF',
@@ -1063,55 +1295,114 @@ return [
 'pdf.template.overdue' => '逾期 PDF 模板',
 'pdf.template.paid' => '付費PDF模板',
 'pdf.watermark' => '啟用 PDF 浮水印',
-'peppol' => 'Peppol 通用商業語言 (UBL) 2.1 發票 - Ecosio 驗證',
+'peppol' => 'Peppol 通用商業語言 (UBL) 2.'
+	. '1 發票 - Ecosio 驗證',
 'peppol.abbreviation' => '佩波爾',
-'peppol.allowance.or.charge.inherit' => '發票限額費用和發票項目限額費用繼承自已完成的 Peppol 文件等級限額費用',
-'peppol.client.check' => '此客戶的 Peppol 詳細資訊不足。至少缺一項。請參閱“查看...客戶...選項...編輯 Peppol 詳細資訊以進行電子發票”',
-'peppol.client.defaults' => '使用 OpenPeppol 預設設定填寫客戶端 Peppol 表單以進行測試。',
-'peppol.currency.code.from' => '來自貨幣，即原產國稅收貨幣（要更改，請參閱 config/common/params.php TaxCurrencyCode）',
-'peppol.currency.code.to' => '貨幣，即文檔貨幣：請參閱函數 get.setting(&#39;currency.code.to&#39;)',
+'peppol.allowance.or.charge.inherit' =>
+	'發票限額費用和發票項目限額費用繼承自已完成的 Peppol 文件等級限額費用',
+'peppol.client.check' => '此客戶的 Peppol 詳細資訊不足。至少缺一項。請參閱“查看.'
+	. '客戶.'
+	. '選項.'
+	. '編輯 Peppol 詳細資訊以進行電子發票”',
+'peppol.client.defaults' => '使用 OpenPeppol'
+    . ' 預設設定填寫客戶端 Peppol'
+    . ' 表單以進行測試。',
+'peppol.currency.code.from' => '來自貨幣，'
+    . '即原產國稅收貨幣（要更改，請參閱 config/common/params.'
+	. 'php TaxCurrencyCode）',
+'peppol.currency.code.to' => '貨幣，即文檔貨幣：請參閱函數 get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
 'peppol.currency.from.to' => '今天從貨幣之一轉換為目標貨幣',
 'peppol.currency.to.from' => '今天將其中一種目標貨幣轉換為這種來源貨幣',
 'peppol.document.reference.null' => '庫存號-空庫存號',
-'peppol.ecosio.validator' => 'OpenPeppol UBL 發票的 Ecosio 驗證器（3.15.0）（又稱 BIS Billing 3.0.14）',
+'peppol.ecosio.validator' => 'OpenPeppol UBL 發票的 Ecosio 驗證器（3.'
+	. '15.'
+	. '0）（又稱 BIS Billing 3.'
+	. '0.'
+	. '14）',
 'peppol.electronic.invoicing' => 'Peppol電子發票',
-'peppol.enable' => '使用通用商業語言 (UBL) 2.1 啟用 Peppol',
+'peppol.enable' => '使用通用商業語言 (UBL) 2.'
+	. '1 啟用 Peppol',
 'peppol.include.delivery.period' => '包括交貨期',
-'peppol.invoice.note.not.found' => '未找到發票',
+'peppol.invoice.note.not.found' =>
+	'未找到發票',
 'peppol.label.switch.off' => 'Peppol 預設設定已啟用',
 'peppol.label.switch.on' => 'Peppol 預設設定已停用',
 'peppol.mandatory' => ' （強制的）',
 'peppol.optional' => ' （選修的）',
-'peppol.stand.in.code' => '描述代碼 - 指示貨物供應/付款時未來稅點日期的基準。如果可以確定稅點，則描述代碼在發票期間內互斥。',
-'peppol.store.cove.1.1.1' => '在 Store Cove 網站上註冊 API 存取權限',
-'peppol.store.cove.1.1.2' => '從 Store Cove 網站建立您的 API 金鑰並儲存在「設定」...「檢視」...「線上支付」...「Store Cove」...「Api 金鑰」中',
-'peppol.store.cove.1.1.3' => '進行第一次 API 呼叫以取得 JSON 回應。',
-'peppol.store.cove.1.1.4' => '發送您透過點擊綠色按鈕 World=&gt;DE 取得的第一個測試 Json 發票',
+'peppol.stand.in.code' => '描述代碼'
+    . ' - 指示貨物供應/付款時未來稅點日期的基準。如果可以確定稅點，'
+    . '則描述代碼在發票期間內互斥。',
+'peppol.store.cove.1.1.1' =>
+	'在 Store Cove 網站上註冊 API '
+	. '存取權限',
+'peppol.store.cove.1.1.2' =>
+	'從 Store Cove 網站建立您的 API '
+	. '金鑰並儲存在「設定」.'
+	. '「檢視」.'
+	. '「線上支付」.'
+	. '「Store Cove」.'
+	. '「Api 金鑰」中',
+'peppol.store.cove.1.1.3' =>
+	'進行第一次 API 呼叫以取得 JSON 回應。',
+'peppol.store.cove.1.1.4' =>
+	'發送您透過點擊綠色按鈕 World=&gt;DE 取得的第一個測試 Json 發票',
 'peppol.stream.toggle' => 'Peppol - “流”或“儲存到檔案”切換按鈕',
-'peppol.tax.category.not.found' => 'Peppol 稅務類別代碼（https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/）缺失。',
-'peppol.tax.category.percent.not.found' => 'Peppol 稅務類別百分比（https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/）缺失。',
+'peppol.tax.category.not.found' =>
+	'Peppol 稅務類別代碼（https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/）缺失。',
+'peppol.tax.category.percent.not.found' =>
+	'Peppol 稅務類別百分比（https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/）缺失。',
 'peppol.tax.rate.code' => 'Peppol 稅率代碼',
-'peppol.trying.to.send.non.pdf.file' => '目前僅使用 Peppol 發票發送 PDF 文件',
+'peppol.trying.to.send.non.pdf.file' =>
+	'目前僅使用 Peppol 發票發送 PDF 文件',
 'peppol.unit' => '使用 Peppol 進行單位分類',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => '來源：src/Invoice/Ubl/Invoice：缺少文件描述 - Ecosio：文件不得包含空元素。解決方案：在發票檢視中：選項...編輯...文件描述',
-'peppol.validator.Invoice.cac.Note' => '來源：src/Invoice/Ubl/Invoice：缺少發票註解 - Ecosio：文件不得包含空元素。',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party：缺少電子郵件地址 - Ecosio：必須提供電子地址。解決方案：客戶端...檢視...選項...編輯電子發票的 Peppol 詳細資料...EndPointID',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'來源：src/Invoice/Ubl/Invoice：'
+    . '缺少文件描述 - Ecosio：'
+    . '文件不得包含空元素。解決方案：在發票檢視中：選項.'
+	. '編輯.'
+	. '文件描述',
+'peppol.validator.Invoice.cac.Note' =>
+	'來源：src/Invoice/Ubl/Invoice：'
+    . '缺少發票註解 - Ecosio：'
+    . '文件不得包含空元素。',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party：缺少電子郵件地址 - Ecosio：'
+    . '必須提供電子地址。解決方案：客戶端.'
+	. '檢視.'
+	. '選項.'
+	. '編輯電子發票的 Peppol 詳細資料.'
+	. 'EndPointID',
 'peppol.version' => 'Peppol 版本',
 'peppol.xml.stream' => '串流傳輸，即顯示在瀏覽器畫面上，而不是下載資料夾中。',
 'per.item' => '每件商品',
 'per.page.total' => ' 每頁。總計 ',
 'performance' => '表現',
-'performance.label.switch.off' => '更快的讀寫模式 - 參考 config/common/params.php 搜尋“mode” ',
-'performance.label.switch.on' => '較慢的只寫模式 - 請參閱 config/common/params.php 搜尋“mode” ',
+'performance.label.switch.off' => '更快的讀寫模式 - 參考 config/common/params.'
+	. 'php 搜尋“mode”',
+'performance.label.switch.on' => '較慢的只寫模式 - 請參閱 config/common/params.'
+	. 'php 搜尋“mode”',
 'period' => '時期',
 'permission' => '您沒有所需的權限。',
 'personal.information' => '個人資訊',
 'phone' => '電話',
 'phone.abbr' => '磷',
 'phone.number' => '電話號碼',
-'php.timezone.fail' => '似乎未配置時區。請檢查 PHP 配置中的 date.timezone。否則將選擇<strong>%s</strong> 。',
+'php.timezone.fail' => '似乎未配置時區。請檢查 PHP 配置中的 date.'
+	. 'timezone。否則將選擇<strong>%s</strong> 。',
 'php.timezone.success' => '已配置有效的時區。',
-'php.version.fail' => '已安裝 PHP 版本 %s，但 InvoicePlane 需要 PHP 版本 %s 或更高版本',
+'php.version.fail' => '已安裝 PHP 版本 %s，但 InvoicePlane '
+	. '需要 PHP 版本 %s 或更高版本',
 'php.version.success' => 'PHP 似乎符合安裝要求',
 'platform' => '平台',
 'platform.PhpMyAdmin' => 'PhpMyAdmin 版本',
@@ -1138,25 +1429,36 @@ return [
 'price' => '價格',
 'product' => '產品',
 'product.add' => '產品添加',
-'product.additional.item.property.name' => 'Peppol 附加屬性項目名稱，例如顏色',
-'product.additional.item.property.value' => 'Peppol 附加屬性項目值，例如黑色',
-'product.country.of.origin.code' => 'Peppol 原產國代碼採用 ISO-3166-1:Alpha2 國家代碼',
-'product.custom.fields' => '產品自訂欄位（例如 Peppol：AdditionalItemProperty 多選欄位顏色值黑色）',
+'product.additional.item.property.name' =>
+	'Peppol 附加屬性項目名稱，例如顏色',
+'product.additional.item.property.value' =>
+	'Peppol 附加屬性項目值，例如黑色',
+'product.country.of.origin.code' =>
+	'Peppol 原產國代碼採用 ISO-3166-1:'
+	. 'Alpha2 國家代碼',
+'product.custom.fields' => '產品自訂欄位（例如 Peppol：'
+    . 'AdditionalItemProperty 多選欄位顏色值黑色）',
 'product.description' => '產品描述',
 'product.edit' => '編輯產品',
 'product.error.summary' => '產品錯誤摘要',
 'product.families' => '產品系列',
 'product.form.tab.category' => '類別',
-'product.form.tab.not.required' => '非必填字段',
+'product.form.tab.not.required' =>
+	'非必填字段',
 'product.form.tab.required' => '必填字段',
 'product.found' => '找到產品',
 'product.history' => '無法刪除。該產品已在發票或報價單上。',
 'product.icc.id' => 'Peppol 商品分類代碼 ID，例如 9873242',
-'product.icc.listid' => 'Peppol 物品分類代碼清單 ID - 例如 SRV',
-'product.icc.listversionid' => 'Peppol 物品分類代碼清單版本 ID（可選）- 例如，如果 ItemClassification 由丹麥供應商提供，則應使用 UNSPSC 版本 19.0501。',
+'product.icc.listid' => 'Peppol 物品分類代碼清單 ID - 例如 '
+	. 'SRV',
+'product.icc.listversionid' => 'Peppol 物品分類代碼清單版本 ID'
+    . '（可選）- 例如，如果 ItemClassification '
+	. '由丹麥供應商提供，則應使用 UNSPSC 版本 19.'
+	. '0501。',
 'product.id' => '產品編號',
 'product.image' => '影像',
-'product.item.classification.code.scheme.id.not.found' => '未找到產品項目分類代碼方案 ID',
+'product.item.classification.code.scheme.id.not.found' =>
+	'未找到產品項目分類代碼方案 ID',
 'product.name' => '產品名稱',
 'product.not.found' => '未找到產品',
 'product.peppol.unit' => '配備 Peppol 的單位',
@@ -1170,12 +1472,17 @@ return [
 'product.property.table' => '產品物性表',
 'product.property.value' => '價值',
 'product.record.successfully.added' => '產品記錄新增成功',
-'product.sii.id' => '與上述方案相關的 Peppol 標準項目識別 ID - 例如全球貿易項目編號資料庫中的 14 位元零填充識別碼（出現在條碼下）',
-'product.sii.schemeid' => 'Peppol 標準項目識別方案 ID - 例如 0160',
+'product.sii.id' => '與上述方案相關的 Peppol 標準項目識別 ID - '
+	. '例如全球貿易項目編號資料庫中的 14 位元零填充識別碼（出現在條碼下）',
+'product.sii.schemeid' => 'Peppol 標準項目識別方案 ID - 例如 '
+	. '0160',
 'product.sku' => '庫存單位',
 'product.tariff' => '關稅',
 'product.unit' => '產品單位',
-'product.unit.code.not.found' => '產品沒有關聯的單位代碼。產品...編輯...帶有 Peppol 的單位。',
+'product.unit.code.not.found' =>
+	'產品沒有關聯的單位代碼。產品.'
+	. '編輯.'
+	. '帶有 Peppol 的單位。',
 'product.units' => '產品單位',
 'product.view.tab.details' => '產品詳情',
 'product.view.tab.gallery' => '產品圖庫',
@@ -1189,7 +1496,8 @@ return [
 'productimage.list' => '與該產品相關的圖像列表',
 'productimage.no.file.uploaded' => '尚未上傳圖片。可能存在重複。',
 'productimage.plural' => '產品圖片',
-'productimage.possible.file.upload.attack' => '可能的文件上傳攻擊： ',
+'productimage.possible.file.upload.attack' =>
+	'可能的文件上傳攻擊：',
 'productimage.upload' => '上傳商品圖片',
 'productimage.uploaded.to' => '圖像已上傳至以下目錄： ',
 'productimage.view' => '可以在產品視圖下新增與產品相關的多張圖片',
@@ -1197,7 +1505,10 @@ return [
 'products.form' => '產品形式',
 'profile.deleted' => '個人資料已刪除',
 'profile.history' => '無法刪除個人資料。存在歷史記錄',
-'profile.new' => '使用新的電子郵件地址或手機號碼建立個人資料，啟動後，選擇要關聯的公司資訊。這些資訊將自動顯示在文件中，例如報價單和發票。',
+'profile.new' => '使用新的電子郵件地址或手機號碼建立個人資料，'
+    . '啟動後，'
+    . '選擇要關聯的公司資訊。這些資訊將自動顯示在文件中，'
+    . '例如報價單和發票。',
 'profile.not.deleted' => '個人資料未被刪除',
 'profile.plural' => '個人資料',
 'profile.property.label.company' => '公司',
@@ -1229,23 +1540,37 @@ return [
 'qr.code.settings' => 'QR 圖碼設定',
 'qr.code.settings.bic' => '比克',
 'qr.code.settings.effect' => '上述設定對這個二維碼有什麼影響？',
-'qr.code.settings.effect.explanation' => '在實際代碼中...沒有。所有程式碼都使用預設值，因為上面使用了非常基本的實際程式碼。',
+'qr.code.settings.effect.explanation' =>
+	'在實際代碼中.'
+	. '沒有。所有程式碼都使用預設值，因為上面使用了非常基本的實際程式碼。',
 'qr.code.settings.enable' => '啟用二維碼',
-'qr.code.settings.enable.hint' => '啟用此選項將在發票 PDF 中包含二維碼。您必須填寫收款人、IBAN 和 BIC 才能正常運作。否則二維碼將不會顯示。',
+'qr.code.settings.enable.hint' =>
+	'啟用此選項將在發票 PDF 中包含二維碼。您必須填寫收款人、IBAN 和 BIC '
+	. '才能正常運作。否則二維碼將不會顯示。',
 'qr.code.settings.iban' => 'IBAN',
 'qr.code.settings.recipient' => '接受者',
-'qr.code.settings.remittance.text' => '匯款文本',
-'qr.code.settings.remittance.text.tags' => '匯款文字標籤',
+'qr.code.settings.remittance.text' =>
+	'匯款文本',
+'qr.code.settings.remittance.text.tags' =>
+	'匯款文字標籤',
 'qr.code.source' => 'QR 圖碼來源',
-'qr.code.source.path' => '資源\視圖\發票\設定\company.logo.and.address.php',
+'qr.code.source.path' => '資源\\視圖\\發票\\設定\\company.'
+	. 'logo.'
+	. 'and.'
+	. 'address.'
+	. 'php',
 'qr.code.type' => 'QR 圖碼類型',
-'qr.code.type.absolute.url' => '絕對（整個）基於 URL',
+'qr.code.type.absolute.url' =>
+	'絕對（整個）基於 URL',
 'qr.code.widget.used' => '使用的小部件',
 'qr.ecc.level' => 'QR 碼 Ecc 等級（預設值：L）',
 'qr.height.and.width' => 'QR碼高度和寬度（預設值：60）',
 'qr.meaning' => '意義',
-'qr.meaning.benefit' => '掃描後返回檢視（無需輸入網址），即可列印 PDF 格式的發票。適用於所有擁有活躍客戶帳號的使用者。',
-'qr.output.type' => 'QR 碼輸出類型（例如 .svg、.png）（預設：png）',
+'qr.meaning.benefit' => '掃描後返回檢視（無需輸入網址），'
+    . '即可列印 PDF 格式的發票。適用於所有擁有活躍客戶帳號的使用者。',
+'qr.output.type' => 'QR 碼輸出類型（例如 .'
+	. 'svg、.'
+	. 'png）（預設：png）',
 'qr.version' => 'QR 碼版本號（最早 0 最新 40）（預設值：40）',
 'qty' => '數量',
 'quantity' => '數量',
@@ -1266,10 +1591,15 @@ return [
 'quote.date' => '報價日期',
 'quote.dates' => '報價日期',
 'quote.delete.not' => '發票尚未刪除。',
-'quote.delivery.location.index.button.list' => '引號',
+'quote.delivery.location.index.button.list' =>
+	'引號',
 'quote.delivery.location.none' => '此報價尚未關聯交貨地點。',
 'quote.disable.flash.messages' => '停用引用 Flash 訊息',
-'quote.email.templates.not.configured' => '未配置電子郵件範本。設定...報價...報價範本...預設電子郵件模板',
+'quote.email.templates.not.configured' =>
+	'未配置電子郵件範本。設定.'
+	. '報價.'
+	. '報價範本.'
+	. '預設電子郵件模板',
 'quote.group' => '報價組',
 'quote.id' => '報價編號 ',
 'quote.item' => '報價項目',
@@ -1279,7 +1609,9 @@ return [
 'quote.item.cannot.delete' => '無法刪除報價項目',
 'quote.label.switch.off' => '增值稅報價',
 'quote.label.switch.on' => '非增值稅報價',
-'quote.not.copied.to.invoice' => '發票並非根據報價單建立！發票重複。請將您的報價單複製到另一個報價單，然後再複製到發票。每個報價單必須有匹配的發票。',
+'quote.not.copied.to.invoice' =>
+	'發票並非根據報價單建立！發票重複。請將您的報價單複製到另一個報價單，'
+    . '然後再複製到發票。每個報價單必須有匹配的發票。',
 'quote.number' => '報價編號',
 'quote.number.status' => '報價編號狀態',
 'quote.overview' => '報價概覽',
@@ -1288,15 +1620,21 @@ return [
 'quote.pre.password' => '引用標準 PDF 密碼（可選）',
 'quote.reject' => '拒絕',
 'quote.rejected' => '此報價已被拒絕',
-'quote.sales.order.created.from.quote' => '銷售訂單由報價創建，您輸入了採購訂單號碼！',
-'quote.sales.order.not.created.from.quote' => '銷售訂單未根據報價創建！銷售訂單重複。請將您的報價複製到另一個報價，然後再複製到銷售訂單。每個報價必須有一個相符的銷售訂單。',
-'quote.status.email.body' => '客戶 %1$s 有 %2$s 的報價 %3$s 連結至報價：%4$s',
+'quote.sales.order.created.from.quote' =>
+	'銷售訂單由報價創建，您輸入了採購訂單號碼！',
+'quote.sales.order.not.created.from.quote' =>
+	'銷售訂單未根據報價創建！銷售訂單重複。請將您的報價複製到另一個報價，'
+    . '然後再複製到銷售訂單。每個報價必須有一個相符的銷售訂單。',
+'quote.status.email.body' => '客戶 %1$s 有 %2$s 的報價 '
+	. '%3$s 連結至報價：%4$s',
 'quote.status.email.subject' => '客戶 %1$s %2$s 報價 %3$s',
 'quote.tax' => '報價稅',
 'quote.tax.rate' => '報價稅率',
 'quote.tax.rate.add' => '報價稅率添加',
-'quote.tax.rate.cannot.delete' => '無法刪除報價稅率',
-'quote.tax.rate.incomplete.fields' => '欄位不完整：必須填寫稅率。提示：請填寫零稅率。',
+'quote.tax.rate.cannot.delete' =>
+	'無法刪除報價稅率',
+'quote.tax.rate.incomplete.fields' =>
+	'欄位不完整：必須填寫稅率。提示：請填寫零稅率。',
 'quote.tax.rate.saved' => '報價稅率已保存',
 'quote.template' => '報價模板',
 'quote.templates' => '報價模板',
@@ -1304,9 +1642,12 @@ return [
 'quote.to.so' => '報價至銷售訂單',
 'quote.to.so.password' => '銷售訂單密碼',
 'quote.vat.quote' => '增值稅報價',
-'quote.with.purchase.order.line.number' => '採購訂單行號（Peppol 要求）- 與銷售訂單行號相符',
-'quote.with.purchase.order.number' => '採購訂單號碼 - 與銷售訂單號碼相符',
-'quote.with.purchase.order.person' => '下訂單的個人/部門',
+'quote.with.purchase.order.line.number' =>
+	'採購訂單行號（Peppol 要求）- 與銷售訂單行號相符',
+'quote.with.purchase.order.number' =>
+	'採購訂單號碼 - 與銷售訂單號碼相符',
+'quote.with.purchase.order.person' =>
+	'下訂單的個人/部門',
 'quotes' => '引號',
 'quotes.expire.after' => '報價到期日（天）',
 'quotes.requiring.approval' => '需要批准的報價',
@@ -1345,14 +1686,18 @@ return [
 'report' => '報告',
 'report.options' => '報告選項',
 'report.sales.by.product' => '按產品分列的銷售額',
-'report.sales.by.product.info' => '本報告顯示產品銷售總額及其商品稅，不包括與這些產品相關的額外發票稅。',
+'report.sales.by.product.info' =>
+	'本報告顯示產品銷售總額及其商品稅，不包括與這些產品相關的額外發票稅。',
 'report.sales.by.task' => '按任務銷售',
-'report.sales.by.task.info' => '此報告提供任務銷售總額及其商品稅。不包括與這些任務相關的額外發票稅。',
-'report.test.fraud.prevention.headers.api' => '測試詐欺防制標頭 API',
+'report.sales.by.task.info' =>
+	'此報告提供任務銷售總額及其商品稅。不包括與這些任務相關的額外發票稅。',
+'report.test.fraud.prevention.headers.api' =>
+	'測試詐欺防制標頭 API',
 'reports' => '報告',
 'reset' => '重置',
 'reset.password' => '重設密碼',
-'rules.peppol.en16931.001' => '必須提供業務流程或設定檔 ID。請參閱 config/common/params.php 中的“搜尋 ProfileID”',
+'rules.peppol.en16931.001' => '必須提供業務流程或設定檔 ID。請參閱 config/common/params.'
+	. 'php 中的“搜尋 ProfileID”',
 'run.report' => '運行報告',
 'sales' => '銷售量',
 'sales.by.client' => '按客戶銷售',
@@ -1363,10 +1708,14 @@ return [
 'salesorder.assembled.packaged.prepared' => '組裝/包裝/準備',
 'salesorder.cancelled' => '銷售訂單已取消',
 'salesorder.client.confirmed.terms' => '客戶確認條款',
-'salesorder.clients.purchase.order.number' => '客戶採購訂單編號',
-'salesorder.clients.purchase.order.person' => '客戶的採購訂單處理人員',
+'salesorder.clients.purchase.order.number' =>
+	'客戶採購訂單編號',
+'salesorder.clients.purchase.order.person' =>
+	'客戶的採購訂單處理人員',
 'salesorder.copied.to.invoice' => '銷售訂單複製到發票',
-'salesorder.copied.to.invoice.not' => '發票並非由銷售訂單創建！發票重複。請將您的銷售訂單複製到另一個銷售訂單，然後再複製到發票。每個銷售訂單必須有匹配的發票。',
+'salesorder.copied.to.invoice.not' =>
+	'發票並非由銷售訂單創建！發票重複。請將您的銷售訂單複製到另一個銷售訂單，'
+    . '然後再複製到發票。每個銷售訂單必須有匹配的發票。',
 'salesorder.date.created' => '銷售訂單建立日期',
 'salesorder.default.group' => '銷售訂單預設組',
 'salesorder.goods.services.confirmed' => '客戶確認出貨',
@@ -1390,12 +1739,21 @@ return [
 'save.item.as.lookup' => '將項目儲存為查找',
 'search.family' => '搜尋家庭',
 'search.product' => '搜尋產品',
-'security.disable.read.only.empty' => '停用唯讀設定目前沒有值 0 或 1。合法的做法是預設將其設為 0，以便使用唯讀功能來防止發票被刪除。',
-'security.disable.read.only.info' => '警告：發票保護和刪除防護的唯讀功能已啟用。停用「disable.read.only」功能，可將已傳送的發票重設為草稿。',
-'security.disable.read.only.success' => '成功：發票保護和刪除預防的唯讀功能已重新啟用',
-'security.disable.read.only.true.draft.check.and.mark' => '警告：您正在編輯草稿，並且停用唯讀設定處於 true',
-'security.disable.read.only.true.sent.check.and.mark' => '警告：您正在編輯已傳送的發票，並且停用唯讀設定為 true',
-'security.disable.read.only.warning' => '警告：發票保護和刪除預防的唯讀功能已停用',
+'security.disable.read.only.empty' =>
+	'停用唯讀設定目前沒有值 0 或 1。合法的做法是預設將其設為 0，'
+    . '以便使用唯讀功能來防止發票被刪除。',
+'security.disable.read.only.info' =>
+	'警告：發票保護和刪除防護的唯讀功能已啟用。停用「disable.'
+	. 'read.'
+	. 'only」功能，可將已傳送的發票重設為草稿。',
+'security.disable.read.only.success' =>
+	'成功：發票保護和刪除預防的唯讀功能已重新啟用',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'警告：您正在編輯草稿，並且停用唯讀設定處於 true',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'警告：您正在編輯已傳送的發票，並且停用唯讀設定為 true',
+'security.disable.read.only.warning' =>
+	'警告：發票保護和刪除預防的唯讀功能已停用',
 'select.family' => '選擇家庭',
 'select.payment.method' => '選擇付款方式',
 'select.project' => '選擇項目',
@@ -1407,63 +1765,36 @@ return [
 'set.to.read.only' => '將發票設定為唯讀',
 'setting' => '環境',
 'setting.add' => '設定添加',
-'setting.as.a.result.of ' => ' 後果 ',
+'setting.as.a.result.of ' =>
+	'後果',
 'setting.assets.cleared.at' => '資產清算於 ',
-'setting.assets.were.not.cleared.at' => '資產未在 ',
+'setting.assets.were.not.cleared.at' =>
+	'資產未在',
 'setting.company' => '公司公開資訊',
 'setting.company.private' => '公司私人詳細信息',
 'setting.company.profile' => '更改個人資料，例如手機和電子郵件地址',
 'setting.duplicate.key' => '無法完成儲存。您有一個具有以下按鍵的重複項： ',
-'setting.error.on.the.public.assets.folder' => ' 公共資產資料夾出現錯誤。',
+'setting.error.on.the.public.assets.folder' =>
+	'公共資產資料夾出現錯誤。',
 'setting.form' => '設定表單',
 'setting.key' => '設定鍵',
 'setting.section' => '部分',
 'setting.subsection' => '子節',
 'setting.translator.key' => '翻譯鍵',
 'setting.value' => '設定值',
-'setting.you.have.cleared.the.cache' => '您已清除快取。',
-'setting.you.have.not.cleared.the.cache.due.to.a' => '您尚未清除快取 ',
+'setting.you.have.cleared.the.cache' =>
+	'您已清除快取。',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'您尚未清除快取',
 'settings' => '設定',
 'settings.successfully.saved' => '設定已成功儲存',
-'setup.choose.language' => '選擇語言',
-'setup.choose.language.message' => '選擇一種語言以繼續安裝。',
-'setup.complete' => '安裝完成',
-'setup.complete.message' => 'InvoicePlane 已成功安裝。您現在可以登入了。',
-'setup.complete.secure.setup' => '如果您想確保安裝安全，可以暫時停用該設定。具體操作如下：在<code>ipconfig.php</code>檔案中，將<code>DISABLE_SETUP=false</code>替換為<code>DISABLE_SETUP=true</code> 。',
-'setup.complete.support.note' => '如果您遇到任何問題或需要協助，請查看<a href="https://wiki.invoiceplane.com">官方 wiki</a>或<a href="https://community.invoiceplane.com/">社群論壇</a>。',
-'setup.create.user' => '建立使用者帳戶',
-'setup.create.user.message' => '這是您登入 InvoicePlane 所需的資訊。',
-'setup.database.configured.message' => '資料庫配置成功。',
-'setup.database.details' => '資料庫詳細信息',
-'setup.database.message' => '提供以下資訊以連接到您的資料庫。',
-'setup.db.cannot.connect' => '無法使用提供的資料庫資訊連接到資料庫伺服器。請檢查憑證，然後重試。',
-'setup.db.database.info' => '您為 InvoicePlane 建立的資料庫的名稱。',
-'setup.db.hostname.info' => '您的資料庫的主機名稱。',
-'setup.db.password.info' => '與資料庫關聯的密碼。',
-'setup.db.port.info' => '您的主機名稱正在監聽的連接埠。預設值為 3306。',
 'setup.db.username.info' => '與資料庫關聯的使用者名稱。',
-'setup.install.tables' => '安裝表',
-'setup.other.contact' => '其他聯絡方式',
-'setup.prerequisites' => '先決條件',
-'setup.prerequisites.message' => '歡迎使用 InvoicePlane！必須先解決以下列出的所有問題，然後才能繼續安裝。',
-'setup.tables.errors' => '需要先解決以下錯誤才能繼續安裝。',
-'setup.tables.success' => '資料庫表已成功安裝。',
-'setup.upgrade.message' => '需要先解決以下錯誤才能繼續安裝。',
-'setup.upgrade.success' => '資料庫表已成功升級。',
-'setup.upgrade.tables' => '升級表',
-'setup.user.address.info' => '下面輸入的地址資訊將顯示在您的發票上。',
-'setup.user.contact.info' => '此聯絡資訊也可以顯示在您的發票上。',
-'setup.user.email.info' => '您的電子郵件地址將用於登入 InvoicePlane。',
-'setup.user.name.info' => '您的公司名稱或您的名字和姓氏。',
-'setup.user.password.info' => '請務必使用強密碼。建議使用大小寫字母、數字和符號的組合。最小長度：8 個字符',
-'setup.user.password.verify.info' => '再次提供相同的密碼來驗證您的密碼。',
-'setup.v120.alert' => '<strong>注意力！</strong><br>閱讀有關 InvoicePlane 應用程式的一些重大變更的<a href="https://go.invoiceplane.com/v120update" target="_blank">更新通知</a>非常重要。',
-'setup.v147.alert' => '<strong>注意力！</strong><br>請開啟檔案<code>application/config/config.php</code>並將行<code>$config[&#39;sess_use_database&#39;] = false;</code>改為<code>$config[&#39;sess_use_database&#39;] = true;</code> 。<br>更多詳情請見<a href="https://go.invoiceplane.com/v147update" target="_blank">此處</a>',
 'showing.of' => '顯示 %s（共 %s） ',
 'signup' => '報名',
 'single.choice' => '單選',
 'site.soletrader.about.choose' => '以下是選擇我們的一些有吸引力的理由：',
-'site.soletrader.about.competitive.rates' => '有競爭力的價格',
+'site.soletrader.about.competitive.rates' =>
+	'有競爭力的價格',
 'site.soletrader.about.contemporary' => '當代技能',
 'site.soletrader.about.dissatisfaction' => '如果您對服務不滿意，我們將免費重新提供服務。',
 'site.soletrader.about.finished' => '已完成的項目',
@@ -1519,28 +1850,53 @@ return [
 'stop.logging.in' => '停止登入',
 'stop.signing.up' => '停止註冊',
 'storecove' => '斯托爾科夫',
-'storecove.advisory.to.developer.field.easily.missed' => '客戶容易忽略的字段',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. 建立寄件者 - 法人實體國家',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'客戶容易忽略的字段',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. '建立寄件者 - 法人實體國家',
 'storecove.invoice.json.encoded' => 'StoreCove Json 編碼發票',
 'storecove.legal' => '合法的',
-'storecove.legal.entity.id.for.json' => '1.1.4. 建立寄件者 - Store Cove 法人實體 ID 插入到 invoice.json 中',
-'storecove.legal.entity.identifier.id.not.found' => '未找到配置參數會計供應商方法人實體公司 ID。',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. '建立寄件者 - Store Cove 法人實體 '
+	. 'ID 插入到 invoice.'
+	. 'json 中',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'未找到配置參數會計供應商方法人實體公司 ID。',
 'storecove.no.contract.exists' => '不存在合約',
 'storecove.not.available' => '無法使用',
-'storecove.purchase.order.item.id.null' => 'po-item-id-null',
-'storecove.receiver.identifier' => '接收方識別碼 - 請參閱 StoreCove 6.3',
-'storecove.region.country.legal.tax' => '地區 ---------- 國家 --------- 法律 --------- 稅務',
-'storecove.salesorder.number.not.exist' => '銷售訂單號碼不存在',
-'storecove.sender.identifier' => '6.2 寄件者識別符',
-'storecove.sender.identifier.basis' => '6.2 發送者識別碼基礎 - 法律或稅務',
-'storecove.supplier.contact.email.not.found' => '未找到供應商聯絡郵箱。請參閱配置參數數組。',
-'storecove.supplier.contact.firstname.not.found' => '未找到供應商聯絡人名字。請參閱配置參數數組。',
-'storecove.supplier.contact.lastname.not.found' => '未找到供應商聯絡人姓氏。請參閱配置參數數組。',
-'storecove.supplier.contact.name.not.found' => '未找到供應商聯絡人姓名。請參閱配置參數數組。',
-'storecove.supplier.contact.telephone.not.found' => '未找到供應商聯絡電話。請參閱配置參數數組。',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-null',
+'storecove.receiver.identifier' => '接收方識別碼 - 請參閱 StoreCove 6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'地區 ---------- 國家 --------- 法律 '
+	. '--------- 稅務',
+'storecove.salesorder.number.not.exist' =>
+	'銷售訂單號碼不存在',
+'storecove.sender.identifier' => '6.'
+	. '2 寄件者識別符',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 發送者識別碼基礎 - 法律或稅務',
+'storecove.supplier.contact.email.not.found' =>
+	'未找到供應商聯絡郵箱。請參閱配置參數數組。',
+'storecove.supplier.contact.firstname.not.found' =>
+	'未找到供應商聯絡人名字。請參閱配置參數數組。',
+'storecove.supplier.contact.lastname.not.found' =>
+	'未找到供應商聯絡人姓氏。請參閱配置參數數組。',
+'storecove.supplier.contact.name.not.found' =>
+	'未找到供應商聯絡人姓名。請參閱配置參數數組。',
+'storecove.supplier.contact.telephone.not.found' =>
+	'未找到供應商聯絡電話。請參閱配置參數數組。',
 'storecove.tax' => '稅',
 'storecove.tax.rate.code' => 'Storecove 稅率代碼',
-'storecove.tax.scheme.identifier.id.not.found' => '未找到配置參數會計供應商方稅務計畫公司 ID。',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'未找到配置參數會計供應商方稅務計畫公司 ID。',
 'stream' => '在瀏覽器/模態框中串流 PDF',
 'street.address' => '街道地址',
 'street.address.2' => '街道地址（續）',
@@ -1555,7 +1911,10 @@ return [
 'sumex.canton' => '廣州',
 'sumex.diagnosis' => '診斷',
 'sumex.edit' => 'Sumex 編輯',
-'sumex.help' => '此選項在發票中新增選單項，用於產生 TARMED / SUMEX1 半相容發票。 TARMED / SUMEX1 是瑞士醫療保健標準。<a href="http://sumex1.net/">更多資訊</a>',
+'sumex.help' => '此選項在發票中新增選單項，用於產生 TARMED / SUMEX1 半相容發票。 '
+	. 'TARMED / SUMEX1 是瑞士醫療保健標準。<a href="http:'
+	. '//sumex1.'
+	. 'net/">更多資訊</a>',
 'sumex.information' => 'Sumex 訊息',
 'sumex.insurednumber' => '受保人號碼',
 'sumex.observations' => '觀察',
@@ -1592,7 +1951,8 @@ return [
 'sumex.sliptype' => 'Sumex 滑套類型',
 'sumex.sliptype-esr9' => 'ESR 9（橘色滑套）',
 'sumex.sliptype-esrRed' => '紅色滑倒',
-'sumex.sliptype.help' => '此選項將變更 Sumex 中的單據類型。請注意，如果您選擇橘色單據，則需要以「01-」開頭的使用者號碼。',
+'sumex.sliptype.help' => '此選項將變更 Sumex'
+    . ' 中的單據類型。請注意，如果您選擇橘色單據，則需要以「01-」開頭的使用者號碼。',
 'sumex.ssn' => '音訊視訊系統',
 'sumex.veka' => '星期',
 'sunday' => '星期日',
@@ -1624,44 +1984,96 @@ return [
 'tax.rates' => '稅率',
 'taxes' => '稅收',
 'telegram' => '電報',
-'telegram.bot.api.chat.id' => '電報：非機器人：個人帳號：Hello World：測試訊息：訊息收件者：<b>聊天 ID</b>',
-'telegram.bot.api.chat.id.not.set' => '向機器人發送第一則訊息並接收「Hello」、「World」測試訊息的非機器人個人電報帳戶持有者的聊天 ID 尚未設定。',
-'telegram.bot.api.current.status' => '<b>目前用途：</b>不需要 webhook，因為客戶端沒有聊天 ID，也不會向機器人發送訊息。',
+'telegram.bot.api.chat.id' =>
+	'電報：非機器人：個人帳號：Hello World：測試訊息：訊息收件者：<b>聊天 ID</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'向機器人發送第一則訊息並接收'
+    . '「Hello」、「World」測試訊息的非機器人個人電報帳戶持有者的聊天 ID 尚未設定。',
+'telegram.bot.api.current.status' =>
+	'<b>目前用途：</b>不需要 webhook，因為客戶端沒有聊天 ID，也不會向機器人發送訊息。',
 'telegram.bot.api.enable' => '啟用電報',
-'telegram.bot.api.enabled.not' => '電報未啟用',
-'telegram.bot.api.future.use' => '<b>未來用途：</b>具有聊天 ID 的客戶將收到電報發票，並透過向 webhook 發送確認來確認收到',
-'telegram.bot.api.general.purpose' => '<b>透過令牌識別的註冊機器人將客戶付款通知傳送到以下註冊聊天 ID（通常是管理員的個人非機器人電報帳戶）。</b>',
-'telegram.bot.api.get.updates.failed' => '您的電報更新失敗。',
-'telegram.bot.api.get.updates.success' => '您的 Telegram 更新已使用 api 方法 getUpdates 成功。',
-'telegram.bot.api.hello.world.test.message' => '來自 Telegram Bot Api 的 Hello World。感謝 yiisoft 開發人員！',
-'telegram.bot.api.hello.world.test.message.sent' => '「Hello World」訊息已發送。',
-'telegram.bot.api.hello.world.test.message.sent.not' => '「Hello World」訊息未發送。',
-'telegram.bot.api.hello.world.test.message.use' => '向外部聊天 ID 發送基本測試訊息“Hello World from Telegram Bot Api”',
-'telegram.bot.api.payment.notification.success' => 'Telegram 付款通知成功',
-'telegram.bot.api.payment.notifications' => '電報付款通知',
+'telegram.bot.api.enabled.not' =>
+	'電報未啟用',
+'telegram.bot.api.future.use' =>
+	'<b>未來用途：</b>具有聊天 ID 的客戶將收到電報發票，並透過向 '
+    . 'webhook 發送確認來確認收到',
+'telegram.bot.api.general.purpose' =>
+	'<b>透過令牌識別的註冊機器人將客戶付款通知傳送到以下註冊聊天 '
+    . 'ID（通常是管理員的個人非機器人電報帳戶）。</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'您的電報更新失敗。',
+'telegram.bot.api.get.updates.success' =>
+	'您的 Telegram 更新已使用 api 方法 '
+	. 'getUpdates 成功。',
+'telegram.bot.api.hello.world.test.message' =>
+	'來自 Telegram Bot Api 的 '
+	. 'Hello World。感謝 yiisoft 開發人員！',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'「Hello World」訊息已發送。',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'「Hello World」訊息未發送。',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'向外部聊天 ID 發送基本測試訊息“Hello World from '
+	. 'Telegram Bot Api”',
+'telegram.bot.api.payment.notification.success' =>
+	'Telegram 付款通知成功',
+'telegram.bot.api.payment.notifications' =>
+	'電報付款通知',
 'telegram.bot.api.token' => 'Telegram 機器人 API 令牌',
-'telegram.bot.api.token.not.set' => 'Telegram Bot Api 令牌未設定',
-'telegram.bot.api.webhook.delete' => '刪除 Webhook',
-'telegram.bot.api.webhook.deleted' => 'Webhook 剛剛停用，因此可以使用手動 api 取得方法 getUpdates。',
-'telegram.bot.api.webhook.secret.token' => 'Webhook Secret Token 用於額外的安全性（用作 setWebhook 函數中的參數，而不是作為 queryParameter）',
-'telegram.bot.api.webhook.setup' => 'Webhook 已設定。',
-'telegram.bot.api.webhook.setup.already' => 'Webhook 已經設定完畢。',
-'telegram.bot.api.webhook.url.this.site' => '此網站的 Telegram Webhook Url 用於 TelegramHelper 的 setWebhook 函數。',
+'telegram.bot.api.token.not.set' =>
+	'Telegram Bot Api 令牌未設定',
+'telegram.bot.api.webhook.delete' =>
+	'刪除 Webhook',
+'telegram.bot.api.webhook.deleted' =>
+	'Webhook 剛剛停用，因此可以使用手動 api 取得方法 getUpdates。',
+'telegram.bot.api.webhook.secret.token' =>
+	'Webhook Secret Token 用於額外的安全性（用作 setWebhook '
+	. '函數中的參數，而不是作為 queryParameter）',
+'telegram.bot.api.webhook.setup' =>
+	'Webhook 已設定。',
+'telegram.bot.api.webhook.setup.already' =>
+	'Webhook 已經設定完畢。',
+'telegram.bot.api.webhook.url.this.site' =>
+	'此網站的 Telegram Webhook Url 用於 '
+	. 'TelegramHelper 的 setWebhook 函數。',
 'template' => '發票模板',
 'templates' => '發票模板',
 'term' => '條款與條件',
 'term.1' => '我還沒有閱讀條款和條件。',
 'term.2' => '我已閱讀並同意條款和條件。',
-'term.add.additional.terms.at.setting.repository' => '在設定儲存庫 getPaymentTerms 函數中新增附加條款。',
+'term.add.additional.terms.at.setting.repository' =>
+	'在設定儲存庫 getPaymentTerms 函數中新增附加條款。',
 'terms' => '條款',
 'test.data.install' => '安裝測試數據',
 'test.data.use' => '使用測試數據',
 'test.remove' => '刪除測試數據',
-'test.remove.tooltip' => '查看..設定..常規..安裝測試數據..否和查看..設定..常規..使用測試數據..否',
+'test.remove.tooltip' => '查看.'
+	. '設定.'
+	. '常規.'
+	. '安裝測試數據.'
+	. '否和查看.'
+	. '設定.'
+	. '常規.'
+	. '使用測試數據.'
+	. '否',
 'test.reset' => '重置測試數據',
 'test.reset.setting' => '重新安裝設定',
-'test.reset.setting.tooltip' => '這將刪除所有當前設定並重新安裝 InvoiceController/install.default.settings.on.first.run 中的預設設置',
-'test.reset.tooltip' => '查看..設定..常規..安裝測試數據..是和查看..設定..常規..使用測試數據..是',
+'test.reset.setting.tooltip' => 
+    '這將刪除所有當前設定並重新安裝 InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run 中的預設設置',
+'test.reset.tooltip' => '查看.'
+	. '設定.'
+	. '常規.'
+	. '安裝測試數據.'
+	. '是和查看.'
+	. '設定.'
+	. '常規.'
+	. '使用測試數據.'
+	. '是',
 'text' => '文字',
 'theme' => '主題',
 'this.month' => '本月',
@@ -1685,20 +2097,38 @@ return [
 'true' => '真的',
 'try.again' => '再試一次',
 'two.factor.authentication' => '雙重身份驗證',
-'two.factor.authentication.attempt.failure' => '雙重認證嘗試失敗',
-'two.factor.authentication.attempt.failure.must.setup' => '雙重認證嘗試失敗：您必須設定一個帶有金鑰 (+) 的新二維碼，並在出現提示時選擇覆蓋先前的條目',
-'two.factor.authentication.attempt.success' => '雙重認證嘗試成功',
+'two.factor.authentication.attempt.failure' =>
+	'雙重認證嘗試失敗',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'雙重認證嘗試失敗：'
+    . '您必須設定一個帶有金鑰 (+) 的新二維碼，並在出現提示時選擇覆蓋先前的條目',
+'two.factor.authentication.attempt.success' =>
+	'雙重認證嘗試成功',
 'two.factor.authentication.disabled' => '為了提高安全性，雙重認證現已停用。',
 'two.factor.authentication.enable' => '啟用雙重認證',
-'two.factor.authentication.enabled.with.disabling' => '雙重身份驗證目前已啟用，以增強安全性。身份驗證成功後，身份驗證將停用，直到下次登錄，以提供額外的安全保障。每次登入後，必須掃描二維碼，取得新的密碼。',
-'two.factor.authentication.enabled.without.disabling' => '目前已啟用雙重認證以增加安全性，並且在身份驗證成功後不會被停用。設定雙重認證後，登入後將不會再看到二維碼進行掃描。',
+'two.factor.authentication.enabled.with.disabling' =>
+	'雙重身份驗證目前已啟用，'
+    . '以增強安全性。身份驗證成功後，'
+    . '身份驗證將停用，直到下次登錄，'
+    . '以提供額外的安全保障。每次登入後，'
+    . '必須掃描二維碼，取得新的密碼。',
+'two.factor.authentication.enabled.without.disabling' =>
+	'目前已啟用雙重認證以增加安全性，'
+    . '並且在身份驗證成功後不會被停用。設定雙重認證後，'
+    . '登入後將不會再看到二維碼進行掃描。',
 'two.factor.authentication.error' => '雙重身份驗證錯誤',
-'two.factor.authentication.form.verify.login' => '驗證登入',
-'two.factor.authentication.invalid.code.format' => '代碼格式無效。請輸入應用程式中的 6 位數代碼。',
-'two.factor.authentication.missing.code.or.secret' => '缺少身份驗證碼或 2FA 金鑰。',
-'two.factor.authentication.new.six.digit.code' => '請從您的應用程式輸入新的 6 位數驗證碼（與設定碼不同）。',
-'two.factor.authentication.no.secret.generated' => '未產生密鑰。請重新啟動安裝程式。',
-'two.factor.authentication.qr.code.enter.manually' => '或手動將此程式碼輸入到 Android 應用程式中： ',
+'two.factor.authentication.form.verify.login' =>
+	'驗證登入',
+'two.factor.authentication.invalid.code.format' =>
+	'代碼格式無效。請輸入應用程式中的 6 位數代碼。',
+'two.factor.authentication.missing.code.or.secret' =>
+	'缺少身份驗證碼或 2FA 金鑰。',
+'two.factor.authentication.new.six.digit.code' =>
+	'請從您的應用程式輸入新的 6 位數驗證碼（與設定碼不同）。',
+'two.factor.authentication.no.secret.generated' =>
+	'未產生密鑰。請重新啟動安裝程式。',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'或手動將此程式碼輸入到 Android 應用程式中：',
 'two.factor.authentication.scan' => '使用您的 Aegis 應用程式掃描此二維碼：',
 'two.factor.authentication.setup' => '設定雙重認證',
 'type' => '類型',
@@ -1736,7 +2166,9 @@ return [
 'user.account.clients' => '擁有用戶帳戶的用戶端',
 'user.accounts' => '發票使用者帳戶',
 'user.all.clients' => '新增所有客戶',
-'user.all.clients.text' => '* 如果選取此選項，使用者將能夠看到所有用戶端，包括後來新增的用戶端。',
+'user.all.clients.text' => '* 如果選取此選項，'
+    . '使用者將能夠看到所有用戶端，'
+    . '包括後來新增的用戶端。',
 'user.api.list' => '預發票用戶 - 已註冊用戶',
 'user.client.active.no' => '您沒有擁有活躍用戶帳戶的客戶。管理員將客戶指派給已註冊的使用者帳戶。',
 'user.client.count' => '#',
@@ -1746,23 +2178,38 @@ return [
 'user.iban' => 'IBAN',
 'user.inv.active.not' => '用戶帳戶未啟動',
 'user.inv.list.limit' => '每頁列出的記錄數（注意：覆蓋預設值）',
-'user.inv.more.than.one.assigned' => '發票建立失敗：請查閱您的「設定」...使用者帳戶。此客戶已指派多個使用者。',
+'user.inv.more.than.one.assigned' =>
+	'發票建立失敗：請查閱您的「設定」.'
+	. '使用者帳戶。此客戶已指派多個使用者。',
 'user.inv.refer.to' => '按一下此處可覆寫每頁 10 筆記錄的預設值。',
 'user.inv.role.accountant' => '會計',
-'user.inv.role.accountant.assigned' => '會計角色分配',
-'user.inv.role.accountant.default' => '預設情況下，客戶的會計可以查看發票、支付發票、查看發票付款以及編輯發票付款。',
+'user.inv.role.accountant.assigned' =>
+	'會計角色分配',
+'user.inv.role.accountant.default' =>
+	'預設情況下，客戶的會計可以查看發票、支付發票、查看發票付款以及編輯發票付款。',
 'user.inv.role.administrator' => '行政人員',
-'user.inv.role.administrator.already.assigned' => '管理員角色已分配',
-'user.inv.role.administrator.assigned' => '管理員角色現已分配。 ',
-'user.inv.role.all.new' => '所有新使用者將預設承擔觀察員角色，即可以查看文檔但不能編輯發送給他們的文檔，即觀察或查看文檔。',
+'user.inv.role.administrator.already.assigned' =>
+	'管理員角色已分配',
+'user.inv.role.administrator.assigned' =>
+	'管理員角色現已分配。',
+'user.inv.role.all.new' =>
+	'所有新使用者將預設承擔觀察員角色，'
+    . '即可以查看文檔但不能編輯發送給他們的文檔，即觀察或查看文檔。',
 'user.inv.role.observer' => '觀察者',
-'user.inv.role.observer.assigned' => '觀察員角色分配',
-'user.inv.role.observer.assigned.already' => '觀察員角色已被指派。',
-'user.inv.role.revoke.all' => '撤銷所有角色',
-'user.inv.role.warning.revoke.all' => '您確定要撤銷所有角色嗎',
-'user.inv.role.warning.role' => '您確定要擔任這個角色嗎？',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => '無法將下拉式選單的管理員類型指派給非管理員',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => '無法將下拉式選單的訪客類型指派給管理員',
+'user.inv.role.observer.assigned' =>
+	'觀察員角色分配',
+'user.inv.role.observer.assigned.already' =>
+	'觀察員角色已被指派。',
+'user.inv.role.revoke.all' =>
+	'撤銷所有角色',
+'user.inv.role.warning.revoke.all' =>
+	'您確定要撤銷所有角色嗎',
+'user.inv.role.warning.role' =>
+	'您確定要擔任這個角色嗎？',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'無法將下拉式選單的管理員類型指派給非管理員',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'無法將下拉式選單的訪客類型指派給管理員',
 'user.signup.please' => '請註冊！',
 'user.subscriber.number' => '用戶號碼',
 'user.type' => '使用者類型',
@@ -1773,7 +2220,8 @@ return [
 'validator.invalid.login.password' => '登入名稱或密碼無效',
 'validator.password.change' => '您的密碼已更改',
 'validator.password.not.match' => '密碼不匹配',
-'validator.password.not.match.new' => '您的新密碼不匹配',
+'validator.password.not.match.new' =>
+	'您的新密碼不匹配',
 'validator.password.reset' => '您的密碼已重設',
 'validator.user.exist' => '具有此登入名稱的使用者已存在',
 'validator.user.exist.not' => '具有此登入的使用者不存在',
@@ -1822,4 +2270,79 @@ return [
 'yes' => '是的',
 'zip' => '郵遞區號',
 'zip.code' => '郵遞區號',
+
+'allowance.or.charge.allowance.tax' =>
+	'津貼稅',
+'allowance.or.charge.charge.tax' =>
+	'稅費',
+'allowance.or.charge.inv.add' =>
+	'新增發票津貼或費用',
+'allowance.or.charge.level' => '等級（⬅️總體，明細項➡）',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'運輸/處理/包裝',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'運輸/處理/包裝增值稅',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'運輸/處理/包裝稅',
+'amount.payment' => '應付金額',
+'calendar' => '日曆',
+'continue.with.developersandboxhmrc' => '繼續參與英國開發者政府沙盒計劃',
+'continue.with.oidc' => '繼續使用 OpenID Connect',
+'continue.with.openbanking' => '繼續推動開放銀行',
+'converted.to.invoice' => '已轉換為發票',
+'converted.to.so' => '已轉換為銷售訂單',
+'custom.field.edit' => '自訂欄位編輯',
+'delete.quote.single' => '此報價單可以刪除，因為它沒有關聯的銷售訂單或發票。',
+'delete.quote.derived' => '此報價單關聯著銷售訂單或發票，因此無法刪除。',
+'extended' => '擴充',
+'extended.language' => '擴展語言',
+'file' => '文件',
+'grand.fathered' => '祖父',
+'layout.password.otp.6' => '一次性密碼（6 位數字）',
+'layout.password.otp.6.8' =>
+	'一次性密碼（6 位數）/ 備份恢復碼（8 位數）',
+'oauth2.account.locked' => '帳戶已鎖定',
+'oauth2.backup.recovery.codes' => '備份恢復代碼。請妥善保管。',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'重新產生備份恢復程式碼',
+'oauth2.consent.required' => '需要徵得同意',
+'oauth2.default' => '使用的預設 OAuth 2.'
+	. '0 配置',
+'oauth2.invalid.request' => '無效請求',
+'oauth2.invalid.client' => '無效客戶端',
+'oauth2.invalid.grant' => '無效授權',
+'oauth2.login.required' => '需要登入',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'缺少身份驗證碼或狀態參數。',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'狀態參數缺失。可能遭受 CSRF 攻擊',
+'oauth2.server.error' => '伺服器錯誤',
+'oauth2.temporarily.unavailable' => '暫時無法使用',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'生產環境中不允許建立測試使用者。',
+'oauth2.unauthorized.client' => '未經授權的客戶端',
+'oauth2.unsupported.response.type' => '不支援的回應類型',
+'oauth2.unsupported.grant.type' => '不支持的撥款類型',
+'online.payment.apiToken' => 'API令牌',
+'online.payment.thirdPartyProvider' => '第三方供應商，如 Wonderful',
+'open.banking.pay.with' => '使用開放銀行付款： ',
+'open.banking.not.configured' => '開放銀行功能尚未配置。請聯絡技術支援。',
+'radiolist.choice' => '電台清單選擇',
+'region' => '地區',
+'script' => '腳本',
+'tax.rate.active.not' => '警告：尚未啟動任何稅率。請至少啟用一個稅率。設定…稅率',
+'textarea' => '文字區域',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'無效的 8 位元備份還原代碼',
+'two.factor.authentication.invalid.totp.code' =>
+	'無效的6位元定時一次性身份驗證碼',
+'two.factor.authentication.rate.limit.reached' =>
+	'已達到速率限制，請稍候10秒。',
+'url' => '網址',
+'variant' => '變體',
+'approval.required' => '需要審批',
+'quote.approval.required' => '報價需經審批',
+'quote.must.be.approved.first' =>
+	'報價必須先獲得批准才能轉換',    
 ];
+

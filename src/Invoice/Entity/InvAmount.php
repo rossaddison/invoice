@@ -27,7 +27,9 @@ class InvAmount
         /** Note the $total is calculated after taking into account invoice discount i.e. $inv->getDiscount */
         private ?float $total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $paid = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $balance = 0.00) {}
+        private ?float $balance = 0.00)
+    {
+    }
 
     public function getInv(): ?Inv
     {
@@ -109,7 +111,7 @@ class InvAmount
         $this->packhandleship_tax = $packhandleship_tax;
     }
 
-    public function getTax_total(): float|null
+    public function getTax_total(): ?float
     {
         return $this->tax_total;
     }
@@ -119,7 +121,7 @@ class InvAmount
         $this->tax_total = $tax_total;
     }
 
-    public function getTotal(): float|null
+    public function getTotal(): ?float
     {
         return $this->total;
     }
@@ -129,7 +131,7 @@ class InvAmount
         $this->total = $total;
     }
 
-    public function getPaid(): float|null
+    public function getPaid(): ?float
     {
         return $this->paid;
     }
@@ -139,7 +141,7 @@ class InvAmount
         $this->paid = $paid;
     }
 
-    public function getBalance(): float|null
+    public function getBalance(): ?float
     {
         return $this->balance;
     }

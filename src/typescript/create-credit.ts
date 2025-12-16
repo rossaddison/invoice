@@ -44,7 +44,7 @@ export class CreateCreditHandler {
         }
 
         // Extract invoice ID from URL
-        const invId = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
+        const invId = absoluteUrl.pathname.split('/').at(-1) || '';
 
         // Collect form data with type safety
         const formData: InvoiceFormData = {

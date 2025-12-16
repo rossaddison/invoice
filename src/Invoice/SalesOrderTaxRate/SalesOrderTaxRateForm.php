@@ -26,17 +26,17 @@ final class SalesOrderTaxRateForm extends FormModel
         $this->so_tax_rate_amount = $salesOrderTaxRate->getSo_tax_rate_amount();
     }
 
-    public function getSo_id(): int|null
+    public function getSo_id(): ?int
     {
         return $this->so_id;
     }
 
-    public function getTax_rate_id(): int|null
+    public function getTax_rate_id(): ?int
     {
         return $this->tax_rate_id;
     }
 
-    public function getInclude_item_tax(): int|null
+    public function getInclude_item_tax(): ?int
     {
         return $this->include_item_tax;
     }

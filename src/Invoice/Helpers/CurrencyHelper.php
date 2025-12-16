@@ -9,7 +9,9 @@ class CurrencyHelper
     /**
      * Create a new Currency object
      */
-    private function __construct(private readonly mixed $code, private readonly mixed $numeric, private readonly mixed $decimals) {}
+    private function __construct(private readonly mixed $code, private readonly mixed $numeric, private readonly mixed $decimals)
+    {
+    }
 
     /**
      * Get the three letter code for the currency

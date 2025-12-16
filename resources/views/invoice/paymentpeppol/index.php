@@ -24,13 +24,13 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $id
  */
 
-echo $alert;
+ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(PaymentPeppol $model) => $model->getId(),
+        content: static fn (PaymentPeppol $model) => $model->getId(),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -72,10 +72,10 @@ $toolbarReset = A::tag()
   ->id('btn-reset')
   ->render();
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('paymentpeppol/index'))->csrf($csrf)->open() .
+$toolbarString = Form::tag()->post($urlGenerator->generate('paymentpeppol/index'))->csrf($csrf)->open()
 
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,

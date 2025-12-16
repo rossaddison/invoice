@@ -33,8 +33,6 @@ final class InvFormTest extends TestCase
      */
     public function testLongTextFieldsAcceptUnlimitedContent(): void
     {
-        $form = new InvForm($this->inv);
-        
         // Create very long content (over 65535 characters)
         $longContent = str_repeat('This is a very long text content. ', 2000); // ~70,000 chars
         
@@ -278,7 +276,7 @@ final class InvFormTest extends TestCase
         $inv->method('getSo_id')->willReturn('1');
         $inv->method('getCreditinvoice_parent_id')->willReturn('0');
         $inv->method('getDelivery_id')->willReturn('0');
-        $inv->method('getDelivery_location_id')->willReturn('0');  
+        $inv->method('getDelivery_location_id')->willReturn('0');
         $inv->method('getPostal_address_id')->willReturn('0');
         $inv->method('getContract_id')->willReturn('0');
         $inv->method('getDiscount_amount')->willReturn(0.00);

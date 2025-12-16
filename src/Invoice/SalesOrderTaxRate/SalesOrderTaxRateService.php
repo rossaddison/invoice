@@ -8,7 +8,9 @@ use App\Invoice\Entity\SalesOrderTaxRate;
 
 final readonly class SalesOrderTaxRateService
 {
-    public function __construct(private SalesOrderTaxRateRepository $repository) {}
+    public function __construct(private SalesOrderTaxRateRepository $repository)
+    {
+    }
 
     /**
      * @param SalesOrderTaxRate $model

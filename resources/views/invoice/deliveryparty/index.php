@@ -38,12 +38,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(DeliveryParty $model) => Html::encode($model->getId()),
+        content: static fn (DeliveryParty $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'party_name',
         header: $translator->translate('name'),
-        content: static fn(DeliveryParty $model) => Html::encode($model->getPartyName()),
+        content: static fn (DeliveryParty $model) => Html::encode($model->getPartyName()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -79,17 +79,17 @@ $columns = [
     ),
 ];
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('deliveryparty/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('deliveryparty/add'))
         ->addClass('btn btn-info')
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

@@ -3,1823 +3,3305 @@
 declare(strict_types=1);
 
 return [
-'account.information' => 'Informazioni sull&#39;account',
-'active' => 'Attivo',
-'add' => 'Aggiungere',
-'add.invoice' => 'Aggiungi fattura',
-'add.client' => 'Aggiungi cliente',
-'add.family' => 'Aggiungi famiglia',
-'add.files' => 'Aggiungi file...',
-'add.invoice.tax' => 'Aggiungi imposta sulla fattura',
-'add.new.row' => 'Aggiungi nuova riga',
-'add.note' => 'Aggiungi nota',
-'add.notes' => 'Aggiungi note',
-'add.payment.provider' => 'Aggiungi un fornitore di pagamento',
-'add.product' => 'Aggiungi prodotto',
-'add.quote' => 'Aggiungi preventivo',
-'add.quote.tax' => 'Aggiungi preventivo fiscale',
-'add.task' => 'Aggiungi attività',
-'add.unit' => 'Aggiungi unità',
-'address' => 'Indirizzo',
-'administrator' => 'Amministratore',
-'after.amount' => 'Dopo l&#39;importo',
-'after.amount.space' => 'Dopo Importo con spazio unificatore',
-'aging' => 'Invecchiamento delle fatture',
-'aging.1.15' => '1 - 15 giorni',
-'aging.16.30' => '16 - 30 giorni',
-'aging.above.30' => 'Oltre 30 giorni',
-'alert.no.client.assigned' => 'Nessun cliente assegnato a questo progetto.',
-'alert.no.tasks.found' => 'Nessun compito trovato per questo progetto.',
-'alert.task.delete' => 'Attenzione! Si desidera eliminare un&#39;attività utilizzata per generare una fattura.',
-'all' => 'Tutto',
-'allowance.or.charge' => 'Indennità o addebito',
-'allowance.or.charge.add' => 'Aggiungi sconto o addebito a livello di documento (ovvero NON a livello di riga di fattura)',
-'allowance.or.charge.allowance' => 'Indennità',
-'allowance.or.charge.allowance.vat' => 'IVA sull&#39;indennità',
-'allowance.or.charge.amount' => 'Importo dell&#39;indennità di imposta (fattore moltiplicatore numerico come percentuale moltiplicata per l&#39;importo base)',
-'allowance.or.charge.base.amount' => 'Importo base',
-'allowance.or.charge.charge' => 'Carica',
-'allowance.or.charge.charge.vat' => 'IVA in carica',
-'allowance.or.charge.edit.allowance' => 'Modifica dell&#39;indennità a livello di documento (ovvero NON a livello di riga di fattura)',
-'allowance.or.charge.edit.charge' => 'Modifica addebito a livello di documento (ovvero NON a livello di riga di fattura)',
-'allowance.or.charge.index' => 'Indice di sconto o di addebito relativo alla voce di bilancio',
-'allowance.or.charge.inv' => 'Sconto o addebito sulla fattura',
-'allowance.or.charge.item' => 'Sconto o addebito sulla voce di fattura',
-'allowance.or.charge.item.add' => 'Aggiungi indennità/addebito',
-'allowance.or.charge.multiplier.factor.numeric' => 'Fattore moltiplicatore numerico',
-'allowance.or.charge.reason' => 'Motivo',
-'allowance.or.charge.reason.code' => 'Codice motivo',
-'already.paid' => 'Questa fattura è già stata pagata.',
-'amount' => 'Importo della voce di fattura',
-'amount.add' => 'Aggiungi importo articolo fattura',
-'amount.due' => 'Importo dovuto',
-'amount.no' => 'Non c&#39;è alcun importo della fattura',
-'amount.settings' => 'Impostazioni importo',
-'amounts' => 'Importi delle fatture',
-'any.family' => 'Qualsiasi famiglia',
-'apply.after.item.tax' => 'Applicare dopo l&#39;imposta sull&#39;articolo',
-'apply.before.item.tax' => 'Applicare prima dell&#39;imposta sull&#39;articolo',
-'approve' => 'Approvare',
-'approve.this.quote' => 'Approva questa citazione',
-'approved' => 'Approvato',
-'archive' => 'Archivia il pdf in Caricamenti/Archivio',
-'assign.client' => 'Assegna cliente',
-'assign.client.on.signup' => 'Assegna un client all&#39;utente al momento della registrazione.',
-'assign.client.on.signup.default.age.minimum.eighteen' => 'Al momento della registrazione, assegnare all&#39;utente un client con età minima predefinita di diciotto anni.',
-'assign.client.on.signup.done' => 'Assegnazione di un client all&#39;utente al momento della registrazione.',
-'assigned.clients' => 'Clienti assegnati',
-'attachment.list' => 'Elenco degli allegati',
-'attachments' => 'Allegati',
-'automatic.email.on.recur' => 'Invia automaticamente fatture ricorrenti via e-mail',
-'back' => 'Indietro',
-'balance' => 'Bilancia',
-'balance.does.not.equal.zero' => 'Il saldo non è uguale a zero. Lo stato è Pagato =&gt; Il saldo dovrebbe essere zero. ',
-'base.invoice' => 'Fattura base',
-'bcc' => 'BCC',
-'bcc.mails.to.admin' => 'Invia tutte le email in uscita come Ccn all&#39;account amministratore',
-'bcc.mails.to.admin.hint' => 'L&#39;account amministratore è l&#39;account creato durante l&#39;installazione di InvoicePlane.',
-'before.amount' => 'Prima dell&#39;importo',
-'bill.to' => 'Disegno di legge per',
-'birthdate' => 'Data di nascita',
-'body' => 'Corpo',
-'boolean' => 'Booleano',
+'account.information' => 'Paskyros informacija',
+'active' => 'Aktyvus',
+'add' => 'Pridėti',
+'add.invoice' => 'Pridėti sąskaitą faktūrą',
+'add.client' => 'Pridėti klientą',
+'add.family' => 'Pridėti šeimą',
+'add.files' => 'Pridėti failus...',
+'add.invoice.tax' => 'Pridėti sąskaitos faktūros mokestį',
+'add.new.row' => 'Pridėti naują eilutę',
+'add.note' => 'Pridėti pastabą',
+'add.notes' => 'Pridėti pastabas',
+'add.payment.provider' => 'Pridėti mokėjimo paslaugų teikėją',
+'add.product' => 'Pridėti produktą',
+'add.quote' => 'Pridėti citatą',
+'add.quote.tax' => 'Pridėti kainos pasiūlymą Mokestis',
+'add.task' => 'Pridėti užduotį',
+'add.unit' => 'Pridėti vienetą',
+'address' => 'Adresas',
+'administrator' => 'Administratorius',
+'after.amount' => 'Po Suma',
+'after.amount.space' => 'Po „Amount“ su nekeliamuoju tarpu',
+'aging' => 'Sąskaitos faktūros senėjimas',
+'aging.1.15' => '1–15 dienų',
+'aging.16.30' => '16–30 dienų',
+'aging.above.30' => 'Virš 30 dienų',
+'alert.no.client.assigned' => 'Šiam projektui nepriskirtas joks klientas.',
+'alert.no.tasks.found' => 'Šiam projektui nerasta jokių užduočių.',
+'alert.task.delete' => 'Dėmesio! Norite ištrinti užduotį, kuri '
+	. 'buvo naudojama sąskaitai faktūrai generuoti.',
+'all' => 'Visi',
+'allowance.or.charge' => 'Peppol išmoka arba mokestis už '
+	. 'bendrą sąskaitos faktūros sąskaitą arba '
+	. 'sąskaitos faktūros eilutės straipsnį',
+'allowance.or.charge.add' => 'Pridėti pirminio dokumento lygio nuolaidą '
+	. 'arba mokestį (žr.'
+	. 'sąskaitos faktūros rodinio parinktis, kaip '
+	. 'pridėti sąskaitos faktūros nuolaidą arba '
+	. 'mokesčius)',
+'allowance.or.charge.allowance' => 'Pašalpa',
+'allowance.or.charge.allowance.vat' =>
+	'PVM nuo pašalpos',
+'allowance.or.charge.allowance.tax' =>
+	'Mokestis nuo pašalpos',
+'allowance.or.charge.amount' => 'Suma (mfn x bazinė | '
+	. 'fiksuota)',
+'allowance.or.charge.base.amount' =>
+	'Bazinė suma (būtina, jei MFN '
+	. '&gt; 1)',
+'allowance.or.charge.charge' => 'Mokestis',
+'allowance.or.charge.charge.vat' =>
+	'PVM įskaičiuotas',
+'allowance.or.charge.charge.tax' =>
+	'Mokestis už mokestį',
+'allowance.or.charge.edit.allowance' =>
+	'Redaguoti',
+'allowance.or.charge.edit.charge' =>
+	'Redaguoti',
+'allowance.or.charge.index' => 'Leidimų arba mokesčių indeksas, palyginti '
+	. 'su eilutės elementu',
+'allowance.or.charge.inv' => 'Sąskaitos faktūros suma arba mokestis',
+'allowance.or.charge.inv.add' =>
+	'Pridėti sąskaitos faktūros nuolaidą arba '
+	. 'mokestį',
+'allowance.or.charge.item' => 'Sąskaitos faktūros elemento nuolaida arba '
+	. 'mokestis',
+'allowance.or.charge.item.add' =>
+	'Nuolaida / mokestis pridėti',
+'allowance.or.charge.level' => 'Lygis (⬅ ️Bendras, Eilutės elementas '
+	. '➡)',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'Daugiklis Skaitmeninis:'
+	. '&gt;1 =&gt; naudojamas, 0 arba '
+	. '1 =&gt; nenaudojamas',
+'allowance.or.charge.reason' => 'Priežastis',
+'allowance.or.charge.reason.code' =>
+	'Priežasties kodas',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'Pristatymas / tvarkymas / pakavimas',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'PVM už siuntimą / tvarkymą '
+	. '/ pakuotę',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'Siuntimo / tvarkymo / pakavimo '
+	. 'mokestis',
+'already.paid' => 'Ši sąskaita faktūra jau apmokėta.',
+'amount.payment' => 'Mokėjimo suma, kurią reikia sumokėti '
+	. 'visą',
+'amount' => 'Sąskaitos faktūros elemento suma',
+'amount.add' => 'Sąskaitos faktūros elemento suma Pridėti',
+'amount.due' => 'Mokėtina suma',
+'amount.no' => 'Sąskaitos faktūros sumos nėra',
+'amount.settings' => 'Sumos nustatymai',
+'amounts' => 'Sąskaitos faktūros sumos',
+'any.family' => 'Bet kuri šeima',
+'apply.after.item.tax' => 'Taikyti po prekės mokesčio',
+'apply.before.item.tax' => 'Taikyti prieš prekės mokestį',
+'approve' => 'Patvirtinti',
+'approve.this.quote' => 'Patvirtinti šią citatą',
+'approved' => 'Patvirtinta',
+'archive' => 'Archyvuokite PDF failą skiltyje „Įkėlimai '
+	. '/ archyvas“',
+'assign.client' => 'Priskirti klientą',
+'assign.client.on.signup' => 'Priskirkite klientą vartotojui registracijos metu.',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'Registruojantis vartotojui priskirti klientą, kuriam '
+	. 'numatytasis minimalus amžius yra aštuoniolika '
+	. 'metų.',
+'assign.client.on.signup.done' =>
+	'Prisiregistravus vartotojui, jam buvo priskirtas '
+	. 'klientas.',
+'assigned.clients' => 'Priskirti klientai',
+'attachment.list' => 'Priedų sąrašas',
+'attachments' => 'Priedai',
+'automatic.email.on.recur' => 'Automatiškai el.'
+	. 'paštu siųsti periodines sąskaitas faktūras',
+'back' => 'Atgal',
+'balance' => 'Balansas',
+'balance.does.not.equal.zero' =>
+	'Likutis nėra lygus nuliui.'
+	. 'Būsena – apmokėta =&gt; Likutis '
+	. 'turėtų būti nulis.',
+'base.invoice' => 'Bazinė sąskaita faktūra',
+'bcc' => 'Nematomoji kopija',
+'bcc.mails.to.admin' => 'Siųsti visus siunčiamus el.'
+	. 'laiškus kaip nematomąją kopiją administratoriaus '
+	. 'paskyrai',
+'bcc.mails.to.admin.hint' =>
+	'Administratoriaus paskyra yra paskyra, kuri '
+	. 'buvo sukurta diegiant „InvoicePlane“.',
+'before.amount' => 'Prieš sumą',
+'bill.to' => 'Sąskaitos gavėjas',
+'birthdate' => 'Gimimo data',
+'body' => 'Kūnas',
+'boolean' => 'Būlio reikšmė',
 'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' => 'Dimensione carattere pulsante Chiudi avviso',
-'bootstrap5.alert.message.font' => 'Carattere del messaggio di avviso',
-'bootstrap5.alert.message.font.size' => 'Dimensione del carattere del messaggio di avviso',
-'bootstrap5.layout.invoice.navbar.font' => 'Layout del carattere della barra di navigazione della fattura',
-'bootstrap5.layout.invoice.navbar.font.size' => 'Layout Fattura Barra di navigazione Dimensione carattere',
-'bootstrap5.offcanvas.enable' => 'Abilita Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Posizionamento fuori tela, ad esempio in alto, in basso, inizio cioè a sinistra, fine cioè a destra',
-'breadcrumb.product.index' => 'Indice dei prodotti',
-'breadcrumb.product.property.index' => 'Indice delle proprietà del prodotto',
-'calculate.discounts' => 'Calcola gli sconti',
-'calendar.day.1' => '1 giorno',
-'calendar.day.15' => '15 giorni',
-'calendar.day.2' => '2 giorni',
-'calendar.day.3' => '3 giorni',
-'calendar.day.30' => '30 giorni',
-'calendar.day.4' => '4 giorni',
-'calendar.day.5' => '5 giorni',
-'calendar.day.6' => '6 giorni',
-'calendar.month.1' => '1 mese',
-'calendar.month.10' => '10 mesi',
-'calendar.month.11' => '11 mesi',
-'calendar.month.2' => '2 mesi',
-'calendar.month.3' => '3 mesi',
-'calendar.month.4' => '4 mesi',
-'calendar.month.5' => '5 mesi',
-'calendar.month.6' => '6 mesi',
-'calendar.month.7' => '7 mesi',
-'calendar.month.8' => '8 mesi',
-'calendar.month.9' => '9 mesi',
-'calendar.week.1' => '1 settimana',
-'calendar.week.2' => '2 settimane',
-'calendar.week.3' => '3 settimane',
-'calendar.week.4' => '4 settimane',
-'calendar.year.1' => '1 anno',
-'calendar.year.2' => '2 anni',
-'calendar.year.3' => '3 anni',
-'calendar.year.4' => '4 anni',
-'calendar.year.5' => '5 anni',
-'can.be.changed' => 'Può essere cambiato',
-'cancel' => 'Cancellare',
-'canceled' => 'Annullato',
-'case.date' => 'Data del caso',
-'case.number' => 'Numero del caso',
-'cash.discount' => 'Sconto in contanti',
-'category.primary' => 'Categoria Primaria',
-'category.secondary' => 'Categoria Secondaria',
-'caution.delete.invoices' => 'Solo test: Elimina tutte le fatture e i record correlati. (Vedi funzione inv/flush)',
-'caution.deleted.invoices' => 'Solo test: tutte le fatture e i campi correlati sono stati eliminati.',
-'cc' => 'CC',
-'change.client' => 'Cambia cliente',
-'change.password' => 'Cambiare la password',
-'checking.for.news' => 'Controllo delle novità...',
-'checking.for.updates' => 'Controllo aggiornamenti...',
-'city' => 'Città',
-'claim' => 'Ha avviato un&#39;azione legale',
-'cldr' => 'In',
-'client' => 'Cliente',
-'client.access' => 'Accesso cliente',
-'client.add' => 'Aggiungi cliente',
-'client.age' => 'Età',
-'client.age.hint' => 'Questo campo è obbligatorio e il cliente deve avere almeno 16 anni di età.',
-'client.already.exists' => 'Il cliente esiste già!',
-'client.birthdate.hint' => 'Se la data di nascita non è nota, inserire 01/01/1901',
-'client.building.number' => 'Numero dell&#39;edificio del cliente',
-'client.contract.period.end' => 'Fine del periodo',
-'client.contract.period.start' => 'Inizio del periodo',
-'client.contract.reference' => 'Riferimento contrattuale',
-'client.custom' => 'Cliente personalizzato',
-'client.custom.add' => 'Aggiunta personalizzata del cliente',
-'client.delete.history.exits.no' => 'Impossibile eliminare. Esiste una cronologia clienti.',
-'client.detail.changes' => 'Vi preghiamo di inviarci un&#39;e-mail se questo dettaglio cambia.',
-'client.error.summary' => 'Riepilogo degli errori',
-'client.form' => 'Modulo cliente',
-'client.frequency' => 'Frequenza del cliente',
-'client.group' => 'Gruppo clienti',
-'client.has.not.assigned' => 'Questi clienti non sono stati assegnati a un account utente. Uno o più clienti per account utente.',
-'client.has.not.user.account' => 'Questo cliente non ha un account utente o non è attualmente assegnato a nessun utente. 1. Assicurarsi che il cliente sia registrato, ovvero che abbia un account utente, oppure assegnare questo cliente a un utente attualmente registrato. 2. Impostazioni ... Account utente fattura ... Aggiungi un account utente 3. Assegnare questo cliente all&#39;account utente 4. Non sarà possibile creare fatture e preventivi per questo cliente nello stato attuale.',
-'client.has.user.account' => 'Account utente',
-'client.import.list.blank' => 'Elenco di importazione client vuoto',
-'client.name' => 'Nome del cliente',
-'client.not.allocated.to.user' => 'Client non assegnato all&#39;utente',
-'client.note' => 'Nota del cliente',
-'client.note.add' => 'Aggiungi nota al cliente',
-'client.note.date' => 'Data del cliente',
-'client.note.view' => 'Visualizzazione delle note del cliente',
-'client.notes' => 'Note del cliente',
-'client.number' => 'Numero cliente',
-'client.peppol' => 'Dettagli del cliente Peppol',
-'client.peppol.accounting.cost' => 'Codice di costo contabile del cliente per la contabilità',
-'client.peppol.add' => 'Aggiungi i dettagli Peppol per la fatturazione elettronica',
-'client.peppol.buyer.reference.default' => 'Riferimento acquirente: se il cliente non ha specificato alcun referente per l&#39;ordine di acquisto, questo è il riferimento acquirente predefinito o la persona che effettua l&#39;ordine.',
-'client.peppol.buyer.reference.example' => 'ad esempio il nome della persona che normalmente ordina, il numero di matricola della persona che normalmente ordina o un codice identificativo di questa persona o reparto/gruppo',
-'client.peppol.clientpeppols.form' => 'Modulo contabile cliente/parte cliente',
-'client.peppol.edit' => 'Modifica i dettagli Peppol per la fatturazione elettronica',
-'client.peppol.endpointid' => 'ID punto finale: indirizzo e-mail',
-'client.peppol.endpointid.schemeid' => 'ID del punto finale - schemeID basato sul codice a 4 cifre EAS (Electronic Address Scheme), ad esempio 0192',
-'client.peppol.financial.institution.branchid' => 'ID filiale istituto finanziario',
-'client.peppol.identificationid' => 'ID di identificazione',
-'client.peppol.identificationid.schemeid' => 'ID identificativo - schemeID',
-'client.peppol.legal.entity.company.legal.form' => 'Persona giuridica Forma giuridica della società - Informazioni legali aggiuntive rilevanti per il venditore, ad esempio capitale sociale',
-'client.peppol.legal.entity.companyid' => 'ID società persona giuridica',
-'client.peppol.legal.entity.companyid.schemeid' => 'Identificativo della persona giuridica - schemeID',
-'client.peppol.legal.entity.registration.name' => 'Nome di registrazione dell&#39;entità legale',
-'client.peppol.not.found' => 'Il cliente non ha configurato i propri dati Peppol.',
-'client.peppol.not.found.accounting.cost' => 'Non trovato: costo contabile o un valore testuale che specifica dove registrare i dati rilevanti nei conti finanziari degli acquirenti.',
-'client.peppol.not.found.delivery.location' => 'Luogo di consegna Paese Nome non trovato',
-'client.peppol.not.found.id' => 'Il cliente non ha inserito online il suo ID account nella sezione Dettagli cliente Peppol.',
-'client.peppol.not.found.id.supplier.assigned' => 'ID account assegnato al fornitore Peppol del cliente non trovato',
-'client.peppol.not.found.invoice' => 'Nessuna fattura collegata trovata',
-'client.peppol.not.found.purchase.order' => 'L&#39;ordine di vendita non ha alcun numero di ordine di acquisto associato',
-'client.peppol.not.found.purchase.order.item.number' => 'La voce di ordine di vendita non ha un numero identificativo corrispondente della voce di ordine di acquisto (numero identificativo dell&#39;articolo dell&#39;acquirente) associato. Amministratore: modifica il numero di articolo dell&#39;ordine di vendita della fattura.',
-'client.peppol.not.found.purchase.order.line.number' => 'Il numero di riga dell&#39;ordine di vendita non ha un numero di riga dell&#39;ordine di acquisto corrispondente (OrderLineReference LineID) associato. Amministratore: modifica il numero di riga dell&#39;ordine di vendita della fattura. ',
-'client.peppol.not.found.sales.order' => 'L&#39;ordine di vendita non esiste',
-'client.peppol.payee.financial.account.name' => 'Nome del conto finanziario del beneficiario',
-'client.peppol.payee.financial.accountid' => 'ID del conto finanziario del beneficiario',
-'client.peppol.record.updated.successfully' => 'Record Peppol aggiornato con successo',
-'client.peppol.supplier.assigned.account.id' => 'ID account assegnato al fornitore',
-'client.peppol.taxschemecompanyid' => 'ID società regime fiscale',
-'client.peppol.taxschemeid' => 'ID regime fiscale',
-'client.postaladdress' => 'Indirizzo postale',
-'client.postaladdress.add' => 'Aggiungi un indirizzo postale del cliente',
-'client.postaladdress.additional.street.name' => 'Nome della via aggiuntivo',
-'client.postaladdress.available' => 'Indirizzi postali disponibili',
-'client.postaladdress.building.number' => 'Numero civico',
-'client.postaladdress.city.name' => 'Nome della città',
-'client.postaladdress.country' => 'Paese',
-'client.postaladdress.countrysubentity' => 'Sottoentità del Paese',
-'client.postaladdress.none' => 'Il Cliente non ha un indirizzo postale',
-'client.postaladdress.postalzone' => 'Postalzone',
-'client.postaladdress.street.name' => 'Nome della via',
-'client.purchase.order.number' => 'Numero dell&#39;ordine di acquisto del cliente',
-'client.streets' => 'Strade',
-'client.surname' => 'Cognome del cliente',
-'client.surname.optional' => 'Cognome del cliente (facoltativo)',
-'client.title' => 'Titolo del cliente (Sig./Sig.ra/Sig.na/Dott./Prof.)',
-'client.title.doctor' => 'Dottore',
-'client.title.miss' => 'Mancare',
-'client.title.mr' => 'Sig',
-'client.title.mrs' => 'Sig.ra',
-'client.title.professor' => 'Professore',
-'client.view' => 'Vista del cliente',
-'clients' => 'Clienti',
-'close' => 'Vicino',
-'closed' => 'Chiuso',
-'column' => 'Colonna',
-'common.date.created' => 'Data di creazione',
-'common.date.modified' => 'Data di modifica',
-'common.name' => 'Nome',
-'company' => 'Azienda',
-'company.deleted' => 'L&#39;azienda è stata eliminata',
-'company.not.deleted' => 'L&#39;azienda non è stata eliminata perché è associato un profilo aziendale.',
-'company.private' => 'Società privata',
-'company.private.logo' => 'Logo aziendale',
-'company.private.logo.height' => 'Altezza del logo',
-'company.private.logo.margin' => 'Margine del logo',
-'company.private.logo.width' => 'Larghezza del logo',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Il logo verrà eliminato dai caricamenti e dalla cartella pubblica',
-'company.public' => 'Società pubblica',
-'complete' => 'Completare',
-'confirm' => 'Confermare',
-'confirm.deletion' => 'Conferma l&#39;eliminazione',
-'contact.information' => 'Informazioni sui contatti',
-'continue' => 'Continuare',
-'continue.with.developer.sandbox.hmrc' => 'Continua con Developer Gov Sandbox UK',
-'continue.with.facebook' => 'Continua con Facebook',
-'continue.with.github' => 'Continua con Github',
-'continue.with.google' => 'Continua con Google',
-'continue.with.govuk' => 'Continua con Gov Uk',
-'continue.with.linkedin' => 'Continua con LinkedIn',
-'continue.with.microsoftonline' => 'Continua con MicrosoftOnline',
-'continue.with.vkontakte' => 'Continua con VKontakte',
-'continue.with.x' => 'Continua con X',
-'continue.with.yandex' => 'Continua con Yandex',
-'contract' => 'Contrarre',
-'contract.add' => 'Aggiungi un contratto',
-'contract.contracts' => 'Contratti',
-'contract.create' => 'Crea i tuoi contratti tramite &quot;Fattura...Visualizza...Opzioni...Modifica&quot;. Verrà creato un contratto per il cliente a cui verrà emessa la fattura. Collega questo contratto alle fatture future.',
-'contract.index.button.list' => 'Fatture',
-'contract.name' => 'Nome',
-'contract.none' => 'Promemoria: non è stato impostato alcun contratto per questa fattura',
-'contract.period.end' => 'Fine del periodo',
-'contract.period.start' => 'Inizio del periodo',
-'contract.reference' => 'Riferimento',
-'contracts' => 'Contratti',
-'copy.invoice' => 'Copia fattura',
-'copy.quote' => 'Copia citazione',
-'count' => 'Conteggio fatture',
-'country' => 'Paese',
-'create' => 'Creare',
-'create.credit.invoice' => 'Crea fattura di credito',
-'create.credit.invoice.alert' => 'La creazione di una fattura di credito renderà la fattura corrente <em>di sola lettura,</em> il che significa che non sarà più possibile modificarla. La fattura di credito conterrà lo stato corrente di tutti gli articoli, ma con importi e saldi negativi.',
-'create.invoice' => 'Crea fattura',
-'create.product' => 'Crea prodotto',
-'create.project' => 'Crea progetto',
-'create.quote' => 'Crea preventivo',
-'create.recurring' => 'Crea ricorrente',
-'create.task' => 'Crea attività',
-'created' => 'Creato',
-'creation.unsuccessful' => 'Creazione fattura non riuscita',
-'credit.invoice' => 'Fattura di credito',
-'credit.invoice.date' => 'Data fattura di accredito',
-'credit.invoice.details' => 'Dettagli della fattura di credito',
-'credit.invoice.for.invoice' => 'Nota di credito',
-'credit.note.creation.successful' => 'Creazione nota di credito riuscita',
-'credit.note.creation.unsuccessful' => 'La creazione della nota di credito o della nota di credito per annullare la fattura non è riuscita',
+'bootstrap5.alert.close.button.font.size' =>
+	'Įspėjimo uždarymo mygtuko šrifto dydis',
+'bootstrap5.alert.message.font' => 'Įspėjimo pranešimo šriftas',
+'bootstrap5.alert.message.font.size' =>
+	'Įspėjimo pranešimo šrifto dydis',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'Sąskaitos faktūros išdėstymo naršymo juostos '
+	. 'šriftas',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'Maketo sąskaitos faktūros naršymo juostos '
+	. 'šrifto dydis',
+'bootstrap5.offcanvas.enable' => 'Įjungti „Offcanvas“',
+'bootstrap5.offcanvas.placement' => 'Išdėstymas „Offcanvas“ tinkle, pvz.'
+	. ', viršuje, apačioje, pradžioje (kairėn),'
+	. 'pabaigoje (dešinėn).',
+'breadcrumb.product.index' => 'Produktų indeksas',
+'breadcrumb.product.property.index' => 'Produkto savybių indeksas',
+'calculate.discounts' => 'Apskaičiuokite nuolaidas',
+'calendar' => 'Kalendorius',
+'calendar.day.1' => '1 diena',
+'calendar.day.15' => '15 dienų',
+'calendar.day.2' => '2 dienos',
+'calendar.day.3' => '3 dienos',
+'calendar.day.30' => '30 dienų',
+'calendar.day.4' => '4 dienos',
+'calendar.day.5' => '5 dienos',
+'calendar.day.6' => '6 dienos',
+'calendar.month.1' => '1 mėnuo',
+'calendar.month.10' => '10 mėnesių',
+'calendar.month.11' => '11 mėnesių',
+'calendar.month.2' => '2 mėnesiai',
+'calendar.month.3' => '3 mėnesiai',
+'calendar.month.4' => '4 mėnesiai',
+'calendar.month.5' => '5 mėnesiai',
+'calendar.month.6' => '6 mėnesiai',
+'calendar.month.7' => '7 mėnesiai',
+'calendar.month.8' => '8 mėnesiai',
+'calendar.month.9' => '9 mėnesiai',
+'calendar.week.1' => '1 savaitė',
+'calendar.week.2' => '2 savaitės',
+'calendar.week.3' => '3 savaitės',
+'calendar.week.4' => '4 savaitės',
+'calendar.year.1' => '1 metai',
+'calendar.year.2' => '2 metai',
+'calendar.year.3' => '3 metai',
+'calendar.year.4' => '4 metai',
+'calendar.year.5' => '5 metai',
+'can.be.changed' => 'Galima pakeisti',
+'cancel' => 'Atšaukti',
+'canceled' => 'Atšaukta',
+'case.date' => 'Bylos data',
+'case.number' => 'Bylos numeris',
+'cash.discount' => 'Grynaisiais pinigais taikoma nuolaida',
+'category.primary' => 'Kategorija Pagrindinė',
+'category.secondary' => 'Kategorija Antrinė',
+'caution.delete.invoices' => 'Tik testavimui:'
+	. 'Ištrinti visas sąskaitas faktūras ir '
+	. 'susijusius įrašus.'
+	. '(Žr.'
+	. 'funkciją inv/flush)',
+'caution.deleted.invoices' => 'Tik testavimui:'
+	. 'Visos sąskaitos faktūros ir susiję '
+	. 'laukai buvo ištrinti.',
+'cc' => 'KK',
+'change.client' => 'Keisti klientą',
+'change.password' => 'Keisti slaptažodį',
+'checking.for.news' => 'Ieškoma naujienų...',
+'checking.for.updates' => 'Ieškoma atnaujinimų...',
+'city' => 'Miestas',
+'claim' => 'Pradėjo teisinį ieškinį',
+'cldr' => 'į',
+'client' => 'Klientas',
+'client.access' => 'Kliento prieiga',
+'client.add' => 'Kliento pridėjimas',
+'client.age' => 'Amžius',
+'client.age.hint' => 'Šis laukas yra privalomas, o '
+	. 'klientas pagal įstatymą turi būti '
+	. 'bent 16 metų amžiaus.',
+'client.already.exists' => 'Klientas jau yra!',
+'client.birthdate.hint' => 'Jei gimimo data nežinoma, įveskite '
+	. '1901-01-01',
+'client.building.number' => 'Kliento pastato numeris',
+'client.contract.period.end' => 'Laikotarpio pabaiga',
+'client.contract.period.start' => 'Laikotarpio pradžia',
+'client.contract.reference' => 'Sutarties nuoroda',
+'client.custom' => 'Kliento pasirinkimas',
+'client.custom.add' => 'Kliento pasirinktinis pridėjimas',
+'client.delete.history.exits.no' =>
+	'Negalima ištrinti.'
+	. 'Kliento istorija yra.',
+'client.detail.changes' => 'Jei ši informacija pasikeis, prašome '
+	. 'atsiųsti mums el.'
+	. 'laišką.',
+'client.error.summary' => 'Klaidos suvestinė',
+'client.form' => 'Kliento forma',
+'client.frequency' => 'Klientų dažnis',
+'client.group' => 'Klientų grupė',
+'client.has.not.assigned' => 'Šie klientai nebuvo priskirti vartotojo '
+	. 'paskyrai.'
+	. 'Vienas ar daugiau klientų vienai '
+	. 'vartotojo paskyrai.',
+'client.has.not.user.account' =>
+	'Šis klientas neturi vartotojo paskyros '
+	. 'arba šiuo metu nėra priskirtas '
+	. 'vartotojui.'
+	. '1.'
+	. 'Įsitikinkite, kad klientas yra užsiregistravęs,'
+	. 't.'
+	. 'y.'
+	. 'turi vartotojo paskyrą, arba priskirkite '
+	. 'šį klientą šiuo metu registruotam '
+	. 'vartotojui.'
+	. '2.'
+	. 'Nustatymai .'
+	. 'Sąskaitos faktūros vartotojo paskyra .'
+	. 'Pridėti vartotojo paskyrą 3.'
+	. 'Priskirkite šį klientą vartotojo paskyrai '
+	. '4.'
+	. 'Esant dabartinei būsenai, šiam klientui '
+	. 'nebus galima kurti sąskaitų faktūrų '
+	. 'ir kainų pasiūlymų.',
+'client.has.user.account' => 'Vartotojo paskyra',
+'client.import.list.blank' => 'Kliento importavimo sąrašas tuščias',
+'client.name' => 'Kliento vardas',
+'client.not.allocated.to.user' =>
+	'Klientas nepriskirtas vartotojui',
+'client.note' => 'Kliento pastaba',
+'client.note.add' => 'Kliento pastaba Pridėti',
+'client.note.date' => 'Kliento data',
+'client.note.view' => 'Kliento pastabų rodinys',
+'client.notes' => 'Kliento pastabos',
+'client.number' => 'Kliento numeris',
+'client.peppol' => 'Kliento Peppol duomenys',
+'client.peppol.accounting.cost' => 'Kliento apskaitos sąnaudų kodas buhalterijai',
+'client.peppol.add' => 'Pridėti „Peppol“ duomenis el.'
+	. 'sąskaitų faktūrų išrašymui',
+'client.peppol.buyer.reference.default' =>
+	'Pirkėjo nuoroda:'
+	. 'jei klientas nenurodė kliento pirkimo '
+	. 'užsakymo kontaktinio asmens, tai yra '
+	. 'numatytoji pirkėjo nuoroda arba užsakantis '
+	. 'asmuo.',
+'client.peppol.buyer.reference.example' =>
+	'pvz.'
+	. ', įprasto užsakovo vardas, pavardė,'
+	. 'įprasto užsakovo darbuotojo numeris arba '
+	. 'kodas, identifikuojantis šį asmenį arba '
+	. 'skyrių / grupę',
+'client.peppol.clientpeppols.form' => 'Apskaitos kliento / kliento šalies '
+	. 'forma',
+'client.peppol.edit' => 'Redaguoti Peppol duomenis el.'
+	. 'sąskaitų faktūrų išrašymui',
+'client.peppol.endpointid' => 'Pabaigos taško ID:'
+	. 'el.'
+	. 'pašto adresas',
+'client.peppol.endpointid.schemeid' => 'Galinio taško ID – schemos '
+	. 'ID, pagrįstas EAS (elektroninio adreso '
+	. 'schema), 4 skaitmenų kodas, pvz.'
+	. ', 0192',
+'client.peppol.financial.institution.branchid' =>
+	'Finansų įstaigos filialo ID',
+'client.peppol.identificationid' => 'Identifikavimo ID',
+'client.peppol.identificationid.schemeid' => 'Identifikavimo ID – schemos ID',
+'client.peppol.legal.entity.company.legal.form' =>
+	'Juridinio asmens įmonės teisinė forma '
+	. '– papildoma teisinė informacija, aktuali '
+	. 'pardavėjui, pvz.'
+	. ', įstatinis kapitalas',
+'client.peppol.legal.entity.companyid' =>
+	'Juridinio asmens įmonės ID',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'Juridinio asmens įmonės ID – '
+	. 'schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'Juridinio asmens registracijos pavadinimas',
+'client.peppol.not.found' => 'Klientas arba užsakovas nenustatė savo '
+	. '„Peppol“ duomenų.',
+'client.peppol.not.found.accounting.cost' =>
+	'Nerasta:'
+	. 'Apskaitos sąnaudos arba tekstinė reikšmė,'
+	. 'nurodanti, kur Pirkėjo finansinėse sąskaitose '
+	. 'registruoti atitinkamus duomenis.',
+'client.peppol.not.found.delivery.location' =>
+	'Pristatymo vieta Šalies pavadinimas nerastas',
+'client.peppol.not.found.id' =>
+	'Klientas neįrašė savo paskyros ID '
+	. 'savo kliento „Peppol“ duomenyse internete.',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'Kliento „Peppol“ tiekėjo priskirtos paskyros '
+	. 'ID nerastas',
+'client.peppol.not.found.invoice' =>
+	'Nerasta susietų sąskaitų faktūrų',
+'client.peppol.not.found.purchase.order' =>
+	'Pardavimo užsakymas neturi su juo '
+	. 'susieto pirkimo užsakymo numerio',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'Pardavimo užsakymo eilutės elementas neturi '
+	. 'su juo susieto pirkimo užsakymo '
+	. 'eilutės elemento identifikavimo numerio (pirkėjo '
+	. 'elemento identifikatoriaus).'
+	. 'Administratorius:'
+	. 'redaguokite sąskaitos faktūros pardavimo užsakymo '
+	. 'elemento numerį.',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'Pardavimo užsakymo eilutės numeris neturi '
+	. 'su juo susieto atitinkamo pirkimo '
+	. 'užsakymo eilutės numerio („OrderLineReference LineID“).'
+	. 'Administratorius:'
+	. 'redaguokite sąskaitos faktūros pardavimo užsakymo '
+	. 'eilutės numerį.',
+'client.peppol.not.found.sales.order' =>
+	'Pardavimo užsakymas neegzistuoja',
+'client.peppol.payee.financial.account.name' =>
+	'Mokėjimo gavėjo finansinės sąskaitos pavadinimas',
+'client.peppol.payee.financial.accountid' =>
+	'Mokėjimo gavėjo finansinės sąskaitos ID',
+'client.peppol.record.updated.successfully' =>
+	'Peppol įrašas sėkmingai atnaujintas',
+'client.peppol.supplier.assigned.account.id' =>
+	'Tiekėjui priskirtas paskyros ID',
+'client.peppol.taxschemecompanyid' => 'Mokesčių schemos įmonės ID',
+'client.peppol.taxschemeid' => 'Mokesčių schemos ID',
+'client.postaladdress' => 'Pašto adresas',
+'client.postaladdress.add' => 'Pridėti kliento pašto adresą',
+'client.postaladdress.additional.street.name' =>
+	'Papildomas gatvės pavadinimas',
+'client.postaladdress.available' => 'Galimi pašto adresai',
+'client.postaladdress.building.number' => 'Pastato numeris',
+'client.postaladdress.city.name' => 'Miesto pavadinimas',
+'client.postaladdress.country' => 'Šalis',
+'client.postaladdress.countrysubentity' => 'Šalies padalinys',
+'client.postaladdress.none' => 'Klientas neturi pašto adreso',
+'client.postaladdress.postalzone' => 'Pašto zona',
+'client.postaladdress.street.name' => 'Gatvės pavadinimas',
+'client.purchase.order.number' => 'Kliento pirkimo užsakymo numeris',
+'client.streets' => 'Gatvės',
+'client.surname' => 'Kliento pavardė',
+'client.surname.optional' => 'Kliento pavardė (neprivaloma)',
+'client.title' => 'Kliento pareigos (Ponas/Ponia/Panelė/Dr.'
+	. '/Prof.'
+	. ')',
+'client.title.doctor' => 'Dr.',
+'client.title.miss' => 'Panelė',
+'client.title.mr' => 'Ponas',
+'client.title.mrs' => 'Ponia',
+'client.title.professor' => 'Profesorius',
+'client.view' => 'Kliento rodinys',
+'clients' => 'Klientai',
+'close' => 'Uždaryti',
+'closed' => 'Uždaryta',
+'column' => 'Stulpelis',
+'common.date.created' => 'Sukūrimo data',
+'common.date.modified' => 'Modifikavimo data',
+'common.name' => 'Vardas',
+'company' => 'Įmonė',
+'company.deleted' => 'Įmonė buvo ištrinta',
+'company.not.deleted' => 'Įmonė nebuvo ištrinta, nes prie '
+	. 'jos yra pridėtas įmonės profilis.',
+'company.private' => 'Įmonė Privati',
+'company.private.logo' => 'Įmonės logotipas',
+'company.private.logo.height' => 'Logotipo aukštis',
+'company.private.logo.margin' => 'Logotipo paraštė',
+'company.private.logo.width' => 'Logotipo plotis',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'Logotipas bus ištrintas iš įkėlimų '
+	. 'ir viešojo aplanko',
+'company.public' => 'Bendrovės viešoji',
+'complete' => 'Užbaigtas',
+'confirm' => 'Patvirtinti',
+'confirm.deletion' => 'Patvirtinti ištrynimą',
+'contact.information' => 'Kontaktinė informacija',
+'continue' => 'Tęsti',
+'continue.with.developersandboxhmrc' => 'Tęsti su „Developer Gov Sandbox '
+	. 'UK“',
+'continue.with.facebook' => 'Tęsti naudojant „Facebook“',
+'continue.with.github' => 'Tęsti naudojant „Github“',
+'continue.with.google' => 'Tęsti naudojant „Google“',
+'continue.with.govuk' => 'Tęsti su „Gov Uk“',
+'continue.with.linkedin' => 'Tęsti naudojant „LinkedIn“',
+'continue.with.microsoftonline' => 'Tęsti su „MicrosoftOnline“',
+'continue.with.oidc' => 'Tęsti naudojant „Open Id Connect“',
+'continue.with.openbanking' => 'Tęskite su atvirąja bankininkyste',
+'continue.with.vkontakte' => 'Tęskite su „VKontakte“',
+'continue.with.x' => 'Tęsti su X',
+'continue.with.yandex' => 'Tęsti su „Yandex“',
+'contract' => 'Sutartis',
+'contract.add' => 'Pridėti sutartį',
+'contract.contracts' => 'Sutartys',
+'contract.create' => 'Sukurkite sutartis naudodami.'
+	. 'Sąskaita faktūra.'
+	. 'Peržiūrėti.'
+	. 'Parinktys.'
+	. 'Redaguoti.'
+	. 'Sutartis bus sukurta klientui, kuriam '
+	. 'išrašoma sąskaita faktūra.'
+	. 'Susiekite šią sutartį su būsimomis '
+	. 'sąskaitomis faktūromis.',
+'contract.index.button.list' => 'Sąskaitos faktūros',
+'contract.name' => 'Vardas',
+'contract.none' => 'Priminimas:'
+	. 'šiai sąskaitai faktūrai nesudaryta jokia '
+	. 'sutartis',
+'contract.period.end' => 'Laikotarpio pabaiga',
+'contract.period.start' => 'Laikotarpio pradžia',
+'contract.reference' => 'Nuoroda',
+'contracts' => 'Sutartys',
+'converted.to.invoice' => 'Konvertuota į sąskaitą faktūrą',
+'converted.to.so' => 'Konvertuota į pardavimo užsakymą',
+'copy.invoice' => 'Kopijuoti sąskaitą faktūrą',
+'copy.quote' => 'Kopijuoti citatą',
+'count' => 'Sąskaitų faktūrų skaičius',
+'country' => 'Šalis',
+'create' => 'Sukurti',
+'create.credit.invoice' => 'Sukurti kreditinę sąskaitą faktūrą',
+'create.credit.invoice.alert' => 'Sukūrus kreditinę sąskaitą faktūrą, dabartinė '
+	. 'sąskaita faktūra taps <em>tik skaitoma,</em> '
+	. 'o tai reiškia, kad nebegalėsite '
+	. 'jos redaguoti.'
+	. 'Kreditinėje sąskaitoje faktūroje bus rodoma '
+	. 'dabartinė būsena su visais elementais,'
+	. 'tačiau su neigiamomis sumomis ir '
+	. 'likučiais.',
+'create.invoice' => 'Sukurti sąskaitą faktūrą',
+'create.product' => 'Sukurti produktą',
+'create.project' => 'Sukurti projektą',
+'create.quote' => 'Sukurti kainos pasiūlymą',
+'create.recurring' => 'Sukurti pasikartojantį',
+'create.task' => 'Sukurti užduotį',
+'created' => 'Sukurta',
+'creation.unsuccessful' => 'Sąskaitos faktūros sukūrimas nesėkmingas',
+'credit.invoice' => 'Kreditinė sąskaita faktūra',
+'credit.invoice.date' => 'Kreditinės sąskaitos faktūros data',
+'credit.invoice.details' => 'Kreditinės sąskaitos faktūros duomenys',
+'credit.invoice.for.invoice' => 'Kreditinė sąskaita faktūra',
+'credit.note.creation.successful' => 'Kredito pažymos sukūrimas sėkmingas',
+'credit.note.creation.unsuccessful' => 'Kreditinės sąskaitos faktūros arba kreditinės '
+	. 'pažymos sukūrimas, siekiant atšaukti sąskaitą '
+	. 'faktūrą, nepavyko',
 'creditcard.cvv' => 'CVV / CSC',
-'creditcard.details' => 'Dettagli della carta di credito',
-'creditcard.expiry.month' => 'Mese di scadenza',
-'creditcard.expiry.year' => 'Anno di scadenza',
-'creditcard.number' => 'Numero di carta di credito',
-'cron.key' => 'Chiave CRON',
-'curl.store.cove.api.get.legal.entity.id.successful' => 'Ottieni il successo dell&#39;entità legale',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Chiamata API di configurazione di Store Cove - Entità legale riuscita',
-'curl.store.cove.api.setup.successful' => 'Chiamata API di configurazione di Store Cove riuscita',
-'currency' => 'Valuta',
-'currency.code' => 'Codice valuta',
-'currency.symbol' => 'Simbolo di valuta',
-'currency.symbol.placement' => 'Posizionamento del simbolo di valuta',
-'current.day' => 'Giorno corrente',
-'current.month' => 'mese corrente',
-'current.version' => 'Versione corrente',
-'current.year' => 'Anno corrente',
-'current.yy' => 'Anno corrente (formato a 2 cifre)',
-'custom' => 'Fattura personalizzata',
-'custom.field' => 'Campo personalizzato',
-'custom.field.add' => 'Aggiungi campo personalizzato',
-'custom.field.form' => 'Modulo campo personalizzato',
-'custom.field.location' => 'Posizione del documento',
-'custom.field.number' => 'Numero',
-'custom.field.required' => 'Necessario',
-'custom.fields' => 'Campi personalizzati',
-'custom.invoice.add' => 'Aggiungi fattura personalizzata',
-'custom.title' => 'Titolo personalizzato',
-'custom.value' => 'Valore personalizzato',
-'custom.value.delete' => 'Elimina prima il valore personalizzato',
-'custom.value.new' => 'Nuovo valore personalizzato',
-'custom.values' => 'Valori personalizzati',
-'custom.values.edit' => 'Modifica valore personalizzato',
-'custom.values.new' => 'Nuovo valore personalizzato',
-'dashboard' => 'Pannello di controllo',
-'database' => 'Banca dati',
-'database.properly.configured' => 'Il database è configurato correttamente',
-'date' => 'Data della fattura',
-'date.actual.delivery' => 'Data di consegna effettiva',
-'date.applied' => 'Data di applicazione',
-'date.created' => 'Data di creazione',
-'date.format' => 'Formato data',
-'date.issued' => 'Data di emissione/creazione',
-'date.supplied' => 'Data di fornitura',
-'dates' => 'Date di fatturazione',
-'datetime.immutable.date.created' => 'Creare',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
-'datetime.immutable.date.modified' => 'Contro',
-'datetime.immutable.time.created' => 'Tempo',
-'days' => 'Giorni',
-'debug' => 'Modalità debug attiva',
-'decimal.point' => 'Punto decimale',
-'default' => 'Predefinito',
-'default.country' => 'Paese predefinito',
-'default.email.template' => 'Modello di posta elettronica predefinito',
-'default.hourly.rate' => 'Tariffa oraria predefinita',
-'default.invoice.group' => 'Gruppo fatture predefinito',
-'default.invoice.tax.rate' => 'Aliquota IVA predefinita della fattura',
-'default.invoice.tax.rate.placement' => 'Posizionamento predefinito dell&#39;aliquota fiscale della fattura',
-'default.item.tax.rate' => 'Aliquota IVA predefinita per articolo',
-'default.list.limit' => 'Numero di elementi negli elenchi',
-'default.notes' => 'Note predefinite',
-'default.payment.method' => 'Metodo di pagamento predefinito',
-'default.pdf.template' => 'Modello PDF predefinito',
-'default.public.template' => 'Modello pubblico predefinito',
-'default.quote.group' => 'Gruppo di quotazioni predefinito',
-'default.terms' => 'Termini predefiniti',
-'delete' => 'Eliminare',
-'delete.attachment.warning' => 'Vuoi davvero eliminare questo allegato?',
-'delete.client' => 'Elimina cliente',
-'delete.client.warning' => 'Se elimini questo cliente, eliminerai anche tutte le fatture, i preventivi e i pagamenti ad esso correlati. Vuoi davvero eliminare definitivamente questo cliente?',
-'delete.invoice' => 'Elimina fattura',
-'delete.invoice.warning' => 'Se elimini questa fattura, non potrai recuperarla in seguito. Vuoi davvero eliminare definitivamente questa fattura?',
-'delete.quote' => 'Elimina citazione',
-'delete.quote.warning' => 'Se elimini questa citazione, non potrai recuperarla in seguito. Vuoi davvero eliminare definitivamente questa citazione?',
-'delete.record.warning' => 'Vuoi davvero eliminare questo record?',
-'delete.sent' => 'Impossibile eliminare - fattura inviata',
-'delete.tax.warning' => 'Sei sicuro di voler eliminare questa tassa?',
-'delete.user.client.warning' => 'Vuoi davvero annullare l&#39;assegnazione di questo client a questo utente?',
-'deleted' => 'Eliminato',
-'deletion.forbidden' => 'L&#39;eliminazione delle fatture è vietata. Contattare l&#39;amministratore o consultare la documentazione.',
-'delivery' => 'Dettagli di consegna: date di inizio/fine della fattura/periodo di consegna',
-'delivery.actual.delivery.date' => 'Data di consegna effettiva',
-'delivery.add' => 'Aggiungi consegna',
-'delivery.date.created' => 'Data di creazione',
-'delivery.date.modified' => 'Data di consegna modificata',
-'delivery.end.date' => 'Data di fine della consegna/periodo di fatturazione',
-'delivery.location' => 'Luogo di consegna',
-'delivery.location.add' => 'Aggiungi luogo di consegna',
-'delivery.location.add.in.invoice' => 'Aggiungi il luogo di consegna in Fattura... Visualizza... Opzioni... Modifica',
-'delivery.location.building.number' => 'Numero civico',
-'delivery.location.client' => 'Luoghi di consegna del cliente',
-'delivery.location.delete' => 'Elimina luogo di consegna',
-'delivery.location.edit' => 'Modifica luogo di consegna',
-'delivery.location.electronic.address.scheme' => 'Schema di indirizzi elettronici (elenco codici) Predefinito: 0088 Codice di posizione EAN (European Article Numbering) alias (GLN) Numeri di posizione globali',
-'delivery.location.global.location.number' => 'Numero di posizione globale (13 cifre)',
-'delivery.location.id.not.found' => 'ID del numero di posizione globale del luogo di consegna non trovato',
-'delivery.location.index.button.list' => 'Fatture',
-'delivery.location.none' => 'Nessun luogo di consegna è stato collegato a questa fattura',
-'delivery.location.peppol.output' => 'Non è presente alcun luogo di consegna associato a questa fattura. Pertanto, non è previsto alcun output Peppol.',
-'delivery.location.plural' => 'Luoghi di consegna',
-'delivery.location.view' => 'Visualizza posizione di consegna',
-'delivery.party' => 'Partito di consegna',
-'delivery.party.add' => 'Aggiungi parte di consegna',
-'delivery.party.edit' => 'Modifica della consegna',
-'delivery.party.name' => ' Nome della parte di consegna',
-'delivery.party.view' => 'Visualizzazione della festa di consegna',
-'delivery.start.date' => 'Data di inizio della consegna/periodo di fatturazione',
-'description' => 'Descrizione',
-'description.document' => 'Descrizione del documento',
-'details' => 'Dettagli',
-'development.progress' => 'Progresso dello sviluppo',
+'creditcard.details' => 'Kreditinės kortelės duomenys',
+'creditcard.expiry.month' => 'Galiojimo mėnuo',
+'creditcard.expiry.year' => 'Galiojimo metai',
+'creditcard.number' => 'Kreditinės kortelės numeris',
+'cron.key' => 'CRON raktas',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'Užtikrinti sėkmę juridinio asmens veikloje',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'„Store Cove“ sąrankos API iškvietimas '
+	. '– juridinis asmuo sėkmingas',
+'curl.store.cove.api.setup.successful' =>
+	'„Store Cove“ sąrankos API iškvietimas '
+	. 'sėkmingas',
+'currency' => 'Valiuta',
+'currency.code' => 'Valiutos kodas',
+'currency.symbol' => 'Valiutos simbolis',
+'currency.symbol.placement' => 'Valiutos simbolio išdėstymas',
+'current.day' => 'Dabartinė diena',
+'current.month' => 'Einamasis mėnuo',
+'current.version' => 'Dabartinė versija',
+'current.year' => 'Einamieji metai',
+'current.yy' => 'Einamieji metai (2 skaitmenų formatu)',
+'custom' => 'Sąskaitos faktūros pritaikymas',
+'custom.field' => 'Pasirinktinis laukas',
+'custom.field.add' => 'Pridėti pasirinktinį lauką',
+'custom.field.edit' => 'Pasirinktinio lauko redagavimas',
+'custom.field.form' => 'Pasirinktinė lauko forma',
+'custom.field.location' => 'Dokumento pozicija',
+'custom.field.number' => 'Skaičius',
+'custom.field.required' => 'Privaloma, t.'
+	. 'y.'
+	. 'jei vartotojas šiame lauke nieko '
+	. 'neįveda, jis turės bent kažką '
+	. 'įvesti.',
+'custom.fields' => 'Pasirinktiniai laukai',
+'custom.invoice.add' => 'Pridėti pasirinktinę sąskaitą faktūrą',
+'custom.title' => 'Pasirinktinis pavadinimas',
+'custom.value' => 'Pasirinktinė vertė',
+'custom.value.delete' => 'Pirmiausia ištrinkite pasirinktinę reikšmę',
+'custom.value.new' => 'Nauja tinkinta vertė',
+'custom.values' => 'Pasirinktinės vertės',
+'custom.values.edit' => 'Redaguoti pasirinktinę reikšmę',
+'custom.values.new' => 'Nauja tinkinta reikšmė',
+'dashboard' => 'Prietaisų skydelis',
+'database' => 'Duomenų bazė',
+'database.properly.configured' => 'Duomenų bazė tinkamai sukonfigūruota',
+'date' => 'Sąskaitos faktūros data',
+'date.actual.delivery' => 'Faktinio pristatymo data',
+'date.applied' => 'Taikymo data',
+'date.created' => 'Sukūrimo data',
+'date.format' => 'Datos formatas',
+'date.issued' => 'Išdavimo / Sukūrimo data',
+'date.supplied' => 'Pateikimo data',
+'dates' => 'Sąskaitų faktūrų datos',
+'datetime.immutable.date.created' => 'Sukurti',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Ym',
+'datetime.immutable.date.modified' => 'Prieš',
+'datetime.immutable.time.created' => 'Laikas',
+'days' => 'Dienos',
+'debug' => 'Derinimo režimas įjungtas',
+'decimal.point' => 'Dešimtainis taškas',
+'default' => 'Numatytasis',
+'default.country' => 'Numatytoji šalis',
+'default.email.template' => 'Numatytasis el.'
+	. 'pašto šablonas',
+'default.hourly.rate' => 'Numatytasis valandinis įkainis',
+'default.invoice.group' => 'Numatytoji sąskaitų faktūrų grupė',
+'default.invoice.tax.rate' => 'Numatytasis sąskaitos faktūros mokesčio tarifas',
+'default.invoice.tax.rate.placement' =>
+	'Numatytasis sąskaitos faktūros mokesčio tarifo '
+	. 'išdėstymas',
+'default.item.tax.rate' => 'Numatytasis prekės mokesčio tarifas',
+'default.list.limit' => 'Elementų skaičius sąrašuose',
+'default.notes' => 'Numatytosios pastabos',
+'default.payment.method' => 'Numatytasis mokėjimo būdas',
+'default.pdf.template' => 'Numatytasis PDF šablonas',
+'default.public.template' => 'Numatytasis viešasis šablonas',
+'default.quote.group' => 'Numatytoji kainų grupė',
+'default.terms' => 'Numatytosios sąlygos',
+'delete' => 'Ištrinti',
+'delete.attachment.warning' => 'Ar tikrai norite ištrinti šį '
+	. 'priedą?',
+'delete.client' => 'Ištrinti klientą',
+'delete.client.warning' => 'Jei ištrinsite šį klientą, taip '
+	. 'pat ištrinsite visas su šiuo '
+	. 'klientu susijusias sąskaitas faktūras, kainos '
+	. 'pasiūlymus ir mokėjimus.'
+	. 'Ar tikrai norite visam laikui '
+	. 'ištrinti šį klientą?',
+'delete.invoice' => 'Ištrinti sąskaitą faktūrą',
+'delete.invoice.warning' => 'Jei ištrinsite šią sąskaitą faktūrą,'
+	. 'vėliau jos atkurti nebegalėsite.'
+	. 'Ar tikrai norite visam laikui '
+	. 'ištrinti šią sąskaitą faktūrą?',
+'delete.quote' => 'Ištrinti citatą',
+'delete.quote.warning' => 'Jei ištrinsite šią citatą, vėliau '
+	. 'jos atkurti nebegalėsite.'
+	. 'Ar tikrai norite visam laikui '
+	. 'ištrinti šią citatą?',
+'delete.quote.single' => 'Šią kainos pasiūlymą galima ištrinti,'
+	. 'nes su juo nesusijęs joks '
+	. 'pardavimo užsakymas ar sąskaita faktūra.',
+'delete.quote.derived' => 'Su šiuo pasiūlymu susietas arba '
+	. 'pardavimo užsakymas, arba sąskaita faktūra,'
+	. 'todėl jo negalima ištrinti.',
+'delete.record.warning' => 'Ar tikrai norite ištrinti šį '
+	. 'įrašą?',
+'delete.sent' => 'Negalima ištrinti – sąskaita faktūra '
+	. 'išsiųsta',
+'delete.tax.warning' => 'Ar tikrai norite ištrinti šį '
+	. 'mokestį?',
+'delete.user.client.warning' => 'Ar tikrai norite atjungti šį '
+	. 'klientą nuo šio vartotojo?',
+'deleted' => 'Ištrinta',
+'deletion.forbidden' => 'Sąskaitų faktūrų naikinimas draudžiamas.'
+	. 'Susisiekite su administratoriumi arba peržiūrėkite '
+	. 'dokumentaciją.',
+'delivery' => 'Pristatymo informacija:'
+	. 'Sąskaita faktūra / Pristatymo laikotarpio '
+	. 'pradžios / pabaigos datos',
+'delivery.actual.delivery.date' => 'Faktinė pristatymo data',
+'delivery.add' => 'Pridėti pristatymą',
+'delivery.date.created' => 'Sukūrimo data',
+'delivery.date.modified' => 'Pristatymo data pakeista',
+'delivery.end.date' => 'Pristatymo pabaigos data / Sąskaitos '
+	. 'faktūros laikotarpis',
+'delivery.location' => 'Pristatymo vieta',
+'delivery.location.add' => 'Pristatymo vieta Pridėti',
+'delivery.location.add.in.invoice' =>
+	'Pridėti pristatymo vietą dalyje „Sąskaita '
+	. 'faktūra“.'
+	. 'Peržiūrėti.'
+	. 'Parinktys.'
+	. 'Redaguoti',
+'delivery.location.building.number' => 'Pastato numeris',
+'delivery.location.client' => 'Kliento pristatymo vietos',
+'delivery.location.delete' => 'Pristatymo vietos ištrynimas',
+'delivery.location.edit' => 'Pristatymo vietos redagavimas',
+'delivery.location.electronic.address.scheme' =>
+	'Elektroninio adreso schema (kodų sąrašas).'
+	. 'Numatytoji reikšmė:'
+	. '0088.'
+	. 'Europos prekių numeracijos (EAN) vietos '
+	. 'kodas, dar žinomas kaip (GLN) '
+	. 'pasauliniai vietos numeriai.',
+'delivery.location.global.location.number' =>
+	'Pasaulinis vietos numeris (13 skaitmenų)',
+'delivery.location.id.not.found' =>
+	'Pristatymo vietos pasaulinio vietos numerio '
+	. 'ID nerastas',
+'delivery.location.index.button.list' =>
+	'Sąskaitos faktūros',
+'delivery.location.none' => 'Su šia sąskaita faktūra nesusieta '
+	. 'jokia pristatymo vieta',
+'delivery.location.peppol.output' => 'Su šia sąskaita faktūra nėra '
+	. 'susieta pristatymo vieta.'
+	. 'Todėl nėra „Peppol“ išvesties.',
+'delivery.location.plural' => 'Pristatymo vietos',
+'delivery.location.view' => 'Pristatymo vietos rodinys',
+'delivery.party' => 'Pristatymo šalis',
+'delivery.party.add' => 'Pristatymo šalis Pridėti',
+'delivery.party.edit' => 'Pristatymo grupės redagavimas',
+'delivery.party.name' => ' Pristatymo šalies pavadinimas',
+'delivery.party.view' => 'Pristatymo grupės vaizdas',
+'delivery.start.date' => 'Pristatymo pradžios data / Sąskaitos '
+	. 'faktūros laikotarpis',
+'description' => 'Aprašymas',
+'description.document' => 'Dokumento aprašymas',
+'details' => 'Išsami informacija',
+'development.progress' => 'Vystymosi pažanga',
 'development.schema' => 'Schema',
-'disable.flash.messages' => 'Disabilita i messaggi flash delle fatture',
-'disable.quickactions' => 'Disabilitare le azioni rapide',
-'disable.sidebar' => 'Disabilita la barra laterale',
-'discount' => 'Sconto',
-'discount.amount' => 'Importo dello sconto',
-'discount.percent' => 'Percentuale di sconto',
-'discount.percentage' => 'Percentuale di sconto',
-'document.description' => 'Descrizione del documento Peppol',
-'documentation' => 'Documentazione',
-'download' => 'Scaricamento',
-'download.pdf' => 'Scarica PDF',
-'draft' => 'Bozza',
-'draft.guest' => 'Le bozze di fattura non sono visualizzabili dai Clienti.',
-'draft.number.off' => 'Le nuove bozze di fattura non avranno alcun numero di fattura. Contrassegna come inviato per ottenere il numero di fattura.',
-'draft.number.on' => 'Le nuove bozze di fatture avranno un numero di fattura',
-'drop.files.here' => 'Trascina qui i file!',
-'due.date' => 'Due Date',
-'early.settlement.cash.discount' => 'Sconto in contanti per liquidazione anticipata',
-'edit' => 'Modificare',
-'elements' => 'Elementi',
-'email' => 'E-mail',
-'email.address' => 'Indirizzo e-mail',
-'email.date' => 'Data di invio tramite e-mail',
-'email.default' => 'Predefinito',
-'email.default.none.set' => 'Non è stato impostato alcun valore predefinito',
-'email.exception' => 'Eccezione relativa all&#39;invio di e-mail.',
-'email.from.dropdown' => 'Da E-mail a discesa Indirizzi e-mail da includere nel modulo MailerQuote e nel modulo MailerInv',
-'email.include' => 'Include',
-'email.invoice' => 'Fattura via e-mail',
-'email.link.click.confirm' => 'Si prega di confermare il tuo indirizzo email cliccando su questo link',
-'email.log' => 'Registro fatture inviate via e-mail',
-'email.logs' => 'Registri delle fatture inviate via e-mail',
-'email.logs.with.filter' => 'Inviato via email',
-'email.not.configured' => 'Prima di poter inviare un&#39;e-mail, è necessario configurare le impostazioni e-mail nell&#39;area Impostazioni di sistema.',
-'email.not.sent.successfully' => 'L&#39;email NON è stata inviata correttamente',
-'email.pdf.attachment' => 'Vuoi allegare un preventivo/fattura all&#39;e-mail?',
-'email.quote' => 'Citazione via email',
-'email.send.method' => 'Metodo di invio e-mail',
-'email.send.method.phpmail' => 'Posta PHP',
-'email.send.method.sendmail' => 'Invia posta',
+'disable.flash.messages' => 'Išjungti sąskaitų faktūrų pranešimus',
+'disable.quickactions' => 'Išjungti greituosius veiksmus',
+'disable.sidebar' => 'Išjungti šoninę juostą',
+'discount' => 'Nuolaida',
+'discount.amount' => 'Nuolaidos suma',
+'discount.percent' => 'Nuolaidos procentas',
+'discount.percentage' => 'Nuolaidos procentas',
+'document.description' => 'Peppol dokumento aprašymas',
+'documentation' => 'Dokumentacija',
+'download' => 'Atsisiųsti',
+'download.pdf' => 'Atsisiųsti PDF',
+'draft' => 'Juodraštis',
+'draft.guest' => 'Klientai negali peržiūrėti sąskaitų faktūrų '
+	. 'juodraščių.',
+'draft.number.off' => 'Nauji sąskaitų faktūrų juodraščiai neturės '
+	. 'sąskaitos faktūros numerio.'
+	. 'Pažymėkite kaip išsiųstą, kad gautumėte '
+	. 'sąskaitos faktūros numerį.',
+'draft.number.on' => 'Nauji sąskaitų faktūrų juodraščiai turės '
+	. 'sąskaitos faktūros numerį',
+'drop.files.here' => 'Įmeskite failus čia!',
+'due.date' => 'Dvi datos',
+'early.settlement.cash.discount' => 'Ankstyvo atsiskaitymo grynaisiais pinigais nuolaida',
+'edit' => 'Redaguoti',
+'elements' => 'Elementai',
+'email' => 'El.'
+	. 'paštas',
+'email.address' => 'El.'
+	. 'pašto adresas',
+'email.date' => 'El.'
+	. 'pašto data',
+'email.default' => 'Numatytasis',
+'email.default.none.set' => 'Numatytasis nustatymas nenustatytas',
+'email.exception' => 'El.'
+	. 'pašto siuntimo išimtis.',
+'email.from.dropdown' => 'Iš el.'
+	. 'pašto išskleidžiamojo meniu el.'
+	. 'pašto adresai, kurie bus įtraukti '
+	. 'į „MailerQuote“ ir „MailerInv“ formas',
+'email.include' => 'Įtraukti',
+'email.invoice' => 'Sąskaita faktūra el.'
+	. 'paštu',
+'email.link.click.confirm' => 'Prašome patvirtinti savo el.'
+	. 'pašto adresą spustelėdami šią nuorodą',
+'email.log' => 'El.'
+	. 'paštu siunčiamų sąskaitų faktūrų žurnalas',
+'email.logs' => 'El.'
+	. 'paštu siunčiamų sąskaitų faktūrų žurnalai',
+'email.logs.with.filter' => 'Išsiųsta el.'
+	. 'paštu',
+'email.not.configured' => 'Prieš siųsdami el.'
+	. 'laišką, turite sukonfigūruoti el.'
+	. 'pašto nustatymus sistemos nustatymų srityje.',
+'email.not.sent.successfully' => 'El.'
+	. 'laiškas nebuvo sėkmingai išsiųstas',
+'email.pdf.attachment' => 'Pridėti kainos pasiūlymą / sąskaitą '
+	. 'faktūrą prie el.'
+	. 'laiško?',
+'email.quote' => 'El.'
+	. 'pašto kainos pasiūlymas',
+'email.send.method' => 'El.'
+	. 'pašto siuntimo būdas',
+'email.send.method.phpmail' => 'PHP paštas',
+'email.send.method.sendmail' => 'Siųsti el.'
+	. 'laišką',
 'email.send.method.smtp' => 'SMTP',
-'email.settings' => 'Impostazioni e-mail',
-'email.source.email.template' => ' Recuperato da Impostazioni... Modello email',
-'email.source.user.account' => ' Recuperato da Impostazioni ... Account utente fattura',
-'email.successfully.sent' => 'Email inviata con successo',
-'email.template' => 'Modello di posta elettronica',
-'email.template.add' => 'Aggiungi modello email',
-'email.template.already.exists' => 'Il modello di email esiste già!',
-'email.template.form' => 'Modulo modello e-mail',
-'email.template.from.email.leave.blank' => ': Se si lascia vuoto questo campo, l&#39;indirizzo email dell&#39;account dell&#39;utente verrà inserito come valore modificabile nel modulo di invio della mail. Ad esempio, l&#39;indirizzo email del server di un commercialista. Si consiglia di utilizzare un indirizzo email correlato al server.',
-'email.template.from.source' => 'Fonte e-mail',
-'email.template.from.source.admin.email' => 'Indirizzo email dell&#39;amministratore (config/common/params)',
-'email.template.from.source.froms.email' => 'Da tabella predefinita (impostazioni...Da indirizzi email a discesa)',
-'email.template.from.source.sender.email' => 'Indirizzo email del mittente (config/common/params)',
-'email.template.not.configured' => 'Modelli di email non configurati. Impostazioni...Fatture...Modelli di fattura...Modello di email predefinito',
-'email.template.overdue' => 'Modello di e-mail in ritardo',
-'email.template.paid' => 'Modello di email a pagamento',
-'email.template.successfully.added' => 'Modello di email aggiunto correttamente',
-'email.template.successfully.deleted' => 'Modello di email eliminato correttamente',
-'email.template.successfully.edited' => 'Modello di email modificato correttamente',
-'email.template.tags' => 'Tag modello email',
-'email.template.tags.instructions' => 'I tag del modello possono essere utilizzati per aggiungere informazioni dinamiche, come il nome del cliente o il numero di fattura, al modello di email. Fai clic sul campo di testo &quot;Corpo&quot; e seleziona un tag dal menu a discesa. Verrà inserito automaticamente nel campo di testo.',
-'email.template.type' => 'Tipo di modello di posta elettronica',
-'email.templates' => 'Modelli di posta elettronica',
-'email.to.address.missing' => 'Devi specificare un indirizzo email a cui inviare l&#39;email.',
-'email.warning.draft' => 'Le bozze di fattura devono prima essere contrassegnate come inviate, in modo che appaiano sul lato del cliente e poi possano essere inviate via e-mail.',
-'enable.debug.mode' => 'Abilita la modalità di debug',
-'enable.online.payments' => 'Abilita i pagamenti online',
-'enable.permissive.search.clients' => 'Abilita la ricerca permissiva',
-'enable.projects' => 'Abilita il modulo Progetti',
-'enable.vat' => 'Abilita IVA',
-'enable.vat.message' => 'Visualizza il messaggio di promemoria IVA sopra il pulsante delle opzioni nelle visualizzazioni',
-'enable.vat.warning.line.1' => '1. Con l&#39;IVA abilitata, solo le singole voci della fattura saranno tassate con IVA. Ad esempio, le imposte sul preventivo/fattura non appariranno sulla fattura e saranno ridotte a 0.',
-'enable.vat.warning.line.2' => '2. Con l&#39;IVA abilitata, il totale delle imposte non è costituito da imposte non contabilizzate sulle singole voci, come indicato sopra. ',
-'enable.vat.warning.line.3' => '3. Creare preventivi/fatture IVA in un database separato.',
-'enable.vat.warning.line.4' => '4. Tutte le nuove voci di fattura IVA vengono contrassegnate con il flag belongs_to_vat_invoice.',
-'enabled' => 'Abilitato',
-'end' => 'FINE',
-'end.date' => 'Data di fine',
-'enforcement' => 'Ufficiale di polizia presente all&#39;indirizzo',
-'enter' => 'Entrare',
-'enter.payment' => 'Inserisci il pagamento',
-'error.duplicate.file' => 'Errore: nome file duplicato, per favore cambialo!',
-'errors' => 'Errori',
-'every' => 'Ogni',
-'example' => 'Esempio',
-'expired' => 'Scaduto',
-'expires' => 'Scade',
-'extra.information' => 'Informazioni aggiuntive',
-'failure' => 'Fallimento',
-'false' => 'Falso',
-'families' => 'Famiglie',
-'family' => 'Famiglia',
-'family.add' => 'Aggiungi famiglia',
-'family.already.exists' => 'La famiglia esiste già!',
-'family.history' => 'Esiste una storia familiare. Impossibile eliminarla.',
-'family.name' => 'Cognome',
-'family.search' => 'Ricerca familiare',
-'faq' => 'Domande frequenti',
-'faq.ai.callback.session' => 'Copilot: Come posso includere https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php per migliorare la gestione dello stato nella funzione `callbackGithub`?',
-'faq.business.rules' => 'Cosa sono le regole aziendali Peppol?',
-'faq.gov.developer.sandbox.hmrc' => 'Come posso collegare questo repository all&#39;HMRC Developer Sandbox?',
-'faq.lamp.alpine' => 'Come posso configurare questo repository su Linux Alpine, Apache2, mySql/mariadb e php?',
-'faq.oauth2' => 'Come faccio a configurare un provider di identità OAuth2, ad esempio registrandomi e accedendo con Facebook?',
-'faq.payment.provider' => 'Come posso configurare un fornitore di servizi di pagamento online?',
-'faq.php.info.all' => 'Tutto',
-'faq.php.info.configuration' => 'Configurazione',
-'faq.php.info.credits' => 'Crediti',
-'faq.php.info.details' => 'Dettagli informazioni PHP',
-'faq.php.info.environment' => 'Ambiente',
-'faq.php.info.general' => 'Generale',
-'faq.php.info.licence' => 'Licenza',
-'faq.php.info.modules' => 'Moduli',
-'faq.php.info.variables' => 'Variabili',
-'faq.shared.hosting' => 'Come posso ospitare yii3i su un hosting condiviso?',
-'faq.taxpoint' => 'Come determinare qual è il Tax Point?',
-'faq.yii.requirement.checker' => 'Controllo dei requisiti dell&#39;applicazione Yii',
-'fax' => 'Fax',
+'email.settings' => 'El.'
+	. 'pašto nustatymai',
+'email.source.email.template' => 'Gauta iš nustatymų.'
+	. 'El.'
+	. 'laiško šablonas',
+'email.source.user.account' => 'Gauta iš nustatymų.'
+	. 'Sąskaitos faktūros naudotojo paskyra',
+'email.successfully.sent' => 'El.'
+	. 'laiškas sėkmingai išsiųstas',
+'email.template' => 'El.'
+	. 'laiško šablonas',
+'email.template.add' => 'El.'
+	. 'pašto šablono pridėjimas',
+'email.template.already.exists' => 'El.'
+	. 'pašto šablonas jau yra!',
+'email.template.form' => 'El.'
+	. 'pašto šablono forma',
+'email.template.from.email.leave.blank' =>
+	'Jei paliksite šį lauką tuščią,'
+	. 'vartotojo paskyros el.'
+	. 'pašto adresas bus įterptas kaip '
+	. 'redaguojama reikšmė el.'
+	. 'pašto formoje.'
+	. 'Pvz.'
+	. ', buhalterio serverio el.'
+	. 'pašto adresas.'
+	. 'Pageidautina čia naudoti su serveriu '
+	. 'susijusį el.'
+	. 'pašto adresą.',
+'email.template.from.source' => 'El.'
+	. 'pašto šaltinis',
+'email.template.from.source.admin.email' =>
+	'Administratoriaus el.'
+	. 'pašto adresas (config/common/params)',
+'email.template.from.source.froms.email' =>
+	'Iš lentelės numatytieji nustatymai (nustatymai.'
+	. 'Iš el.'
+	. 'pašto išskleidžiamasis el.'
+	. 'pašto adresų sąrašas)',
+'email.template.from.source.sender.email' =>
+	'Siuntėjo el.'
+	. 'pašto adresas (config/common/params)',
+'email.template.not.configured' => 'El.'
+	. 'pašto šablonai nesukonfigūruoti.'
+	. 'Nustatymai.'
+	. 'Sąskaitos faktūros.'
+	. 'Sąskaitų faktūrų šablonai.'
+	. 'Numatytasis el.'
+	. 'pašto šablonas',
+'email.template.overdue' => 'Pavėluoto el.'
+	. 'laiško šablonas',
+'email.template.paid' => 'Mokamas el.'
+	. 'laiško šablonas',
+'email.template.successfully.added' => 'El.'
+	. 'laiško šablonas sėkmingai pridėtas',
+'email.template.successfully.deleted' => 'El.'
+	. 'laiško šablonas sėkmingai ištrintas',
+'email.template.successfully.edited' => 'El.'
+	. 'laiško šablonas sėkmingai redaguotas',
+'email.template.tags' => 'El.'
+	. 'laiško šablono žymės',
+'email.template.tags.instructions' => 'Šablono žymes galima naudoti norint '
+	. 'į el.'
+	. 'laiško šabloną įtraukti dinaminę informaciją,'
+	. 'pvz.'
+	. ', kliento vardą ar sąskaitos '
+	. 'faktūros numerį.'
+	. 'Spustelėkite teksto lauką ir išskleidžiamajame '
+	. 'meniu pasirinkite žymę.'
+	. 'Ji bus automatiškai įterpta į '
+	. 'teksto lauką.',
+'email.template.type' => 'El.'
+	. 'laiško šablono tipas',
+'email.templates' => 'El.'
+	. 'laiškų šablonai',
+'email.to.address.missing' => 'Turite nurodyti el.'
+	. 'pašto adresą, kuriuo turėtų būti '
+	. 'išsiųstas el.'
+	. 'laiškas.',
+'email.warning.draft' => 'Juodraščius sąskaitas faktūras pirmiausia reikia '
+	. 'pažymėti kaip išsiųstus, kad jie '
+	. 'būtų matomi kliento pusėje, o '
+	. 'tada juos būtų galima siųsti '
+	. 'el.'
+	. 'paštu.',
+'enable.debug.mode' => 'Įgalinti derinimo režimą',
+'enable.online.payments' => 'Įgalinti mokėjimus internetu',
+'enable.permissive.search.clients' => 'Įgalinti leidžiančią paiešką',
+'enable.projects' => 'Įjungti projektų modulį',
+'enable.vat' => 'Įjungti PVM',
+'enable.vat.message' => 'Rodyti PVM priminimo pranešimą virš '
+	. 'parinkčių mygtuko rodiniuose',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. 'Įjungus PVM, PVM apmokestinamos tik '
+	. 'atskiros sąskaitos faktūros eilutės, t.'
+	. 'y.'
+	. 'kainos pasiūlymo / sąskaitos faktūros '
+	. 'mokesčiai sąskaitoje faktūroje nebus rodomi '
+	. 'ir bus sumažinti iki 0.',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. 'Įjungus PVM, jokie aukščiau paminėti '
+	. 'ne į prekių eilutę įtraukti '
+	. 'mokesčiai nesudaro bendros mokesčių sumos.',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. 'PVM sąskaitų faktūrų / kainų '
+	. 'pasiūlymų kūrimą atskiroje duomenų bazėje.',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. 'Visos naujos PVM sąskaitos faktūros '
+	. 'eilutės pažymimos žyme „belongs_to_vat_invoice“.',
+'enabled' => 'Įjungta',
+'end' => 'Pabaiga',
+'end.date' => 'Pabaigos data',
+'enforcement' => 'Vykdymo pareigūnas, atvykstantis adresu',
+'enter' => 'Įeiti',
+'enter.payment' => 'Įveskite mokėjimą',
+'error.duplicate.file' => 'Klaida:'
+	. 'pasikartojantis failo pavadinimas, pakeiskite jį!',
+'errors' => 'Klaidos',
+'every' => 'Kiekvienas',
+'example' => 'Pavyzdys',
+'expired' => 'Nebegalioja',
+'expires' => 'Galiojimo laikas baigiasi',
+'extended' => 'Išplėstinis',
+'extended.language' => 'Išplėstinė kalba',
+'extra.information' => 'Papildoma informacija',
+'failure' => 'Nesėkmė',
+'false' => 'Neteisinga',
+'families' => 'Šeimos',
+'family' => 'Šeima',
+'family.add' => 'Šeimos pridėjimas',
+'family.already.exists' => 'Šeima jau egzistuoja!',
+'family.history' => 'Šeimos istorija yra.'
+	. 'Negalima ištrinti.',
+'family.name' => 'Pavardė',
+'family.search' => 'Šeimos paieška',
+'faq' => 'DUK',
+'faq.ai.callback.session' => '„Copilot“:'
+	. 'Kaip galiu įtraukti https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php, kad pagerinčiau būsenos valdymą '
+	. '„callbackGithub“ funkcijoje?',
+'faq.business.rules' => 'Kas yra „Peppol“ verslo taisyklės?',
+'faq.gov.developer.sandbox.hmrc' =>
+	'Kaip prijungti šią saugyklą prie '
+	. 'HMRC kūrėjų bandomosios aplinkos?',
+'faq.lamp.alpine' => 'Kaip galiu sukonfigūruoti šią saugyklą '
+	. '„Linux Alpine“, „Apache2“, „mySQL“ / '
+	. '„mariadb“ ir „php“ sistemose?',
+'faq.oauth2' => 'Kaip nustatyti „OAuth2“ tapatybės teikėją,'
+	. 'pvz.'
+	. ', registraciją ir prisijungimą naudojant '
+	. '„Facebook“?',
+'faq.payment.provider' => 'Kaip nustatyti internetinių mokėjimų teikėją?',
+'faq.php.info.all' => 'Visi',
+'faq.php.info.configuration' => 'Konfigūracija',
+'faq.php.info.credits' => 'Kreditai',
+'faq.php.info.details' => 'Php informacijos detalės',
+'faq.php.info.environment' => 'Aplinka',
+'faq.php.info.general' => 'Bendra',
+'faq.php.info.licence' => 'Licencija',
+'faq.php.info.modules' => 'Moduliai',
+'faq.php.info.variables' => 'Kintamieji',
+'faq.shared.hosting' => 'Kaip talpinti „yii3i“ bendro naudojimo '
+	. 'talpinime?',
+'faq.taxpoint' => 'Kaip nustatyti, kas yra mokesčių '
+	. 'taškas?',
+'faq.yii.requirement.checker' => 'Yii programos reikalavimų tikrintuvas',
+'fax' => 'Faksas',
 'fax.abbr' => 'F',
-'fax.number' => 'Numero di fax',
-'field' => 'Campo',
-'filter.clients' => 'Filtra clienti',
-'filter.invoices' => 'Filtra fatture',
-'filter.payments' => 'Filtra pagamenti',
-'filter.quotes' => 'Filtra citazioni',
-'first' => 'Primo',
-'first.day.of.week' => 'Primo giorno della settimana',
-'first.reset' => 'Per prima cosa, elimina i preventivi e le fatture di prova creati per il test. Dopodiché, potrai eliminare i dati di prova.',
-'flash.messages.appear.here' => 'I messaggi flash vengono visualizzati qui.',
-'footer' => 'Piè di pagina',
-'forgot.your.password' => 'Ho dimenticato la mia password',
-'form.error' => 'Errori di forma',
-'from.date' => 'Da Data',
-'from.default.in.dropdown' => 'Indirizzo email predefinito nell&#39;elenco a discesa',
-'from.email' => 'Da e-mail',
-'from.email.address' => 'Da indirizzi e-mail: scegli un indirizzo predefinito',
-'from.include.in.dropdown' => 'Includi questa e-mail nell&#39;elenco a discesa',
-'from.name' => 'Da Nome',
-'front.page' => 'Prima pagina',
-'gallery.caption.slide1' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide10' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide11' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide12' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide13' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide14' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide15' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide2' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide3' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide4' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide5' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide6' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide7' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide8' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gallery.caption.slide9' => 'Da ../resources/messages/it/app.php puoi modificare questo testo.',
-'gateway.online.payment' => 'Pagamento online',
-'gender' => 'Genere',
-'gender.female' => 'Femmina',
-'gender.male' => 'Maschio',
-'gender.other' => 'Altro',
-'general' => 'Generale',
-'general.no' => 'NO',
-'general.settings' => 'Impostazioni generali',
-'general.yes' => 'SÌ',
-'generate' => 'Generare',
-'generate.copy' => 'Genera copia',
-'generate.invoice.number.for.draft' => 'Genera il numero di fattura per le bozze di fattura',
-'generate.quote.number.for.draft' => 'Genera il numero di preventivo per le bozze di preventivo',
-'generate.sumex' => 'Genera PDF Sumex',
-'generator' => 'Generatore',
-'generator.add' => 'Aggiungi generatore',
-'generator.camelcase.capital.name' => 'Nome del capitale Camelcase utilizzato nei nomi di Controller e Repository, ad esempio TaxRate. Utilizzare &quot;Product&quot; se si utilizza l&#39;esempio precedente di &quot;product&quot;.',
-'generator.camelcase.capital.name.product' => 'Prodotto',
-'generator.controller.and.repository' => 'Controller e repository',
-'generator.controller.layout.directory' => 'Directory del layout del controller, ad esempio dirname(dirname(__DIR__)), che appare subito dopo il costrutto del controller. Il file del controller si trova in (__DIR__) e si trova due directory sotto la directory &#39;src&#39;, che verrà utilizzata come &#39;base&#39; per aggiungere un percorso alla directory del layout.',
-'generator.controller.layout.directory.dot.path' => 'Percorso della directory del layout del controller, ad esempio &#39;/views/layout/invoice.php&#39;, che appare subito dopo la struttura del controller (escludendo gli apostrofi) e viene aggiunto alla posizione della directory src sopra indicata.',
-'generator.controller.layout.directory.dot.path.placeholder' => 'Percorso del punto della directory del layout del controller',
-'generator.controller.layout.directory.placeholder' => 'Directory di layout del controller, ad esempio dirname(dirname(__DIR__))',
-'generator.controller.path.layout' => 'Percorso al file di layout',
-'generator.created.at.include' => 'Includi il campo created_at nell&#39;entità',
-'generator.deleted.at.include' => 'Includi il campo deleted_at nell&#39;entità',
-'generator.external.entity' => 'Entità esterna utilizzata in questa entità. L&#39;entità di impostazione è una semplice coppia chiave-valore con un database indicizzato.',
-'generator.external.entity.default' => 'Entità esterna, ad esempio MyEntity, escluso il percorso. Percorso integrato nel generatore. Impostazione predefinita:',
-'generator.external.entity.placeholder' => 'Entità esterna, ad esempio MyEntity escluso il percorso. Percorso integrato nel generatore. Impostazione predefinita: Impostazione. Repository aggiuntivo, ad esempio Repository di impostazione in aggiunta al repository principale.',
-'generator.file.type.not.found' => 'Tipo di file non trovato.',
-'generator.flash.include' => 'Includi messaggio Flash nella funzione Aggiungi/Modifica/Visualizza/Elimina nel Controller',
-'generator.generate' => 'Generare',
-'generator.generated' => ' generato a ',
-'generator.google.translate.any' => 'Traduci inglese\any_lang.php',
-'generator.google.translate.app' => 'Traduci inglese\app_lang.php',
-'generator.google.translate.common' => 'Traduci inglese\common_lang.php',
-'generator.google.translate.diff' => 'Traduci italiano\diff_lang.php',
-'generator.google.translate.gateway' => 'Traduci inglese\gateway_lang.php',
-'generator.google.translate.ip' => 'Traduci inglese\ip_lang.php',
-'generator.google.translate.latest.a' => 'Traduci inglese\a_latest_lang.php',
-'generator.google.translate.latest.b' => 'Traduci inglese\b_latest_lang.php',
-'generator.headerline.include' => 'Includi l&#39;intestazione se è richiesto Ajax',
-'generator.history' => 'Questo record ha delle relazioni generatore esistenti, quindi non può essere eliminato. Eliminare prima queste relazioni.',
-'generator.modified.at.include' => 'Includi il campo modified_at nell&#39;entità',
-'generator.namespace' => 'Spazio dei nomi',
-'generator.namespace.before.entity' => 'Namespace prima del percorso dell&#39;entità, ad esempio App\Invoice (NON App\Invoice\Entity)',
-'generator.relation.form' => 'Modulo di relazione del generatore',
-'generator.relation.form.camelcase.name' => 'Nome Camelcase escluso id (ad esempio tax_rate_id &#39;chiave/relazione esterna&#39; nella tabella Prodotto semplificata in TaxRate AND è il nome di un&#39;entità)',
-'generator.relation.form.entity.generator' => 'Generatore di entità',
-'generator.relation.form.lowercase.name' => 'Nome in minuscolo escluso id (ad esempio tax_rate_id &#39;chiave/relazione esterna&#39; nella tabella Prodotto semplificata in tax.rate) ',
-'generator.relation.form.view.field.name' => 'Visualizza il nome del campo',
-'generator.relations' => 'Relazioni del generatore',
-'generator.relations.add' => 'Relazione generatori Aggiungi',
-'generator.route.prefix' => 'Prefisso del percorso, ad esempio fattura in &#39;fattura/prodotto&#39;, che apparirà dopo la struttura del controller.',
-'generator.route.suffix' => 'Suffisso di percorso, ad esempio prodotto in &#39;fattura/prodotto&#39;, che apparirà dopo la struttura del controller.',
-'generator.small.plural.name' => 'Piccolo nome plurale utilizzato nel Controller per la funzione di controllo degli indici che elenca tutti i generatori di entità. Normalmente il valore sopra indicato con una s finale.',
-'generator.small.plural.name.placeholder' => 'Nome plurale piccolo',
-'generator.small.plural.name.products' => 'prodotti',
-'generator.small.singular.name' => 'Nome singolare breve utilizzato nel Controller per le funzioni di modifica e visualizzazione. Normalmente è uguale al suffisso di percorso. Ad esempio, &quot;prodotto&quot;.',
-'generator.small.singular.name.placeholder' => 'Nome singolare piccolo',
-'generator.small.singular.name.product' => 'prodotto',
-'generator.table' => 'Tavolo',
-'generator.table.used.to.generate.entity.controller.repository' => 'Tabella utilizzata per generare Entità, Controller Aggiungi Modifica Elimina Vista, Repository, Servizio, Mapper',
-'generator.updated.at.include' => 'Includi il campo updated.at nell&#39;entità',
-'generators' => 'Generatori',
-'generators.relation' => 'Relazione dei generatori',
+'fax.number' => 'Fakso numeris',
+'field' => 'Laukas',
+'file' => 'Failas',
+'filter.clients' => 'Filtruoti klientus',
+'filter.invoices' => 'Filtruoti sąskaitas faktūras',
+'filter.payments' => 'Filtruoti mokėjimus',
+'filter.quotes' => 'Filtruoti citatas',
+'first' => 'Pirmas',
+'first.day.of.week' => 'Pirmoji savaitės diena',
+'first.reset' => 'Pirmiausia ištrinkite testavimui sukurtas kainas '
+	. 'ir sąskaitas faktūras.'
+	. 'Tada galima ištrinti testavimo duomenis.',
+'flash.messages.appear.here' => 'Čia rodomi momentiniai pranešimai.',
+'footer' => 'Poraštė',
+'forgot.your.password' => 'Pamiršau slaptažodį',
+'form.error' => 'Formos klaidos',
+'from.date' => 'Nuo datos',
+'from.default.in.dropdown' => 'Numatytasis el.'
+	. 'pašto adresas išskleidžiamajame sąraše',
+'from.email' => 'Iš el.'
+	. 'pašto',
+'from.email.address' => 'Iš el.'
+	. 'pašto adresų:'
+	. 'pasirinkite numatytąjį',
+'from.include.in.dropdown' => 'Įtraukti šį el.'
+	. 'pašto adresą į išskleidžiamąjį sąrašą',
+'from.name' => 'Nuo vardo',
+'front.page' => 'Titulinis puslapis',
+'gallery.caption.slide1' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide10' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide11' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide12' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide13' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide14' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide15' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide2' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide3' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide4' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide5' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide6' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide7' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide8' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gallery.caption.slide9' => 'Šį tekstą galite pakeisti adresu '
+	. '.'
+	. '/resources/messages/en/app.'
+	. 'php.',
+'gateway.online.payment' => 'Mokėjimas internetu',
+'gender' => 'Lytis',
+'gender.female' => 'Moteris',
+'gender.male' => 'Vyras',
+'gender.other' => 'Kita',
+'general' => 'Bendra',
+'general.no' => 'Ne',
+'general.settings' => 'Bendrieji nustatymai',
+'general.yes' => 'Taip',
+'generate' => 'Generuoti',
+'generate.copy' => 'Sukurti kopiją',
+'generate.invoice.number.for.draft' =>
+	'Sukurti sąskaitos faktūros numerį juodraščiams',
+'generate.quote.number.for.draft' =>
+	'Sukurti pasiūlymo numerį juodraščių pasiūlymams',
+'generate.sumex' => 'Sukurti Sumex PDF',
+'generator' => 'Generatorius',
+'generator.add' => 'Generatoriaus pridėjimas',
+'generator.camelcase.capital.name' => '„Camelcase“ didžiosios raidės pavadinimas, naudojamas '
+	. 'valdiklio ir saugyklos pavadinimuose, pvz.'
+	. ', „TaxRate“.'
+	. 'Jei naudojate aukščiau pateiktą „product“ '
+	. 'pavyzdį, naudokite „Product“.',
+'generator.camelcase.capital.name.product' =>
+	'Produktas',
+'generator.controller.and.repository' => 'Valdiklis ir saugykla',
+'generator.controller.layout.directory' => 'Valdiklio išdėstymo katalogas, pvz.'
+	. ', dirname(dirname(__DIR__)), kuris rodomas iškart '
+	. 'po valdiklio sudarymo.'
+	. 'Valdiklio failas yra (__DIR__) ir '
+	. 'yra dviem katalogais žemiau „src“ '
+	. 'katalogo, kuris bus naudojamas kaip '
+	. '„bazė“ pridedant kelią į išdėstymo '
+	. 'katalogą.',
+'generator.controller.layout.directory.dot.path' =>
+	'Valdiklio išdėstymo katalogo taškų kelias,'
+	. 'pvz.'
+	. ', „/views/layout/invoice.'
+	. 'php“, kuris rodomas iškart po '
+	. 'valdiklio konstrukcijos (nenaudokite apostrofų) ir '
+	. 'pridedamas prie aukščiau nurodytos „src“ '
+	. 'katalogo vietos.',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'Valdiklio išdėstymo katalogas Taškų kelias',
+'generator.controller.layout.directory.placeholder' =>
+	'Valdiklio išdėstymo katalogas, pvz.'
+	. ', dirname(dirname(__DIR__))',
+'generator.controller.path.layout' => 'Kelias į maketo failą',
+'generator.created.at.include' => 'Įtraukti created_at lauką į objektą',
+'generator.deleted.at.include' => 'Įtraukti ištrintą_at lauką į objektą',
+'generator.external.entity' => 'Šiame objekte naudojamas išorinis objektas.'
+	. 'Nustatymų objektas yra paprasta raktų '
+	. '=&gt; reikšmių poros ID indeksuota '
+	. 'duomenų bazė.',
+'generator.external.entity.default' => 'Išorinis objektas, pvz.'
+	. ', „MyEntity“ be kelio.'
+	. 'Kelias integruotas generatoriuje.'
+	. 'Numatytasis nustatymas',
+'generator.external.entity.placeholder' => 'Išorinis objektas, pvz.'
+	. ', „MyEntity“ be kelio.'
+	. 'Kelias integruotas generatoriuje.'
+	. 'Numatytoji reikšmė:'
+	. 'nustatymas.'
+	. 'Papildoma saugykla, pvz.'
+	. ', nustatymų saugykla, papildanti pagrindinę '
+	. 'saugyklą.',
+'generator.file.type.not.found' =>
+	'Failo tipas nerastas.',
+'generator.flash.include' => 'Įtraukite „Flash“ pranešimą į valdiklio '
+	. 'funkciją „Pridėti / Redaguoti / '
+	. 'Peržiūrėti / Ištrinti“',
+'generator.generate' => 'Generuoti',
+'generator.generated' => ' sugeneruotas ',
+'generator.google.translate.any' => 'Versti anglų k.'
+	. '\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => 'Versti anglų k.'
+	. '\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => 'Versti anglų k.'
+	. '\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => 'Versti anglų k.'
+	. '\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => 'Versti English\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => 'Versti anglų k.'
+	. '\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'Versti anglų k.'
+	. '\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'Versti anglų k.'
+	. '\\b_latest_lang.'
+	. 'php',
+'generator.headerline.include' => 'Įtraukite antraštę, jei reikia „Ajax“',
+'generator.history' => 'Šis įrašas turi esamų generatoriaus '
+	. 'ryšių, todėl jo negalima ištrinti.'
+	. 'Pirmiausia ištrinkite šiuos ryšius.',
+'generator.modified.at.include' => 'Įtraukti modified_at lauką į objektą',
+'generator.namespace' => 'Vardų erdvė',
+'generator.namespace.before.entity' => 'Vardų sritis prieš objekto kelią,'
+	. 'pvz.'
+	. ', Programa\\Sąskaita faktūra (NE Programa\\Sąskaita '
+	. 'faktūra\\Objektas)',
+'generator.relation.form' => 'Generatoriaus ryšio forma',
+'generator.relation.form.camelcase.name' =>
+	'„Camelcase“ pavadinimas be ID (pvz.'
+	. ', „tax_rate_id“ „išorinis raktas/ryšys“ „Product“ '
+	. 'lentelėje, supaprastintoje iki „TaxRate“ IR '
+	. 'yra subjekto pavadinimas)',
+'generator.relation.form.entity.generator' =>
+	'Objektų generatorius',
+'generator.relation.form.lowercase.name' =>
+	'Mažosios raidės pavadinimas be ID '
+	. '(pvz.'
+	. ', tax_rate_id „išorinis raktas/ryšys“ produktų '
+	. 'lentelėje supaprastinta į tax.'
+	. 'rate)',
+'generator.relation.form.view.field.name' =>
+	'Rodinio lauko pavadinimas',
+'generator.relations' => 'Generatoriaus santykiai',
+'generator.relations.add' => 'Generatorių ryšys Pridėti',
+'generator.route.prefix' => 'Maršruto prefiksas, pvz.'
+	. ', sąskaita faktūra, esanti „invoice/product“,'
+	. 'kuris bus rodomas po valdiklio '
+	. 'konstrukcijos.',
+'generator.route.suffix' => 'Maršruto priesaga, pvz.'
+	. ', product, faile „invoice/product“, kuri '
+	. 'bus rodoma po valdiklio konstrukcijos.',
+'generator.small.plural.name' => 'Mažas daugiskaitos pavadinimas, naudojamas valdiklyje '
+	. 'indeksų valdiklio funkcijai, kad būtų '
+	. 'galima išvardyti visus objektų generatorius.'
+	. 'Paprastai tai yra aukščiau pateikta '
+	. 'reikšmė su raide „s“ gale.',
+'generator.small.plural.name.placeholder' =>
+	'Mažasis daugiskaitos vardas',
+'generator.small.plural.name.products' =>
+	'produktai',
+'generator.small.singular.name' => 'Mažas vienaskaitos pavadinimas, naudojamas valdiklyje '
+	. 'redagavimo ir peržiūros valdiklio funkcijoms.'
+	. 'Paprastai toks pat kaip maršruto '
+	. 'priesaga, pvz.'
+	. ', produktas',
+'generator.small.singular.name.placeholder' =>
+	'Mažas vienaskaitos vardas',
+'generator.small.singular.name.product' =>
+	'produktas',
+'generator.table' => 'Lentelė',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'Lentelė, naudojama objektui, valdikliui, pridėti,'
+	. 'redaguoti, ištrinti, peržiūrėti, saugyklai, paslaugai,'
+	. 'žymėtojui generuoti',
+'generator.updated.at.include' => 'Įtraukti updated.'
+	. 'at lauką į objektą',
+'generators' => 'Generatoriai',
+'generators.relation' => 'Generatorių santykis',
 'gln' => 'GLN',
-'gov.developer.sandbox' => 'Sandbox per sviluppatori',
+'gov.developer.sandbox' => 'Kūrėjo smėlio dėžė',
 'gov.developer.sandbox.uk' => 'Hmrc',
+'grand.fathered' => 'Senelio tėvas',
 'gridview.api' => 'API',
-'gridview.create.at' => 'Creato a',
-'gridview.login' => 'Login',
-'gridview.profile' => 'Profilo',
-'gridview.title' => 'Elenco degli utenti',
-'group' => 'Gruppo',
-'group.add' => 'Aggiungi gruppo',
-'group.document.number' => 'Numero documento non generato. Controllare i gruppi.',
-'group.form' => 'Modulo di gruppo',
-'group.history' => 'Esiste una cronologia del gruppo. Impossibile eliminarla.',
-'groups' => 'Gruppi',
-'guest.account.denied' => 'Questo account non è configurato. Contattare l&#39;amministratore di sistema.',
-'guest.read.only' => 'Ospite (sola lettura)',
-'guest.url' => 'URL ospite',
-'hide.or.unhide.columns' => 'Nascondere o visualizzare le colonne',
-'hint.greater.than.zero.please' => 'Maggiore di 0,00 per favore!',
-'hint.this.field.is.not.required' => 'Questo campo non è obbligatorio',
-'hint.this.field.is.required' => 'Questo campo è obbligatorio',
-'home' => 'Casa',
-'home.caption.slide1' => 'Registrati e accedi come amministratore. Nessuna connessione internet... ignora l&#39;errore di connessione via email.',
-'home.caption.slide2' => 'Come amministratore, registra un utente. L&#39;account email è valido e la connessione internet è valida. L&#39;utente otterrà un account cliente.',
-'home.caption.slide3' => 'Account email non legittimo e connessione internet assente... Accedi come amministratore e attiva l&#39;account utente di fatturazione nelle Impostazioni. Crea un account cliente. Assegnalo all&#39;utente.',
-'home.caption.slides.location.debug.mode' => 'Questa posizione del contenuto: ./resources/views/site/index.php all&#39;interno di ./resources/views/layout/. ... e posizione della diapositiva di traduzione ./resources/messages/app.php',
-'hostname' => 'Nome host',
-'html.sumex.no' => 'Html senza Sumex',
-'html.sumex.yes' => 'HTML con Sumex',
+'gridview.create.at' => 'Sukurta',
+'gridview.login' => 'Prisijungti',
+'gridview.profile' => 'Profilis',
+'gridview.title' => 'Vartotojų sąrašas',
+'group' => 'Grupė',
+'group.add' => 'Grupės pridėjimas',
+'group.document.number' => 'Dokumento numeris nesugeneruotas.'
+	. 'Patikrinkite grupes.',
+'group.form' => 'Grupės forma',
+'group.history' => 'Grupės istorija yra.'
+	. 'Negalima ištrinti.',
+'groups' => 'Grupės',
+'guest.account.denied' => 'Ši paskyra nesukonfigūruota.'
+	. 'Susisiekite su sistemos administratoriumi.',
+'guest.read.only' => 'Svečias (tik skaityti)',
+'guest.url' => 'Svečio URL',
+'hide.or.unhide.columns' => 'Slėpti arba rodyti stulpelius',
+'hint.greater.than.zero.please' =>
+	'Prašau, didesnis nei 0,00!',
+'hint.this.field.is.not.required' =>
+	'Šis laukas nebūtinas',
+'hint.this.field.is.required' =>
+	'Šis laukas privalomas',
+'home' => 'Pradžia',
+'home.caption.slide1' => 'Užsiregistruokite ir prisijunkite kaip administratorius.'
+	. 'Nėra interneto ryšio.'
+	. 'ignoruokite el.'
+	. 'pašto klaidą prisijungiant.',
+'home.caption.slide2' => 'Kaip administratorius, užregistruokite vartotoją.'
+	. 'El.'
+	. 'pašto paskyra ir interneto ryšys '
+	. 'galioja.'
+	. 'patikrinkite.'
+	. 'Vartotojas gaus kliento paskyrą.',
+'home.caption.slide3' => 'El.'
+	. 'pašto paskyra nelegali ir nėra '
+	. 'interneto ryšio.'
+	. 'prisijunkite kaip administratorius ir suaktyvinkite '
+	. 'vartotojo sąskaitos faktūros paskyrą skiltyje '
+	. '„Nustatymai“.'
+	. 'Sukurkite kliento paskyrą.'
+	. 'Priskirkite ją vartotojui.',
+'home.caption.slides.location.debug.mode' =>
+	'Turinio vieta:'
+	. '/resources/views/site/index.'
+	. 'php aplanke .'
+	. '/resources/views/layout/.'
+	. '.'
+	. 'ir vertimo skaidrės vieta .'
+	. '/resources/messages/app.'
+	. 'php',
+'hostname' => 'Pagrindinio kompiuterio pavadinimas',
+'html.sumex.no' => 'HTML be Sumex',
+'html.sumex.yes' => 'HTML su „Sumex“',
 'id' => 'ID',
-'identifier.format' => 'Formattazione dell&#39;identificatore',
-'identifier.format.template.tags' => 'Tag modello per l&#39;identificatore',
-'identifier.format.template.tags.instructions' => 'I tag modello possono essere utilizzati per aggiungere informazioni dinamiche, come il nome del cliente o il numero di fattura, al modello di email. Fai clic sul campo <b>di formattazione dell&#39;identificatore</b> e seleziona un tag dal menu a discesa. Verrà inserito automaticamente nel campo di testo.',
-'identity.provider.authentication.successful' => 'Sei stato autenticato con successo tramite il tuo Identity Provider scelto, hai effettuato la registrazione e ti è stato assegnato un account cliente. Clicca qui entro la prossima ora per attivare il tuo account. Hai un&#39;ora di tempo per effettuare il primo accesso.',
-'image.overdue' => '  Posizione dell&#39;immagine: ./invoice/public/img/overdue.png',
-'image.paid' => '  Posizione dell&#39;immagine: ./invoice/public/img/paid.png',
-'import' => 'Importare',
-'import.data' => 'Importa dati',
-'import.from.csv' => 'Importa da CSV',
-'in.progress' => 'In corso',
-'inactive' => 'Inattivo',
-'index.checkbox.add.some.items.to.enable' => 'La fattura non contiene articoli. Aggiungi articoli per abilitare la casella di controllo',
-'index.footer.showing' => 'Visualizzazione di %s su %s',
-'index.showing' => 'Visualizzazione di %s su %s',
-'info.task.readonly' => 'Questa attività non può più essere modificata perché è già stata fatturata.',
-'install.test.data' => 'Ora è possibile installare i dati di prova',
-'install.test.data.exists.already' => 'I dati di prova della fattura esistono già',
-'install.test.data.goto.tab.index' => 'Vai a Impostazioni... Generali... Installa dati di prova',
-'interface' => 'Interfaccia',
-'invalid.amount' => 'Importo non valido',
-'invalid.subscriber.number' => 'Numero di abbonato non valido',
-'invoice' => 'Fattura',
-'invoiced' => 'Fatturato',
-'invoiceplane' => 'InvoicePlane',
-'invoiceplane.clients' => 'Clienti inseriti',
-'invoiceplane.database.name' => 'Nome del database',
-'invoiceplane.database.password' => 'Password',
-'invoiceplane.database.username' => 'Nome utente',
-'invoiceplane.families' => 'Famiglie inserite',
-'invoiceplane.import' => 'Prova di connessione',
-'invoiceplane.import.complete.connection.closed' => 'Importazione completata! Connessione chiusa!',
-'invoiceplane.import.connected' => 'Hai una connessione!',
-'invoiceplane.import.proceed' => 'Procedere con il processo di importazione',
-'invoiceplane.import.proceed.alert' => 'Sei sicuro di voler procedere?',
-'invoiceplane.imported' => 'Le tabelle sono state importate',
-'invoiceplane.news' => 'Notizie di InvoicePlane',
-'invoiceplane.no.connection' => 'Nessuna connessione',
-'invoiceplane.no.username.or.password' => 'Salva il nome del database, il nome utente e la password per InvoicePlane',
-'invoiceplane.products' => 'Prodotti inseriti',
-'invoiceplane.tables' => 'Importa le tabelle InvoicePlane Cliente, Prodotto, Unità, Famiglia, Aliquota d&#39;imposta in tabelle vuote. Non devono essere presenti dati in queste tabelle prima dell&#39;importazione né documenti, ad esempio fatture.',
-'invoiceplane.tables.not.empty' => 'Le tabelle Cliente, Prodotto, Unità, Famiglia e Aliquota d&#39;imposta devono essere vuote prima dell&#39;importazione',
-'invoiceplane.taxrates' => 'Aliquote fiscali inserite con aliquota fiscale obbligatoria pari a zero e aliquota fiscale standard.',
-'invoiceplane.units' => 'Unità inserite',
-'invoiceplane.yes.connection' => 'Sì, hai una connessione al database Invoiceplane!',
-'invoices' => 'Fatture',
-'invoices.due.after' => 'Fatture in scadenza dopo (giorni)',
-'is.not.writable' => 'non è scrivibile',
-'is.writable' => 'è scrivibile',
-'item' => 'Articolo della fattura',
-'item.add' => 'Aggiungi articolo fattura',
-'item.allowance' => 'Sconto articolo',
-'item.charge' => 'Costo dell&#39;articolo',
-'item.date' => 'Data dell&#39;articolo',
-'item.discount' => 'Sconto articolo',
-'item.lookup' => 'Ricerca articoli fattura',
-'item.lookup.form' => 'Modulo di ricerca articoli',
-'item.lookups' => 'Ricerche di articoli',
-'item.name' => 'Nome dell&#39;articolo',
-'item.tax' => 'Imposta sull&#39;articolo',
-'item.tax.excluded' => 'Subtotale x percentuale imposta (l&#39;imposta sull&#39;articolo è stata esclusa)',
-'item.tax.included' => '(Subtotale + Imposta sull&#39;articolo) x Percentuale di imposta',
-'item.tax.rate' => 'Aliquota IVA articolo',
-'items' => 'Articoli della fattura',
-'judgement' => 'Giudizio ottenuto',
-'label' => 'Etichetta',
-'label.switch.off' => 'Fattura IVA',
-'label.switch.on' => 'Fattura senza IVA',
-'language' => 'Lingua',
-'last' => 'Scorso',
-'last.month' => 'Il mese scorso',
-'last.quarter' => 'Ultimo trimestre',
-'last.year' => 'L&#39;anno scorso',
-'layout.add' => 'Aggiungere',
-'layout.add.post' => 'Aggiungi post',
-'layout.add.random-content' => 'Aggiungi contenuti casuali',
-'layout.add.tag' => 'Aggiungi tag',
-'layout.archive' => 'Archivio',
-'layout.archive.for-year' => 'Archivio per {anno}',
-'layout.blog' => 'Blog',
-'layout.change-language' => 'Cambia lingua',
-'layout.console' => 'Consolle',
-'layout.content' => 'Contenuto',
-'layout.create.new-user' => 'Crea nuovo utente',
-'layout.db.schema' => 'Schema del database',
-'layout.go.home' => 'Torna a casa',
-'layout.login' => 'Login',
-'layout.migrations' => 'Migrazioni',
-'layout.no-records' => 'Nessun record',
-'layout.not-found' => 'Non trovato',
-'layout.page.not-authorised' => 'Non autorizzato: le credenziali di autenticazione non sono corrette.',
-'layout.page.not-found' => 'Impossibile trovare la pagina {url}.',
-'layout.page.user-cancelled-oauth2' => 'L&#39;utente ha annullato l&#39;accesso/la registrazione tramite il provider di identità, ad esempio Facebook',
-'layout.pagination-summary' => 'Visualizzazione di {pageSize} su {total} post',
-'layout.password' => 'Password',
-'layout.password-verify' => 'Conferma la tua password',
-'layout.password-verify.new' => 'Conferma la tua nuova password',
-'layout.password.new' => 'Nuova password',
-'layout.password.otp' => 'Password OTP',
-'layout.rbac.assign-role' => 'Assegna il ruolo RBAC all&#39;utente',
-'layout.remember' => 'Ricordati di me',
-'layout.reset' => 'Reset',
-'layout.show-more' => 'mostra di più',
-'layout.submit' => 'Invia',
-'layout.title' => 'Titolo',
-'layout.total.posts' => 'Totale {count} post',
-'left.pad' => 'Pad sinistro',
-'letter' => 'Lettera di preavviso di 7 giorni inviata',
-'loading.error' => 'Sembra che l&#39;applicazione si sia bloccata a causa di un errore.',
-'loading.error.help' => 'Ottieni aiuto',
-'login' => 'Login',
-'login.logo' => 'Logo di accesso',
-'loginalert.credentials.incorrect' => 'Email o password errate.',
-'loginalert.no.password' => 'Inserisci una password.',
-'loginalert.user.inactive' => 'Questo utente è contrassegnato come inattivo. Contatta l&#39;amministratore di sistema.',
-'loginalert.user.not.found' => 'Non è presente alcun account registrato con questo indirizzo email.',
-'loginalert.wrong.auth.code' => 'Reimpostazione password negata. Hai fornito un token di autorizzazione non valido.',
-'logo' => 'Logo della fattura',
-'logout' => 'Esci',
-'loss' => 'Cancellato',
-'mark.invoices.sent.copy' => 'Contrassegna le fatture come inviate quando si copia una fattura',
-'mark.invoices.sent.pdf' => 'Contrassegna le fatture come inviate quando viene generato il PDF',
-'mark.quotes.sent.pdf' => 'Contrassegna le citazioni come inviate quando viene generato il PDF',
-'mark.sent.copy.on' => 'L&#39;opzione &quot;Segna fatture come inviate quando si copia una fattura&quot; è attiva. Dovrebbe essere attiva solo durante lo sviluppo.',
-'mark.sent.off' => 'Contrassegna le fatture come inviate durante la copia delle fatture... è attualmente DISATTIVATO. Impostato su ATTIVO solo in fase di sviluppo. Clicca qui per attivarlo.',
-'mark.sent.on' => 'Contrassegna fatture come inviate durante la copia delle fatture... è attualmente ATTIVA. Mantienila sempre DISATTIVATA durante la produzione. Clicca qui per disattivarla.',
-'max' => 'Massimo',
-'max.quantity' => 'Quantità massima',
-'menu' => 'Menu',
-'menu.about' => 'Di',
-'menu.accreditations' => 'Accreditamenti',
-'menu.blog' => 'Blog',
-'menu.comments-feed' => 'Feed dei commenti',
-'menu.contact.details' => 'Dettagli di contatto',
-'menu.contact.soon' => 'Grazie per averci contattato, ti risponderemo il prima possibile.',
-'menu.contact.us' => 'Contattaci',
-'menu.gallery' => 'Galleria',
-'menu.language' => 'Lingua',
-'menu.login' => 'Login',
-'menu.logout' => 'Esci ({login})',
-'menu.pricing' => 'Prezzi',
-'menu.privacy.policy' => 'politica sulla riservatezza',
-'menu.signup' => 'Iscrizione',
-'menu.swagger' => 'Spavalderia',
-'menu.team' => 'Squadra',
-'menu.terms.of.service' => 'Termini di servizio',
-'menu.testimonial' => 'Testimonianza',
-'menu.users' => 'Utenti',
-'merchant' => 'commerciante',
-'merchant.add' => 'Aggiungi commerciante',
-'merchant.driver' => 'Autista',
-'merchant.reference' => 'Riferimento',
-'merchant.response' => 'Risposta',
-'min.quantity' => 'Quantità minima',
-'mobile' => 'Mobile',
-'mobile.number' => 'Numero di cellulare',
-'monday' => 'Lunedi',
-'monospaced.font.for.amounts' => 'Utilizzare un font Monospace per gli importi',
-'month' => 'Mese',
-'month.prefix' => 'Prefisso del mese',
+'identifier.format' => 'Identifikatoriaus formatavimas',
+'identifier.format.template.tags' => 'Identifikatoriaus šablono žymės',
+'identifier.format.template.tags.instructions' =>
+	'Šablono žymes galima naudoti norint '
+	. 'į el.'
+	. 'laiško šabloną įtraukti dinaminę informaciją,'
+	. 'pvz.'
+	. ', kliento vardą ar sąskaitos '
+	. 'faktūros numerį.'
+	. 'Spustelėkite <b>identifikatoriaus formatavimo</b> lauką ir '
+	. 'išskleidžiamajame meniu pasirinkite žymę.'
+	. 'Ji bus automatiškai įterpta į '
+	. 'teksto lauką.',
+'identity.provider.authentication.successful' => 'Jūsų tapatybė sėkmingai patvirtinta naudojant '
+	. 'pasirinktą tapatybės teikėją, užsiregistravote ir '
+	. 'jums buvo priskirta kliento paskyra.'
+	. 'Spustelėkite čia per artimiausią valandą,'
+	. 'kad suaktyvintumėte savo paskyrą.'
+	. 'Turite valandą iki pirmojo prisijungimo.',
+'image.overdue' => 'Paveikslėlio vieta:'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => 'Paveikslėlio vieta:'
+	. '/invoice/public/img/paid.'
+	. 'png',
+'import' => 'Importuoti',
+'import.data' => 'Importuoti duomenis',
+'import.from.csv' => 'Importuoti iš CSV',
+'in.progress' => 'Vykdoma',
+'inactive' => 'Neaktyvus',
+'index.checkbox.add.some.items.to.enable' =>
+	'Sąskaitoje faktūroje nėra elementų.'
+	. 'Pridėkite elementus, kad aktyvuotumėte žymimąjį '
+	. 'langelį.',
+'index.footer.showing' => 'Rodoma %s iš %s',
+'index.showing' => 'Rodoma %s iš %s',
+'info.task.readonly' => 'Šios užduoties daugiau keisti negalima,'
+	. 'nes ji jau yra išrašyta '
+	. 'sąskaitoje faktūroje.',
+'install.test.data' => 'Dabar galima įdiegti bandymo duomenis',
+'install.test.data.exists.already' =>
+	'Derinimo režimas (ne gamybinė aplinka) '
+	. 'ĮJUNGTAS:'
+	. 'Sąskaitos faktūros testo duomenys jau '
+	. 'yra.'
+	. 'Šis pranešimas išnyks, jei bus '
+	. 'gamybinėje aplinkoje.',
+'install.test.data.goto.tab.index' =>
+	'Eikite į Nustatymai .'
+	. 'Bendrieji .'
+	. 'Įdiegti bandymo duomenis',
+'interface' => 'Sąsaja',
+'invalid.amount' => 'Neteisinga suma',
+'invalid.subscriber.number' => 'Neteisingas abonento numeris',
+'invoice' => 'Sąskaita faktūra',
+'invoiced' => 'Sąskaita faktūra',
+'invoiceplane' => 'Sąskaitų faktūrų plokštuma',
+'invoiceplane.clients' => 'Klientai įterpti',
+'invoiceplane.database.name' => 'Duomenų bazės pavadinimas',
+'invoiceplane.database.password' => 'Slaptažodis',
+'invoiceplane.database.username' => 'Vartotojo vardas',
+'invoiceplane.families' => 'Įterptos šeimos',
+'invoiceplane.import' => 'Bandomasis ryšys',
+'invoiceplane.import.complete.connection.closed' =>
+	'Importavimas baigtas! Ryšys nutrauktas!',
+'invoiceplane.import.connected' => 'Turite ryšį!',
+'invoiceplane.import.proceed' => 'Tęskite importavimo procesą',
+'invoiceplane.import.proceed.alert' => 'Ar tikrai norite tęsti?',
+'invoiceplane.imported' => 'Lentelės buvo importuotos',
+'invoiceplane.news' => '„InvoicePlane“ naujienos',
+'invoiceplane.no.connection' => 'Nėra ryšio',
+'invoiceplane.no.username.or.password' =>
+	'Išsaugokite savo duomenų bazės pavadinimą,'
+	. 'vartotojo vardą ir slaptažodį, skirtus '
+	. '„InvoicePlane“.',
+'invoiceplane.products' => 'Įterpti produktai',
+'invoiceplane.tables' => 'Importuokite „InvoicePlane“ lenteles „Client“, „Product“,'
+	. '„Unit“, „Family“, „TaxRate“ į tuščias '
+	. 'lenteles.'
+	. 'Prieš importuojant šiose lentelėse neturėtų '
+	. 'būti jokių duomenų ir jokių '
+	. 'esamų dokumentų, pvz.'
+	. ', sąskaitų faktūrų.',
+'invoiceplane.tables.not.empty' => 'Prieš importuojant, jūsų kliento, produkto,'
+	. 'vieneto, šeimos ir mokesčio tarifo '
+	. 'lentelės turi būti tuščios.',
+'invoiceplane.taxrates' => 'Įterpti mokesčių tarifai su privalomais '
+	. 'nuliniu mokesčio tarifu ir standartiniu '
+	. 'mokesčio tarifu.',
+'invoiceplane.units' => 'Įterpti vienetai',
+'invoiceplane.yes.connection' => 'Taip, jūs turite ryšį su '
+	. 'savo „Invoiceplane“ duomenų baze!',
+'invoices' => 'Sąskaitos faktūros',
+'invoices.due.after' => 'Sąskaitos faktūros, kurių terminas po '
+	. '(dienų)',
+'is.not.writable' => 'nėra rašomas',
+'is.writable' => 'yra rašomas',
+'item' => 'Prekė',
+'item.add' => 'Prekė Pridėti',
+'item.allowance' => 'Prekės išmoka',
+'item.charge' => 'Prekės mokestis',
+'item.date' => 'Prekės data',
+'item.discount' => 'Prekės nuolaida',
+'item.lookup' => 'Elementų paieška',
+'item.lookup.form' => 'Prekės paieškos forma',
+'item.lookups' => 'Elementų paieškos',
+'item.name' => 'Prekės pavadinimas',
+'item.tax' => 'Prekės mokestis',
+'item.tax.excluded' => 'Tarpinė suma x PVM procentas '
+	. '(prekės PVM neįskaičiuotas)',
+'item.tax.included' => '(Tarpinė suma + Prekės mokestis) '
+	. 'x Mokesčio procentas',
+'item.tax.rate' => 'Prekės mokesčio tarifas',
+'items' => 'Elementai',
+'judgement' => 'Sprendimas gautas',
+'label' => 'Etiketė',
+'label.switch.off' => 'PVM sąskaita faktūra',
+'label.switch.on' => 'PVM sąskaitos faktūros nėra',
+'language' => 'Kalba',
+'last' => 'Paskutinis',
+'last.month' => 'Praėjusį mėnesį',
+'last.quarter' => 'Paskutinis ketvirtis',
+'last.year' => 'Praėjusiais metais',
+'layout.add' => 'Pridėti',
+'layout.add.post' => 'Pridėti įrašą',
+'layout.add.random-content' => 'Pridėti atsitiktinį turinį',
+'layout.add.tag' => 'Pridėti žymą',
+'layout.archive' => 'Archyvas',
+'layout.archive.for-year' => 'Archyvas už {year}',
+'layout.blog' => 'Dienoraštis',
+'layout.change-language' => 'Keisti kalbą',
+'layout.console' => 'Konsolė',
+'layout.content' => 'Turinys',
+'layout.create.new-user' => 'Sukurti naują vartotoją',
+'layout.db.schema' => 'DB schema',
+'layout.go.home' => 'Grįžti namo',
+'layout.login' => 'Prisijungti',
+'layout.migrations' => 'Migracijos',
+'layout.no-records' => 'Nėra įrašų',
+'layout.not-found' => 'Nerasta',
+'layout.page.not-authorised' => 'Neautorizuota:'
+	. 'Autentifikavimo duomenys neteisingi.',
+'layout.page.not-found' => 'Puslapio {url} rasti nepavyko.',
+'layout.page.user-cancelled-oauth2' => 'Vartotojas atšaukė Prisijungimas / registracija '
+	. 'per tapatybės teikėją, pvz.'
+	. ', „Facebook“',
+'layout.pagination-summary' => 'Rodoma {pageSize} iš {total} įrašų',
+'layout.password' => 'Slaptažodis',
+'layout.password-verify' => 'Patvirtinkite slaptažodį',
+'layout.password-verify.new' => 'Patvirtinkite naują slaptažodį',
+'layout.password.new' => 'Naujas slaptažodis',
+'layout.password.otp.6' => 'Vienkartinis slaptažodis (6 skaitmenys)',
+'layout.password.otp.6.8' =>
+	'Vienkartinis slaptažodis (6 skaitmenys) / '
+	. 'Atsarginės kopijos atkūrimo kodai (8 '
+	. 'skaitmenys)',
+'layout.rbac.assign-role' => 'Priskirti RBAC vaidmenį vartotojui',
+'layout.remember' => 'Prisiminti mane',
+'layout.reset' => 'Atstatyti',
+'layout.show-more' => 'rodyti daugiau',
+'layout.submit' => 'Pateikti',
+'layout.title' => 'Pavadinimas',
+'layout.total.posts' => 'Iš viso {count} įrašų',
+'left.pad' => 'Kairysis skydelis',
+'letter' => 'Išsiųstas laiškas prieš veiksmą likus '
+	. '7 dienoms',
+'loading.error' => 'Panašu, kad programa užstrigo dėl '
+	. 'klaidos.',
+'loading.error.help' => 'Gaukite pagalbos',
+'login' => 'Prisijungti',
+'login.logo' => 'Prisijungimo logotipas',
+'loginalert.credentials.incorrect' => 'El.'
+	. 'pašto adresas arba slaptažodis neteisingas.',
+'loginalert.no.password' => 'Įveskite slaptažodį.',
+'loginalert.user.inactive' => 'Šis naudotojas pažymėtas kaip neaktyvus.'
+	. 'Susisiekite su sistemos administratoriumi.',
+'loginalert.user.not.found' => 'Šiuo el.'
+	. 'pašto adresu nėra užregistruotos paskyros.',
+'loginalert.wrong.auth.code' => 'Slaptažodžio nustatymas iš naujo atmestas.'
+	. 'Pateikėte neteisingą autentifikavimo raktą.',
+'logo' => 'Sąskaitos faktūros logotipas',
+'logout' => 'Atsijungti',
+'loss' => 'Nurašyta',
+'mark.invoices.sent.copy' => 'Pažymėti sąskaitas faktūras kaip išsiųstas '
+	. 'kopijuojant sąskaitą faktūrą',
+'mark.invoices.sent.pdf' => 'Pažymėti sąskaitas faktūras kaip išsiųstas,'
+	. 'kai sugeneruojamas PDF failas',
+'mark.quotes.sent.pdf' => 'Pažymėti citatas kaip išsiųstas, kai '
+	. 'sugeneruojamas PDF failas',
+'mark.sent.copy.on' => 'Įjungta funkcija „Žymėti sąskaitas faktūras '
+	. 'kaip išsiųstas kopijuojant“.'
+	. 'Ji turėtų būti įjungta tik '
+	. 'kūrimo metu.',
+'mark.sent.off' => '„Pažymėti sąskaitas faktūras kaip išsiųstas '
+	. 'kopijuojant sąskaitas faktūras.'
+	. '“ šiuo metu yra IŠJUNGTA.'
+	. 'ĮJUNGTA tik kūrimo metu, spustelėkite '
+	. 'čia, kad įjungtumėte.',
+'mark.sent.on' => '„Pažymėti sąskaitas faktūras kaip išsiųstas '
+	. 'kopijuojant sąskaitas faktūras.'
+	. '“ šiuo metu įjungta.'
+	. 'Gamybos metu visada išjunkite šią '
+	. 'funkciją, spustelėdami čia.',
+'max' => 'Maks.',
+'max.quantity' => 'Maksimalus kiekis',
+'menu' => 'Meniu',
+'menu.about' => 'Apie',
+'menu.accreditations' => 'Akreditacijos',
+'menu.blog' => 'Dienoraštis',
+'menu.comments-feed' => 'Komentarų srautas',
+'menu.contact.details' => 'Kontaktinė informacija',
+'menu.contact.soon' => 'Dėkojame, kad susisiekėte su mumis,'
+	. 'susisieksime su jumis kaip įmanoma '
+	. 'greičiau.',
+'menu.contact.us' => 'Susisiekite su mumis',
+'menu.gallery' => 'Galerija',
+'menu.language' => 'Kalba',
+'menu.login' => 'Prisijungti',
+'menu.logout' => 'Atsijungti ({login})',
+'menu.pricing' => 'Kainodara',
+'menu.privacy.policy' => 'Privatumo politika',
+'menu.signup' => 'Registruotis',
+'menu.swagger' => 'Pasipūtimas',
+'menu.team' => 'Komanda',
+'menu.terms.of.service' => 'Paslaugų teikimo sąlygos',
+'menu.testimonial' => 'Atsiliepimas',
+'menu.users' => 'Vartotojai',
+'merchant' => 'Prekybininkas',
+'merchant.add' => 'Prekybininko pridėjimas',
+'merchant.driver' => 'Vairuotojas',
+'merchant.reference' => 'Nuoroda',
+'merchant.response' => 'Atsakymas',
+'min.quantity' => 'Minimalus kiekis',
+'mobile' => 'Mobilusis',
+'mobile.number' => 'Mobiliojo telefono numeris',
+'monday' => 'Pirmadienis',
+'monospaced.font.for.amounts' => 'Kiekiams naudokite monospace šriftą',
+'month' => 'Mėnuo',
+'month.prefix' => 'Mėnesio prefiksas',
 'mpdf' => 'Mpdf',
-'mpdf.allow.charset.conversion' => 'Consenti conversione set di caratteri',
-'mpdf.auto.arabic' => 'Auto arabo',
-'mpdf.auto.language.to.font' => 'Lingua automatica in base al carattere',
-'mpdf.auto.script.to.lang' => 'Script automatico in lingua',
-'mpdf.auto.vietnamese' => 'Auto Vietnamese',
-'mpdf.cjk' => 'Carattere cinese, giapponese e coreano',
-'mpdf.ltr' => 'Da sinistra a destra',
-'mpdf.show.image.errors' => 'Mostra errori nell&#39;immagine',
-'mtd' => 'Rendere la tassazione digitale',
-'mtd.fph' => 'Intestazioni di prevenzione delle frodi',
-'mtd.fph.all.valid' => 'Tutte le intestazioni di prevenzione delle frodi sono valide',
-'mtd.fph.generate' => 'Generare',
-'mtd.fph.no.provided' => 'Nessuna intestazione di prevenzione delle frodi fornita',
-'mtd.fph.record.alert' => 'Vuoi davvero registrare i nuovi dettagli dell&#39;intestazione di prevenzione delle frodi? I dettagli precedenti verranno sovrascritti se salvati!',
-'mtd.fph.screen.timestamp' => 'Marca temporale',
-'mtd.fph.some.advisories' => 'Almeno un&#39;intestazione è potenzialmente non valida',
-'mtd.fph.some.invalid' => 'Almeno un&#39;intestazione non è valida',
-'mtd.gov.client.browser.do.not.track' => 'Un valore che indica se l&#39;opzione Do Not Track è attivata nel browser',
-'mtd.gov.client.browser.do.not.track.eg' => 'ad esempio falso',
-'mtd.gov.client.browser.js.user.agent' => 'Agente utente JS del browser del client Gov',
-'mtd.gov.client.browser.js.user.agent.eg' => 'ad esempio Mozilla/5.0 (iPad; U; CPU OS 3 2.1 come Mac OS X; en-us) (KHTML, come Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' => 'Un elenco dei plug-in del browser sul dispositivo di origine',
-'mtd.gov.client.browser.plugins.eg' => 'ad esempio Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Metodo di connessione client Gov',
-'mtd.gov.client.device.id' => 'ID dispositivo',
-'mtd.gov.client.device.id.eg' => 'es. beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => 'IP locali',
-'mtd.gov.client.multi.factor' => 'Multifattore',
-'mtd.gov.client.multi.factor.eg' => 'ad esempio tipo=OTP; stato=successo, tipo=SMS; stato=fallimento, tipo=Biometrico, tipo=SMS; timestamp=2023-04-01T12:34:56Z; riferimento univoco=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => 'Password monouso (OTP): ',
-'mtd.gov.client.public.ip' => 'IP pubblico',
-'mtd.gov.client.public.port' => 'Porta pubblica (non http 80 e non https 443, ad esempio 57961)',
-'mtd.gov.client.screens' => 'Schermate client governative',
-'mtd.gov.client.screens.colour.depth' => 'Profondità del colore',
-'mtd.gov.client.screens.height' => 'Altezza dello schermo',
-'mtd.gov.client.screens.pixels' => 'pixel',
-'mtd.gov.client.screens.scaling.factor' => 'Fattore di scala',
-'mtd.gov.client.screens.scaling.factor.bits' => 'pezzi',
-'mtd.gov.client.screens.width' => 'Larghezza dello schermo',
-'mtd.gov.client.timezone' => 'Fuso orario',
-'mtd.gov.client.user.ids' => 'ID utente',
-'mtd.gov.client.user.ids.uuid' => 'uuid',
-'mtd.gov.client.window.size' => 'Dimensione della finestra',
-'mtd.gov.client.window.size.pixels' => 'pixel',
-'mtd.gov.vendor.forwarded' => 'Un elenco che descrive in dettaglio i passaggi su Internet tra i servizi che terminano il protocollo Transport Layer Security (TLS)',
-'mtd.gov.vendor.license.ids' => 'Una struttura dati chiave-valore di chiavi di licenza con hash correlate al software del fornitore che ha avviato la richiesta API sul dispositivo di origine',
-'mtd.gov.vendor.public.ip' => 'L&#39;indirizzo IP pubblico dei server a cui il dispositivo di origine ha inviato le sue richieste',
-'mtd.gov.vendor.version' => 'Una struttura dati chiave-valore delle versioni software coinvolte nella gestione di una richiesta',
-'multiple.choice' => 'Scelta multipla',
-'name' => 'Nome',
-'new' => 'Nuovo',
-'new.password' => 'Nuova password',
-'new.product' => 'Nuovo prodotto',
-'new.task' => 'Nuovo compito',
-'next' => 'Prossimo',
-'next.date' => 'Prossima data',
-'next.id' => 'ID successivo',
-'no' => 'NO',
-'no.attachments' => 'Nessun allegato',
-'no.client' => 'Nessun cliente',
-'no.file.uploaded' => 'Nessun file caricato',
-'no.overdue.invoices' => 'Nessuna fattura in ritardo',
-'no.quotes.requiring.approval' => 'Non ci sono preventivi che richiedono approvazione.',
-'no.records' => 'Nessun record',
-'no.updates.available' => 'Nessun aggiornamento disponibile.',
-'none' => 'Nessuno',
-'not.available' => 'Non disponibile',
-'not.found' => 'Fattura non trovata',
-'not.set' => 'Non ancora impostato',
-'not.started' => 'Non iniziato',
-'note' => 'Nota',
-'notes' => 'Note',
+'mpdf.allow.charset.conversion' => 'Leisti simbolių rinkinio konvertavimą',
+'mpdf.auto.arabic' => 'Automatinė arabų kalba',
+'mpdf.auto.language.to.font' =>
+	'Automatinis kalbos ir šrifto suderinimas',
+'mpdf.auto.script.to.lang' =>
+	'Automatinis scenarijaus konvertavimas į kalbą',
+'mpdf.auto.vietnamese' => 'Vietnamietiškas automobilis',
+'mpdf.cjk' => 'Kinų, japonų, korėjiečių šriftas',
+'mpdf.ltr' => 'Iš kairės į dešinę',
+'mpdf.show.image.errors' => 'Rodyti vaizdo klaidas',
+'mtd' => 'Mokesčių skaitmeninimas',
+'mtd.fph' => 'Sukčiavimo prevencijos antraštės',
+'mtd.fph.all.valid' => 'Visos sukčiavimo prevencijos antraštės galioja',
+'mtd.fph.generate' => 'Generuoti',
+'mtd.fph.no.provided' => 'Nepateiktos sukčiavimo prevencijos antraštės',
+'mtd.fph.record.alert' => 'Ar tikrai norite įrašyti naujus '
+	. 'sukčiavimo prevencijos antraštės duomenis? Ankstesni '
+	. 'duomenys bus perrašyti, jei bus '
+	. 'išsaugoti!',
+'mtd.fph.screen.timestamp' => 'Laiko žyma',
+'mtd.fph.some.advisories' => 'Bent viena antraštė gali būti '
+	. 'netinkama',
+'mtd.fph.some.invalid' => 'Bent viena antraštė yra netinkama',
+'mtd.gov.client.browser.do.not.track' =>
+	'Reikšmė, nurodanti, ar naršyklėje įjungta '
+	. 'parinktis „Nesekti“',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'pvz.'
+	. ', klaidinga',
+'mtd.gov.client.browser.js.user.agent' =>
+	'„Gov-Client-Browser-JS-User-Agent“',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'pvz.'
+	. ', Mozilla/5.'
+	. '0 (iPad; U; CPU OS '
+	. '3 2.'
+	. '1 kaip Mac OS X;'
+	. 'en-us) (KHTML, kaip Gecko) Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'Naršyklės papildinių sąrašas pradiniame įrenginyje',
+'mtd.gov.client.browser.plugins.eg' =>
+	'pvz.'
+	. ', „Shockwave%20F1ash Chromium%20PDF%20Viewer“',
+'mtd.gov.client.connection.method' =>
+	'Valdymo kliento ryšio metodas',
+'mtd.gov.client.device.id' =>
+	'Įrenginio ID',
+'mtd.gov.client.device.id.eg' =>
+	'pvz.'
+	. ', beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'Vietiniai IP adresai',
+'mtd.gov.client.multi.factor' =>
+	'Daugiafaktorinis',
+'mtd.gov.client.multi.factor.eg' =>
+	'pvz.'
+	. ', tipas=OTP; būsena=sėkmė, tipas=SMS; būsena=nesėkmė,'
+	. 'tipas=Biometrinis, tipas=SMS; laiko žyma=2023-04-01T12:'
+	. '34:'
+	. '56Z; unikali nuoroda=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'Vienkartinis slaptažodis (OTP):',
+'mtd.gov.client.public.ip' =>
+	'Viešas IP adresas',
+'mtd.gov.client.public.port' =>
+	'Viešasis prievadas (ne http 80 '
+	. 'ir ne https 443, pvz.'
+	. ', 57961)',
+'mtd.gov.client.screens' => 'Valdymo kliento ekranai',
+'mtd.gov.client.screens.colour.depth' =>
+	'Spalvų gylis',
+'mtd.gov.client.screens.height' =>
+	'Ekrano aukštis',
+'mtd.gov.client.screens.pixels' =>
+	'pikselių',
+'mtd.gov.client.screens.scaling.factor' =>
+	'Mastelio koeficientas',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'bitai',
+'mtd.gov.client.screens.width' =>
+	'Ekrano plotis',
+'mtd.gov.client.timezone' => 'Laiko juosta',
+'mtd.gov.client.user.ids' =>
+	'Vartotojo ID',
+'mtd.gov.client.user.ids.uuid' =>
+	'uuid',
+'mtd.gov.client.window.size' =>
+	'Lango dydis',
+'mtd.gov.client.window.size.pixels' =>
+	'pikselių',
+'mtd.gov.vendor.forwarded' => 'Sąrašas, kuriame išsamiai aprašomi interneto '
+	. 'ryšio tarp paslaugų, kurios nutraukia '
+	. 'transporto sluoksnio saugumą (TLS), duomenys.',
+'mtd.gov.vendor.license.ids' =>
+	'Maišytų licencijos raktų, susijusių su '
+	. 'tiekėjo programine įranga, kuri inicijavo '
+	. 'API užklausą pradiniame įrenginyje, rakto '
+	. 'ir reikšmės duomenų struktūra.',
+'mtd.gov.vendor.public.ip' =>
+	'Viešas serverių IP adresas, į '
+	. 'kurį įrenginys siuntė užklausas',
+'mtd.gov.vendor.version' => 'Programinės įrangos versijų, kurios dalyvauja '
+	. 'apdorojant užklausą, rakto ir reikšmės '
+	. 'duomenų struktūra',
+'multiple.choice' => 'Keli pasirinkimai',
+'name' => 'Vardas',
+'new' => 'Naujas',
+'new.password' => 'Naujas slaptažodis',
+'new.product' => 'Naujas produktas',
+'new.task' => 'Nauja užduotis',
+'next' => 'Toliau',
+'next.date' => 'Kita data',
+'next.id' => 'Kitas ID',
+'no' => 'Ne',
+'no.attachments' => 'Nėra priedų',
+'no.client' => 'Nėra kliento',
+'no.file.uploaded' => 'Failas neįkeltas',
+'no.overdue.invoices' => 'Nėra pradelstų sąskaitų faktūrų',
+'no.quotes.requiring.approval' => 'Nėra jokių kainų pasiūlymų, kuriems '
+	. 'reikėtų patvirtinimo.',
+'no.records' => 'Nėra įrašų',
+'no.updates.available' => 'Nėra atnaujinimų.',
+'none' => 'Nėra',
+'not.available' => 'Nėra',
+'not.found' => 'Sąskaita faktūra nerasta',
+'not.set' => 'Dar nenustatyta',
+'not.started' => 'Nepradėta',
+'note' => 'Pastaba',
+'notes' => 'Pastabos',
 'number' => '#',
-'number.format' => 'Formato numerico',
-'number.format.compact.comma' => '1000000,00 (Formato compatto con virgola decimale)',
-'number.format.compact.point' => '1000000.00 (Formato compatto con punto decimale)',
-'number.format.european' => '1.000.000,00 (formato europeo)',
-'number.format.iso.80k.1' => '1 000 000,00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 con virgola decimale)',
-'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 con punto decimale)',
-'number.format.us.uk' => '1.000.000,00 (formato USA/Regno Unito)',
-'number.missing.therefore.use.invoice.id' => 'numero-fattura-mancante-quindi-id-fattura-',
-'number.no' => 'Nessun numero di fattura',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => 'ID cliente',
-'oauth2.google.people.api.v1.client.secret' => 'Segreto del cliente',
-'online.log' => 'Registro online',
-'online.payment' => 'Pagamento online',
-'online.payment.3dauth.redirect' => 'Attendi mentre ti reindirizziamo all&#39;emittente della tua carta per l&#39;autenticazione...',
-'online.payment.accessKey' => 'Chiave di accesso',
-'online.payment.accessToken' => 'Token di accesso',
-'online.payment.accountId' => 'ID account',
-'online.payment.accountNumber' => 'Numero di conto',
-'online.payment.apiKey' => 'Chiave API',
-'online.payment.apiLoginId' => 'ID di accesso API',
-'online.payment.appId' => 'ID applicazione',
-'online.payment.appSecret' => 'App Secret',
-'online.payment.callbackPassword' => 'Password di richiamata',
-'online.payment.card.invalid' => 'Questa carta di credito non è valida. Si prega di controllare le informazioni fornite.',
-'online.payment.clientId' => 'ID cliente',
-'online.payment.clientSecret' => 'Segreto del cliente',
-'online.payment.creditcard.hint' => 'Se desideri pagare tramite carta di credito, inserisci le informazioni qui sotto.<br/> Le informazioni relative alla carta di credito non vengono memorizzate sui nostri server e verranno trasferite al gateway di pagamento online tramite una connessione sicura.',
-'online.payment.developerMode' => 'Modalità sviluppatore',
-'online.payment.for' => 'Pagamento online per',
-'online.payment.for.invoice' => 'Pagamento online per fattura',
-'online.payment.installationId' => 'ID di installazione',
-'online.payment.merchantAccessCode' => 'Codice di accesso del commerciante',
-'online.payment.merchantId' => 'ID commerciante',
-'online.payment.merchantKey' => 'Chiave del commerciante',
-'online.payment.method' => 'Metodo di pagamento online',
-'online.payment.partner' => 'Partner',
-'online.payment.partnerID' => 'ID partner',
-'online.payment.password' => 'Password',
-'online.payment.payment.cancelled' => 'Pagamento annullato.',
-'online.payment.payment.failed' => 'Pagamento non riuscito. Riprova.',
-'online.payment.payment.redirect' => 'Attendi attentamente, verrai reindirizzato alla pagina di pagamento...',
-'online.payment.payment.successful' => 'Pagamento della fattura %s effettuato con successo!',
-'online.payment.pdtKey' => 'Chiave Pdt',
-'online.payment.privateKey' => 'Chiave privata',
-'online.payment.profileID' => 'ID profilo',
-'online.payment.profileId' => 'ID profilo',
-'online.payment.publicKey' => 'Chiave pubblica',
-'online.payment.publicKeyId' => 'ID chiave pubblica',
-'online.payment.publishableKey' => 'Chiave pubblicabile',
-'online.payment.pxPostPassword' => 'Password di posta Px',
-'online.payment.pxPostUsername' => 'Nome utente Px Post',
-'online.payment.referrerId' => 'ID referrer',
-'online.payment.region' => 'Regione',
-'online.payment.returnUrl' => 'URL di ritorno',
-'online.payment.sandbox' => 'Sandbox',
-'online.payment.sandboxId' => 'ID sandbox',
-'online.payment.secret' => 'Segreto',
-'online.payment.secretKey' => 'Chiave segreta',
-'online.payment.secretWord' => 'Parola segreta',
-'online.payment.secureHash' => 'Hash sicuro',
-'online.payment.sharedSecret' => 'Segreto condiviso',
-'online.payment.signature' => 'Firma',
-'online.payment.siteCode' => 'Codice del sito',
-'online.payment.siteId' => 'ID sito',
-'online.payment.storeId' => 'ID negozio',
-'online.payment.storePassword' => 'Password del negozio',
-'online.payment.subAccountId' => 'ID dell&#39;account secondario',
-'online.payment.testMode' => 'Modalità di prova',
-'online.payment.testOrLiveApiKey' => 'Chiave API di prova o live, ovvero inizia con test_ o live_',
-'online.payment.transactionKey' => 'Chiave di transazione',
-'online.payment.transactionPassword' => 'Password di transazione',
-'online.payment.username' => 'Nome utente',
-'online.payment.vendor' => 'Venditore',
-'online.payment.version' => 'Versione Omnipay (selezionata) / Conforme PCI (nessun dettaglio di carta di credito memorizzato in questo database) (non selezionato)',
-'online.payment.webhookId' => 'ID webhook',
-'online.payment.websiteKey' => 'Chiave del sito web',
-'online.payments' => 'Pagamenti online',
-'open' => 'Aprire',
-'open.invoices' => 'Fatture aperte',
-'open.quotes' => 'Citazioni aperte',
-'open.reports.in.new.tab' => 'Apri report in una nuova scheda del browser',
-'optional' => 'Opzionale',
-'options' => 'Opzioni',
-'order' => 'Ordine',
-'orm' => 'Orm',
-'other.settings' => 'Altre impostazioni',
-'overdue' => 'In ritardo',
-'overdue.invoices' => 'Fatture scadute',
-'overview' => 'Panoramica della fattura',
-'overview.period' => 'Periodo di panoramica della fattura',
-'page' => 'Pagina',
-'paid' => 'Pagato',
-'password' => 'Password',
-'password.change' => 'Cambiare la password',
-'password.changed' => 'Password modificata con successo',
-'password.reset' => 'Reimposta password',
-'password.reset.email' => 'Hai richiesto una nuova password per la tua installazione. Clicca sul link nella tua casella di posta per reimpostare la password.',
-'password.reset.failed' => 'Si è verificato un errore durante l&#39;invio dell&#39;email per la reimpostazione della password. Consulta i registri dell&#39;applicazione o contatta l&#39;amministratore di sistema.',
-'password.reset.info' => 'Riceverai un&#39;e-mail con un link per reimpostare la password.',
-'password.reset.request.token' => 'Richiedi token di reimpostazione della password',
-'past.month' => 'Mese scorso',
-'past.quarter' => 'Ultimo trimestre',
-'past.year' => 'Anno scorso',
-'pay.now' => 'Paga ora',
-'payment' => 'Pagamento',
-'payment.add' => 'Aggiungi pagamento',
-'payment.cannot.delete' => 'Impossibile eliminare il pagamento',
-'payment.cannot.exceed.balance' => 'L&#39;importo del pagamento non può superare il saldo della fattura.',
-'payment.custom' => 'Pagamento personalizzato',
-'payment.custom.add' => 'Pagamento personalizzato Aggiungi',
-'payment.date' => 'Data di pagamento',
-'payment.deleted' => 'Pagamento cancellato',
-'payment.description' => 'Pagamento per la fattura %s',
-'payment.form' => 'Modulo di pagamento',
-'payment.gateway.default.locale' => 'Impostazioni locali predefinite, ad esempio en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Il test del gateway di pagamento Mollie o la chiave API live sono stati impostati.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => 'È necessario configurare il test del gateway di pagamento Mollie o la chiave API live.',
-'payment.gateway.mollie.api.payment.id' => 'ID pagamento Mollie: ',
-'payment.gateway.no' => 'Nessun gateway di pagamento è stato configurato in Impostazioni ... Visualizza ... Pagamento online',
-'payment.history' => 'Cronologia dei pagamenti',
-'payment.information.amazon.no.omnipay.version' => 'Al momento non esiste una versione Omnipay di Amazon Pay. Deseleziona &quot;Versione Omnipay&quot; per utilizzare la versione conforme a PCI nella vista Impostazioni.',
-'payment.information.amazon.payment.session.complete' => 'Sessione di pagamento Amazon completata - ID sessione: ',
-'payment.information.amazon.payment.session.incomplete' => 'Sessione di pagamento Amazon incompleta. Riprova.',
-'payment.information.braintree.braintree.no.omnipay.version' => 'Attualmente non esiste una versione di Braintree Omnipay compatibile con la versione 6.9.1 di Braintree. Deselezionare la versione Omnipay per utilizzare la versione conforme a PCI in Impostazioni.',
-'payment.information.invoice.number.not.provided' => 'Il numero di fattura non è stato fornito',
-'payment.information.no.information.provided' => 'Nessuna informazione è stata fornita',
-'payment.information.none' => 'Nessuno',
-'payment.information.omnipay.driver.being.used' => 'Viene utilizzato un driver {{$d}} di Omnipay.',
-'payment.information.payment.method.required' => 'Per questa fattura è richiesto un metodo di pagamento.',
-'payment.information.stripe.api.key' => 'È necessario impostare la chiave segreta/chiave API del gateway di pagamento Stripe.',
-'payment.logs' => 'Registri dei pagamenti',
-'payment.method' => 'Metodo di pagamento',
-'payment.method.add' => 'Aggiungi metodo di pagamento',
-'payment.method.already.exists' => 'Il metodo di pagamento esiste già!',
-'payment.method.form' => 'Modulo di metodo di pagamento',
-'payment.method.history' => 'Impossibile eliminare. Esiste la cronologia del metodo di pagamento.',
-'payment.methods' => 'Metodi di pagamento',
-'payment.no.invoice.sent' => 'Nessuna fattura è stata inviata da noi né visionata dal cliente.',
-'payment.provider' => 'Fornitore di servizi di pagamento',
-'payment.term' => 'Termini di pagamento',
-'payment.term.0.days' => 'Si prega di utilizzare uno dei metodi di pagamento forniti',
-'payment.term.add.additional.terms.at.setting.repository' => 'Aggiungere termini aggiuntivi nella funzione getPaymentTerms del repository delle impostazioni.',
-'payment.term.eom.120.days' => 'EOM(120): si prega di pagare entro 120 giorni dalla fine del mese dalla data di emissione',
-'payment.term.eom.15.days' => 'EOM(15): si prega di pagare entro 15 giorni dalla fine del mese della data di emissione',
-'payment.term.eom.30.days' => 'EOM(30): si prega di pagare entro 30 giorni dalla fine del mese della data di emissione',
-'payment.term.eom.60.days' => 'EOM(60): si prega di pagare entro 60 giorni dalla fine del mese della data di emissione',
-'payment.term.eom.90.days' => 'EOM(90): si prega di pagare entro 90 giorni dalla fine del mese della data di emissione',
-'payment.term.general' => 'Pagamento dovuto entro 30 giorni',
-'payment.term.mfi.15' => 'MFI(15): Si prega di pagare il 15 del mese successivo alla data di emissione',
-'payment.term.net.120.days' => 'Netto (120): si prega di pagare entro 120 giorni dalla data di emissione',
-'payment.term.net.15.days' => 'Netto (15): si prega di pagare entro 15 giorni dalla data di emissione.',
-'payment.term.net.30.days' => 'Netto (30): si prega di pagare entro 30 giorni dalla data di emissione',
-'payment.term.net.60.days' => 'Netto (60): si prega di pagare entro 60 giorni dalla data di emissione',
-'payment.term.net.90.days' => 'Netto (90): si prega di pagare entro 90 giorni dalla data di emissione',
-'payment.term.pia' => 'Il pagamento è richiesto in anticipo (PIA)',
-'payment.term.polite' => 'Apprezziamo la vostra fiducia. Vi preghiamo di effettuare il pagamento entro 30 giorni dal ricevimento di questa fattura.',
-'payment.terms.default' => 'Paga entro 14 giorni',
-'paymentpeppol' => 'Pagamenti effettuati tramite Peppol',
-'paymentpeppol.reference.plural' => 'Riferimenti di pagamento tramite Peppol',
-'payments' => 'Pagamenti',
-'paymentterm' => 'Termine di pagamento',
+'number.format' => 'Skaičių formatas',
+'number.format.compact.comma' => '1000000,00 (kompaktiškas formatas su dešimtainiu '
+	. 'kableliu)',
+'number.format.compact.point' => '1000000,00 (kompaktiškas formatas su kableliu)',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00 (europietiškas formatas)',
+'number.format.iso.80k.1' =>
+	'1 000 000,00 (ISO 80000-1)',
+'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
+	. 'su kableliu)',
+'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 '
+	. 'su kableliu)',
+'number.format.us.uk' => '1 000 000,00 (JAV / '
+	. 'JK formatas)',
+'number.missing.therefore.use.invoice.id' =>
+	'sąskaitos-faktūros-numerio-trūksta-todėl-sąskaitos-ID-',
+'number.no' => 'Nėra sąskaitos faktūros numerio',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.account.locked' => 'Paskyra užrakinta',
+'oauth2.backup.recovery.codes' => 'Atsarginės kopijos atkūrimo kodai.'
+	. 'Laikykite saugioje vietoje.',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'Atkurti atsarginių kopijų atkūrimo kodus',
+'oauth2.consent.required' => 'Reikalingas sutikimas',
+'oauth2.default' => 'Naudojama numatytoji oauth2.'
+	. '0 konfigūracija',
+'oauth2.google.people.api.v1.client.id' =>
+	'Kliento ID',
+'oauth2.google.people.api.v1.client.secret' =>
+	'Kliento paslaptis',
+'oauth2.invalid.request' => 'Neteisinga užklausa',
+'oauth2.invalid.client' => 'Neteisingas klientas',
+'oauth2.invalid.grant' => 'Negaliojanti dotacija',
+'oauth2.login.required' => 'Būtina prisijungti',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'Trūksta autentifikavimo kodo arba būsenos '
+	. 'parametro.',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'Trūksta būsenos parametro.'
+	. 'Galima csrf ataka.',
+'oauth2.server.error' => 'Serverio klaida',
+'oauth2.temporarily.unavailable' => 'Laikinai nepasiekiamas',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'Bandomojo vartotojo kūrimas gamybinėje aplinkoje '
+	. 'neleidžiamas.',
+'oauth2.unauthorized.client' => 'Neįgaliotas klientas',
+'oauth2.unsupported.response.type' => 'Nepalaikomas atsakymo tipas',
+'oauth2.unsupported.grant.type' => 'Nepalaikomas dotacijos tipas',
+'online.log' => 'Internetinis žurnalas',
+'online.payment' => 'Mokėjimas internetu',
+'online.payment.3dauth.redirect' => 'Palaukite, kol nukreipsime jus pas '
+	. 'kortelės išdavėją autentifikavimui.',
+'online.payment.accessKey' => 'Prieigos raktas',
+'online.payment.accessToken' => 'Prieigos raktas',
+'online.payment.accountId' => 'Paskyros ID',
+'online.payment.accountNumber' => 'Sąskaitos numeris',
+'online.payment.apiKey' => 'API raktas',
+'online.payment.apiLoginId' => 'API prisijungimo ID',
+'online.payment.appId' => 'Programėlės ID',
+'online.payment.appSecret' => 'Programėlės slaptasis kodas',
+'online.payment.callbackPassword' => 'Atgalinio skambinimo slaptažodis',
+'online.payment.card.invalid' => 'Ši kreditinė kortelė negalioja.'
+	. 'Patikrinkite pateiktą informaciją.',
+'online.payment.clientId' => 'Kliento ID',
+'online.payment.clientSecret' => 'Kliento paslaptis',
+'online.payment.creditcard.hint' => 'Jei norite mokėti kreditine kortele,'
+	. 'prašome įvesti toliau pateiktą informaciją.'
+	. '<br/> Kreditinės kortelės informacija nėra '
+	. 'saugoma mūsų serveriuose ir bus '
+	. 'perduota į internetinių mokėjimų vartus '
+	. 'naudojant saugų ryšį.',
+'online.payment.developerMode' => 'Kūrėjo režimas',
+'online.payment.for' => 'Mokėjimas internetu už',
+'online.payment.for.invoice' => 'Sąskaitos faktūros apmokėjimas internetu',
+'online.payment.installationId' => 'Įdiegimo ID',
+'online.payment.merchantAccessCode' => 'Pardavėjo prieigos kodas',
+'online.payment.merchantId' => 'Pardavėjo ID',
+'online.payment.merchantKey' => 'Pardavėjo raktas',
+'online.payment.method' => 'Mokėjimo internetu būdas',
+'online.payment.partner' => 'Partneris',
+'online.payment.partnerID' => 'Partnerio ID',
+'online.payment.password' => 'Slaptažodis',
+'online.payment.payment.cancelled' => 'Mokėjimas atšauktas.',
+'online.payment.payment.failed' => 'Mokėjimas nepavyko.'
+	. 'Bandykite dar kartą.',
+'online.payment.payment.redirect' => 'Prašome palaukti, kol nukreipsime jus '
+	. 'į mokėjimo puslapį.',
+'online.payment.payment.successful' => 'Sąskaitos faktūros %s apmokėjimas sėkmingas!',
+'online.payment.pdtKey' => 'Pdt raktas',
+'online.payment.privateKey' => 'Privatus raktas',
+'online.payment.profileID' => 'Profilio ID',
+'online.payment.profileId' => 'Profilio ID',
+'online.payment.publicKey' => 'Viešas raktas',
+'online.payment.publicKeyId' => 'Viešojo rakto ID',
+'online.payment.publishableKey' => 'Publikuojamas raktas',
+'online.payment.pxPostPassword' => 'Px pašto slaptažodis',
+'online.payment.pxPostUsername' => 'Px įrašo vartotojo vardas',
+'online.payment.referrerId' => 'Nuorodos ID',
+'online.payment.region' => 'Regionas',
+'online.payment.returnUrl' => 'Grąžinimo URL',
+'online.payment.sandbox' => 'Smėlio dėžė',
+'online.payment.sandboxId' => 'Smėlio dėžės ID',
+'online.payment.secret' => 'Paslaptis',
+'online.payment.secretKey' => 'Slaptas raktas',
+'online.payment.secretWord' => 'Slaptas žodis',
+'online.payment.secureHash' => 'Saugus maišos',
+'online.payment.sharedSecret' => 'Bendra paslaptis',
+'online.payment.signature' => 'Parašas',
+'online.payment.siteCode' => 'Svetainės kodas',
+'online.payment.siteId' => 'Svetainės ID',
+'online.payment.storeId' => 'Parduotuvės ID',
+'online.payment.storePassword' => 'Parduotuvės slaptažodis',
+'online.payment.subAccountId' => 'Subsąskaitos ID',
+'online.payment.testMode' => 'Bandymo režimas',
+'online.payment.testOrLiveApiKey' => 'Testinis arba tiesioginis API raktas,'
+	. 't.'
+	. 'y.'
+	. 'prasideda test_ arba live_',
+'online.payment.apiToken' => 'API prieigos raktas',
+'online.payment.thirdPartyProvider' => 'Trečiosios šalies tiekėjas, pvz.'
+	. ', „Wonderful“',
+'online.payment.transactionKey' => 'Operacijos raktas',
+'online.payment.transactionPassword' => 'Operacijos slaptažodis',
+'online.payment.username' => 'Vartotojo vardas',
+'online.payment.vendor' => 'Pardavėjas',
+'online.payment.version' => '„Omnipay“ versija (pažymėta) / PCI '
+	. 'suderinama (šioje duomenų bazėje nėra '
+	. 'saugomų kredito kortelių duomenų) (nepažymėta)',
+'online.payment.webhookId' => 'Žiniatinklio kabliuko ID',
+'online.payment.websiteKey' => 'Svetainės raktas',
+'online.payments' => 'Mokėjimai internetu',
+'open.banking.pay.with' => 'Mokėkite per atvirąją bankininkystę: ',
+'open.banking.not.configured' => 'Atviroji bankininkystė nesukonfigūruota.'
+	. 'Susisiekite su palaikymo tarnyba.',
+'open' => 'Atidaryti',
+'open.invoices' => 'Atviros sąskaitos faktūros',
+'open.quotes' => 'Atviros citatos',
+'open.reports.in.new.tab' =>
+	'Atidaryti ataskaitas naujame naršyklės skirtuke',
+'optional' => 'Pasirinktinai',
+'options' => 'Parinktys',
+'order' => 'Užsakymas',
+'orm' => 'Ormas',
+'other.settings' => 'Kiti nustatymai',
+'overdue' => 'Vėluoja',
+'overdue.invoices' => 'Pradelstos sąskaitos faktūros',
+'overview' => 'Sąskaitos faktūros apžvalga',
+'overview.period' => 'Sąskaitos faktūros apžvalgos laikotarpis',
+'page' => 'Puslapis',
+'paid' => 'Mokama',
+'password' => 'Slaptažodis',
+'password.change' => 'Keisti slaptažodį',
+'password.changed' => 'Slaptažodis sėkmingai pakeistas',
+'password.reset' => 'Atkurti slaptažodį',
+'password.reset.email' => 'Pateikėte užklausą dėl naujo slaptažodžio '
+	. 'savo diegimui.'
+	. 'Norėdami atkurti slaptažodį, spustelėkite nuorodą '
+	. 'gautuosiuose.',
+'password.reset.failed' => 'Bandant išsiųsti slaptažodžio atkūrimo el.'
+	. 'laišką, įvyko klaida.'
+	. 'Peržiūrėkite programos žurnalus arba susisiekite '
+	. 'su sistemos administratoriumi.',
+'password.reset.info' => 'Gausite el.'
+	. 'laišką su nuoroda slaptažodžio atkūrimui.',
+'password.reset.request.token' => 'Prašyti slaptažodžio atkūrimo žetono',
+'past.month' => 'Praėjusį mėnesį',
+'past.quarter' => 'Praėjusį ketvirtį',
+'past.year' => 'Praėjusiais metais',
+'pay.now' => 'Mokėti dabar',
+'payment' => 'Mokėjimas',
+'payment.add' => 'Mokėjimo pridėjimas',
+'payment.cannot.delete' => 'Negalima ištrinti mokėjimo',
+'payment.cannot.exceed.balance' => 'Mokėjimo suma negali viršyti sąskaitos '
+	. 'faktūros likučio.',
+'payment.custom' => 'Mokėjimas pagal užsakymą',
+'payment.custom.add' => 'Mokėjimas Pasirinktinis pridėjimas',
+'payment.date' => 'Mokėjimo data',
+'payment.deleted' => 'Mokėjimas ištrintas',
+'payment.description' => 'Mokėjimas už sąskaitą faktūrą %s',
+'payment.form' => 'Mokėjimo forma',
+'payment.gateway.default.locale' => 'Numatytoji lokalė, pvz.'
+	. ', en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'„Mollie“ mokėjimo šliuzo testas arba '
+	. 'tiesioginis API raktas buvo sukonfigūruotas.',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'Reikia nustatyti „Mollie“ mokėjimo šliuzo '
+	. 'testą arba tiesioginį API raktą.',
+'payment.gateway.mollie.api.payment.id' =>
+	'Mollie mokėjimo ID:',
+'payment.gateway.no' => 'Nustatymuose nenustatyti mokėjimo šliuzai.'
+	. 'Peržiūrėti.'
+	. 'Mokėjimas internetu',
+'payment.history' => 'Mokėjimų istorija',
+'payment.information.amazon.no.omnipay.version' =>
+	'Šiuo metu nėra „Amazon Pay '
+	. 'Omnipay“ versijos.'
+	. 'Nustatymų rodinyje panaikinkite žymėjimą prie '
+	. '„Omnipay“ versijos, kad naudotumėte PCI '
+	. 'suderinamą versiją.',
+'payment.information.amazon.payment.session.complete' =>
+	'„Amazon“ mokėjimo sesija baigta – '
+	. 'sesijos ID:',
+'payment.information.amazon.payment.session.incomplete' =>
+	'„Amazon“ mokėjimo sesija neužbaigta – '
+	. 'bandykite dar kartą',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'Šiuo metu nėra „Braintree Omnipay“ '
+	. 'versijos, suderinamos su „Braintree“ 6.'
+	. '9.'
+	. '1 versija.'
+	. 'Nustatymų rodinyje panaikinkite žymėjimą prie '
+	. '„Omnipay“ versijos, kad būtų naudojama '
+	. 'PCI suderinama versija.',
+'payment.information.invoice.number.not.provided' =>
+	'Nesuteiktas sąskaitos faktūros numeris',
+'payment.information.no.information.provided' =>
+	'Nepateikta jokia informacija',
+'payment.information.none' => 'Nėra',
+'payment.information.omnipay.driver.being.used' =>
+	'Naudojamas {{$d}} vairuotojas iš „Omnipay“.',
+'payment.information.payment.method.required' =>
+	'Šiai sąskaitai faktūrai reikalingas mokėjimo '
+	. 'būdas.',
+'payment.information.stripe.api.key' =>
+	'Reikia nustatyti „Stripe“ mokėjimo šliuzo '
+	. 'slaptąjį raktą / API raktą.',
+'payment.logs' => 'Mokėjimų žurnalai',
+'payment.method' => 'Mokėjimo būdas',
+'payment.method.add' => 'Mokėjimo būdas Pridėti',
+'payment.method.already.exists' => 'Mokėjimo būdas jau yra!',
+'payment.method.form' => 'Mokėjimo būdo forma',
+'payment.method.history' => 'Negalima ištrinti.'
+	. 'Mokėjimo būdų istorija jau yra.',
+'payment.methods' => 'Mokėjimo būdai',
+'payment.no.invoice.sent' => 'Mes neišsiuntėme ir klientas neperžiūrėjo '
+	. 'jokių sąskaitų faktūrų.',
+'payment.provider' => 'Mokėjimo paslaugų teikėjas',
+'payment.term' => 'Mokėjimo sąlygos',
+'payment.term.0.days' => 'Prašome naudoti vieną iš pateiktų '
+	. 'mokėjimo būdų',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'Pridėkite papildomas sąlygas nustatymų saugyklos '
+	. 'getPaymentTerms funkcijoje.',
+'payment.term.eom.120.days' =>
+	'EOM(120):'
+	. 'Prašome sumokėti per 120 dienų.'
+	. 'Išdavimo datos mėnesio pabaiga.',
+'payment.term.eom.15.days' =>
+	'EOM(15):'
+	. 'Prašome sumokėti per 15 dienų '
+	. 'nuo išdavimo datos mėnesio pabaigos',
+'payment.term.eom.30.days' =>
+	'EOM(30):'
+	. 'Prašome sumokėti per 30 dienų '
+	. 'nuo išdavimo datos mėnesio pabaigos',
+'payment.term.eom.60.days' =>
+	'EOM(60):'
+	. 'Prašome sumokėti per 60 dienų '
+	. 'nuo išdavimo datos mėnesio pabaigos',
+'payment.term.eom.90.days' =>
+	'EOM(90):'
+	. 'Prašome sumokėti per 90 dienų '
+	. 'nuo išdavimo datos mėnesio pabaigos',
+'payment.term.general' => 'Mokėjimas per 30 dienų',
+'payment.term.mfi.15' => 'MFI(15):'
+	. 'Prašome mokėti 15-tą mėnesio dieną '
+	. 'po išdavimo datos mėnesio',
+'payment.term.net.120.days' =>
+	'Grynasis (120):'
+	. 'Prašome sumokėti per 120 dienų '
+	. 'nuo išdavimo datos',
+'payment.term.net.15.days' =>
+	'Grynasis (15):'
+	. 'Prašome sumokėti per 15 dienų '
+	. 'nuo išrašymo datos.',
+'payment.term.net.30.days' =>
+	'Grynasis (30):'
+	. 'Prašome sumokėti per 30 dienų '
+	. 'nuo išdavimo datos',
+'payment.term.net.60.days' =>
+	'Grynasis (60):'
+	. 'Prašome sumokėti per 60 dienų '
+	. 'nuo išdavimo datos',
+'payment.term.net.90.days' =>
+	'Grynasis (90):'
+	. 'Prašome sumokėti per 90 dienų '
+	. 'nuo išdavimo datos',
+'payment.term.pia' => 'Būtinas išankstinis mokėjimas (PIA)',
+'payment.term.polite' => 'Vertiname Jūsų pasirinkimą.'
+	. 'Prašome atlikti mokėjimą per 30 '
+	. 'dienų nuo šios sąskaitos faktūros '
+	. 'gavimo.',
+'payment.terms.default' => 'Apmokėkite per 14 dienų',
+'paymentpeppol' => 'Mokėjimai, atlikti per „Peppol“',
+'paymentpeppol.reference.plural' => 'Mokėjimo nuorodos naudojant „Peppol“',
+'payments' => 'Mokėjimai',
+'paymentterm' => 'Mokėjimo terminas',
 'pdf' => 'PDF',
-'pdf.archived.no' => 'Pdf NON archiviato in Caricamenti/Archivio/Fattura',
-'pdf.archived.yes' => 'Pdf archiviato in Caricamenti/Archivio/Fattura',
-'pdf.include.zugferd' => 'Includere ZUGFeRD',
-'pdf.include.zugferd.help' => 'Abilitando questa opzione, nei PDF delle fatture verrà incluso il formato XML ZUGFeRD, uno standard XML per le fatture. <a href="https://www.ferd-net.de/">Ulteriori informazioni</a>',
-'pdf.invoice.footer' => 'Piè di pagina PDF',
-'pdf.invoice.footer.hint' => 'Puoi inserire qui qualsiasi codice HTML che verrà visualizzato nella parte inferiore delle tue fatture PDF.',
-'pdf.modal' => 'PDF modale',
-'pdf.quote.footer' => 'Piè di pagina delle citazioni',
-'pdf.quote.footer.hint' => 'Qui puoi inserire qualsiasi codice HTML che verrà visualizzato in fondo ai tuoi preventivi PDF.',
-'pdf.settings' => 'Impostazioni PDF',
-'pdf.template' => 'Modello PDF',
-'pdf.template.overdue' => 'Modello PDF in ritardo',
-'pdf.template.paid' => 'Modello PDF a pagamento',
-'pdf.watermark' => 'Abilita filigrane PDF',
-'peppol' => 'Fattura Peppol Universal Business Language (UBL) 2.1 - Ecosio Validated',
+'pdf.archived.no' => 'Pdf failas NĖRA archyvuotas skiltyje '
+	. '„Įkėlimai / Archyvas / Sąskaita '
+	. 'faktūra“',
+'pdf.archived.yes' => 'Pdf archyvuotas aplanke „Įkėlimai / '
+	. 'Archyvas / Sąskaita faktūra“',
+'pdf.include.zugferd' => 'Įtraukti ZUGFeRD',
+'pdf.include.zugferd.help' => 'Įjungus šią parinktį, sąskaitų faktūrų '
+	. 'PDF failuose bus įtrauktas ZUGFeRD '
+	. 'XML, kuris yra sąskaitų faktūrų '
+	. 'XML standartas.'
+	. '<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">Daugiau informacijos</a>',
+'pdf.invoice.footer' => 'PDF poraštė',
+'pdf.invoice.footer.hint' => 'Čia galite įvesti bet kokį '
+	. 'HTML kodą, kuris bus rodomas '
+	. 'jūsų PDF sąskaitų faktūrų apačioje.',
+'pdf.modal' => 'Modalinis PDF',
+'pdf.quote.footer' => 'Citatos poraštė',
+'pdf.quote.footer.hint' => 'Čia galite įvesti bet kokį '
+	. 'HTML kodą, kuris bus rodomas '
+	. 'jūsų PDF citatų apačioje.',
+'pdf.settings' => 'PDF nustatymai',
+'pdf.template' => 'PDF šablonas',
+'pdf.template.overdue' => 'Pavėluotas PDF šablonas',
+'pdf.template.paid' => 'Mokamas PDF šablonas',
+'pdf.watermark' => 'Įgalinti PDF vandenženklius',
+'peppol' => '„Peppol Universal Business Language“ (UBL) '
+	. '2.'
+	. '1 sąskaitų faktūrų formatas – '
+	. '„Ecosio Validated“',
 'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' => 'Gli addebiti per sconto fattura e gli addebiti per sconto articolo fattura ereditano da un addebito per sconto a livello di documento Peppol completato',
-'peppol.client.check' => 'I dettagli Peppol relativi a questo cliente sono insufficienti. Ne manca almeno uno. Consultare Visualizza... Cliente... Opzioni... Modifica i dettagli Peppol per la fatturazione elettronica.',
-'peppol.client.defaults' => 'Compila il modulo Peppol del cliente con i valori predefiniti di OpenPeppol per il test.',
-'peppol.currency.code.from' => 'Da Valuta, ovvero Valuta dell&#39;imposta del paese di origine (per modificare vedere config/common/params.php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'Per la valuta, ad esempio la valuta del documento: vedere la funzione get.setting(&#39;currency.code.to&#39;)',
-'peppol.currency.from.to' => 'Uno di Da Valuta oggi si converte in questo di A Valuta',
-'peppol.currency.to.from' => 'Uno di A Valuta oggi si converte in questo di Da Valuta',
-'peppol.document.reference.null' => 'numero-fattura-null-id-fattura',
-'peppol.ecosio.validator' => 'Validatore Ecosio per OpenPeppol UBL Invoice (3.15.0) (noto anche come BIS Billing 3.0.14)',
-'peppol.electronic.invoicing' => 'Fatturazione elettronica Peppol',
-'peppol.enable' => 'Abilita Peppol utilizzando Universal Business Language (UBL) 2.1',
-'peppol.include.delivery.period' => 'Includi periodi di consegna',
-'peppol.invoice.note.not.found' => 'Nota fattura non trovata',
-'peppol.label.switch.off' => 'Peppol Defaults Abilitati',
-'peppol.label.switch.on' => 'Impostazioni predefinite Peppol disabilitate',
-'peppol.mandatory' => ' (Obbligatorio)',
-'peppol.optional' => ' (Opzionale)',
-'peppol.stand.in.code' => 'Codice descrittivo: indica la base imponibile utilizzata per la futura data di erogazione/pagamento dei beni. Se è possibile determinare un punto di erogazione, il codice descrittivo viene escluso nel periodo di fatturazione.',
-'peppol.store.cove.1.1.1' => 'Registrati per l&#39;accesso API sul sito web di Store Cove',
-'peppol.store.cove.1.1.2' => 'Crea la tua chiave API dal sito web di Store Cove e salvala in Impostazioni...Visualizza...Pagamento online...Store Cove...Chiave API',
-'peppol.store.cove.1.1.3' => 'Effettua la tua prima chiamata API per ottenere la risposta JSON.',
-'peppol.store.cove.1.1.4' => 'Invia la tua prima fattura di prova JSON che hai ottenuto cliccando sul pulsante verde Mondo=&gt;DE',
-'peppol.stream.toggle' => 'Peppol - Pulsante di attivazione/disattivazione &#39;Stream&#39; o &#39;Salva su file&#39;',
-'peppol.tax.category.not.found' => 'Codice categoria fiscale Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) mancante.',
-'peppol.tax.category.percent.not.found' => 'Percentuale della categoria fiscale Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) mancante.',
-'peppol.tax.rate.code' => 'Codice aliquota fiscale Peppol',
-'peppol.trying.to.send.non.pdf.file' => 'Al momento vengono inviati solo file PDF con Peppol Invoices',
-'peppol.unit' => 'Classificazione delle unità utilizzando Peppol',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Origine: src/Invoice/Ubl/Invoice: Descrizione del documento mancante - Ecosio: il documento NON DEVE contenere elementi vuoti. Soluzione: Nella vista Fattura: Opzioni... Modifica... Descrizione del documento',
-'peppol.validator.Invoice.cac.Note' => 'Origine: src/Invoice/Ubl/Invoice: Nota fattura mancante - Ecosio: il documento NON DEVE contenere elementi vuoti.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party: Indirizzo email mancante - Ecosio: L&#39;indirizzo elettronico DEVE essere fornito. Soluzione: Cliente ... Visualizza ... Opzioni ... Modifica i dettagli Peppol per la fatturazione elettronica ... EndPointID',
-'peppol.version' => 'Versione Peppol',
-'peppol.xml.stream' => 'Esegui lo streaming, ovvero mostralo sullo schermo del browser anziché nella cartella dei download.',
-'per.item' => 'per articolo',
-'per.page.total' => ' per pagina. Totale ',
-'performance' => 'Prestazione',
-'performance.label.switch.off' => 'Modalità di lettura e scrittura più veloce: fare riferimento alla ricerca &#39;mode&#39; in config/common/params.php ',
-'performance.label.switch.on' => 'Modalità di sola scrittura più lenta: fare riferimento alla ricerca &#39;mode&#39; in config/common/params.php ',
-'period' => 'Periodo',
-'permission' => 'Non hai l&#39;autorizzazione richiesta.',
-'personal.information' => 'Informazioni personali',
-'phone' => 'Telefono',
+'peppol.allowance.or.charge.inherit' =>
+	'Sąskaitos faktūros nuolaidos ir sąskaitos '
+	. 'faktūros elementų nuolaidos perkeliamos iš '
+	. 'užpildyto „Peppol“ dokumento lygio nuolaidos.',
+'peppol.client.check' => 'Nepakanka su šiuo klientu susijusių '
+	. '„Peppol“ duomenų.'
+	. 'Trūksta bent vieno.'
+	. 'Žr.'
+	. '„Peržiūrėti.'
+	. 'Klientas.'
+	. 'Parinktys.'
+	. 'Redaguoti „Peppol“ duomenis el.'
+	. 'sąskaitų faktūrų išrašymui“.',
+'peppol.client.defaults' => 'Užpildykite kliento „Peppol“ formą su '
+	. '„OpenPeppol“ numatytaisiais nustatymais testavimui.',
+'peppol.currency.code.from' => 'Valiuta, pvz.'
+	. ', kilmės šalies mokesčių valiuta '
+	. '(norėdami pakeisti, žr.'
+	. 'config/common/params.'
+	. 'php TaxCurrencyCode)',
+'peppol.currency.code.to' => 'Valiuta, t.'
+	. 'y.'
+	. 'dokumento valiuta:'
+	. 'žr.'
+	. 'funkciją get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
+'peppol.currency.from.to' => 'Vienas iš „From Currency“ šiandien '
+	. 'konvertuojamas į šią „To Currency“',
+'peppol.currency.to.from' => 'Vienas iš „To Currency“ šiandien '
+	. 'konvertuojamas į šią „From Currency“',
+'peppol.document.reference.null' => 'inv-number-null-inv-id',
+'peppol.ecosio.validator' => '„Ecosio“ validatorius, skirtas „OpenPeppol UBL '
+	. 'Invoice“ (3.'
+	. '15.'
+	. '0) (dar žinomas kaip „BIS '
+	. 'Billing 3.'
+	. '0.'
+	. '14“)',
+'peppol.electronic.invoicing' => 'Peppol elektroninės sąskaitos faktūros',
+'peppol.enable' => 'Įjunkite „Peppol“ naudodami universaliąją verslo '
+	. 'kalbą (UBL 2.'
+	. '1)',
+'peppol.include.delivery.period' => 'Įtraukti pristatymo laikotarpius',
+'peppol.invoice.note.not.found' =>
+	'Sąskaitos faktūros pastaba nerasta',
+'peppol.label.switch.off' => 'Peppol numatytieji nustatymai įjungti',
+'peppol.label.switch.on' => 'Peppol numatytieji nustatymai išjungti',
+'peppol.mandatory' => ' (Privaloma)',
+'peppol.optional' => ' (Nebūtina)',
+'peppol.stand.in.code' => 'Aprašymo kodas – nurodo, koks '
+	. 'pagrindas bus naudojamas būsimai mokesčių '
+	. 'mokėjimo datai, kai prekės bus '
+	. 'tiekiamos / apmokamos.'
+	. 'Jei mokesčių mokėjimo datą galima '
+	. 'nustatyti, aprašymo kodas sąskaitos faktūros '
+	. 'laikotarpiu abipusiai neįtraukiamas.',
+'peppol.store.cove.1.1.1' =>
+	'Registruokitės API prieigai „Store Cove“ '
+	. 'svetainėje',
+'peppol.store.cove.1.1.2' =>
+	'Sukurkite API raktą „Store Cove“ '
+	. 'svetainėje ir išsaugokite jį skiltyje '
+	. '„Nustatymai.'
+	. 'Peržiūrėti.'
+	. 'Mokėjimas internetu.'
+	. '„Store Cove“.'
+	. 'API raktas“',
+'peppol.store.cove.1.1.3' =>
+	'Atlikite pirmąjį API iškvietimą, kad '
+	. 'gautumėte JSON atsakymą.',
+'peppol.store.cove.1.1.4' =>
+	'Išsiųskite pirmąją bandomąją JSON sąskaitą '
+	. 'faktūrą, kurią gavote spustelėję žalią '
+	. 'mygtuką „World=&gt;DE“',
+'peppol.stream.toggle' => '„Peppol“ – perjungimo mygtukas „Srautas“ '
+	. 'arba „Įrašyti į failą“',
+'peppol.tax.category.not.found' =>
+	'Trūksta „Peppol“ mokesčių kategorijos kodo '
+	. '(https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/).',
+'peppol.tax.category.percent.not.found' =>
+	'Trūksta „Peppol“ mokesčių kategorijos procento '
+	. '(https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/).',
+'peppol.tax.rate.code' => 'Peppol mokesčių tarifo kodas',
+'peppol.trying.to.send.non.pdf.file' =>
+	'Šiuo metu su „Peppol“ sąskaitomis '
+	. 'faktūromis siunčiami tik PDF failai.',
+'peppol.unit' => 'Vienetų klasifikavimas naudojant Peppol',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'Šaltinis:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Trūksta dokumento aprašymo – Ecosio:'
+	. 'Dokumente NETURI būti tuščių elementų.'
+	. 'Sprendimas:'
+	. 'Sąskaitos faktūros rodinyje:'
+	. 'Parinktys.'
+	. 'Redaguoti.'
+	. 'Dokumento aprašymas',
+'peppol.validator.Invoice.cac.Note' =>
+	'Šaltinis:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Trūksta sąskaitos faktūros pastabos – '
+	. 'Ecosio:'
+	. 'Dokumente NETURI būti tuščių elementų.',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party:'
+	. 'Trūksta el.'
+	. 'pašto adreso - Ecosio:'
+	. 'Elektroninis adresas BŪTINA pateikti.'
+	. 'Sprendimas:'
+	. 'Klientas.'
+	. 'Peržiūrėti.'
+	. 'Parinktys.'
+	. 'Redaguoti „Peppol“ duomenis el.'
+	. 'sąskaitų faktūrų išrašymui.'
+	. 'EndPointID',
+'peppol.version' => 'Peppol versija',
+'peppol.xml.stream' => 'Srautas, t.'
+	. 'y.'
+	. 'rodyti ekrane naršyklėje, o ne '
+	. 'atsisiuntimų aplanke.',
+'per.item' => 'už prekę',
+'per.page.total' => 'puslapyje.'
+	. 'Iš viso',
+'performance' => 'Našumas',
+'performance.label.switch.off' => 'Greitesnis skaitymo ir rašymo režimas '
+	. '– žr.'
+	. 'config/common/params.'
+	. 'php paieškos „mode“',
+'performance.label.switch.on' => 'Lėtesnis tik rašymo režimas – '
+	. 'žr.'
+	. 'config/common/params.'
+	. 'php paieškos „mode“',
+'period' => 'Laikotarpis',
+'permission' => 'Jūs neturite reikiamo leidimo.',
+'personal.information' => 'Asmeninė informacija',
+'phone' => 'Telefonas',
 'phone.abbr' => 'P',
-'phone.number' => 'Numero di telefono',
-'php.timezone.fail' => 'Sembra che non sia configurato alcun fuso orario. Controlla date.timezone nella configurazione PHP. Altrimenti verrà selezionato <strong>%s</strong> .',
-'php.timezone.success' => 'È configurato un fuso orario valido.',
-'php.version.fail' => 'La versione PHP %s è installata ma InvoicePlane richiede la versione PHP %s o superiore',
-'php.version.success' => 'PHP sembra soddisfare i requisiti di installazione',
-'platform' => 'Piattaforma',
-'platform.PhpMyAdmin' => 'Versione di PhpMyAdmin',
-'platform.PhpSupport' => 'Supporto PHP',
-'platform.PhpVersion' => 'Versione PHP',
-'platform.csrf' => 'Protezione contro la contraffazione tra siti',
-'platform.editor' => 'Redattore',
-'platform.mySqlVersion' => 'Versione mySql',
-'platform.netbeans.UTF-8' => 'Codifica UTF-8 di Netbeans',
-'platform.server' => 'Server',
-'platform.sqlPath' => 'Percorso SQL',
-'platform.update' => 'File e componenti aggiuntivi di WampServer',
-'platform.windowsVersion' => 'Windows 11 Home Edition',
-'platform.xdebug' => 'Estensione Xdebug',
-'please.enable.js' => 'Abilita Javascript per utilizzare InvoicePlane',
-'po.group' => 'Gruppo di ordini di acquisto',
-'port' => 'Porta',
-'position' => 'Posizione',
-'possible.file.upload.attack' => 'Possibile attacco di caricamento file: ',
-'pre.password' => 'Password PDF standard per la fattura (facoltativa)',
-'prefix' => 'Prefisso',
-'prev' => 'Precedente',
-'preview' => 'Anteprima',
-'price' => 'Prezzo',
-'product' => 'Prodotto',
-'product.add' => 'Aggiungi prodotto',
-'product.additional.item.property.name' => 'Peppol Nome dell&#39;articolo aggiuntivo della proprietà, ad esempio Colore',
-'product.additional.item.property.value' => 'Valore aggiuntivo dell&#39;articolo di proprietà Peppol, ad esempio Nero',
-'product.country.of.origin.code' => 'Codice Paese di Origine Peppol utilizzando i codici Paese ISO-3166-1:Alpha2',
-'product.custom.fields' => 'Campi personalizzati del prodotto (ad es. Peppol: valore colore campo a scelta multipla AdditionalItemProperty nero)',
-'product.description' => 'Descrizione del prodotto',
-'product.edit' => 'Modifica prodotto',
-'product.error.summary' => 'Riepilogo degli errori del prodotto',
-'product.families' => 'Famiglie di prodotti',
-'product.form.tab.category' => 'Categoria',
-'product.form.tab.not.required' => 'Campi non obbligatori',
-'product.form.tab.required' => 'Campi obbligatori',
-'product.found' => 'Prodotto trovato',
-'product.history' => 'Impossibile eliminare. Questo prodotto è presente su una fattura o un preventivo.',
-'product.icc.id' => 'Codice di classificazione dell&#39;articolo Peppol ID, ad esempio 9873242',
-'product.icc.listid' => 'ID elenco codici di classificazione articoli Peppol - ad esempio SRV',
-'product.icc.listversionid' => 'ID versione elenco codici classificazione articoli Peppol (facoltativo): ad esempio, se la classificazione degli articoli è fornita da fornitori danesi, è necessario utilizzare la versione 19.0501 dell&#39;UNSPSC.',
-'product.id' => 'ID prodotto',
-'product.image' => 'Immagine',
-'product.item.classification.code.scheme.id.not.found' => 'Codice di classificazione dell&#39;articolo del prodotto, schema ID non trovato',
-'product.name' => 'Nome del prodotto',
-'product.not.found' => 'Prodotto non trovato',
-'product.peppol.unit' => 'Unità con Peppol',
-'product.price' => 'Prezzo',
-'product.price.base.quantity' => 'quantità nel prodotto',
-'product.property' => ' Proprietà del prodotto',
-'product.property.add' => ' Aggiungi proprietà prodotto',
-'product.property.edit' => 'Modifica proprietà prodotto',
-'product.property.index' => 'Indice delle proprietà del prodotto',
-'product.property.name' => 'Nome',
-'product.property.table' => 'Tabella delle proprietà del prodotto',
-'product.property.value' => 'Valore',
-'product.record.successfully.added' => 'Record del prodotto aggiunto correttamente',
-'product.sii.id' => 'Identificativo standard dell&#39;articolo Peppol associato allo schema sopra indicato, ad esempio identificatore di 14 cifre con zeri aggiunti nel database Global Trade Item Number (che appare sotto il codice a barre)',
-'product.sii.schemeid' => 'Schema di identificazione degli articoli standard Peppol - ad esempio 0160',
-'product.sku' => 'Codice articolo',
-'product.tariff' => 'Tariffa',
-'product.unit' => 'Unità di prodotto',
-'product.unit.code.not.found' => 'Al prodotto non è associato alcun codice unità. Prodotto ... Modifica ... Unità con Peppol.',
-'product.units' => 'Unità di prodotto',
-'product.view.tab.details' => 'Dettagli del prodotto',
-'product.view.tab.gallery' => 'Galleria prodotti',
-'product.view.tab.images' => 'Immagini del prodotto',
-'product.view.tab.properties' => 'Proprietà del prodotto',
-'productimage.add' => 'Aggiungi un&#39;immagine del prodotto',
-'productimage.deleted.from' => 'L&#39;immagine è stata eliminata con successo dalla seguente directory: ',
-'productimage.form' => 'Modulo immagine prodotto',
-'productimage.gallery' => 'Immagini relative a: ',
-'productimage.index' => 'Indice delle immagini del prodotto',
-'productimage.list' => 'Elenco delle immagini associate a questo prodotto',
-'productimage.no.file.uploaded' => 'Nessuna immagine caricata. Possibile duplicato.',
-'productimage.plural' => 'Immagini del prodotto',
-'productimage.possible.file.upload.attack' => 'Possibile attacco di caricamento file: ',
-'productimage.upload' => 'Carica l&#39;immagine del prodotto',
-'productimage.uploaded.to' => 'L&#39;immagine è stata caricata nella seguente directory: ',
-'productimage.view' => 'È possibile aggiungere più immagini relative al prodotto nella Vista Prodotto',
-'products' => 'Prodotti',
-'products.form' => 'Modulo del prodotto',
-'profile.deleted' => 'Il profilo è stato eliminato',
-'profile.history' => 'Impossibile eliminare il profilo. Esiste una cronologia.',
-'profile.new' => 'Crea un profilo con un nuovo indirizzo email o numero di cellulare, rendilo attivo e seleziona i dati aziendali a cui desideri collegarlo. Queste informazioni appariranno automaticamente nella documentazione, ad esempio preventivi e fatture.',
-'profile.not.deleted' => 'Il profilo non è stato eliminato',
-'profile.plural' => 'Profili',
-'profile.property.label.company' => 'Azienda',
-'profile.property.label.current' => 'Attuale',
-'profile.property.label.description' => 'Descrizione',
-'profile.property.label.email' => 'E-mail',
-'profile.property.label.mobile' => 'Mobile',
-'profile.singular' => 'Profilo',
-'project' => 'Progetto',
-'project.add' => 'Aggiungi progetto',
-'project.name' => 'Nome del progetto',
-'projects' => 'Progetti',
-'projects.form' => 'Progetti',
-'properties' => 'Proprietà',
-'provider.name' => 'Nome del fornitore',
-'provider.response' => 'Risposta del fornitore',
-'purchase.price' => 'Prezzo di acquisto',
-'Q1' => 'Primo trimestre',
-'Q2' => 'Secondo trimestre',
-'Q3' => 'Terzo trimestre',
-'Q4' => 'Q4',
-'qr.absolute.url' => 'URL assoluto utilizzato per creare il codice QR sopra',
-'qr.code' => 'Codice QR',
-'qr.code.1' => 'Codice QR 1',
-'qr.code.details' => 'Dettagli del codice QR',
-'qr.code.level.1' => 'Il livello di codifica è Base',
-'qr.code.level.2' => 'Il livello di codifica è intermedio',
-'qr.code.level.3' => 'Il livello di codifica è avanzato',
-'qr.code.settings' => 'Impostazioni del codice QR',
+'phone.number' => 'Telefono numeris',
+'php.timezone.fail' => 'Atrodo, kad nėra sukonfigūruota laiko '
+	. 'juosta.'
+	. 'Patikrinkite date.'
+	. 'timezone savo PHP konfigūracijoje.'
+	. 'Priešingu atveju bus pasirinkta <strong>%s</strong> '
+	. '.',
+'php.timezone.success' => 'Sukonfigūruota galiojanti laiko juosta.',
+'php.version.fail' => 'Įdiegta PHP %s versija, bet '
+	. '„InvoicePlane“ reikalinga PHP %s arba '
+	. 'naujesnė versija.',
+'php.version.success' => 'PHP atitinka diegimo reikalavimus.',
+'platform' => 'Platforma',
+'platform.PhpMyAdmin' => 'PhpMyAdmin versija',
+'platform.PhpSupport' => 'Php palaikymas',
+'platform.PhpVersion' => 'Php versija',
+'platform.csrf' => 'Apsauga nuo klastojimo skirtingose ​​svetainėse',
+'platform.editor' => 'Redaktorius',
+'platform.mySqlVersion' => '„mySQL“ versija',
+'platform.netbeans.UTF-8' => '„Netbeans“ UTF-8 kodavimas',
+'platform.server' => 'Serveris',
+'platform.sqlPath' => 'SQL kelias',
+'platform.update' => '„WampServer“ failai ir priedai',
+'platform.windowsVersion' => '„Windows 11 Home Edition“',
+'platform.xdebug' => 'Xdebug plėtinys',
+'please.enable.js' => 'Norėdami naudoti „InvoicePlane“, įjunkite „Javascript“.',
+'po.group' => 'Pirkimo užsakymo grupė',
+'port' => 'Uostas',
+'position' => 'Pozicija',
+'possible.file.upload.attack' => 'Galima failų įkėlimo ataka: ',
+'pre.password' => 'Standartinis sąskaitos faktūros PDF slaptažodis '
+	. '(neprivaloma)',
+'prefix' => 'Priešdėlis',
+'prev' => 'Ankstesnis',
+'preview' => 'Peržiūra',
+'price' => 'Kaina',
+'product' => 'Produktas',
+'product.add' => 'Produkto pridėjimas',
+'product.additional.item.property.name' =>
+	'Papildoma „Peppol“ savybė.'
+	. 'Elemento pavadinimas, pvz.'
+	. ', spalva.',
+'product.additional.item.property.value' =>
+	'Peppol papildomos savybės elemento vertė,'
+	. 'pvz.'
+	. ', juoda',
+'product.country.of.origin.code' =>
+	'Peppol kilmės šalies kodas, naudojant '
+	. 'ISO-3166-1:'
+	. 'Alpha2 šalių kodus',
+'product.custom.fields' => 'Produkto pasirinktiniai laukai (pvz.'
+	. ', Peppol:'
+	. 'PapildomaPrekė, Keli pasirinkimo variantai, Lauko '
+	. 'spalva, Reikšmė, Juoda)',
+'product.description' => 'Produkto aprašymas',
+'product.edit' => 'Redaguoti produktą',
+'product.error.summary' => 'Produkto klaidų santrauka',
+'product.families' => 'Produktų šeimos',
+'product.form.tab.category' => 'Kategorija',
+'product.form.tab.not.required' =>
+	'Nebūtini laukai',
+'product.form.tab.required' => 'Privalomi laukai',
+'product.found' => 'Produktas rastas',
+'product.history' => 'Negalima ištrinti.'
+	. 'Šis produktas yra sąskaitoje faktūroje '
+	. 'arba kainos pasiūlyme.',
+'product.icc.id' => 'Peppol prekės klasifikavimo kodo ID,'
+	. 'pvz.'
+	. ', 9873242',
+'product.icc.listid' => 'Peppol prekės klasifikacijos kodų sąrašo '
+	. 'ID, pvz.'
+	. ', SRV',
+'product.icc.listversionid' => '„Peppol“ prekių klasifikavimo kodų sąrašo '
+	. 'versijos ID (neprivaloma) – pvz.'
+	. ', jei prekių klasifikaciją teikia '
+	. 'Danijos tiekėjai, turėtų būti naudojama '
+	. 'UNSPSC 19.'
+	. '0501 versija.',
+'product.id' => 'Produkto ID',
+'product.image' => 'Vaizdas',
+'product.item.classification.code.scheme.id.not.found' =>
+	'Produkto elemento klasifikavimo kodo schemos '
+	. 'ID nerastas',
+'product.name' => 'Produkto pavadinimas',
+'product.not.found' => 'Produktas nerastas',
+'product.peppol.unit' => 'Vienetas su Peppol',
+'product.price' => 'Kaina',
+'product.price.base.quantity' => 'kiekis produkte',
+'product.property' => ' Produkto savybė',
+'product.property.add' => ' Produkto ypatybė Pridėti',
+'product.property.edit' => 'Produkto ypatybių redagavimas',
+'product.property.index' => 'Produkto savybių indeksas',
+'product.property.name' => 'Vardas',
+'product.property.table' => 'Produkto savybių lentelė',
+'product.property.value' => 'Vertė',
+'product.record.successfully.added' => 'Produkto įrašas sėkmingai pridėtas',
+'product.sii.id' => 'Su aukščiau pateikta schema susietas '
+	. '„Peppol“ standartinis prekės identifikavimo ID,'
+	. 'pvz.'
+	. ', 14 skaitmenų identifikatorius su '
+	. 'nuliais papildymais pasaulinėje prekybos prekės '
+	. 'numerių duomenų bazėje (rodomas po '
+	. 'brūkšniniu kodu).',
+'product.sii.schemeid' => '„Peppol“ standartinio prekės identifikavimo schemos '
+	. 'ID, pvz.'
+	. ', 0160',
+'product.sku' => 'SKU',
+'product.tariff' => 'Tarifas',
+'product.unit' => 'Produkto vienetas',
+'product.unit.code.not.found' =>
+	'Produktas neturi su juo susieto '
+	. 'vieneto kodo.'
+	. 'Produktas.'
+	. 'Redaguoti.'
+	. 'Vienetas su Peppol.',
+'product.units' => 'Produkto vienetai',
+'product.view.tab.details' => 'Produkto informacija',
+'product.view.tab.gallery' => 'Produktų galerija',
+'product.view.tab.images' => 'Produkto vaizdai',
+'product.view.tab.properties' => 'Produkto savybės',
+'productimage.add' => 'Pridėti produkto paveikslėlį',
+'productimage.deleted.from' => 'Vaizdas sėkmingai ištrintas iš šio '
+	. 'katalogo:',
+'productimage.form' => 'Produkto vaizdo forma',
+'productimage.gallery' => 'Vaizdai, susiję su: ',
+'productimage.index' => 'Produkto vaizdų rodyklė',
+'productimage.list' => 'Su šiuo produktu susijusių vaizdų '
+	. 'sąrašas',
+'productimage.no.file.uploaded' => 'Neįkeltas joks vaizdas.'
+	. 'Galbūt dublikatas.',
+'productimage.plural' => 'Produkto vaizdai',
+'productimage.possible.file.upload.attack' =>
+	'Galima failų įkėlimo ataka:',
+'productimage.upload' => 'Įkelti produkto vaizdą',
+'productimage.uploaded.to' => 'Vaizdas įkeltas į šį katalogą: ',
+'productimage.view' => 'Produkto rodinyje galima pridėti kelis '
+	. 'su produktu susijusius vaizdus.',
+'products' => 'Produktai',
+'products.form' => 'Produkto forma',
+'profile.deleted' => 'Profilis buvo ištrintas',
+'profile.history' => 'Negalima ištrinti profilio.'
+	. 'Istorija jau yra',
+'profile.new' => 'Sukurkite profilį su nauju el.'
+	. 'pašto adresu arba mobiliojo telefono '
+	. 'numeriu, suaktyvinkite jį ir pasirinkite '
+	. 'įmonės, su kuria norite jį '
+	. 'susieti, duomenis.'
+	. 'Ši informacija automatiškai bus rodoma '
+	. 'dokumentuose, pvz.'
+	. ', kainos pasiūlymuose ir sąskaitose '
+	. 'faktūrose.',
+'profile.not.deleted' => 'Profilis nebuvo ištrintas',
+'profile.plural' => 'Profiliai',
+'profile.property.label.company' => 'Įmonė',
+'profile.property.label.current' => 'Dabartinis',
+'profile.property.label.description' => 'Aprašymas',
+'profile.property.label.email' => 'El.'
+	. 'paštas',
+'profile.property.label.mobile' => 'Mobilusis',
+'profile.singular' => 'Profilis',
+'project' => 'Projektas',
+'project.add' => 'Projekto pridėjimas',
+'project.name' => 'Projekto pavadinimas',
+'projects' => 'Projektai',
+'projects.form' => 'Projektai',
+'properties' => 'Ypatybės',
+'provider.name' => 'Paslaugų teikėjo pavadinimas',
+'provider.response' => 'Paslaugų teikėjo atsakymas',
+'purchase.price' => 'Pirkimo kaina',
+'Q1' => 'Q1',
+'Q2' => '2 ketvirtis',
+'Q3' => '3 ketvirtis',
+'Q4' => '4 ketvirtis',
+'qr.absolute.url' => 'Absoliutus URL, naudojamas QR kodui '
+	. 'sukurti',
+'qr.code' => 'QR kodas',
+'qr.code.1' => 'QR kodas 1',
+'qr.code.details' => 'QR kodo informacija',
+'qr.code.level.1' => 'Kodavimo lygis yra bazinis',
+'qr.code.level.2' => 'Kodavimo lygis yra vidutinis',
+'qr.code.level.3' => 'Kodavimo lygis yra pažengęs',
+'qr.code.settings' => 'QR kodo nustatymai',
 'qr.code.settings.bic' => 'BIC',
-'qr.code.settings.effect' => 'Che effetto hanno le impostazioni di cui sopra su questo codice QR?',
-'qr.code.settings.effect.explanation' => 'Nel codice effettivo... nessuno. Vengono utilizzati tutti i valori predefiniti perché viene utilizzato il codice effettivo di cui sopra, che è molto semplice.',
-'qr.code.settings.enable' => 'Abilita codice QR',
-'qr.code.settings.enable.hint' => 'Abilitando questa opzione verrà visualizzato un codice QR per i PDF delle fatture. È necessario inserire il destinatario, l&#39;IBAN e il BIC qui sotto per un corretto funzionamento. In caso contrario, il codice QR non verrà visualizzato.',
-'qr.code.settings.iban' => 'Codice IBAN',
-'qr.code.settings.recipient' => 'Destinatario',
-'qr.code.settings.remittance.text' => 'Testo di rimessa',
-'qr.code.settings.remittance.text.tags' => 'Tag di testo di rimessa',
-'qr.code.source' => 'Fonte del codice QR',
-'qr.code.source.path' => 'risorse\viste\fattura\impostazione\azienda.logo.e.indirizzo.php',
-'qr.code.type' => 'Tipo di codice QR',
-'qr.code.type.absolute.url' => 'Url assoluto (l&#39;intero) basato',
-'qr.code.widget.used' => 'Widget utilizzato',
-'qr.ecc.level' => 'Livello Ecc del codice QR (predefinito: L)',
-'qr.height.and.width' => 'Altezza e larghezza del codice QR (predefinita: 60)',
-'qr.meaning' => 'Senso',
-'qr.meaning.benefit' => 'Scansiona e torna alla visualizzazione (senza digitare l&#39;URL) dove la fattura può essere stampata in formato PDF. Applicabile a tutti gli utenti con un account cliente attivo.',
-'qr.output.type' => 'Tipo di output del codice QR (ad esempio .svg, .png) (predefinito: png)',
-'qr.version' => 'Numero di versione del codice QR (dal più vecchio 0 al più recente 40) (predefinito: 40)',
-'qty' => 'Quantità',
-'quantity' => 'Quantità',
-'quarter' => 'Trimestre',
-'quick.actions' => 'Azioni rapide',
-'quote' => 'Citazione',
-'quote.add' => 'Aggiungi citazione',
-'quote.amount' => 'Importo del preventivo',
-'quote.amount.add' => 'Aggiungi importo preventivo',
-'quote.amounts' => 'Importi delle quotazioni',
-'quote.approve' => 'Approvare',
-'quote.approved' => 'Questo preventivo è stato approvato',
-'quote.copied.to.invoice' => 'Preventivo copiato nella NUOVA fattura',
-'quote.copied.to.quote' => 'Citazione copiata in NUOVA citazione!',
-'quote.copied.to.so' => 'Preventivo copiato nell&#39;ordine di vendita',
-'quote.custom' => 'Citazione personalizzata',
-'quote.custom.add' => 'Aggiungi preventivo personalizzato',
-'quote.date' => 'Data di quotazione',
-'quote.dates' => 'Date di quotazione',
-'quote.delete.not' => 'La fattura non è stata eliminata.',
-'quote.delivery.location.index.button.list' => 'Citazioni',
-'quote.delivery.location.none' => 'Nessun luogo di consegna è stato collegato a questo preventivo.',
-'quote.disable.flash.messages' => 'Disabilita i messaggi flash con citazione',
-'quote.email.templates.not.configured' => 'Modelli di email non configurati. Impostazioni...Preventivi...Modelli di preventivo...Modello di email predefinito',
-'quote.group' => 'Gruppo di citazioni',
-'quote.id' => 'ID citazione ',
-'quote.item' => 'Articolo di quotazione',
-'quote.item.add' => 'Aggiungi elemento preventivo',
-'quote.item.amount' => 'Importo dell&#39;articolo quotato',
-'quote.item.amount.add' => 'Aggiungi importo all&#39;articolo del preventivo',
-'quote.item.cannot.delete' => 'Impossibile eliminare l&#39;elemento del preventivo',
-'quote.label.switch.off' => 'Preventivo IVA',
-'quote.label.switch.on' => 'Preventivo NON IVA',
-'quote.not.copied.to.invoice' => 'Fattura NON creata dal preventivo! Fattura duplicata. Copia il preventivo in un altro preventivo e poi copialo nella fattura. Ogni preventivo deve avere una fattura corrispondente.',
-'quote.number' => 'Numero di citazione',
-'quote.number.status' => 'Stato del numero di preventivo',
-'quote.overview' => 'Panoramica delle citazioni',
-'quote.overview.period' => 'Periodo di panoramica delle quotazioni',
-'quote.password' => 'Cita la password PDF (facoltativa)',
-'quote.pre.password' => 'Cita la password PDF standard (facoltativa)',
-'quote.reject' => 'Rifiutare',
-'quote.rejected' => 'Questa citazione è stata rifiutata',
-'quote.sales.order.created.from.quote' => 'Ordine di vendita creato dal preventivo e hai inserito il numero dell&#39;ordine di acquisto!',
-'quote.sales.order.not.created.from.quote' => 'Ordine di vendita non creato dal preventivo! Ordine di vendita duplicato. Copia il tuo preventivo in un altro preventivo e poi copialo nell&#39;ordine di vendita. Ogni preventivo deve avere un ordine di vendita corrispondente.',
-'quote.status.email.body' => 'Il cliente %1$s ha %2$s il preventivo %3$sLink al preventivo: %4$s',
-'quote.status.email.subject' => 'Cliente %1$s %2$s preventivo %3$s',
-'quote.tax' => 'Quotazione fiscale',
-'quote.tax.rate' => 'Quota aliquota fiscale',
-'quote.tax.rate.add' => 'Quota Aliquota Fiscale Aggiungi',
-'quote.tax.rate.cannot.delete' => 'Impossibile eliminare l&#39;aliquota fiscale del preventivo',
-'quote.tax.rate.incomplete.fields' => 'Campi incompleti: è necessario includere un&#39;aliquota fiscale. Suggerimento: includere un&#39;aliquota fiscale pari a zero.',
-'quote.tax.rate.saved' => 'L&#39;aliquota fiscale è stata salvata',
-'quote.template' => 'Modello di preventivo',
-'quote.templates' => 'Modelli di preventivo',
-'quote.to.invoice' => 'Preventivo in fattura',
-'quote.to.so' => 'Preventivo per ordine di vendita',
-'quote.to.so.password' => 'Password dell&#39;ordine di vendita',
-'quote.vat.quote' => 'Preventivo IVA',
-'quote.with.purchase.order.line.number' => 'Numero di riga dell&#39;ordine di acquisto (requisito Peppol) - da abbinare al numero di riga dell&#39;ordine di vendita',
-'quote.with.purchase.order.number' => 'Numero ordine di acquisto - da abbinare al numero ordine di vendita',
-'quote.with.purchase.order.person' => 'Persona/Reparto che effettua l&#39;ordine',
-'quotes' => 'Citazioni',
-'quotes.expire.after' => 'Le quotazioni scadono dopo (giorni)',
-'quotes.requiring.approval' => 'Preventivi che richiedono approvazione',
-'read.only' => 'Solo lettura',
-'read.this.please' => 'Per favore, leggi questo!',
-'reason' => 'Motivo',
-'reason.accident' => 'Incidente',
-'reason.birthdefect' => 'Difetto congenito',
-'reason.disease' => 'Malattia',
-'reason.maternity' => 'Maternità',
-'reason.prevention' => 'Prevenzione',
-'reason.unknown' => 'Sconosciuto',
-'recent.clients' => 'Clienti recenti',
-'recent.invoices' => 'Fatture recenti',
-'recent.payments' => 'Pagamenti recenti',
-'recent.quotes' => 'Citazioni recenti',
-'record.successfully.created' => 'Record creato con successo',
-'record.successfully.deleted' => 'Record eliminato con successo',
-'record.successfully.updated' => 'Record aggiornato con successo',
-'records.no' => 'Nessun record',
-'recurring' => 'Ricorrente',
-'recurring.add' => 'Aggiunta ricorrente',
-'recurring.deleted' => 'Eliminato',
-'recurring.frequency' => 'Frequenza',
-'recurring.invoices' => 'Fatture ricorrenti',
-'recurring.no.invoices.selected' => 'Non hai selezionato alcuna fattura.',
-'recurring.original.invoice.date' => 'Data della fattura originale: ',
-'recurring.status.sent.only' => 'Solo le fatture con stato inviato possono essere rese ricorrenti',
-'recurring.tooltip.next' => 'La data successiva viene impostata tramite l&#39;indice.',
-'reject' => 'Rifiutare',
-'reject.this.quote' => 'Rifiuta questa citazione',
-'rejected' => 'Respinto',
-'reminder' => 'Promemoria inviato',
-'remove' => 'Rimuovere',
-'remove.logo' => 'Rimuovi logo',
-'report' => 'Rapporto',
-'report.options' => 'Opzioni di segnalazione',
-'report.sales.by.product' => 'Vendite per prodotto',
-'report.sales.by.product.info' => 'Questo report indica il totale delle vendite dei prodotti, comprese le relative imposte. Non include le imposte aggiuntive sulla fattura relative a questi prodotti.',
-'report.sales.by.task' => 'Vendite per attività',
-'report.sales.by.task.info' => 'Questo report indica il totale delle vendite delle attività insieme alle relative imposte sugli articoli. Non include le imposte aggiuntive sulla fattura relative a queste attività.',
-'report.test.fraud.prevention.headers.api' => 'API di test delle intestazioni di prevenzione delle frodi',
-'reports' => 'Rapporti',
-'reset' => 'Reset',
-'reset.password' => 'Reimposta password',
-'rules.peppol.en16931.001' => 'È necessario fornire il Business Process o l&#39;ID del profilo. Fare riferimento alla ricerca ProfileID in config/common/params.php.',
-'run.report' => 'Esegui rapporto',
-'sales' => 'Saldi',
-'sales.by.client' => 'Vendite per cliente',
-'sales.by.date' => 'Vendite per data',
-'sales.with.tax' => 'Vendite con imposta',
-'salesorder' => 'Ordine di vendita',
-'salesorder.agree.to.terms' => 'Si prega di accettare i Termini che ora ti saranno inviati',
-'salesorder.assembled.packaged.prepared' => 'Assemblato/confezionato/preparato',
-'salesorder.cancelled' => 'Ordine di vendita annullato',
-'salesorder.client.confirmed.terms' => 'Termini confermati dal cliente',
-'salesorder.clients.purchase.order.number' => 'Numero dell&#39;ordine di acquisto del cliente',
-'salesorder.clients.purchase.order.person' => 'Persona incaricata dell&#39;ordine di acquisto del cliente che gestisce il suo ordine',
-'salesorder.copied.to.invoice' => 'Ordine di vendita copiato nella fattura',
-'salesorder.copied.to.invoice.not' => 'Fattura NON creata dall&#39;ordine di vendita! Fattura duplicata. Copia il tuo ordine di vendita in un altro ordine di vendita e poi copialo nella fattura. Ogni ordine di vendita deve avere una fattura corrispondente.',
-'salesorder.date.created' => 'Data di creazione dell&#39;ordine di vendita',
-'salesorder.default.group' => 'Gruppo predefinito ordine di vendita',
-'salesorder.goods.services.confirmed' => 'Consegna confermata dal cliente',
-'salesorder.goods.services.delivered' => 'Beni/servizi consegnati',
-'salesorder.invoice' => 'Fattura',
-'salesorder.invoice.generate' => 'Genera fattura',
-'salesorder.invoice.generated' => 'Fattura generata',
-'salesorder.invoice.number' => 'Numero di fattura',
-'salesorder.number' => 'Numero dell&#39;ordine di vendita',
-'salesorder.number.status' => 'Stato del numero dell&#39;ordine di vendita',
-'salesorder.password' => 'Password dell&#39;ordine di vendita',
-'salesorder.payment.terms' => 'Condizioni di pagamento dell&#39;ordine di vendita, ad esempio: si prega di pagare entro 30 giorni',
-'salesorder.recent' => 'Ordini di vendita recenti',
-'salesorder.reject' => 'Rifiuto dell&#39;ordine di vendita',
-'salesorder.rejected' => 'Ordine di vendita rifiutato',
-'salesorder.sent.to.customer' => 'Accordo sui termini richiesto',
-'salesorder.to.invoice' => 'Ordine di vendita in fattura',
-'salesorder.vat.salesorder' => 'Ordine di vendita IVA',
-'salesorders' => 'Ordini di vendita',
-'save' => 'Salva',
-'save.item.as.lookup' => 'Salva elemento come ricerca',
-'search.family' => 'Cerca famiglia',
-'search.product' => 'Cerca prodotto',
-'security.disable.read.only.empty' => 'L&#39;impostazione di disattivazione della sola lettura attualmente non ha né il valore 0 né il valore 1. Impostarla su 0 per impostazione predefinita in modo che sia disponibile una funzione di sola lettura per impedire l&#39;eliminazione delle fatture.',
-'security.disable.read.only.info' => 'Attenzione: la funzionalità di sola lettura per la protezione delle fatture e la prevenzione dell&#39;eliminazione è abilitata. Disattivare &quot;disable.read.only&quot; per consentire il ripristino delle fatture inviate come bozze.',
-'security.disable.read.only.success' => 'Successo: la funzionalità di sola lettura per la protezione delle fatture e la prevenzione dell&#39;eliminazione è stata riattivata',
-'security.disable.read.only.true.draft.check.and.mark' => 'Attenzione: stai modificando una bozza con l&#39;impostazione di disattivazione della sola lettura impostata su true',
-'security.disable.read.only.true.sent.check.and.mark' => 'Attenzione: stai modificando una fattura inviata con l&#39;impostazione di disattivazione della sola lettura impostata su true',
-'security.disable.read.only.warning' => 'Attenzione: la funzionalità di sola lettura per la protezione delle fatture e la prevenzione dell&#39;eliminazione è stata disabilitata',
-'select.family' => 'Seleziona famiglia',
-'select.payment.method' => 'Seleziona il metodo di pagamento',
-'select.project' => 'Seleziona progetto',
-'select.unit' => 'Seleziona unità',
-'send' => 'Inviare',
-'send.email' => 'Invia email',
-'sent' => 'Inviato',
-'set.new.password' => 'Imposta una nuova password',
-'set.to.read.only' => 'Imposta la fattura in sola lettura su',
-'setting' => 'Collocamento',
-'setting.add' => 'Impostazione Aggiungi',
-'setting.as.a.result.of ' => ' come conseguenza di ',
-'setting.assets.cleared.at' => 'Attività liquidate a ',
-'setting.assets.were.not.cleared.at' => 'Le attività non sono state liquidate a ',
-'setting.company' => 'Dettagli pubblici dell&#39;azienda',
-'setting.company.private' => 'Dettagli privati ​​dell&#39;azienda',
-'setting.company.profile' => 'Modifica del profilo, ad esempio indirizzo cellulare ed e-mail',
-'setting.duplicate.key' => 'Impossibile completare il salvataggio. Hai un duplicato con la seguente chiave: ',
-'setting.error.on.the.public.assets.folder' => ' errore nella cartella delle risorse pubbliche.',
-'setting.form' => 'Modulo di impostazione',
-'setting.key' => 'Chiave di impostazione',
-'setting.section' => 'Sezione',
-'setting.subsection' => 'Sottosezione',
-'setting.translator.key' => 'Chiave del traduttore',
-'setting.value' => 'Impostazione del valore',
-'setting.you.have.cleared.the.cache' => 'Hai svuotato la cache.',
-'setting.you.have.not.cleared.the.cache.due.to.a' => 'Non hai cancellato la cache a ',
-'settings' => 'Impostazioni',
-'settings.successfully.saved' => 'Impostazioni salvate correttamente',
-'setup.choose.language' => 'Scegli una lingua',
-'setup.choose.language.message' => 'Selezionare una lingua per continuare l&#39;installazione.',
-'setup.complete' => 'Installazione completata',
-'setup.complete.message' => 'InvoicePlane è stato installato correttamente. Ora puoi effettuare l&#39;accesso.',
-'setup.complete.secure.setup' => 'Se desideri proteggere la tua installazione, puoi disabilitare temporaneamente il setup. Per farlo, sostituisci la riga <code>DISABLE_SETUP=false</code> con <code>DISABLE_SETUP=true</code> nel tuo file <code>ipconfig.php</code> .',
-'setup.complete.support.note' => 'Se riscontri problemi o hai bisogno di aiuto, dai un&#39;occhiata al <a href="https://wiki.invoiceplane.com">wiki ufficiale</a> o al <a href="https://community.invoiceplane.com/">forum della community</a> .',
-'setup.create.user' => 'Crea un account utente',
-'setup.create.user.message' => 'Queste sono le informazioni necessarie per accedere a InvoicePlane.',
-'setup.database.configured.message' => 'Il database è configurato correttamente.',
-'setup.database.details' => 'Dettagli del database',
-'setup.database.message' => 'Fornisci le seguenti informazioni per connetterti al tuo database.',
-'setup.db.cannot.connect' => 'Impossibile connettersi al server del database con le informazioni fornite. Verificare le credenziali e riprovare.',
-'setup.db.database.info' => 'Il nome del database creato per InvoicePlane.',
-'setup.db.hostname.info' => 'Il nome host del tuo database.',
-'setup.db.password.info' => 'Password associata al database.',
-'setup.db.port.info' => 'La porta su cui è in ascolto il tuo hostname. Il valore predefinito è 3306.',
-'setup.db.username.info' => 'Nome utente associato al database.',
-'setup.install.tables' => 'Installa tabelle',
-'setup.other.contact' => 'Altro contatto',
-'setup.prerequisites' => 'Prerequisiti',
-'setup.prerequisites.message' => 'Benvenuti su InvoicePlane! Qualsiasi problema elencato di seguito deve essere risolto prima di poter procedere con l&#39;installazione.',
-'setup.tables.errors' => 'Prima di poter continuare l&#39;installazione, è necessario risolvere gli errori riportati di seguito.',
-'setup.tables.success' => 'Le tabelle del database sono state installate correttamente.',
-'setup.upgrade.message' => 'Per poter proseguire con l&#39;installazione è necessario risolvere gli errori riportati di seguito.',
-'setup.upgrade.success' => 'Le tabelle del database sono state aggiornate con successo.',
-'setup.upgrade.tables' => 'Tabelle di aggiornamento',
-'setup.user.address.info' => 'Le informazioni relative all&#39;indirizzo immesse di seguito verranno visualizzate sulle fatture.',
-'setup.user.contact.info' => 'Queste informazioni di contatto possono essere visualizzate anche sulle fatture.',
-'setup.user.email.info' => 'Il tuo indirizzo email verrà utilizzato per accedere a InvoicePlane.',
-'setup.user.name.info' => 'Il nome della tua azienda oppure il tuo nome e cognome.',
-'setup.user.password.info' => 'Ricordati di usare una password complessa. Si consiglia una combinazione di lettere maiuscole e minuscole, numeri e simboli. Lunghezza minima: 8 caratteri.',
-'setup.user.password.verify.info' => 'Verifica la tua password immettendo nuovamente la stessa password.',
-'setup.v120.alert' => '<strong>Attenzione!</strong><br> È molto importante che tu legga <a href="https://go.invoiceplane.com/v120update" target="_blank">questo avviso di aggiornamento</a> riguardante alcune modifiche significative dell&#39;applicazione InvoicePlane.',
-'setup.v147.alert' => '<strong>Attenzione!</strong><br> Aprire il file <code>application/config/config.php</code> e modificare la riga <code>$config[&#39;sess_use_database&#39;] = false;</code> in <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Maggiori dettagli possono essere trovati <a href="https://go.invoiceplane.com/v147update" target="_blank">qui</a>',
-'showing.of' => 'Visualizzazione di %s su %s ',
-'signup' => 'Iscrizione',
-'single.choice' => 'Scelta singola',
-'site.soletrader.about.choose' => 'Ecco alcuni validi motivi per sceglierci:',
-'site.soletrader.about.competitive.rates' => 'Tariffe competitive',
-'site.soletrader.about.contemporary' => 'Competenze contemporanee',
-'site.soletrader.about.dissatisfaction' => 'In caso di insoddisfazione per il servizio, ripeteremo il lavoro gratuitamente.',
-'site.soletrader.about.finished' => 'Progetti finiti',
-'site.soletrader.about.happy' => 'Clienti soddisfatti',
-'site.soletrader.about.quality' => 'Senza rinunciare alla qualità',
-'site.soletrader.about.return' => 'Clienti di ritorno',
-'site.soletrader.about.simply' => 'Basta prendere il telefono e noi rifaremo il lavoro.',
-'site.soletrader.about.solved' => 'Problemi risolti',
-'site.soletrader.about.trained' => 'Il nostro team è altamente qualificato ed esperto.',
-'site.soletrader.about.we' => 'Applichiamo diligentemente le nostre competenze al meglio delle nostre capacità.',
-'site.soletrader.about.willing' => 'Supporto al ritorno volontario',
-'site.soletrader.contact.address' => 'Indirizzo',
-'site.soletrader.contact.email' => 'E-mail',
-'site.soletrader.contact.lookout' => 'Siamo sempre alla ricerca di nuovi clienti. Se sei interessato a collaborare con noi, contattaci in uno dei seguenti modi.',
-'site.soletrader.contact.phone' => 'Telefono',
-'site.soletrader.contact.touch' => 'Mettiti in contatto',
-'site.soletrader.pricing.basic' => 'di base',
-'site.soletrader.pricing.choosePlan' => 'Scegli il piano',
-'site.soletrader.pricing.currencyPerMonth' => 'al mese',
-'site.soletrader.pricing.explore' => 'Esplora i nostri prezzi flessibili per trovare la soluzione più adatta alla gestione della tua attività.',
-'site.soletrader.pricing.plans' => 'Altri piani',
-'site.soletrader.pricing.pricing' => ' I nostri prezzi',
-'site.soletrader.pricing.pro' => 'Professionale',
-'site.soletrader.pricing.proPrice' => 'Prezzo pro',
-'site.soletrader.pricing.special' => 'speciale',
-'site.soletrader.pricing.starter' => 'Antipasto',
-'site.soletrader.pricing.visits' => 'visite',
-'site.soletrader.team.assistant' => 'Assistente',
-'site.soletrader.team.coordinator' => 'Coordinatore',
-'site.soletrader.team.we' => 'Siamo un gruppo di persone attente, esperte e diligenti.',
-'site.soletrader.testimonial.we' => 'Queste sono le testimonianze',
-'site.soletrader.testimonial.worker1' => 'Questa è la mia testimonianza',
-'site.soletrader.testimonial.worker2' => 'Questa è la mia testimonianza',
-'site.soletrader.testimonial.worker3' => 'Questa è la mia testimonianza',
-'site.todays.date' => 'Data odierna',
-'six.months' => 'Sei mesi',
-'smtp.mail.from' => 'Indirizzo del mittente SMTP per le email di sistema',
-'smtp.password' => 'Password SMTP',
-'smtp.port' => 'Porta SMTP',
-'smtp.requires.authentication' => 'Richiede autenticazione',
-'smtp.security' => 'Sicurezza',
-'smtp.server.address' => 'Indirizzo del server SMTP',
-'smtp.ssl' => 'Certificato SSL',
+'qr.code.settings.effect' => 'Kokį poveikį aukščiau nurodyti nustatymai '
+	. 'turi šiam QR kodui?',
+'qr.code.settings.effect.explanation' =>
+	'Tikrajame kode.'
+	. 'nėra.'
+	. 'Visos numatytosios reikšmės naudojamos, nes '
+	. 'naudojamas pats paprasčiausias aukščiau pateiktas '
+	. 'kodas.',
+'qr.code.settings.enable' => 'Įjungti QR kodą',
+'qr.code.settings.enable.hint' =>
+	'Įjungus šią parinktį, sąskaitų faktūrų '
+	. 'PDF failams bus pridėtas QR '
+	. 'kodas.'
+	. 'Kad kodas veiktų tinkamai, turite '
+	. 'užpildyti gavėjo, IBAN ir BIC '
+	. 'duomenis žemiau.'
+	. 'Priešingu atveju QR kodas nebus '
+	. 'rodomas.',
+'qr.code.settings.iban' => 'IBAN',
+'qr.code.settings.recipient' => 'Gavėjas',
+'qr.code.settings.remittance.text' =>
+	'Perlaidos tekstas',
+'qr.code.settings.remittance.text.tags' =>
+	'Mokėjimo teksto žymės',
+'qr.code.source' => 'QR kodo šaltinis',
+'qr.code.source.path' => 'ištekliai\\peržiūros\\sąskaita\\nustatymai\\įmonės.'
+	. 'logotipas.'
+	. 'ir.'
+	. 'adresas.'
+	. 'php',
+'qr.code.type' => 'QR kodo tipas',
+'qr.code.type.absolute.url' =>
+	'Absoliutus (visas) URL pagrįstas',
+'qr.code.widget.used' => 'Naudotas valdiklis',
+'qr.ecc.level' => 'QR kodo ECC lygis (numatytasis:'
+	. 'L)',
+'qr.height.and.width' => 'QR kodo aukštis ir plotis '
+	. '(numatytoji reikšmė:'
+	. '60)',
+'qr.meaning' => 'Reikšmė',
+'qr.meaning.benefit' => 'Nuskaitykite ir grįžkite į peržiūrą '
+	. '(neįvesdami URL), kurioje sąskaitą faktūrą '
+	. 'galima atsispausdinti PDF formatu.'
+	. 'Taikoma visiems vartotojams, turintiems aktyvią '
+	. 'kliento paskyrą.',
+'qr.output.type' => 'QR kodo išvesties tipas (pvz.'
+	. ', .'
+	. 'svg, .'
+	. 'png) (numatytasis:'
+	. 'png)',
+'qr.version' => 'QR kodo versijos numeris (anksčiausia '
+	. '0, naujausia 40) (numatytoji reikšmė:'
+	. '40)',
+'qty' => 'Kiekis',
+'quantity' => 'Kiekis',
+'quarter' => 'Ketvirtis',
+'quick.actions' => 'Greiti veiksmai',
+'quote' => 'Citata',
+'quote.add' => 'Pridėti citatą',
+'quote.amount' => 'Pasiūlymo suma',
+'quote.amount.add' => 'Kainos suma Pridėti',
+'quote.amounts' => 'Citatos sumos',
+'quote.approve' => 'Patvirtinti',
+'quote.approved' => 'Ši citata patvirtinta',
+'quote.copied.to.invoice' => 'Kaina nukopijuota į NAUJĄ sąskaitą '
+	. 'faktūrą',
+'quote.copied.to.quote' => 'Citata nukopijuota į NAUJĄ citatą!',
+'quote.copied.to.so' => 'Užsakymo pasiūlymas nukopijuotas į pardavimo '
+	. 'užsakymą',
+'quote.custom' => 'Citata pagal užsakymą',
+'quote.custom.add' => 'Citatos pasirinkimas Pridėti',
+'quote.date' => 'Citatos data',
+'quote.dates' => 'Citatos datos',
+'quote.delete.not' => 'Sąskaita faktūra nebuvo ištrinta.',
+'quote.delivery.location.index.button.list' =>
+	'Citatos',
+'quote.delivery.location.none' => 'Su šiuo kainos pasiūlymu nesusieta '
+	. 'jokia pristatymo vieta.',
+'quote.disable.flash.messages' => 'Išjungti citatų žinutes',
+'quote.email.templates.not.configured' =>
+	'El.'
+	. 'pašto šablonai nesukonfigūruoti.'
+	. 'Nustatymai.'
+	. 'Citatos.'
+	. 'Citatų šablonai.'
+	. 'Numatytasis el.'
+	. 'pašto šablonas',
+'quote.group' => 'Citatų grupė',
+'quote.id' => 'Citatos ID ',
+'quote.item' => 'Citatos elementas',
+'quote.item.add' => 'Citatos elemento pridėjimas',
+'quote.item.amount' => 'Pasiūlymo elemento suma',
+'quote.item.amount.add' => 'Kainos elementas Suma Pridėti',
+'quote.item.cannot.delete' => 'Nepavyksta ištrinti citatos elemento',
+'quote.label.switch.off' => 'PVM pasiūlymas',
+'quote.label.switch.on' => 'Kaina be PVM',
+'quote.not.copied.to.invoice' =>
+	'Sąskaita faktūra NEsukurta iš kainos '
+	. 'pasiūlymo! Sąskaitos faktūros kopija.'
+	. 'Nukopijuokite savo kainos pasiūlymą į '
+	. 'kitą kainos pasiūlymą, o tada '
+	. 'nukopijuokite į sąskaitą faktūrą.'
+	. 'Kiekviena kainos pasiūlymo paraiška turi '
+	. 'turėti atitinkamą sąskaitą faktūrą.',
+'quote.number' => 'Citatos numeris',
+'quote.number.status' => 'Citatos numerio būsena',
+'quote.overview' => 'Citatos apžvalga',
+'quote.overview.period' => 'Kainos apžvalgos laikotarpis',
+'quote.password' => 'Citatos PDF slaptažodis (neprivaloma)',
+'quote.pre.password' => 'Citatos standartinis PDF slaptažodis (nebūtina)',
+'quote.reject' => 'Atmesti',
+'quote.rejected' => 'Ši citata buvo atmesta',
+'quote.sales.order.created.from.quote' =>
+	'Pardavimo užsakymas sukurtas iš kainos '
+	. 'pasiūlymo ir jūs įvedėte savo '
+	. 'pirkimo užsakymo numerį!',
+'quote.sales.order.not.created.from.quote' =>
+	'Pardavimo užsakymas nesukurtas iš pasiūlymo!'
+	. 'Pardavimo užsakymo kopija.'
+	. 'Nukopijuokite savo pasiūlymą į kitą '
+	. 'pasiūlymą, o tada nukopijuokite į '
+	. 'pardavimo užsakymą.'
+	. 'Kiekvienas pasiūlymas turi turėti atitinkamą '
+	. 'pardavimo užsakymą.',
+'quote.status.email.body' => 'Klientas %1$s pateikė %2$s citatą '
+	. '%3$sNuoroda į citatą:'
+	. '%4$s',
+'quote.status.email.subject' => 'Kliento %1$s %2$s kainos pasiūlymas '
+	. '%3$s',
+'quote.tax' => 'Citatos mokestis',
+'quote.tax.rate' => 'Citatos mokesčio tarifas',
+'quote.tax.rate.add' => 'Kainos mokesčio tarifas Pridėti',
+'quote.tax.rate.cannot.delete' =>
+	'Nepavyksta ištrinti kainos pasiūlymo mokesčio '
+	. 'tarifo',
+'quote.tax.rate.incomplete.fields' =>
+	'Neužpildyti laukai:'
+	. 'privalote nurodyti mokesčio tarifą.'
+	. 'Patarimas:'
+	. 'nurodykite nulinį mokesčio tarifą.',
+'quote.tax.rate.saved' => 'Pasiūlymo mokesčio tarifas išsaugotas',
+'quote.template' => 'Citatos šablonas',
+'quote.templates' => 'Citatų šablonai',
+'quote.to.invoice' => 'Kainos pasiūlymas sąskaitai faktūrai',
+'quote.to.so' => 'Pasiūlymo pateikimas pardavimo užsakymui',
+'quote.to.so.password' => 'Pardavimo užsakymo slaptažodis',
+'quote.vat.quote' => 'PVM pasiūlymas',
+'quote.with.purchase.order.line.number' =>
+	'Pirkimo užsakymo eilutės numeris (Peppol '
+	. 'reikalavimas) – turi būti susietas '
+	. 'su pardavimo užsakymo eilutės numeriu',
+'quote.with.purchase.order.number' =>
+	'Pirkimo užsakymo numeris – turi '
+	. 'būti susietas su pardavimo užsakymo '
+	. 'numeriu',
+'quote.with.purchase.order.person' =>
+	'Užsakymą pateikiantis asmuo / skyrius',
+'quotes' => 'Citatos',
+'quotes.expire.after' => 'Citatos galioja po (dienų)',
+'quotes.requiring.approval' => 'Citatos, kurioms reikalingas patvirtinimas',
+'radiolist.choice' => 'Radijo sąrašo pasirinkimas',
+'read.only' => 'Tik skaityti',
+'read.this.please' => 'Prašau, perskaitykite tai!',
+'reason' => 'Priežastis',
+'reason.accident' => 'Avarija',
+'reason.birthdefect' => 'Įgimtas defektas',
+'reason.disease' => 'Liga',
+'reason.maternity' => 'Motinystė',
+'reason.prevention' => 'Prevencija',
+'reason.unknown' => 'Nežinoma',
+'recent.clients' => 'Naujausi klientai',
+'recent.invoices' => 'Naujausios sąskaitos faktūros',
+'recent.payments' => 'Naujausi mokėjimai',
+'recent.quotes' => 'Naujausios citatos',
+'record.successfully.created' => 'Įrašas sėkmingai sukurtas',
+'record.successfully.deleted' => 'Įrašas sėkmingai ištrintas',
+'record.successfully.updated' => 'Įrašas sėkmingai atnaujintas',
+'records.no' => 'Nėra įrašų',
+'recurring' => 'Pasikartojantys',
+'recurring.add' => 'Pasikartojantis pridėjimas',
+'recurring.deleted' => 'Ištrinta',
+'recurring.frequency' => 'Dažnis',
+'recurring.invoices' => 'Pasikartojančios sąskaitos faktūros',
+'recurring.no.invoices.selected' => 'Nepasirinkote jokių sąskaitų faktūrų.',
+'recurring.original.invoice.date' => 'Originalios sąskaitos faktūros data: ',
+'recurring.status.sent.only' => 'Pasikartojančias sąskaitas faktūras galima padaryti '
+	. 'tik išsiųstas',
+'recurring.tooltip.next' => 'Kita data nustatoma pagal indeksą.',
+'region' => 'Regionas',
+'reject' => 'Atmesti',
+'reject.this.quote' => 'Atmesti šią citatą',
+'rejected' => 'Atmesta',
+'reminder' => 'Priminimas išsiųstas',
+'remove' => 'Pašalinti',
+'remove.logo' => 'Pašalinti logotipą',
+'report' => 'Pranešti',
+'report.options' => 'Ataskaitos parinktys',
+'report.sales.by.product' => 'Pardavimai pagal produktą',
+'report.sales.by.product.info' =>
+	'Šioje ataskaitoje pateikiama bendra produkto '
+	. 'pardavimo suma kartu su prekės '
+	. 'mokesčiu.'
+	. 'Į ją neįtrauktas papildomas su '
+	. 'šiais produktais susijęs sąskaitos faktūros '
+	. 'mokestis.',
+'report.sales.by.task' => 'Pardavimai pagal užduotį',
+'report.sales.by.task.info' =>
+	'Šioje ataskaitoje pateikiama užduoties pardavimo '
+	. 'suma kartu su prekės mokesčiu.'
+	. 'Į ją neįtrauktas papildomas su '
+	. 'šiomis užduotimis susijęs sąskaitos faktūros '
+	. 'mokestis.',
+'report.test.fraud.prevention.headers.api' =>
+	'Testavimo sukčiavimo prevencijos antraščių API',
+'reports' => 'Ataskaitos',
+'reset' => 'Atstatyti',
+'reset.password' => 'Atkurti slaptažodį',
+'rules.peppol.en16931.001' => 'Turi būti pateiktas verslo proceso '
+	. 'arba profilio ID.'
+	. 'Profilio ID ieškokite faile config/common/params.'
+	. 'php.',
+'run.report' => 'Vykdyti ataskaitą',
+'sales' => 'Pardavimai',
+'sales.by.client' => 'Pardavimai pagal klientą',
+'sales.by.date' => 'Pardavimai pagal datą',
+'sales.with.tax' => 'Pardavimai su mokesčiais',
+'salesorder' => 'Pardavimo užsakymas',
+'salesorder.agree.to.terms' => 'Prašome sutikti su sąlygomis, kurios '
+	. 'bus jums išsiųstos',
+'salesorder.assembled.packaged.prepared' => 'Surinkta/Supakuota/Paruošta',
+'salesorder.cancelled' => 'Pardavimo užsakymas atšauktas',
+'salesorder.client.confirmed.terms' => 'Kliento patvirtintos sąlygos',
+'salesorder.clients.purchase.order.number' =>
+	'Kliento pirkimo užsakymo numeris',
+'salesorder.clients.purchase.order.person' =>
+	'Kliento užsakymų tvarkytojas, tvarkantis jų '
+	. 'užsakymą',
+'salesorder.copied.to.invoice' => 'Pardavimo užsakymas nukopijuotas į sąskaitą '
+	. 'faktūrą',
+'salesorder.copied.to.invoice.not' =>
+	'Sąskaita faktūra NEsukurta iš pardavimo '
+	. 'užsakymo! Sąskaitos faktūros kopija.'
+	. 'Nukopijuokite savo pardavimo užsakymą į '
+	. 'kitą pardavimo užsakymą, o tada '
+	. 'nukopijuokite į sąskaitą faktūrą.'
+	. 'Kiekvienas pardavimo užsakymas turi turėti '
+	. 'atitinkamą sąskaitą faktūrą.',
+'salesorder.date.created' => 'Pardavimo užsakymo sukūrimo data',
+'salesorder.default.group' => 'Pardavimo užsakymo numatytoji grupė',
+'salesorder.goods.services.confirmed' => 'Klientas patvirtino pristatymą',
+'salesorder.goods.services.delivered' => 'Pristatytos prekės / paslaugos',
+'salesorder.invoice' => 'Sąskaita faktūra',
+'salesorder.invoice.generate' => 'Sąskaitos faktūros generavimas',
+'salesorder.invoice.generated' => 'Sąskaita faktūra sugeneruota',
+'salesorder.invoice.number' => 'Sąskaitos faktūros numeris',
+'salesorder.number' => 'Pardavimo užsakymo numeris',
+'salesorder.number.status' => 'Pardavimo užsakymo Nr.'
+	. 'Būsena',
+'salesorder.password' => 'Pardavimo užsakymo slaptažodis',
+'salesorder.payment.terms' => 'Pardavimo užsakymo mokėjimo sąlygos, pvz.'
+	. ', prašome sumokėti per 30 '
+	. 'dienų',
+'salesorder.recent' => 'Naujausi pardavimo užsakymai',
+'salesorder.reject' => 'Pardavimo užsakymo atmetimas',
+'salesorder.rejected' => 'Pardavimo užsakymas atmestas',
+'salesorder.sent.to.customer' => 'Reikalingas sąlygų susitarimas',
+'salesorder.to.invoice' => 'Pardavimo užsakymas į sąskaitą faktūrą',
+'salesorder.vat.salesorder' => 'PVM pardavimo užsakymas',
+'salesorders' => 'Pardavimo užsakymai',
+'save' => 'Išsaugoti',
+'save.item.as.lookup' => 'Įrašyti elementą kaip paieškos užklausą',
+'script' => 'Scenarijus',
+'search.family' => 'Ieškoti šeimos',
+'search.product' => 'Ieškoti produkto',
+'security.disable.read.only.empty' =>
+	'Nustatymas „Išjungti tik skaitymui“ šiuo '
+	. 'metu neturi nei 0, nei '
+	. '1 reikšmės.'
+	. 'Pagal numatytuosius nustatymus teisiškai nustatykite '
+	. 'jį į 0, kad būtų '
+	. 'galima naudoti tik skaitymui skirtą '
+	. 'funkciją, kuri neleistų ištrinti sąskaitos '
+	. 'faktūros.',
+'security.disable.read.only.info' =>
+	'Įspėjimas:'
+	. 'įjungta sąskaitų faktūrų apsaugos ir '
+	. 'ištrynimo prevencijos tik skaitymo funkcija.'
+	. 'Išjunkite „disable.'
+	. 'read.'
+	. 'only“, kad išsiųstos sąskaitos faktūros '
+	. 'būtų atkurtos į juodraščio būseną.',
+'security.disable.read.only.success' =>
+	'Sėkmingai:'
+	. 'vėl įjungtas tik skaitymo funkcionalumas '
+	. 'sąskaitų faktūrų apsaugai ir ištrynimo '
+	. 'prevencijai.',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'Įspėjimas:'
+	. 'redaguojate juodraštį, kai išjungus tik '
+	. 'skaitymą nustatytas nustatymas „true“',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'Įspėjimas:'
+	. 'redaguojate išsiųstą sąskaitą faktūrą, kai '
+	. 'nustatymas „išjungti tik skaitymą“ yra '
+	. '„true“',
+'security.disable.read.only.warning' =>
+	'Įspėjimas:'
+	. 'Sąskaitų faktūrų apsaugos ir ištrynimo '
+	. 'prevencijos tik skaitymo funkcija buvo '
+	. 'išjungta.',
+'select.family' => 'Pasirinkite šeimą',
+'select.payment.method' => 'Pasirinkite mokėjimo būdą',
+'select.project' => 'Pasirinkite projektą',
+'select.unit' => 'Pasirinkite vienetą',
+'send' => 'Siųsti',
+'send.email' => 'Siųsti el.'
+	. 'laišką',
+'sent' => 'Išsiųsta',
+'set.new.password' => 'Nustatyti naują slaptažodį',
+'set.to.read.only' => 'Nustatyti sąskaitą faktūrą kaip skirtą '
+	. 'tik skaitymui',
+'setting' => 'Nustatymas',
+'setting.add' => 'Nustatymas Pridėti',
+'setting.as.a.result.of ' =>
+	'dėl to',
+'setting.assets.cleared.at' => 'Turtas išvalytas ',
+'setting.assets.were.not.cleared.at' =>
+	'Turtas nebuvo įteisintas',
+'setting.company' => 'Įmonės vieša informacija',
+'setting.company.private' => 'Įmonės privatūs duomenys',
+'setting.company.profile' => 'Profilio keitimas, pvz.'
+	. ', mobiliojo telefono ir el.'
+	. 'pašto adreso',
+'setting.duplicate.key' => 'Nepavyko išsaugoti.'
+	. 'Turite dublikatą su šiuo raktu:',
+'setting.error.on.the.public.assets.folder' =>
+	'klaida viešųjų išteklių aplanke.',
+'setting.form' => 'Nustatymo forma',
+'setting.key' => 'Nustatymo raktas',
+'setting.section' => 'Skyrius',
+'setting.subsection' => 'Poskyris',
+'setting.translator.key' => 'Vertėjo raktas',
+'setting.value' => 'Nustatymo vertė',
+'setting.you.have.cleared.the.cache' =>
+	'Išvalėte talpyklą.',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'Neišvalėte talpyklos iki',
+'settings' => 'Nustatymai',
+'settings.successfully.saved' => 'Nustatymai sėkmingai išsaugoti',
+'setup.choose.language' => 'Pasirinkite kalbą',
+'setup.choose.language.message' => 'Pasirinkite kalbą, kad tęstumėte diegimą.',
+'setup.complete' => 'Diegimas baigtas',
+'setup.complete.message' => '„InvoicePlane“ sėkmingai įdiegta.'
+	. 'Dabar galite prisijungti.',
+'setup.complete.secure.setup' => 'Jei norite apsaugoti diegimą, galite '
+	. 'kol kas išjungti sąranką.'
+	. 'Norėdami tai padaryti, savo <code>ipconfig.'
+	. 'php</code> faile pakeiskite eilutę <code>DISABLE_SETUP=false</code> '
+	. 'į <code>DISABLE_SETUP=true</code> .',
+'setup.complete.support.note' => 'Jei kyla problemų arba reikia '
+	. 'pagalbos, apsilankykite <a href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">oficialioje wiki</a> svetainėje arba <a '
+	. 'href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">bendruomenės forume</a> .',
+'setup.create.user' => 'Sukurti vartotojo paskyrą',
+'setup.create.user.message' => 'Šios informacijos jums reikės norint '
+	. 'prisijungti prie „InvoicePlane“.',
+'setup.database.configured.message' => 'Duomenų bazė sėkmingai sukonfigūruota.',
+'setup.database.details' => 'Duomenų bazės informacija',
+'setup.database.message' => 'Pateikite toliau nurodytą informaciją, kad '
+	. 'prisijungtumėte prie savo duomenų bazės.',
+'setup.db.cannot.connect' => 'Nepavyksta prisijungti prie duomenų bazės '
+	. 'serverio naudojant pateiktą duomenų bazės '
+	. 'informaciją.'
+	. 'Patikrinkite prisijungimo duomenis ir bandykite '
+	. 'dar kartą.',
+'setup.db.database.info' => 'Jūsų sukurtos „InvoicePlane“ duomenų bazės '
+	. 'pavadinimas.',
+'setup.db.hostname.info' => 'Jūsų duomenų bazės pagrindinio kompiuterio '
+	. 'pavadinimas.',
+'setup.db.password.info' => 'Su duomenų baze susietas slaptažodis.',
+'setup.db.port.info' => 'Prievadas, kurio klausosi jūsų pagrindinio '
+	. 'kompiuterio pavadinimas.'
+	. 'Numatytasis yra 3306.',
+'setup.db.username.info' => 'Su duomenų baze susietas vartotojo '
+	. 'vardas.',
+'setup.install.tables' => 'Įdiegti lenteles',
+'setup.other.contact' => 'Kitas kontaktas',
+'setup.prerequisites' => 'Būtinos sąlygos',
+'setup.prerequisites.message' => 'Sveiki atvykę į „InvoicePlane“! Prieš '
+	. 'tęsiant diegimą, reikia išspręsti visas '
+	. 'toliau išvardytas problemas.',
+'setup.tables.errors' => 'Prieš tęsiant diegimą, reikia ištaisyti '
+	. 'toliau nurodytas klaidas.',
+'setup.tables.success' => 'Duomenų bazės lentelės buvo sėkmingai '
+	. 'įdiegtos.',
+'setup.upgrade.message' => 'Prieš tęsiant diegimą, reikia ištaisyti '
+	. 'toliau nurodytas klaidas.',
+'setup.upgrade.success' => 'Duomenų bazės lentelės buvo sėkmingai '
+	. 'atnaujintos.',
+'setup.upgrade.tables' => 'Atnaujinti lenteles',
+'setup.user.address.info' => 'Žemiau įvesta adreso informacija bus '
+	. 'rodoma jūsų sąskaitose faktūrose.',
+'setup.user.contact.info' => 'Ši kontaktinė informacija taip pat '
+	. 'gali būti rodoma jūsų sąskaitose '
+	. 'faktūrose.',
+'setup.user.email.info' => 'Jūsų el.'
+	. 'pašto adresas bus naudojamas prisijungiant '
+	. 'prie „InvoicePlane“.',
+'setup.user.name.info' => 'Arba jūsų įmonės pavadinimas, arba '
+	. 'jūsų vardas ir pavardė.',
+'setup.user.password.info' => 'Nepamirškite naudoti stipraus slaptažodžio.'
+	. 'Rekomenduojama naudoti didžiųjų ir mažųjų '
+	. 'raidžių, skaičių ir simbolių derinį.'
+	. 'Minimalus ilgis:'
+	. '8 simboliai',
+'setup.user.password.verify.info' =>
+	'Patvirtinkite slaptažodį dar kartą įvesdami '
+	. 'tą patį slaptažodį.',
+'setup.v120.alert' => '<strong>Dėmesio!</strong><br> Labai svarbu perskaityti <a '
+	. 'href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">šį atnaujinimo pranešimą</a> apie '
+	. 'kai kuriuos svarbius „InvoicePlane“ programos '
+	. 'pakeitimus.',
+'setup.v147.alert' => '<strong>Dėmesio!</strong><br> Atidarykite failą <code>application/config/config.'
+	. 'php</code> ir pakeiskite eilutę <code>$config[\'sess_use_database\'] '
+	. '= false;</code> į <code>$config[\'sess_use_database\'] = '
+	. 'true;</code> .'
+	. '<br> Daugiau informacijos rasite <a '
+	. 'href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">čia</a>',
+'showing.of' => 'Rodoma %s iš %s ',
+'signup' => 'Registruotis',
+'single.choice' => 'Vienas pasirinkimas',
+'site.soletrader.about.choose' => 'Štai kelios patrauklios priežastys, kodėl '
+	. 'verta rinktis mus:',
+'site.soletrader.about.competitive.rates' =>
+	'Konkurencingos kainos',
+'site.soletrader.about.contemporary' => 'Šiuolaikiniai įgūdžiai',
+'site.soletrader.about.dissatisfaction' => 'Jei liksite nepatenkinti paslauga, darbą '
+	. 'atliksime nemokamai.',
+'site.soletrader.about.finished' => 'Užbaigti projektai',
+'site.soletrader.about.happy' => 'Patenkinti klientai',
+'site.soletrader.about.quality' => 'Neaukojant kokybės',
+'site.soletrader.about.return' => 'Grįžtantys klientai',
+'site.soletrader.about.simply' => 'Tiesiog pakelkite ragelį ir mes '
+	. 'perdarysime darbą.',
+'site.soletrader.about.solved' => 'Išspręstos problemos',
+'site.soletrader.about.trained' => 'Mūsų komanda yra gerai apmokyta '
+	. 'ir patyrusi.',
+'site.soletrader.about.we' => 'Mes kruopščiai pritaikome savo įgūdžius '
+	. 'kiek įmanoma geriau.',
+'site.soletrader.about.willing' => 'Norinčios grįžti paramos',
+'site.soletrader.contact.address' => 'Adresas',
+'site.soletrader.contact.email' => 'El.'
+	. 'paštas',
+'site.soletrader.contact.lookout' => 'Mes visada ieškome naujų klientų.'
+	. 'Jei jus domina bendradarbiavimas su '
+	. 'mumis, susisiekite su mumis vienu '
+	. 'iš šių būdų.',
+'site.soletrader.contact.phone' => 'Telefonas',
+'site.soletrader.contact.touch' => 'Susisiekite',
+'site.soletrader.pricing.basic' => 'pagrindinis',
+'site.soletrader.pricing.choosePlan' => 'Pasirinkite planą',
+'site.soletrader.pricing.currencyPerMonth' => 'per mėnesį',
+'site.soletrader.pricing.explore' => 'Išbandykite mūsų lanksčias kainodaros sistemas,'
+	. 'kad rastumėte puikiai jūsų verslui '
+	. 'tinkantį variantą.',
+'site.soletrader.pricing.plans' => 'Daugiau planų',
+'site.soletrader.pricing.pricing' => ' Mūsų kainodara',
+'site.soletrader.pricing.pro' => 'Profesionalus',
+'site.soletrader.pricing.proPrice' => 'Pro kaina',
+'site.soletrader.pricing.special' => 'ypatingas',
+'site.soletrader.pricing.starter' => 'Starteris',
+'site.soletrader.pricing.visits' => 'apsilankymai',
+'site.soletrader.team.assistant' => 'Asistentas',
+'site.soletrader.team.coordinator' => 'Koordinatorius',
+'site.soletrader.team.we' => 'Esame rūpestingų, patyrusių ir darbščių '
+	. 'žmonių grupė.',
+'site.soletrader.testimonial.we' => 'Tai yra atsiliepimai',
+'site.soletrader.testimonial.worker1' => 'Tai mano atsiliepimas',
+'site.soletrader.testimonial.worker2' => 'Tai mano atsiliepimas',
+'site.soletrader.testimonial.worker3' => 'Tai mano atsiliepimas',
+'site.todays.date' => 'Šiandienos data',
+'six.months' => 'Šeši mėnesiai',
+'smtp.mail.from' => 'SMTP siuntėjo adresas sistemos el.'
+	. 'laiškams',
+'smtp.password' => 'SMTP slaptažodis',
+'smtp.port' => 'SMTP prievadas',
+'smtp.requires.authentication' => 'Reikalingas autentifikavimas',
+'smtp.security' => 'Saugumas',
+'smtp.server.address' => 'SMTP serverio adresas',
+'smtp.ssl' => 'SSL',
 'smtp.tls' => 'TLS',
-'smtp.username' => 'Nome utente SMTP',
-'smtp.verify.certs' => 'Verificare i certificati SMTP',
-'sql.file' => 'File SQL',
-'start' => 'Inizio',
-'start.date' => 'Data di inizio',
-'state' => 'Stato',
-'status' => 'Stato',
-'stop' => 'Fermare',
-'stop.logging.in' => 'Interrompere l&#39;accesso',
-'stop.signing.up' => 'Smetti di registrarti',
+'smtp.username' => 'SMTP vartotojo vardas',
+'smtp.verify.certs' => 'Patikrinkite SMTP sertifikatus',
+'sql.file' => 'SQL failas',
+'start' => 'Pradėti',
+'start.date' => 'Pradžios data',
+'state' => 'Valstija',
+'status' => 'Būsena',
+'stop' => 'Stop',
+'stop.logging.in' => 'Nustoti prisijungti',
+'stop.signing.up' => 'Nustoti registruotis',
 'storecove' => 'Storecove',
-'storecove.advisory.to.developer.field.easily.missed' => 'Campo facilmente trascurato dal cliente',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. Creare un mittente - Paese della persona giuridica',
-'storecove.invoice.json.encoded' => 'Fattura codificata JSON di StoreCove',
-'storecove.legal' => 'Legal',
-'storecove.legal.entity.id.for.json' => '1.1.4. Crea un mittente - Memorizza l&#39;ID dell&#39;entità legale di Cove inserito in invoice.json',
-'storecove.legal.entity.identifier.id.not.found' => 'Parametri di configurazione Contabilità Fornitore Parte Persona giuridica Azienda Id non trovato.',
-'storecove.no.contract.exists' => 'Non esiste alcun contratto',
-'storecove.not.available' => 'Non disponibile',
-'storecove.purchase.order.item.id.null' => 'po-item-id-null',
-'storecove.receiver.identifier' => 'Identificatore del destinatario - vedere StoreCove 6.3',
-'storecove.region.country.legal.tax' => 'Regione ---------- Paese --------- Legale --------- Tasse',
-'storecove.salesorder.number.not.exist' => 'Il numero dell&#39;ordine di vendita non esiste',
-'storecove.sender.identifier' => '6.2 Identificativo del mittente',
-'storecove.sender.identifier.basis' => '6.2 Base identificativa del mittente - Legale o fiscale',
-'storecove.supplier.contact.email.not.found' => 'Email di contatto del fornitore non trovata. Fare riferimento all&#39;array dei parametri di configurazione.',
-'storecove.supplier.contact.firstname.not.found' => 'Nome del contatto del fornitore non trovato. Fare riferimento all&#39;array dei parametri di configurazione.',
-'storecove.supplier.contact.lastname.not.found' => 'Cognome del contatto del fornitore non trovato. Fare riferimento all&#39;array dei parametri di configurazione.',
-'storecove.supplier.contact.name.not.found' => 'Nome del contatto del fornitore non trovato. Fare riferimento all&#39;array dei parametri di configurazione.',
-'storecove.supplier.contact.telephone.not.found' => 'Numero di telefono del fornitore non trovato. Fare riferimento alla matrice dei parametri di configurazione.',
-'storecove.tax' => 'Tassare',
-'storecove.tax.rate.code' => 'Codice aliquota fiscale Storecove',
-'storecove.tax.scheme.identifier.id.not.found' => 'Parametri di configurazione Contabilità Fornitore Parte Schema fiscale ID azienda non trovato.',
-'stream' => 'Streaming PDF nel browser / modale',
-'street.address' => 'Indirizzo',
-'street.address.2' => 'Indirizzo (continua)',
-'subject' => 'Soggetto',
-'submenu' => 'Sottomenu',
-'submit' => 'Invia',
-'subtotal' => 'Subtotale',
-'success' => 'Successo',
-'successful' => 'Riuscito',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'Klientas lengvai gali nepastebėti lauko',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Sukurkite siuntėją – juridinio asmens '
+	. 'šalis',
+'storecove.invoice.json.encoded' => '„StoreCove“ JSON užkoduota sąskaita faktūra',
+'storecove.legal' => 'Teisinis',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Sukurkite siuntėją – „Store Cove“ '
+	. 'juridinio asmens ID įterptas į '
+	. 'invoice.'
+	. 'json failą',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'Konfigūracijos parametrai.'
+	. 'Apskaitos tiekėjo šalies juridinio asmens '
+	. 'įmonės ID nerastas.',
+'storecove.no.contract.exists' => 'Nėra jokios sutarties',
+'storecove.not.available' => 'Nėra',
+'storecove.purchase.order.item.id.null' =>
+	'po-item-id-null',
+'storecove.receiver.identifier' => 'Gavėjo identifikatorius – žr.'
+	. '„StoreCove“ 6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'Regionas ----------- Šalis ---------- Teisinė '
+	. 'informacija ---------- Mokesčiai',
+'storecove.salesorder.number.not.exist' =>
+	'Pardavimo užsakymo numeris neegzistuoja',
+'storecove.sender.identifier' => '6.'
+	. '2 Siuntėjo identifikatorius',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 Siuntėjo identifikatoriaus pagrindas – '
+	. 'teisinis arba mokesčių',
+'storecove.supplier.contact.email.not.found' =>
+	'Tiekėjo kontaktinis el.'
+	. 'pašto adresas nerastas.'
+	. 'Žr.'
+	. 'konfigūracijos parametrų masyvą.',
+'storecove.supplier.contact.firstname.not.found' =>
+	'Tiekėjo kontaktinio asmens vardas nerastas.'
+	. 'Žr.'
+	. 'konfigūracijos parametrų masyvą.',
+'storecove.supplier.contact.lastname.not.found' =>
+	'Tiekėjo kontaktinio asmens pavardė nerasta.'
+	. 'Žr.'
+	. 'konfigūracijos parametrų masyvą.',
+'storecove.supplier.contact.name.not.found' =>
+	'Tiekėjo kontaktinio asmens vardas nerastas.'
+	. 'Žr.'
+	. 'konfigūracijos parametrų masyvą.',
+'storecove.supplier.contact.telephone.not.found' =>
+	'Tiekėjo kontaktinis telefono numeris nerastas.'
+	. 'Žr.'
+	. 'konfigūracijos parametrų masyvą.',
+'storecove.tax' => 'Mokestis',
+'storecove.tax.rate.code' => 'Storecove mokesčių tarifo kodas',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'Apskaitos tiekėjo šalies mokesčių schemos '
+	. 'įmonės ID konfigūracijos parametrai nerastas.',
+'stream' => 'Srautiniu būdu transliuoti PDF failus '
+	. 'naršyklėje / modaliniame formate',
+'street.address' => 'Gatvės adresas',
+'street.address.2' => 'Gatvės adresas (tęs.'
+	. ')',
+'subject' => 'Tema',
+'submenu' => 'Submeniu',
+'submit' => 'Pateikti',
+'subtotal' => 'Tarpinė suma',
+'success' => 'Sėkmė',
+'successful' => 'Sėkmingas',
 'sumex' => 'Sumex',
-'sumex.add' => 'Aggiungi Sumex',
-'sumex.canton' => 'Cantone',
-'sumex.diagnosis' => 'Diagnosi',
-'sumex.edit' => 'Modifica Sumex',
-'sumex.help' => 'Questa opzione aggiunge una voce di menu nelle fatture per generare una fattura semi-compatibile con TARMED/SUMEX1. TARMED/SUMEX1 è uno standard svizzero per l&#39;assistenza sanitaria. <a href="http://sumex1.net/">Ulteriori informazioni</a>',
-'sumex.information' => 'Informazioni su Sumex',
-'sumex.insurednumber' => 'Numero assicurato',
-'sumex.observations' => 'Osservazioni',
+'sumex.add' => 'Sumex Pridėti',
+'sumex.canton' => 'Kantonas',
+'sumex.diagnosis' => 'Diagnozė',
+'sumex.edit' => '„Sumex“ redagavimas',
+'sumex.help' => 'Ši parinktis sąskaitoms faktūroms prideda '
+	. 'meniu įrašą, skirtą sugeneruoti su '
+	. 'TARMED / SUMEX1 pusiau suderinamą '
+	. 'sąskaitą faktūrą.'
+	. 'TARMED / SUMEX1 yra Šveicarijos '
+	. 'standartas sveikatos priežiūros įstaigoms.'
+	. '<a href="http:'
+	. '//sumex1.'
+	. 'net/">Daugiau informacijos</a>',
+'sumex.information' => '„Sumex“ informacija',
+'sumex.insurednumber' => 'Apdraustojo numeris',
+'sumex.observations' => 'Stebėjimai',
 'sumex.place' => 'Sumex Place',
-'sumex.place.association' => 'Associazione',
-'sumex.place.company' => 'Azienda',
-'sumex.place.hospital' => 'Ospedale',
-'sumex.place.lab' => 'Laboratorio',
-'sumex.place.practice' => 'Pratica',
+'sumex.place.association' => 'Asociacija',
+'sumex.place.company' => 'Įmonė',
+'sumex.place.hospital' => 'Ligoninė',
+'sumex.place.lab' => 'Laboratorija',
+'sumex.place.practice' => 'Praktika',
 'sumex.rcc' => 'RCC',
-'sumex.role' => 'Ruolo di Sumex',
-'sumex.role.chiropractor' => 'Chiropratico',
-'sumex.role.dentaltechnician' => 'Odontotecnico',
-'sumex.role.dentist' => 'Dentista',
-'sumex.role.druggist' => 'Farmacista',
-'sumex.role.ergotherapist' => 'Ergoterapista',
-'sumex.role.hospital' => 'Ospedale',
-'sumex.role.labtechnician' => 'Tecnico di laboratorio',
-'sumex.role.logotherapist' => 'Logoterapeuta',
-'sumex.role.midwife' => 'Ostetrica',
-'sumex.role.naturopathicdoctor' => 'Medico naturopata',
-'sumex.role.naturopathictherapist' => 'Terapeuta naturopata',
-'sumex.role.nursingstaff' => 'personale infermieristico',
-'sumex.role.nutritionist' => 'Nutrizionista',
-'sumex.role.other' => 'Altro',
-'sumex.role.othertechnician' => 'Altro tecnico',
-'sumex.role.pharmacist' => 'Farmacista',
-'sumex.role.physician' => 'Medico',
-'sumex.role.physiotherapist' => 'Fisioterapista',
-'sumex.role.psychologist' => 'Psicologo',
-'sumex.role.transport' => 'Trasporto',
-'sumex.role.wholesaler' => 'Grossista',
-'sumex.settings' => 'Impostazioni Sumex',
-'sumex.sliptype' => 'Tipo di slittamento Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Scontrino arancione)',
-'sumex.sliptype-esrRed' => 'Red Slip',
-'sumex.sliptype.help' => 'Questa opzione cambierà il tipo di scontrino in Sumex. Si prega di notare che se si seleziona lo scontrino arancione, è necessario un numero di abbonato che inizi con &quot;01-&quot;.',
+'sumex.role' => 'Sumex vaidmuo',
+'sumex.role.chiropractor' => 'Chiropraktikas',
+'sumex.role.dentaltechnician' => 'Dantų technikas',
+'sumex.role.dentist' => 'Stomatologas',
+'sumex.role.druggist' => 'Vaistininkas',
+'sumex.role.ergotherapist' => 'Ergoterapeutas',
+'sumex.role.hospital' => 'Ligoninė',
+'sumex.role.labtechnician' => 'Laboratorijos technikas',
+'sumex.role.logotherapist' => 'Logoterapeutas',
+'sumex.role.midwife' => 'Akušerė',
+'sumex.role.naturopathicdoctor' => 'Natūropatinis gydytojas',
+'sumex.role.naturopathictherapist' => 'Natūropatinis terapeutas',
+'sumex.role.nursingstaff' => 'Slaugos personalas',
+'sumex.role.nutritionist' => 'Mitybos specialistas',
+'sumex.role.other' => 'Kita',
+'sumex.role.othertechnician' => 'Kitas technikas',
+'sumex.role.pharmacist' => 'Vaistininkas',
+'sumex.role.physician' => 'Gydytojas',
+'sumex.role.physiotherapist' => 'Kineziterapeutas',
+'sumex.role.psychologist' => 'psichologas',
+'sumex.role.transport' => 'Transportas',
+'sumex.role.wholesaler' => 'Didmenininkas',
+'sumex.settings' => '„Sumex“ nustatymai',
+'sumex.sliptype' => '„Sumex“ slydimo tipas',
+'sumex.sliptype-esr9' => 'ESR 9 (oranžinis slydimas)',
+'sumex.sliptype-esrRed' => 'Raudonasis slydimas',
+'sumex.sliptype.help' => 'Ši parinktis pakeis kvito tipą '
+	. '„Sumex“ sistemoje.'
+	. 'Atkreipkite dėmesį, kad jei pasirinksite '
+	. 'oranžinį kvitą, jums reikės abonento '
+	. 'numerio, prasidedančio „01-“.',
 'sumex.ssn' => 'AVS',
-'sumex.veka' => 'SETTIMANA',
-'sunday' => 'Domenica',
-'system.settings' => 'Impostazioni di sistema',
-'table' => 'Tavolo',
-'task' => 'Compito',
-'task.add' => 'Aggiungi attività',
-'task.description' => 'Descrizione del compito',
-'task.finish.date' => 'Data di fine',
-'task.name' => 'Nome dell&#39;attività',
-'task.price' => 'Prezzo del compito',
-'tasks' => 'Compiti',
-'tasks.form' => 'Modulo di attività',
-'tax' => 'Tassare',
-'tax.code' => 'Codice delle imposte',
-'tax.code.short' => 'Codice fiscale',
-'tax.information' => 'Informazioni sulle tasse',
-'tax.point' => 'Data Punto di Imposta',
-'tax.rate' => 'Aliquota fiscale',
-'tax.rate.add' => 'Aggiungi aliquota fiscale',
-'tax.rate.code' => 'Codice aliquota fiscale della fattura',
-'tax.rate.decimal.places' => 'Aliquota fiscale decimale',
-'tax.rate.edit' => 'Modifica aliquota fiscale',
-'tax.rate.form' => 'Modulo aliquota fiscale',
-'tax.rate.history.exists' => 'Impossibile eliminare. La cronologia esiste già.',
-'tax.rate.name' => 'Nome dell&#39;aliquota fiscale, ad esempio Standard',
-'tax.rate.percent' => 'Percentuale dell&#39;aliquota fiscale',
-'tax.rate.placement' => 'Posizionamento dell&#39;aliquota fiscale',
-'tax.rates' => 'Aliquote fiscali',
-'taxes' => 'Tasse',
-'telegram' => 'Telegramma',
-'telegram.bot.api.chat.id' => 'Telegram: Non-bot: Account personale: Hello World: Messaggio di prova: Destinatario del messaggio: <b>ID chat</b>',
-'telegram.bot.api.chat.id.not.set' => 'Non è stato impostato l&#39;ID chat del titolare dell&#39;account Telegram personale non-bot che ha inviato al bot il suo primo messaggio e che deve ricevere il messaggio di prova &#39;Hello&#39; &#39;World&#39;.',
-'telegram.bot.api.current.status' => '<b>Utilizzo attuale:</b> non è necessario un webhook perché i client non hanno ID chat e non inviano messaggi al bot.',
-'telegram.bot.api.enable' => 'Abilita Telegram',
-'telegram.bot.api.enabled.not' => 'Telegramma non abilitato',
-'telegram.bot.api.future.use' => '<b>Utilizzo futuro:</b> i clienti con ID chat ricevono una fattura Telegram e confermano la ricezione inviando una conferma al webhook',
-'telegram.bot.api.general.purpose' => '<b>Il bot registrato, identificato tramite token, invia notifiche di pagamento al cliente al seguente ID chat registrato (solitamente l&#39;account Telegram personale non-bot dell&#39;amministratore).</b>',
-'telegram.bot.api.get.updates.failed' => 'Gli aggiornamenti di Telegram non sono riusciti.',
-'telegram.bot.api.get.updates.success' => 'Gli aggiornamenti di Telegram sono stati eseguiti correttamente utilizzando il metodo API getUpdates.',
-'telegram.bot.api.hello.world.test.message' => 'Ciao a tutti da Telegram Bot Api. Grazie agli sviluppatori di Yiisoft!',
-'telegram.bot.api.hello.world.test.message.sent' => 'Messaggio di &quot;Hello World&quot; inviato.',
-'telegram.bot.api.hello.world.test.message.sent.not' => 'Messaggio Hello World NON inviato.',
-'telegram.bot.api.hello.world.test.message.use' => 'Invia un messaggio di prova di base &quot;Hello World from Telegram Bot Api&quot; a un ID chat esterno',
-'telegram.bot.api.payment.notification.success' => 'Notifica di pagamento Telegram avvenuta con successo',
-'telegram.bot.api.payment.notifications' => 'Notifiche di pagamento Telegram',
-'telegram.bot.api.token' => 'Token API del bot di Telegram',
-'telegram.bot.api.token.not.set' => 'Token API del bot Telegram non impostato',
-'telegram.bot.api.webhook.delete' => 'Elimina il webhook',
-'telegram.bot.api.webhook.deleted' => 'Il webhook è stato appena disabilitato in modo che sia possibile utilizzare il metodo di ottenimento manuale dell&#39;API getUpdates.',
-'telegram.bot.api.webhook.secret.token' => 'Token segreto del webhook per ulteriore sicurezza (utilizzato come parametro nella funzione setWebhook e non come queryParameter)',
-'telegram.bot.api.webhook.setup' => 'Il webhook è configurato.',
-'telegram.bot.api.webhook.setup.already' => 'Il webhook è già stato configurato.',
-'telegram.bot.api.webhook.url.this.site' => 'URL del webhook Telegram di questo sito utilizzato nella funzione setWebhook di TelegramHelper.',
-'template' => 'Modello di fattura',
-'templates' => 'Modelli di fattura',
-'term' => 'Termini e Condizioni',
-'term.1' => 'Non ho letto i termini e le condizioni.',
-'term.2' => 'Ho letto e accetto i termini e le condizioni.',
-'term.add.additional.terms.at.setting.repository' => 'Aggiungere termini aggiuntivi nella funzione getPaymentTerms del repository delle impostazioni.',
-'terms' => 'Termini',
-'test.data.install' => 'Installa i dati di prova',
-'test.data.use' => 'Utilizzare i dati di prova',
-'test.remove' => 'Rimuovi dati di prova',
-'test.remove.tooltip' => 'Visualizza..Impostazioni..Generale..Installa dati di prova..No e Visualizza..Impostazioni..Generale..Usa dati di prova..No',
-'test.reset' => 'Reimposta i dati del test',
-'test.reset.setting' => 'Impostazioni Reinstalla',
-'test.reset.setting.tooltip' => 'Ciò rimuoverà tutte le impostazioni correnti e reinstallerà le impostazioni predefinite in InvoiceController/install.default.settings.on.first.run',
-'test.reset.tooltip' => 'Visualizza..Impostazioni..Generale..Installa dati di prova..Sì e Visualizza..Impostazioni..Generale..Usa dati di prova..Sì',
-'text' => 'Testo',
+'sumex.veka' => 'SAVAITĖ',
+'sunday' => 'sekmadienį',
+'system.settings' => 'Sistemos nustatymai',
+'table' => 'Lentelė',
+'task' => 'Užduotis',
+'task.add' => 'Užduoties pridėjimas',
+'task.description' => 'Užduoties aprašymas',
+'task.finish.date' => 'Pabaigos data',
+'task.name' => 'Užduoties pavadinimas',
+'task.price' => 'Užduoties kaina',
+'tasks' => 'Užduotys',
+'tasks.form' => 'Užduoties forma',
+'tax' => 'Mokestis',
+'tax.code' => 'Mokesčių kodeksas',
+'tax.code.short' => 'Mokesčių kodas',
+'tax.information' => 'Informacija apie mokesčius',
+'tax.point' => 'Mokesčio taško data',
+'tax.rate' => 'Mokesčių tarifas',
+'tax.rate.active.not' => 'Įspėjimas:'
+	. 'Nėra aktyvių mokesčių tarifų.'
+	. 'Suaktyvinkite bent vieną mokesčių tarifą.'
+	. 'Nustatymai.'
+	. 'Mokesčių tarifas',
+'tax.rate.add' => 'Mokesčių tarifas Pridėti',
+'tax.rate.code' => 'Sąskaitos faktūros mokesčio tarifo kodas',
+'tax.rate.decimal.places' => 'Mokesčio tarifas po kablelio',
+'tax.rate.edit' => 'Redaguoti mokesčio tarifą',
+'tax.rate.form' => 'Mokesčių tarifo forma',
+'tax.rate.history.exists' => 'Negalima ištrinti.'
+	. 'Istorija jau uždaryta.',
+'tax.rate.name' => 'Mokesčio tarifo pavadinimas, pvz.'
+	. ', standartinis',
+'tax.rate.percent' => 'Mokesčio tarifo procentas',
+'tax.rate.placement' => 'Mokesčių tarifų išdėstymas',
+'tax.rates' => 'Mokesčių tarifai',
+'taxes' => 'Mokesčiai',
+'telegram' => 'Telegrama',
+'telegram.bot.api.chat.id' =>
+	'Telegram:'
+	. 'Ne robotas:'
+	. 'Asmeninė paskyra:'
+	. 'Sveikas, pasauli:'
+	. 'Bandomoji žinutė:'
+	. 'Žinutės gavėjas:'
+	. '<b>Pokalbių ID</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'Nebuvo nustatytas ne roboto asmeninės '
+	. 'telegramos paskyros savininko, kuris išsiuntė '
+	. 'robotui pirmąją žinutę ir gaus '
+	. 'bandomąjį pranešimą „Sveikas“, „Pasauli“, pokalbių '
+	. 'ID.',
+'telegram.bot.api.current.status' =>
+	'<b>Dabartinis naudojimas:'
+	. '</b> „webhook“ nereikia, nes klientai '
+	. 'neturi pokalbių ID ir nesiunčia '
+	. 'pranešimų robotui.',
+'telegram.bot.api.enable' => 'Įjungti „Telegram“',
+'telegram.bot.api.enabled.not' =>
+	'„Telegram“ neįjungta',
+'telegram.bot.api.future.use' =>
+	'<b>Naudojimas ateityje:'
+	. '</b> klientams, turintiems pokalbių ID,'
+	. 'siunčiama telegramos sąskaita faktūra, o '
+	. 'gavimą jie patvirtina atsiųsdami patvirtinimą '
+	. 'į internetinę kablį.',
+'telegram.bot.api.general.purpose' =>
+	'<b>Registruotas robotas, identifikuojamas pagal prieigos '
+	. 'raktą, siunčia kliento mokėjimo pranešimus '
+	. 'toliau nurodytu registruoto pokalbių ID '
+	. '(paprastai administratoriaus asmenine ne roboto '
+	. 'telegramos paskyra).'
+	. '</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'Jūsų „Telegram“ atnaujinimai nepavyko.',
+'telegram.bot.api.get.updates.success' =>
+	'Jūsų „Telegram“ atnaujinimai sėkmingai išsiųsti '
+	. 'naudojant API metodą „getUpdates“.',
+'telegram.bot.api.hello.world.test.message' =>
+	'Sveiki, pasauli, nuo „Telegram Bot '
+	. 'Api“.'
+	. 'Ačiū „yiisoft“ kūrėjams!',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'Žinutė „Sveikas pasauli“ išsiųsta.',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'Žinutė „Sveikas, pasauli“ NĖRA išsiųsta.',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'Išsiųskite paprastą bandomąją žinutę „Sveikas '
+	. 'pasauli iš Telegram Bot Api“ '
+	. 'į išorinį pokalbių ID',
+'telegram.bot.api.payment.notification.success' =>
+	'„Telegram“ mokėjimo pranešimas sėkmingas',
+'telegram.bot.api.payment.notifications' =>
+	'„Telegram“ mokėjimo pranešimai',
+'telegram.bot.api.token' => '„Telegram Bot“ API žetonas',
+'telegram.bot.api.token.not.set' =>
+	'Telegram Bot API prieigos raktas '
+	. 'nenustatytas',
+'telegram.bot.api.webhook.delete' =>
+	'Ištrinti „Webhook“',
+'telegram.bot.api.webhook.deleted' =>
+	'„Webhook“ ką tik buvo išjungtas,'
+	. 'kad būtų galima naudoti rankinį '
+	. 'API gavimo metodą „getUpdates“.',
+'telegram.bot.api.webhook.secret.token' =>
+	'„Webhook“ slaptasis prieigos raktas papildomam '
+	. 'saugumui (naudojamas kaip parametras funkcijoje '
+	. '„setWebhook“, o ne kaip „queryParameter“)',
+'telegram.bot.api.webhook.setup' =>
+	'Žiniatinklio kabliukas nustatytas.',
+'telegram.bot.api.webhook.setup.already' =>
+	'Žiniatinklio jungtis jau nustatyta.',
+'telegram.bot.api.webhook.url.this.site' =>
+	'Šios svetainės „Telegram Webhook“ URL '
+	. 'naudojamas „TelegramHelper“ funkcijoje „setWebhook“.',
+'template' => 'Sąskaitos faktūros šablonas',
+'templates' => 'Sąskaitų faktūrų šablonai',
+'term' => 'Sąlygos ir nuostatos',
+'term.1' => 'Neskaičiau sąlygų ir nuostatų.',
+'term.2' => 'Perskaičiau ir sutinku su sąlygomis.',
+'term.add.additional.terms.at.setting.repository' =>
+	'Pridėkite papildomas sąlygas nustatymų saugyklos '
+	. 'getPaymentTerms funkcijoje.',
+'terms' => 'Sąlygos',
+'test.data.install' => 'Įdiegti bandymo duomenis',
+'test.data.use' => 'Naudokite bandymo duomenis',
+'test.remove' => 'Pašalinti bandymo duomenis',
+'test.remove.tooltip' => 'Rodinys.'
+	. 'Nustatymai.'
+	. 'Bendra.'
+	. 'Įdiegti bandymo duomenis.'
+	. 'Ne ir Rodinys.'
+	. 'Nustatymai.'
+	. 'Bendra.'
+	. 'Naudoti bandymo duomenis.'
+	. 'Ne',
+'test.reset' => 'Atstatyti bandymo duomenis',
+'test.reset.setting' => 'Nustatymų diegimas iš naujo',
+'test.reset.setting.tooltip' => 'Tai pašalins visus dabartinius nustatymus '
+	. 'ir iš naujo įdiegs numatytuosius '
+	. 'nustatymus faile „InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run“.',
+'test.reset.tooltip' => 'Peržiūrėti.'
+	. 'Nustatymai.'
+	. 'Bendrieji.'
+	. 'Įdiegti bandymo duomenis.'
+	. 'Taip ir Peržiūrėti.'
+	. 'Nustatymai.'
+	. 'Bendrieji.'
+	. 'Naudoti bandymo duomenis.'
+	. 'Taip',
+'text' => 'Tekstas',
+'textarea' => 'Teksto sritis',
 'theme' => 'Tema',
-'this.month' => 'Questo mese',
-'this.quarter' => 'Questo trimestre',
-'this.year' => 'Quest&#39;anno',
-'thousands.separator' => 'Separatore di migliaia',
-'time.created' => 'Tempo creato',
-'time.zone' => 'Fuso orario',
-'title' => 'Titolo',
-'to.date' => 'Ad oggi',
-'to.email' => 'Per inviare un&#39;e-mail',
-'total' => 'Totale',
-'total.balance' => 'Saldo totale',
-'total.billed' => 'Totale fatturato',
-'total.paid' => 'Totale pagato',
-'transaction.reference' => 'Riferimento alla transazione',
-'transaction.successful' => 'Transazione riuscita',
-'treatment' => 'Trattamento',
-'treatment.end' => 'Fine del trattamento',
-'treatment.start' => 'Inizio del trattamento',
-'true' => 'VERO',
-'try.again' => 'Riprova',
-'two.factor.authentication' => 'Autenticazione a due fattori',
-'two.factor.authentication.attempt.failure' => 'Tentativo di autenticazione a due fattori fallito',
-'two.factor.authentication.attempt.failure.must.setup' => 'Tentativo di autenticazione a due fattori fallito: è necessario impostare un nuovo codice QR con segreto (+) e scegliere di sovrascrivere la voce precedente quando richiesto',
-'two.factor.authentication.attempt.success' => 'Tentativo di autenticazione a due fattori riuscito',
-'two.factor.authentication.disabled' => 'Per maggiore sicurezza, l&#39;autenticazione a due fattori è stata disattivata.',
-'two.factor.authentication.enable' => 'Abilita l&#39;autenticazione a due fattori',
-'two.factor.authentication.enabled.with.disabling' => 'L&#39;autenticazione a due fattori è attualmente abilitata per una maggiore sicurezza e viene disabilitata dopo l&#39;autenticazione per un ulteriore livello di sicurezza fino al successivo accesso. Scansione obbligatoria del codice QR dopo ogni accesso per un nuovo segreto.',
-'two.factor.authentication.enabled.without.disabling' => 'L&#39;autenticazione a due fattori è attualmente abilitata per maggiore sicurezza e non viene disabilitata dopo un&#39;autenticazione riuscita. Il codice QR non verrà più visualizzato per la scansione dopo aver effettuato l&#39;accesso e aver impostato l&#39;autenticazione a due fattori.',
-'two.factor.authentication.error' => 'Errore di autenticazione a due fattori',
-'two.factor.authentication.form.verify.login' => 'Verifica l&#39;accesso',
-'two.factor.authentication.invalid.code.format' => 'Formato del codice non valido. Inserisci il codice a 6 cifre dalla tua app.',
-'two.factor.authentication.missing.code.or.secret' => 'Codice di autenticazione o segreto 2FA mancante.',
-'two.factor.authentication.new.six.digit.code' => 'Inserisci un nuovo codice di autenticazione a 6 cifre (diverso dal codice di configurazione) dalla tua app.',
-'two.factor.authentication.no.secret.generated' => 'Nessun segreto generato. Riavvia la configurazione.',
-'two.factor.authentication.qr.code.enter.manually' => 'Oppure inserisci manualmente questo codice nell&#39;app Android: ',
-'two.factor.authentication.scan' => 'Scansiona questo codice QR con la tua app Aegis:',
-'two.factor.authentication.setup' => 'Imposta l&#39;autenticazione a due fattori',
-'type' => 'Tipo',
-'unit' => 'Unità',
-'unit.add' => 'Aggiungi unità',
-'unit.already.exists' => 'L&#39;unità esiste già!',
-'unit.description.not.provided' => 'Descrizione non fornita',
-'unit.edit' => 'Modifica unità',
-'unit.history' => 'Impossibile eliminare. La cronologia esiste.',
-'unit.name' => 'Nome dell&#39;unità',
-'unit.name.plrl' => 'Nome dell&#39;unità (forma plurale)',
+'this.month' => 'Šį mėnesį',
+'this.quarter' => 'Šis ketvirtis',
+'this.year' => 'Šiais metais',
+'thousands.separator' => 'Tūkstančių separatorius',
+'time.created' => 'Sukūrimo laikas',
+'time.zone' => 'Laiko juosta',
+'title' => 'Pavadinimas',
+'to.date' => 'Iki šiol',
+'to.email' => 'Į el.'
+	. 'laišką',
+'total' => 'Iš viso',
+'total.balance' => 'Bendras likutis',
+'total.billed' => 'Iš viso išrašyta',
+'total.paid' => 'Iš viso sumokėta',
+'transaction.reference' => 'Operacijos nuoroda',
+'transaction.successful' => 'Sandoris sėkmingas',
+'treatment' => 'Gydymas',
+'treatment.end' => 'Gydymo pabaiga',
+'treatment.start' => 'Gydymo pradžia',
+'true' => 'Tiesa',
+'try.again' => 'Bandykite dar kartą',
+'two.factor.authentication' => 'Dviejų veiksnių autentifikavimas',
+'two.factor.authentication.attempt.failure' =>
+	'Dviejų veiksnių autentifikavimo bandymas nepavyko',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'Dviejų veiksnių autentifikavimo bandymo klaida:'
+	. 'turite nustatyti naują QR kodą '
+	. 'su slaptu raktu (+) ir,'
+	. 'kai būsite paraginti, pasirinkti „perrašyti '
+	. 'ankstesnį įrašą“.',
+'two.factor.authentication.attempt.success' =>
+	'Dviejų veiksnių autentifikavimo bandymas sėkmingas',
+'two.factor.authentication.disabled' => 'Dviejų veiksnių autentifikavimas dabar buvo '
+	. 'išjungtas siekiant papildomo saugumo.',
+'two.factor.authentication.enable' => 'Įgalinti dviejų veiksnių autentifikavimą',
+'two.factor.authentication.enabled.with.disabling' =>
+	'Dviejų veiksnių autentifikavimas šiuo metu '
+	. 'įjungtas siekiant papildomo saugumo ir '
+	. 'išjungiamas po sėkmingo autentifikavimo, siekiant '
+	. 'užtikrinti papildomą saugumo sluoksnį iki '
+	. 'kito prisijungimo.'
+	. 'Privalomas QR kodo nuskaitymas po '
+	. 'kiekvieno prisijungimo, norint gauti naują '
+	. 'slaptą kodą.'
+	. '+ .'
+	. 'Nuskaitykite QR kodą .'
+	. 'išsaugoti .'
+	. 'ištrinti ankstesnį įrašą.'
+	. '(Nerekomenduojama)',
+'two.factor.authentication.enabled.without.disabling' =>
+	'Dviejų veiksnių autentifikavimas šiuo metu '
+	. 'įjungtas siekiant papildomo saugumo ir '
+	. 'nėra išjungtas po sėkmingo autentifikavimo.'
+	. 'QR kodas nebus rodomas nuskaitymui '
+	. 'prisijungus ir nustačius dviejų veiksnių '
+	. 'autentifikavimą.'
+	. '(Rekomenduojama)',
+'two.factor.authentication.error' => 'Dviejų veiksnių autentifikavimo klaida',
+'two.factor.authentication.form.verify.login' =>
+	'Patvirtinti prisijungimą',
+'two.factor.authentication.invalid.code.format' =>
+	'Neteisingas kodo formatas.'
+	. 'Įveskite 6 skaitmenų kodą iš '
+	. 'savo programėlės.',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'Neteisingas 8 skaitmenų atsarginės kopijos '
+	. 'atkūrimo kodas',
+'two.factor.authentication.invalid.totp.code' =>
+	'Neteisingas 6 skaitmenų vienkartinis laiko '
+	. 'autentifikavimo kodas',
+'two.factor.authentication.missing.code.or.secret' =>
+	'Trūksta autentifikavimo kodo arba 2FA '
+	. 'paslapties.',
+'two.factor.authentication.new.six.digit.code' =>
+	'Įveskite naują 6 skaitmenų autentifikavimo '
+	. 'kodą (skirtingą nuo nustatymo kodo) '
+	. 'iš savo programėlės.',
+'two.factor.authentication.no.secret.generated' =>
+	'Nebuvo sugeneruota jokia paslaptis.'
+	. 'Paleiskite sąranką iš naujo.',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'Arba rankiniu būdu įveskite šį '
+	. 'kodą į „Android“ programėlę:',
+'two.factor.authentication.rate.limit.reached' =>
+	'Pasiekta greičio riba.'
+	. 'Palaukite 10 sekundžių.',
+'two.factor.authentication.scan' => 'Nuskaitykite šį QR kodą naudodami '
+	. '„Aegis“ programėlę:',
+'two.factor.authentication.setup' => 'Nustatykite dviejų veiksnių autentifikavimą',
+'type' => 'Tipas',
+'unit' => 'Vienetas',
+'unit.add' => 'Pridėti vienetą',
+'unit.already.exists' => 'Vienetas jau yra!',
+'unit.description.not.provided' => 'Aprašymas nepateiktas',
+'unit.edit' => 'Redaguoti vienetą',
+'unit.history' => 'Negalima ištrinti.'
+	. 'Istorija yra.',
+'unit.name' => 'Įrenginio pavadinimas',
+'unit.name.plrl' => 'Vieneto pavadinimas (daugiskaita)',
 'unit.peppol' => 'Peppol',
-'unit.peppol.add' => 'Aggiungi unità Peppol',
-'unit.peppol.code' => 'Codice Peppol unitario',
-'unit.peppol.edit' => 'Modifica unità Peppol',
-'unit.peppol.index' => 'Indice Peppol unitario',
-'units' => 'Unità',
-'unknown' => 'Sconosciuto',
-'unpaid' => 'Non pagato',
-'updatecheck' => 'Controllo aggiornamenti',
-'updatecheck.failed' => 'Controllo aggiornamenti fallito! Controlla la tua connessione di rete.',
-'updates' => 'Aggiornamenti',
-'updates.available' => 'Aggiornamenti disponibili!',
-'upload.date' => 'Data di caricamento',
-'upload.description' => 'Descrizione',
-'upload.filename.description' => 'Nome file Descrizione',
-'upload.filename.new' => 'Nuovo nome file',
-'upload.filename.original' => 'Nome file originale',
-'upload.index' => 'Indice di caricamento',
-'upload.plural' => 'Caricamenti',
-'upload.url.key' => 'Chiave URL',
-'use.system.language' => 'Usa la lingua di sistema',
-'user' => 'Utente',
-'user.account' => 'Account utente fattura',
-'user.account.clients' => 'Clienti con account utente',
-'user.accounts' => 'Account utente fattura',
-'user.all.clients' => 'Aggiungi tutti i clienti',
-'user.all.clients.text' => '* Se questa opzione è selezionata, l&#39;utente potrà vedere tutti i clienti, compresi quelli aggiunti in seguito.',
-'user.api.list' => 'Utenti pre-fatturazione - Utenti registrati',
-'user.client.active.no' => 'Non hai clienti con account utente attivi. Gli amministratori assegnano i clienti a un account utente registrato.',
+'unit.peppol.add' => 'Peppolo papildymo skyrius',
+'unit.peppol.code' => 'Peppolo vieneto kodas',
+'unit.peppol.edit' => 'Peppolo skyrius Redaguoti',
+'unit.peppol.index' => 'Peppol indekso vienetas',
+'units' => 'Vienetai',
+'unknown' => 'Nežinoma',
+'unpaid' => 'Nesumokėta',
+'updatecheck' => 'Atnaujinimų patikrinimas',
+'updatecheck.failed' => 'Atnaujinimų patikra nepavyko! Patikrinkite tinklo '
+	. 'ryšį.',
+'updates' => 'Atnaujinimai',
+'updates.available' => 'Atnaujinimai prieinami!',
+'upload.date' => 'Įkėlimo data',
+'upload.description' => 'Aprašymas',
+'upload.filename.description' => 'Failo pavadinimo aprašymas',
+'upload.filename.new' => 'Naujas failo pavadinimas',
+'upload.filename.original' => 'Originalus failo pavadinimas',
+'upload.index' => 'Įkėlimo indeksas',
+'upload.plural' => 'Įkėlimai',
+'upload.url.key' => 'URL raktas',
+'url' => 'URL',
+'use.system.language' => 'Naudoti sistemos kalbą',
+'user' => 'Vartotojas',
+'user.account' => 'Sąskaitos faktūros naudotojo paskyra',
+'user.account.clients' => 'Klientai su vartotojo paskyromis',
+'user.accounts' => 'Sąskaitų faktūrų naudotojų paskyros',
+'user.all.clients' => 'Pridėti visus klientus',
+'user.all.clients.text' => '* Jei ši parinktis pažymėta,'
+	. 'vartotojas galės matyti visus klientus,'
+	. 'įskaitant ir tuos, kurie bus '
+	. 'pridėti vėliau.',
+'user.api.list' => 'Išankstinės sąskaitos faktūros vartotojai – '
+	. 'užsiregistravę vartotojai',
+'user.client.active.no' => 'Neturite klientų su aktyviomis naudotojų '
+	. 'paskyromis.'
+	. 'Administratoriai priskiria klientus prie užsiregistravusių '
+	. 'naudotojų paskyrų.',
 'user.client.count' => '#',
-'user.client.no.account' => 'Questo client non ha alcun account utente associato e pertanto questo documento non può essere creato.',
-'user.clients.assigned.not' => 'A questo utente non sono assegnati clienti.',
-'user.form' => 'Modulo utente',
-'user.iban' => 'Codice IBAN',
-'user.inv.active.not' => 'L&#39;account utente non è attivo',
-'user.inv.list.limit' => 'Numero di record elencati per pagina (Nota: sostituisce l&#39;impostazione predefinita)',
-'user.inv.more.than.one.assigned' => 'Creazione fattura non riuscita: consulta le tue impostazioni... Account utente. A questo cliente è stato assegnato più di un utente.',
-'user.inv.refer.to' => 'Il valore predefinito di 10 record per pagina può essere sovrascritto cliccando qui.',
-'user.inv.role.accountant' => 'Contabile',
-'user.inv.role.accountant.assigned' => 'Ruolo di contabile assegnato',
-'user.inv.role.accountant.default' => 'Per impostazione predefinita, il contabile di un cliente può visualizzare le fatture, pagarle, visualizzarne i pagamenti e modificarne i pagamenti.',
-'user.inv.role.administrator' => 'Amministratore',
-'user.inv.role.administrator.already.assigned' => 'Il ruolo di amministratore è già stato assegnato',
-'user.inv.role.administrator.assigned' => 'Il ruolo di Amministratore è stato ora assegnato. ',
-'user.inv.role.all.new' => 'Per impostazione predefinita, tutti i nuovi utenti assumeranno il ruolo di osservatore, ovvero potranno visualizzare la documentazione ma non modificare quella inviata loro, ovvero osservare o guardare la documentazione.',
-'user.inv.role.observer' => 'Osservatore',
-'user.inv.role.observer.assigned' => 'Ruolo di osservatore assegnato',
-'user.inv.role.observer.assigned.already' => 'Il ruolo di osservatore è già stato assegnato.',
-'user.inv.role.revoke.all' => 'Revoca tutti i ruoli',
-'user.inv.role.warning.revoke.all' => 'Sei sicuro di voler revocare tutti i ruoli?',
-'user.inv.role.warning.role' => 'Sei sicuro di voler assumere questo ruolo?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Impossibile assegnare il tipo di amministratore del menu a discesa a un utente non amministratore',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Impossibile assegnare il tipo di ospite del menu a discesa a un amministratore',
-'user.signup.please' => 'Per favore, registrati!',
-'user.subscriber.number' => 'Numero dell&#39;abbonato',
-'user.type' => 'Tipo di utente',
-'username' => 'Nome utente',
-'users' => 'Utenti',
-'utility.assets.clear' => 'Cancella cache risorse',
-'validator.fail' => 'Impossibile elaborare il campo %s: %s',
-'validator.invalid.login.password' => 'Login o password non validi',
-'validator.password.change' => 'La tua password è stata modificata',
-'validator.password.not.match' => 'Le password non corrispondono',
-'validator.password.not.match.new' => 'Le tue nuove password non corrispondono',
-'validator.password.reset' => 'La tua password è stata reimpostata',
-'validator.user.exist' => 'Esiste già un utente con questo login',
-'validator.user.exist.not' => 'Non esiste un utente con questo login',
-'value' => 'Valore',
-'values' => 'Valori',
-'values.with.taxes' => 'Valori con tasse',
-'vat' => 'I.V.A.',
-'vat.abbreviation' => 'I.V.A.',
-'vat.break.down' => 'Riepilogo IVA',
-'vat.id' => 'Partita IVA',
-'vat.id.short' => 'I.V.A.',
-'vat.invoice' => 'FATTURA IVA',
-'vat.rate' => 'Aliquota IVA',
-'vat.reg.no' => 'Partita IVA n.',
-'vat.registered' => 'Partita IVA registrata',
-'vendor.nikic.fast-route' => 'Costruire percorsi più veloci',
-'verify.password' => 'Verifica password',
-'version.history' => 'Cronologia delle versioni',
-'view' => 'Visualizzazione',
-'view.all' => 'Visualizza tutto',
-'view.client' => 'Visualizza cliente',
-'view.clients' => 'Visualizza i clienti',
-'view.contact.form.body' => 'Corpo',
-'view.contact.form.email' => 'E-mail',
-'view.contact.form.name' => 'Nome',
-'view.contact.form.subject' => 'Soggetto',
-'view.invoices' => 'Visualizza fatture',
-'view.payment.logs' => 'Visualizza i registri dei pagamenti online',
-'view.payments' => 'Visualizza i pagamenti',
-'view.product.families' => 'Visualizza le famiglie di prodotti',
-'view.product.units' => 'Visualizza le unità di prodotto',
-'view.products' => 'Visualizza i prodotti',
-'view.projects' => 'Visualizza progetti',
-'view.quotes' => 'Visualizza citazioni',
-'view.recurring.invoices' => 'Visualizza fatture ricorrenti',
-'view.tasks' => 'Visualizza attività',
-'viewed' => 'Visualizzato',
-'warning' => 'Avvertimento',
-'web' => 'Web',
-'web.address' => 'Indirizzo Web',
-'welcome' => 'Benvenuto',
-'wrong.passwordreset.token' => 'Nessun utente trovato per il token di reimpostazione fornito. Se ritieni che si tratti di un errore, contatta l&#39;amministratore.',
-'year' => 'Anno',
-'year.prefix' => 'Prefisso dell&#39;anno',
-'years' => 'Anni',
-'yes' => 'SÌ',
-'zip' => 'Codice postale',
-'zip.code' => 'Codice postale',
+'user.client.no.account' => 'Šis klientas neturi su juo '
+	. 'susietos vartotojo paskyros, todėl šio '
+	. 'dokumento sukurti negalima.',
+'user.clients.assigned.not' => 'Šiam vartotojui nėra priskirtų klientų.',
+'user.form' => 'Vartotojo forma',
+'user.iban' => 'IBAN',
+'user.inv.active.not' => 'Vartotojo paskyra nėra aktyvi',
+'user.inv.list.limit' => 'Įrašų skaičius puslapyje (pastaba:'
+	. 'nepaisoma numatytųjų reikšmių)',
+'user.inv.more.than.one.assigned' =>
+	'Sąskaitos faktūros sukūrimas nesėkmingas:'
+	. 'žr.'
+	. 'savo nustatymus.'
+	. 'Vartotojo paskyra.'
+	. 'Šiam klientui priskirtas daugiau nei '
+	. 'vienas vartotojas.',
+'user.inv.refer.to' => 'Numatytąjį 10 įrašų puslapyje nustatymą '
+	. 'galima pakeisti spustelėjus čia.',
+'user.inv.role.accountant' => 'Buhalteris',
+'user.inv.role.accountant.assigned' =>
+	'Priskirtas buhalterio vaidmuo',
+'user.inv.role.accountant.default' =>
+	'Kliento buhalteris pagal numatytuosius nustatymus '
+	. 'gali peržiūrėti sąskaitas faktūras, apmokėti '
+	. 'sąskaitas faktūras, peržiūrėti sąskaitų faktūrų '
+	. 'apmokėjimus ir redaguoti sąskaitų faktūrų '
+	. 'apmokėjimus.',
+'user.inv.role.administrator' => 'Administratorius',
+'user.inv.role.administrator.already.assigned' =>
+	'Administratoriaus vaidmuo jau priskirtas',
+'user.inv.role.administrator.assigned' =>
+	'Administratoriaus vaidmuo dabar priskirtas.',
+'user.inv.role.all.new' =>
+	'Visi nauji vartotojai pagal numatytuosius '
+	. 'nustatymus prisiims stebėtojo vaidmenį, t.'
+	. 'y.'
+	. 'galės peržiūrėti dokumentaciją, bet ne '
+	. 'redaguoti jiems atsiųstos dokumentacijos, t.'
+	. 'y.'
+	. 'stebėti arba peržiūrėti dokumentaciją.',
+'user.inv.role.observer' => 'Stebėtojas',
+'user.inv.role.observer.assigned' =>
+	'Stebėtojo vaidmuo priskirtas',
+'user.inv.role.observer.assigned.already' =>
+	'Stebėtojo vaidmuo jau paskirtas.',
+'user.inv.role.revoke.all' =>
+	'Atšaukti visus vaidmenis',
+'user.inv.role.warning.revoke.all' =>
+	'Ar tikrai norite atšaukti visus '
+	. 'vaidmenis?',
+'user.inv.role.warning.role' =>
+	'Ar tikrai norite priimti šį '
+	. 'vaidmenį?',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'Išskleidžiamojo meniu administratoriaus tipo negalima '
+	. 'priskirti ne administratoriui',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'Išskleidžiamojo meniu svečio tipo negalima '
+	. 'priskirti administratoriui',
+'user.signup.please' => 'Prašome užsiregistruoti!',
+'user.subscriber.number' => 'Prenumeratoriaus numeris',
+'user.type' => 'Vartotojo tipas',
+'username' => 'Vartotojo vardas',
+'users' => 'Vartotojai',
+'validator.fail' => 'Nepavyko apdoroti lauko %s:'
+	. '%s',
+'validator.invalid.login.password' => 'Neteisingas prisijungimo vardas arba slaptažodis',
+'validator.password.change' => 'Jūsų slaptažodis pakeistas',
+'validator.password.not.match' => 'Slaptažodžiai nesutampa',
+'validator.password.not.match.new' =>
+	'Jūsų nauji slaptažodžiai nesutampa',
+'validator.password.reset' => 'Jūsų slaptažodis buvo nustatytas iš '
+	. 'naujo',
+'validator.user.exist' => 'Vartotojas su tokiais prisijungimo duomenimis '
+	. 'jau yra',
+'validator.user.exist.not' => 'Vartotojas su tokiu prisijungimu neegzistuoja',
+'value' => 'Vertė',
+'values' => 'Vertybės',
+'values.with.taxes' => 'Vertės su mokesčiais',
+'variant' => 'Variantas',
+'vat' => 'PVM',
+'vat.abbreviation' => 'PVM',
+'vat.break.down' => 'PVM suvestinė',
+'vat.id' => 'PVM mokėtojo kodas',
+'vat.id.short' => 'PVM',
+'vat.invoice' => 'PVM SĄSKAITA',
+'vat.rate' => 'PVM tarifas',
+'vat.reg.no' => 'PVM reg.'
+	. 'Nr.',
+'vat.registered' => 'PVM mokėtojas',
+'vendor.nikic.fast-route' => 'Greitesnių maršrutų kūrimas',
+'verify.password' => 'Patvirtinkite slaptažodį',
+'version.history' => 'Versijų istorija',
+'view' => 'Peržiūrėti',
+'view.all' => 'Peržiūrėti visus',
+'view.client' => 'Peržiūrėti klientą',
+'view.clients' => 'Peržiūrėti klientus',
+'view.contact.form.body' => 'Kūnas',
+'view.contact.form.email' => 'El.'
+	. 'paštas',
+'view.contact.form.name' => 'Vardas',
+'view.contact.form.subject' => 'Tema',
+'view.invoices' => 'Peržiūrėti sąskaitas faktūras',
+'view.payment.logs' => 'Peržiūrėti internetinių mokėjimų žurnalus',
+'view.payments' => 'Peržiūrėti mokėjimus',
+'view.product.families' => 'Peržiūrėti produktų šeimas',
+'view.product.units' => 'Peržiūrėti produkto vienetus',
+'view.products' => 'Peržiūrėti produktus',
+'view.projects' => 'Peržiūrėti projektus',
+'view.quotes' => 'Peržiūrėti citatas',
+'view.recurring.invoices' => 'Peržiūrėti pasikartojančias sąskaitas faktūras',
+'view.tasks' => 'Peržiūrėti užduotis',
+'viewed' => 'Peržiūrėta',
+'warning' => 'Įspėjimas',
+'web' => 'Žiniatinklis',
+'web.address' => 'Žiniatinklio adresas',
+'welcome' => 'Sveiki atvykę',
+'wrong.passwordreset.token' => 'Pateiktam nustatymo iš naujo prieigos '
+	. 'raktui nerasta jokių naudotojų.'
+	. 'Jei manote, kad tai klaida,'
+	. 'susisiekite su administratoriumi.',
+'year' => 'Metai',
+'year.prefix' => 'Metų prefiksas',
+'years' => 'Metai',
+'yes' => 'Taip',
+'zip' => 'Pašto kodas',
+'zip.code' => 'Pašto kodas',
+'approval.required' => 'Reikalingas patvirtinimas',
+'quote.approval.required' => 'Reikalingas kainos pasiūlymo patvirtinimas',
+'quote.must.be.approved.first' =>
+	'Prieš konvertavimą turi būti patvirtinta '
+	. 'citata',
 ];

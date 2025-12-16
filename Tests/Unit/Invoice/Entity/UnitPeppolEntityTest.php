@@ -10,6 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 class UnitPeppolEntityTest extends TestCase
 {
+    public string $unitOfMass = 'Unit of mass';
+    
+    public string $unitOfTimePeriod = 'Unit of time period';
+    
     public function testConstructorWithDefaults(): void
     {
         $unitPeppol = new UnitPeppol();
@@ -159,16 +163,16 @@ class UnitPeppolEntityTest extends TestCase
         $unitPeppol = new UnitPeppol();
         
         $commonUnits = [
-            ['KGM', 'Kilogram', 'Unit of mass'],
+            ['KGM', 'Kilogram', $this->unitOfMass],
             ['MTR', 'Metre', 'Unit of length'],
             ['LTR', 'Litre', 'Unit of volume'],
             ['PCE', 'Piece', 'Unit of quantity'],
             ['HUR', 'Hour', 'Unit of time'],
-            ['DAY', 'Day', 'Unit of time period'],
-            ['MON', 'Month', 'Unit of time period'],
-            ['YEA', 'Year', 'Unit of time period'],
-            ['TON', 'Tonne', 'Unit of mass'],
-            ['GRM', 'Gram', 'Unit of mass'],
+            ['DAY', 'Day', $this->unitOfTimePeriod],
+            ['MON', 'Month', $this->unitOfTimePeriod],
+            ['YEA', 'Year', $this->unitOfTimePeriod],
+            ['TON', 'Tonne', $this->unitOfMass],
+            ['GRM', 'Gram', $this->unitOfMass],
         ];
         
         foreach ($commonUnits as [$code, $name, $description]) {

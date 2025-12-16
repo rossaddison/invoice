@@ -43,27 +43,27 @@ final class SumexForm extends FormModel
         $this->casenumber = $sumex->getCasenumber();
     }
 
-    public function getInvoice(): int|null
+    public function getInvoice(): ?int
     {
         return $this->invoice;
     }
 
-    public function getReason(): int|null
+    public function getReason(): ?int
     {
         return $this->reason;
     }
 
-    public function getDiagnosis(): string|null
+    public function getDiagnosis(): ?string
     {
         return $this->diagnosis;
     }
 
-    public function getObservations(): string|null
+    public function getObservations(): ?string
     {
         return $this->observations;
     }
 
-    public function getTreatmentstart(): string|null|DateTimeImmutable
+    public function getTreatmentstart(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->treatmentstart
@@ -71,7 +71,7 @@ final class SumexForm extends FormModel
         return $this->treatmentstart;
     }
 
-    public function getTreatmentend(): string|null|DateTimeImmutable
+    public function getTreatmentend(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->treatmentend
@@ -79,7 +79,7 @@ final class SumexForm extends FormModel
         return $this->treatmentend;
     }
 
-    public function getCasedate(): string|null|DateTimeImmutable
+    public function getCasedate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->casedate
@@ -87,7 +87,7 @@ final class SumexForm extends FormModel
         return $this->casedate;
     }
 
-    public function getCasenumber(): string|null
+    public function getCasenumber(): ?string
     {
         return $this->casenumber;
     }

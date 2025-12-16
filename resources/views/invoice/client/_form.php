@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
     ->open()
 ?>
 <?=
-    $alert;
+    $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 <?= Field::errorSummary($form)
     ->errors($errors)
@@ -74,7 +74,12 @@ Html::openTag('div', ['class' => 'card-header d-flex justify-content-between']),
 $translator->translate('personal.information'),
 Html::openTag('div', ['class' => 'p-2']),
 Field::checkbox($form, 'client_active')
-->inputLabelAttributes(['class' => 'form-check-label'])
+->inputLabelAttributes([
+    'class' => 'form-check-label',
+    'data-bs-toggle' => 'tooltip',
+    'onclick' => "return confirm(" . "'" . $translator->translate('client.deactivate.warning') . "');",
+    'title' => $translator->translate('client.deactivate.warning')
+])
 ->inputClass('form-check-input')
 ->ariaDescribedBy($translator->translate('client.active')),
 Html::closeTag('div'),
@@ -168,7 +173,7 @@ foreach ($countries as $cldr => $country) {
         continue;
     }
         ?>
-                <?php $cvH->print_field_for_form($customField, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->print_field_for_form($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
@@ -224,7 +229,7 @@ if ($custom_field->getLocation() !== 2) {
     continue;
 }
     ?>
-                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
         <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -256,8 +261,8 @@ echo Field::date($form, 'client_birthdate')
     'role' => 'presentation',
     'autocomplete' => 'off',
 ])
-->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate() ?
-                                $form->getClient_birthdate()->format('Y-m-d') : ''))
+->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate()
+                                ? $form->getClient_birthdate()->format('Y-m-d') : ''))
 ->required(false);
 ?>    
             <?= Field::number($form, 'client_age')
@@ -291,7 +296,7 @@ echo Field::date($form, 'client_birthdate')
             continue;
         }
             ?>
-                    <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                    <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>
@@ -316,7 +321,7 @@ echo Field::date($form, 'client_birthdate')
             continue;
         }
             ?>
-                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator,  $clientCustomValues, $customValues); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -338,7 +343,7 @@ echo Field::date($form, 'client_birthdate')
                                 continue;
                             }
                                 ?>
-                                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $clientCustomValues, $customValues); ?>
+                                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
                             <?php endforeach; ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>

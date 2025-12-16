@@ -24,22 +24,22 @@ final class InvSentLogForm extends FormModel
         $this->date_sent = $invsentlog->getDate_sent();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getInv(): Inv|null
+    public function getInv(): ?Inv
     {
         return $this->inv;
     }
 
-    public function getDate_sent(): string|null|DateTimeImmutable
+    public function getDate_sent(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_sent

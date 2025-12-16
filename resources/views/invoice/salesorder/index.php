@@ -34,7 +34,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -49,8 +49,8 @@ $toolbar = Div::tag();
 // see SalesOrder/SalesOrderRepository getStatuses function
 // && Invoice\Asset\invoice\css\style.css & yii3i.css
 
-$statusBar =
-    Div::tag()
+$statusBar
+    = Div::tag()
         ->addClass('btn-group index-options')
         ->content(
             Html::a(
@@ -159,12 +159,20 @@ $columns = [
     new DataColumn(
         'status_id',
         header: $translator->translate('status'),
-        content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
+        content: static function (SalesOrder $model) use ($soR, $urlGenerator): Yiisoft\Html\Tag\CustomTag {
             $statusId = $model->getStatus_id();
-            if (null !== $statusId) {
+            if (null !== $statusId) {                
                 $span = $soR->getSpecificStatusArrayLabel((string) $statusId);
                 $class = $soR->getSpecificStatusArrayClass($statusId);
-                return Html::tag('span', $span, ['id' => '#so-to-invoice','class' => 'label ' . $class]);
+                $spanTag = Html::tag('span', $span, ['id' => '#so-to-invoice', 'class' => 'label ' . $class]);
+                if (7 !== $statusId) {
+                    return $spanTag;
+                } else {
+                    return Html::tag('a', $spanTag, [
+                        'href' => $urlGenerator->generate('inv/add', ['origin' => 'main']), 
+                        'style' => 'text-decoration:none']);
+                }    
+                    
             }
             return Html::tag('span');
         },
@@ -178,16 +186,16 @@ $columns = [
     new DataColumn(
         'quote_id',
         content: static function (SalesOrder $model) use ($urlGenerator): string|A {
-            return ($model->getQuote_id() ?
-            Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']) : '');
+            return ($model->getQuote_id()
+            ? Html::a($model->getQuote_id(), $urlGenerator->generate('quote/view', ['id' => $model->getQuote_id()]), ['style' => 'text-decoration:none']) : '');
         },
     ),
     new DataColumn(
         'inv_id',
         content: static function (SalesOrder $model) use ($urlGenerator): string|A {
             $invId = $model->getInv_id();
-            return (null !== $invId ?
-            Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none']) : '');
+            return (null !== $invId
+            ? Html::a($invId, $urlGenerator->generate('inv/view', ['id' => $invId]), ['style' => 'text-decoration:none']) : '');
         },
     ),
     new DataColumn(
@@ -197,8 +205,8 @@ $columns = [
             /**
              * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
              */
-            return $model->getDate_created() instanceof \DateTimeImmutable ?
-                    $model->getDate_created()->format('Y-m-d')
+            return $model->getDate_created() instanceof \DateTimeImmutable
+                    ? $model->getDate_created()->format('Y-m-d')
                     : '';
         },
         encodeContent: true,
@@ -240,10 +248,10 @@ $grid_summary =  $s->grid_summary(
     (string) $so_statuses[$status]['label'],
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open() .
-    $statusBar .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('salesorder/index'))->csrf($csrf)->open()
+    . $statusBar
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

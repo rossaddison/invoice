@@ -12,13 +12,14 @@ use PHPUnit\Framework\TestCase;
  */
 final class AuthValidationTest extends TestCase
 {
+    public string $oneToSix = '123456';
     /**
      * Test TOTP code validation patterns
      */
     public function testTotpCodeValidation(): void
     {
         // Valid 6-digit TOTP codes
-        $this->assertTrue($this->isValidTotpCode('123456'));
+        $this->assertTrue($this->isValidTotpCode($this->oneToSix));
         $this->assertTrue($this->isValidTotpCode('000000'));
         $this->assertTrue($this->isValidTotpCode('999999'));
 
@@ -55,15 +56,15 @@ final class AuthValidationTest extends TestCase
     public function testCodeSanitization(): void
     {
         // Test trimming whitespace
-        $this->assertEquals('123456', $this->sanitizeCode(' 123456 '));
-        $this->assertEquals('123456', $this->sanitizeCode("\t123456\n"));
+        $this->assertEquals($this->oneToSix, $this->sanitizeCode(' 123456 '));
+        $this->assertEquals($this->oneToSix, $this->sanitizeCode("\t123456\n"));
         
         // Test removal of common separators
-        $this->assertEquals('123456', $this->sanitizeCode('1-2-3-4-5-6'));
+        $this->assertEquals($this->oneToSix, $this->sanitizeCode('1-2-3-4-5-6'));
         $this->assertEquals('ABCD1234', $this->sanitizeCode('A.B.C.D.1.2.3.4'));
         
         // Test numeric input handling
-        $this->assertEquals('123456', $this->sanitizeCode(123456));
+        $this->assertEquals($this->oneToSix, $this->sanitizeCode(123456));
     }
 
     /**
@@ -77,7 +78,7 @@ final class AuthValidationTest extends TestCase
         $this->assertNull($this->sanitizeAndValidateCode(new \stdClass()));
         
         // Test mixed content
-        $this->assertEquals('123456', $this->sanitizeAndValidateCode('1a2b3c4d5e6f', true)); // Extract digits only
+        $this->assertEquals($this->oneToSix, $this->sanitizeAndValidateCode('1a2b3c4d5e6f', true)); // Extract digits only
         $this->assertEquals('ABCD1234', $this->sanitizeAndValidateCode('AB-CD-12-34', false)); // Remove separators
     }
 
@@ -125,18 +126,14 @@ final class AuthValidationTest extends TestCase
         $code = $this->sanitizeCode($input);
         
         if ($digitsOnly) {
-            $code = preg_replace('/[^0-9]/', '', $code);
+            $code = preg_replace('/\D/', '', $code);
         }
         
         if (empty($code)) {
             return null;
         }
         
-        // Validate format
-        if ($this->isValidTotpCode($code) || $this->isValidBackupCode($code)) {
-            return $code;
-        }
-        
-        return null;
+        return ($this->isValidTotpCode($code) || $this->isValidBackupCode($code)) ? $code : null;
+
     }
 }

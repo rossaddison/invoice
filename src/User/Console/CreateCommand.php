@@ -82,7 +82,7 @@ final class CreateCommand extends Command
 
         if (!$user instanceof User) {
             $errors = $this->signupForm->getValidationResult()->getErrorMessagesIndexedByProperty();
-            array_walk($errors, fn(string $error, string $attribute): mixed => $io->error("$attribute: $error"));
+            array_walk($errors, fn (string $error, string $attribute): mixed => $io->error("$attribute: $error"));
             return ExitCode::DATAERR;
         }
 

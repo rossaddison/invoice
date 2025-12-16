@@ -116,7 +116,7 @@ final class RecoveryCodeRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return RecoveryCode|null
      */
-    public function repoRecoveryCodeLoadedquery(string $id): RecoveryCode|null
+    public function repoRecoveryCodeLoadedquery(string $id): ?RecoveryCode
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

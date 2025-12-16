@@ -99,102 +99,102 @@ final class CompanyForm extends FormModel
         $this->arbitrationJurisdiction = $company->getArbitrationJurisdiction();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCurrent(): int|null
+    public function getCurrent(): ?int
     {
         return $this->current;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getAddress_1(): string|null
+    public function getAddress_1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): string|null
+    public function getAddress_2(): ?string
     {
         return $this->address_2;
     }
 
-    public function getCity(): string|null
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function getState(): string|null
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    public function getZip(): string|null
+    public function getZip(): ?string
     {
         return $this->zip;
     }
 
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    public function getPhone(): string|null
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function getFax(): string|null
+    public function getFax(): ?string
     {
         return $this->fax;
     }
 
-    public function getEmail(): string|null
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function getWeb(): string|null
+    public function getWeb(): ?string
     {
         return $this->web;
     }
 
-    public function getSlack(): string|null
+    public function getSlack(): ?string
     {
         return $this->slack;
     }
 
-    public function getFacebook(): string|null
+    public function getFacebook(): ?string
     {
         return $this->facebook;
     }
 
-    public function getTwitter(): string|null
+    public function getTwitter(): ?string
     {
         return $this->twitter;
     }
 
-    public function getLinkedin(): string|null
+    public function getLinkedin(): ?string
     {
         return $this->linkedin;
     }
 
-    public function getWhatsapp(): string|null
+    public function getWhatsapp(): ?string
     {
         return $this->whatsapp;
     }
 
-    public function getArbitrationBody(): string|null
+    public function getArbitrationBody(): ?string
     {
         return $this->arbitrationBody;
     }
 
-    public function getArbitrationJurisdiction(): string|null
+    public function getArbitrationJurisdiction(): ?string
     {
         return $this->arbitrationJurisdiction;
     }

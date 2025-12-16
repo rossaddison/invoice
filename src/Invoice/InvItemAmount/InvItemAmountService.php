@@ -8,7 +8,9 @@ use App\Invoice\Entity\InvItemAmount;
 
 final readonly class InvItemAmountService
 {
-    public function __construct(private InvItemAmountRepository $repository) {}
+    public function __construct(private InvItemAmountRepository $repository)
+    {
+    }
 
     /**
      * @param InvItemAmount $model

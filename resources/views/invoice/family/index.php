@@ -7,13 +7,17 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\I;;
+use Yiisoft\Html\Tag\Input;
+use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
@@ -32,11 +36,27 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
+ * @var string $modal_generate_products
  * @var string $sortString
  * @psalm-var positive-int $page
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
+
+/**
+ * Used with the checkbox column to generate products from selected families
+ * Related logic: see family.js handleGenerateProducts function
+ */
+$generateProductsButton = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
+        ->addClass('btn btn-success')
+        ->href('#generate-products-modal')
+        ->content('☑️' . $translator->translate('generate')
+            . ' '
+            . $translator->translate('products') 
+            . '🏭')
+        ->id('btn-generate-products')
+        ->render();
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -56,16 +76,53 @@ $toolbarFilter = A::tag()
     ->render();
 
 $columns = [
+    new CheckboxColumn(
+        /**
+         * Related logic: see header checkbox: name: 'checkbox-selection-all'
+         */
+        content: static function (Checkbox $input, DataContext $context) use ($translator): string {
+            $family = $context->data;
+            if (($family instanceof Family) && (null !== ($id = $family->getFamily_id()))) {
+                return Input::tag()
+                       ->type('checkbox')
+                       ->addAttributes([
+                           'id' => $id,
+                           'name' => 'family_ids[]',
+                           'data-bs-toggle' => 'tooltip'
+                        ])
+                       ->value($id)
+                       ->disabled(null!== $family->getFamily_commalist() && null !== $family->getFamily_productprefix() ? false : true)
+                       ->render();
+            }
+            return '';
+        },
+        multiple: false,
+    ),
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn(Family $model) => Html::encode($model->getFamily_id()),
+        content: static fn (Family $model) => Html::encode($model->getFamily_id()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_name',
         header: $translator->translate('family'),
-        content: static fn(Family $model) => Html::encode($model->getFamily_name() ?? ''),
+        content: static fn (Family $model) => '<span data-family-name>' . Html::encode($model->getFamily_name() ?? '') . '</span>',
+        encodeContent: false,
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'family_commalist',
+        header: $translator->translate('family.comma.list'),
+        content: static fn (Family $model) => '<span data-family-commalist>' . Html::encode($model->getFamily_commalist() ?? '') . '</span>',
+        encodeContent: false,
+        withSorting: true,
+    ),
+    new DataColumn(
+        property: 'family_productprefix',
+        header: $translator->translate('family.product.prefix'),
+        content: static fn (Family $model) => '<span data-family-prefix>' . Html::encode($model->getFamily_productprefix() ?? '') . '</span>',
+        encodeContent: false,
         withSorting: true,
     ),
     new DataColumn(
@@ -127,15 +184,17 @@ $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $sort = Sort::only(['id'])
         ->withOrderString($sortString);
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('family/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('family/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('family/add'))
         ->addClass('btn btn-info')
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    // use the checkboxcolumn to generate products from selected families
+    . Div::tag()->addClass('float-end m-3')->content($generateProductsButton)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $sortedAndPagedPaginator = (new OffsetPaginator($families))
     ->withPageSize($s->positiveListLimit())
@@ -168,3 +227,5 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
+
+echo $modal_generate_products;

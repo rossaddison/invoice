@@ -26,7 +26,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
@@ -40,12 +40,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(CategorySecondary $model) => Html::encode($model->getId()),
+        content: static fn (CategorySecondary $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(CategorySecondary $model) => Html::encode($model->getName() ?? ''),
+        content: static fn (CategorySecondary $model) => Html::encode($model->getName() ?? ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -84,14 +84,14 @@ $columns = [
     ]),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('categorysecondary/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString = Form::tag()->post($urlGenerator->generate('categorysecondary/index'))->csrf($csrf)->open()
+    . A::tag()
         ->href($urlGenerator->generate('categorysecondary/add'))
         ->addAttributes(['style' => 'text-decoration:none'])
         ->content('➕')
-        ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+        ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');
 

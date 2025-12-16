@@ -9,6 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 class ItemLookupEntityTest extends TestCase
 {
+    public string $premiumWidget = 'Premium Widget';
+    
+    public string $testItem = 'Test Item';
+    
     public function testConstructorWithDefaults(): void
     {
         $itemLookup = new ItemLookup();
@@ -23,13 +27,13 @@ class ItemLookupEntityTest extends TestCase
     {
         $itemLookup = new ItemLookup(
             id: 1,
-            name: 'Premium Widget',
+            name: $this->premiumWidget,
             description: 'High-quality widget for professional use',
             price: 99.99
         );
         
         $this->assertSame('1', $itemLookup->getId());
-        $this->assertSame('Premium Widget', $itemLookup->getName());
+        $this->assertSame($this->premiumWidget, $itemLookup->getName());
         $this->assertSame('High-quality widget for professional use', $itemLookup->getDescription());
         $this->assertSame(99.99, $itemLookup->getPrice());
     }
@@ -394,7 +398,7 @@ class ItemLookupEntityTest extends TestCase
     {
         $itemLookup = new ItemLookup(
             id: 1,
-            name: 'Test Item',
+            name: $this->testItem,
             description: 'Test description',
             price: 99.99
         );
@@ -496,7 +500,7 @@ class ItemLookupEntityTest extends TestCase
             ['Small Widget', 'Compact version of our popular widget', 19.99],
             ['Medium Widget', 'Standard size widget for general use', 39.99],
             ['Large Widget', 'Extended widget for heavy-duty applications', 59.99],
-            ['Premium Widget', 'Top-tier widget with advanced features', 99.99],
+            [$this->premiumWidget, 'Top-tier widget with advanced features', 99.99],
             ['Basic Service', 'Essential service package', 29.99],
             ['Standard Service', 'Full-featured service package', 49.99],
             ['Premium Service', 'Complete service with priority support', 79.99],
@@ -625,9 +629,9 @@ class ItemLookupEntityTest extends TestCase
         $this->assertNull($item1->getPrice());
         
         // ID and name
-        $item2 = new ItemLookup(id: 2, name: 'Test Item');
+        $item2 = new ItemLookup(id: 2, name: $this->testItem);
         $this->assertSame('2', $item2->getId());
-        $this->assertSame('Test Item', $item2->getName());
+        $this->assertSame($this->testItem, $item2->getName());
         $this->assertSame('', $item2->getDescription());
         $this->assertNull($item2->getPrice());
         

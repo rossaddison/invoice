@@ -81,7 +81,7 @@ final class SalesOrderCustomRepository extends Select\Repository
         );
     }
 
-    public function repoSalesOrderCustomquery(string $id): SalesOrderCustom|null
+    public function repoSalesOrderCustomquery(string $id): ?SalesOrderCustom
     {
         $query = $this->select()
                       ->load('custom_field')
@@ -90,7 +90,7 @@ final class SalesOrderCustomRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $so_id, string $custom_field_id): SalesOrderCustom|null
+    public function repoFormValuequery(string $so_id, string $custom_field_id): ?SalesOrderCustom
     {
         $query = $this->select()
                       ->where(['so_id' => $so_id])

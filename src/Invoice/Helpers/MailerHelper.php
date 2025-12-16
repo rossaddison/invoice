@@ -135,8 +135,8 @@ class MailerHelper
         array|string|null $bcc,
         array $attachFiles,
         // $target_path of pdfs generated
-        string|null $pdf_template_target_path,
-        UIR|null $uiR,
+        ?string $pdf_template_target_path,
+        ?UIR $uiR,
     ): bool {
         if (null !== $cc && is_string($cc) && (strlen($cc) > 4) && !is_array($cc)) {
             // Allow multiple CC's delimited by comma or semicolon
@@ -223,10 +223,10 @@ class MailerHelper
             $this->flash_message('info', $this->translator->translate('email.successfully.sent'));
             return true;
         } catch (\Exception $e) {
-            $this->flash_message('warning', $this->translator->translate('email.not.sent.successfully') .
-                                            "\n" .
-                                            $this->translator->translate('email.exception') .
-                                            "\n");
+            $this->flash_message('warning', $this->translator->translate('email.not.sent.successfully')
+                                            . "\n"
+                                            . $this->translator->translate('email.exception')
+                                            . "\n");
             $this->logger->error($e->getMessage());
         }
         return false;
@@ -237,7 +237,7 @@ class MailerHelper
     * @param string $message
     * @return Flash|null
     */
-    private function flash_message(string $level, string $message): Flash|null
+    private function flash_message(string $level, string $message): ?Flash
     {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);

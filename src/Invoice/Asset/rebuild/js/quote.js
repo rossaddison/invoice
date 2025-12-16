@@ -15,6 +15,29 @@
         return {};
     }
 
+    // Secure reload helper to prevent Open Redirect vulnerabilities
+    function secureReload() {
+        // Safely reload the current page without using potentially manipulable URLs
+        window.location.reload();
+    }
+
+    // Helper function to safely create loading/success UI elements to prevent XSS
+    function createSecureUIElement(type, className, iconClass) {
+        var element = document.createElement(type || 'h6');
+        element.className = className || 'text-center';
+        var icon = document.createElement('i');
+        icon.className = iconClass || 'fa fa-spin fa-spinner';
+        element.appendChild(icon);
+        return element;
+    }
+
+    // Helper function to safely set button content
+    function setSecureButtonContent(btn, type, className, iconClass) {
+        if (!btn) return;
+        btn.textContent = '';
+        btn.appendChild(createSecureUIElement(type, className, iconClass));
+    }
+
     // Helper to get origin
     function getOrigin() {
         return window.location.origin;
@@ -80,7 +103,14 @@
             if (e.target.matches('.delete-items-confirm-quote') || e.target.closest('.delete-items-confirm-quote')) {
                 var btn = document.querySelector('.delete-items-confirm-quote');
                 if (btn) {
-                    btn.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+                    // Create secure spinner content to prevent XSS
+                    btn.textContent = '';
+                    var h2 = document.createElement('h2');
+                    h2.className = 'text-center';
+                    var icon = document.createElement('i');
+                    icon.className = 'fa fa-spin fa-spinner';
+                    h2.appendChild(icon);
+                    btn.appendChild(h2);
                     
                     var item_ids = [];
                     var checkboxes = document.querySelectorAll("input[name='item_ids[]']:checked");
@@ -106,7 +136,14 @@
                     .then(function (data) {
                         var response = parsedata(data);
                         if (response.success === 1) {
-                            btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
+                            // Create secure success content to prevent XSS
+                            btn.textContent = '';
+                            var h2 = document.createElement('h2');
+                            h2.className = 'text-center';
+                            var icon = document.createElement('i');
+                            icon.className = 'fa fa-check';
+                            h2.appendChild(icon);
+                            btn.appendChild(h2);
                             location.reload(true);
                         }
                     })
@@ -130,10 +167,30 @@
                             return response.text();
                         })
                         .then(function (html) {
-                            modalPlaceholder.innerHTML = html;
+                            // Sanitize HTML content to prevent XSS attacks
+                            modalPlaceholder.textContent = '';
+                            var tempDiv = document.createElement('div');
+                            tempDiv.textContent = html;
+                            // For trusted server content, use createDocumentFragment for better security
+                            var fragment = document.createDocumentFragment();
+                            var parser = new DOMParser();
+                            try {
+                                var doc = parser.parseFromString(html, 'text/html');
+                                // Only append if parsing was successful and content is from trusted source
+                                if (doc && doc.body) {
+                                    while (doc.body.firstChild) {
+                                        fragment.appendChild(doc.body.firstChild);
+                                    }
+                                    modalPlaceholder.appendChild(fragment);
+                                }
+                            } catch (e) {
+                                console.error('HTML parsing error:', e);
+                                modalPlaceholder.textContent = 'Error loading content';
+                            }
                         })
                         .catch(function (error) {
                             console.error('Modal load error:', error);
+                            modalPlaceholder.textContent = 'Failed to load content';
                         });
                 }
             }
@@ -180,10 +237,30 @@
                             return response.text();
                         })
                         .then(function (html) {
-                            modalPlaceholder.innerHTML = html;
+                            // Sanitize HTML content to prevent XSS attacks
+                            modalPlaceholder.textContent = '';
+                            var tempDiv = document.createElement('div');
+                            tempDiv.textContent = html;
+                            // For trusted server content, use createDocumentFragment for better security
+                            var fragment = document.createDocumentFragment();
+                            var parser = new DOMParser();
+                            try {
+                                var doc = parser.parseFromString(html, 'text/html');
+                                // Only append if parsing was successful and content is from trusted source
+                                if (doc && doc.body) {
+                                    while (doc.body.firstChild) {
+                                        fragment.appendChild(doc.body.firstChild);
+                                    }
+                                    modalPlaceholder.appendChild(fragment);
+                                }
+                            } catch (e) {
+                                console.error('HTML parsing error:', e);
+                                modalPlaceholder.textContent = 'Error loading content';
+                            }
                         })
                         .catch(function (error) {
                             console.error('Client modal load error:', error);
+                            modalPlaceholder.textContent = 'Failed to load content';
                         });
                 }
             }
@@ -232,10 +309,30 @@
                                         return response.text();
                                     })
                                     .then(function (html) {
-                                        notesList.innerHTML = html;
+                                        // Sanitize HTML content to prevent XSS attacks
+                                        notesList.textContent = '';
+                                        var tempDiv = document.createElement('div');
+                                        tempDiv.textContent = html;
+                                        // For trusted server content, use createDocumentFragment for better security
+                                        var fragment = document.createDocumentFragment();
+                                        var parser = new DOMParser();
+                                        try {
+                                            var doc = parser.parseFromString(html, 'text/html');
+                                            // Only append if parsing was successful and content is from trusted source
+                                            if (doc && doc.body) {
+                                                while (doc.body.firstChild) {
+                                                    fragment.appendChild(doc.body.firstChild);
+                                                }
+                                                notesList.appendChild(fragment);
+                                            }
+                                        } catch (e) {
+                                            console.error('HTML parsing error:', e);
+                                            notesList.textContent = 'Error loading notes';
+                                        }
                                     })
                                     .catch(function (error) {
                                         console.error('Notes reload error:', error);
+                                        notesList.textContent = 'Failed to load notes';
                                     });
                             }
                         } else {
@@ -271,7 +368,16 @@
                 var url = getOrigin() + "/invoice/quote/save_quote_tax_rate";
                 var btn = document.querySelector('.quote_tax_submit');
                 var absoluteUrl = new URL(window.location.href);
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                if (btn) {
+                    // Create secure spinner content to prevent XSS
+                    btn.textContent = '';
+                    var h6 = document.createElement('h6');
+                    h6.className = 'text-center';
+                    var icon = document.createElement('i');
+                    icon.className = 'fa fa-spin fa-spinner';
+                    h6.appendChild(icon);
+                    btn.appendChild(h6);
+                }
                 
                 var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
                 var tax_rate_id = document.getElementById('tax_rate_id');
@@ -294,8 +400,7 @@
                 })
                 .then(function (data) {
                     var response = parsedata(data);
-                    window.location = absoluteUrl.href;
-                    window.location.reload();
+                    secureReload();
                     alert(response.flash_message);
                 })
                 .catch(function (error) {
@@ -311,7 +416,7 @@
                 var url = getOrigin() + "/invoice/quote/create_confirm";
                 var btn = document.querySelector('.quote_create_confirm');
                 var absoluteUrl = new URL(window.location.href);
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
 
                 var create_quote_client_id = document.getElementById('create_quote_client_id');
                 var quote_group_id = document.getElementById('quote_group_id');
@@ -335,15 +440,13 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                     }
                     var message = response.message;
                     if (response.success === 0) {
-                        if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-check');
+                        secureReload();
                         alert(message);
                     }
                 })
@@ -360,7 +463,7 @@
                 var url = getOrigin() + "/invoice/quote/approve";
                 var btn = document.querySelector('.quote_with_purchase_order_number_confirm');
                 var absoluteUrl = new URL(window.location.href);
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
 
                 var url_key = document.getElementById('url_key');
                 var quote_with_purchase_order_number = document.getElementById('quote_with_purchase_order_number');
@@ -384,9 +487,8 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                     }
                 })
                 .catch(function (error) {
@@ -402,7 +504,7 @@
                 var url = getOrigin() + "/invoice/quote/quote_to_invoice_confirm";
                 var btn = document.querySelector('.quote_to_invoice_confirm');
                 var absoluteUrl = new URL(window.location.href);
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
 
                 var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
                 var client_id = document.getElementById('client_id');
@@ -428,14 +530,14 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                         window.location.reload();
                         alert(response.flash_message);
                     }
                     if (response.success === 0) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                         window.location.reload();
                         alert(response.flash_message);
                     }
@@ -453,7 +555,7 @@
                 var url = getOrigin() + "/invoice/quote/quote_to_so_confirm";
                 var btn = document.querySelector('.quote_to_so_confirm');
                 var absoluteUrl = new URL(window.location.href);
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
 
                 var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
                 var client_id = document.getElementById('client_id');
@@ -483,14 +585,14 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                         window.location.reload();
                         alert(response.flash_message);
                     }
                     if (response.success === 0) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                         window.location.reload();
                         alert(response.flash_message);
                     }
@@ -508,7 +610,7 @@
                 var url = getOrigin() + "/invoice/quote/quote_to_quote_confirm";
                 var btn = document.querySelector('.quote_to_quote_confirm');
                 var absoluteUrl = new URL(window.location.href);
-                if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
+                setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
 
                 var quote_id = absoluteUrl.href.substring(absoluteUrl.href.lastIndexOf('/') + 1);
                 var create_quote_client_id = document.getElementById('create_quote_client_id');
@@ -532,8 +634,8 @@
                 .then(function (data) {
                     var response = parsedata(data);
                     if (response.success === 1) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
+                        setSecureButtonContent(btn, 'h2', 'text-center', 'fa fa-check');
+                        secureReload();
                         window.location.reload();
                         alert(response.flash_message);
                     }

@@ -151,7 +151,6 @@ final class InvController extends BaseController
 
     /**
      *
-     * @param Crypt $crypt
      * @param DataResponseFactoryInterface $factory
      * @param DelRepo $delRepo
      * @param InvAllowanceChargeService $inv_allowance_charge_service
@@ -173,7 +172,6 @@ final class InvController extends BaseController
      * @param Flash $flash
      */
     public function __construct(
-        private readonly Crypt $crypt,
         private readonly DataResponseFactoryInterface $factory,
         private readonly FormFields $formFields,
         private readonly ButtonsToolbarFull $buttonsToolbarFull,
@@ -210,7 +208,7 @@ final class InvController extends BaseController
      * @param UIR $uiR
      * @return User|null
      */
-    private function active_user(string $client_id, UR $uR, UCR $ucR, UIR $uiR): User|null
+    private function active_user(string $client_id, UR $uR, UCR $ucR, UIR $uiR): ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
@@ -325,8 +323,8 @@ final class InvController extends BaseController
             '//invoice/setting/inv_message',
             [
                 'heading' => $this->translator->translate('errors'),
-                'message' => $this->translator->translate('path') .
-                             $this->translator->translate('is.not.writable'),
+                'message' => $this->translator->translate('path')
+                             . $this->translator->translate('is.not.writable'),
                 'url' => 'inv/view', 'id' => $inv_id,
             ],
         );
@@ -536,9 +534,9 @@ final class InvController extends BaseController
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
                         $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = ($client_first_name ?? '') .
-                                         ' ' .
-                                         ($client_surname ?? '');
+                        $client_fullname = ($client_first_name ?? '')
+                                         . ' '
+                                         . ($client_surname ?? '');
                     } else {
                         $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
                     }
@@ -692,9 +690,9 @@ final class InvController extends BaseController
                     if (null !== $user_client && null !== $user_client->getClient()) {
                         $client_first_name = $user_client->getClient()?->getClient_name();
                         $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = ($client_first_name ?? '') .
-                                         ' ' .
-                                         ($client_surname ?? '');
+                        $client_fullname = ($client_first_name ?? '')
+                                         . ' '
+                                         . ($client_surname ?? '');
                     } else {
                         $this->flashMessage('warning', $this->translator->translate('user.client.no.account'));
                     }
@@ -843,8 +841,8 @@ final class InvController extends BaseController
         $inv_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
 
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
-        ($formHydrator->populateAndValidate($invTaxRateForm, $inv_tax_rate)) ?
-                        $this->inv_tax_rate_service->saveInvTaxRate(new InvTaxRate(), $inv_tax_rate) : '';
+        ($formHydrator->populateAndValidate($invTaxRateForm, $inv_tax_rate))
+                        ? $this->inv_tax_rate_service->saveInvTaxRate(new InvTaxRate(), $inv_tax_rate) : '';
     }
 
     /**
@@ -1121,8 +1119,8 @@ final class InvController extends BaseController
              */
             $endDate = $delivery->getEnd_date();
             if (null != $delivery_id) {
-                $optionsDataDelivery[$delivery_id] =
-                $startDate->format($this->date_helper->style())
+                $optionsDataDelivery[$delivery_id]
+                = $startDate->format($this->date_helper->style())
                 . ' ----- '
                 . $endDate->format($this->date_helper->style())
                 . ' ---- '
@@ -1352,7 +1350,7 @@ final class InvController extends BaseController
      * @param UIR $uiR
      * @return InvForm|null
      */
-    public function edit_save_form_fields(array|object|null $body, int $id, FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR, UCR $ucR, UIR $uiR): InvForm|null
+    public function edit_save_form_fields(array|object|null $body, int $id, FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR, UCR $ucR, UIR $uiR): ?InvForm
     {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
@@ -1444,13 +1442,13 @@ final class InvController extends BaseController
                 $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_invoice_template($invoice)) ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('default.email.template') . '=>' .
-                                        $this->translator->translate('not.set'),
+                    $this->translator->translate('default.email.template') . '=>'
+                                        . $this->translator->translate('not.set'),
                 ) : '';
                 empty($template_helper->select_pdf_invoice_template($invoice)) ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('default.pdf.template') . '=>' .
-                                        $this->translator->translate('not.set'),
+                    $this->translator->translate('default.pdf.template') . '=>'
+                                        . $this->translator->translate('not.set'),
                 ) : '';
                 $parameters = [
                     'head' => $head,
@@ -1557,7 +1555,7 @@ final class InvController extends BaseController
      * @return bool
      */
     public function email_stage_1(
-        string|null $inv_id,
+        ?string $inv_id,
         array $from,
         // $to can only have one email address
         string $to,
@@ -1873,13 +1871,13 @@ final class InvController extends BaseController
         #[RouteArgument('status')]
         string $status = '0',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterInvAmountTotal')]
-        string $queryFilterInvAmountTotal = null,
+        ?string $queryFilterInvAmountTotal = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
@@ -1911,8 +1909,8 @@ final class InvController extends BaseController
                     if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
                         $invs = $iR->filterInvAmountTotal($queryFilterInvAmountTotal);
                     }
-                    if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
-                       (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
+                    if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
+                       && (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                         $invs = $iR->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);
                     }
                     $inv_statuses = $iR->getStatuses($this->translator);
@@ -2048,19 +2046,19 @@ final class InvController extends BaseController
         #[RouteArgument('status')]
         string $status = '0',
         #[Query('page')]
-        string $queryPage = null,
+        ?string $queryPage = null,
         #[Query('sort')]
-        string $querySort = null,
+        ?string $querySort = null,
         #[Query('filterInvNumber')]
-        string $queryFilterInvNumber = null,
+        ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        string $queryFilterClient = null,
+        ?string $queryFilterClient = null,
         #[Query('filterInvAmountTotal')]
-        string $queryFilterInvAmountTotal = null,
+        ?string $queryFilterInvAmountTotal = null,
         #[Query('filterClientGroup')]
-        string $queryFilterClientGroup = null,
+        ?string $queryFilterClientGroup = null,
         #[Query('filterDateCreatedYearMonth')]
-        string $queryFilterDateCreatedYearMonth = null,
+        ?string $queryFilterDateCreatedYearMonth = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
@@ -2093,8 +2091,8 @@ final class InvController extends BaseController
             if (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal)) {
                 $invs = $invRepo->filterInvAmountTotal($queryFilterInvAmountTotal);
             }
-            if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) &&
-               (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
+            if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
+               && (isset($queryFilterInvAmountTotal) && !empty($queryFilterInvAmountTotal))) {
                 $invs = $invRepo->filterInvNumberAndInvAmountTotal($queryFilterInvNumber, (float) $queryFilterInvAmountTotal);
             }
             if (isset($queryFilterClient) && !empty($queryFilterClient)) {
@@ -2117,14 +2115,22 @@ final class InvController extends BaseController
                 'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
                 'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
-                'defaultInvoiceGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_invoice_group')))
-                                            ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName
-                                                                                               : $this->sR->getSetting('not.set'))
-                                            : $this->sR->getSetting('not.set'),
-                'defaultInvoicePaymentMethod' => null !== ($pmR = $pmR->repoPaymentMethodquery($this->sR->getSetting('invoice_default_payment_method')))
-                                            ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 ? $paymentMethodName
-                                                                                                : $this->sR->getSetting('not.set'))
-                                            : $this->sR->getSetting('not.set'),
+                'defaultInvoiceGroup' =>
+                    null !==
+                        ($gR = $groupRepo->repoGroupquery(
+                                $this->sR->getSetting('default_invoice_group'))
+                        )   ? (strlen($groupName = $gR->getName() ?? '') > 0
+                            ? $groupName
+                            : $this->sR->getSetting('not.set'))
+                            : $this->sR->getSetting('not.set'),
+                'defaultInvoicePaymentMethod' =>
+                    null !==
+                        ($pmR = $pmR->repoPaymentMethodquery(
+                                $this->sR->getSetting('invoice_default_payment_method')))
+                            ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 
+                            ? $paymentMethodName
+                            : $this->sR->getSetting('not.set'))
+                            : $this->sR->getSetting('not.set'),
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
                 'invs' => $invs,
@@ -2152,6 +2158,7 @@ final class InvController extends BaseController
                 'viewRenderer' => $this->viewRenderer,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' => $visibleToggleInvSentLogColumn == '0' ? false : true,
+                'locale' => new \Yiisoft\I18n\Locale($_language),
             ];
             return $this->viewRenderer->render('index', $parameters);
         }
@@ -2614,7 +2621,7 @@ final class InvController extends BaseController
      * @param SR $sR
      * @param GR $gR
      */
-    public function generate_inv_number_if_applicable(string|null $inv_id, IR $iR, SR $sR, GR $gR): void
+    public function generate_inv_number_if_applicable(?string $inv_id, IR $iR, SR $sR, GR $gR): void
     {
         if (null !== $inv_id) {
             $inv = $iR->repoInvUnloadedquery($inv_id);
@@ -2654,7 +2661,7 @@ final class InvController extends BaseController
      * @param bool $unloaded
      * @return Inv|null
      */
-    private function inv(int $id, IR $invRepo, bool $unloaded = false): Inv|null
+    private function inv(int $id, IR $invRepo, bool $unloaded = false): ?Inv
     {
         if ($id) {
             $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string) $id) : $invRepo->repoInvLoadedquery((string) $id));
@@ -2681,7 +2688,7 @@ final class InvController extends BaseController
      * @param icR $icR
      * @return array
      */
-    public function inv_custom_values(string|null $inv_id, ICR $icR): array
+    public function inv_custom_values(?string $inv_id, ICR $icR): array
     {
         // Get all the custom fields that have been registered with this inv on creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
@@ -2707,7 +2714,7 @@ final class InvController extends BaseController
      * @param IIR $invitemRepository
      * @return InvItem|null
      */
-    private function inv_item(int $id, IIR $invitemRepository): InvItem|null
+    private function inv_item(int $id, IIR $invitemRepository): ?InvItem
     {
         if ($id) {
             $invitem = $invitemRepository->repoInvItemquery((string) $id) ?: null;
@@ -2957,10 +2964,10 @@ final class InvController extends BaseController
                             // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
                             $accumulativeChargeTotal = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
                             $accumulativeAllowanceTotal = $this->inv_item_service->accumulativeAllowanceTotal($newInvItemId, $aciiR);
-                            if (($invItem->getQuantity() >=  0.00) &&
-                                ($invItem->getPrice() >= 0.00) &&
-                                ($invItem->getDiscount_amount() >= 0.00) &&
-                                ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
+                            if (($invItem->getQuantity() >=  0.00)
+                                && ($invItem->getPrice() >= 0.00)
+                                && ($invItem->getDiscount_amount() >= 0.00)
+                                && ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
                                 $this->inv_item_service->saveInvItemAmount(
                                     $newInvItemId,
                                     $invItem->getQuantity() ?? 0.00,
@@ -2984,10 +2991,10 @@ final class InvController extends BaseController
                             // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
                             $accumulativeChargeTotal = $this->inv_item_service->accumulativeChargeTotal($newInvItemId, $aciiR);
                             $accumulativeAllowanceTotal = $this->inv_item_service->accumulativeAllowanceTotal($newInvItemId, $aciiR);
-                            if (($invItem->getQuantity() >=  0.00) &&
-                                ($invItem->getPrice() >= 0.00) &&
-                                ($invItem->getDiscount_amount() >= 0.00) &&
-                                ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
+                            if (($invItem->getQuantity() >=  0.00)
+                                && ($invItem->getPrice() >= 0.00)
+                                && ($invItem->getDiscount_amount() >= 0.00)
+                                && ($inv_item->getTaxRate()?->getTaxRatePercent() >= 0.00)) {
                                 $this->inv_item_service->saveInvItemAmount(
                                     $newInvItemId,
                                     $invItem->getQuantity() ?? 0.00,
@@ -3042,7 +3049,7 @@ final class InvController extends BaseController
      * @param ITRR $invtaxrateRepository
      * @return InvTaxRate|null
      */
-    private function invtaxrate(int $id, ITRR $invtaxrateRepository): InvTaxRate|null
+    private function invtaxrate(int $id, ITRR $invtaxrateRepository): ?InvTaxRate
     {
         if ($id) {
             $invtaxrate = $invtaxrateRepository->repoInvTaxRatequery((string) $id);
@@ -3789,7 +3796,6 @@ final class InvController extends BaseController
                             $this->sR->getSetting('currency_from_to'),
                             // one of 'to currency' converts to this of 'from currency':
                             $this->sR->getSetting('currency_to_from'),
-                            $this->crypt,
                         );
                         $storecove_array = $storecovehelper->maximum_pre_json_php_object_for_an_invoice(
                             $soR,
@@ -4038,14 +4044,13 @@ final class InvController extends BaseController
                         '//invoice/task/modal_task_lookups_inv',
                         [
                             'partial_task_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/task/partial_task_table_modal', [
-                                // Only tasks with complete or status of 3 are made available for selection
-                                'taskR' => $taskR,
-                                'prjctR' => $prjctR,
+                                'tasks' => $taskR->repoTaskStatusquery(3),
+                                'projectR' => $prjctR,
                                 'dateHelper' => $this->date_helper,
                                 'numberHelper' => $this->number_helper,
                             ]),
                             'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
-                            'tasks' => $pR->findAllPreloaded(),
+                            'tasks' => $taskR->findAllPreloaded(),
                             'head' => $head,
                         ],
                     ),
@@ -4278,37 +4283,7 @@ final class InvController extends BaseController
             'actionArguments' => ['id' => $this->session->get('inv_id'), '_language' => $_language],
         ]);
     }
-
-    /**
-     * @param string $_language
-     * @param DLR $dlr
-     * @param string $delivery_location_id
-     * @return string
-     */
-    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id): string
-    {
-        if (!empty($delivery_location_id)) {
-            $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
-            if (null !== $del) {
-                return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
-                    'actionName' => 'del/view',
-                    'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
-                    'title' => $this->translator->translate('delivery.location'),
-                    'building_number' => $del->getBuildingNumber(),
-                    'address_1' => $del->getAddress_1(),
-                    'address_2' => $del->getAddress_2(),
-                    'city' => $del->getCity(),
-                    'state' => $del->getZip(),
-                    'country' => $del->getCountry(),
-                    'global_location_number' => $del->getGlobal_location_number(),
-                ]);
-            } //null!==$del
-        } else {
-            return '';
-        }
-        return '';
-    }
-
+    
     /**
      * @param bool $show_buttons
      * @param int $id
@@ -4327,7 +4302,7 @@ final class InvController extends BaseController
      * @param bool $so_exists
      * @return string
      */
-    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, InvAmount|null $invAmount): string
+    private function view_partial_item_table(bool $show_buttons, int $id, ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR, IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR, ?InvAmount $invAmount): string
     {
         $inv = $this->inv($id, $iR, false);
         if ($inv) {

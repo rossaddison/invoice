@@ -206,7 +206,7 @@ final class MerchantController extends BaseController
      * @param MerchantRepository $merchantRepository
      * @return Merchant|null
      */
-    private function merchant(CurrentRoute $currentRoute, MerchantRepository $merchantRepository): Merchant|null
+    private function merchant(CurrentRoute $currentRoute, MerchantRepository $merchantRepository): ?Merchant
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

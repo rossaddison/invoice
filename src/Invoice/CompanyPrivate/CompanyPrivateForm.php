@@ -60,62 +60,62 @@ final class CompanyPrivateForm extends FormModel
         $this->end_date = $company_private->getEnd_date();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCompany_id(): int|null
+    public function getCompany_id(): ?int
     {
         return $this->company_id;
     }
 
-    public function getVat_id(): string|null
+    public function getVat_id(): ?string
     {
         return $this->vat_id;
     }
 
-    public function getTax_code(): string|null
+    public function getTax_code(): ?string
     {
         return $this->tax_code;
     }
 
-    public function getIban(): string|null
+    public function getIban(): ?string
     {
         return $this->iban;
     }
 
-    public function getGln(): string|null
+    public function getGln(): ?string
     {
         return $this->gln;
     }
 
-    public function getLogo_filename(): string|null
+    public function getLogo_filename(): ?string
     {
         return $this->logo_filename;
     }
 
-    public function getLogo_width(): string|null
+    public function getLogo_width(): ?string
     {
         return $this->logo_width;
     }
 
-    public function getLogo_height(): string|null
+    public function getLogo_height(): ?string
     {
         return $this->logo_height;
     }
 
-    public function getLogo_margin(): string|null
+    public function getLogo_margin(): ?string
     {
         return $this->logo_margin;
     }
 
-    public function getRcc(): string|null
+    public function getRcc(): ?string
     {
         return $this->rcc;
     }
 
-    public function getStart_date(): string|null|DateTimeImmutable
+    public function getStart_date(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->start_date
@@ -123,7 +123,7 @@ final class CompanyPrivateForm extends FormModel
         return $this->start_date;
     }
 
-    public function getEnd_date(): string|null|DateTimeImmutable
+    public function getEnd_date(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->end_date

@@ -16,7 +16,8 @@ final class PaymentCustomFieldProcessor implements CustomFieldProcessor
     public function __construct(
         private readonly PaymentCustomRepository $paymentCustomRepository,
         private readonly PaymentCustomService $paymentCustomService,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function exists(string $entityId, string $customFieldId): bool

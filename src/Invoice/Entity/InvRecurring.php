@@ -27,7 +27,9 @@ class InvRecurring
         private mixed $start = '', #[Column(type: 'date', nullable: true)]
         private mixed $end = '', #[Column(type: 'string(191)', nullable: false)]
         private string $frequency = '', #[Column(type: 'date', nullable: true)]
-        private mixed $next = '') {}
+        private mixed $next = '')
+    {
+    }
 
     public function getId(): string
     {
@@ -65,7 +67,7 @@ class InvRecurring
         $this->start = $start;
     }
 
-    public function getEnd(): string|null|DateTimeImmutable
+    public function getEnd(): string|DateTimeImmutable|null
     {
         /** @var DateTimeImmutable|string|null $this->end */
         return $this->end;
@@ -76,7 +78,7 @@ class InvRecurring
         $this->end = $end;
     }
 
-    public function getNext(): string|null|DateTimeImmutable
+    public function getNext(): string|DateTimeImmutable|null
     {
         /** @var DateTimeImmutable|string|null $this->next */
         return $this->next;

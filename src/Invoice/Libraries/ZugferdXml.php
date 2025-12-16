@@ -106,7 +106,7 @@ final class ZugferdXml
      * @param \DateTimeImmutable $date
      * @return string
      */
-    protected function zugferdFormattedDate(\DateTimeImmutable $date): string|null
+    protected function zugferdFormattedDate(\DateTimeImmutable $date): ?string
     {
         $return_date = \DateTime::createFromFormat('Y-m-d', $date->format('Y-m-d'));
         return $return_date->format('Ymd');

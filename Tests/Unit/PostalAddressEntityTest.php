@@ -9,6 +9,16 @@ use Codeception\Test\Unit;
 
 final class PostalAddressEntityTest extends Unit
 {
+    public string $mainStreet = 'Main Street';
+    
+    public string $newYork = 'New York';
+    
+    public string $oneThousandOne = '10001';
+    
+    public string $oneToFive = '12345';
+    
+    public string $testCity = 'Test City';
+    
     public function testConstructorWithDefaults(): void
     {
         $postalAddress = new PostalAddress();
@@ -27,24 +37,24 @@ final class PostalAddressEntityTest extends Unit
     public function testConstructorWithAllParameters(): void
     {
         $postalAddress = new PostalAddress(
-            1, 
-            123, 
-            'Main Street', 
-            'Apt 2B', 
-            '456', 
-            'New York', 
-            '10001', 
-            'NY', 
+            1,
+            123,
+            $this->mainStreet,
+            'Apt 2B',
+            '456',
+            $this->newYork,
+            $this->oneThousandOne,
+            'NY',
             'USA'
         );
         
         $this->assertSame('1', $postalAddress->getId());
         $this->assertSame('123', $postalAddress->getClient_id());
-        $this->assertSame('Main Street', $postalAddress->getStreet_name());
+        $this->assertSame($this->mainStreet, $postalAddress->getStreet_name());
         $this->assertSame('Apt 2B', $postalAddress->getAdditional_street_name());
         $this->assertSame('456', $postalAddress->getBuilding_number());
-        $this->assertSame('New York', $postalAddress->getCity_name());
-        $this->assertSame('10001', $postalAddress->getPostalzone());
+        $this->assertSame($this->newYork, $postalAddress->getCity_name());
+        $this->assertSame($this->oneThousandOne, $postalAddress->getPostalzone());
         $this->assertSame('NY', $postalAddress->getCountrysubentity());
         $this->assertSame('USA', $postalAddress->getCountry());
     }
@@ -157,7 +167,7 @@ final class PostalAddressEntityTest extends Unit
         $longCity = 'Very Long City Name That Could Exceed Normal Limits';
         
         $postalAddress = new PostalAddress(
-            1, 1, $longStreet, 'Suite 1000', '9999', $longCity, '12345', 'State', 'Country'
+            1, 1, $longStreet, 'Suite 1000', '9999', $longCity, $this->oneToFive, 'State', 'Country'
         );
         
         $this->assertSame($longStreet, $postalAddress->getStreet_name());
@@ -172,8 +182,8 @@ final class PostalAddressEntityTest extends Unit
         $postalAddress->setStreet_name('Test Street');
         $postalAddress->setAdditional_street_name('Test Apt');
         $postalAddress->setBuilding_number('100');
-        $postalAddress->setCity_name('Test City');
-        $postalAddress->setPostalzone('12345');
+        $postalAddress->setCity_name($this->testCity);
+        $postalAddress->setPostalzone($this->oneToFive);
         $postalAddress->setCountrysubentity('Test State');
         $postalAddress->setCountry('Test Country');
         
@@ -182,15 +192,15 @@ final class PostalAddressEntityTest extends Unit
         $this->assertSame('Test Street', $postalAddress->getStreet_name());
         $this->assertSame('Test Apt', $postalAddress->getAdditional_street_name());
         $this->assertSame('100', $postalAddress->getBuilding_number());
-        $this->assertSame('Test City', $postalAddress->getCity_name());
-        $this->assertSame('12345', $postalAddress->getPostalzone());
+        $this->assertSame($this->testCity, $postalAddress->getCity_name());
+        $this->assertSame($this->oneToFive, $postalAddress->getPostalzone());
         $this->assertSame('Test State', $postalAddress->getCountrysubentity());
         $this->assertSame('Test Country', $postalAddress->getCountry());
     }
 
     public function testStringConversions(): void
     {
-        $postalAddress = new PostalAddress(123, 456, 'Street', 'Apt', '789', 'City', '12345', 'State', 'Country');
+        $postalAddress = new PostalAddress(123, 456, 'Street', 'Apt', '789', 'City', $this->oneToFive, 'State', 'Country');
         
         // Verify getters return strings even though setters accept ints for ID fields
         $this->assertIsString($postalAddress->getId());
@@ -201,7 +211,7 @@ final class PostalAddressEntityTest extends Unit
 
     public function testPublicIdProperty(): void
     {
-        $postalAddress = new PostalAddress(999, 1, 'Street', 'Apt', '1', 'City', '12345', 'State', 'Country');
+        $postalAddress = new PostalAddress(999, 1, 'Street', 'Apt', '1', 'City', $this->oneToFive, 'State', 'Country');
         
         // Test that id property is accessible as public
         $this->assertSame(999, $postalAddress->id);
@@ -210,7 +220,7 @@ final class PostalAddressEntityTest extends Unit
     public function testGetFullAddressMethod(): void
     {
         $postalAddress = new PostalAddress(
-            1, 1, 'Main Street', 'Suite 200', '123', 'New York', '10001', 'NY', 'USA'
+            1, 1, $this->mainStreet, 'Suite 200', '123', $this->newYork, $this->oneThousandOne, 'NY', 'USA'
         );
         
         $expectedFullAddress = 'Main Street 123, Suite 200, 10001';
@@ -259,14 +269,14 @@ final class PostalAddressEntityTest extends Unit
 
     public function testNumericalBuildingNumbers(): void
     {
-        $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit A', '999', 'Test City', '99999', 'State', 'Country');
+        $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit A', '999', $this->testCity, '99999', 'State', 'Country');
         
         $this->assertSame('999', $postalAddress->getBuilding_number());
     }
 
     public function testAlphanumericBuildingNumbers(): void
     {
-        $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit B', '12A', 'Test City', '12345', 'State', 'Country');
+        $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit B', '12A', $this->testCity, $this->oneToFive, 'State', 'Country');
         
         $this->assertSame('12A', $postalAddress->getBuilding_number());
     }

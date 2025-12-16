@@ -17,7 +17,9 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class Button
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator) {}
+    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
+    {
+    }
 
     public static function tfaToggleSecret(): string
     {
@@ -65,7 +67,7 @@ final readonly class Button
         $buttonsDataArray = [
             [
                 '',
-                'type' => 'reset',
+                'type' => 'button',
                 'onclick' => 'window.history.back()',
                 'class' => 'btn btn-danger bi bi-arrow-left',
                 'value' => 'main',
@@ -219,8 +221,8 @@ final readonly class Button
     public function developerSandboxHmrc(string $developerSandboxHmrcAuthUrl): string
     {
         return
-        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
-            Img::tag()
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            . Img::tag()
             ->src('/img/govuk-opengraph-image.png')
             ->size(90, 60)
             ->addClass('btn btn-dark')
@@ -229,8 +231,8 @@ final readonly class Button
             ->content($this->translator->translate('continue.with.developersandboxhmrc'))
             ->href($developerSandboxHmrcAuthUrl)
             ->id('btn-sandboxhmrc')
-            ->render() .
-        Html::closeTag('div');
+            ->render()
+        . Html::closeTag('div');
     }
 
     public function facebook(string $facebookAuthUrl): string
@@ -273,8 +275,8 @@ final readonly class Button
     public function govuk(string $govukAuthUrl): string
     {
         return
-        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
-            Img::tag()
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            . Img::tag()
             ->src('/img/govuk-opengraph-image.png')
             ->size(90, 60)
             ->addClass('btn btn-dark')
@@ -283,8 +285,8 @@ final readonly class Button
             ->content($this->translator->translate('continue.with.govuk'))
             ->href($govukAuthUrl)
             ->id('btn-govuk')
-            ->render() .
-        Html::closeTag('div');
+            ->render()
+        . Html::closeTag('div');
     }
 
     public function linkedin(string $linkedInAuthUrl): string
@@ -310,21 +312,21 @@ final readonly class Button
     public function openbanking(string $openBankingAuthUrl, string $provider): string
     {
         return
-        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
-            A::tag()
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            . A::tag()
             ->addClass('btn btn-dark')
             ->content('🏦  ' . $this->translator->translate('continue.with.openbanking') . '➡️' . ucfirst($provider))
             ->href($openBankingAuthUrl)
             ->id('btn-openbanking')
-            ->render() .
-        Html::closeTag('div');
+            ->render()
+        . Html::closeTag('div');
     }
 
     public function vkontakte(string $vkontakteAuthUrl): string
     {
         return
-        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
-            Img::tag()
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            . Img::tag()
             ->src('/img/vkontakte-24.jpg')
             ->addClass('btn btn-dark')
             ->render() . A::tag()
@@ -332,8 +334,8 @@ final readonly class Button
             ->content($this->translator->translate('continue.with.vkontakte'))
             ->href($vkontakteAuthUrl)
             ->id('btn-vkontakte')
-            ->render() .
-        Html::closeTag('div');
+            ->render()
+        . Html::closeTag('div');
     }
 
     public function x(string $xAuthUrl): string
@@ -349,8 +351,8 @@ final readonly class Button
     public function yandex(string $yandexAuthUrl): string
     {
         return
-        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']) .
-            Img::tag()
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            . Img::tag()
             ->src('/img/yandex-24.jpg')
             ->addClass('btn btn-dark disabled')
             ->render() . A::tag()
@@ -358,8 +360,8 @@ final readonly class Button
             ->content($this->translator->translate('continue.with.yandex'))
             ->href($yandexAuthUrl)
             ->id('btn-vkontakte')
-            ->render() .
-        Html::closeTag('div');
+            ->render()
+        . Html::closeTag('div');
     }
 
     public function regenerateRecoveryCodes(string $regenerateCodesUrl): string

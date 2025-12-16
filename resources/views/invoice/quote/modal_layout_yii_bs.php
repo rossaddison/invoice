@@ -35,10 +35,10 @@ echo Modal::widget()
  * The simplified modal_layout is not using 'aria-hidden'
  */
 
-$inert = '$(function () {' .
-        "const modal = document.getElementById('modal-add-quote');" .
-        "modal.removeAttribute('inert');" .
-        "modal.setAttribute('inert', '');" .
-'});';
+$inert = '$(function () {'
+        . "const modal = document.getElementById('modal-add-quote');"
+        . "modal.removeAttribute('inert');"
+        . "modal.setAttribute('inert', '');"
+. '});';
 
 echo Html::script($inert)->type('module');

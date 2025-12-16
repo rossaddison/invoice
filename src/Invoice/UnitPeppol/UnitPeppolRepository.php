@@ -93,7 +93,7 @@ final class UnitPeppolRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return UnitPeppol|null
      */
-    public function repoUnitPeppolLoadedquery(string $id): UnitPeppol|null
+    public function repoUnitPeppolLoadedquery(string $id): ?UnitPeppol
     {
         $query = $this->select()
                       ->load('unit')
@@ -112,7 +112,7 @@ final class UnitPeppolRepository extends Select\Repository
         return $query->count();
     }
 
-    public function repoUnit(string $unit_id): UnitPeppol|null
+    public function repoUnit(string $unit_id): ?UnitPeppol
     {
         $query = $this->select()
                       ->where(['unit_id' => $unit_id]);

@@ -67,7 +67,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
 ?>
     <?php
-        echo $alert;
+        echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 echo $modal_delete_inv;
 if ($vat === '0') {
     echo $modal_add_inv_tax;
@@ -196,16 +196,15 @@ echo $modal_pdf;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['id' => 'add-task-tab', 'class' => 'tab-pane']); ?>
                     <div class="panel-heading">
-                        <?= Html::openTag('td'); ?>
+                        <?= Html::openTag('div'); ?>
                             <?= Html::openTag('button', [
-                                'class' => 'btn btn-primary bi bi-ui-checks',
-                                'href' => '#modal-choose-tasks',
-                                'id' => 'modal-choose-tasks',
-                                'data-bs-toggle' => 'modal']);
+        'class' => 'btn btn-primary bi bi-ui-checks w-100',
+        'data-bs-target' => '#modal-choose-tasks-inv',
+        'data-bs-toggle' => 'modal']);
     ?>
                             <?= $translator->translate('add.task'); ?>
                             <?= Html::closeTag('button'); ?>
-                        <?= Html::closeTag('td'); ?>           
+                        <?= Html::closeTag('div'); ?>           
                 <?= $add_inv_item_task; ?>
                     </div>
             <?= Html::closeTag('div'); ?>
@@ -692,7 +691,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
                                             <b><?= $translator->translate('payment.method'); ?></b>
                                         </label>
 <?php if ($inv->getPayment_method() !== 0) { ?>
-                                            <select name="payment_method" id="payment_method" class="form-control" disabled="disabled">
+                                            <select name="payment_method" id="payment_method_1" class="form-control" disabled="disabled">
                                                 <option value="0"><?= Html::encode($translator->translate('select.payment.method')); ?></option>
                                         <?php
                                                 /**
@@ -710,7 +709,7 @@ if (($inv->getStatus_id() === 1 || ($s->getSetting('enable_invoice_deletion') ==
     <?php } ?>
                                             </select>
 <?php } else { ?>
-                                            <select name="payment_method" id="payment_method" class="form-control"
+                                            <select name="payment_method_2" id="payment_method" class="form-control"
     <?= 'disabled="disabled"'; ?>>
                                                 <option "0" ><?= Html::encode($translator->translate('none')); ?></option>
                                             </select>

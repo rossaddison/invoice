@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
                                     <input type="hidden" name="settings[enable_peppol]" value="0">
                                     <input type="checkbox" name="settings[enable_peppol]" value="1"
                                         <?php $s->check_select($body['settings[enable_peppol]'], 1, '==', true) ?>>
-                                        <?= Html::a($translator->translate('peppol.enable'), 'http://www.datypic.com/sc/ubl21/ss.html', ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']); ?>
+                                        <?= Html::a($translator->translate('peppol.enable'), 'https://www.datypic.com/sc/ubl21/ss.html', ['style' => 'text-decoration:none','data-bs-toggle' => 'tooltip','title' => '']); ?>
                                 </label>
                             </div>                            
                         </div>

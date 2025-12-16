@@ -50,8 +50,8 @@ final class GeneratorTruncateCommand extends Command
 
         if (0 === count(is_array($findAll = $this->promise
                 ->getORM()
-                ->getRepository(GentorRelation::class)->findAll()) ? $findAll : iterator_to_array($findAll)) +
-            count(is_array($findAll = $this->promise
+                ->getRepository(GentorRelation::class)->findAll()) ? $findAll : iterator_to_array($findAll))
+            + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(Gentor::class)->findAll()) ? $findAll : iterator_to_array($findAll))
         ) {

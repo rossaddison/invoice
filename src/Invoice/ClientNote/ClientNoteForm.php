@@ -27,7 +27,7 @@ final class ClientNoteForm extends FormModel
         $this->note = $clientNote->getNote();
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }
@@ -40,7 +40,7 @@ final class ClientNoteForm extends FormModel
         return $this->date_note;
     }
 
-    public function getNote(): string|null
+    public function getNote(): ?string
     {
         return $this->note;
     }

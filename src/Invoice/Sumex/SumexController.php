@@ -197,7 +197,7 @@ final class SumexController extends BaseController
      * @param SumexRepository $sumexRepository
      * @return Sumex|null
      */
-    private function sumex(CurrentRoute $currentRoute, SumexRepository $sumexRepository): Sumex|null
+    private function sumex(CurrentRoute $currentRoute, SumexRepository $sumexRepository): ?Sumex
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

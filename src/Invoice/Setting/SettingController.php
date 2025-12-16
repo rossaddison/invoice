@@ -10,7 +10,6 @@ use App\Invoice\BaseController;
 use App\Invoice\Entity\Setting;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
 use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\Libraries\Crypt;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PM;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\CountryHelper;
@@ -135,7 +134,7 @@ final class SettingController extends BaseController
         PM $pm,
         TR $tR,
         #[Query('active')]
-        string $active = null,
+        ?string $active = null,
     ): Response {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => '@invoice/Language',
@@ -143,7 +142,6 @@ final class SettingController extends BaseController
         $datehelper = new DateHelper($this->sR);
         $numberhelper = new NumberHelper($this->sR);
         $countries = new CountryHelper();
-        $crypt = new Crypt();
         $peppol_arrays = new PeppolArrays();
         $languages = $this->sR->locale_language_array();
         $body = $request->getParsedBody();
@@ -210,7 +208,6 @@ final class SettingController extends BaseController
                 'gateway_regions' => $this->sR->amazon_regions(),
                 'openBankingProviders' => $this->getOpenBankingProviderNames(),
                 'payment_methods' => $pm->findAllPreloaded(),
-                'crypt' => $crypt,
             ]),
             'mpdf' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),
             'mtd' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_making_tax_digital'),
@@ -226,8 +223,6 @@ final class SettingController extends BaseController
                 // Therefore they are mutually exclusive.
                 // They cannot both exist at the same time.
                 'stand_in_codes' => $peppol_arrays->getUncl2005subset(),
-                // use crypt to decode the store cove api key
-                'crypt' => $crypt,
             ]),
             'storecove' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
                 'countries' => $countries->get_country_list((string) $this->session->get('_language')),
@@ -277,7 +272,7 @@ final class SettingController extends BaseController
                         }
                         if (isset($settings[$key . '_field_is_password']) && $value !== '') {
                             // Encrypt passwords but don't save empty passwords
-                            $this->tab_index_settings_save($key, (string) $crypt->encode(trim($value)));
+                            $this->tab_index_settings_save($key, (string) $this->sR->encode(trim($value)));
                         } elseif (isset($settings[$key . '_field_is_amount'])) {
                             // Format amount inputs
                             $this->tab_index_settings_save($key, (string) $numberhelper->standardize_amount($value));
@@ -691,7 +686,7 @@ final class SettingController extends BaseController
      */
     private function setting(
         CurrentRoute $currentRoute,
-    ): Setting|null {
+    ): ?Setting {
         $setting_id = $currentRoute->getArgument('setting_id');
         if (null !== $setting_id) {
             return $this->sR->repoSettingquery($setting_id);
@@ -707,29 +702,6 @@ final class SettingController extends BaseController
     private function settings(): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $this->sR->findAllPreloaded();
-    }
-
-    /**
-     * @return \Yiisoft\DataResponse\DataResponse
-     */
-    public function clear(): \Yiisoft\DataResponse\DataResponse
-    {
-        $directory = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'assets';
-        try {
-            $filehelper = new FileHelper();
-            $filehelper->clearDirectory($directory);
-            $this->flashMessage('info', $this->translator->translate('setting.assets.cleared.at') . $directory);
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
-                '//invoice/setting/successful',
-                ['heading' => $this->translator->translate('successful'),'message' => $this->translator->translate('setting.you.have.cleared.the.cache')],
-            ));
-        } catch (\Exception $e) {
-            $this->flashMessage('warning', $this->translator->translate('setting.assets.were.not.cleared.at') . $directory . $this->translator->translate('setting.as.a.result.of') . $e->getMessage());
-            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
-                '//invoice/setting/unsuccessful',
-                ['heading' => $this->translator->translate('unsuccessful'),'message' => $this->translator->translate('setting.you.have.not.cleared.the.cache.due.to.a') . $e->getMessage() . $this->translator->translate('setting.error.on.the.public.assets.folder')],
-            ));
-        }
     }
 
     /**

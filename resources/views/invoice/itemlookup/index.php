@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -38,22 +38,22 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(ItemLookup $model) => Html::encode($model->getId()),
+        content: static fn (ItemLookup $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(ItemLookup $model): string => Html::encode($model->getName()),
+        content: static fn (ItemLookup $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'description',
         header: $translator->translate('description'),
-        content: static fn(ItemLookup $model): string => Html::encode($model->getDescription()),
+        content: static fn (ItemLookup $model): string => Html::encode($model->getDescription()),
     ),
     new DataColumn(
         'price',
         header: $translator->translate('price'),
-        content: static fn(ItemLookup $model): string => Html::encode($model->getPrice()),
+        content: static fn (ItemLookup $model): string => Html::encode($model->getPrice()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -97,15 +97,15 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('itemlookup/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('itemlookup/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('itemlookup/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

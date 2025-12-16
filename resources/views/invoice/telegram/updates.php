@@ -8,11 +8,12 @@ use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\I;
 
 /**
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var string $alert
  * @var Phptg\BotApi\FailResult|array $updates
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 echo I::tag()->content('')->addClass('bi bi-info-circle')->addAttributes(['data-bs-toggle' => 'tooltip','title' => '.../resources/views/telegram/updates.php'])->render();
 if (!$updates instanceof \Phptg\BotApi\FailResult) {
     /**

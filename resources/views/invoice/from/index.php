@@ -22,7 +22,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
@@ -36,12 +36,12 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(FromDropDown $model) => $model->getId(),
+        content: static fn (FromDropDown $model) => $model->getId(),
     ),
     new DataColumn(
         'default_email',
         header: $translator->translate('email.default'),
-        content: static fn(FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
+        content: static fn (FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -78,15 +78,15 @@ $columns = [
     ),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('from/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('from/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('from/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');
 

@@ -79,14 +79,14 @@ use Yiisoft\Html\Tag\Form;
 
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::text($form, 'label')
-    ->label($translator->translate('label'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('label'),
-        'class' => 'form-control',
-        'id' => 'label',
-    ])
-    ->value(Html::encode($form->getLabel() ?? ''))
-    ->render();
+        ->label($translator->translate('label'))
+        ->addInputAttributes([
+            'placeholder' => $translator->translate('label'),
+            'class' => 'form-control',
+            'id' => 'label',
+        ])
+        ->value(Html::encode($form->getLabel() ?? ''))
+        ->render();
 ?>
             <?= Html::closeTag('div'); ?>
 
@@ -108,15 +108,15 @@ foreach ($types as $type) {
 ?>   
             <?= Html::openTag('div', ['class' => 'form-group']); ?>
                 <?= Field::select($form, 'type')
-        ->label($translator->translate('type'))
-        ->addInputAttributes([
-            'placeholder' => $translator->translate('type'),
-            'class' => 'form-control',
-            'id' => 'type',
-        ])
-        ->value(Html::encode($form->getType() ?? ''))
-        ->optionsData($optionsDataType)
-        ->render();
+                    ->label($translator->translate('type'))
+                    ->addInputAttributes([
+                        'placeholder' => $translator->translate('type'),
+                        'class' => 'form-control',
+                        'id' => 'type',
+                    ])
+                    ->value(Html::encode($form->getType() ?? ''))
+                    ->optionsData($optionsDataType)
+                    ->render();
 ?>
             <?= Html::closeTag('div'); ?>   
             <?= Html::openTag('div', ['class' => 'form-group']); ?>

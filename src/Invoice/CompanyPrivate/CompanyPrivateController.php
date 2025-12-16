@@ -348,7 +348,7 @@ final class CompanyPrivateController extends BaseController
      * @param CompanyPrivateRepository $companyprivateRepository
      * @return CompanyPrivate|null
      */
-    private function companyprivate(CurrentRoute $currentRoute, CompanyPrivateRepository $companyprivateRepository): CompanyPrivate|null
+    private function companyprivate(CurrentRoute $currentRoute, CompanyPrivateRepository $companyprivateRepository): ?CompanyPrivate
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

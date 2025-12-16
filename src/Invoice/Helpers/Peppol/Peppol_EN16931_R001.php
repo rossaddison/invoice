@@ -11,7 +11,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class Peppol_EN16931_R001 extends \RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(private readonly string $client_id, private readonly TranslatorInterface $translator, private readonly UrlGenerator $urlGenerator) {}
+    public function __construct(private readonly string $client_id, private readonly TranslatorInterface $translator, private readonly UrlGenerator $urlGenerator)
+    {
+    }
 
     #[\Override]
     public function getName(): string

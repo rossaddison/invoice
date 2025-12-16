@@ -8,65 +8,60 @@ use Tests\Support\FunctionalTester;
 
 class UserControllerCest
 {
-    public function _before(FunctionalTester $I): void
+    public function testIndexPageLoads(FunctionalTester $tester): void
     {
-        // Setup before each test if needed
+        $tester->wantTo('see the user index page loads');
+        $tester->amOnPage('/user');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testIndexPageLoads(FunctionalTester $I): void
+    public function testIndexWithPagination(FunctionalTester $tester): void
     {
-        $I->wantTo('see the user index page loads');
-        $I->amOnPage('/user');
-        $I->seeResponseCodeIs(200);
+        $tester->wantTo('test user index with pagination');
+        $tester->amOnPage('/user/1/10'); // page 1, pagesize 10
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testIndexWithPagination(FunctionalTester $I): void
+    public function testIndexWithDifferentPageSize(FunctionalTester $tester): void
     {
-        $I->wantTo('test user index with pagination');
-        $I->amOnPage('/user/1/10'); // page 1, pagesize 10
-        $I->seeResponseCodeIs(200);
+        $tester->wantTo('test user index with different page size');
+        $tester->amOnPage('/user/2/5'); // page 2, pagesize 5
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testIndexWithDifferentPageSize(FunctionalTester $I): void
+    public function testProfilePageWithLogin(FunctionalTester $tester): void
     {
-        $I->wantTo('test user index with different page size');
-        $I->amOnPage('/user/2/5'); // page 2, pagesize 5
-        $I->seeResponseCodeIs(200);
-    }
-
-    public function testProfilePageWithLogin(FunctionalTester $I): void
-    {
-        $I->wantTo('see a user profile page');
+        $tester->wantTo('see a user profile page');
         // Using a common login that exists - admin user
-        $I->amOnPage('/user/admin');
-        $I->seeResponseCodeIs(200);
+        $tester->amOnPage('/user/admin');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testProfilePageWithNonExistentLogin(FunctionalTester $I): void
+    public function testProfilePageWithNonExistentLogin(FunctionalTester $tester): void
     {
-        $I->wantTo('see 404 for non-existent user');
-        $I->amOnPage('/user/nonexistentuser12345');
-        $I->seeResponseCodeIs(404);
+        $tester->wantTo('see 404 for non-existent user');
+        $tester->amOnPage('/user/nonexistentuser12345');
+        $tester->seeResponseCodeIs(404);
     }
 
-    public function testIndexWithQueryParameters(FunctionalTester $I): void
+    public function testIndexWithQueryParameters(FunctionalTester $tester): void
     {
-        $I->wantTo('test user index with query parameters');
-        $I->amOnPage('/user?test=value');
-        $I->seeResponseCodeIs(200);
+        $tester->wantTo('test user index with query parameters');
+        $tester->amOnPage('/user?test=value');
+        $tester->seeResponseCodeIs(200);
     }
 
-    public function testIndexTrailingSlash(FunctionalTester $I): void
+    public function testIndexTrailingSlash(FunctionalTester $tester): void
     {
-        $I->wantTo('test user index with trailing slash returns 404');
-        $I->amOnPage('/user/');
-        $I->seeResponseCodeIs(404);
+        $tester->wantTo('test user index with trailing slash returns 404');
+        $tester->amOnPage('/user/');
+        $tester->seeResponseCodeIs(404);
     }
 
-    public function testIndexWithComplexPath(FunctionalTester $I): void
+    public function testIndexWithComplexPath(FunctionalTester $tester): void
     {
-        $I->wantTo('test user index with complex URL pattern');
-        $I->amOnPage('/user/3/20'); // page 3, pagesize 20
-        $I->seeResponseCodeIs(200);
+        $tester->wantTo('test user index with complex URL pattern');
+        $tester->amOnPage('/user/3/20'); // page 3, pagesize 20
+        $tester->seeResponseCodeIs(200);
     }
 }

@@ -8,7 +8,9 @@ use App\Invoice\Entity\UserInv;
 
 final readonly class UserInvService
 {
-    public function __construct(private UserInvRepository $repository) {}
+    public function __construct(private UserInvRepository $repository)
+    {
+    }
 
     /**
      * @param UserInv $model

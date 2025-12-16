@@ -198,7 +198,7 @@ final class ClientNoteController extends BaseController
      * @param ClientNoteRepository $clientnoteRepository
      * @return ClientNote|null
      */
-    private function clientnote(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository): ClientNote|null
+    private function clientnote(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository): ?ClientNote
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

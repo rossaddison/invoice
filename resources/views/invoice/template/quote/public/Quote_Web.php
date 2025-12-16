@@ -221,7 +221,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <?php $query = $qiaR->repoQuoteItemAmountquery((int) $item->getId()); ?>
+                                <?php $query = $qiaR->repoQuoteItemAmountquery((string) $item->getId()); ?>
                                 <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>
                             </tr>
                         <?php endforeach ?>

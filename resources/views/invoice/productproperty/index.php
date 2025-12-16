@@ -22,7 +22,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
   ->addAttributes(['type' => 'reset'])
@@ -43,12 +43,12 @@ $columns = [
     new DataColumn(
         'name',
         header: $translator->translate('product.property.name'),
-        content: static fn(ProductProperty $model) => Html::encode($model->getName()),
+        content: static fn (ProductProperty $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'value',
         header: $translator->translate('product.property.value'),
-        content: static fn(ProductProperty $model) => Html::encode($model->getValue()),
+        content: static fn (ProductProperty $model) => Html::encode($model->getValue()),
     ),
     new DataColumn(
         header: $translator->translate('view'),
@@ -90,9 +90,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('productproperty/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+$toolbarString = Form::tag()->post($urlGenerator->generate('productproperty/index'))->csrf($csrf)->open()
+        . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        . Form::tag()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

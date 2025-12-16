@@ -46,7 +46,7 @@ final class ProjectController extends BaseController
      * @param Request $request
      * @param ProjectService $service
      */
-    public function index(ProjectRepository $projectRepository, Request $request, ProjectService $service, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(ProjectRepository $projectRepository, Request $request, ProjectService $service, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -193,7 +193,7 @@ final class ProjectController extends BaseController
      * @param ProjectRepository $projectRepository
      * @return Project|null
      */
-    private function project(CurrentRoute $currentRoute, ProjectRepository $projectRepository): Project|null
+    private function project(CurrentRoute $currentRoute, ProjectRepository $projectRepository): ?Project
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

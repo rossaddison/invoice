@@ -1,0 +1,51 @@
+/* 
+ * ⚠️  CRITICAL WARNING: Angular TypeScript Configuration
+ * 🚨 This file is specifically for Angular components - DO NOT modify existing tsconfig.json
+ * 📝 This setup allows Angular to coexist with existing Yii3 TypeScript build system
+ * 🔄 Use this config for Angular development while preserving esbuild setup for main app
+ */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2024",
+      "dom"
+    ],
+    "paths": {
+      "@app/*": ["angular/app/*"],
+      "@environments/*": ["angular/environments/*"],
+      "@shared/*": ["src/typescript/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "include": [
+    "angular/**/*"
+  ],
+  "exclude": [
+    "src/typescript/**/*",
+    "node_modules",
+    "dist"
+  ]
+}

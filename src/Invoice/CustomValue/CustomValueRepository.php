@@ -82,13 +82,13 @@ final class CustomValueRepository extends Select\Repository
      * @param string $id
      * @return CustomValue|null
      */
-    public function repoCustomValuequery(string $id): CustomValue|null
+    public function repoCustomValuequery(string $id): ?CustomValue
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoCustomValueDropDown(string $id, string $customFieldId): CustomValue|null
+    public function repoCustomValueDropDown(string $id, string $customFieldId): ?CustomValue
     {
         $query = $this->select()
                       ->where(['id' => $id])

@@ -8,7 +8,9 @@ use App\Invoice\Entity\Setting;
 
 final readonly class SettingService
 {
-    public function __construct(private SettingRepository $repository) {}
+    public function __construct(private SettingRepository $repository)
+    {
+    }
 
     /**
      * @param Setting $setting

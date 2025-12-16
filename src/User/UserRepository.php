@@ -78,7 +78,7 @@ final class UserRepository extends Select\Repository
      * @return User|null
      * @psalm-return TEntity|null
      */
-    public function findByEmail(string $email): User|null
+    public function findByEmail(string $email): ?User
     {
         return $this->findBy('email', $email);
     }
@@ -89,7 +89,7 @@ final class UserRepository extends Select\Repository
      * @return User|null
      * @psalm-return TEntity|null
      */
-    public function findById(string $id): User|null
+    public function findById(string $id): ?User
     {
         return $this->findByPK($id);
     }
@@ -100,7 +100,7 @@ final class UserRepository extends Select\Repository
      * @return User|null
      * @psalm-return TEntity|null
      */
-    public function findByLogin(string $login): User|null
+    public function findByLogin(string $login): ?User
     {
         return $this->findBy('login', $login);
     }
@@ -110,7 +110,7 @@ final class UserRepository extends Select\Repository
      * @return User|null
      * @psalm-return TEntity|null
      */
-    public function findByLoginWithAuthIdentity(string $login): User|null
+    public function findByLoginWithAuthIdentity(string $login): ?User
     {
         return $this
             ->select()
@@ -133,7 +133,7 @@ final class UserRepository extends Select\Repository
      * @return User|null
      * @psalm-return TEntity|null
      */
-    private function findBy(string $field, string $value): User|null
+    private function findBy(string $field, string $value): ?User
     {
         return $this->findOne([$field => $value]);
     }

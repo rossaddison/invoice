@@ -190,7 +190,7 @@ final class PaymentMethodController extends BaseController
     private function paymentmethod(
         CurrentRoute $currentRoute,
         PaymentMethodRepository $paymentmethodRepository,
-    ): PaymentMethod|null {
+    ): ?PaymentMethod {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $paymentmethodRepository->repoPaymentMethodquery($id);

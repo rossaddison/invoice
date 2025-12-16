@@ -8,6 +8,7 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\Task;
 use App\Invoice\Entity\InvItem;
+use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
@@ -18,6 +19,12 @@ use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Invoice\Project\ProjectRepository as prjctR;
+use App\Invoice\Quote\QuoteRepository as qR;
+use App\Invoice\QuoteAmount\QuoteAmountRepository as qaR;
+use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
+use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
+use App\Invoice\QuoteItemAmount\QuoteItemAmountService as qiaS;
+use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as qtrR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Task\TaskRepository as tR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
@@ -25,6 +32,8 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvItem\InvItemForm;
+use App\Invoice\QuoteItem\QuoteItemService;
+use App\Invoice\QuoteItem\QuoteItemForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -46,6 +55,7 @@ final class TaskController extends BaseController
         private readonly TaskService $taskService,
         private readonly DataResponseFactoryInterface $factory,
         private InvItemService $invitemService,
+        private QuoteItemService $quoteitemService,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -56,6 +66,7 @@ final class TaskController extends BaseController
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->invitemService = $invitemService;
+        $this->quoteitemService = $quoteitemService;
     }
 
     /**
@@ -63,7 +74,7 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @param prjctR $prjctR
      */
-    public function index(tR $tR, prjctR $prjctR, #[Query('page')] int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(tR $tR, prjctR $prjctR, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -287,6 +298,86 @@ final class TaskController extends BaseController
         }
     }
 
+    //views/invoice/task/modal_task_lookups_quote.php => modal_task_lookups_quote.js $(document).on('click', '.select-items-confirm-task-quote', function ()
+
+    /**
+     * @param FormHydrator $formHydrator
+     * @param Request $request
+     * @param tR $taskR
+     * @param trR $trR
+     * @param qiaR $qiaR
+     * @param qiR $qiR
+     * @param qtrR $qtrR
+     * @param qaR $qaR
+     * @param qR $qR
+     * @param pymR $pymR
+     */
+    public function selection_quote(
+        FormHydrator $formHydrator,
+        Request $request,
+        tR $taskR,
+        trR $trR,
+        qiaR $qiaR,
+        qiaS $qiaS,
+        qiR $qiR,
+        qtrR $qtrR,
+        qaR $qaR,
+        qR $qR,
+        pymR $pymR,
+    ): \Yiisoft\DataResponse\DataResponse {
+        $select_items = $request->getQueryParams();
+        /** @var array $task_ids */
+        $task_ids = ($select_items['task_ids'] ?: []);
+        $quote_id = (string) $select_items['quote_id'];
+        // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
+        $tasks = $taskR->findinTasks($task_ids);
+        $numberHelper = new NumberHelper($this->sR);
+        // Format the task prices according to comma or point or other setting choice.
+        $order = 1;
+        /** @var Task $task */
+        foreach ($tasks as $task) {
+            $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
+            $this->save_task_lookup_item_quote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
+            $order++;
+        }
+        $numberHelper->calculate_quote($quote_id, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        return $this->factory->createResponse(Json::encode($tasks));
+    }
+
+    /**
+     * @param int $order
+     * @param Task $task
+     * @param string $quote_id
+     * @param tR $taskR
+     * @param trR $trR
+     * @param qiaR $qiaR
+     * @param qiaS $qiaS
+     * @param FormHydrator $formHydrator
+     */
+    private function save_task_lookup_item_quote(int $order, Task $task, string $quote_id, tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
+    {
+        $quoteItem = new QuoteItem();
+        $form = new QuoteItemForm($quoteItem, $quote_id);
+        $ajax_content = [
+            'name' => $task->getName(),
+            'quote_id' => $quote_id,
+            'tax_rate_id' => $task->getTax_rate_id(),
+            'task_id' => $task->getId(),
+            'product_id' => null,
+            'date_added' => new \DateTimeImmutable('now'),
+            'description' => $task->getDescription(),
+            // A default quantity of 1 is used to initialize the item
+            'quantity' => (float) 1,
+            'price' => $task->getPrice(),
+            // The user will determine how much discount to give on this item later
+            'discount_amount' => (float) 0,
+            'order' => $order,
+        ];
+        if ($formHydrator->populateAndValidate($form, $ajax_content)) {
+            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $taskR, $qiaR, $qiaS, $trR, $this->translator);
+        }
+    }
+
     /**
      * @param CurrentRoute $currentRoute
      * @param tR $tR
@@ -336,7 +427,7 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @return Task|null
      */
-    private function task(CurrentRoute $currentRoute, tR $tR): Task|null
+    private function task(CurrentRoute $currentRoute, tR $tR): ?Task
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

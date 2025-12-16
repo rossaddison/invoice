@@ -1,4 +1,4 @@
-FROM php:8.5.0RC3-fpm-alpine
+FROM php:8.5.0RC4-fpm-alpine
 
 # Install system dependencies and PHP build tools
 RUN apk add --no-cache \
@@ -49,7 +49,8 @@ COPY docker/dev/php/conf.d/ $PHP_INI_DIR/conf.d/
 COPY docker/dev/php/php-fpm.d/ /usr/local/etc/php-fpm.d/
 
 # Copy and install PHP dependencies
-COPY composer.json composer.lock* ./
+COPY composer.json ./
+COPY composer.lock ./
 RUN composer install --no-plugins --no-scripts --prefer-dist && composer clear-cache
 
 # Copy the rest of your application code

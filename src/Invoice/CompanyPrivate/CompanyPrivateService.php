@@ -10,7 +10,9 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class CompanyPrivateService
 {
-    public function __construct(private CompanyPrivateRepository $repository) {}
+    public function __construct(private CompanyPrivateRepository $repository)
+    {
+    }
 
     /**
      * @param CompanyPrivate $model

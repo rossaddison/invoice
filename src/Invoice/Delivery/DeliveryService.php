@@ -9,7 +9,9 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class DeliveryService
 {
-    public function __construct(private DeliveryRepository $repository) {}
+    public function __construct(private DeliveryRepository $repository)
+    {
+    }
 
     public function saveDelivery(Delivery $model, array $array, SettingRepository $s): void
     {

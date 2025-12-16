@@ -14,7 +14,8 @@ return [
 'add.new.row' => 'Thêm hàng mới',
 'add.note' => 'Thêm Ghi chú',
 'add.notes' => 'Thêm Ghi chú',
-'add.payment.provider' => 'Thêm Nhà cung cấp thanh toán',
+'add.payment.provider' => 'Thêm Nhà cung cấp thanh '
+	. 'toán',
 'add.product' => 'Thêm sản phẩm',
 'add.quote' => 'Thêm trích dẫn',
 'add.quote.tax' => 'Thêm báo giá thuế',
@@ -23,76 +24,143 @@ return [
 'address' => 'Địa chỉ',
 'administrator' => 'Người quản lý',
 'after.amount' => 'Sau Số Tiền',
-'after.amount.space' => 'Sau Số lượng với khoảng cách không ngắt',
+'after.amount.space' => 'Sau Số lượng với khoảng '
+	. 'cách không ngắt',
 'aging' => 'Hóa đơn lão hóa',
 'aging.1.15' => '1 - 15 ngày',
 'aging.16.30' => '16 - 30 ngày',
 'aging.above.30' => 'Trên 30 ngày',
-'alert.no.client.assigned' => 'Không có khách hàng nào được giao cho dự án này.',
-'alert.no.tasks.found' => 'Không tìm thấy nhiệm vụ nào cho dự án này.',
-'alert.task.delete' => 'Thận trọng! Bạn muốn xóa tác vụ đã được sử dụng để tạo hóa đơn.',
+'alert.no.client.assigned' => 'Không có khách hàng nào '
+	. 'được giao cho dự án '
+	. 'này.',
+'alert.no.tasks.found' => 'Không tìm thấy nhiệm vụ '
+	. 'nào cho dự án này.',
+'alert.task.delete' => 'Thận trọng! Bạn muốn xóa '
+	. 'tác vụ đã được sử '
+	. 'dụng để tạo hóa đơn.',
 'all' => 'Tất cả',
 'allowance.or.charge' => 'Phụ cấp hoặc Phí',
-'allowance.or.charge.add' => 'Cấp độ tài liệu (tức là KHÔNG phải cấp độ dòng hóa đơn) Thêm phụ cấp hoặc phí',
+'allowance.or.charge.add' => 'Cấp độ tài liệu (tức '
+	. 'là KHÔNG phải cấp độ '
+	. 'dòng hóa đơn) Thêm phụ '
+	. 'cấp hoặc phí',
 'allowance.or.charge.allowance' => 'Trợ cấp',
-'allowance.or.charge.allowance.vat' => 'Thuế GTGT đối với trợ cấp',
-'allowance.or.charge.amount' => 'Số tiền trợ cấp phí (Hệ số nhân số theo phần trăm nhân với số tiền cơ sở)',
-'allowance.or.charge.base.amount' => 'Số lượng cơ sở',
+'allowance.or.charge.allowance.vat' =>
+	'Thuế GTGT đối với trợ '
+	. 'cấp',
+'allowance.or.charge.amount' => 'Số tiền trợ cấp phí '
+	. '(Hệ số nhân số theo '
+	. 'phần trăm nhân với số '
+	. 'tiền cơ sở)',
+'allowance.or.charge.base.amount' =>
+	'Số lượng cơ sở',
 'allowance.or.charge.charge' => 'Thù lao',
-'allowance.or.charge.charge.vat' => 'Thuế GTGT khi tính phí',
-'allowance.or.charge.edit.allowance' => 'Cấp độ tài liệu (tức là KHÔNG phải cấp độ dòng hóa đơn) Sửa trợ cấp',
-'allowance.or.charge.edit.charge' => 'Cấp độ tài liệu (tức là KHÔNG phải cấp độ dòng hóa đơn) Sửa phí',
-'allowance.or.charge.index' => 'Chỉ số phụ cấp hoặc phí liên quan đến mục hàng',
-'allowance.or.charge.inv' => 'Khoản trợ cấp hoặc phí hóa đơn',
-'allowance.or.charge.item' => 'Khoản khấu trừ hoặc phí trên hóa đơn',
-'allowance.or.charge.item.add' => 'Phụ cấp/Phí Thêm',
-'allowance.or.charge.multiplier.factor.numeric' => 'Hệ số nhân Số',
+'allowance.or.charge.charge.vat' =>
+	'Thuế GTGT khi tính phí',
+'allowance.or.charge.edit.allowance' =>
+	'Cấp độ tài liệu (tức '
+	. 'là KHÔNG phải cấp độ '
+	. 'dòng hóa đơn) Sửa trợ '
+	. 'cấp',
+'allowance.or.charge.edit.charge' =>
+	'Cấp độ tài liệu (tức '
+	. 'là KHÔNG phải cấp độ '
+	. 'dòng hóa đơn) Sửa phí',
+'allowance.or.charge.index' => 'Chỉ số phụ cấp hoặc '
+	. 'phí liên quan đến mục '
+	. 'hàng',
+'allowance.or.charge.inv' => 'Khoản trợ cấp hoặc phí '
+	. 'hóa đơn',
+'allowance.or.charge.item' => 'Khoản khấu trừ hoặc phí '
+	. 'trên hóa đơn',
+'allowance.or.charge.item.add' =>
+	'Phụ cấp/Phí Thêm',
+'allowance.or.charge.multiplier.factor.numeric' =>
+	'Hệ số nhân Số',
 'allowance.or.charge.reason' => 'Lý do',
-'allowance.or.charge.reason.code' => 'Mã lý do',
-'already.paid' => 'Hóa đơn này đã được thanh toán.',
+'allowance.or.charge.reason.code' =>
+	'Mã lý do',
+'already.paid' => 'Hóa đơn này đã được '
+	. 'thanh toán.',
 'amount' => 'Số lượng mục hóa đơn',
-'amount.add' => 'Mục hóa đơn Số tiền Thêm',
+'amount.add' => 'Mục hóa đơn Số tiền '
+	. 'Thêm',
 'amount.due' => 'Số tiền phải trả',
-'amount.no' => 'Không có số tiền trong hóa đơn',
+'amount.no' => 'Không có số tiền trong '
+	. 'hóa đơn',
 'amount.settings' => 'Cài đặt số lượng',
 'amounts' => 'Số tiền hóa đơn',
 'any.family' => 'Bất kỳ gia đình nào',
-'apply.after.item.tax' => 'Áp dụng sau khi tính thuế mặt hàng',
-'apply.before.item.tax' => 'Áp dụng trước khi tính thuế mặt hàng',
+'apply.after.item.tax' => 'Áp dụng sau khi tính '
+	. 'thuế mặt hàng',
+'apply.before.item.tax' => 'Áp dụng trước khi tính '
+	. 'thuế mặt hàng',
 'approve' => 'Chấp thuận',
 'approve.this.quote' => 'Phê duyệt báo giá này',
 'approved' => 'Tán thành',
 'archive' => 'Lưu trữ pdf tại Uploads/Archive',
 'assign.client' => 'Chỉ định khách hàng',
-'assign.client.on.signup' => 'Chỉ định khách hàng cho người dùng khi đăng ký.',
-'assign.client.on.signup.default.age.minimum.eighteen' => 'Chỉ định một khách hàng có độ tuổi tối thiểu mặc định là mười tám cho người dùng khi đăng ký.',
-'assign.client.on.signup.done' => 'Chỉ định khách hàng cho người dùng khi đăng ký.',
+'assign.client.on.signup' => 'Chỉ định khách hàng cho '
+	. 'người dùng khi đăng ký.',
+'assign.client.on.signup.default.age.minimum.eighteen' =>
+	'Chỉ định một khách hàng '
+	. 'có độ tuổi tối thiểu '
+	. 'mặc định là mười tám '
+	. 'cho người dùng khi đăng '
+	. 'ký.',
+'assign.client.on.signup.done' =>
+	'Chỉ định khách hàng cho '
+	. 'người dùng khi đăng ký.',
 'assigned.clients' => 'Khách hàng được chỉ định',
 'attachment.list' => 'Danh sách đính kèm',
 'attachments' => 'Đính kèm',
-'automatic.email.on.recur' => 'Tự động gửi hóa đơn định kỳ qua Email',
+'automatic.email.on.recur' => 'Tự động gửi hóa đơn '
+	. 'định kỳ qua Email',
 'back' => 'Mặt sau',
 'balance' => 'Sự cân bằng',
-'balance.does.not.equal.zero' => 'Số dư không bằng 0. Trạng thái là Đã thanh toán =&gt; Số dư phải bằng 0. ',
+'balance.does.not.equal.zero' =>
+	'Số dư không bằng 0.'
+	. 'Trạng thái là Đã thanh '
+	. 'toán =&gt; Số dư phải '
+	. 'bằng 0.',
 'base.invoice' => 'Hóa đơn cơ sở',
 'bcc' => 'BCC',
-'bcc.mails.to.admin' => 'Gửi tất cả email đi dưới dạng BCC đến tài khoản quản trị viên',
-'bcc.mails.to.admin.hint' => 'Tài khoản quản trị là tài khoản được tạo khi cài đặt InvoicePlane.',
+'bcc.mails.to.admin' => 'Gửi tất cả email đi '
+	. 'dưới dạng BCC đến tài '
+	. 'khoản quản trị viên',
+'bcc.mails.to.admin.hint' =>
+	'Tài khoản quản trị là '
+	. 'tài khoản được tạo khi '
+	. 'cài đặt InvoicePlane.',
 'before.amount' => 'Trước Số Tiền',
 'bill.to' => 'Hóa đơn cho',
 'birthdate' => 'Ngày sinh',
 'body' => 'Thân hình',
 'boolean' => 'Boolean',
 'bootstrap5' => 'Khởi động 5',
-'bootstrap5.alert.close.button.font.size' => 'Nút Đóng Cảnh Báo Kích Thước Phông Chữ',
-'bootstrap5.alert.message.font' => 'Phông chữ tin nhắn cảnh báo',
-'bootstrap5.alert.message.font.size' => 'Kích thước phông chữ tin nhắn cảnh báo',
-'bootstrap5.layout.invoice.navbar.font' => 'Bố cục phông chữ thanh điều hướng hóa đơn',
-'bootstrap5.layout.invoice.navbar.font.size' => 'Bố cục Hóa đơn Thanh điều hướng Kích thước phông chữ',
+'bootstrap5.alert.close.button.font.size' =>
+	'Nút Đóng Cảnh Báo Kích '
+	. 'Thước Phông Chữ',
+'bootstrap5.alert.message.font' => 'Phông chữ tin nhắn cảnh '
+	. 'báo',
+'bootstrap5.alert.message.font.size' =>
+	'Kích thước phông chữ tin '
+	. 'nhắn cảnh báo',
+'bootstrap5.layout.invoice.navbar.font' =>
+	'Bố cục phông chữ thanh '
+	. 'điều hướng hóa đơn',
+'bootstrap5.layout.invoice.navbar.font.size' =>
+	'Bố cục Hóa đơn Thanh '
+	. 'điều hướng Kích thước phông '
+	. 'chữ',
 'bootstrap5.offcanvas.enable' => 'Bật Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Vị trí Offcanvas ví dụ trên, dưới, bắt đầu tức là bên trái, kết thúc tức là bên phải',
+'bootstrap5.offcanvas.placement' => 'Vị trí Offcanvas ví dụ '
+	. 'trên, dưới, bắt đầu tức '
+	. 'là bên trái, kết thúc '
+	. 'tức là bên phải',
 'breadcrumb.product.index' => 'Chỉ mục sản phẩm',
-'breadcrumb.product.property.index' => 'Chỉ số tài sản sản phẩm',
+'breadcrumb.product.property.index' => 'Chỉ số tài sản sản '
+	. 'phẩm',
 'calculate.discounts' => 'Tính toán chiết khấu',
 'calendar.day.1' => '1 Ngày',
 'calendar.day.15' => '15 ngày',
@@ -130,95 +198,244 @@ return [
 'cash.discount' => 'Giảm giá tiền mặt',
 'category.primary' => 'Thể loại Chính',
 'category.secondary' => 'Thể loại Trung học',
-'caution.delete.invoices' => 'Chỉ thử nghiệm: Xóa tất cả hóa đơn và hồ sơ liên quan. (Xem chức năng inv/flush)',
-'caution.deleted.invoices' => 'Chỉ thử nghiệm: Tất cả hóa đơn và các trường liên quan đã bị xóa.',
+'caution.delete.invoices' => 'Chỉ thử nghiệm:'
+	. 'Xóa tất cả hóa đơn '
+	. 'và hồ sơ liên quan.'
+	. '(Xem chức năng inv/flush)',
+'caution.deleted.invoices' => 'Chỉ thử nghiệm:'
+	. 'Tất cả hóa đơn và '
+	. 'các trường liên quan đã '
+	. 'bị xóa.',
 'cc' => 'CC',
 'change.client' => 'Thay đổi khách hàng',
 'change.password' => 'Thay đổi mật khẩu',
 'checking.for.news' => 'Đang kiểm tra tin tức...',
-'checking.for.updates' => 'Đang kiểm tra bản cập nhật...',
+'checking.for.updates' => 'Đang kiểm tra bản cập '
+	. 'nhật.',
 'city' => 'Thành phố',
-'claim' => 'Bắt đầu một khiếu nại pháp lý',
+'claim' => 'Bắt đầu một khiếu nại '
+	. 'pháp lý',
 'cldr' => 'TRONG',
 'client' => 'Khách hàng',
 'client.access' => 'Truy cập của khách hàng',
 'client.add' => 'Thêm khách hàng',
 'client.age' => 'Tuổi',
-'client.age.hint' => 'Trường này là bắt buộc và khách hàng phải đủ 16 tuổi trở lên về mặt pháp lý',
+'client.age.hint' => 'Trường này là bắt buộc '
+	. 'và khách hàng phải đủ '
+	. '16 tuổi trở lên về '
+	. 'mặt pháp lý',
 'client.already.exists' => 'Khách hàng đã tồn tại!',
-'client.birthdate.hint' => 'Nếu không biết ngày sinh, hãy nhập 01/01/1901',
-'client.building.number' => 'Số tòa nhà của khách hàng',
+'client.birthdate.hint' => 'Nếu không biết ngày sinh,'
+	. 'hãy nhập 01/01/1901',
+'client.building.number' => 'Số tòa nhà của khách '
+	. 'hàng',
 'client.contract.period.end' => 'Kết thúc kỳ',
 'client.contract.period.start' => 'Bắt đầu giai đoạn',
 'client.contract.reference' => 'Tham chiếu hợp đồng',
 'client.custom' => 'Khách hàng tùy chỉnh',
-'client.custom.add' => 'Thêm tùy chỉnh của khách hàng',
-'client.delete.history.exits.no' => 'Không thể xóa. Lịch sử khách hàng tồn tại.',
-'client.detail.changes' => 'Vui lòng gửi email cho chúng tôi nếu thông tin chi tiết này thay đổi.',
+'client.custom.add' => 'Thêm tùy chỉnh của khách '
+	. 'hàng',
+'client.delete.history.exits.no' =>
+	'Không thể xóa.'
+	. 'Lịch sử khách hàng tồn '
+	. 'tại.',
+'client.detail.changes' => 'Vui lòng gửi email cho '
+	. 'chúng tôi nếu thông tin '
+	. 'chi tiết này thay đổi.',
 'client.error.summary' => 'Tóm tắt lỗi',
 'client.form' => 'Biểu mẫu khách hàng',
 'client.frequency' => 'Tần suất khách hàng',
 'client.group' => 'Nhóm khách hàng',
-'client.has.not.assigned' => 'Những khách hàng này chưa được chỉ định cho một tài khoản người dùng. Một hoặc nhiều khách hàng cho mỗi tài khoản người dùng.',
-'client.has.not.user.account' => 'Khách hàng này không có tài khoản người dùng hoặc hiện không được chỉ định cho người dùng. 1. Đảm bảo Khách hàng đã Đăng ký tức là có tài khoản người dùng hoặc chỉ định khách hàng này cho người dùng hiện đã đăng ký. 2. Cài đặt ... Tài khoản người dùng hóa đơn ... Thêm tài khoản người dùng 3. Chỉ định khách hàng này cho tài khoản người dùng 4. Sẽ không thể tạo Hóa đơn và Báo giá cho Khách hàng này ở trạng thái hiện tại.',
+'client.has.not.assigned' => 'Những khách hàng này chưa '
+	. 'được chỉ định cho một '
+	. 'tài khoản người dùng.'
+	. 'Một hoặc nhiều khách hàng '
+	. 'cho mỗi tài khoản người '
+	. 'dùng.',
+'client.has.not.user.account' =>
+	'Khách hàng này không có '
+	. 'tài khoản người dùng hoặc '
+	. 'hiện không được chỉ định '
+	. 'cho người dùng.'
+	. '1.'
+	. 'Đảm bảo Khách hàng đã '
+	. 'Đăng ký tức là có '
+	. 'tài khoản người dùng hoặc '
+	. 'chỉ định khách hàng này '
+	. 'cho người dùng hiện đã '
+	. 'đăng ký.'
+	. '2.'
+	. 'Cài đặt .'
+	. 'Tài khoản người dùng hóa '
+	. 'đơn .'
+	. 'Thêm tài khoản người dùng '
+	. '3.'
+	. 'Chỉ định khách hàng này '
+	. 'cho tài khoản người dùng '
+	. '4.'
+	. 'Sẽ không thể tạo Hóa '
+	. 'đơn và Báo giá cho '
+	. 'Khách hàng này ở trạng '
+	. 'thái hiện tại.',
 'client.has.user.account' => 'Tài khoản người dùng',
-'client.import.list.blank' => 'Danh sách nhập khẩu khách hàng trống',
+'client.import.list.blank' => 'Danh sách nhập khẩu khách '
+	. 'hàng trống',
 'client.name' => 'Tên khách hàng',
-'client.not.allocated.to.user' => 'Máy khách không được phân bổ cho người dùng',
+'client.not.allocated.to.user' =>
+	'Máy khách không được phân '
+	. 'bổ cho người dùng',
 'client.note' => 'Ghi chú của khách hàng',
-'client.note.add' => 'Thêm ghi chú của khách hàng',
+'client.note.add' => 'Thêm ghi chú của khách '
+	. 'hàng',
 'client.note.date' => 'Ngày của khách hàng',
-'client.note.view' => 'Xem Ghi chú của Khách hàng',
+'client.note.view' => 'Xem Ghi chú của Khách '
+	. 'hàng',
 'client.notes' => 'Ghi chú của khách hàng',
 'client.number' => 'Số khách hàng',
 'client.peppol' => 'Chi tiết khách hàng Peppol',
-'client.peppol.accounting.cost' => 'Mã chi phí kế toán khách hàng cho kế toán',
-'client.peppol.add' => 'Thêm thông tin chi tiết Peppol để lập hóa đơn điện tử',
-'client.peppol.buyer.reference.default' => 'Tham chiếu người mua: Nếu khách hàng không chỉ định Người liên hệ mua hàng của khách hàng thì đây là Tham chiếu người mua hoặc Người đặt hàng mặc định.',
-'client.peppol.buyer.reference.example' => 'ví dụ: tên của người thường đặt hàng, số nhân viên của người thường đặt hàng hoặc mã xác định người này hoặc phòng ban/nhóm',
-'client.peppol.clientpeppols.form' => 'Biểu mẫu bên khách hàng/khách hàng kế toán',
-'client.peppol.edit' => 'Chỉnh sửa thông tin Peppol để lập hóa đơn điện tử',
-'client.peppol.endpointid' => 'ID Điểm cuối: Địa chỉ Email',
-'client.peppol.endpointid.schemeid' => 'ID Điểm cuối - schemeID dựa trên EAS (Sơ đồ Địa chỉ Điện tử) mã 4 chữ số ví dụ: 0192',
-'client.peppol.financial.institution.branchid' => 'Mã chi nhánh của tổ chức tài chính',
+'client.peppol.accounting.cost' => 'Mã chi phí kế toán '
+	. 'khách hàng cho kế toán',
+'client.peppol.add' => 'Thêm thông tin chi tiết '
+	. 'Peppol để lập hóa đơn '
+	. 'điện tử',
+'client.peppol.buyer.reference.default' =>
+	'Tham chiếu người mua:'
+	. 'Nếu khách hàng không chỉ '
+	. 'định Người liên hệ mua '
+	. 'hàng của khách hàng thì '
+	. 'đây là Tham chiếu người '
+	. 'mua hoặc Người đặt hàng '
+	. 'mặc định.',
+'client.peppol.buyer.reference.example' =>
+	'ví dụ:'
+	. 'tên của người thường đặt '
+	. 'hàng, số nhân viên của '
+	. 'người thường đặt hàng hoặc '
+	. 'mã xác định người này '
+	. 'hoặc phòng ban/nhóm',
+'client.peppol.clientpeppols.form' => 'Biểu mẫu bên khách hàng/khách '
+	. 'hàng kế toán',
+'client.peppol.edit' => 'Chỉnh sửa thông tin Peppol '
+	. 'để lập hóa đơn điện '
+	. 'tử',
+'client.peppol.endpointid' => 'ID Điểm cuối:'
+	. 'Địa chỉ Email',
+'client.peppol.endpointid.schemeid' => 'ID Điểm cuối - schemeID '
+	. 'dựa trên EAS (Sơ đồ '
+	. 'Địa chỉ Điện tử) mã '
+	. '4 chữ số ví dụ:'
+	. '0192',
+'client.peppol.financial.institution.branchid' =>
+	'Mã chi nhánh của tổ '
+	. 'chức tài chính',
 'client.peppol.identificationid' => 'ID nhận dạng',
 'client.peppol.identificationid.schemeid' => 'ID nhận dạng - schemeID',
-'client.peppol.legal.entity.company.legal.form' => 'Hình thức pháp lý của công ty - Thông tin pháp lý bổ sung có liên quan đến Người bán, ví dụ: Vốn cổ phần',
-'client.peppol.legal.entity.companyid' => 'Mã số công ty pháp nhân',
-'client.peppol.legal.entity.companyid.schemeid' => 'Mã số công ty pháp nhân - schemeID',
-'client.peppol.legal.entity.registration.name' => 'Tên đăng ký pháp nhân',
-'client.peppol.not.found' => 'Khách hàng chưa thiết lập thông tin chi tiết Peppol của mình.',
-'client.peppol.not.found.accounting.cost' => 'Không tìm thấy: Chi phí kế toán hoặc giá trị văn bản chỉ định nơi ghi chép dữ liệu có liên quan vào tài khoản tài chính của Người mua.',
-'client.peppol.not.found.delivery.location' => 'Địa điểm giao hàng Tên quốc gia không tìm thấy',
-'client.peppol.not.found.id' => 'Khách hàng chưa điền Mã tài khoản vào thông tin Khách hàng Peppol trực tuyến.',
-'client.peppol.not.found.id.supplier.assigned' => 'Khách hàng Peppol Nhà cung cấp Tài khoản được chỉ định không tìm thấy',
-'client.peppol.not.found.invoice' => 'Không tìm thấy hóa đơn liên kết',
-'client.peppol.not.found.purchase.order' => 'Đơn đặt hàng bán không có Số đơn đặt hàng mua liên quan đến nó',
-'client.peppol.not.found.purchase.order.item.number' => 'Mục hàng đơn đặt hàng bán không có Mã số nhận dạng mục hàng đơn đặt hàng mua (Mã số nhận dạng mục hàng của người mua) phù hợp được liên kết với nó. Quản trị viên: Chỉnh sửa Mã số mục hàng đơn đặt hàng bán của Hóa đơn.',
-'client.peppol.not.found.purchase.order.line.number' => 'Số dòng lệnh bán hàng không có Số dòng lệnh mua hàng (OrderLineReference LineID) phù hợp được liên kết với nó. Quản trị viên: Chỉnh sửa Số dòng lệnh bán hàng của Hóa đơn. ',
-'client.peppol.not.found.sales.order' => 'Đơn đặt hàng không tồn tại',
-'client.peppol.payee.financial.account.name' => 'Tên tài khoản tài chính của người nhận thanh toán',
-'client.peppol.payee.financial.accountid' => 'ID tài khoản tài chính của người nhận thanh toán',
-'client.peppol.record.updated.successfully' => 'Bản ghi Peppol đã được cập nhật thành công',
-'client.peppol.supplier.assigned.account.id' => 'Nhà cung cấp chỉ định ID tài khoản',
-'client.peppol.taxschemecompanyid' => 'Mã số công ty chế độ thuế',
+'client.peppol.legal.entity.company.legal.form' =>
+	'Hình thức pháp lý của '
+	. 'công ty - Thông tin '
+	. 'pháp lý bổ sung có '
+	. 'liên quan đến Người bán,'
+	. 'ví dụ:'
+	. 'Vốn cổ phần',
+'client.peppol.legal.entity.companyid' =>
+	'Mã số công ty pháp '
+	. 'nhân',
+'client.peppol.legal.entity.companyid.schemeid' =>
+	'Mã số công ty pháp '
+	. 'nhân - schemeID',
+'client.peppol.legal.entity.registration.name' =>
+	'Tên đăng ký pháp nhân',
+'client.peppol.not.found' => 'Khách hàng chưa thiết lập '
+	. 'thông tin chi tiết Peppol '
+	. 'của mình.',
+'client.peppol.not.found.accounting.cost' =>
+	'Không tìm thấy:'
+	. 'Chi phí kế toán hoặc '
+	. 'giá trị văn bản chỉ '
+	. 'định nơi ghi chép dữ '
+	. 'liệu có liên quan vào '
+	. 'tài khoản tài chính của '
+	. 'Người mua.',
+'client.peppol.not.found.delivery.location' =>
+	'Địa điểm giao hàng Tên '
+	. 'quốc gia không tìm thấy',
+'client.peppol.not.found.id' =>
+	'Khách hàng chưa điền Mã '
+	. 'tài khoản vào thông tin '
+	. 'Khách hàng Peppol trực tuyến.',
+'client.peppol.not.found.id.supplier.assigned' =>
+	'Khách hàng Peppol Nhà cung '
+	. 'cấp Tài khoản được chỉ '
+	. 'định không tìm thấy',
+'client.peppol.not.found.invoice' =>
+	'Không tìm thấy hóa đơn '
+	. 'liên kết',
+'client.peppol.not.found.purchase.order' =>
+	'Đơn đặt hàng bán không '
+	. 'có Số đơn đặt hàng '
+	. 'mua liên quan đến nó',
+'client.peppol.not.found.purchase.order.item.number' =>
+	'Mục hàng đơn đặt hàng '
+	. 'bán không có Mã số '
+	. 'nhận dạng mục hàng đơn '
+	. 'đặt hàng mua (Mã số '
+	. 'nhận dạng mục hàng của '
+	. 'người mua) phù hợp được '
+	. 'liên kết với nó.'
+	. 'Quản trị viên:'
+	. 'Chỉnh sửa Mã số mục '
+	. 'hàng đơn đặt hàng bán '
+	. 'của Hóa đơn.',
+'client.peppol.not.found.purchase.order.line.number' =>
+	'Số dòng lệnh bán hàng '
+	. 'không có Số dòng lệnh '
+	. 'mua hàng (OrderLineReference LineID) phù '
+	. 'hợp được liên kết với '
+	. 'nó.'
+	. 'Quản trị viên:'
+	. 'Chỉnh sửa Số dòng lệnh '
+	. 'bán hàng của Hóa đơn.',
+'client.peppol.not.found.sales.order' =>
+	'Đơn đặt hàng không tồn '
+	. 'tại',
+'client.peppol.payee.financial.account.name' =>
+	'Tên tài khoản tài chính '
+	. 'của người nhận thanh toán',
+'client.peppol.payee.financial.accountid' =>
+	'ID tài khoản tài chính '
+	. 'của người nhận thanh toán',
+'client.peppol.record.updated.successfully' =>
+	'Bản ghi Peppol đã được '
+	. 'cập nhật thành công',
+'client.peppol.supplier.assigned.account.id' =>
+	'Nhà cung cấp chỉ định '
+	. 'ID tài khoản',
+'client.peppol.taxschemecompanyid' => 'Mã số công ty chế '
+	. 'độ thuế',
 'client.peppol.taxschemeid' => 'Mã số thuế',
 'client.postaladdress' => 'Địa chỉ bưu chính',
-'client.postaladdress.add' => 'Thêm địa chỉ bưu chính của khách hàng',
-'client.postaladdress.additional.street.name' => 'Tên Đường Bổ Sung',
-'client.postaladdress.available' => 'Địa chỉ bưu chính có sẵn',
+'client.postaladdress.add' => 'Thêm địa chỉ bưu chính '
+	. 'của khách hàng',
+'client.postaladdress.additional.street.name' =>
+	'Tên Đường Bổ Sung',
+'client.postaladdress.available' => 'Địa chỉ bưu chính có '
+	. 'sẵn',
 'client.postaladdress.building.number' => 'Số tòa nhà',
 'client.postaladdress.city.name' => 'Tên thành phố',
 'client.postaladdress.country' => 'Quốc gia',
 'client.postaladdress.countrysubentity' => 'Quốc gia thực thể phụ',
-'client.postaladdress.none' => 'Khách hàng không có địa chỉ bưu chính',
+'client.postaladdress.none' => 'Khách hàng không có địa '
+	. 'chỉ bưu chính',
 'client.postaladdress.postalzone' => 'Khu vực bưu chính',
 'client.postaladdress.street.name' => 'Tên Đường Phố',
-'client.purchase.order.number' => 'Số đơn đặt hàng của khách hàng',
+'client.purchase.order.number' => 'Số đơn đặt hàng của '
+	. 'khách hàng',
 'client.streets' => 'Đường phố',
 'client.surname' => 'Họ của khách hàng',
-'client.surname.optional' => 'Họ của khách hàng (Tùy chọn)',
-'client.title' => 'Tiêu đề khách hàng (Ông/Bà/Cô/Tiến sĩ/Giáo sư)',
+'client.surname.optional' => 'Họ của khách hàng (Tùy '
+	. 'chọn)',
+'client.title' => 'Tiêu đề khách hàng (Ông/Bà/Cô/Tiến '
+	. 'sĩ/Giáo sư)',
 'client.title.doctor' => 'Tiến sĩ',
 'client.title.miss' => 'Cô',
 'client.title.mr' => 'Ông',
@@ -234,20 +451,28 @@ return [
 'common.name' => 'Tên',
 'company' => 'Công ty',
 'company.deleted' => 'Công ty đã bị xóa',
-'company.not.deleted' => 'Công ty không bị xóa vì bạn có Hồ sơ công ty được đính kèm vào đó.',
+'company.not.deleted' => 'Công ty không bị xóa '
+	. 'vì bạn có Hồ sơ '
+	. 'công ty được đính kèm '
+	. 'vào đó.',
 'company.private' => 'Công ty tư nhân',
 'company.private.logo' => 'Logo công ty',
 'company.private.logo.height' => 'Chiều cao logo',
 'company.private.logo.margin' => 'Lề Logo',
 'company.private.logo.width' => 'Chiều rộng Logo',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Logo sẽ bị xóa khỏi mục tải lên và thư mục công khai',
+'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
+	'Logo sẽ bị xóa khỏi '
+	. 'mục tải lên và thư '
+	. 'mục công khai',
 'company.public' => 'Công ty đại chúng',
 'complete' => 'Hoàn thành',
 'confirm' => 'Xác nhận',
 'confirm.deletion' => 'Xác nhận xóa',
 'contact.information' => 'Thông tin liên lạc',
 'continue' => 'Tiếp tục',
-'continue.with.developer.sandbox.hmrc' => 'Tiếp tục với Developer Gov Sandbox UK',
+'continue.with.developer.sandbox.hmrc' =>
+	'Tiếp tục với Developer Gov '
+	. 'Sandbox UK',
 'continue.with.facebook' => 'Tiếp tục với Facebook',
 'continue.with.github' => 'Tiếp tục với Github',
 'continue.with.google' => 'Tiếp tục với Google',
@@ -260,10 +485,24 @@ return [
 'contract' => 'Hợp đồng',
 'contract.add' => 'Thêm hợp đồng',
 'contract.contracts' => 'Hợp đồng',
-'contract.create' => 'Tạo Hợp đồng của bạn thông qua. Hóa đơn...Xem...Tùy chọn...Chỉnh sửa. Một hợp đồng sẽ được tạo cho khách hàng mà Hóa đơn được lập cho. Liên kết hợp đồng này với các hóa đơn trong tương lai.',
+'contract.create' => 'Tạo Hợp đồng của bạn '
+	. 'thông qua.'
+	. 'Hóa đơn.'
+	. 'Xem.'
+	. 'Tùy chọn.'
+	. 'Chỉnh sửa.'
+	. 'Một hợp đồng sẽ được '
+	. 'tạo cho khách hàng mà '
+	. 'Hóa đơn được lập cho.'
+	. 'Liên kết hợp đồng này '
+	. 'với các hóa đơn trong '
+	. 'tương lai.',
 'contract.index.button.list' => 'Hóa đơn',
 'contract.name' => 'Tên',
-'contract.none' => 'Nhắc nhở: Không có hợp đồng nào được thiết lập cho hóa đơn này',
+'contract.none' => 'Nhắc nhở:'
+	. 'Không có hợp đồng nào '
+	. 'được thiết lập cho hóa '
+	. 'đơn này',
 'contract.period.end' => 'Kết thúc kỳ',
 'contract.period.start' => 'Bắt đầu giai đoạn',
 'contract.reference' => 'Thẩm quyền giải quyết',
@@ -274,7 +513,17 @@ return [
 'country' => 'Quốc gia',
 'create' => 'Tạo nên',
 'create.credit.invoice' => 'Tạo hóa đơn tín dụng',
-'create.credit.invoice.alert' => 'Việc tạo hóa đơn tín dụng sẽ biến hóa đơn hiện tại <em>thành chỉ đọc,</em> nghĩa là bạn sẽ không thể chỉnh sửa hóa đơn nữa. Hóa đơn tín dụng sẽ chứa trạng thái hiện tại với tất cả các mục nhưng có số tiền và số dư âm.',
+'create.credit.invoice.alert' => 'Việc tạo hóa đơn tín '
+	. 'dụng sẽ biến hóa đơn '
+	. 'hiện tại <em>thành chỉ đọc,</em> '
+	. 'nghĩa là bạn sẽ không '
+	. 'thể chỉnh sửa hóa đơn '
+	. 'nữa.'
+	. 'Hóa đơn tín dụng sẽ '
+	. 'chứa trạng thái hiện tại '
+	. 'với tất cả các mục '
+	. 'nhưng có số tiền và '
+	. 'số dư âm.',
 'create.invoice' => 'Tạo hóa đơn',
 'create.product' => 'Tạo sản phẩm',
 'create.project' => 'Tạo dự án',
@@ -282,31 +531,46 @@ return [
 'create.recurring' => 'Tạo định kỳ',
 'create.task' => 'Tạo nhiệm vụ',
 'created' => 'Tạo',
-'creation.unsuccessful' => 'Tạo hóa đơn không thành công',
+'creation.unsuccessful' => 'Tạo hóa đơn không thành '
+	. 'công',
 'credit.invoice' => 'Hóa đơn tín dụng',
 'credit.invoice.date' => 'Ngày hóa đơn tín dụng',
-'credit.invoice.details' => 'Chi tiết hóa đơn tín dụng',
+'credit.invoice.details' => 'Chi tiết hóa đơn tín '
+	. 'dụng',
 'credit.invoice.for.invoice' => 'Ghi chú tín dụng',
-'credit.note.creation.successful' => 'Tạo Ghi chú tín dụng thành công',
-'credit.note.creation.unsuccessful' => 'Việc tạo Phiếu ghi nợ hoặc Biên lai ghi có để hủy Hóa đơn không thành công',
+'credit.note.creation.successful' => 'Tạo Ghi chú tín dụng '
+	. 'thành công',
+'credit.note.creation.unsuccessful' => 'Việc tạo Phiếu ghi nợ '
+	. 'hoặc Biên lai ghi có '
+	. 'để hủy Hóa đơn không '
+	. 'thành công',
 'creditcard.cvv' => 'CVV/CSC',
 'creditcard.details' => 'Chi tiết thẻ tín dụng',
 'creditcard.expiry.month' => 'Tháng hết hạn',
 'creditcard.expiry.year' => 'Năm hết hạn',
 'creditcard.number' => 'Số thẻ tín dụng',
 'cron.key' => 'Chìa khóa CRON',
-'curl.store.cove.api.get.legal.entity.id.successful' => 'Nhận được sự thành công của pháp nhân',
-'curl.store.cove.api.setup.legal.entity.successful' => 'Store Cove Thiết lập API Call - Thực thể pháp lý thành công',
-'curl.store.cove.api.setup.successful' => 'Thiết lập Store Cove API Call thành công',
+'curl.store.cove.api.get.legal.entity.id.successful' =>
+	'Nhận được sự thành công '
+	. 'của pháp nhân',
+'curl.store.cove.api.setup.legal.entity.successful' =>
+	'Store Cove Thiết lập API '
+	. 'Call - Thực thể pháp '
+	. 'lý thành công',
+'curl.store.cove.api.setup.successful' =>
+	'Thiết lập Store Cove API '
+	. 'Call thành công',
 'currency' => 'Tiền tệ',
 'currency.code' => 'Mã tiền tệ',
 'currency.symbol' => 'Ký hiệu tiền tệ',
-'currency.symbol.placement' => 'Vị trí ký hiệu tiền tệ',
+'currency.symbol.placement' => 'Vị trí ký hiệu tiền '
+	. 'tệ',
 'current.day' => 'Ngày hiện tại',
 'current.month' => 'Tháng hiện tại',
 'current.version' => 'Phiên bản hiện tại',
 'current.year' => 'Năm hiện tại',
-'current.yy' => 'Năm hiện tại (định dạng 2 chữ số)',
+'current.yy' => 'Năm hiện tại (định dạng '
+	. '2 chữ số)',
 'custom' => 'Hóa đơn tùy chỉnh',
 'custom.field' => 'Trường tùy chỉnh',
 'custom.field.add' => 'Thêm trường tùy chỉnh',
@@ -318,14 +582,17 @@ return [
 'custom.invoice.add' => 'Thêm hóa đơn tùy chỉnh',
 'custom.title' => 'Tiêu đề tùy chỉnh',
 'custom.value' => 'Giá trị tùy chỉnh',
-'custom.value.delete' => 'Xóa giá trị tùy chỉnh đầu tiên',
+'custom.value.delete' => 'Xóa giá trị tùy chỉnh '
+	. 'đầu tiên',
 'custom.value.new' => 'Giá trị tùy chỉnh mới',
 'custom.values' => 'Giá trị tùy chỉnh',
-'custom.values.edit' => 'Chỉnh sửa giá trị tùy chỉnh',
+'custom.values.edit' => 'Chỉnh sửa giá trị tùy '
+	. 'chỉnh',
 'custom.values.new' => 'Giá trị tùy chỉnh mới',
 'dashboard' => 'Bảng điều khiển',
 'database' => 'Cơ sở dữ liệu',
-'database.properly.configured' => 'Cơ sở dữ liệu được cấu hình đúng',
+'database.properly.configured' => 'Cơ sở dữ liệu được '
+	. 'cấu hình đúng',
 'date' => 'Ngày hóa đơn',
 'date.actual.delivery' => 'Ngày giao hàng thực tế',
 'date.applied' => 'Ngày nộp đơn',
@@ -335,7 +602,8 @@ return [
 'date.supplied' => 'Ngày cung cấp',
 'dates' => 'Ngày lập hóa đơn',
 'datetime.immutable.date.created' => 'Tạo nên',
-'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Có',
+'datetime.immutable.date.created.mySql.format.year.month.filter' =>
+	'Có',
 'datetime.immutable.date.modified' => 'Chống lại',
 'datetime.immutable.time.created' => 'Thời gian',
 'days' => 'Ngày',
@@ -344,65 +612,133 @@ return [
 'default' => 'Mặc định',
 'default.country' => 'Quốc gia mặc định',
 'default.email.template' => 'Mẫu Email Mặc định',
-'default.hourly.rate' => 'Tỷ giá mặc định theo giờ',
+'default.hourly.rate' => 'Tỷ giá mặc định theo '
+	. 'giờ',
 'default.invoice.group' => 'Nhóm hóa đơn mặc định',
-'default.invoice.tax.rate' => 'Tỷ lệ thuế hóa đơn mặc định',
-'default.invoice.tax.rate.placement' => 'Vị trí thuế hóa đơn mặc định',
+'default.invoice.tax.rate' => 'Tỷ lệ thuế hóa đơn '
+	. 'mặc định',
+'default.invoice.tax.rate.placement' =>
+	'Vị trí thuế hóa đơn '
+	. 'mặc định',
 'default.item.tax.rate' => 'Tỷ lệ thuế mặc định',
-'default.list.limit' => 'Số lượng mục trong danh sách',
+'default.list.limit' => 'Số lượng mục trong danh '
+	. 'sách',
 'default.notes' => 'Ghi chú mặc định',
-'default.payment.method' => 'Phương thức thanh toán mặc định',
+'default.payment.method' => 'Phương thức thanh toán mặc '
+	. 'định',
 'default.pdf.template' => 'Mẫu PDF mặc định',
 'default.public.template' => 'Mẫu công khai mặc định',
 'default.quote.group' => 'Nhóm trích dẫn mặc định',
 'default.terms' => 'Điều khoản mặc định',
 'delete' => 'Xóa bỏ',
-'delete.attachment.warning' => 'Bạn có chắc chắn muốn xóa tệp đính kèm này không?',
+'delete.attachment.warning' => 'Bạn có chắc chắn muốn '
+	. 'xóa tệp đính kèm này '
+	. 'không?',
 'delete.client' => 'Xóa khách hàng',
-'delete.client.warning' => 'Nếu bạn xóa khách hàng này, bạn cũng sẽ xóa mọi hóa đơn, báo giá và thanh toán liên quan đến khách hàng này. Bạn có chắc chắn muốn xóa vĩnh viễn khách hàng này không?',
+'delete.client.warning' => 'Nếu bạn xóa khách hàng '
+	. 'này, bạn cũng sẽ xóa '
+	. 'mọi hóa đơn, báo giá '
+	. 'và thanh toán liên quan '
+	. 'đến khách hàng này.'
+	. 'Bạn có chắc chắn muốn '
+	. 'xóa vĩnh viễn khách hàng '
+	. 'này không?',
 'delete.invoice' => 'Xóa hóa đơn',
-'delete.invoice.warning' => 'Nếu bạn xóa hóa đơn này, bạn sẽ không thể khôi phục lại sau này. Bạn có chắc chắn muốn xóa vĩnh viễn hóa đơn này không?',
+'delete.invoice.warning' => 'Nếu bạn xóa hóa đơn '
+	. 'này, bạn sẽ không thể '
+	. 'khôi phục lại sau này.'
+	. 'Bạn có chắc chắn muốn '
+	. 'xóa vĩnh viễn hóa đơn '
+	. 'này không?',
 'delete.quote' => 'Xóa trích dẫn',
-'delete.quote.warning' => 'Nếu bạn xóa trích dẫn này, bạn sẽ không thể khôi phục lại sau này. Bạn có chắc chắn muốn xóa vĩnh viễn trích dẫn này không?',
-'delete.record.warning' => 'Bạn có chắc chắn muốn xóa bản ghi này không?',
-'delete.sent' => 'Không thể xóa - hóa đơn đã được gửi',
-'delete.tax.warning' => 'Bạn có chắc chắn muốn xóa loại thuế này không?',
-'delete.user.client.warning' => 'Bạn có chắc chắn muốn hủy chỉ định khách hàng này khỏi người dùng này không?',
+'delete.quote.warning' => 'Nếu bạn xóa trích dẫn '
+	. 'này, bạn sẽ không thể '
+	. 'khôi phục lại sau này.'
+	. 'Bạn có chắc chắn muốn '
+	. 'xóa vĩnh viễn trích dẫn '
+	. 'này không?',
+'delete.record.warning' => 'Bạn có chắc chắn muốn '
+	. 'xóa bản ghi này không?',
+'delete.sent' => 'Không thể xóa - hóa '
+	. 'đơn đã được gửi',
+'delete.tax.warning' => 'Bạn có chắc chắn muốn '
+	. 'xóa loại thuế này không?',
+'delete.user.client.warning' => 'Bạn có chắc chắn muốn '
+	. 'hủy chỉ định khách hàng '
+	. 'này khỏi người dùng này '
+	. 'không?',
 'deleted' => 'Đã xóa',
-'deletion.forbidden' => 'Việc xóa hóa đơn bị cấm. Vui lòng liên hệ với người quản lý hoặc tham khảo tài liệu.',
-'delivery' => 'Chi tiết giao hàng: Hóa đơn/Thời gian giao hàng Ngày bắt đầu/Kết thúc',
+'deletion.forbidden' => 'Việc xóa hóa đơn bị '
+	. 'cấm.'
+	. 'Vui lòng liên hệ với '
+	. 'người quản lý hoặc tham '
+	. 'khảo tài liệu.',
+'delivery' => 'Chi tiết giao hàng:'
+	. 'Hóa đơn/Thời gian giao hàng '
+	. 'Ngày bắt đầu/Kết thúc',
 'delivery.actual.delivery.date' => 'Ngày giao hàng thực tế',
 'delivery.add' => 'Thêm Giao hàng',
 'delivery.date.created' => 'Ngày tạo',
-'delivery.date.modified' => 'Ngày giao hàng đã được sửa đổi',
-'delivery.end.date' => 'Ngày kết thúc giao hàng/Thời hạn hóa đơn',
+'delivery.date.modified' => 'Ngày giao hàng đã được '
+	. 'sửa đổi',
+'delivery.end.date' => 'Ngày kết thúc giao hàng/Thời '
+	. 'hạn hóa đơn',
 'delivery.location' => 'Địa điểm giao hàng',
 'delivery.location.add' => 'Thêm địa điểm giao hàng',
-'delivery.location.add.in.invoice' => 'Thêm địa điểm giao hàng vào mục Hóa đơn ... Xem ... Tùy chọn ... Chỉnh sửa',
+'delivery.location.add.in.invoice' =>
+	'Thêm địa điểm giao hàng '
+	. 'vào mục Hóa đơn .'
+	. 'Xem .'
+	. 'Tùy chọn .'
+	. 'Chỉnh sửa',
 'delivery.location.building.number' => 'Số tòa nhà',
-'delivery.location.client' => 'Địa điểm giao hàng của khách hàng',
+'delivery.location.client' => 'Địa điểm giao hàng của '
+	. 'khách hàng',
 'delivery.location.delete' => 'Địa điểm giao hàng Xóa',
 'delivery.location.edit' => 'Địa điểm giao hàng Sửa',
-'delivery.location.electronic.address.scheme' => 'Sơ đồ địa chỉ điện tử (Danh sách mã) Mặc định: 0088 Mã số bài viết Châu Âu (EAN) Mã vị trí hay còn gọi là (GLN) Số vị trí toàn cầu',
-'delivery.location.global.location.number' => 'Số vị trí toàn cầu (13 chữ số)',
-'delivery.location.id.not.found' => 'Địa điểm giao hàng Địa điểm toàn cầu Số ID không tìm thấy',
-'delivery.location.index.button.list' => 'Hóa đơn',
-'delivery.location.none' => 'Không có địa điểm giao hàng nào được liên kết với hóa đơn này',
-'delivery.location.peppol.output' => 'Không có địa điểm giao hàng nào được liên kết với hóa đơn này. Do đó không có đầu ra Peppol',
+'delivery.location.electronic.address.scheme' =>
+	'Sơ đồ địa chỉ điện '
+	. 'tử (Danh sách mã) Mặc '
+	. 'định:'
+	. '0088 Mã số bài viết '
+	. 'Châu Âu (EAN) Mã vị '
+	. 'trí hay còn gọi là '
+	. '(GLN) Số vị trí toàn '
+	. 'cầu',
+'delivery.location.global.location.number' =>
+	'Số vị trí toàn cầu '
+	. '(13 chữ số)',
+'delivery.location.id.not.found' =>
+	'Địa điểm giao hàng Địa '
+	. 'điểm toàn cầu Số ID '
+	. 'không tìm thấy',
+'delivery.location.index.button.list' =>
+	'Hóa đơn',
+'delivery.location.none' => 'Không có địa điểm giao '
+	. 'hàng nào được liên kết '
+	. 'với hóa đơn này',
+'delivery.location.peppol.output' => 'Không có địa điểm giao '
+	. 'hàng nào được liên kết '
+	. 'với hóa đơn này.'
+	. 'Do đó không có đầu '
+	. 'ra Peppol',
 'delivery.location.plural' => 'Địa điểm giao hàng',
 'delivery.location.view' => 'Xem vị trí giao hàng',
 'delivery.party' => 'Bữa tiệc giao hàng',
 'delivery.party.add' => 'Thêm Bữa Tiệc Giao Hàng',
-'delivery.party.edit' => 'Chỉnh sửa Bữa tiệc giao hàng',
+'delivery.party.edit' => 'Chỉnh sửa Bữa tiệc giao '
+	. 'hàng',
 'delivery.party.name' => ' Tên bên giao hàng',
 'delivery.party.view' => 'Giao hàng Xem tiệc',
-'delivery.start.date' => 'Ngày bắt đầu giao hàng/Thời hạn hóa đơn',
+'delivery.start.date' => 'Ngày bắt đầu giao hàng/Thời '
+	. 'hạn hóa đơn',
 'description' => 'Sự miêu tả',
 'description.document' => 'Mô tả tài liệu',
 'details' => 'Chi tiết',
 'development.progress' => 'Tiến trình phát triển',
 'development.schema' => 'Sơ đồ',
-'disable.flash.messages' => 'Tắt tin nhắn Flash hóa đơn',
+'disable.flash.messages' => 'Tắt tin nhắn Flash hóa '
+	. 'đơn',
 'disable.quickactions' => 'Vô hiệu hóa Quickactions',
 'disable.sidebar' => 'Vô hiệu hóa thanh bên',
 'discount' => 'Giảm giá',
@@ -414,77 +750,176 @@ return [
 'download' => 'Tải về',
 'download.pdf' => 'Tải xuống PDF',
 'draft' => 'Bản nháp',
-'draft.guest' => 'Khách hàng không thể xem được hóa đơn nháp.',
-'draft.number.off' => 'Hóa đơn dự thảo mới sẽ không có Số hóa đơn. Đánh dấu là đã gửi để lấy Số hóa đơn',
-'draft.number.on' => 'Hóa đơn dự thảo mới sẽ có Số hóa đơn',
+'draft.guest' => 'Khách hàng không thể xem '
+	. 'được hóa đơn nháp.',
+'draft.number.off' => 'Hóa đơn dự thảo mới '
+	. 'sẽ không có Số hóa '
+	. 'đơn.'
+	. 'Đánh dấu là đã gửi '
+	. 'để lấy Số hóa đơn',
+'draft.number.on' => 'Hóa đơn dự thảo mới '
+	. 'sẽ có Số hóa đơn',
 'drop.files.here' => 'Thả tập tin vào đây!',
 'due.date' => 'Hai Ngày',
-'early.settlement.cash.discount' => 'Chiết khấu tiền mặt thanh toán sớm',
+'early.settlement.cash.discount' => 'Chiết khấu tiền mặt thanh '
+	. 'toán sớm',
 'edit' => 'Biên tập',
 'elements' => 'Các yếu tố',
 'email' => 'E-mail',
 'email.address' => 'Địa chỉ Email',
 'email.date' => 'Ngày gửi email',
 'email.default' => 'Mặc định',
-'email.default.none.set' => 'Không có mặc định nào được thiết lập',
+'email.default.none.set' => 'Không có mặc định nào '
+	. 'được thiết lập',
 'email.exception' => 'Ngoại lệ khi gửi email.',
-'email.from.dropdown' => 'Từ Email Dropdown Địa chỉ email sẽ được đưa vào Biểu mẫu MailerQuote và Biểu mẫu MailerInv',
+'email.from.dropdown' => 'Từ Email Dropdown Địa chỉ '
+	. 'email sẽ được đưa vào '
+	. 'Biểu mẫu MailerQuote và Biểu '
+	. 'mẫu MailerInv',
 'email.include' => 'Bao gồm',
 'email.invoice' => 'Hóa đơn Email',
-'email.link.click.confirm' => 'Vui lòng xác nhận địa chỉ email của bạn bằng cách nhấp vào liên kết này',
-'email.log' => 'Nhật ký hóa đơn gửi qua email',
-'email.logs' => 'Nhật ký hóa đơn gửi qua email',
+'email.link.click.confirm' => 'Vui lòng xác nhận địa '
+	. 'chỉ email của bạn bằng '
+	. 'cách nhấp vào liên kết '
+	. 'này',
+'email.log' => 'Nhật ký hóa đơn gửi '
+	. 'qua email',
+'email.logs' => 'Nhật ký hóa đơn gửi '
+	. 'qua email',
 'email.logs.with.filter' => 'Đã gửi qua email',
-'email.not.configured' => 'Trước khi bạn có thể gửi Email, bạn phải cấu hình cài đặt Email trong phần Cài đặt hệ thống.',
-'email.not.sent.successfully' => 'Email KHÔNG được gửi thành công',
-'email.pdf.attachment' => 'Đính kèm báo giá/hóa đơn vào email?',
+'email.not.configured' => 'Trước khi bạn có thể '
+	. 'gửi Email, bạn phải cấu '
+	. 'hình cài đặt Email trong '
+	. 'phần Cài đặt hệ thống.',
+'email.not.sent.successfully' => 'Email KHÔNG được gửi thành '
+	. 'công',
+'email.pdf.attachment' => 'Đính kèm báo giá/hóa đơn '
+	. 'vào email?',
 'email.quote' => 'Email trích dẫn',
 'email.send.method' => 'Phương pháp gửi email',
 'email.send.method.phpmail' => 'Thư PHP',
 'email.send.method.sendmail' => 'Gửi thư',
 'email.send.method.smtp' => 'Giao thức SMTP',
 'email.settings' => 'Cài đặt Email',
-'email.source.email.template' => ' Lấy từ Cài đặt ... Mẫu Email',
-'email.source.user.account' => ' Lấy từ Cài đặt ... Tài khoản người dùng hóa đơn',
-'email.successfully.sent' => 'Email đã được gửi thành công',
+'email.source.email.template' => 'Lấy từ Cài đặt .'
+	. 'Mẫu Email',
+'email.source.user.account' => 'Lấy từ Cài đặt .'
+	. 'Tài khoản người dùng hóa '
+	. 'đơn',
+'email.successfully.sent' => 'Email đã được gửi thành '
+	. 'công',
 'email.template' => 'Mẫu Email',
 'email.template.add' => 'Mẫu Email Thêm',
 'email.template.already.exists' => 'Mẫu Email đã có sẵn!',
 'email.template.form' => 'Mẫu biểu mẫu Email',
-'email.template.from.email.leave.blank' => ': Nếu bạn để trống trường này, địa chỉ email tài khoản của Người dùng sẽ được chèn dưới dạng giá trị có thể chỉnh sửa trên biểu mẫu gửi thư. Ví dụ: Địa chỉ email máy chủ của kế toán. Tốt nhất là sử dụng địa chỉ email liên quan đến máy chủ tại đây.',
+'email.template.from.email.leave.blank' =>
+	'Nếu bạn để trống trường '
+	. 'này, địa chỉ email tài '
+	. 'khoản của Người dùng sẽ '
+	. 'được chèn dưới dạng giá '
+	. 'trị có thể chỉnh sửa '
+	. 'trên biểu mẫu gửi thư.'
+	. 'Ví dụ:'
+	. 'Địa chỉ email máy chủ '
+	. 'của kế toán.'
+	. 'Tốt nhất là sử dụng '
+	. 'địa chỉ email liên quan '
+	. 'đến máy chủ tại đây.',
 'email.template.from.source' => 'Nguồn Email',
-'email.template.from.source.admin.email' => 'Địa chỉ email của người quản trị (config/common/params)',
-'email.template.from.source.froms.email' => 'Từ Bảng Mặc định (cài đặt...Từ Menu thả xuống Email Địa chỉ Email)',
-'email.template.from.source.sender.email' => 'Địa chỉ email của người gửi (config/common/params)',
-'email.template.not.configured' => 'Mẫu email chưa được cấu hình. Cài đặt...Hóa đơn...Mẫu hóa đơn...Mẫu email mặc định',
+'email.template.from.source.admin.email' =>
+	'Địa chỉ email của người '
+	. 'quản trị (config/common/params)',
+'email.template.from.source.froms.email' =>
+	'Từ Bảng Mặc định (cài '
+	. 'đặt.'
+	. 'Từ Menu thả xuống Email '
+	. 'Địa chỉ Email)',
+'email.template.from.source.sender.email' =>
+	'Địa chỉ email của người '
+	. 'gửi (config/common/params)',
+'email.template.not.configured' => 'Mẫu email chưa được cấu '
+	. 'hình.'
+	. 'Cài đặt.'
+	. 'Hóa đơn.'
+	. 'Mẫu hóa đơn.'
+	. 'Mẫu email mặc định',
 'email.template.overdue' => 'Mẫu Email Quá Hạn',
 'email.template.paid' => 'Mẫu Email trả phí',
-'email.template.successfully.added' => 'Mẫu Email Đã Thêm Thành Công',
-'email.template.successfully.deleted' => 'Mẫu Email Đã Xóa Thành Công',
-'email.template.successfully.edited' => 'Mẫu Email Đã Chỉnh Sửa Thành Công',
+'email.template.successfully.added' => 'Mẫu Email Đã Thêm Thành '
+	. 'Công',
+'email.template.successfully.deleted' => 'Mẫu Email Đã Xóa Thành '
+	. 'Công',
+'email.template.successfully.edited' => 'Mẫu Email Đã Chỉnh Sửa '
+	. 'Thành Công',
 'email.template.tags' => 'Thẻ mẫu email',
-'email.template.tags.instructions' => 'Có thể sử dụng thẻ mẫu để thêm thông tin động như tên khách hàng hoặc số hóa đơn vào mẫu email. Nhấp vào trường văn bản Nội dung rồi chọn thẻ từ danh sách thả xuống. Thẻ sẽ tự động được chèn vào trường văn bản.',
+'email.template.tags.instructions' => 'Có thể sử dụng thẻ '
+	. 'mẫu để thêm thông tin '
+	. 'động như tên khách hàng '
+	. 'hoặc số hóa đơn vào '
+	. 'mẫu email.'
+	. 'Nhấp vào trường văn bản '
+	. 'Nội dung rồi chọn thẻ '
+	. 'từ danh sách thả xuống.'
+	. 'Thẻ sẽ tự động được '
+	. 'chèn vào trường văn bản.',
 'email.template.type' => 'Loại mẫu email',
 'email.templates' => 'Mẫu Email',
-'email.to.address.missing' => 'Bạn phải chỉ định địa chỉ email để nhận email.',
-'email.warning.draft' => 'Hóa đơn nháp trước tiên phải được đánh dấu là đã gửi để hiển thị ở phía khách hàng và sau đó có thể gửi qua email.',
+'email.to.address.missing' => 'Bạn phải chỉ định địa '
+	. 'chỉ email để nhận email.',
+'email.warning.draft' => 'Hóa đơn nháp trước tiên '
+	. 'phải được đánh dấu là '
+	. 'đã gửi để hiển thị '
+	. 'ở phía khách hàng và '
+	. 'sau đó có thể gửi '
+	. 'qua email.',
 'enable.debug.mode' => 'Bật chế độ gỡ lỗi',
-'enable.online.payments' => 'Cho phép thanh toán trực tuyến',
-'enable.permissive.search.clients' => 'Cho phép tìm kiếm được phép',
+'enable.online.payments' => 'Cho phép thanh toán trực '
+	. 'tuyến',
+'enable.permissive.search.clients' => 'Cho phép tìm kiếm được '
+	. 'phép',
 'enable.projects' => 'Kích hoạt mô-đun Dự án',
 'enable.vat' => 'Bật VAT',
-'enable.vat.message' => 'Hiển thị thông báo nhắc nhở VAT phía trên nút tùy chọn trên chế độ xem',
-'enable.vat.warning.line.1' => '1. Khi bật VAT, chỉ những mục riêng lẻ trên hóa đơn mới được đánh thuế VAT. Nghĩa là Thuế báo giá/hóa đơn sẽ không hiển thị trên hóa đơn và sẽ giảm xuống 0.',
-'enable.vat.warning.line.2' => '2. Khi bật VAT, không có khoản thuế nào ngoài mục hàng như đã đề cập ở trên tạo nên tổng thuế. ',
-'enable.vat.warning.line.3' => '3. Tạo báo giá/hóa đơn VAT trên cơ sở dữ liệu riêng biệt.',
-'enable.vat.warning.line.4' => '4. Tất cả các mục hóa đơn VAT mới đều được đánh dấu bằng cờ belongs_to_vat_invoice.',
+'enable.vat.message' => 'Hiển thị thông báo nhắc '
+	. 'nhở VAT phía trên nút '
+	. 'tùy chọn trên chế độ '
+	. 'xem',
+'enable.vat.warning.line.1' =>
+	'1.'
+	. 'Khi bật VAT, chỉ những '
+	. 'mục riêng lẻ trên hóa '
+	. 'đơn mới được đánh thuế '
+	. 'VAT.'
+	. 'Nghĩa là Thuế báo giá/hóa '
+	. 'đơn sẽ không hiển thị '
+	. 'trên hóa đơn và sẽ '
+	. 'giảm xuống 0.',
+'enable.vat.warning.line.2' =>
+	'2.'
+	. 'Khi bật VAT, không có '
+	. 'khoản thuế nào ngoài mục '
+	. 'hàng như đã đề cập '
+	. 'ở trên tạo nên tổng '
+	. 'thuế.',
+'enable.vat.warning.line.3' =>
+	'3.'
+	. 'Tạo báo giá/hóa đơn VAT '
+	. 'trên cơ sở dữ liệu '
+	. 'riêng biệt.',
+'enable.vat.warning.line.4' =>
+	'4.'
+	. 'Tất cả các mục hóa '
+	. 'đơn VAT mới đều được '
+	. 'đánh dấu bằng cờ belongs_to_vat_invoice.',
 'enabled' => 'Đã bật',
 'end' => 'Kết thúc',
 'end.date' => 'Ngày kết thúc',
-'enforcement' => 'Cán bộ thực thi tham dự Địa chỉ',
+'enforcement' => 'Cán bộ thực thi tham '
+	. 'dự Địa chỉ',
 'enter' => 'Đi vào',
 'enter.payment' => 'Nhập thanh toán',
-'error.duplicate.file' => 'Lỗi: Tên tệp trùng lặp, vui lòng đổi tên!',
+'error.duplicate.file' => 'Lỗi:'
+	. 'Tên tệp trùng lặp, vui '
+	. 'lòng đổi tên!',
 'errors' => 'Lỗi',
 'every' => 'Mọi',
 'example' => 'Ví dụ',
@@ -496,17 +931,40 @@ return [
 'families' => 'Gia đình',
 'family' => 'Gia đình',
 'family.add' => 'Thêm gia đình',
-'family.already.exists' => 'Gia đình đã tồn tại rồi!',
-'family.history' => 'Lịch sử gia đình tồn tại. Không thể xóa',
+'family.already.exists' => 'Gia đình đã tồn tại '
+	. 'rồi!',
+'family.history' => 'Lịch sử gia đình tồn '
+	. 'tại.'
+	. 'Không thể xóa',
 'family.name' => 'Họ tên',
 'family.search' => 'Tìm kiếm gia đình',
 'faq' => 'Câu hỏi thường gặp',
-'faq.ai.callback.session' => 'Copilot: Làm thế nào tôi có thể đưa https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php vào để cải thiện việc quản lý trạng thái trong hàm `callbackGithub`?',
-'faq.business.rules' => 'Quy tắc kinh doanh của Peppol là gì?',
-'faq.gov.developer.sandbox.hmrc' => 'Làm thế nào để kết nối kho lưu trữ này với HMRC Developer Sandbox?',
-'faq.lamp.alpine' => 'Làm thế nào tôi có thể thiết lập kho lưu trữ này trên Linux Alpine, Apache2, mySql/mariadb và php?',
-'faq.oauth2' => 'Làm thế nào để thiết lập Nhà cung cấp danh tính OAuth2 ví dụ như đăng ký và đăng nhập bằng Facebook',
-'faq.payment.provider' => 'Làm thế nào để thiết lập Nhà cung cấp thanh toán trực tuyến?',
+'faq.ai.callback.session' => 'Copilot:'
+	. 'Làm thế nào tôi có '
+	. 'thể đưa https:'
+	. '//github.'
+	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
+	. 'php vào để cải thiện '
+	. 'việc quản lý trạng thái '
+	. 'trong hàm `callbackGithub`?',
+'faq.business.rules' => 'Quy tắc kinh doanh của '
+	. 'Peppol là gì?',
+'faq.gov.developer.sandbox.hmrc' =>
+	'Làm thế nào để kết '
+	. 'nối kho lưu trữ này '
+	. 'với HMRC Developer Sandbox?',
+'faq.lamp.alpine' => 'Làm thế nào tôi có '
+	. 'thể thiết lập kho lưu '
+	. 'trữ này trên Linux Alpine,'
+	. 'Apache2, mySql/mariadb và php?',
+'faq.oauth2' => 'Làm thế nào để thiết '
+	. 'lập Nhà cung cấp danh '
+	. 'tính OAuth2 ví dụ như '
+	. 'đăng ký và đăng nhập '
+	. 'bằng Facebook',
+'faq.payment.provider' => 'Làm thế nào để thiết '
+	. 'lập Nhà cung cấp thanh '
+	. 'toán trực tuyến?',
 'faq.php.info.all' => 'Tất cả',
 'faq.php.info.configuration' => 'Cấu hình',
 'faq.php.info.credits' => 'Tín dụng',
@@ -516,9 +974,13 @@ return [
 'faq.php.info.licence' => 'Giấy phép',
 'faq.php.info.modules' => 'Các mô-đun',
 'faq.php.info.variables' => 'Biến số',
-'faq.shared.hosting' => 'Làm thế nào để lưu trữ yii3i trên dịch vụ lưu trữ chia sẻ?',
-'faq.taxpoint' => 'Làm thế nào để xác định Điểm thuế là gì?',
-'faq.yii.requirement.checker' => 'Trình kiểm tra yêu cầu ứng dụng Yii',
+'faq.shared.hosting' => 'Làm thế nào để lưu '
+	. 'trữ yii3i trên dịch vụ '
+	. 'lưu trữ chia sẻ?',
+'faq.taxpoint' => 'Làm thế nào để xác '
+	. 'định Điểm thuế là gì?',
+'faq.yii.requirement.checker' => 'Trình kiểm tra yêu cầu '
+	. 'ứng dụng Yii',
 'fax' => 'Fax',
 'fax.abbr' => 'F',
 'fax.number' => 'Số Fax',
@@ -529,33 +991,89 @@ return [
 'filter.quotes' => 'Lọc trích dẫn',
 'first' => 'Đầu tiên',
 'first.day.of.week' => 'Ngày đầu tuần',
-'first.reset' => 'Trước tiên hãy xóa các báo giá và hóa đơn thử nghiệm mà bạn đã tạo để thử nghiệm. Sau đó, dữ liệu thử nghiệm có thể bị xóa.',
-'flash.messages.appear.here' => 'Tin nhắn Flash xuất hiện ở đây.',
+'first.reset' => 'Trước tiên hãy xóa các '
+	. 'báo giá và hóa đơn '
+	. 'thử nghiệm mà bạn đã '
+	. 'tạo để thử nghiệm.'
+	. 'Sau đó, dữ liệu thử '
+	. 'nghiệm có thể bị xóa.',
+'flash.messages.appear.here' => 'Tin nhắn Flash xuất hiện '
+	. 'ở đây.',
 'footer' => 'Chân trang',
-'forgot.your.password' => 'Tôi quên mật khẩu của tôi',
+'forgot.your.password' => 'Tôi quên mật khẩu của '
+	. 'tôi',
 'form.error' => 'Lỗi biểu mẫu',
 'from.date' => 'Từ ngày',
-'from.default.in.dropdown' => 'Địa chỉ email mặc định trong danh sách thả xuống',
+'from.default.in.dropdown' => 'Địa chỉ email mặc định '
+	. 'trong danh sách thả xuống',
 'from.email' => 'Từ Email',
-'from.email.address' => 'Từ Địa chỉ Email: Chọn một địa chỉ mặc định',
-'from.include.in.dropdown' => 'Bao gồm email này vào danh sách thả xuống',
+'from.email.address' => 'Từ Địa chỉ Email:'
+	. 'Chọn một địa chỉ mặc '
+	. 'định',
+'from.include.in.dropdown' => 'Bao gồm email này vào '
+	. 'danh sách thả xuống',
 'from.name' => 'Từ Tên',
 'front.page' => 'Trang đầu',
-'gallery.caption.slide1' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide10' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide11' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide12' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide13' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide14' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide15' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide2' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide3' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide4' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide5' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide6' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide7' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide8' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
-'gallery.caption.slide9' => 'Từ ../resources/messages/en/app.php bạn có thể thay đổi văn bản này.',
+'gallery.caption.slide1' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide10' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide11' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide12' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide13' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide14' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide15' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide2' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide3' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide4' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide5' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide6' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide7' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide8' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
+'gallery.caption.slide9' => 'Từ .'
+	. '/resources/messages/en/app.'
+	. 'php bạn có thể thay '
+	. 'đổi văn bản này.',
 'gateway.online.payment' => 'Thanh toán trực tuyến',
 'gender' => 'Giới tính',
 'gender.female' => 'Nữ giới',
@@ -567,112 +1085,336 @@ return [
 'general.yes' => 'Đúng',
 'generate' => 'Phát ra',
 'generate.copy' => 'Tạo bản sao',
-'generate.invoice.number.for.draft' => 'Tạo số hóa đơn cho các hóa đơn dự thảo',
-'generate.quote.number.for.draft' => 'Tạo số báo giá cho bản báo giá nháp',
+'generate.invoice.number.for.draft' =>
+	'Tạo số hóa đơn cho '
+	. 'các hóa đơn dự thảo',
+'generate.quote.number.for.draft' =>
+	'Tạo số báo giá cho '
+	. 'bản báo giá nháp',
 'generate.sumex' => 'Tạo Sumex PDF',
 'generator' => 'Máy phát điện',
 'generator.add' => 'Thêm máy phát điện',
-'generator.camelcase.capital.name' => 'Tên viết hoa Camelcase được sử dụng trong tên Bộ điều khiển và Kho lưu trữ, ví dụ: TaxRate. Sử dụng &#39;Sản phẩm&#39; nếu sử dụng ví dụ trên về &#39;sản phẩm&#39;',
-'generator.camelcase.capital.name.product' => 'Sản phẩm',
-'generator.controller.and.repository' => 'Bộ điều khiển và Kho lưu trữ',
-'generator.controller.layout.directory' => 'Thư mục bố trí bộ điều khiển ví dụ: dirname(dirname(__DIR__)) xuất hiện ngay sau lệnh xây dựng bộ điều khiển. Tệp Bộ điều khiển nằm trong (__DIR__) và là hai thư mục bên dưới thư mục &#39;src&#39; sẽ được sử dụng làm &#39;cơ sở&#39; để thêm đường dẫn đến thư mục Bố trí.',
-'generator.controller.layout.directory.dot.path' => 'Đường dẫn dấu chấm thư mục bố trí bộ điều khiển ví dụ: &#39;/views/layout/invoice.php&#39; xuất hiện ngay sau cấu trúc bộ điều khiển (loại trừ dấu nháy đơn) và được thêm vào vị trí thư mục src ở trên.',
-'generator.controller.layout.directory.dot.path.placeholder' => 'Đường dẫn chấm của thư mục bố trí bộ điều khiển',
-'generator.controller.layout.directory.placeholder' => 'Thư mục bố trí bộ điều khiển ví dụ: dirname(dirname(__DIR__))',
-'generator.controller.path.layout' => 'Đường dẫn đến tệp bố trí',
-'generator.created.at.include' => 'Bao gồm trường created_at trong Thực thể',
-'generator.deleted.at.include' => 'Bao gồm trường deleted_at trong Thực thể',
-'generator.external.entity' => 'Thực thể bên ngoài được sử dụng trong Thực thể này. Thực thể thiết lập là một cơ sở dữ liệu được lập chỉ mục theo cặp khóa =&gt; giá trị đơn giản.',
-'generator.external.entity.default' => 'Thực thể bên ngoài ví dụ: MyEntity không bao gồm đường dẫn. Đường dẫn được xây dựng trong Generator. Mặc định: Cài đặt',
-'generator.external.entity.placeholder' => 'Thực thể bên ngoài ví dụ: MyEntity không bao gồm đường dẫn. Đường dẫn được xây dựng trong Generator. Mặc định: Thiết lập. Kho lưu trữ bổ sung ví dụ: Thiết lập Kho lưu trữ ngoài kho lưu trữ chính.',
-'generator.file.type.not.found' => 'Không tìm thấy loại tập tin.',
-'generator.flash.include' => 'Bao gồm Tin nhắn Flash trong chức năng Thêm/Chỉnh sửa/Xem/Xóa trong Bộ điều khiển',
+'generator.camelcase.capital.name' => 'Tên viết hoa Camelcase được '
+	. 'sử dụng trong tên Bộ '
+	. 'điều khiển và Kho lưu '
+	. 'trữ, ví dụ:'
+	. 'TaxRate.'
+	. 'Sử dụng \'Sản phẩm\' nếu '
+	. 'sử dụng ví dụ trên '
+	. 'về \'sản phẩm\'',
+'generator.camelcase.capital.name.product' =>
+	'Sản phẩm',
+'generator.controller.and.repository' => 'Bộ điều khiển và Kho '
+	. 'lưu trữ',
+'generator.controller.layout.directory' => 'Thư mục bố trí bộ '
+	. 'điều khiển ví dụ:'
+	. 'dirname(dirname(__DIR__)) xuất hiện ngay sau '
+	. 'lệnh xây dựng bộ điều '
+	. 'khiển.'
+	. 'Tệp Bộ điều khiển nằm '
+	. 'trong (__DIR__) và là hai '
+	. 'thư mục bên dưới thư '
+	. 'mục \'src\' sẽ được sử '
+	. 'dụng làm \'cơ sở\' để '
+	. 'thêm đường dẫn đến thư '
+	. 'mục Bố trí.',
+'generator.controller.layout.directory.dot.path' =>
+	'Đường dẫn dấu chấm thư '
+	. 'mục bố trí bộ điều '
+	. 'khiển ví dụ:'
+	. '\'/views/layout/invoice.'
+	. 'php\' xuất hiện ngay sau '
+	. 'cấu trúc bộ điều khiển '
+	. '(loại trừ dấu nháy đơn) '
+	. 'và được thêm vào vị '
+	. 'trí thư mục src ở '
+	. 'trên.',
+'generator.controller.layout.directory.dot.path.placeholder' =>
+	'Đường dẫn chấm của thư '
+	. 'mục bố trí bộ điều '
+	. 'khiển',
+'generator.controller.layout.directory.placeholder' =>
+	'Thư mục bố trí bộ '
+	. 'điều khiển ví dụ:'
+	. 'dirname(dirname(__DIR__))',
+'generator.controller.path.layout' => 'Đường dẫn đến tệp bố '
+	. 'trí',
+'generator.created.at.include' => 'Bao gồm trường created_at trong '
+	. 'Thực thể',
+'generator.deleted.at.include' => 'Bao gồm trường deleted_at trong '
+	. 'Thực thể',
+'generator.external.entity' => 'Thực thể bên ngoài được '
+	. 'sử dụng trong Thực thể '
+	. 'này.'
+	. 'Thực thể thiết lập là '
+	. 'một cơ sở dữ liệu '
+	. 'được lập chỉ mục theo '
+	. 'cặp khóa =&gt; giá trị '
+	. 'đơn giản.',
+'generator.external.entity.default' => 'Thực thể bên ngoài ví '
+	. 'dụ:'
+	. 'MyEntity không bao gồm đường '
+	. 'dẫn.'
+	. 'Đường dẫn được xây dựng '
+	. 'trong Generator.'
+	. 'Mặc định:'
+	. 'Cài đặt',
+'generator.external.entity.placeholder' => 'Thực thể bên ngoài ví '
+	. 'dụ:'
+	. 'MyEntity không bao gồm đường '
+	. 'dẫn.'
+	. 'Đường dẫn được xây dựng '
+	. 'trong Generator.'
+	. 'Mặc định:'
+	. 'Thiết lập.'
+	. 'Kho lưu trữ bổ sung '
+	. 'ví dụ:'
+	. 'Thiết lập Kho lưu trữ '
+	. 'ngoài kho lưu trữ chính.',
+'generator.file.type.not.found' =>
+	'Không tìm thấy loại tập '
+	. 'tin.',
+'generator.flash.include' => 'Bao gồm Tin nhắn Flash '
+	. 'trong chức năng Thêm/Chỉnh sửa/Xem/Xóa '
+	. 'trong Bộ điều khiển',
 'generator.generate' => 'Phát ra',
 'generator.generated' => ' được tạo ra tại ',
-'generator.google.translate.any' => 'Dịch tiếng Anh\any_lang.php',
-'generator.google.translate.app' => 'Dịch tiếng Anh\app_lang.php',
-'generator.google.translate.common' => 'Dịch tiếng Anh\common_lang.php',
-'generator.google.translate.diff' => 'Dịch tiếng Anh\diff_lang.php',
-'generator.google.translate.gateway' => 'Dịch tiếng Anh\gateway_lang.php',
-'generator.google.translate.ip' => 'Dịch tiếng Anh\ip_lang.php',
-'generator.google.translate.latest.a' => 'Dịch tiếng Anh\a_latest_lang.php',
-'generator.google.translate.latest.b' => 'Dịch tiếng Anh\b_latest_lang.php',
-'generator.headerline.include' => 'Bao gồm Headerline nếu Ajax yêu cầu',
-'generator.history' => 'Bản ghi này có các mối quan hệ Generator hiện có nên không thể xóa được. Trước tiên hãy xóa các mối quan hệ này.',
-'generator.modified.at.include' => 'Bao gồm trường modified_at trong Thực thể',
+'generator.google.translate.any' => 'Dịch tiếng Anh\\any_lang.'
+	. 'php',
+'generator.google.translate.app' => 'Dịch tiếng Anh\\app_lang.'
+	. 'php',
+'generator.google.translate.common' => 'Dịch tiếng Anh\\common_lang.'
+	. 'php',
+'generator.google.translate.diff' => 'Dịch tiếng Anh\\diff_lang.'
+	. 'php',
+'generator.google.translate.gateway' => 'Dịch tiếng Anh\\gateway_lang.'
+	. 'php',
+'generator.google.translate.ip' => 'Dịch tiếng Anh\\ip_lang.'
+	. 'php',
+'generator.google.translate.latest.a' =>
+	'Dịch tiếng Anh\\a_latest_lang.'
+	. 'php',
+'generator.google.translate.latest.b' =>
+	'Dịch tiếng Anh\\b_latest_lang.'
+	. 'php',
+'generator.headerline.include' => 'Bao gồm Headerline nếu Ajax '
+	. 'yêu cầu',
+'generator.history' => 'Bản ghi này có các '
+	. 'mối quan hệ Generator hiện '
+	. 'có nên không thể xóa '
+	. 'được.'
+	. 'Trước tiên hãy xóa các '
+	. 'mối quan hệ này.',
+'generator.modified.at.include' => 'Bao gồm trường modified_at trong '
+	. 'Thực thể',
 'generator.namespace' => 'Không gian tên',
-'generator.namespace.before.entity' => 'Không gian tên trước Đường dẫn thực thể ví dụ: App\Invoice (KHÔNG phải App\Invoice\Entity)',
-'generator.relation.form' => 'Biểu mẫu quan hệ máy phát điện',
-'generator.relation.form.camelcase.name' => 'Tên Camelcase không bao gồm id (ví dụ: tax_rate_id &#39;khóa ngoại/quan hệ&#39; trong bảng Sản phẩm được đơn giản hóa thành TaxRate VÀ là tên của một Thực thể)',
-'generator.relation.form.entity.generator' => 'Trình tạo thực thể',
-'generator.relation.form.lowercase.name' => 'Tên viết thường không bao gồm id (ví dụ: tax_rate_id &#39;khóa ngoại/quan hệ&#39; trong bảng Sản phẩm được đơn giản hóa thành tax.rate) ',
-'generator.relation.form.view.field.name' => 'Xem Tên Trường',
+'generator.namespace.before.entity' => 'Không gian tên trước Đường '
+	. 'dẫn thực thể ví dụ:'
+	. 'App\\Invoice (KHÔNG phải App\\Invoice\\Entity)',
+'generator.relation.form' => 'Biểu mẫu quan hệ máy '
+	. 'phát điện',
+'generator.relation.form.camelcase.name' =>
+	'Tên Camelcase không bao gồm '
+	. 'id (ví dụ:'
+	. 'tax_rate_id \'khóa ngoại/quan hệ\' trong '
+	. 'bảng Sản phẩm được đơn '
+	. 'giản hóa thành TaxRate VÀ '
+	. 'là tên của một Thực '
+	. 'thể)',
+'generator.relation.form.entity.generator' =>
+	'Trình tạo thực thể',
+'generator.relation.form.lowercase.name' =>
+	'Tên viết thường không bao '
+	. 'gồm id (ví dụ:'
+	. 'tax_rate_id \'khóa ngoại/quan hệ\' trong '
+	. 'bảng Sản phẩm được đơn '
+	. 'giản hóa thành tax.'
+	. 'rate)',
+'generator.relation.form.view.field.name' =>
+	'Xem Tên Trường',
 'generator.relations' => 'Quan hệ máy phát điện',
-'generator.relations.add' => 'Máy phát điện Quan hệ Thêm',
-'generator.route.prefix' => 'Tiền tố tuyến đường ví dụ: hóa đơn trong &#39;hóa đơn/sản phẩm&#39; sẽ xuất hiện sau cấu trúc bộ điều khiển.',
-'generator.route.suffix' => 'Hậu tố tuyến đường ví dụ: sản phẩm trong &#39;hóa đơn/sản phẩm&#39; sẽ xuất hiện sau cấu trúc bộ điều khiển.',
-'generator.small.plural.name' => 'Tên số nhiều nhỏ được sử dụng trong Controller cho hàm điều khiển chỉ mục để liệt kê tất cả các trình tạo thực thể. Thông thường giá trị ở trên có chữ s ở cuối.',
-'generator.small.plural.name.placeholder' => 'Tên số nhiều nhỏ',
-'generator.small.plural.name.products' => 'các sản phẩm',
-'generator.small.singular.name' => 'Tên số ít nhỏ được sử dụng trong Controller để chỉnh sửa và xem các chức năng của controller. Thông thường giống như Route Suffix. ví dụ: product',
-'generator.small.singular.name.placeholder' => 'Tên số ít nhỏ',
-'generator.small.singular.name.product' => 'sản phẩm',
+'generator.relations.add' => 'Máy phát điện Quan hệ '
+	. 'Thêm',
+'generator.route.prefix' => 'Tiền tố tuyến đường ví '
+	. 'dụ:'
+	. 'hóa đơn trong \'hóa đơn/sản '
+	. 'phẩm\' sẽ xuất hiện sau '
+	. 'cấu trúc bộ điều khiển.',
+'generator.route.suffix' => 'Hậu tố tuyến đường ví '
+	. 'dụ:'
+	. 'sản phẩm trong \'hóa đơn/sản '
+	. 'phẩm\' sẽ xuất hiện sau '
+	. 'cấu trúc bộ điều khiển.',
+'generator.small.plural.name' => 'Tên số nhiều nhỏ được '
+	. 'sử dụng trong Controller cho '
+	. 'hàm điều khiển chỉ mục '
+	. 'để liệt kê tất cả '
+	. 'các trình tạo thực thể.'
+	. 'Thông thường giá trị ở '
+	. 'trên có chữ s ở '
+	. 'cuối.',
+'generator.small.plural.name.placeholder' =>
+	'Tên số nhiều nhỏ',
+'generator.small.plural.name.products' =>
+	'các sản phẩm',
+'generator.small.singular.name' => 'Tên số ít nhỏ được '
+	. 'sử dụng trong Controller để '
+	. 'chỉnh sửa và xem các '
+	. 'chức năng của controller.'
+	. 'Thông thường giống như Route '
+	. 'Suffix.'
+	. 'ví dụ:'
+	. 'product',
+'generator.small.singular.name.placeholder' =>
+	'Tên số ít nhỏ',
+'generator.small.singular.name.product' =>
+	'sản phẩm',
 'generator.table' => 'Bàn',
-'generator.table.used.to.generate.entity.controller.repository' => 'Bảng được sử dụng để tạo Thực thể, Bộ điều khiển Thêm Chỉnh sửa Xóa Chế độ xem, Kho lưu trữ, Dịch vụ, Trình ánh xạ',
-'generator.updated.at.include' => 'Bao gồm trường updated.at trong Thực thể',
+'generator.table.used.to.generate.entity.controller.repository' =>
+	'Bảng được sử dụng để '
+	. 'tạo Thực thể, Bộ điều '
+	. 'khiển Thêm Chỉnh sửa Xóa '
+	. 'Chế độ xem, Kho lưu '
+	. 'trữ, Dịch vụ, Trình ánh '
+	. 'xạ',
+'generator.updated.at.include' => 'Bao gồm trường updated.'
+	. 'at trong Thực thể',
 'generators' => 'Máy phát điện',
-'generators.relation' => 'Mối quan hệ giữa máy phát điện',
+'generators.relation' => 'Mối quan hệ giữa máy '
+	. 'phát điện',
 'gln' => 'GLN',
-'gov.developer.sandbox' => 'Sandbox dành cho nhà phát triển',
+'gov.developer.sandbox' => 'Sandbox dành cho nhà phát '
+	. 'triển',
 'gov.developer.sandbox.uk' => 'Hmrc',
-'gridview.api' => 'Giao diện lập trình ứng dụng (API)',
+'gridview.api' => 'Giao diện lập trình ứng '
+	. 'dụng (API)',
 'gridview.create.at' => 'Được tạo ra tại',
 'gridview.login' => 'Đăng nhập',
 'gridview.profile' => 'Hồ sơ',
 'gridview.title' => 'Danh sách người dùng',
 'group' => 'Nhóm',
 'group.add' => 'Thêm nhóm',
-'group.document.number' => 'Số tài liệu không được tạo. Kiểm tra Nhóm.',
+'group.document.number' => 'Số tài liệu không được '
+	. 'tạo.'
+	. 'Kiểm tra Nhóm.',
 'group.form' => 'Biểu mẫu nhóm',
-'group.history' => 'Lịch sử nhóm tồn tại. Không thể xóa',
+'group.history' => 'Lịch sử nhóm tồn tại.'
+	. 'Không thể xóa',
 'groups' => 'Nhóm',
-'guest.account.denied' => 'Tài khoản này chưa được cấu hình. Vui lòng liên hệ với quản trị viên hệ thống.',
+'guest.account.denied' => 'Tài khoản này chưa được '
+	. 'cấu hình.'
+	. 'Vui lòng liên hệ với '
+	. 'quản trị viên hệ thống.',
 'guest.read.only' => 'Khách (Chỉ đọc)',
 'guest.url' => 'URL của khách',
 'hide.or.unhide.columns' => 'Ẩn hoặc hiện các cột',
-'hint.greater.than.zero.please' => 'Vui lòng lớn hơn 0,00!',
-'hint.this.field.is.not.required' => 'Trường này không bắt buộc',
-'hint.this.field.is.required' => 'Trường này là bắt buộc',
+'hint.greater.than.zero.please' =>
+	'Vui lòng lớn hơn 0,00!',
+'hint.this.field.is.not.required' =>
+	'Trường này không bắt buộc',
+'hint.this.field.is.required' =>
+	'Trường này là bắt buộc',
 'home' => 'Trang chủ',
-'home.caption.slide1' => 'Đăng ký và đăng nhập với tư cách quản trị viên. Không có internet ... bỏ qua lỗi kết nối email.',
-'home.caption.slide2' => 'Với tư cách là người quản trị, hãy đăng ký người dùng. Tài khoản email hợp lệ và kết nối internet ... xác minh. Người dùng sẽ nhận được tài khoản khách hàng.',
-'home.caption.slide3' => 'Tài khoản email không hợp lệ và không có kết nối internet ... đăng nhập quản trị và Tài khoản người dùng Hóa đơn của người dùng được kích hoạt trong Cài đặt. Tạo tài khoản khách hàng. Chỉ định cho người dùng',
-'home.caption.slides.location.debug.mode' => 'Vị trí của nội dung này: ./resources/views/site/index.php trong ./resources/views/layout/. ... và vị trí slide dịch ./resources/messages/app.php',
+'home.caption.slide1' => 'Đăng ký và đăng nhập '
+	. 'với tư cách quản trị '
+	. 'viên.'
+	. 'Không có internet .'
+	. 'bỏ qua lỗi kết nối '
+	. 'email.',
+'home.caption.slide2' => 'Với tư cách là người '
+	. 'quản trị, hãy đăng ký '
+	. 'người dùng.'
+	. 'Tài khoản email hợp lệ '
+	. 'và kết nối internet .'
+	. 'xác minh.'
+	. 'Người dùng sẽ nhận được '
+	. 'tài khoản khách hàng.',
+'home.caption.slide3' => 'Tài khoản email không hợp '
+	. 'lệ và không có kết '
+	. 'nối internet .'
+	. 'đăng nhập quản trị và '
+	. 'Tài khoản người dùng Hóa '
+	. 'đơn của người dùng được '
+	. 'kích hoạt trong Cài đặt.'
+	. 'Tạo tài khoản khách hàng.'
+	. 'Chỉ định cho người dùng',
+'home.caption.slides.location.debug.mode' =>
+	'Vị trí của nội dung '
+	. 'này:'
+	. '/resources/views/site/index.'
+	. 'php trong .'
+	. '/resources/views/layout/.'
+	. '.'
+	. 'và vị trí slide dịch '
+	. '.'
+	. '/resources/messages/app.'
+	. 'php',
 'hostname' => 'Tên máy chủ',
 'html.sumex.no' => 'Html không có Sumex',
 'html.sumex.yes' => 'Html với Sumex',
 'id' => 'NHẬN DẠNG',
 'identifier.format' => 'Định dạng định danh',
-'identifier.format.template.tags' => 'Thẻ mẫu cho Mã định danh',
-'identifier.format.template.tags.instructions' => 'Có thể sử dụng thẻ mẫu để thêm thông tin động như tên khách hàng hoặc số hóa đơn vào mẫu email. Nhấp vào trường Định <b>dạng định danh</b> rồi chọn thẻ từ danh sách thả xuống. Thẻ sẽ tự động được chèn vào trường văn bản.',
-'identity.provider.authentication.successful' => 'Bạn đã được xác thực thành công thông qua Nhà cung cấp danh tính đã chọn, đã đăng ký và được cấp một tài khoản khách hàng. Nhấp vào đây trong vòng một giờ tới để kích hoạt tài khoản của bạn. Bạn có một giờ để đăng nhập lần đầu.',
-'image.overdue' => '  Vị trí của hình ảnh: ./invoice/public/img/overdue.png',
-'image.paid' => '  Vị trí của hình ảnh: ./invoice/public/img/paid.png',
+'identifier.format.template.tags' => 'Thẻ mẫu cho Mã định '
+	. 'danh',
+'identifier.format.template.tags.instructions' =>
+	'Có thể sử dụng thẻ '
+	. 'mẫu để thêm thông tin '
+	. 'động như tên khách hàng '
+	. 'hoặc số hóa đơn vào '
+	. 'mẫu email.'
+	. 'Nhấp vào trường Định <b>dạng '
+	. 'định danh</b> rồi chọn thẻ '
+	. 'từ danh sách thả xuống.'
+	. 'Thẻ sẽ tự động được '
+	. 'chèn vào trường văn bản.',
+'identity.provider.authentication.successful' => 'Bạn đã được xác thực '
+	. 'thành công thông qua Nhà '
+	. 'cung cấp danh tính đã '
+	. 'chọn, đã đăng ký và '
+	. 'được cấp một tài khoản '
+	. 'khách hàng.'
+	. 'Nhấp vào đây trong vòng '
+	. 'một giờ tới để kích '
+	. 'hoạt tài khoản của bạn.'
+	. 'Bạn có một giờ để '
+	. 'đăng nhập lần đầu.',
+'image.overdue' => 'Vị trí của hình ảnh:'
+	. '/invoice/public/img/overdue.'
+	. 'png',
+'image.paid' => 'Vị trí của hình ảnh:'
+	. '/invoice/public/img/paid.'
+	. 'png',
 'import' => 'Nhập khẩu',
 'import.data' => 'Nhập dữ liệu',
 'import.from.csv' => 'Nhập từ CSV',
 'in.progress' => 'Đang tiến hành',
 'inactive' => 'Không hoạt động',
-'index.checkbox.add.some.items.to.enable' => 'Hóa đơn không có mục nào. Thêm mục để bật hộp kiểm',
-'index.footer.showing' => 'Hiển thị %s trong số %s',
-'index.showing' => 'Hiển thị %s trong số %s',
-'info.task.readonly' => 'Không thể thay đổi nhiệm vụ này nữa vì nó đã được lập hóa đơn.',
-'install.test.data' => 'Dữ liệu thử nghiệm hiện có thể được cài đặt',
-'install.test.data.exists.already' => 'Dữ liệu kiểm tra hóa đơn đã tồn tại',
-'install.test.data.goto.tab.index' => 'Vào Cài đặt ... Chung ... Cài đặt Dữ liệu Kiểm tra',
+'index.checkbox.add.some.items.to.enable' =>
+	'Hóa đơn không có mục '
+	. 'nào.'
+	. 'Thêm mục để bật hộp '
+	. 'kiểm',
+'index.footer.showing' => 'Hiển thị %s trong số '
+	. '%s',
+'index.showing' => 'Hiển thị %s trong số '
+	. '%s',
+'info.task.readonly' => 'Không thể thay đổi nhiệm '
+	. 'vụ này nữa vì nó '
+	. 'đã được lập hóa đơn.',
+'install.test.data' => 'Dữ liệu thử nghiệm hiện '
+	. 'có thể được cài đặt',
+'install.test.data.exists.already' =>
+	'Dữ liệu kiểm tra hóa '
+	. 'đơn đã tồn tại',
+'install.test.data.goto.tab.index' =>
+	'Vào Cài đặt .'
+	. 'Chung .'
+	. 'Cài đặt Dữ liệu Kiểm '
+	. 'tra',
 'interface' => 'Giao diện',
 'invalid.amount' => 'Số tiền không hợp lệ',
-'invalid.subscriber.number' => 'Số thuê bao không hợp lệ',
+'invalid.subscriber.number' => 'Số thuê bao không hợp '
+	. 'lệ',
 'invoice' => 'Hóa đơn',
 'invoiced' => 'Đã xuất hóa đơn',
 'invoiceplane' => 'Hóa đơn',
@@ -682,22 +1424,47 @@ return [
 'invoiceplane.database.username' => 'Tên người dùng',
 'invoiceplane.families' => 'Gia đình được chèn vào',
 'invoiceplane.import' => 'Kiểm tra kết nối',
-'invoiceplane.import.complete.connection.closed' => 'Đã nhập hoàn tất! Kết nối đã đóng!',
+'invoiceplane.import.complete.connection.closed' =>
+	'Đã nhập hoàn tất! Kết '
+	. 'nối đã đóng!',
 'invoiceplane.import.connected' => 'Bạn đã có kết nối!',
-'invoiceplane.import.proceed' => 'Tiến hành quá trình nhập khẩu',
-'invoiceplane.import.proceed.alert' => 'Bạn có chắc chắn muốn tiếp tục không?',
+'invoiceplane.import.proceed' => 'Tiến hành quá trình nhập '
+	. 'khẩu',
+'invoiceplane.import.proceed.alert' => 'Bạn có chắc chắn muốn '
+	. 'tiếp tục không?',
 'invoiceplane.imported' => 'Bảng đã được nhập',
 'invoiceplane.news' => 'Tin tức của InvoicePlane',
 'invoiceplane.no.connection' => 'Không có kết nối',
-'invoiceplane.no.username.or.password' => 'Vui lòng lưu tên Cơ sở dữ liệu, Tên người dùng và Mật khẩu của bạn cho InvoicePlane',
+'invoiceplane.no.username.or.password' =>
+	'Vui lòng lưu tên Cơ '
+	. 'sở dữ liệu, Tên người '
+	. 'dùng và Mật khẩu của '
+	. 'bạn cho InvoicePlane',
 'invoiceplane.products' => 'Sản phẩm đã chèn',
-'invoiceplane.tables' => 'Nhập các Bảng InvoicePlane Client, Product, Unit, Family, TaxRate vào các bảng trống. Không nên có dữ liệu hiện có trong các bảng này trước khi nhập và không có tài liệu hiện có nào ví dụ như Invoices.',
-'invoiceplane.tables.not.empty' => 'Bảng Khách hàng, Sản phẩm, Đơn vị, Gia đình và Tỷ lệ thuế của bạn phải trống trước khi nhập',
-'invoiceplane.taxrates' => 'Thuế suất được chèn bắt buộc với Thuế suất bằng 0 và Thuế suất chuẩn.',
-'invoiceplane.units' => 'Các đơn vị được chèn vào',
-'invoiceplane.yes.connection' => 'Có, bạn đã kết nối tới cơ sở dữ liệu Invoiceplane!',
+'invoiceplane.tables' => 'Nhập các Bảng InvoicePlane Client,'
+	. 'Product, Unit, Family, TaxRate vào '
+	. 'các bảng trống.'
+	. 'Không nên có dữ liệu '
+	. 'hiện có trong các bảng '
+	. 'này trước khi nhập và '
+	. 'không có tài liệu hiện '
+	. 'có nào ví dụ như '
+	. 'Invoices.',
+'invoiceplane.tables.not.empty' => 'Bảng Khách hàng, Sản phẩm,'
+	. 'Đơn vị, Gia đình và '
+	. 'Tỷ lệ thuế của bạn '
+	. 'phải trống trước khi nhập',
+'invoiceplane.taxrates' => 'Thuế suất được chèn bắt '
+	. 'buộc với Thuế suất bằng '
+	. '0 và Thuế suất chuẩn.',
+'invoiceplane.units' => 'Các đơn vị được chèn '
+	. 'vào',
+'invoiceplane.yes.connection' => 'Có, bạn đã kết nối '
+	. 'tới cơ sở dữ liệu '
+	. 'Invoiceplane!',
 'invoices' => 'Hóa đơn',
-'invoices.due.after' => 'Hóa đơn đến hạn sau (ngày)',
+'invoices.due.after' => 'Hóa đơn đến hạn sau '
+	. '(ngày)',
 'is.not.writable' => 'không thể ghi được',
 'is.writable' => 'có thể ghi được',
 'item' => 'Mục hóa đơn',
@@ -711,8 +1478,12 @@ return [
 'item.lookups' => 'Tra cứu mục',
 'item.name' => 'Tên mặt hàng',
 'item.tax' => 'Thuế mặt hàng',
-'item.tax.excluded' => 'Tổng phụ x Tỷ lệ thuế (Thuế mục đã được loại trừ)',
-'item.tax.included' => '(Tổng cộng + Thuế mục) x Tỷ lệ phần trăm thuế',
+'item.tax.excluded' => 'Tổng phụ x Tỷ lệ '
+	. 'thuế (Thuế mục đã được '
+	. 'loại trừ)',
+'item.tax.included' => '(Tổng cộng + Thuế mục) '
+	. 'x Tỷ lệ phần trăm '
+	. 'thuế',
 'item.tax.rate' => 'Thuế suất mặt hàng',
 'items' => 'Các mục hóa đơn',
 'judgement' => 'Phán quyết đã đạt được',
@@ -741,16 +1512,25 @@ return [
 'layout.migrations' => 'Di cư',
 'layout.no-records' => 'Không có hồ sơ',
 'layout.not-found' => 'Không tìm thấy',
-'layout.page.not-authorised' => 'Không được phép: Thông tin xác thực không chính xác.',
+'layout.page.not-authorised' => 'Không được phép:'
+	. 'Thông tin xác thực không '
+	. 'chính xác.',
 'layout.page.not-found' => 'Không tìm thấy trang {url}.',
-'layout.page.user-cancelled-oauth2' => 'Người dùng đã hủy Đăng nhập / Đăng ký thông qua Nhà cung cấp danh tính ví dụ Facebook',
-'layout.pagination-summary' => 'Hiển thị {pageSize} trong tổng số {total} bài đăng',
+'layout.page.user-cancelled-oauth2' => 'Người dùng đã hủy Đăng '
+	. 'nhập / Đăng ký thông '
+	. 'qua Nhà cung cấp danh '
+	. 'tính ví dụ Facebook',
+'layout.pagination-summary' => 'Hiển thị {pageSize} trong tổng '
+	. 'số {total} bài đăng',
 'layout.password' => 'Mật khẩu',
-'layout.password-verify' => 'Xác nhận mật khẩu của bạn',
-'layout.password-verify.new' => 'Xác nhận mật khẩu mới của bạn',
+'layout.password-verify' => 'Xác nhận mật khẩu của '
+	. 'bạn',
+'layout.password-verify.new' => 'Xác nhận mật khẩu mới '
+	. 'của bạn',
 'layout.password.new' => 'Mật khẩu mới',
 'layout.password.otp' => 'Mật khẩu OTP',
-'layout.rbac.assign-role' => 'Chỉ định vai trò RBAC cho người dùng',
+'layout.rbac.assign-role' => 'Chỉ định vai trò RBAC '
+	. 'cho người dùng',
 'layout.remember' => 'Nhớ tôi nhé',
 'layout.reset' => 'Cài lại',
 'layout.show-more' => 'hiển thị thêm',
@@ -758,39 +1538,75 @@ return [
 'layout.title' => 'Tiêu đề',
 'layout.total.posts' => 'Tổng số {count} bài viết',
 'left.pad' => 'Bàn phím trái',
-'letter' => 'Thư trước khi hành động 7 ngày đã được gửi',
-'loading.error' => 'Có vẻ như ứng dụng bị kẹt do lỗi.',
+'letter' => 'Thư trước khi hành động '
+	. '7 ngày đã được gửi',
+'loading.error' => 'Có vẻ như ứng dụng '
+	. 'bị kẹt do lỗi.',
 'loading.error.help' => 'Nhận trợ giúp',
 'login' => 'Đăng nhập',
 'login.logo' => 'Logo đăng nhập',
-'loginalert.credentials.incorrect' => 'Email hoặc mật khẩu không đúng.',
+'loginalert.credentials.incorrect' => 'Email hoặc mật khẩu không '
+	. 'đúng.',
 'loginalert.no.password' => 'Vui lòng nhập mật khẩu.',
-'loginalert.user.inactive' => 'Người dùng này được đánh dấu là không hoạt động. Vui lòng liên hệ với quản trị viên hệ thống.',
-'loginalert.user.not.found' => 'Không có tài khoản nào được đăng ký bằng địa chỉ Email này.',
-'loginalert.wrong.auth.code' => 'Không thể đặt lại mật khẩu. Bạn đã cung cấp mã xác thực không hợp lệ.',
+'loginalert.user.inactive' => 'Người dùng này được đánh '
+	. 'dấu là không hoạt động.'
+	. 'Vui lòng liên hệ với '
+	. 'quản trị viên hệ thống.',
+'loginalert.user.not.found' => 'Không có tài khoản nào '
+	. 'được đăng ký bằng địa '
+	. 'chỉ Email này.',
+'loginalert.wrong.auth.code' => 'Không thể đặt lại mật '
+	. 'khẩu.'
+	. 'Bạn đã cung cấp mã '
+	. 'xác thực không hợp lệ.',
 'logo' => 'Biểu tượng hóa đơn',
 'logout' => 'Đăng xuất',
 'loss' => 'Đã xóa sổ',
-'mark.invoices.sent.copy' => 'Đánh dấu hóa đơn đã gửi khi sao chép hóa đơn',
-'mark.invoices.sent.pdf' => 'Đánh dấu hóa đơn đã gửi khi tạo PDF',
-'mark.quotes.sent.pdf' => 'Đánh dấu trích dẫn là đã gửi khi PDF được tạo',
-'mark.sent.copy.on' => 'Đánh dấu hóa đơn là đã gửi khi sao chép Hóa đơn là Bật. Chỉ nên bật trong quá trình phát triển',
-'mark.sent.off' => 'Đánh dấu hóa đơn là đã gửi khi sao chép hóa đơn ... hiện đang TẮT. Chỉ được đặt thành BẬT trong quá trình phát triển. Nhấp vào đây để BẬT',
-'mark.sent.on' => 'Đánh dấu hóa đơn là đã gửi khi sao chép hóa đơn ... hiện đang BẬT. Luôn bật TẮT trong quá trình sản xuất. Nhấp vào đây để TẮT',
+'mark.invoices.sent.copy' => 'Đánh dấu hóa đơn đã '
+	. 'gửi khi sao chép hóa '
+	. 'đơn',
+'mark.invoices.sent.pdf' => 'Đánh dấu hóa đơn đã '
+	. 'gửi khi tạo PDF',
+'mark.quotes.sent.pdf' => 'Đánh dấu trích dẫn là '
+	. 'đã gửi khi PDF được '
+	. 'tạo',
+'mark.sent.copy.on' => 'Đánh dấu hóa đơn là '
+	. 'đã gửi khi sao chép '
+	. 'Hóa đơn là Bật.'
+	. 'Chỉ nên bật trong quá '
+	. 'trình phát triển',
+'mark.sent.off' => 'Đánh dấu hóa đơn là '
+	. 'đã gửi khi sao chép '
+	. 'hóa đơn .'
+	. 'hiện đang TẮT.'
+	. 'Chỉ được đặt thành BẬT '
+	. 'trong quá trình phát triển.'
+	. 'Nhấp vào đây để BẬT',
+'mark.sent.on' => 'Đánh dấu hóa đơn là '
+	. 'đã gửi khi sao chép '
+	. 'hóa đơn .'
+	. 'hiện đang BẬT.'
+	. 'Luôn bật TẮT trong quá '
+	. 'trình sản xuất.'
+	. 'Nhấp vào đây để TẮT',
 'max' => 'Tối đa',
 'max.quantity' => 'Số lượng tối đa',
 'menu' => 'Thực đơn',
 'menu.about' => 'Về',
 'menu.accreditations' => 'Chứng nhận',
 'menu.blog' => 'Blog',
-'menu.comments-feed' => 'Nguồn cấp dữ liệu bình luận',
+'menu.comments-feed' => 'Nguồn cấp dữ liệu bình '
+	. 'luận',
 'menu.contact.details' => 'Chi tiết liên lạc',
-'menu.contact.soon' => 'Cảm ơn bạn đã liên hệ với chúng tôi, chúng tôi sẽ liên hệ với bạn sớm nhất có thể.',
+'menu.contact.soon' => 'Cảm ơn bạn đã liên '
+	. 'hệ với chúng tôi, chúng '
+	. 'tôi sẽ liên hệ với '
+	. 'bạn sớm nhất có thể.',
 'menu.contact.us' => 'Liên hệ với chúng tôi',
 'menu.gallery' => 'Phòng trưng bày',
 'menu.language' => 'Ngôn ngữ',
 'menu.login' => 'Đăng nhập',
-'menu.logout' => 'Đăng xuất ({đăng nhập})',
+'menu.logout' => 'Đăng xuất ({login})',
 'menu.pricing' => 'Giá cả',
 'menu.privacy.policy' => 'Chính sách bảo mật',
 'menu.signup' => 'Đăng ký',
@@ -808,58 +1624,140 @@ return [
 'mobile' => 'Di động',
 'mobile.number' => 'Số điện thoại di động',
 'monday' => 'Thứ hai',
-'monospaced.font.for.amounts' => 'Sử dụng phông chữ Monospace cho số lượng',
+'monospaced.font.for.amounts' => 'Sử dụng phông chữ Monospace '
+	. 'cho số lượng',
 'month' => 'Tháng',
 'month.prefix' => 'Tiền tố tháng',
 'mpdf' => 'Mpdf',
-'mpdf.allow.charset.conversion' => 'Cho phép chuyển đổi bộ ký tự',
+'mpdf.allow.charset.conversion' => 'Cho phép chuyển đổi bộ '
+	. 'ký tự',
 'mpdf.auto.arabic' => 'Tiếng Ả Rập tự động',
-'mpdf.auto.language.to.font' => 'Ngôn ngữ tự động sang phông chữ',
-'mpdf.auto.script.to.lang' => 'Tự động dịch sang ngôn ngữ',
+'mpdf.auto.language.to.font' =>
+	'Ngôn ngữ tự động sang '
+	. 'phông chữ',
+'mpdf.auto.script.to.lang' =>
+	'Tự động dịch sang ngôn '
+	. 'ngữ',
 'mpdf.auto.vietnamese' => 'xe việt nam',
-'mpdf.cjk' => 'Phông chữ Trung Quốc, Nhật Bản, Hàn Quốc',
+'mpdf.cjk' => 'Phông chữ Trung Quốc, Nhật '
+	. 'Bản, Hàn Quốc',
 'mpdf.ltr' => 'Từ trái sang phải',
 'mpdf.show.image.errors' => 'Hiển thị lỗi hình ảnh',
 'mtd' => 'Làm cho Thuế số hóa',
-'mtd.fph' => 'Tiêu đề phòng ngừa gian lận',
-'mtd.fph.all.valid' => 'Tất cả các tiêu đề phòng ngừa gian lận đều hợp lệ',
+'mtd.fph' => 'Tiêu đề phòng ngừa gian '
+	. 'lận',
+'mtd.fph.all.valid' => 'Tất cả các tiêu đề '
+	. 'phòng ngừa gian lận đều '
+	. 'hợp lệ',
 'mtd.fph.generate' => 'Phát ra',
-'mtd.fph.no.provided' => 'Không có tiêu đề phòng ngừa gian lận nào được cung cấp',
-'mtd.fph.record.alert' => 'Bạn có chắc chắn muốn ghi lại thông tin chi tiết Tiêu đề phòng ngừa gian lận mới không? Thông tin chi tiết trước đó sẽ bị ghi đè nếu lưu!',
+'mtd.fph.no.provided' => 'Không có tiêu đề phòng '
+	. 'ngừa gian lận nào được '
+	. 'cung cấp',
+'mtd.fph.record.alert' => 'Bạn có chắc chắn muốn '
+	. 'ghi lại thông tin chi '
+	. 'tiết Tiêu đề phòng ngừa '
+	. 'gian lận mới không? Thông '
+	. 'tin chi tiết trước đó '
+	. 'sẽ bị ghi đè nếu '
+	. 'lưu!',
 'mtd.fph.screen.timestamp' => 'Dấu thời gian',
-'mtd.fph.some.advisories' => 'Ít nhất một tiêu đề có khả năng không hợp lệ',
-'mtd.fph.some.invalid' => 'Có ít nhất một tiêu đề không hợp lệ',
-'mtd.gov.client.browser.do.not.track' => 'Giá trị cho biết tùy chọn Không theo dõi có được bật trong trình duyệt hay không',
-'mtd.gov.client.browser.do.not.track.eg' => 'ví dụ sai',
-'mtd.gov.client.browser.js.user.agent' => 'Gov-Client-Browser-JS-User-Agent',
-'mtd.gov.client.browser.js.user.agent.eg' => 'ví dụ: Mozilla/5.0 (iPad; U; CPU OS 3 2.1 như Mac OS X; en-us) (KHTML, như Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' => 'Danh sách các plug-in trình duyệt trên thiết bị gốc',
-'mtd.gov.client.browser.plugins.eg' => 'ví dụ Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' => 'Phương pháp kết nối Gov-Client',
-'mtd.gov.client.device.id' => 'ID thiết bị',
-'mtd.gov.client.device.id.eg' => 'ví dụ: beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' => 'IP cục bộ',
-'mtd.gov.client.multi.factor' => 'Nhiều yếu tố',
-'mtd.gov.client.multi.factor.eg' => 'ví dụ loại=OTP; trạng thái=thành công, loại=SMS; trạng thái=thất bại, loại=Sinh trắc học, loại=SMS; dấu thời gian=2023-04-01T12:34:56Z; tham chiếu duy nhất=abc123xyz',
-'mtd.gov.client.multi.factor.otp' => 'Mật khẩu dùng một lần (OTP): ',
-'mtd.gov.client.public.ip' => 'IP công cộng',
-'mtd.gov.client.public.port' => 'Cổng công cộng (không phải http 80 và không phải https 443 ví dụ 57961)',
+'mtd.fph.some.advisories' => 'Ít nhất một tiêu đề '
+	. 'có khả năng không hợp '
+	. 'lệ',
+'mtd.fph.some.invalid' => 'Có ít nhất một tiêu '
+	. 'đề không hợp lệ',
+'mtd.gov.client.browser.do.not.track' =>
+	'Giá trị cho biết tùy '
+	. 'chọn Không theo dõi có '
+	. 'được bật trong trình duyệt '
+	. 'hay không',
+'mtd.gov.client.browser.do.not.track.eg' =>
+	'ví dụ sai',
+'mtd.gov.client.browser.js.user.agent' =>
+	'Gov-Client-Browser-JS-User-Agent',
+'mtd.gov.client.browser.js.user.agent.eg' =>
+	'ví dụ:'
+	. 'Mozilla/5.'
+	. '0 (iPad; U; CPU OS '
+	. '3 2.'
+	. '1 như Mac OS X;'
+	. 'en-us) (KHTML, như Gecko) Mobile/7B405',
+'mtd.gov.client.browser.plugins' =>
+	'Danh sách các plug-in trình '
+	. 'duyệt trên thiết bị gốc',
+'mtd.gov.client.browser.plugins.eg' =>
+	'ví dụ Shockwave%20F1ash Chromium%20PDF%20Viewer',
+'mtd.gov.client.connection.method' =>
+	'Phương pháp kết nối Gov-Client',
+'mtd.gov.client.device.id' =>
+	'ID thiết bị',
+'mtd.gov.client.device.id.eg' =>
+	'ví dụ:'
+	. 'beec798b-b366-47fa-b1f8-92cede14a1ce',
+'mtd.gov.client.local.ips' =>
+	'IP cục bộ',
+'mtd.gov.client.multi.factor' =>
+	'Nhiều yếu tố',
+'mtd.gov.client.multi.factor.eg' =>
+	'ví dụ loại=OTP; trạng thái=thành '
+	. 'công, loại=SMS; trạng thái=thất bại,'
+	. 'loại=Sinh trắc học, loại=SMS; dấu '
+	. 'thời gian=2023-04-01T12:'
+	. '34:'
+	. '56Z; tham chiếu duy nhất=abc123xyz',
+'mtd.gov.client.multi.factor.otp' =>
+	'Mật khẩu dùng một lần '
+	. '(OTP):',
+'mtd.gov.client.public.ip' =>
+	'IP công cộng',
+'mtd.gov.client.public.port' =>
+	'Cổng công cộng (không phải '
+	. 'http 80 và không phải '
+	. 'https 443 ví dụ 57961)',
 'mtd.gov.client.screens' => 'Màn hình Gov-Client',
-'mtd.gov.client.screens.colour.depth' => 'Độ sâu màu',
-'mtd.gov.client.screens.height' => 'Chiều cao màn hình',
-'mtd.gov.client.screens.pixels' => 'điểm ảnh',
-'mtd.gov.client.screens.scaling.factor' => 'Hệ số tỷ lệ',
-'mtd.gov.client.screens.scaling.factor.bits' => 'bit',
-'mtd.gov.client.screens.width' => 'Chiều rộng màn hình',
+'mtd.gov.client.screens.colour.depth' =>
+	'Độ sâu màu',
+'mtd.gov.client.screens.height' =>
+	'Chiều cao màn hình',
+'mtd.gov.client.screens.pixels' =>
+	'điểm ảnh',
+'mtd.gov.client.screens.scaling.factor' =>
+	'Hệ số tỷ lệ',
+'mtd.gov.client.screens.scaling.factor.bits' =>
+	'bit',
+'mtd.gov.client.screens.width' =>
+	'Chiều rộng màn hình',
 'mtd.gov.client.timezone' => 'Múi giờ',
-'mtd.gov.client.user.ids' => 'ID người dùng',
-'mtd.gov.client.user.ids.uuid' => 'uuid',
-'mtd.gov.client.window.size' => 'Kích thước cửa sổ',
-'mtd.gov.client.window.size.pixels' => 'điểm ảnh',
-'mtd.gov.vendor.forwarded' => 'Danh sách nêu chi tiết các bước nhảy qua internet giữa các dịch vụ chấm dứt Bảo mật lớp truyền tải (TLS)',
-'mtd.gov.vendor.license.ids' => 'Cấu trúc dữ liệu khóa-giá trị của các khóa cấp phép băm liên quan đến phần mềm của nhà cung cấp đã khởi tạo yêu cầu API trên thiết bị gốc',
-'mtd.gov.vendor.public.ip' => 'Địa chỉ IP công khai của các máy chủ mà thiết bị gốc gửi yêu cầu của mình tới',
-'mtd.gov.vendor.version' => 'Cấu trúc dữ liệu khóa-giá trị của các phiên bản phần mềm liên quan đến việc xử lý yêu cầu',
+'mtd.gov.client.user.ids' =>
+	'ID người dùng',
+'mtd.gov.client.user.ids.uuid' =>
+	'uuid',
+'mtd.gov.client.window.size' =>
+	'Kích thước cửa sổ',
+'mtd.gov.client.window.size.pixels' =>
+	'điểm ảnh',
+'mtd.gov.vendor.forwarded' => 'Danh sách nêu chi tiết '
+	. 'các bước nhảy qua internet '
+	. 'giữa các dịch vụ chấm '
+	. 'dứt Bảo mật lớp truyền '
+	. 'tải (TLS)',
+'mtd.gov.vendor.license.ids' =>
+	'Cấu trúc dữ liệu khóa-giá '
+	. 'trị của các khóa cấp '
+	. 'phép băm liên quan đến '
+	. 'phần mềm của nhà cung '
+	. 'cấp đã khởi tạo yêu '
+	. 'cầu API trên thiết bị '
+	. 'gốc',
+'mtd.gov.vendor.public.ip' =>
+	'Địa chỉ IP công khai '
+	. 'của các máy chủ mà '
+	. 'thiết bị gốc gửi yêu '
+	. 'cầu của mình tới',
+'mtd.gov.vendor.version' => 'Cấu trúc dữ liệu khóa-giá '
+	. 'trị của các phiên bản '
+	. 'phần mềm liên quan đến '
+	. 'việc xử lý yêu cầu',
 'multiple.choice' => 'Trắc nghiệm',
 'name' => 'Tên',
 'new' => 'Mới',
@@ -872,11 +1770,15 @@ return [
 'no' => 'KHÔNG',
 'no.attachments' => 'Không có tệp đính kèm',
 'no.client' => 'Không có khách hàng',
-'no.file.uploaded' => 'Không có tập tin nào được tải lên',
-'no.overdue.invoices' => 'Không có hóa đơn quá hạn',
-'no.quotes.requiring.approval' => 'Không có báo giá nào cần phải được chấp thuận.',
+'no.file.uploaded' => 'Không có tập tin nào '
+	. 'được tải lên',
+'no.overdue.invoices' => 'Không có hóa đơn quá '
+	. 'hạn',
+'no.quotes.requiring.approval' => 'Không có báo giá nào '
+	. 'cần phải được chấp thuận.',
 'no.records' => 'Không có hồ sơ',
-'no.updates.available' => 'Không có bản cập nhật nào khả dụng.',
+'no.updates.available' => 'Không có bản cập nhật '
+	. 'nào khả dụng.',
 'none' => 'Không có',
 'not.available' => 'Không có sẵn',
 'not.found' => 'Không tìm thấy hóa đơn',
@@ -886,21 +1788,40 @@ return [
 'notes' => 'Ghi chú',
 'number' => '#',
 'number.format' => 'Định dạng số',
-'number.format.compact.comma' => '1000000,00 (Định dạng rút gọn với dấu phẩy thập phân)',
-'number.format.compact.point' => '1000000.00 (Định dạng nhỏ gọn có dấu thập phân)',
-'number.format.european' => '1.000.000,00 (định dạng Châu Âu)',
-'number.format.iso.80k.1' => '1 000 000.00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 với dấu phẩy thập phân)',
-'number.format.iso80k1.point' => '1 000 000.00 (ISO 80000-1 có dấu thập phân)',
-'number.format.us.uk' => '1.000.000,00 (định dạng US/UK)',
-'number.missing.therefore.use.invoice.id' => 'số hóa đơn-thiếu-do đó-id-hóa đơn-',
+'number.format.compact.comma' => '1000000,00 (Định dạng rút gọn '
+	. 'với dấu phẩy thập phân)',
+'number.format.compact.point' => '1000000.'
+	. '00 (Định dạng nhỏ gọn '
+	. 'có dấu thập phân)',
+'number.format.european' => '1.'
+	. '000.'
+	. '000,00 (định dạng Châu Âu)',
+'number.format.iso.80k.1' =>
+	'1 000 000.'
+	. '00 (ISO 80000-1)',
+'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
+	. 'với dấu phẩy thập phân)',
+'number.format.iso80k1.point' => '1 000 000.'
+	. '00 (ISO 80000-1 có dấu '
+	. 'thập phân)',
+'number.format.us.uk' => '1.'
+	. '000.'
+	. '000,00 (định dạng US/UK)',
+'number.missing.therefore.use.invoice.id' =>
+	'số hóa đơn-thiếu-do đó-id-hóa đơn-',
 'number.no' => 'Không có số hóa đơn',
-'oauth2' => 'OAuth 2.0',
-'oauth2.google.people.api.v1.client.id' => 'Mã khách hàng',
-'oauth2.google.people.api.v1.client.secret' => 'Bí mật của khách hàng',
+'oauth2' => 'OAuth 2.'
+	. '0',
+'oauth2.google.people.api.v1.client.id' =>
+	'Mã khách hàng',
+'oauth2.google.people.api.v1.client.secret' =>
+	'Bí mật của khách hàng',
 'online.log' => 'Nhật ký trực tuyến',
 'online.payment' => 'Thanh toán trực tuyến',
-'online.payment.3dauth.redirect' => 'Vui lòng đợi trong khi chúng tôi chuyển hướng bạn đến đơn vị phát hành thẻ để xác thực...',
+'online.payment.3dauth.redirect' => 'Vui lòng đợi trong khi '
+	. 'chúng tôi chuyển hướng bạn '
+	. 'đến đơn vị phát hành '
+	. 'thẻ để xác thực.',
 'online.payment.accessKey' => 'Phím truy cập',
 'online.payment.accessToken' => 'Mã thông báo truy cập',
 'online.payment.accountId' => 'ID tài khoản',
@@ -910,25 +1831,45 @@ return [
 'online.payment.appId' => 'ID ứng dụng',
 'online.payment.appSecret' => 'Ứng dụng bí mật',
 'online.payment.callbackPassword' => 'Gọi lại mật khẩu',
-'online.payment.card.invalid' => 'Thẻ tín dụng này không hợp lệ. Vui lòng kiểm tra thông tin được cung cấp.',
+'online.payment.card.invalid' => 'Thẻ tín dụng này không '
+	. 'hợp lệ.'
+	. 'Vui lòng kiểm tra thông '
+	. 'tin được cung cấp.',
 'online.payment.clientId' => 'Mã khách hàng',
 'online.payment.clientSecret' => 'Bí mật của khách hàng',
-'online.payment.creditcard.hint' => 'Nếu bạn muốn thanh toán bằng thẻ tín dụng, vui lòng nhập thông tin bên dưới.<br/> Thông tin thẻ tín dụng không được lưu trữ trên máy chủ của chúng tôi và sẽ được chuyển đến cổng thanh toán trực tuyến bằng kết nối an toàn.',
+'online.payment.creditcard.hint' => 'Nếu bạn muốn thanh toán '
+	. 'bằng thẻ tín dụng, vui '
+	. 'lòng nhập thông tin bên '
+	. 'dưới.'
+	. '<br/> Thông tin thẻ tín '
+	. 'dụng không được lưu trữ '
+	. 'trên máy chủ của chúng '
+	. 'tôi và sẽ được chuyển '
+	. 'đến cổng thanh toán trực '
+	. 'tuyến bằng kết nối an '
+	. 'toàn.',
 'online.payment.developerMode' => 'Chế độ nhà phát triển',
 'online.payment.for' => 'Thanh toán trực tuyến cho',
-'online.payment.for.invoice' => 'Thanh toán trực tuyến cho hóa đơn',
+'online.payment.for.invoice' => 'Thanh toán trực tuyến cho '
+	. 'hóa đơn',
 'online.payment.installationId' => 'Mã cài đặt',
-'online.payment.merchantAccessCode' => 'Mã truy cập của thương gia',
+'online.payment.merchantAccessCode' => 'Mã truy cập của thương '
+	. 'gia',
 'online.payment.merchantId' => 'Mã số thương gia',
 'online.payment.merchantKey' => 'Chìa khóa thương gia',
-'online.payment.method' => 'Phương thức thanh toán trực tuyến',
+'online.payment.method' => 'Phương thức thanh toán trực '
+	. 'tuyến',
 'online.payment.partner' => 'Cộng sự',
 'online.payment.partnerID' => 'ID đối tác',
 'online.payment.password' => 'Mật khẩu',
 'online.payment.payment.cancelled' => 'Thanh toán đã bị hủy.',
-'online.payment.payment.failed' => 'Thanh toán không thành công. Vui lòng thử lại.',
-'online.payment.payment.redirect' => 'Vui lòng đợi trong khi chúng tôi chuyển hướng bạn đến trang thanh toán...',
-'online.payment.payment.successful' => 'Thanh toán hóa đơn %s thành công!',
+'online.payment.payment.failed' => 'Thanh toán không thành công.'
+	. 'Vui lòng thử lại.',
+'online.payment.payment.redirect' => 'Vui lòng đợi trong khi '
+	. 'chúng tôi chuyển hướng bạn '
+	. 'đến trang thanh toán.',
+'online.payment.payment.successful' => 'Thanh toán hóa đơn %s '
+	. 'thành công!',
 'online.payment.pdtKey' => 'Khóa Pdt',
 'online.payment.privateKey' => 'Khóa riêng tư',
 'online.payment.profileID' => 'ID hồ sơ',
@@ -955,19 +1896,29 @@ return [
 'online.payment.storePassword' => 'Lưu trữ mật khẩu',
 'online.payment.subAccountId' => 'ID tài khoản phụ',
 'online.payment.testMode' => 'Chế độ kiểm tra',
-'online.payment.testOrLiveApiKey' => 'Khóa API thử nghiệm hoặc trực tiếp tức là bắt đầu bằng test_ hoặc live_',
+'online.payment.testOrLiveApiKey' => 'Khóa API thử nghiệm hoặc '
+	. 'trực tiếp tức là bắt '
+	. 'đầu bằng test_ hoặc live_',
 'online.payment.transactionKey' => 'Khóa giao dịch',
 'online.payment.transactionPassword' => 'Mật khẩu giao dịch',
 'online.payment.username' => 'Tên người dùng',
 'online.payment.vendor' => 'Người bán',
-'online.payment.version' => 'Phiên bản Omnipay (đã chọn) / Tuân thủ PCI (Không có thông tin chi tiết về thẻ tín dụng nào được lưu trữ trên cơ sở dữ liệu này) (chưa chọn)',
+'online.payment.version' => 'Phiên bản Omnipay (đã chọn) '
+	. '/ Tuân thủ PCI (Không '
+	. 'có thông tin chi tiết '
+	. 'về thẻ tín dụng nào '
+	. 'được lưu trữ trên cơ '
+	. 'sở dữ liệu này) (chưa '
+	. 'chọn)',
 'online.payment.webhookId' => 'ID Webhook',
 'online.payment.websiteKey' => 'Chìa khóa trang web',
 'online.payments' => 'Thanh toán trực tuyến',
 'open' => 'Mở',
 'open.invoices' => 'Hóa đơn mở',
 'open.quotes' => 'Mở trích dẫn',
-'open.reports.in.new.tab' => 'Mở Báo cáo trong Tab Trình duyệt mới',
+'open.reports.in.new.tab' =>
+	'Mở Báo cáo trong Tab '
+	. 'Trình duyệt mới',
 'optional' => 'Không bắt buộc',
 'options' => 'Tùy chọn',
 'order' => 'Đặt hàng',
@@ -981,12 +1932,28 @@ return [
 'paid' => 'Trả',
 'password' => 'Mật khẩu',
 'password.change' => 'Thay đổi mật khẩu',
-'password.changed' => 'Mật khẩu đã được thay đổi thành công',
+'password.changed' => 'Mật khẩu đã được thay '
+	. 'đổi thành công',
 'password.reset' => 'Đặt lại mật khẩu',
-'password.reset.email' => 'Bạn đã yêu cầu mật khẩu mới cho cài đặt của mình. Vui lòng nhấp vào liên kết trong hộp thư đến của bạn để đặt lại mật khẩu.',
-'password.reset.failed' => 'Đã xảy ra lỗi khi cố gắng gửi email đặt lại mật khẩu của bạn. Vui lòng xem lại nhật ký ứng dụng hoặc liên hệ với quản trị viên hệ thống.',
-'password.reset.info' => 'Bạn sẽ nhận được Email có liên kết để đặt lại mật khẩu.',
-'password.reset.request.token' => 'Yêu cầu mã thông báo đặt lại mật khẩu',
+'password.reset.email' => 'Bạn đã yêu cầu mật '
+	. 'khẩu mới cho cài đặt '
+	. 'của mình.'
+	. 'Vui lòng nhấp vào liên '
+	. 'kết trong hộp thư đến '
+	. 'của bạn để đặt lại '
+	. 'mật khẩu.',
+'password.reset.failed' => 'Đã xảy ra lỗi khi '
+	. 'cố gắng gửi email đặt '
+	. 'lại mật khẩu của bạn.'
+	. 'Vui lòng xem lại nhật '
+	. 'ký ứng dụng hoặc liên '
+	. 'hệ với quản trị viên '
+	. 'hệ thống.',
+'password.reset.info' => 'Bạn sẽ nhận được Email '
+	. 'có liên kết để đặt '
+	. 'lại mật khẩu.',
+'password.reset.request.token' => 'Yêu cầu mã thông báo '
+	. 'đặt lại mật khẩu',
 'past.month' => 'Tháng qua',
 'past.quarter' => 'Quý vừa qua',
 'past.year' => 'Năm qua',
@@ -994,169 +1961,488 @@ return [
 'payment' => 'Sự chi trả',
 'payment.add' => 'Thêm thanh toán',
 'payment.cannot.delete' => 'Không thể xóa thanh toán',
-'payment.cannot.exceed.balance' => 'Số tiền thanh toán không được vượt quá số dư hóa đơn.',
+'payment.cannot.exceed.balance' => 'Số tiền thanh toán không '
+	. 'được vượt quá số dư '
+	. 'hóa đơn.',
 'payment.custom' => 'Thanh toán Tùy chỉnh',
 'payment.custom.add' => 'Thanh toán Tùy chỉnh Thêm',
 'payment.date' => 'Ngày thanh toán',
 'payment.deleted' => 'Thanh toán đã xóa',
-'payment.description' => 'Thanh toán cho Hóa đơn %s',
+'payment.description' => 'Thanh toán cho Hóa đơn '
+	. '%s',
 'payment.form' => 'Biểu mẫu thanh toán',
-'payment.gateway.default.locale' => 'Ngôn ngữ mặc định ví dụ en.GB',
-'payment.gateway.mollie.api.key.has.been.setup' => 'Cổng thanh toán Mollie đã được thiết lập để kiểm tra hoặc khóa API trực tiếp.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Cần phải thiết lập Cổng thanh toán Mollie Test hoặc Khóa API trực tiếp.',
-'payment.gateway.mollie.api.payment.id' => 'Mã thanh toán Mollie: ',
-'payment.gateway.no' => 'Không có cổng thanh toán nào được thiết lập trong Cài đặt ... Xem ... Thanh toán trực tuyến',
+'payment.gateway.default.locale' => 'Ngôn ngữ mặc định ví '
+	. 'dụ en.'
+	. 'GB',
+'payment.gateway.mollie.api.key.has.been.setup' =>
+	'Cổng thanh toán Mollie đã '
+	. 'được thiết lập để kiểm '
+	. 'tra hoặc khóa API trực '
+	. 'tiếp.',
+'payment.gateway.mollie.api.key.needs.to.be.setup' =>
+	'Cần phải thiết lập Cổng '
+	. 'thanh toán Mollie Test hoặc '
+	. 'Khóa API trực tiếp.',
+'payment.gateway.mollie.api.payment.id' =>
+	'Mã thanh toán Mollie:',
+'payment.gateway.no' => 'Không có cổng thanh toán '
+	. 'nào được thiết lập trong '
+	. 'Cài đặt .'
+	. 'Xem .'
+	. 'Thanh toán trực tuyến',
 'payment.history' => 'Lịch sử thanh toán',
-'payment.information.amazon.no.omnipay.version' => 'Hiện tại không có phiên bản Amazon Pay Omnipay. Bỏ chọn Phiên bản Omnipay để sử dụng phiên bản tuân thủ PCI trong Cài đặt Xem',
-'payment.information.amazon.payment.session.complete' => 'Phiên thanh toán Amazon đã hoàn tất - Mã phiên: ',
-'payment.information.amazon.payment.session.incomplete' => 'Phiên thanh toán của Amazon không hoàn tất - Vui lòng thử lại',
-'payment.information.braintree.braintree.no.omnipay.version' => 'Hiện tại không có phiên bản Braintree Omnipay nào tương thích với Braintree phiên bản 6.9.1. Bỏ chọn Phiên bản Omnipay để sử dụng phiên bản tuân thủ PCI trong mục Cài đặt',
-'payment.information.invoice.number.not.provided' => 'Số hóa đơn chưa được cung cấp',
-'payment.information.no.information.provided' => 'Không có thông tin nào được cung cấp',
+'payment.information.amazon.no.omnipay.version' =>
+	'Hiện tại không có phiên '
+	. 'bản Amazon Pay Omnipay.'
+	. 'Bỏ chọn Phiên bản Omnipay '
+	. 'để sử dụng phiên bản '
+	. 'tuân thủ PCI trong Cài '
+	. 'đặt Xem',
+'payment.information.amazon.payment.session.complete' =>
+	'Phiên thanh toán Amazon đã '
+	. 'hoàn tất - Mã phiên:',
+'payment.information.amazon.payment.session.incomplete' =>
+	'Phiên thanh toán của Amazon '
+	. 'không hoàn tất - Vui '
+	. 'lòng thử lại',
+'payment.information.braintree.braintree.no.omnipay.version' =>
+	'Hiện tại không có phiên '
+	. 'bản Braintree Omnipay nào tương '
+	. 'thích với Braintree phiên bản '
+	. '6.'
+	. '9.'
+	. '1.'
+	. 'Bỏ chọn Phiên bản Omnipay '
+	. 'để sử dụng phiên bản '
+	. 'tuân thủ PCI trong mục '
+	. 'Cài đặt',
+'payment.information.invoice.number.not.provided' =>
+	'Số hóa đơn chưa được '
+	. 'cung cấp',
+'payment.information.no.information.provided' =>
+	'Không có thông tin nào '
+	. 'được cung cấp',
 'payment.information.none' => 'Không có',
-'payment.information.omnipay.driver.being.used' => 'Đang sử dụng trình điều khiển {{$d}} từ Omnipay.',
-'payment.information.payment.method.required' => 'Hóa đơn này cần có phương thức thanh toán.',
-'payment.information.stripe.api.key' => 'Khóa bí mật/Khóa API của Cổng thanh toán Stripe cần được thiết lập.',
+'payment.information.omnipay.driver.being.used' =>
+	'Đang sử dụng trình điều '
+	. 'khiển {{$d}} từ Omnipay.',
+'payment.information.payment.method.required' =>
+	'Hóa đơn này cần có '
+	. 'phương thức thanh toán.',
+'payment.information.stripe.api.key' =>
+	'Khóa bí mật/Khóa API của '
+	. 'Cổng thanh toán Stripe cần '
+	. 'được thiết lập.',
 'payment.logs' => 'Nhật ký thanh toán',
 'payment.method' => 'Phương thức thanh toán',
 'payment.method.add' => 'Phương thức thanh toán Thêm',
-'payment.method.already.exists' => 'Phương thức thanh toán đã tồn tại!',
-'payment.method.form' => 'Biểu mẫu phương thức thanh toán',
-'payment.method.history' => 'Không thể xóa. Lịch sử phương thức thanh toán đã tồn tại.',
+'payment.method.already.exists' => 'Phương thức thanh toán đã '
+	. 'tồn tại!',
+'payment.method.form' => 'Biểu mẫu phương thức thanh '
+	. 'toán',
+'payment.method.history' => 'Không thể xóa.'
+	. 'Lịch sử phương thức thanh '
+	. 'toán đã tồn tại.',
 'payment.methods' => 'Phương thức thanh toán',
-'payment.no.invoice.sent' => 'Chúng tôi chưa gửi hóa đơn hoặc khách hàng chưa xem bất kỳ hóa đơn nào.',
+'payment.no.invoice.sent' => 'Chúng tôi chưa gửi hóa '
+	. 'đơn hoặc khách hàng chưa '
+	. 'xem bất kỳ hóa đơn '
+	. 'nào.',
 'payment.provider' => 'Nhà cung cấp thanh toán',
 'payment.term' => 'Điều khoản thanh toán',
-'payment.term.0.days' => 'Vui lòng sử dụng một trong các phương thức thanh toán được cung cấp',
-'payment.term.add.additional.terms.at.setting.repository' => 'Thêm các điều khoản bổ sung vào chức năng getPaymentTerms của kho lưu trữ.',
-'payment.term.eom.120.days' => 'EOM(120): Vui lòng thanh toán trong vòng 120 ngày Cuối tháng kể từ ngày phát hành',
-'payment.term.eom.15.days' => 'EOM(15): Vui lòng thanh toán trong vòng 15 ngày kể từ ngày cuối tháng của ngày phát hành',
-'payment.term.eom.30.days' => 'EOM(30): Vui lòng thanh toán trong vòng 30 ngày kể từ ngày cuối tháng của ngày phát hành',
-'payment.term.eom.60.days' => 'EOM(60): Vui lòng thanh toán trong vòng 60 ngày kể từ ngày cuối tháng của ngày phát hành',
-'payment.term.eom.90.days' => 'EOM(90): Vui lòng thanh toán trong vòng 90 ngày kể từ ngày cuối tháng của ngày phát hành',
-'payment.term.general' => 'Thanh toán trong vòng 30 ngày',
-'payment.term.mfi.15' => 'MFI(15): Vui lòng thanh toán vào ngày 15 của tháng tiếp theo ngày-tháng phát hành',
-'payment.term.net.120.days' => 'Net(120): Vui lòng thanh toán trong vòng 120 ngày kể từ ngày phát hành',
-'payment.term.net.15.days' => 'Net(15): Vui lòng thanh toán trong vòng 15 ngày kể từ ngày phát hành.',
-'payment.term.net.30.days' => 'Net(30): Vui lòng thanh toán trong vòng 30 ngày kể từ ngày phát hành',
-'payment.term.net.60.days' => 'Net(60): Vui lòng thanh toán trong vòng 60 ngày kể từ ngày phát hành',
-'payment.term.net.90.days' => 'Net(90): Vui lòng thanh toán trong vòng 90 ngày kể từ ngày phát hành',
-'payment.term.pia' => 'Thanh toán phải được thực hiện trước (PIA)',
-'payment.term.polite' => 'Chúng tôi đánh giá cao việc kinh doanh của bạn. Vui lòng gửi thanh toán trong vòng 30 ngày kể từ khi nhận được hóa đơn này.',
-'payment.terms.default' => 'Thanh toán trong vòng 14 ngày',
-'paymentpeppol' => 'Thanh toán được thực hiện thông qua Peppol',
-'paymentpeppol.reference.plural' => 'Tham chiếu thanh toán sử dụng Peppol',
+'payment.term.0.days' => 'Vui lòng sử dụng một '
+	. 'trong các phương thức thanh '
+	. 'toán được cung cấp',
+'payment.term.add.additional.terms.at.setting.repository' =>
+	'Thêm các điều khoản bổ '
+	. 'sung vào chức năng getPaymentTerms '
+	. 'của kho lưu trữ.',
+'payment.term.eom.120.days' =>
+	'EOM(120):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 120 ngày Cuối tháng '
+	. 'kể từ ngày phát hành',
+'payment.term.eom.15.days' =>
+	'EOM(15):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 15 ngày kể từ '
+	. 'ngày cuối tháng của ngày '
+	. 'phát hành',
+'payment.term.eom.30.days' =>
+	'EOM(30):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 30 ngày kể từ '
+	. 'ngày cuối tháng của ngày '
+	. 'phát hành',
+'payment.term.eom.60.days' =>
+	'EOM(60):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 60 ngày kể từ '
+	. 'ngày cuối tháng của ngày '
+	. 'phát hành',
+'payment.term.eom.90.days' =>
+	'EOM(90):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 90 ngày kể từ '
+	. 'ngày cuối tháng của ngày '
+	. 'phát hành',
+'payment.term.general' => 'Thanh toán trong vòng 30 '
+	. 'ngày',
+'payment.term.mfi.15' => 'MFI(15):'
+	. 'Vui lòng thanh toán vào '
+	. 'ngày 15 của tháng tiếp '
+	. 'theo ngày-tháng phát hành',
+'payment.term.net.120.days' =>
+	'Net(120):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 120 ngày kể từ '
+	. 'ngày phát hành',
+'payment.term.net.15.days' =>
+	'Net(15):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 15 ngày kể từ '
+	. 'ngày phát hành.',
+'payment.term.net.30.days' =>
+	'Net(30):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 30 ngày kể từ '
+	. 'ngày phát hành',
+'payment.term.net.60.days' =>
+	'Net(60):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 60 ngày kể từ '
+	. 'ngày phát hành',
+'payment.term.net.90.days' =>
+	'Net(90):'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 90 ngày kể từ '
+	. 'ngày phát hành',
+'payment.term.pia' => 'Thanh toán phải được thực '
+	. 'hiện trước (PIA)',
+'payment.term.polite' => 'Chúng tôi đánh giá cao '
+	. 'việc kinh doanh của bạn.'
+	. 'Vui lòng gửi thanh toán '
+	. 'trong vòng 30 ngày kể '
+	. 'từ khi nhận được hóa '
+	. 'đơn này.',
+'payment.terms.default' => 'Thanh toán trong vòng 14 '
+	. 'ngày',
+'paymentpeppol' => 'Thanh toán được thực hiện '
+	. 'thông qua Peppol',
+'paymentpeppol.reference.plural' => 'Tham chiếu thanh toán sử '
+	. 'dụng Peppol',
 'payments' => 'Thanh toán',
 'paymentterm' => 'Thời hạn thanh toán',
 'pdf' => 'PDF',
-'pdf.archived.no' => 'Pdf KHÔNG được lưu trữ tại Tải lên/Lưu trữ/Hóa đơn',
-'pdf.archived.yes' => 'Pdf Lưu trữ tại Tải lên/Lưu trữ/Hóa đơn',
+'pdf.archived.no' => 'Pdf KHÔNG được lưu trữ '
+	. 'tại Tải lên/Lưu trữ/Hóa đơn',
+'pdf.archived.yes' => 'Pdf Lưu trữ tại Tải '
+	. 'lên/Lưu trữ/Hóa đơn',
 'pdf.include.zugferd' => 'Bao gồm ZUGFeRD',
-'pdf.include.zugferd.help' => 'Bật tùy chọn này sẽ bao gồm ZUGFeRD XML trong PDF hóa đơn, đây là tiêu chuẩn XML cho hóa đơn. <a href="https://www.ferd-net.de/">Thông tin thêm</a>',
+'pdf.include.zugferd.help' => 'Bật tùy chọn này sẽ '
+	. 'bao gồm ZUGFeRD XML trong '
+	. 'PDF hóa đơn, đây là '
+	. 'tiêu chuẩn XML cho hóa '
+	. 'đơn.'
+	. '<a href="https:'
+	. '//www.'
+	. 'ferd-net.'
+	. 'de/">Thông tin thêm</a>',
 'pdf.invoice.footer' => 'Chân trang PDF',
-'pdf.invoice.footer.hint' => 'Bạn có thể nhập bất kỳ mã HTML nào ở đây để hiển thị ở cuối hóa đơn PDF của bạn.',
+'pdf.invoice.footer.hint' => 'Bạn có thể nhập bất '
+	. 'kỳ mã HTML nào ở '
+	. 'đây để hiển thị ở '
+	. 'cuối hóa đơn PDF của '
+	. 'bạn.',
 'pdf.modal' => 'Modal Pdf',
 'pdf.quote.footer' => 'Trích dẫn chân trang',
-'pdf.quote.footer.hint' => 'Bạn có thể nhập bất kỳ mã HTML nào ở đây, mã này sẽ được hiển thị ở cuối trích dẫn PDF của bạn.',
+'pdf.quote.footer.hint' => 'Bạn có thể nhập bất '
+	. 'kỳ mã HTML nào ở '
+	. 'đây, mã này sẽ được '
+	. 'hiển thị ở cuối trích '
+	. 'dẫn PDF của bạn.',
 'pdf.settings' => 'Cài đặt PDF',
 'pdf.template' => 'Mẫu PDF',
 'pdf.template.overdue' => 'Mẫu PDF quá hạn',
 'pdf.template.paid' => 'Mẫu PDF trả phí',
 'pdf.watermark' => 'Bật hình mờ PDF',
-'peppol' => 'Peppol Universal Business Language (UBL) 2.1 Hóa đơn - Ecosio đã xác thực',
+'peppol' => 'Peppol Universal Business Language (UBL) '
+	. '2.'
+	. '1 Hóa đơn - Ecosio '
+	. 'đã xác thực',
 'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' => 'Phí trợ cấp hóa đơn và Phí trợ cấp mục hóa đơn kế thừa từ Phí trợ cấp cấp tài liệu Peppol đã hoàn thành',
-'peppol.client.check' => 'Chi tiết Peppol liên quan đến khách hàng này không đủ. Ít nhất một chi tiết bị thiếu. Tham khảo mục Xem ... Khách hàng ... Tùy chọn ... Chỉnh sửa chi tiết Peppol để lập hóa đơn điện tử',
-'peppol.client.defaults' => 'Điền thông tin mặc định của OpenPeppol vào Biểu mẫu Peppol của Khách hàng để thử nghiệm.',
-'peppol.currency.code.from' => 'Từ Tiền tệ tức là Quốc gia xuất xứ Tiền tệ thuế (Để thay đổi hãy xem config/common/params.php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'Đến Tiền tệ tức là Tiền tệ của Tài liệu: xem hàm get.setting(&#39;currency.code.to&#39;)',
-'peppol.currency.from.to' => 'Một trong những Từ Tiền tệ ngày nay chuyển đổi sang cái này của Đến Tiền tệ',
-'peppol.currency.to.from' => 'Một trong những loại tiền tệ To ngày nay chuyển đổi sang loại tiền tệ From',
+'peppol.allowance.or.charge.inherit' =>
+	'Phí trợ cấp hóa đơn '
+	. 'và Phí trợ cấp mục '
+	. 'hóa đơn kế thừa từ '
+	. 'Phí trợ cấp cấp tài '
+	. 'liệu Peppol đã hoàn thành',
+'peppol.client.check' => 'Chi tiết Peppol liên quan '
+	. 'đến khách hàng này không '
+	. 'đủ.'
+	. 'Ít nhất một chi tiết '
+	. 'bị thiếu.'
+	. 'Tham khảo mục Xem .'
+	. 'Khách hàng .'
+	. 'Tùy chọn .'
+	. 'Chỉnh sửa chi tiết Peppol '
+	. 'để lập hóa đơn điện '
+	. 'tử',
+'peppol.client.defaults' => 'Điền thông tin mặc định '
+	. 'của OpenPeppol vào Biểu mẫu '
+	. 'Peppol của Khách hàng để '
+	. 'thử nghiệm.',
+'peppol.currency.code.from' => 'Từ Tiền tệ tức là '
+	. 'Quốc gia xuất xứ Tiền '
+	. 'tệ thuế (Để thay đổi '
+	. 'hãy xem config/common/params.'
+	. 'php TaxCurrencyCode)',
+'peppol.currency.code.to' => 'Đến Tiền tệ tức là '
+	. 'Tiền tệ của Tài liệu:'
+	. 'xem hàm get.'
+	. 'setting(\'currency.'
+	. 'code.'
+	. 'to\')',
+'peppol.currency.from.to' => 'Một trong những Từ Tiền '
+	. 'tệ ngày nay chuyển đổi '
+	. 'sang cái này của Đến '
+	. 'Tiền tệ',
+'peppol.currency.to.from' => 'Một trong những loại tiền '
+	. 'tệ To ngày nay chuyển '
+	. 'đổi sang loại tiền tệ '
+	. 'From',
 'peppol.document.reference.null' => 'inv-số-null-inv-id',
-'peppol.ecosio.validator' => 'Trình xác thực Ecosio cho Hóa đơn OpenPeppol UBL (3.15.0) (hay còn gọi là BIS Billing 3.0.14)',
+'peppol.ecosio.validator' => 'Trình xác thực Ecosio cho '
+	. 'Hóa đơn OpenPeppol UBL (3.'
+	. '15.'
+	. '0) (hay còn gọi là '
+	. 'BIS Billing 3.'
+	. '0.'
+	. '14)',
 'peppol.electronic.invoicing' => 'Hóa đơn điện tử Peppol',
-'peppol.enable' => 'Kích hoạt Peppol bằng Universal Business Language (UBL) 2.1',
-'peppol.include.delivery.period' => 'Bao gồm thời gian giao hàng',
-'peppol.invoice.note.not.found' => 'Không tìm thấy ghi chú hóa đơn',
+'peppol.enable' => 'Kích hoạt Peppol bằng Universal '
+	. 'Business Language (UBL) 2.'
+	. '1',
+'peppol.include.delivery.period' => 'Bao gồm thời gian giao '
+	. 'hàng',
+'peppol.invoice.note.not.found' =>
+	'Không tìm thấy ghi chú '
+	. 'hóa đơn',
 'peppol.label.switch.off' => 'Peppol Mặc định Đã Bật',
-'peppol.label.switch.on' => 'Peppol Mặc định đã bị vô hiệu hóa',
+'peppol.label.switch.on' => 'Peppol Mặc định đã bị '
+	. 'vô hiệu hóa',
 'peppol.mandatory' => ' (Bắt buộc)',
 'peppol.optional' => ' (Không bắt buộc)',
-'peppol.stand.in.code' => 'Mã mô tả - chỉ ra cơ sở nào sẽ được sử dụng cho ngày tính thuế trong tương lai khi hàng hóa được cung cấp/trả tiền. Nếu có thể xác định được điểm tính thuế, mã mô tả sẽ được loại trừ lẫn nhau trong Kỳ hóa đơn.',
-'peppol.store.cove.1.1.1' => 'Đăng ký API Access trên trang web Store Cove',
-'peppol.store.cove.1.1.2' => 'Tạo khóa API của bạn từ trang web Store Cove và lưu trữ trong Cài đặt...Xem...Thanh toán trực tuyến...Store Cove...Khóa API',
-'peppol.store.cove.1.1.3' => 'Thực hiện lệnh gọi API đầu tiên để nhận phản hồi JSON.',
-'peppol.store.cove.1.1.4' => 'Gửi hóa đơn Json thử nghiệm đầu tiên mà bạn nhận được khi nhấp vào nút màu xanh lá cây World=&gt;DE',
-'peppol.stream.toggle' => 'Peppol - Nút chuyển đổi &#39;Phát trực tuyến&#39; hoặc &#39;Lưu vào tệp&#39;',
-'peppol.tax.category.not.found' => 'Mã loại thuế Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) bị thiếu.',
-'peppol.tax.category.percent.not.found' => 'Phần trăm loại thuế Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) bị thiếu.',
+'peppol.stand.in.code' => 'Mã mô tả - chỉ '
+	. 'ra cơ sở nào sẽ '
+	. 'được sử dụng cho ngày '
+	. 'tính thuế trong tương lai '
+	. 'khi hàng hóa được cung '
+	. 'cấp/trả tiền.'
+	. 'Nếu có thể xác định '
+	. 'được điểm tính thuế, mã '
+	. 'mô tả sẽ được loại '
+	. 'trừ lẫn nhau trong Kỳ '
+	. 'hóa đơn.',
+'peppol.store.cove.1.1.1' =>
+	'Đăng ký API Access trên '
+	. 'trang web Store Cove',
+'peppol.store.cove.1.1.2' =>
+	'Tạo khóa API của bạn '
+	. 'từ trang web Store Cove '
+	. 'và lưu trữ trong Cài '
+	. 'đặt.'
+	. 'Xem.'
+	. 'Thanh toán trực tuyến.'
+	. 'Store Cove.'
+	. 'Khóa API',
+'peppol.store.cove.1.1.3' =>
+	'Thực hiện lệnh gọi API '
+	. 'đầu tiên để nhận phản '
+	. 'hồi JSON.',
+'peppol.store.cove.1.1.4' =>
+	'Gửi hóa đơn Json thử '
+	. 'nghiệm đầu tiên mà bạn '
+	. 'nhận được khi nhấp vào '
+	. 'nút màu xanh lá cây '
+	. 'World=&gt;DE',
+'peppol.stream.toggle' => 'Peppol - Nút chuyển đổi '
+	. '\'Phát trực tuyến\' hoặc \'Lưu '
+	. 'vào tệp\'',
+'peppol.tax.category.not.found' =>
+	'Mã loại thuế Peppol (https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/) bị thiếu.',
+'peppol.tax.category.percent.not.found' =>
+	'Phần trăm loại thuế Peppol '
+	. '(https:'
+	. '//docs.'
+	. 'peppol.'
+	. 'eu/poacc/billing/3.'
+	. '0/codelist/UNCL5305/) bị thiếu.',
 'peppol.tax.rate.code' => 'Mã số thuế Peppol',
-'peppol.trying.to.send.non.pdf.file' => 'Hiện tại chỉ có các tệp pdf được gửi bằng Peppol Invoices',
-'peppol.unit' => 'Phân loại đơn vị sử dụng Peppol',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Nguồn: src/Invoice/Ubl/Invoice: Thiếu mô tả tài liệu - Ecosio: Tài liệu KHÔNG ĐƯỢC chứa các phần tử trống. Giải pháp: Trong Chế độ xem hóa đơn: Tùy chọn ... Chỉnh sửa ... Mô tả tài liệu',
-'peppol.validator.Invoice.cac.Note' => 'Nguồn: src/Invoice/Ubl/Invoice: Thiếu ghi chú hóa đơn - Ecosio: Tài liệu KHÔNG ĐƯỢC chứa phần tử trống.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party: Thiếu địa chỉ email - Ecosio: Địa chỉ điện tử PHẢI được cung cấp. Giải pháp: Khách hàng ... Xem ... Tùy chọn ... Chỉnh sửa thông tin Peppol để lập hóa đơn điện tử ... EndPointID',
+'peppol.trying.to.send.non.pdf.file' =>
+	'Hiện tại chỉ có các '
+	. 'tệp pdf được gửi bằng '
+	. 'Peppol Invoices',
+'peppol.unit' => 'Phân loại đơn vị sử '
+	. 'dụng Peppol',
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
+	'Nguồn:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Thiếu mô tả tài liệu '
+	. '- Ecosio:'
+	. 'Tài liệu KHÔNG ĐƯỢC chứa '
+	. 'các phần tử trống.'
+	. 'Giải pháp:'
+	. 'Trong Chế độ xem hóa '
+	. 'đơn:'
+	. 'Tùy chọn .'
+	. 'Chỉnh sửa .'
+	. 'Mô tả tài liệu',
+'peppol.validator.Invoice.cac.Note' =>
+	'Nguồn:'
+	. 'src/Invoice/Ubl/Invoice:'
+	. 'Thiếu ghi chú hóa đơn '
+	. '- Ecosio:'
+	. 'Tài liệu KHÔNG ĐƯỢC chứa '
+	. 'phần tử trống.',
+'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
+	'src/Invoice/Ubl/Party:'
+	. 'Thiếu địa chỉ email - '
+	. 'Ecosio:'
+	. 'Địa chỉ điện tử PHẢI '
+	. 'được cung cấp.'
+	. 'Giải pháp:'
+	. 'Khách hàng .'
+	. 'Xem .'
+	. 'Tùy chọn .'
+	. 'Chỉnh sửa thông tin Peppol '
+	. 'để lập hóa đơn điện '
+	. 'tử .'
+	. 'EndPointID',
 'peppol.version' => 'Phiên bản Peppol',
-'peppol.xml.stream' => 'Truyền phát tức là hiển thị trên màn hình trong trình duyệt thay vì thư mục tải xuống.',
+'peppol.xml.stream' => 'Truyền phát tức là hiển '
+	. 'thị trên màn hình trong '
+	. 'trình duyệt thay vì thư '
+	. 'mục tải xuống.',
 'per.item' => 'mỗi mục',
-'per.page.total' => ' mỗi trang. Tổng cộng ',
+'per.page.total' => 'mỗi trang.'
+	. 'Tổng cộng',
 'performance' => 'Hiệu suất',
-'performance.label.switch.off' => 'Chế độ đọc và ghi nhanh hơn - tham khảo config/common/params.php tìm kiếm &#39;mode&#39; ',
-'performance.label.switch.on' => 'Chế độ Chỉ ghi chậm hơn - tham khảo config/common/params.php tìm kiếm &#39;mode&#39; ',
+'performance.label.switch.off' => 'Chế độ đọc và ghi '
+	. 'nhanh hơn - tham khảo '
+	. 'config/common/params.'
+	. 'php tìm kiếm \'mode\'',
+'performance.label.switch.on' => 'Chế độ Chỉ ghi chậm '
+	. 'hơn - tham khảo config/common/params.'
+	. 'php tìm kiếm \'mode\'',
 'period' => 'Giai đoạn',
-'permission' => 'Bạn không có đủ quyền cần thiết.',
+'permission' => 'Bạn không có đủ quyền '
+	. 'cần thiết.',
 'personal.information' => 'Thông tin cá nhân',
 'phone' => 'Điện thoại',
 'phone.abbr' => 'P',
 'phone.number' => 'Số điện thoại',
-'php.timezone.fail' => 'Có vẻ như không có múi giờ nào được cấu hình. Vui lòng kiểm tra date.timezone trong cấu hình php của bạn. Nếu không, <strong>%s</strong> sẽ được chọn.',
-'php.timezone.success' => 'Đã cấu hình múi giờ hợp lệ.',
-'php.version.fail' => 'Phiên bản PHP %s đã được cài đặt nhưng InvoicePlane yêu cầu phiên bản PHP %s trở lên',
-'php.version.success' => 'PHP dường như đáp ứng được yêu cầu cài đặt',
+'php.timezone.fail' => 'Có vẻ như không có '
+	. 'múi giờ nào được cấu '
+	. 'hình.'
+	. 'Vui lòng kiểm tra date.'
+	. 'timezone trong cấu hình php '
+	. 'của bạn.'
+	. 'Nếu không, <strong>%s</strong> sẽ được '
+	. 'chọn.',
+'php.timezone.success' => 'Đã cấu hình múi giờ '
+	. 'hợp lệ.',
+'php.version.fail' => 'Phiên bản PHP %s đã '
+	. 'được cài đặt nhưng InvoicePlane '
+	. 'yêu cầu phiên bản PHP '
+	. '%s trở lên',
+'php.version.success' => 'PHP dường như đáp ứng '
+	. 'được yêu cầu cài đặt',
 'platform' => 'Nền tảng',
 'platform.PhpMyAdmin' => 'Phiên bản PhpMyAdmin',
 'platform.PhpSupport' => 'Hỗ trợ Php',
 'platform.PhpVersion' => 'Phiên bản Php',
-'platform.csrf' => 'Bảo vệ chống giả mạo trang web chéo',
+'platform.csrf' => 'Bảo vệ chống giả mạo '
+	. 'trang web chéo',
 'platform.editor' => 'Biên tập viên',
 'platform.mySqlVersion' => 'Phiên bản mySql',
 'platform.netbeans.UTF-8' => 'Mã hóa Netbeans UTF-8',
 'platform.server' => 'Máy chủ',
 'platform.sqlPath' => 'Đường dẫn Sql',
-'platform.update' => 'Tệp và tiện ích bổ sung của WampServer',
+'platform.update' => 'Tệp và tiện ích bổ '
+	. 'sung của WampServer',
 'platform.windowsVersion' => 'Phiên bản Windows 11 Home',
 'platform.xdebug' => 'Tiện ích mở rộng Xdebug',
-'please.enable.js' => 'Vui lòng bật Javascript để sử dụng InvoicePlane',
+'please.enable.js' => 'Vui lòng bật Javascript để '
+	. 'sử dụng InvoicePlane',
 'po.group' => 'Nhóm lệnh mua hàng',
 'port' => 'Cảng',
 'position' => 'Chức vụ',
-'possible.file.upload.attack' => 'Có thể tấn công tải tệp lên: ',
-'pre.password' => 'Mật khẩu PDF chuẩn của hóa đơn (tùy chọn)',
+'possible.file.upload.attack' => 'Có thể tấn công tải '
+	. 'tệp lên:',
+'pre.password' => 'Mật khẩu PDF chuẩn của '
+	. 'hóa đơn (tùy chọn)',
 'prefix' => 'Tiền tố',
 'prev' => 'Trước đó',
 'preview' => 'Xem trước',
 'price' => 'Giá',
 'product' => 'Sản phẩm',
 'product.add' => 'Thêm sản phẩm',
-'product.additional.item.property.name' => 'Peppol Tên mục thuộc tính bổ sung ví dụ: Màu sắc',
-'product.additional.item.property.value' => 'Peppol Giá trị mục tài sản bổ sung ví dụ: Đen',
-'product.country.of.origin.code' => 'Mã quốc gia xuất xứ Peppol sử dụng mã quốc gia ISO-3166-1:Alpha2',
-'product.custom.fields' => 'Trường tùy chỉnh sản phẩm (ví dụ: Peppol: Trường lựa chọn nhiều giá trị màu đen của AdditionalItemProperty)',
+'product.additional.item.property.name' =>
+	'Peppol Tên mục thuộc tính '
+	. 'bổ sung ví dụ:'
+	. 'Màu sắc',
+'product.additional.item.property.value' =>
+	'Peppol Giá trị mục tài '
+	. 'sản bổ sung ví dụ:'
+	. 'Đen',
+'product.country.of.origin.code' =>
+	'Mã quốc gia xuất xứ '
+	. 'Peppol sử dụng mã quốc '
+	. 'gia ISO-3166-1:'
+	. 'Alpha2',
+'product.custom.fields' => 'Trường tùy chỉnh sản phẩm '
+	. '(ví dụ:'
+	. 'Peppol:'
+	. 'Trường lựa chọn nhiều giá '
+	. 'trị màu đen của AdditionalItemProperty)',
 'product.description' => 'Mô tả sản phẩm',
 'product.edit' => 'Chỉnh sửa sản phẩm',
 'product.error.summary' => 'Tóm tắt lỗi sản phẩm',
 'product.families' => 'Các dòng sản phẩm',
 'product.form.tab.category' => 'Loại',
-'product.form.tab.not.required' => 'Không bắt buộc phải điền',
+'product.form.tab.not.required' =>
+	'Không bắt buộc phải điền',
 'product.form.tab.required' => 'Các trường bắt buộc',
 'product.found' => 'Sản phẩm đã tìm thấy',
-'product.history' => 'Không thể xóa. Sản phẩm này nằm trên hóa đơn hoặc báo giá.',
-'product.icc.id' => 'Mã phân loại mặt hàng Peppol ID ví dụ: 9873242',
-'product.icc.listid' => 'Mã phân loại mặt hàng Peppol Danh sách id - ví dụ: SRV',
-'product.icc.listversionid' => 'Mã phân loại mặt hàng Peppol ID phiên bản (Tùy chọn) - ví dụ: Nếu ItemClassification được cung cấp từ nhà cung cấp Đan Mạch, thì nên sử dụng UNSPSC phiên bản 19.0501.',
+'product.history' => 'Không thể xóa.'
+	. 'Sản phẩm này nằm trên '
+	. 'hóa đơn hoặc báo giá.',
+'product.icc.id' => 'Mã phân loại mặt hàng '
+	. 'Peppol ID ví dụ:'
+	. '9873242',
+'product.icc.listid' => 'Mã phân loại mặt hàng '
+	. 'Peppol Danh sách id - '
+	. 'ví dụ:'
+	. 'SRV',
+'product.icc.listversionid' => 'Mã phân loại mặt hàng '
+	. 'Peppol ID phiên bản (Tùy '
+	. 'chọn) - ví dụ:'
+	. 'Nếu ItemClassification được cung cấp '
+	. 'từ nhà cung cấp Đan '
+	. 'Mạch, thì nên sử dụng '
+	. 'UNSPSC phiên bản 19.'
+	. '0501.',
 'product.id' => 'Mã sản phẩm',
 'product.image' => 'Hình ảnh',
-'product.item.classification.code.scheme.id.not.found' => 'Mã phân loại sản phẩm Mã sơ đồ Id không tìm thấy',
+'product.item.classification.code.scheme.id.not.found' =>
+	'Mã phân loại sản phẩm '
+	. 'Mã sơ đồ Id không '
+	. 'tìm thấy',
 'product.name' => 'Tên sản phẩm',
 'product.not.found' => 'Không tìm thấy sản phẩm',
 'product.peppol.unit' => 'Đơn vị với Peppol',
@@ -1164,40 +2450,86 @@ return [
 'product.price.base.quantity' => 'số lượng trong Sản phẩm',
 'product.property' => ' Tài sản sản phẩm',
 'product.property.add' => ' Thêm Thuộc Tính Sản Phẩm',
-'product.property.edit' => 'Chỉnh sửa Thuộc tính Sản phẩm',
-'product.property.index' => 'Chỉ số tài sản sản phẩm',
+'product.property.edit' => 'Chỉnh sửa Thuộc tính Sản '
+	. 'phẩm',
+'product.property.index' => 'Chỉ số tài sản sản '
+	. 'phẩm',
 'product.property.name' => 'Tên',
 'product.property.table' => 'Bảng Thuộc tính Sản phẩm',
 'product.property.value' => 'Giá trị',
-'product.record.successfully.added' => 'Đã thêm thành công Hồ sơ sản phẩm',
-'product.sii.id' => 'Mã định danh mặt hàng tiêu chuẩn Peppol liên quan đến sơ đồ trên - ví dụ: Mã định danh có 14 chữ số đệm bằng số không trong cơ sở dữ liệu Mã số mặt hàng thương mại toàn cầu (xuất hiện bên dưới mã vạch)',
-'product.sii.schemeid' => 'Sơ đồ nhận dạng mặt hàng tiêu chuẩn Peppol - ví dụ: 0160',
+'product.record.successfully.added' => 'Đã thêm thành công Hồ '
+	. 'sơ sản phẩm',
+'product.sii.id' => 'Mã định danh mặt hàng '
+	. 'tiêu chuẩn Peppol liên quan '
+	. 'đến sơ đồ trên - '
+	. 'ví dụ:'
+	. 'Mã định danh có 14 '
+	. 'chữ số đệm bằng số '
+	. 'không trong cơ sở dữ '
+	. 'liệu Mã số mặt hàng '
+	. 'thương mại toàn cầu (xuất '
+	. 'hiện bên dưới mã vạch)',
+'product.sii.schemeid' => 'Sơ đồ nhận dạng mặt '
+	. 'hàng tiêu chuẩn Peppol - '
+	. 'ví dụ:'
+	. '0160',
 'product.sku' => 'Mã sản phẩm',
 'product.tariff' => 'Thuế quan',
 'product.unit' => 'Đơn vị sản phẩm',
-'product.unit.code.not.found' => 'Sản phẩm không có Mã đơn vị liên quan. Sản phẩm ... Chỉnh sửa ... Đơn vị có Peppol.',
+'product.unit.code.not.found' =>
+	'Sản phẩm không có Mã '
+	. 'đơn vị liên quan.'
+	. 'Sản phẩm .'
+	. 'Chỉnh sửa .'
+	. 'Đơn vị có Peppol.',
 'product.units' => 'Đơn vị sản phẩm',
 'product.view.tab.details' => 'Chi tiết sản phẩm',
 'product.view.tab.gallery' => 'Thư viện sản phẩm',
 'product.view.tab.images' => 'Hình ảnh sản phẩm',
 'product.view.tab.properties' => 'Thuộc tính sản phẩm',
 'productimage.add' => 'Thêm hình ảnh sản phẩm',
-'productimage.deleted.from' => 'Hình ảnh đã được xóa thành công khỏi thư mục sau: ',
-'productimage.form' => 'Biểu mẫu hình ảnh sản phẩm',
+'productimage.deleted.from' => 'Hình ảnh đã được xóa '
+	. 'thành công khỏi thư mục '
+	. 'sau:',
+'productimage.form' => 'Biểu mẫu hình ảnh sản '
+	. 'phẩm',
 'productimage.gallery' => 'Hình ảnh liên quan đến: ',
-'productimage.index' => 'Chỉ mục hình ảnh sản phẩm',
-'productimage.list' => 'Danh sách hình ảnh liên quan đến sản phẩm này',
-'productimage.no.file.uploaded' => 'Chưa có hình ảnh nào được tải lên. Có thể có hình ảnh trùng lặp.',
+'productimage.index' => 'Chỉ mục hình ảnh sản '
+	. 'phẩm',
+'productimage.list' => 'Danh sách hình ảnh liên '
+	. 'quan đến sản phẩm này',
+'productimage.no.file.uploaded' => 'Chưa có hình ảnh nào '
+	. 'được tải lên.'
+	. 'Có thể có hình ảnh '
+	. 'trùng lặp.',
 'productimage.plural' => 'Hình ảnh sản phẩm',
-'productimage.possible.file.upload.attack' => 'Có thể tấn công tải tệp lên: ',
-'productimage.upload' => 'Tải lên hình ảnh sản phẩm',
-'productimage.uploaded.to' => 'Hình ảnh đã được tải lên thư mục sau: ',
-'productimage.view' => 'Có thể thêm nhiều hình ảnh liên quan đến sản phẩm vào mục Xem sản phẩm',
+'productimage.possible.file.upload.attack' =>
+	'Có thể tấn công tải '
+	. 'tệp lên:',
+'productimage.upload' => 'Tải lên hình ảnh sản '
+	. 'phẩm',
+'productimage.uploaded.to' => 'Hình ảnh đã được tải '
+	. 'lên thư mục sau:',
+'productimage.view' => 'Có thể thêm nhiều hình '
+	. 'ảnh liên quan đến sản '
+	. 'phẩm vào mục Xem sản '
+	. 'phẩm',
 'products' => 'Các sản phẩm',
 'products.form' => 'Mẫu sản phẩm',
 'profile.deleted' => 'Hồ sơ đã bị xóa',
-'profile.history' => 'Không thể xóa Hồ sơ. Lịch sử tồn tại',
-'profile.new' => 'Tạo hồ sơ với địa chỉ email hoặc số điện thoại di động mới, kích hoạt hồ sơ và chọn thông tin chi tiết về công ty mà bạn muốn liên kết đến. Thông tin này sẽ tự động xuất hiện trên tài liệu, ví dụ như báo giá và hóa đơn.',
+'profile.history' => 'Không thể xóa Hồ sơ.'
+	. 'Lịch sử tồn tại',
+'profile.new' => 'Tạo hồ sơ với địa '
+	. 'chỉ email hoặc số điện '
+	. 'thoại di động mới, kích '
+	. 'hoạt hồ sơ và chọn '
+	. 'thông tin chi tiết về '
+	. 'công ty mà bạn muốn '
+	. 'liên kết đến.'
+	. 'Thông tin này sẽ tự '
+	. 'động xuất hiện trên tài '
+	. 'liệu, ví dụ như báo '
+	. 'giá và hóa đơn.',
 'profile.not.deleted' => 'Hồ sơ chưa bị xóa',
 'profile.plural' => 'Hồ sơ',
 'profile.property.label.company' => 'Công ty',
@@ -1213,40 +2545,89 @@ return [
 'projects.form' => 'Dự án',
 'properties' => 'Của cải',
 'provider.name' => 'Tên nhà cung cấp',
-'provider.response' => 'Phản hồi của nhà cung cấp',
+'provider.response' => 'Phản hồi của nhà cung '
+	. 'cấp',
 'purchase.price' => 'Giá mua',
 'Q1' => 'Câu hỏi 1',
 'Q2' => 'Quý 2',
 'Q3' => 'Quý 3',
 'Q4' => 'Quý 4',
-'qr.absolute.url' => 'Url tuyệt đối được sử dụng để xây dựng Mã QR ở trên',
+'qr.absolute.url' => 'Url tuyệt đối được sử '
+	. 'dụng để xây dựng Mã '
+	. 'QR ở trên',
 'qr.code' => 'Mã QR',
 'qr.code.1' => 'Mã QR 1',
 'qr.code.details' => 'Chi tiết mã QR',
-'qr.code.level.1' => 'Mức độ mã hóa là Cơ bản',
-'qr.code.level.2' => 'Mức độ mã hóa là trung cấp',
-'qr.code.level.3' => 'Mức độ mã hóa là Nâng cao',
+'qr.code.level.1' => 'Mức độ mã hóa là '
+	. 'Cơ bản',
+'qr.code.level.2' => 'Mức độ mã hóa là '
+	. 'trung cấp',
+'qr.code.level.3' => 'Mức độ mã hóa là '
+	. 'Nâng cao',
 'qr.code.settings' => 'Cài đặt mã QR',
 'qr.code.settings.bic' => 'BIC',
-'qr.code.settings.effect' => 'Những thiết lập trên có tác dụng gì đối với Mã QR này?',
-'qr.code.settings.effect.explanation' => 'Trong mã thực tế ... không có. Tất cả các mặc định được sử dụng vì mã thực tế cơ bản nhất ở trên được sử dụng.',
+'qr.code.settings.effect' => 'Những thiết lập trên có '
+	. 'tác dụng gì đối với '
+	. 'Mã QR này?',
+'qr.code.settings.effect.explanation' =>
+	'Trong mã thực tế .'
+	. 'không có.'
+	. 'Tất cả các mặc định '
+	. 'được sử dụng vì mã '
+	. 'thực tế cơ bản nhất '
+	. 'ở trên được sử dụng.',
 'qr.code.settings.enable' => 'Bật mã QR',
-'qr.code.settings.enable.hint' => 'Bật tùy chọn này sẽ bao gồm mã QR cho hóa đơn PDF. Bạn phải điền thông tin người nhận, IBAN và BIC bên dưới để hoạt động chính xác. Nếu không, mã QR sẽ không được hiển thị.',
+'qr.code.settings.enable.hint' =>
+	'Bật tùy chọn này sẽ '
+	. 'bao gồm mã QR cho '
+	. 'hóa đơn PDF.'
+	. 'Bạn phải điền thông tin '
+	. 'người nhận, IBAN và BIC '
+	. 'bên dưới để hoạt động '
+	. 'chính xác.'
+	. 'Nếu không, mã QR sẽ '
+	. 'không được hiển thị.',
 'qr.code.settings.iban' => 'Mã số IBAN',
 'qr.code.settings.recipient' => 'Người nhận',
-'qr.code.settings.remittance.text' => 'Văn bản chuyển tiền',
-'qr.code.settings.remittance.text.tags' => 'Thẻ văn bản chuyển tiền',
+'qr.code.settings.remittance.text' =>
+	'Văn bản chuyển tiền',
+'qr.code.settings.remittance.text.tags' =>
+	'Thẻ văn bản chuyển tiền',
 'qr.code.source' => 'Nguồn Mã QR',
-'qr.code.source.path' => 'resources\views\invoice\setting\company.logo.and.address.php',
+'qr.code.source.path' => 'resources\\views\\invoice\\setting\\company.'
+	. 'logo.'
+	. 'and.'
+	. 'address.'
+	. 'php',
 'qr.code.type' => 'Loại mã QR',
-'qr.code.type.absolute.url' => 'Tuyệt đối (toàn bộ) Dựa trên Url',
+'qr.code.type.absolute.url' =>
+	'Tuyệt đối (toàn bộ) Dựa '
+	. 'trên Url',
 'qr.code.widget.used' => 'Tiện ích được sử dụng',
-'qr.ecc.level' => 'Mức Ecc của Mã QR (Mặc định: L)',
-'qr.height.and.width' => 'Chiều cao và chiều rộng của mã QR (Mặc định: 60)',
+'qr.ecc.level' => 'Mức Ecc của Mã QR '
+	. '(Mặc định:'
+	. 'L)',
+'qr.height.and.width' => 'Chiều cao và chiều rộng '
+	. 'của mã QR (Mặc định:'
+	. '60)',
 'qr.meaning' => 'Nghĩa',
-'qr.meaning.benefit' => 'Quét và quay lại để xem (không cần nhập url) nơi hóa đơn có thể được in ở định dạng pdf. Áp dụng cho tất cả người dùng có tài khoản khách hàng đang hoạt động.',
-'qr.output.type' => 'Kiểu đầu ra mã QR (ví dụ: .svg, .png) (Mặc định: png)',
-'qr.version' => 'Số phiên bản mã QR (sớm nhất 0 muộn nhất 40) (Mặc định: 40)',
+'qr.meaning.benefit' => 'Quét và quay lại để '
+	. 'xem (không cần nhập url) '
+	. 'nơi hóa đơn có thể '
+	. 'được in ở định dạng '
+	. 'pdf.'
+	. 'Áp dụng cho tất cả '
+	. 'người dùng có tài khoản '
+	. 'khách hàng đang hoạt động.',
+'qr.output.type' => 'Kiểu đầu ra mã QR '
+	. '(ví dụ:'
+	. 'svg, .'
+	. 'png) (Mặc định:'
+	. 'png)',
+'qr.version' => 'Số phiên bản mã QR '
+	. '(sớm nhất 0 muộn nhất '
+	. '40) (Mặc định:'
+	. '40)',
 'qty' => 'Số lượng',
 'quantity' => 'Số lượng',
 'quarter' => 'Một phần tư',
@@ -1257,59 +2638,127 @@ return [
 'quote.amount.add' => 'Số tiền báo giá Thêm',
 'quote.amounts' => 'Số tiền trích dẫn',
 'quote.approve' => 'Chấp thuận',
-'quote.approved' => 'Trích dẫn này đã được chấp thuận',
-'quote.copied.to.invoice' => 'Trích dẫn đã được sao chép vào Hóa đơn MỚI',
-'quote.copied.to.quote' => 'Đã sao chép trích dẫn vào Trích dẫn MỚI!',
-'quote.copied.to.so' => 'Đã sao chép báo giá vào đơn đặt hàng',
+'quote.approved' => 'Trích dẫn này đã được '
+	. 'chấp thuận',
+'quote.copied.to.invoice' => 'Trích dẫn đã được sao '
+	. 'chép vào Hóa đơn MỚI',
+'quote.copied.to.quote' => 'Đã sao chép trích dẫn '
+	. 'vào Trích dẫn MỚI!',
+'quote.copied.to.so' => 'Đã sao chép báo giá '
+	. 'vào đơn đặt hàng',
 'quote.custom' => 'Trích dẫn tùy chỉnh',
 'quote.custom.add' => 'Trích dẫn Tùy chỉnh Thêm',
 'quote.date' => 'Ngày trích dẫn',
 'quote.dates' => 'Ngày trích dẫn',
 'quote.delete.not' => 'Hóa đơn chưa bị xóa.',
-'quote.delivery.location.index.button.list' => 'Trích dẫn',
-'quote.delivery.location.none' => 'Không có địa điểm giao hàng nào được liên kết với báo giá này.',
-'quote.disable.flash.messages' => 'Tắt tin nhắn Flash trích dẫn',
-'quote.email.templates.not.configured' => 'Mẫu email chưa được cấu hình. Cài đặt...Trích dẫn...Mẫu trích dẫn...Mẫu email mặc định',
+'quote.delivery.location.index.button.list' =>
+	'Trích dẫn',
+'quote.delivery.location.none' => 'Không có địa điểm giao '
+	. 'hàng nào được liên kết '
+	. 'với báo giá này.',
+'quote.disable.flash.messages' => 'Tắt tin nhắn Flash trích '
+	. 'dẫn',
+'quote.email.templates.not.configured' =>
+	'Mẫu email chưa được cấu '
+	. 'hình.'
+	. 'Cài đặt.'
+	. 'Trích dẫn.'
+	. 'Mẫu trích dẫn.'
+	. 'Mẫu email mặc định',
 'quote.group' => 'Nhóm trích dẫn',
 'quote.id' => 'ID trích dẫn ',
 'quote.item' => 'Mục trích dẫn',
 'quote.item.add' => 'Trích dẫn mục Thêm',
 'quote.item.amount' => 'Số lượng mục trích dẫn',
-'quote.item.amount.add' => 'Trích dẫn Mục Số lượng Thêm',
-'quote.item.cannot.delete' => 'Không thể xóa mục trích dẫn',
+'quote.item.amount.add' => 'Trích dẫn Mục Số lượng '
+	. 'Thêm',
+'quote.item.cannot.delete' => 'Không thể xóa mục trích '
+	. 'dẫn',
 'quote.label.switch.off' => 'Báo giá VAT',
 'quote.label.switch.on' => 'Báo giá KHÔNG VAT',
-'quote.not.copied.to.invoice' => 'Hóa đơn KHÔNG được tạo từ Báo giá! Sao chép hóa đơn. Sao chép Báo giá của bạn vào báo giá khác rồi sao chép vào hóa đơn. Mỗi báo giá phải có hóa đơn phù hợp.',
+'quote.not.copied.to.invoice' =>
+	'Hóa đơn KHÔNG được tạo '
+	. 'từ Báo giá! Sao chép '
+	. 'hóa đơn.'
+	. 'Sao chép Báo giá của '
+	. 'bạn vào báo giá khác '
+	. 'rồi sao chép vào hóa '
+	. 'đơn.'
+	. 'Mỗi báo giá phải có '
+	. 'hóa đơn phù hợp.',
 'quote.number' => 'Số trích dẫn',
 'quote.number.status' => 'Số trích dẫn Trạng thái',
 'quote.overview' => 'Tổng quan về báo giá',
 'quote.overview.period' => 'Tổng quan về báo giá',
-'quote.password' => 'Trích dẫn mật khẩu PDF (tùy chọn)',
-'quote.pre.password' => 'Trích dẫn mật khẩu PDF chuẩn (tùy chọn)',
+'quote.password' => 'Trích dẫn mật khẩu PDF '
+	. '(tùy chọn)',
+'quote.pre.password' => 'Trích dẫn mật khẩu PDF '
+	. 'chuẩn (tùy chọn)',
 'quote.reject' => 'Từ chối',
-'quote.rejected' => 'Trích dẫn này đã bị từ chối',
-'quote.sales.order.created.from.quote' => 'Đơn đặt hàng được tạo từ Báo giá và bạn đã nhập Số đơn đặt hàng!',
-'quote.sales.order.not.created.from.quote' => 'Đơn hàng bán hàng không được tạo từ Báo giá! Sao chép đơn hàng bán hàng. Sao chép Báo giá của bạn vào báo giá khác rồi sao chép vào đơn hàng bán hàng. Mỗi báo giá phải có một đơn hàng bán hàng phù hợp.',
-'quote.status.email.body' => 'Khách hàng %1$s có %2$s báo giá %3$sLiên kết đến báo giá: %4$s',
-'quote.status.email.subject' => 'Khách hàng %1$s %2$s báo giá %3$s',
+'quote.rejected' => 'Trích dẫn này đã bị '
+	. 'từ chối',
+'quote.sales.order.created.from.quote' =>
+	'Đơn đặt hàng được tạo '
+	. 'từ Báo giá và bạn '
+	. 'đã nhập Số đơn đặt '
+	. 'hàng!',
+'quote.sales.order.not.created.from.quote' =>
+	'Đơn hàng bán hàng không '
+	. 'được tạo từ Báo giá!'
+	. 'Sao chép đơn hàng bán '
+	. 'hàng.'
+	. 'Sao chép Báo giá của '
+	. 'bạn vào báo giá khác '
+	. 'rồi sao chép vào đơn '
+	. 'hàng bán hàng.'
+	. 'Mỗi báo giá phải có '
+	. 'một đơn hàng bán hàng '
+	. 'phù hợp.',
+'quote.status.email.body' => 'Khách hàng %1$s có %2$s '
+	. 'báo giá %3$sLiên kết đến '
+	. 'báo giá:'
+	. '%4$s',
+'quote.status.email.subject' => 'Khách hàng %1$s %2$s báo '
+	. 'giá %3$s',
 'quote.tax' => 'Báo giá thuế',
 'quote.tax.rate' => 'Báo giá thuế suất',
 'quote.tax.rate.add' => 'Báo giá Thuế suất Thêm',
-'quote.tax.rate.cannot.delete' => 'Không thể xóa Tỷ lệ thuế trích dẫn',
-'quote.tax.rate.incomplete.fields' => 'Các trường không đầy đủ: Bạn phải bao gồm mức thuế suất. Mẹo: Bao gồm mức thuế suất bằng 0.',
-'quote.tax.rate.saved' => 'Tỷ lệ thuế đã được lưu',
+'quote.tax.rate.cannot.delete' =>
+	'Không thể xóa Tỷ lệ '
+	. 'thuế trích dẫn',
+'quote.tax.rate.incomplete.fields' =>
+	'Các trường không đầy đủ:'
+	. 'Bạn phải bao gồm mức '
+	. 'thuế suất.'
+	. 'Mẹo:'
+	. 'Bao gồm mức thuế suất '
+	. 'bằng 0.',
+'quote.tax.rate.saved' => 'Tỷ lệ thuế đã được '
+	. 'lưu',
 'quote.template' => 'Mẫu trích dẫn',
 'quote.templates' => 'Mẫu trích dẫn',
 'quote.to.invoice' => 'Báo giá thành hóa đơn',
-'quote.to.so' => 'Báo giá cho đơn đặt hàng bán hàng',
-'quote.to.so.password' => 'Mật khẩu đơn hàng bán hàng',
+'quote.to.so' => 'Báo giá cho đơn đặt '
+	. 'hàng bán hàng',
+'quote.to.so.password' => 'Mật khẩu đơn hàng bán '
+	. 'hàng',
 'quote.vat.quote' => 'Báo giá VAT',
-'quote.with.purchase.order.line.number' => 'Số dòng lệnh mua hàng (Yêu cầu của Peppol) - phải khớp với Số dòng lệnh bán hàng',
-'quote.with.purchase.order.number' => 'Số lệnh mua hàng - phải khớp với Số lệnh bán hàng',
-'quote.with.purchase.order.person' => 'Người/Phòng ban đặt hàng',
+'quote.with.purchase.order.line.number' =>
+	'Số dòng lệnh mua hàng '
+	. '(Yêu cầu của Peppol) - '
+	. 'phải khớp với Số dòng '
+	. 'lệnh bán hàng',
+'quote.with.purchase.order.number' =>
+	'Số lệnh mua hàng - '
+	. 'phải khớp với Số lệnh '
+	. 'bán hàng',
+'quote.with.purchase.order.person' =>
+	'Người/Phòng ban đặt hàng',
 'quotes' => 'Trích dẫn',
-'quotes.expire.after' => 'Báo giá hết hạn sau (ngày)',
-'quotes.requiring.approval' => 'Trích dẫn yêu cầu phê duyệt',
+'quotes.expire.after' => 'Báo giá hết hạn sau '
+	. '(ngày)',
+'quotes.requiring.approval' => 'Trích dẫn yêu cầu phê '
+	. 'duyệt',
 'read.only' => 'Chỉ đọc',
 'read.this.please' => 'Hãy đọc bài này nhé!',
 'reason' => 'Lý do',
@@ -1323,19 +2772,27 @@ return [
 'recent.invoices' => 'Hóa đơn gần đây',
 'recent.payments' => 'Thanh toán gần đây',
 'recent.quotes' => 'Trích dẫn gần đây',
-'record.successfully.created' => 'Bản ghi đã được tạo thành công',
-'record.successfully.deleted' => 'Bản ghi đã xóa thành công',
-'record.successfully.updated' => 'Bản ghi đã được cập nhật thành công',
+'record.successfully.created' => 'Bản ghi đã được tạo '
+	. 'thành công',
+'record.successfully.deleted' => 'Bản ghi đã xóa thành '
+	. 'công',
+'record.successfully.updated' => 'Bản ghi đã được cập '
+	. 'nhật thành công',
 'records.no' => 'Không có hồ sơ',
 'recurring' => 'Định kỳ',
 'recurring.add' => 'Thêm định kỳ',
 'recurring.deleted' => 'Đã xóa',
 'recurring.frequency' => 'Tính thường xuyên',
 'recurring.invoices' => 'Hóa đơn định kỳ',
-'recurring.no.invoices.selected' => 'Bạn chưa chọn bất kỳ hóa đơn nào.',
+'recurring.no.invoices.selected' => 'Bạn chưa chọn bất kỳ '
+	. 'hóa đơn nào.',
 'recurring.original.invoice.date' => 'Ngày hóa đơn gốc: ',
-'recurring.status.sent.only' => 'Chỉ những hóa đơn có trạng thái đã gửi mới có thể được tạo định kỳ',
-'recurring.tooltip.next' => 'Ngày tiếp theo được thiết lập thông qua chỉ mục.',
+'recurring.status.sent.only' => 'Chỉ những hóa đơn có '
+	. 'trạng thái đã gửi mới '
+	. 'có thể được tạo định '
+	. 'kỳ',
+'recurring.tooltip.next' => 'Ngày tiếp theo được thiết '
+	. 'lập thông qua chỉ mục.',
 'reject' => 'Từ chối',
 'reject.this.quote' => 'Từ chối trích dẫn này',
 'rejected' => 'Vật bị loại bỏ',
@@ -1345,57 +2802,147 @@ return [
 'report' => 'Báo cáo',
 'report.options' => 'Tùy chọn báo cáo',
 'report.sales.by.product' => 'Bán theo sản phẩm',
-'report.sales.by.product.info' => 'Báo cáo này cung cấp tổng doanh số bán sản phẩm cùng với thuế mặt hàng. Báo cáo không bao gồm thuế hóa đơn bổ sung liên quan đến các sản phẩm này.',
+'report.sales.by.product.info' =>
+	'Báo cáo này cung cấp '
+	. 'tổng doanh số bán sản '
+	. 'phẩm cùng với thuế mặt '
+	. 'hàng.'
+	. 'Báo cáo không bao gồm '
+	. 'thuế hóa đơn bổ sung '
+	. 'liên quan đến các sản '
+	. 'phẩm này.',
 'report.sales.by.task' => 'Bán hàng theo nhiệm vụ',
-'report.sales.by.task.info' => 'Báo cáo này cung cấp tổng doanh số của nhiệm vụ cùng với thuế mặt hàng. Báo cáo không bao gồm thuế hóa đơn bổ sung liên quan đến các nhiệm vụ này.',
-'report.test.fraud.prevention.headers.api' => 'API Tiêu đề phòng ngừa gian lận thử nghiệm',
+'report.sales.by.task.info' =>
+	'Báo cáo này cung cấp '
+	. 'tổng doanh số của nhiệm '
+	. 'vụ cùng với thuế mặt '
+	. 'hàng.'
+	. 'Báo cáo không bao gồm '
+	. 'thuế hóa đơn bổ sung '
+	. 'liên quan đến các nhiệm '
+	. 'vụ này.',
+'report.test.fraud.prevention.headers.api' =>
+	'API Tiêu đề phòng ngừa '
+	. 'gian lận thử nghiệm',
 'reports' => 'Báo cáo',
 'reset' => 'Cài lại',
 'reset.password' => 'Đặt lại mật khẩu',
-'rules.peppol.en16931.001' => 'Phải cung cấp Quy trình kinh doanh hoặc ID hồ sơ. Tham khảo config/common/params.php tìm kiếm ProfileID',
+'rules.peppol.en16931.001' => 'Phải cung cấp Quy trình '
+	. 'kinh doanh hoặc ID hồ '
+	. 'sơ.'
+	. 'Tham khảo config/common/params.'
+	. 'php tìm kiếm ProfileID',
 'run.report' => 'Báo cáo chạy',
 'sales' => 'Việc bán hàng',
 'sales.by.client' => 'Bán hàng theo khách hàng',
 'sales.by.date' => 'Doanh số theo ngày',
 'sales.with.tax' => 'Bán hàng có thuế',
 'salesorder' => 'Đơn đặt hàng bán hàng',
-'salesorder.agree.to.terms' => 'Vui lòng đồng ý với các Điều khoản sẽ được gửi đến bạn ngay bây giờ',
+'salesorder.agree.to.terms' => 'Vui lòng đồng ý với '
+	. 'các Điều khoản sẽ được '
+	. 'gửi đến bạn ngay bây '
+	. 'giờ',
 'salesorder.assembled.packaged.prepared' => 'Đã lắp ráp/Đóng gói/Chuẩn bị',
 'salesorder.cancelled' => 'Đơn hàng đã hủy',
-'salesorder.client.confirmed.terms' => 'Điều khoản được khách hàng xác nhận',
-'salesorder.clients.purchase.order.number' => 'Số đơn đặt hàng của khách hàng',
-'salesorder.clients.purchase.order.person' => 'Đơn đặt hàng của khách hàng Người xử lý đơn đặt hàng của họ',
-'salesorder.copied.to.invoice' => 'Đơn hàng đã được sao chép vào Hóa đơn',
-'salesorder.copied.to.invoice.not' => 'Hóa đơn KHÔNG được tạo từ Lệnh bán hàng! Sao chép hóa đơn. Sao chép Lệnh bán hàng của bạn sang Lệnh bán hàng khác rồi sao chép vào hóa đơn. Mỗi Lệnh bán hàng phải có hóa đơn phù hợp',
-'salesorder.date.created' => 'Ngày tạo đơn đặt hàng bán hàng',
-'salesorder.default.group' => 'Nhóm mặc định đơn đặt hàng bán hàng',
-'salesorder.goods.services.confirmed' => 'Khách hàng xác nhận giao hàng',
+'salesorder.client.confirmed.terms' => 'Điều khoản được khách hàng '
+	. 'xác nhận',
+'salesorder.clients.purchase.order.number' =>
+	'Số đơn đặt hàng của '
+	. 'khách hàng',
+'salesorder.clients.purchase.order.person' =>
+	'Đơn đặt hàng của khách '
+	. 'hàng Người xử lý đơn '
+	. 'đặt hàng của họ',
+'salesorder.copied.to.invoice' => 'Đơn hàng đã được sao '
+	. 'chép vào Hóa đơn',
+'salesorder.copied.to.invoice.not' =>
+	'Hóa đơn KHÔNG được tạo '
+	. 'từ Lệnh bán hàng! Sao '
+	. 'chép hóa đơn.'
+	. 'Sao chép Lệnh bán hàng '
+	. 'của bạn sang Lệnh bán '
+	. 'hàng khác rồi sao chép '
+	. 'vào hóa đơn.'
+	. 'Mỗi Lệnh bán hàng phải '
+	. 'có hóa đơn phù hợp',
+'salesorder.date.created' => 'Ngày tạo đơn đặt hàng '
+	. 'bán hàng',
+'salesorder.default.group' => 'Nhóm mặc định đơn đặt '
+	. 'hàng bán hàng',
+'salesorder.goods.services.confirmed' => 'Khách hàng xác nhận giao '
+	. 'hàng',
 'salesorder.goods.services.delivered' => 'Hàng hóa/Dịch vụ được giao',
 'salesorder.invoice' => 'Hóa đơn',
 'salesorder.invoice.generate' => 'Tạo hóa đơn',
 'salesorder.invoice.generated' => 'Hóa đơn được tạo',
 'salesorder.invoice.number' => 'Số hóa đơn',
-'salesorder.number' => 'Số đơn đặt hàng bán hàng',
-'salesorder.number.status' => 'Số lệnh bán hàng. Trạng thái',
-'salesorder.password' => 'Mật khẩu đơn hàng bán hàng',
-'salesorder.payment.terms' => 'Điều khoản thanh toán đơn đặt hàng bán hàng ví dụ: Vui lòng thanh toán trong vòng 30 ngày',
+'salesorder.number' => 'Số đơn đặt hàng bán '
+	. 'hàng',
+'salesorder.number.status' => 'Số lệnh bán hàng.'
+	. 'Trạng thái',
+'salesorder.password' => 'Mật khẩu đơn hàng bán '
+	. 'hàng',
+'salesorder.payment.terms' => 'Điều khoản thanh toán đơn '
+	. 'đặt hàng bán hàng ví '
+	. 'dụ:'
+	. 'Vui lòng thanh toán trong '
+	. 'vòng 30 ngày',
 'salesorder.recent' => 'Đơn đặt hàng gần đây',
-'salesorder.reject' => 'Từ chối đơn hàng bán hàng',
+'salesorder.reject' => 'Từ chối đơn hàng bán '
+	. 'hàng',
 'salesorder.rejected' => 'Đơn hàng bị từ chối',
-'salesorder.sent.to.customer' => 'Điều khoản Thỏa thuận Yêu cầu',
-'salesorder.to.invoice' => 'Đơn đặt hàng đến Hóa đơn',
+'salesorder.sent.to.customer' => 'Điều khoản Thỏa thuận Yêu '
+	. 'cầu',
+'salesorder.to.invoice' => 'Đơn đặt hàng đến Hóa '
+	. 'đơn',
 'salesorder.vat.salesorder' => 'Đơn đặt hàng bán VAT',
 'salesorders' => 'Đơn đặt hàng bán hàng',
 'save' => 'Cứu',
-'save.item.as.lookup' => 'Lưu mục dưới dạng tra cứu',
+'save.item.as.lookup' => 'Lưu mục dưới dạng tra '
+	. 'cứu',
 'search.family' => 'Tìm kiếm Gia đình',
 'search.product' => 'Tìm kiếm sản phẩm',
-'security.disable.read.only.empty' => 'Cài đặt chỉ đọc vô hiệu hóa hiện không có giá trị 0 hoặc 1. Theo mặc định, hãy đặt thành 0 để có chức năng chỉ đọc nhằm ngăn chặn việc xóa hóa đơn.',
-'security.disable.read.only.info' => 'Cảnh báo: Chức năng Chỉ đọc cho Bảo vệ hóa đơn và Ngăn xóa được bật. Tắt &#39;disable.read.only&#39; để cho phép các hóa đơn đã gửi được đặt lại thành bản nháp',
-'security.disable.read.only.success' => 'Thành công: Chức năng Chỉ đọc cho Bảo vệ hóa đơn và Ngăn xóa đã được bật lại',
-'security.disable.read.only.true.draft.check.and.mark' => 'Cảnh báo: Bạn đang chỉnh sửa bản nháp với cài đặt tắt chỉ đọc thành true',
-'security.disable.read.only.true.sent.check.and.mark' => 'Cảnh báo: Bạn đang chỉnh sửa hóa đơn đã gửi với cài đặt tắt chỉ đọc thành true',
-'security.disable.read.only.warning' => 'Cảnh báo: Chức năng Chỉ đọc để Bảo vệ hóa đơn và Ngăn xóa đã bị vô hiệu hóa',
+'security.disable.read.only.empty' =>
+	'Cài đặt chỉ đọc vô '
+	. 'hiệu hóa hiện không có '
+	. 'giá trị 0 hoặc 1.'
+	. 'Theo mặc định, hãy đặt '
+	. 'thành 0 để có chức '
+	. 'năng chỉ đọc nhằm ngăn '
+	. 'chặn việc xóa hóa đơn.',
+'security.disable.read.only.info' =>
+	'Cảnh báo:'
+	. 'Chức năng Chỉ đọc cho '
+	. 'Bảo vệ hóa đơn và '
+	. 'Ngăn xóa được bật.'
+	. 'Tắt \'disable.'
+	. 'read.'
+	. 'only\' để cho phép các '
+	. 'hóa đơn đã gửi được '
+	. 'đặt lại thành bản nháp',
+'security.disable.read.only.success' =>
+	'Thành công:'
+	. 'Chức năng Chỉ đọc cho '
+	. 'Bảo vệ hóa đơn và '
+	. 'Ngăn xóa đã được bật '
+	. 'lại',
+'security.disable.read.only.true.draft.check.and.mark' =>
+	'Cảnh báo:'
+	. 'Bạn đang chỉnh sửa bản '
+	. 'nháp với cài đặt tắt '
+	. 'chỉ đọc thành true',
+'security.disable.read.only.true.sent.check.and.mark' =>
+	'Cảnh báo:'
+	. 'Bạn đang chỉnh sửa hóa '
+	. 'đơn đã gửi với cài '
+	. 'đặt tắt chỉ đọc thành '
+	. 'true',
+'security.disable.read.only.warning' =>
+	'Cảnh báo:'
+	. 'Chức năng Chỉ đọc để '
+	. 'Bảo vệ hóa đơn và '
+	. 'Ngăn xóa đã bị vô '
+	. 'hiệu hóa',
 'select.family' => 'Chọn gia đình',
 'select.payment.method' => 'Chọn phương thức thanh toán',
 'select.project' => 'Chọn dự án',
@@ -1404,86 +2951,225 @@ return [
 'send.email' => 'Gửi Email',
 'sent' => 'Đã gửi',
 'set.new.password' => 'Đặt mật khẩu mới',
-'set.to.read.only' => 'Đặt Hóa đơn thành chỉ đọc trên',
+'set.to.read.only' => 'Đặt Hóa đơn thành chỉ '
+	. 'đọc trên',
 'setting' => 'Cài đặt',
 'setting.add' => 'Cài đặt Thêm',
-'setting.as.a.result.of ' => ' bởi vì ',
-'setting.assets.cleared.at' => 'Tài sản đã được thanh toán tại ',
-'setting.assets.were.not.cleared.at' => 'Tài sản không được thanh toán tại ',
-'setting.company' => 'Chi tiết công khai của công ty',
-'setting.company.private' => 'Chi tiết riêng tư của công ty',
-'setting.company.profile' => 'Thay đổi hồ sơ ví dụ: điện thoại di động và địa chỉ email',
-'setting.duplicate.key' => 'Không thể hoàn tất việc lưu. Bạn có một bản sao với khóa sau: ',
-'setting.error.on.the.public.assets.folder' => ' lỗi trong thư mục tài sản công cộng.',
+'setting.as.a.result.of ' =>
+	'bởi vì',
+'setting.assets.cleared.at' => 'Tài sản đã được thanh '
+	. 'toán tại',
+'setting.assets.were.not.cleared.at' =>
+	'Tài sản không được thanh '
+	. 'toán tại',
+'setting.company' => 'Chi tiết công khai của '
+	. 'công ty',
+'setting.company.private' => 'Chi tiết riêng tư của '
+	. 'công ty',
+'setting.company.profile' => 'Thay đổi hồ sơ ví '
+	. 'dụ:'
+	. 'điện thoại di động và '
+	. 'địa chỉ email',
+'setting.duplicate.key' => 'Không thể hoàn tất việc '
+	. 'lưu.'
+	. 'Bạn có một bản sao '
+	. 'với khóa sau:',
+'setting.error.on.the.public.assets.folder' =>
+	'lỗi trong thư mục tài '
+	. 'sản công cộng.',
 'setting.form' => 'Thiết lập hình thức',
 'setting.key' => 'Cài đặt khóa',
 'setting.section' => 'Phần',
 'setting.subsection' => 'Tiểu mục',
 'setting.translator.key' => 'Phím dịch',
 'setting.value' => 'Thiết lập giá trị',
-'setting.you.have.cleared.the.cache' => 'Bạn đã xóa bộ nhớ đệm.',
-'setting.you.have.not.cleared.the.cache.due.to.a' => 'Bạn chưa xóa bộ nhớ đệm ',
+'setting.you.have.cleared.the.cache' =>
+	'Bạn đã xóa bộ nhớ '
+	. 'đệm.',
+'setting.you.have.not.cleared.the.cache.due.to.a' =>
+	'Bạn chưa xóa bộ nhớ '
+	. 'đệm',
 'settings' => 'Cài đặt',
-'settings.successfully.saved' => 'Cài đặt đã được lưu thành công',
+'settings.successfully.saved' => 'Cài đặt đã được lưu '
+	. 'thành công',
 'setup.choose.language' => 'Chọn ngôn ngữ',
-'setup.choose.language.message' => 'Chọn ngôn ngữ để tiếp tục cài đặt.',
+'setup.choose.language.message' => 'Chọn ngôn ngữ để tiếp '
+	. 'tục cài đặt.',
 'setup.complete' => 'Cài đặt hoàn tất',
-'setup.complete.message' => 'InvoicePlane đã được cài đặt thành công. Bây giờ bạn có thể đăng nhập.',
-'setup.complete.secure.setup' => 'Nếu bạn muốn bảo mật cài đặt của mình, bạn có thể vô hiệu hóa thiết lập ngay bây giờ. Để thực hiện, hãy thay thế dòng <code>DISABLE_SETUP=false</code> bằng <code>DISABLE_SETUP=true</code> trong tệp <code>ipconfig.php</code> của bạn.',
-'setup.complete.support.note' => 'Nếu bạn gặp bất kỳ vấn đề nào hoặc cần trợ giúp, hãy tham khảo <a href="https://wiki.invoiceplane.com">wiki chính thức</a> hoặc <a href="https://community.invoiceplane.com/">diễn đàn cộng đồng</a> .',
+'setup.complete.message' => 'InvoicePlane đã được cài đặt '
+	. 'thành công.'
+	. 'Bây giờ bạn có thể '
+	. 'đăng nhập.',
+'setup.complete.secure.setup' => 'Nếu bạn muốn bảo mật '
+	. 'cài đặt của mình, bạn '
+	. 'có thể vô hiệu hóa '
+	. 'thiết lập ngay bây giờ.'
+	. 'Để thực hiện, hãy thay '
+	. 'thế dòng <code>DISABLE_SETUP=false</code> bằng <code>DISABLE_SETUP=true</code> '
+	. 'trong tệp <code>ipconfig.'
+	. 'php</code> của bạn.',
+'setup.complete.support.note' => 'Nếu bạn gặp bất kỳ '
+	. 'vấn đề nào hoặc cần '
+	. 'trợ giúp, hãy tham khảo '
+	. '<a href="https:'
+	. '//wiki.'
+	. 'invoiceplane.'
+	. 'com">wiki chính thức</a> hoặc <a '
+	. 'href="https:'
+	. '//community.'
+	. 'invoiceplane.'
+	. 'com/">diễn đàn cộng đồng</a> .',
 'setup.create.user' => 'Tạo tài khoản người dùng',
-'setup.create.user.message' => 'Đây là thông tin bạn cần để đăng nhập vào InvoicePlane.',
-'setup.database.configured.message' => 'Cơ sở dữ liệu đã được cấu hình thành công.',
-'setup.database.details' => 'Chi tiết cơ sở dữ liệu',
-'setup.database.message' => 'Cung cấp thông tin sau để kết nối với cơ sở dữ liệu của bạn.',
-'setup.db.cannot.connect' => 'Không thể kết nối với máy chủ cơ sở dữ liệu với thông tin cơ sở dữ liệu được cung cấp. Vui lòng kiểm tra thông tin đăng nhập và thử lại.',
-'setup.db.database.info' => 'Tên cơ sở dữ liệu bạn đã tạo cho InvoicePlane.',
-'setup.db.hostname.info' => 'Tên máy chủ cho cơ sở dữ liệu của bạn.',
-'setup.db.password.info' => 'Mật khẩu liên quan đến cơ sở dữ liệu.',
-'setup.db.port.info' => 'Cổng mà tên máy chủ của bạn đang lắng nghe. Mặc định là 3306.',
-'setup.db.username.info' => 'Tên người dùng được liên kết với cơ sở dữ liệu.',
+'setup.create.user.message' => 'Đây là thông tin bạn '
+	. 'cần để đăng nhập vào '
+	. 'InvoicePlane.',
+'setup.database.configured.message' => 'Cơ sở dữ liệu đã '
+	. 'được cấu hình thành công.',
+'setup.database.details' => 'Chi tiết cơ sở dữ '
+	. 'liệu',
+'setup.database.message' => 'Cung cấp thông tin sau '
+	. 'để kết nối với cơ '
+	. 'sở dữ liệu của bạn.',
+'setup.db.cannot.connect' => 'Không thể kết nối với '
+	. 'máy chủ cơ sở dữ '
+	. 'liệu với thông tin cơ '
+	. 'sở dữ liệu được cung '
+	. 'cấp.'
+	. 'Vui lòng kiểm tra thông '
+	. 'tin đăng nhập và thử '
+	. 'lại.',
+'setup.db.database.info' => 'Tên cơ sở dữ liệu '
+	. 'bạn đã tạo cho InvoicePlane.',
+'setup.db.hostname.info' => 'Tên máy chủ cho cơ '
+	. 'sở dữ liệu của bạn.',
+'setup.db.password.info' => 'Mật khẩu liên quan đến '
+	. 'cơ sở dữ liệu.',
+'setup.db.port.info' => 'Cổng mà tên máy chủ '
+	. 'của bạn đang lắng nghe.'
+	. 'Mặc định là 3306.',
+'setup.db.username.info' => 'Tên người dùng được liên '
+	. 'kết với cơ sở dữ '
+	. 'liệu.',
 'setup.install.tables' => 'Cài đặt bảng',
 'setup.other.contact' => 'Liên hệ khác',
 'setup.prerequisites' => 'Điều kiện tiên quyết',
-'setup.prerequisites.message' => 'Chào mừng đến với InvoicePlane! Bất kỳ vấn đề nào được liệt kê dưới đây phải được giải quyết trước khi có thể tiếp tục cài đặt.',
-'setup.tables.errors' => 'Các lỗi dưới đây cần được giải quyết trước khi có thể tiếp tục cài đặt.',
-'setup.tables.success' => 'Các bảng cơ sở dữ liệu đã được cài đặt thành công.',
-'setup.upgrade.message' => 'Các lỗi dưới đây cần được giải quyết trước khi có thể tiếp tục cài đặt.',
-'setup.upgrade.success' => 'Các bảng cơ sở dữ liệu đã được nâng cấp thành công.',
+'setup.prerequisites.message' => 'Chào mừng đến với InvoicePlane!'
+	. 'Bất kỳ vấn đề nào '
+	. 'được liệt kê dưới đây '
+	. 'phải được giải quyết trước '
+	. 'khi có thể tiếp tục '
+	. 'cài đặt.',
+'setup.tables.errors' => 'Các lỗi dưới đây cần '
+	. 'được giải quyết trước khi '
+	. 'có thể tiếp tục cài '
+	. 'đặt.',
+'setup.tables.success' => 'Các bảng cơ sở dữ '
+	. 'liệu đã được cài đặt '
+	. 'thành công.',
+'setup.upgrade.message' => 'Các lỗi dưới đây cần '
+	. 'được giải quyết trước khi '
+	. 'có thể tiếp tục cài '
+	. 'đặt.',
+'setup.upgrade.success' => 'Các bảng cơ sở dữ '
+	. 'liệu đã được nâng cấp '
+	. 'thành công.',
 'setup.upgrade.tables' => 'Nâng cấp bảng',
-'setup.user.address.info' => 'Thông tin địa chỉ được nhập bên dưới sẽ hiển thị trên hóa đơn của bạn.',
-'setup.user.contact.info' => 'Thông tin liên lạc này cũng có thể hiển thị trên hóa đơn của bạn.',
-'setup.user.email.info' => 'Địa chỉ email của bạn sẽ được sử dụng để đăng nhập vào InvoicePlane.',
-'setup.user.name.info' => 'Có thể là tên công ty hoặc tên và họ của bạn.',
-'setup.user.password.info' => 'Hãy nhớ sử dụng mật khẩu mạnh. Nên kết hợp chữ hoa và chữ thường, số và ký hiệu. Độ dài tối thiểu: 8 ký tự',
-'setup.user.password.verify.info' => 'Xác minh mật khẩu của bạn bằng cách cung cấp lại cùng một mật khẩu.',
-'setup.v120.alert' => '<strong>Chú ý!</strong><br> Điều rất quan trọng là bạn phải đọc <a href="https://go.invoiceplane.com/v120update" target="_blank">thông báo cập nhật này</a> về một số thay đổi quan trọng của ứng dụng InvoicePlane.',
-'setup.v147.alert' => '<strong>Chú ý!</strong><br> Vui lòng mở tệp <code>application/config/config.php</code> và thay đổi dòng <code>$config[&#39;sess_use_database&#39;] = false;</code> thành <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Có thể tìm thấy thêm thông tin chi tiết <a href="https://go.invoiceplane.com/v147update" target="_blank">tại đây</a>',
-'showing.of' => 'Hiển thị %s trong số %s ',
+'setup.user.address.info' => 'Thông tin địa chỉ được '
+	. 'nhập bên dưới sẽ hiển '
+	. 'thị trên hóa đơn của '
+	. 'bạn.',
+'setup.user.contact.info' => 'Thông tin liên lạc này '
+	. 'cũng có thể hiển thị '
+	. 'trên hóa đơn của bạn.',
+'setup.user.email.info' => 'Địa chỉ email của bạn '
+	. 'sẽ được sử dụng để '
+	. 'đăng nhập vào InvoicePlane.',
+'setup.user.name.info' => 'Có thể là tên công '
+	. 'ty hoặc tên và họ '
+	. 'của bạn.',
+'setup.user.password.info' => 'Hãy nhớ sử dụng mật '
+	. 'khẩu mạnh.'
+	. 'Nên kết hợp chữ hoa '
+	. 'và chữ thường, số và '
+	. 'ký hiệu.'
+	. 'Độ dài tối thiểu:'
+	. '8 ký tự',
+'setup.user.password.verify.info' =>
+	'Xác minh mật khẩu của '
+	. 'bạn bằng cách cung cấp '
+	. 'lại cùng một mật khẩu.',
+'setup.v120.alert' => '<strong>Chú ý!</strong><br> Điều rất quan '
+	. 'trọng là bạn phải đọc '
+	. '<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v120update" target="_blank">thông báo cập nhật '
+	. 'này</a> về một số thay '
+	. 'đổi quan trọng của ứng '
+	. 'dụng InvoicePlane.',
+'setup.v147.alert' => '<strong>Chú ý!</strong><br> Vui lòng mở '
+	. 'tệp <code>application/config/config.'
+	. 'php</code> và thay đổi dòng '
+	. '<code>$config[\'sess_use_database\'] = false;</code> thành <code>$config[\'sess_use_database\'] '
+	. '= true;</code> .'
+	. '<br> Có thể tìm thấy '
+	. 'thêm thông tin chi tiết '
+	. '<a href="https:'
+	. '//go.'
+	. 'invoiceplane.'
+	. 'com/v147update" target="_blank">tại đây</a>',
+'showing.of' => 'Hiển thị %s trong số '
+	. '%s',
 'signup' => 'Đăng ký',
 'single.choice' => 'Lựa chọn duy nhất',
-'site.soletrader.about.choose' => 'Sau đây là một số lý do hấp dẫn để bạn chọn chúng tôi:',
-'site.soletrader.about.competitive.rates' => 'Giá cả cạnh tranh',
+'site.soletrader.about.choose' => 'Sau đây là một số '
+	. 'lý do hấp dẫn để '
+	. 'bạn chọn chúng tôi:',
+'site.soletrader.about.competitive.rates' =>
+	'Giá cả cạnh tranh',
 'site.soletrader.about.contemporary' => 'Kỹ năng đương đại',
-'site.soletrader.about.dissatisfaction' => 'Trong trường hợp không hài lòng về dịch vụ, chúng tôi sẽ làm lại miễn phí.',
+'site.soletrader.about.dissatisfaction' => 'Trong trường hợp không hài '
+	. 'lòng về dịch vụ, chúng '
+	. 'tôi sẽ làm lại miễn '
+	. 'phí.',
 'site.soletrader.about.finished' => 'Dự án đã hoàn thành',
 'site.soletrader.about.happy' => 'Khách hàng hài lòng',
 'site.soletrader.about.quality' => 'Không làm giảm chất lượng',
 'site.soletrader.about.return' => 'Khách hàng quay lại',
-'site.soletrader.about.simply' => 'Chỉ cần nhấc điện thoại lên và chúng tôi sẽ làm lại công việc.',
-'site.soletrader.about.solved' => 'Các vấn đề đã giải quyết',
-'site.soletrader.about.trained' => 'Đội ngũ của chúng tôi được đào tạo bài bản và có nhiều kinh nghiệm.',
-'site.soletrader.about.we' => 'Chúng tôi siêng năng áp dụng các kỹ năng của mình một cách tốt nhất có thể.',
-'site.soletrader.about.willing' => 'Sẵn sàng quay lại hỗ trợ',
+'site.soletrader.about.simply' => 'Chỉ cần nhấc điện thoại '
+	. 'lên và chúng tôi sẽ '
+	. 'làm lại công việc.',
+'site.soletrader.about.solved' => 'Các vấn đề đã giải '
+	. 'quyết',
+'site.soletrader.about.trained' => 'Đội ngũ của chúng tôi '
+	. 'được đào tạo bài bản '
+	. 'và có nhiều kinh nghiệm.',
+'site.soletrader.about.we' => 'Chúng tôi siêng năng áp '
+	. 'dụng các kỹ năng của '
+	. 'mình một cách tốt nhất '
+	. 'có thể.',
+'site.soletrader.about.willing' => 'Sẵn sàng quay lại hỗ '
+	. 'trợ',
 'site.soletrader.contact.address' => 'Địa chỉ',
 'site.soletrader.contact.email' => 'E-mail',
-'site.soletrader.contact.lookout' => 'Chúng tôi luôn tìm kiếm để làm việc với khách hàng mới. Nếu bạn quan tâm đến việc làm việc với chúng tôi, vui lòng liên hệ theo một trong những cách sau.',
+'site.soletrader.contact.lookout' => 'Chúng tôi luôn tìm kiếm '
+	. 'để làm việc với khách '
+	. 'hàng mới.'
+	. 'Nếu bạn quan tâm đến '
+	. 'việc làm việc với chúng '
+	. 'tôi, vui lòng liên hệ '
+	. 'theo một trong những cách '
+	. 'sau.',
 'site.soletrader.contact.phone' => 'Điện thoại',
 'site.soletrader.contact.touch' => 'Liên hệ',
 'site.soletrader.pricing.basic' => 'nền tảng',
 'site.soletrader.pricing.choosePlan' => 'Chọn Kế hoạch',
 'site.soletrader.pricing.currencyPerMonth' => 'mỗi tháng',
-'site.soletrader.pricing.explore' => 'Khám phá mức giá linh hoạt của chúng tôi để tìm ra giải pháp phù hợp nhất cho doanh nghiệp của bạn.',
+'site.soletrader.pricing.explore' => 'Khám phá mức giá linh '
+	. 'hoạt của chúng tôi để '
+	. 'tìm ra giải pháp phù '
+	. 'hợp nhất cho doanh nghiệp '
+	. 'của bạn.',
 'site.soletrader.pricing.plans' => 'Nhiều kế hoạch hơn',
 'site.soletrader.pricing.pricing' => ' Bảng giá của chúng tôi',
 'site.soletrader.pricing.pro' => 'Chuyên nghiệp',
@@ -1493,14 +3179,22 @@ return [
 'site.soletrader.pricing.visits' => 'thăm viếng',
 'site.soletrader.team.assistant' => 'Trợ lý',
 'site.soletrader.team.coordinator' => 'Điều phối viên',
-'site.soletrader.team.we' => 'Chúng tôi là một nhóm những cá nhân chu đáo, giàu kinh nghiệm và siêng năng.',
-'site.soletrader.testimonial.we' => 'Đây là những lời chứng thực',
-'site.soletrader.testimonial.worker1' => 'Đây là lời chứng thực của tôi',
-'site.soletrader.testimonial.worker2' => 'Đây là lời chứng thực của tôi',
-'site.soletrader.testimonial.worker3' => 'Đây là lời chứng thực của tôi',
+'site.soletrader.team.we' => 'Chúng tôi là một nhóm '
+	. 'những cá nhân chu đáo,'
+	. 'giàu kinh nghiệm và siêng '
+	. 'năng.',
+'site.soletrader.testimonial.we' => 'Đây là những lời chứng '
+	. 'thực',
+'site.soletrader.testimonial.worker1' => 'Đây là lời chứng thực '
+	. 'của tôi',
+'site.soletrader.testimonial.worker2' => 'Đây là lời chứng thực '
+	. 'của tôi',
+'site.soletrader.testimonial.worker3' => 'Đây là lời chứng thực '
+	. 'của tôi',
 'site.todays.date' => 'Ngày hôm nay',
 'six.months' => 'Sáu tháng',
-'smtp.mail.from' => 'Địa chỉ người gửi SMTP cho email hệ thống',
+'smtp.mail.from' => 'Địa chỉ người gửi SMTP '
+	. 'cho email hệ thống',
 'smtp.password' => 'Mật khẩu SMTP',
 'smtp.port' => 'Cổng SMTP',
 'smtp.requires.authentication' => 'Yêu cầu xác thực',
@@ -1519,31 +3213,91 @@ return [
 'stop.logging.in' => 'Dừng đăng nhập',
 'stop.signing.up' => 'Dừng đăng ký',
 'storecove' => 'Cửa hàng Cove',
-'storecove.advisory.to.developer.field.easily.missed' => 'Trường dễ bị khách hàng bỏ qua',
-'storecove.create.a.sender.legal.entity.country' => '1.1.4. Tạo người gửi - Quốc gia của pháp nhân',
-'storecove.invoice.json.encoded' => 'Hóa đơn được mã hóa Json của StoreCove',
+'storecove.advisory.to.developer.field.easily.missed' =>
+	'Trường dễ bị khách hàng '
+	. 'bỏ qua',
+'storecove.create.a.sender.legal.entity.country' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Tạo người gửi - Quốc '
+	. 'gia của pháp nhân',
+'storecove.invoice.json.encoded' => 'Hóa đơn được mã hóa '
+	. 'Json của StoreCove',
 'storecove.legal' => 'Hợp pháp',
-'storecove.legal.entity.id.for.json' => '1.1.4. Tạo người gửi - Store Cove Legal Entity Id được chèn vào invoice.json',
-'storecove.legal.entity.identifier.id.not.found' => 'Tham số cấu hình Kế toán Nhà cung cấp Bên Pháp nhân Công ty Không tìm thấy ID.',
-'storecove.no.contract.exists' => 'Không có hợp đồng nào tồn tại',
+'storecove.legal.entity.id.for.json' =>
+	'1.'
+	. '1.'
+	. '4.'
+	. 'Tạo người gửi - Store '
+	. 'Cove Legal Entity Id được '
+	. 'chèn vào invoice.'
+	. 'json',
+'storecove.legal.entity.identifier.id.not.found' =>
+	'Tham số cấu hình Kế '
+	. 'toán Nhà cung cấp Bên '
+	. 'Pháp nhân Công ty Không '
+	. 'tìm thấy ID.',
+'storecove.no.contract.exists' => 'Không có hợp đồng nào '
+	. 'tồn tại',
 'storecove.not.available' => 'Không có sẵn',
-'storecove.purchase.order.item.id.null' => 'po-mã-mục-null',
-'storecove.receiver.identifier' => 'Mã định danh người nhận - xem StoreCove 6.3',
-'storecove.region.country.legal.tax' => 'Khu vực ---------- Quốc gia --------- Pháp lý --------- Thuế',
-'storecove.salesorder.number.not.exist' => 'Số đơn đặt hàng không tồn tại',
-'storecove.sender.identifier' => '6.2 Mã định danh người gửi',
-'storecove.sender.identifier.basis' => '6.2 Cơ sở định danh người gửi - Pháp lý hoặc thuế',
-'storecove.supplier.contact.email.not.found' => 'Không tìm thấy email liên hệ của nhà cung cấp. Tham khảo mảng tham số cấu hình.',
-'storecove.supplier.contact.firstname.not.found' => 'Không tìm thấy tên liên hệ của nhà cung cấp. Tham khảo mảng tham số cấu hình.',
-'storecove.supplier.contact.lastname.not.found' => 'Không tìm thấy Họ tên liên hệ của nhà cung cấp. Tham khảo mảng tham số cấu hình.',
-'storecove.supplier.contact.name.not.found' => 'Không tìm thấy tên liên hệ nhà cung cấp. Tham khảo mảng tham số cấu hình.',
-'storecove.supplier.contact.telephone.not.found' => 'Không tìm thấy số điện thoại liên hệ của nhà cung cấp. Tham khảo mảng tham số cấu hình.',
+'storecove.purchase.order.item.id.null' =>
+	'po-mã-mục-null',
+'storecove.receiver.identifier' => 'Mã định danh người nhận '
+	. '- xem StoreCove 6.'
+	. '3',
+'storecove.region.country.legal.tax' =>
+	'Khu vực ---------- Quốc gia '
+	. '--------- Pháp lý --------- Thuế',
+'storecove.salesorder.number.not.exist' =>
+	'Số đơn đặt hàng không '
+	. 'tồn tại',
+'storecove.sender.identifier' => '6.'
+	. '2 Mã định danh người '
+	. 'gửi',
+'storecove.sender.identifier.basis' => '6.'
+	. '2 Cơ sở định danh '
+	. 'người gửi - Pháp lý '
+	. 'hoặc thuế',
+'storecove.supplier.contact.email.not.found' =>
+	'Không tìm thấy email liên '
+	. 'hệ của nhà cung cấp.'
+	. 'Tham khảo mảng tham số '
+	. 'cấu hình.',
+'storecove.supplier.contact.firstname.not.found' =>
+	'Không tìm thấy tên liên '
+	. 'hệ của nhà cung cấp.'
+	. 'Tham khảo mảng tham số '
+	. 'cấu hình.',
+'storecove.supplier.contact.lastname.not.found' =>
+	'Không tìm thấy Họ tên '
+	. 'liên hệ của nhà cung '
+	. 'cấp.'
+	. 'Tham khảo mảng tham số '
+	. 'cấu hình.',
+'storecove.supplier.contact.name.not.found' =>
+	'Không tìm thấy tên liên '
+	. 'hệ nhà cung cấp.'
+	. 'Tham khảo mảng tham số '
+	. 'cấu hình.',
+'storecove.supplier.contact.telephone.not.found' =>
+	'Không tìm thấy số điện '
+	. 'thoại liên hệ của nhà '
+	. 'cung cấp.'
+	. 'Tham khảo mảng tham số '
+	. 'cấu hình.',
 'storecove.tax' => 'Thuế',
 'storecove.tax.rate.code' => 'Mã số thuế Storecove',
-'storecove.tax.scheme.identifier.id.not.found' => 'Cấu hình tham số Kế toán Nhà cung cấp Bên Thuế Chương trình Công ty Không tìm thấy ID.',
-'stream' => 'Stream Pdf trong trình duyệt / Modal',
+'storecove.tax.scheme.identifier.id.not.found' =>
+	'Cấu hình tham số Kế '
+	. 'toán Nhà cung cấp Bên '
+	. 'Thuế Chương trình Công ty '
+	. 'Không tìm thấy ID.',
+'stream' => 'Stream Pdf trong trình duyệt '
+	. '/ Modal',
 'street.address' => 'Địa chỉ đường phố',
-'street.address.2' => 'Địa chỉ đường phố (tiếp theo)',
+'street.address.2' => 'Địa chỉ đường phố (tiếp '
+	. 'theo)',
 'subject' => 'Chủ thể',
 'submenu' => 'Menu phụ',
 'submit' => 'Nộp',
@@ -1555,7 +3309,16 @@ return [
 'sumex.canton' => 'Quảng Châu',
 'sumex.diagnosis' => 'Chẩn đoán',
 'sumex.edit' => 'Sumex Chỉnh sửa',
-'sumex.help' => 'Tùy chọn này thêm mục menu vào hóa đơn để tạo hóa đơn tương thích bán phần TARMED / SUMEX1. TARMED / SUMEX1 là tiêu chuẩn Thụy Sĩ dành cho chăm sóc sức khỏe. <a href="http://sumex1.net/">Thông tin thêm</a>',
+'sumex.help' => 'Tùy chọn này thêm mục '
+	. 'menu vào hóa đơn để '
+	. 'tạo hóa đơn tương thích '
+	. 'bán phần TARMED / SUMEX1.'
+	. 'TARMED / SUMEX1 là tiêu '
+	. 'chuẩn Thụy Sĩ dành cho '
+	. 'chăm sóc sức khỏe.'
+	. '<a href="http:'
+	. '//sumex1.'
+	. 'net/">Thông tin thêm</a>',
 'sumex.information' => 'Thông tin Sumex',
 'sumex.insurednumber' => 'Số bảo hiểm',
 'sumex.observations' => 'Quan sát',
@@ -1571,20 +3334,26 @@ return [
 'sumex.role.dentaltechnician' => 'Kỹ thuật viên nha khoa',
 'sumex.role.dentist' => 'Nha sĩ',
 'sumex.role.druggist' => 'Dược sĩ',
-'sumex.role.ergotherapist' => 'Chuyên gia trị liệu bằng công thái học',
+'sumex.role.ergotherapist' => 'Chuyên gia trị liệu bằng '
+	. 'công thái học',
 'sumex.role.hospital' => 'Bệnh viện',
-'sumex.role.labtechnician' => 'Kỹ thuật viên phòng thí nghiệm',
-'sumex.role.logotherapist' => 'Nhà trị liệu bằng ngôn ngữ',
+'sumex.role.labtechnician' => 'Kỹ thuật viên phòng thí '
+	. 'nghiệm',
+'sumex.role.logotherapist' => 'Nhà trị liệu bằng ngôn '
+	. 'ngữ',
 'sumex.role.midwife' => 'Bà đỡ',
-'sumex.role.naturopathicdoctor' => 'Bác sĩ y học tự nhiên',
-'sumex.role.naturopathictherapist' => 'Chuyên gia trị liệu thiên nhiên',
+'sumex.role.naturopathicdoctor' => 'Bác sĩ y học tự '
+	. 'nhiên',
+'sumex.role.naturopathictherapist' => 'Chuyên gia trị liệu thiên '
+	. 'nhiên',
 'sumex.role.nursingstaff' => 'Nhân viên điều dưỡng',
 'sumex.role.nutritionist' => 'Chuyên gia dinh dưỡng',
 'sumex.role.other' => 'Khác',
 'sumex.role.othertechnician' => 'Kỹ thuật viên khác',
 'sumex.role.pharmacist' => 'Dược sĩ',
 'sumex.role.physician' => 'Bác sĩ',
-'sumex.role.physiotherapist' => 'Chuyên gia vật lý trị liệu',
+'sumex.role.physiotherapist' => 'Chuyên gia vật lý trị '
+	. 'liệu',
 'sumex.role.psychologist' => 'Nhà tâm lý học',
 'sumex.role.transport' => 'Chuyên chở',
 'sumex.role.wholesaler' => 'Người bán buôn',
@@ -1592,7 +3361,12 @@ return [
 'sumex.sliptype' => 'Loại trượt Sumex',
 'sumex.sliptype-esr9' => 'ESR 9 (Giấy cam)',
 'sumex.sliptype-esrRed' => 'Phiếu đỏ',
-'sumex.sliptype.help' => 'Tùy chọn này sẽ thay đổi loại phiếu trong Sumex. Xin lưu ý rằng nếu bạn chọn phiếu màu cam, bạn cần số thuê bao bắt đầu bằng &quot;01-&quot;',
+'sumex.sliptype.help' => 'Tùy chọn này sẽ thay '
+	. 'đổi loại phiếu trong Sumex.'
+	. 'Xin lưu ý rằng nếu '
+	. 'bạn chọn phiếu màu cam,'
+	. 'bạn cần số thuê bao '
+	. 'bắt đầu bằng &quot;01-&quot;',
 'sumex.ssn' => 'AVS',
 'sumex.veka' => 'TUẦN',
 'sunday' => 'Chủ nhật',
@@ -1614,54 +3388,173 @@ return [
 'tax.rate' => 'Tỷ lệ thuế',
 'tax.rate.add' => 'Thêm tỷ lệ thuế',
 'tax.rate.code' => 'Mã số thuế hóa đơn',
-'tax.rate.decimal.places' => 'Tỷ lệ thuế số thập phân',
+'tax.rate.decimal.places' => 'Tỷ lệ thuế số thập '
+	. 'phân',
 'tax.rate.edit' => 'Chỉnh sửa tỷ lệ thuế',
 'tax.rate.form' => 'Biểu mẫu thuế suất',
-'tax.rate.history.exists' => 'Không thể xóa. Lịch sử đã thoát',
-'tax.rate.name' => 'Tên Tỷ lệ Thuế Ví dụ: Tiêu chuẩn',
+'tax.rate.history.exists' => 'Không thể xóa.'
+	. 'Lịch sử đã thoát',
+'tax.rate.name' => 'Tên Tỷ lệ Thuế Ví '
+	. 'dụ:'
+	. 'Tiêu chuẩn',
 'tax.rate.percent' => 'Tỷ lệ thuế Phần trăm',
 'tax.rate.placement' => 'Vị trí thuế suất',
 'tax.rates' => 'Thuế suất',
 'taxes' => 'Thuế',
 'telegram' => 'Điện tín',
-'telegram.bot.api.chat.id' => 'Telegram: Không phải bot: Tài khoản cá nhân: Hello World: Tin nhắn thử nghiệm: Người nhận tin nhắn: <b>ID trò chuyện</b>',
-'telegram.bot.api.chat.id.not.set' => 'ID trò chuyện của chủ tài khoản telegram cá nhân không phải bot đã gửi tin nhắn đầu tiên cho bot và sẽ nhận được tin nhắn thử nghiệm &#39;Xin chào&#39; &#39;Thế giới&#39; chưa được thiết lập.',
-'telegram.bot.api.current.status' => '<b>Sử dụng hiện tại:</b> Không cần webhook vì máy khách không có ID trò chuyện và không gửi tin nhắn đến bot.',
+'telegram.bot.api.chat.id' =>
+	'Telegram:'
+	. 'Không phải bot:'
+	. 'Tài khoản cá nhân:'
+	. 'Hello World:'
+	. 'Tin nhắn thử nghiệm:'
+	. 'Người nhận tin nhắn:'
+	. '<b>ID trò chuyện</b>',
+'telegram.bot.api.chat.id.not.set' =>
+	'ID trò chuyện của chủ '
+	. 'tài khoản telegram cá nhân '
+	. 'không phải bot đã gửi '
+	. 'tin nhắn đầu tiên cho '
+	. 'bot và sẽ nhận được '
+	. 'tin nhắn thử nghiệm \'Xin '
+	. 'chào\' \'Thế giới\' chưa được '
+	. 'thiết lập.',
+'telegram.bot.api.current.status' =>
+	'<b>Sử dụng hiện tại:'
+	. '</b> Không cần webhook vì '
+	. 'máy khách không có ID '
+	. 'trò chuyện và không gửi '
+	. 'tin nhắn đến bot.',
 'telegram.bot.api.enable' => 'Bật Telegram',
-'telegram.bot.api.enabled.not' => 'Telegram không được kích hoạt',
-'telegram.bot.api.future.use' => '<b>Sử dụng trong tương lai:</b> Khách hàng có ID trò chuyện sẽ được gửi hóa đơn điện tín và họ xác nhận biên lai bằng cách gửi lại xác nhận cho webhook',
-'telegram.bot.api.general.purpose' => '<b>Bot đã đăng ký, được xác định bằng mã thông báo, sẽ gửi Thông báo thanh toán của khách hàng đến ID trò chuyện đã đăng ký bên dưới (thường là tài khoản telegram cá nhân không phải bot của quản trị viên).</b>',
-'telegram.bot.api.get.updates.failed' => 'Cập nhật Telegram của bạn không thành công.',
-'telegram.bot.api.get.updates.success' => 'Cập nhật Telegram của bạn đã thành công khi sử dụng phương thức api getUpdates.',
-'telegram.bot.api.hello.world.test.message' => 'Xin chào thế giới từ Telegram Bot Api. Cảm ơn các nhà phát triển yiisoft!',
-'telegram.bot.api.hello.world.test.message.sent' => 'Đã gửi tin nhắn Xin chào thế giới.',
-'telegram.bot.api.hello.world.test.message.sent.not' => 'Tin nhắn Hello World KHÔNG được gửi.',
-'telegram.bot.api.hello.world.test.message.use' => 'Gửi tin nhắn thử nghiệm cơ bản &#39;Hello World từ Telegram Bot Api&#39; đến một ID trò chuyện bên ngoài',
-'telegram.bot.api.payment.notification.success' => 'Thông báo thanh toán Telegram thành công',
-'telegram.bot.api.payment.notifications' => 'Thông báo thanh toán Telegram',
-'telegram.bot.api.token' => 'Mã thông báo Telegram Bot Api',
-'telegram.bot.api.token.not.set' => 'Mã thông báo Telegram Bot Api chưa được thiết lập',
-'telegram.bot.api.webhook.delete' => 'Xóa Webhook',
-'telegram.bot.api.webhook.deleted' => 'Webhook vừa bị vô hiệu hóa để có thể sử dụng phương thức api thủ công getUpdates.',
-'telegram.bot.api.webhook.secret.token' => 'Mã thông báo bí mật Webhook để tăng cường bảo mật (Được sử dụng làm tham số trong hàm setWebhook chứ không phải làm queryParameter)',
-'telegram.bot.api.webhook.setup' => 'Webhook đã được thiết lập.',
-'telegram.bot.api.webhook.setup.already' => 'Webhook đã được thiết lập rồi.',
-'telegram.bot.api.webhook.url.this.site' => 'Url Telegram Webhook của trang web này được sử dụng trong hàm setWebhook của TelegramHelper.',
+'telegram.bot.api.enabled.not' =>
+	'Telegram không được kích hoạt',
+'telegram.bot.api.future.use' =>
+	'<b>Sử dụng trong tương lai:'
+	. '</b> Khách hàng có ID '
+	. 'trò chuyện sẽ được gửi '
+	. 'hóa đơn điện tín và '
+	. 'họ xác nhận biên lai '
+	. 'bằng cách gửi lại xác '
+	. 'nhận cho webhook',
+'telegram.bot.api.general.purpose' =>
+	'<b>Bot đã đăng ký, được '
+	. 'xác định bằng mã thông '
+	. 'báo, sẽ gửi Thông báo '
+	. 'thanh toán của khách hàng '
+	. 'đến ID trò chuyện đã '
+	. 'đăng ký bên dưới (thường '
+	. 'là tài khoản telegram cá '
+	. 'nhân không phải bot của '
+	. 'quản trị viên).'
+	. '</b>',
+'telegram.bot.api.get.updates.failed' =>
+	'Cập nhật Telegram của bạn '
+	. 'không thành công.',
+'telegram.bot.api.get.updates.success' =>
+	'Cập nhật Telegram của bạn '
+	. 'đã thành công khi sử '
+	. 'dụng phương thức api getUpdates.',
+'telegram.bot.api.hello.world.test.message' =>
+	'Xin chào thế giới từ '
+	. 'Telegram Bot Api.'
+	. 'Cảm ơn các nhà phát '
+	. 'triển yiisoft!',
+'telegram.bot.api.hello.world.test.message.sent' =>
+	'Đã gửi tin nhắn Xin '
+	. 'chào thế giới.',
+'telegram.bot.api.hello.world.test.message.sent.not' =>
+	'Tin nhắn Hello World KHÔNG '
+	. 'được gửi.',
+'telegram.bot.api.hello.world.test.message.use' =>
+	'Gửi tin nhắn thử nghiệm '
+	. 'cơ bản \'Hello World từ '
+	. 'Telegram Bot Api\' đến một '
+	. 'ID trò chuyện bên ngoài',
+'telegram.bot.api.payment.notification.success' =>
+	'Thông báo thanh toán Telegram '
+	. 'thành công',
+'telegram.bot.api.payment.notifications' =>
+	'Thông báo thanh toán Telegram',
+'telegram.bot.api.token' => 'Mã thông báo Telegram Bot '
+	. 'Api',
+'telegram.bot.api.token.not.set' =>
+	'Mã thông báo Telegram Bot '
+	. 'Api chưa được thiết lập',
+'telegram.bot.api.webhook.delete' =>
+	'Xóa Webhook',
+'telegram.bot.api.webhook.deleted' =>
+	'Webhook vừa bị vô hiệu '
+	. 'hóa để có thể sử '
+	. 'dụng phương thức api thủ '
+	. 'công getUpdates.',
+'telegram.bot.api.webhook.secret.token' =>
+	'Mã thông báo bí mật '
+	. 'Webhook để tăng cường bảo '
+	. 'mật (Được sử dụng làm '
+	. 'tham số trong hàm setWebhook '
+	. 'chứ không phải làm queryParameter)',
+'telegram.bot.api.webhook.setup' =>
+	'Webhook đã được thiết lập.',
+'telegram.bot.api.webhook.setup.already' =>
+	'Webhook đã được thiết lập '
+	. 'rồi.',
+'telegram.bot.api.webhook.url.this.site' =>
+	'Url Telegram Webhook của trang '
+	. 'web này được sử dụng '
+	. 'trong hàm setWebhook của TelegramHelper.',
 'template' => 'Mẫu hóa đơn',
 'templates' => 'Mẫu hóa đơn',
 'term' => 'Điều khoản và điều kiện',
-'term.1' => 'Tôi chưa đọc các điều khoản và điều kiện.',
-'term.2' => 'Tôi đã đọc và đồng ý với các điều khoản và điều kiện.',
-'term.add.additional.terms.at.setting.repository' => 'Thêm các điều khoản bổ sung vào chức năng getPaymentTerms của kho lưu trữ.',
+'term.1' => 'Tôi chưa đọc các điều '
+	. 'khoản và điều kiện.',
+'term.2' => 'Tôi đã đọc và đồng '
+	. 'ý với các điều khoản '
+	. 'và điều kiện.',
+'term.add.additional.terms.at.setting.repository' =>
+	'Thêm các điều khoản bổ '
+	. 'sung vào chức năng getPaymentTerms '
+	. 'của kho lưu trữ.',
 'terms' => 'Điều khoản',
-'test.data.install' => 'Cài đặt dữ liệu thử nghiệm',
-'test.data.use' => 'Sử dụng dữ liệu thử nghiệm',
+'test.data.install' => 'Cài đặt dữ liệu thử '
+	. 'nghiệm',
+'test.data.use' => 'Sử dụng dữ liệu thử '
+	. 'nghiệm',
 'test.remove' => 'Xóa dữ liệu thử nghiệm',
-'test.remove.tooltip' => 'Xem..Cài đặt..Chung..Cài đặt dữ liệu thử nghiệm..Không và Xem..Cài đặt..Chung..Sử dụng dữ liệu thử nghiệm..Không',
-'test.reset' => 'Đặt lại dữ liệu thử nghiệm',
+'test.remove.tooltip' => 'Xem.'
+	. 'Cài đặt.'
+	. 'Chung.'
+	. 'Cài đặt dữ liệu thử '
+	. 'nghiệm.'
+	. 'Không và Xem.'
+	. 'Cài đặt.'
+	. 'Chung.'
+	. 'Sử dụng dữ liệu thử '
+	. 'nghiệm.'
+	. 'Không',
+'test.reset' => 'Đặt lại dữ liệu thử '
+	. 'nghiệm',
 'test.reset.setting' => 'Cài đặt Cài đặt lại',
-'test.reset.setting.tooltip' => 'Thao tác này sẽ xóa tất cả các cài đặt hiện tại và cài đặt lại các cài đặt mặc định trong InvoiceController/install.default.settings.on.first.run',
-'test.reset.tooltip' => 'Xem..Cài đặt..Chung..Cài đặt dữ liệu thử nghiệm..Có và Xem..Cài đặt..Chung..Sử dụng dữ liệu thử nghiệm..Có',
+'test.reset.setting.tooltip' => 'Thao tác này sẽ xóa '
+	. 'tất cả các cài đặt '
+	. 'hiện tại và cài đặt '
+	. 'lại các cài đặt mặc '
+	. 'định trong InvoiceController/install.'
+	. 'default.'
+	. 'settings.'
+	. 'on.'
+	. 'first.'
+	. 'run',
+'test.reset.tooltip' => 'Xem.'
+	. 'Cài đặt.'
+	. 'Chung.'
+	. 'Cài đặt dữ liệu thử '
+	. 'nghiệm.'
+	. 'Có và Xem.'
+	. 'Cài đặt.'
+	. 'Chung.'
+	. 'Sử dụng dữ liệu thử '
+	. 'nghiệm.'
+	. 'Có',
 'text' => 'Chữ',
 'theme' => 'Chủ đề',
 'this.month' => 'Tháng này',
@@ -1675,8 +3568,10 @@ return [
 'to.email' => 'Gửi Email',
 'total' => 'Tổng cộng',
 'total.balance' => 'Tổng số dư',
-'total.billed' => 'Tổng số tiền đã thanh toán',
-'total.paid' => 'Tổng số tiền đã thanh toán',
+'total.billed' => 'Tổng số tiền đã thanh '
+	. 'toán',
+'total.paid' => 'Tổng số tiền đã thanh '
+	. 'toán',
 'transaction.reference' => 'Tham chiếu giao dịch',
 'transaction.successful' => 'Giao dịch thành công',
 'treatment' => 'Sự đối đãi',
@@ -1685,31 +3580,94 @@ return [
 'true' => 'ĐÚNG VẬY',
 'try.again' => 'Thử lại',
 'two.factor.authentication' => 'Xác thực hai yếu tố',
-'two.factor.authentication.attempt.failure' => 'Xác thực hai yếu tố không thành công',
-'two.factor.authentication.attempt.failure.must.setup' => 'Không thành công khi xác thực hai yếu tố: Bạn phải thiết lập mã QR mới với bí mật (+) và chọn ghi đè mục nhập trước đó khi được nhắc',
-'two.factor.authentication.attempt.success' => 'Xác thực hai yếu tố thành công',
-'two.factor.authentication.disabled' => 'Xác thực hai yếu tố hiện đã bị vô hiệu hóa để tăng cường bảo mật.',
-'two.factor.authentication.enable' => 'Bật xác thực hai yếu tố',
-'two.factor.authentication.enabled.with.disabling' => 'Xác thực hai yếu tố hiện đang được bật để tăng cường bảo mật và bị vô hiệu hóa sau khi xác thực thành công để có thêm lớp bảo mật cho đến lần đăng nhập tiếp theo. Bắt buộc phải quét mã QR sau mỗi lần đăng nhập để có bí mật mới.',
-'two.factor.authentication.enabled.without.disabling' => 'Xác thực hai yếu tố hiện đang được bật để tăng cường bảo mật và không bị vô hiệu hóa sau khi xác thực thành công. Mã QR sẽ không hiển thị nữa khi quét sau khi đăng nhập hoặc sau khi thiết lập xác thực hai yếu tố.',
-'two.factor.authentication.error' => 'Lỗi xác thực hai yếu tố',
-'two.factor.authentication.form.verify.login' => 'Xác minh Đăng nhập',
-'two.factor.authentication.invalid.code.format' => 'Định dạng mã không hợp lệ. Vui lòng nhập mã gồm 6 chữ số từ ứng dụng của bạn.',
-'two.factor.authentication.missing.code.or.secret' => 'Thiếu mã xác thực hoặc bí mật 2FA.',
-'two.factor.authentication.new.six.digit.code' => 'Vui lòng nhập mã xác thực 6 chữ số mới (khác với mã thiết lập) từ ứng dụng của bạn.',
-'two.factor.authentication.no.secret.generated' => 'Không có bí mật nào được tạo ra. Vui lòng khởi động lại thiết lập.',
-'two.factor.authentication.qr.code.enter.manually' => 'Hoặc nhập mã này vào ứng dụng Android theo cách thủ công: ',
-'two.factor.authentication.scan' => 'Quét mã QR này bằng ứng dụng Aegis của bạn:',
-'two.factor.authentication.setup' => 'Thiết lập xác thực hai yếu tố',
+'two.factor.authentication.attempt.failure' =>
+	'Xác thực hai yếu tố '
+	. 'không thành công',
+'two.factor.authentication.attempt.failure.must.setup' =>
+	'Không thành công khi xác '
+	. 'thực hai yếu tố:'
+	. 'Bạn phải thiết lập mã '
+	. 'QR mới với bí mật '
+	. '(+) và chọn ghi đè '
+	. 'mục nhập trước đó khi '
+	. 'được nhắc',
+'two.factor.authentication.attempt.success' =>
+	'Xác thực hai yếu tố '
+	. 'thành công',
+'two.factor.authentication.disabled' => 'Xác thực hai yếu tố '
+	. 'hiện đã bị vô hiệu '
+	. 'hóa để tăng cường bảo '
+	. 'mật.',
+'two.factor.authentication.enable' => 'Bật xác thực hai yếu '
+	. 'tố',
+'two.factor.authentication.enabled.with.disabling' =>
+	'Xác thực hai yếu tố '
+	. 'hiện đang được bật để '
+	. 'tăng cường bảo mật và '
+	. 'bị vô hiệu hóa sau '
+	. 'khi xác thực thành công '
+	. 'để có thêm lớp bảo '
+	. 'mật cho đến lần đăng '
+	. 'nhập tiếp theo.'
+	. 'Bắt buộc phải quét mã '
+	. 'QR sau mỗi lần đăng '
+	. 'nhập để có bí mật '
+	. 'mới.',
+'two.factor.authentication.enabled.without.disabling' =>
+	'Xác thực hai yếu tố '
+	. 'hiện đang được bật để '
+	. 'tăng cường bảo mật và '
+	. 'không bị vô hiệu hóa '
+	. 'sau khi xác thực thành '
+	. 'công.'
+	. 'Mã QR sẽ không hiển '
+	. 'thị nữa khi quét sau '
+	. 'khi đăng nhập hoặc sau '
+	. 'khi thiết lập xác thực '
+	. 'hai yếu tố.',
+'two.factor.authentication.error' => 'Lỗi xác thực hai yếu '
+	. 'tố',
+'two.factor.authentication.form.verify.login' =>
+	'Xác minh Đăng nhập',
+'two.factor.authentication.invalid.code.format' =>
+	'Định dạng mã không hợp '
+	. 'lệ.'
+	. 'Vui lòng nhập mã gồm '
+	. '6 chữ số từ ứng '
+	. 'dụng của bạn.',
+'two.factor.authentication.missing.code.or.secret' =>
+	'Thiếu mã xác thực hoặc '
+	. 'bí mật 2FA.',
+'two.factor.authentication.new.six.digit.code' =>
+	'Vui lòng nhập mã xác '
+	. 'thực 6 chữ số mới '
+	. '(khác với mã thiết lập) '
+	. 'từ ứng dụng của bạn.',
+'two.factor.authentication.no.secret.generated' =>
+	'Không có bí mật nào '
+	. 'được tạo ra.'
+	. 'Vui lòng khởi động lại '
+	. 'thiết lập.',
+'two.factor.authentication.qr.code.enter.manually' =>
+	'Hoặc nhập mã này vào '
+	. 'ứng dụng Android theo cách '
+	. 'thủ công:',
+'two.factor.authentication.scan' => 'Quét mã QR này bằng '
+	. 'ứng dụng Aegis của bạn:',
+'two.factor.authentication.setup' => 'Thiết lập xác thực hai '
+	. 'yếu tố',
 'type' => 'Kiểu',
 'unit' => 'Đơn vị',
 'unit.add' => 'Thêm đơn vị',
 'unit.already.exists' => 'Đơn vị đã tồn tại!',
-'unit.description.not.provided' => 'Mô tả không được cung cấp',
+'unit.description.not.provided' => 'Mô tả không được cung '
+	. 'cấp',
 'unit.edit' => 'Chỉnh sửa đơn vị',
-'unit.history' => 'Không thể xóa. Lịch sử vẫn tồn tại.',
+'unit.history' => 'Không thể xóa.'
+	. 'Lịch sử vẫn tồn tại.',
 'unit.name' => 'Tên đơn vị',
-'unit.name.plrl' => 'Tên đơn vị (dạng số nhiều)',
+'unit.name.plrl' => 'Tên đơn vị (dạng số '
+	. 'nhiều)',
 'unit.peppol' => 'Peppol',
 'unit.peppol.add' => 'Đơn vị Peppol Thêm',
 'unit.peppol.code' => 'Mã đơn vị Peppol',
@@ -1719,7 +3677,9 @@ return [
 'unknown' => 'Không rõ',
 'unpaid' => 'Chưa thanh toán',
 'updatecheck' => 'Cập nhậtkiểm tra',
-'updatecheck.failed' => 'Kiểm tra cập nhật không thành công! Hãy kiểm tra kết nối mạng của bạn.',
+'updatecheck.failed' => 'Kiểm tra cập nhật không '
+	. 'thành công! Hãy kiểm tra '
+	. 'kết nối mạng của bạn.',
 'updates' => 'Cập nhật',
 'updates.available' => 'Có bản cập nhật!',
 'upload.date' => 'Ngày tải lên',
@@ -1730,53 +3690,144 @@ return [
 'upload.index' => 'Tải lên chỉ mục',
 'upload.plural' => 'Tải lên',
 'upload.url.key' => 'Khóa Url',
-'use.system.language' => 'Sử dụng ngôn ngữ hệ thống',
+'use.system.language' => 'Sử dụng ngôn ngữ hệ '
+	. 'thống',
 'user' => 'Người sử dụng',
-'user.account' => 'Tài khoản người dùng hóa đơn',
-'user.account.clients' => 'Khách hàng có Tài khoản Người dùng',
-'user.accounts' => 'Tài khoản người dùng hóa đơn',
+'user.account' => 'Tài khoản người dùng hóa '
+	. 'đơn',
+'user.account.clients' => 'Khách hàng có Tài khoản '
+	. 'Người dùng',
+'user.accounts' => 'Tài khoản người dùng hóa '
+	. 'đơn',
 'user.all.clients' => 'Thêm tất cả khách hàng',
-'user.all.clients.text' => '* Nếu tùy chọn này được chọn, người dùng sẽ có thể xem tất cả các khách hàng, bao gồm cả những khách hàng được thêm vào sau.',
-'user.api.list' => 'Người dùng trước khi xuất hóa đơn - Người dùng đã đăng ký',
-'user.client.active.no' => 'Bạn không có khách hàng nào có tài khoản người dùng đang hoạt động. Người quản trị sẽ chỉ định khách hàng cho một tài khoản người dùng đã đăng ký.',
+'user.all.clients.text' => '* Nếu tùy chọn này '
+	. 'được chọn, người dùng sẽ '
+	. 'có thể xem tất cả '
+	. 'các khách hàng, bao gồm '
+	. 'cả những khách hàng được '
+	. 'thêm vào sau.',
+'user.api.list' => 'Người dùng trước khi xuất '
+	. 'hóa đơn - Người dùng '
+	. 'đã đăng ký',
+'user.client.active.no' => 'Bạn không có khách hàng '
+	. 'nào có tài khoản người '
+	. 'dùng đang hoạt động.'
+	. 'Người quản trị sẽ chỉ '
+	. 'định khách hàng cho một '
+	. 'tài khoản người dùng đã '
+	. 'đăng ký.',
 'user.client.count' => '#',
-'user.client.no.account' => 'Máy khách này không có tài khoản người dùng nào được liên kết với nó và do đó không thể tạo tài liệu này.',
-'user.clients.assigned.not' => 'Người dùng này không có Khách hàng nào được chỉ định.',
+'user.client.no.account' => 'Máy khách này không có '
+	. 'tài khoản người dùng nào '
+	. 'được liên kết với nó '
+	. 'và do đó không thể '
+	. 'tạo tài liệu này.',
+'user.clients.assigned.not' => 'Người dùng này không có '
+	. 'Khách hàng nào được chỉ '
+	. 'định.',
 'user.form' => 'Biểu mẫu người dùng',
 'user.iban' => 'Mã số IBAN',
-'user.inv.active.not' => 'Tài khoản người dùng không hoạt động',
-'user.inv.list.limit' => 'Số lượng bản ghi được liệt kê trên mỗi trang (Lưu ý: Ghi đè mặc định)',
-'user.inv.more.than.one.assigned' => 'Tạo hóa đơn không thành công: Tham khảo Cài đặt của bạn ... Tài khoản người dùng. Có nhiều hơn một người dùng được chỉ định cho khách hàng này.',
-'user.inv.refer.to' => 'Có thể ghi đè mặc định 10 bản ghi trên một trang bằng cách nhấp vào đây.',
+'user.inv.active.not' => 'Tài khoản người dùng không '
+	. 'hoạt động',
+'user.inv.list.limit' => 'Số lượng bản ghi được '
+	. 'liệt kê trên mỗi trang '
+	. '(Lưu ý:'
+	. 'Ghi đè mặc định)',
+'user.inv.more.than.one.assigned' =>
+	'Tạo hóa đơn không thành '
+	. 'công:'
+	. 'Tham khảo Cài đặt của '
+	. 'bạn .'
+	. 'Tài khoản người dùng.'
+	. 'Có nhiều hơn một người '
+	. 'dùng được chỉ định cho '
+	. 'khách hàng này.',
+'user.inv.refer.to' => 'Có thể ghi đè mặc '
+	. 'định 10 bản ghi trên '
+	. 'một trang bằng cách nhấp '
+	. 'vào đây.',
 'user.inv.role.accountant' => 'Kế toán viên',
-'user.inv.role.accountant.assigned' => 'Vai trò của Kế toán được giao',
-'user.inv.role.accountant.default' => 'Theo mặc định, Kế toán của khách hàng có thể xem hóa đơn, thanh toán hóa đơn, xem khoản thanh toán hóa đơn và chỉnh sửa khoản thanh toán hóa đơn.',
+'user.inv.role.accountant.assigned' =>
+	'Vai trò của Kế toán '
+	. 'được giao',
+'user.inv.role.accountant.default' =>
+	'Theo mặc định, Kế toán '
+	. 'của khách hàng có thể '
+	. 'xem hóa đơn, thanh toán '
+	. 'hóa đơn, xem khoản thanh '
+	. 'toán hóa đơn và chỉnh '
+	. 'sửa khoản thanh toán hóa '
+	. 'đơn.',
 'user.inv.role.administrator' => 'Người quản lý',
-'user.inv.role.administrator.already.assigned' => 'Vai trò Quản trị viên đã được chỉ định',
-'user.inv.role.administrator.assigned' => 'Vai trò Quản trị viên hiện đã được chỉ định. ',
-'user.inv.role.all.new' => 'Theo mặc định, tất cả người dùng mới sẽ đảm nhận vai trò người quan sát, tức là có thể xem Tài liệu nhưng không thể chỉnh sửa Tài liệu được gửi cho họ, tức là quan sát hoặc xem tài liệu.',
+'user.inv.role.administrator.already.assigned' =>
+	'Vai trò Quản trị viên '
+	. 'đã được chỉ định',
+'user.inv.role.administrator.assigned' =>
+	'Vai trò Quản trị viên '
+	. 'hiện đã được chỉ định.',
+'user.inv.role.all.new' =>
+	'Theo mặc định, tất cả '
+	. 'người dùng mới sẽ đảm '
+	. 'nhận vai trò người quan '
+	. 'sát, tức là có thể '
+	. 'xem Tài liệu nhưng không '
+	. 'thể chỉnh sửa Tài liệu '
+	. 'được gửi cho họ, tức '
+	. 'là quan sát hoặc xem '
+	. 'tài liệu.',
 'user.inv.role.observer' => 'Người quan sát',
-'user.inv.role.observer.assigned' => 'Vai trò của người quan sát được chỉ định',
-'user.inv.role.observer.assigned.already' => 'Vai trò Người quan sát đã được chỉ định.',
-'user.inv.role.revoke.all' => 'Thu hồi tất cả các vai trò',
-'user.inv.role.warning.revoke.all' => 'Bạn có chắc chắn muốn thu hồi tất cả các vai trò không?',
-'user.inv.role.warning.role' => 'Bạn có chắc chắn muốn đảm nhận vai trò này không?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Không thể phân bổ loại quản trị viên của danh sách thả xuống cho người không phải quản trị viên',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Không thể phân bổ loại khách của danh sách thả xuống cho người quản trị',
+'user.inv.role.observer.assigned' =>
+	'Vai trò của người quan '
+	. 'sát được chỉ định',
+'user.inv.role.observer.assigned.already' =>
+	'Vai trò Người quan sát '
+	. 'đã được chỉ định.',
+'user.inv.role.revoke.all' =>
+	'Thu hồi tất cả các '
+	. 'vai trò',
+'user.inv.role.warning.revoke.all' =>
+	'Bạn có chắc chắn muốn '
+	. 'thu hồi tất cả các '
+	. 'vai trò không?',
+'user.inv.role.warning.role' =>
+	'Bạn có chắc chắn muốn '
+	. 'đảm nhận vai trò này '
+	. 'không?',
+'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
+	'Không thể phân bổ loại '
+	. 'quản trị viên của danh '
+	. 'sách thả xuống cho người '
+	. 'không phải quản trị viên',
+'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
+	'Không thể phân bổ loại '
+	. 'khách của danh sách thả '
+	. 'xuống cho người quản trị',
 'user.signup.please' => 'Hãy đăng ký!',
 'user.subscriber.number' => 'Số thuê bao',
 'user.type' => 'Loại người dùng',
 'username' => 'Tên người dùng',
 'users' => 'Người sử dụng',
-'utility.assets.clear' => 'Xóa bộ nhớ đệm tài sản',
-'validator.fail' => 'Không thể xử lý trường %s: %s',
-'validator.invalid.login.password' => 'Đăng nhập hoặc mật khẩu không hợp lệ',
-'validator.password.change' => 'Mật khẩu của bạn đã được thay đổi',
+'utility.assets.clear' => 'Xóa bộ nhớ đệm tài '
+	. 'sản',
+'validator.fail' => 'Không thể xử lý trường '
+	. '%s:'
+	. '%s',
+'validator.invalid.login.password' => 'Đăng nhập hoặc mật khẩu '
+	. 'không hợp lệ',
+'validator.password.change' => 'Mật khẩu của bạn đã '
+	. 'được thay đổi',
 'validator.password.not.match' => 'Mật khẩu không khớp',
-'validator.password.not.match.new' => 'Mật khẩu mới của bạn không khớp',
-'validator.password.reset' => 'Mật khẩu của bạn đã được đặt lại',
-'validator.user.exist' => 'Người dùng với thông tin đăng nhập này đã tồn tại',
-'validator.user.exist.not' => 'Người dùng có thông tin đăng nhập này không tồn tại',
+'validator.password.not.match.new' =>
+	'Mật khẩu mới của bạn '
+	. 'không khớp',
+'validator.password.reset' => 'Mật khẩu của bạn đã '
+	. 'được đặt lại',
+'validator.user.exist' => 'Người dùng với thông tin '
+	. 'đăng nhập này đã tồn '
+	. 'tại',
+'validator.user.exist.not' => 'Người dùng có thông tin '
+	. 'đăng nhập này không tồn '
+	. 'tại',
 'value' => 'Giá trị',
 'values' => 'Giá trị',
 'values.with.taxes' => 'Giá trị có thuế',
@@ -1789,7 +3840,8 @@ return [
 'vat.rate' => 'Thuế suất VAT',
 'vat.reg.no' => 'Số đăng ký thuế GTGT',
 'vat.registered' => 'Đã đăng ký VAT',
-'vendor.nikic.fast-route' => 'Xây dựng các tuyến đường nhanh hơn',
+'vendor.nikic.fast-route' => 'Xây dựng các tuyến đường '
+	. 'nhanh hơn',
 'verify.password' => 'Xác minh mật khẩu',
 'version.history' => 'Lịch sử phiên bản',
 'view' => 'Xem',
@@ -1801,7 +3853,8 @@ return [
 'view.contact.form.name' => 'Tên',
 'view.contact.form.subject' => 'Chủ thể',
 'view.invoices' => 'Xem hóa đơn',
-'view.payment.logs' => 'Xem Nhật ký thanh toán trực tuyến',
+'view.payment.logs' => 'Xem Nhật ký thanh toán '
+	. 'trực tuyến',
 'view.payments' => 'Xem thanh toán',
 'view.product.families' => 'Xem các dòng sản phẩm',
 'view.product.units' => 'Xem Đơn vị sản phẩm',
@@ -1815,11 +3868,138 @@ return [
 'web' => 'Trang web',
 'web.address' => 'Địa chỉ Web',
 'welcome' => 'Chào mừng',
-'wrong.passwordreset.token' => 'Không tìm thấy người dùng nào cho mã thông báo đặt lại được cung cấp. Nếu bạn nghĩ đây là lỗi, hãy liên hệ với quản trị viên của bạn.',
+'wrong.passwordreset.token' => 'Không tìm thấy người dùng '
+	. 'nào cho mã thông báo '
+	. 'đặt lại được cung cấp.'
+	. 'Nếu bạn nghĩ đây là '
+	. 'lỗi, hãy liên hệ với '
+	. 'quản trị viên của bạn.',
 'year' => 'Năm',
 'year.prefix' => 'Tiền tố năm',
 'years' => 'Năm',
 'yes' => 'Đúng',
 'zip' => 'Mã bưu chính',
 'zip.code' => 'Mã bưu chính',
+'allowance.or.charge.allowance.tax' =>
+	'Thuế trợ cấp',
+'allowance.or.charge.charge.tax' =>
+	'Thuế trên phí',
+'allowance.or.charge.inv.add' =>
+	'Thêm khoản trợ cấp hoặc '
+	. 'phí hóa đơn',
+'allowance.or.charge.level' => 'Mức (⬅️Tổng thể, Mục hàng '
+	. '➡)',
+'allowance.or.charge.shipping.handling.packaging' =>
+	'Vận chuyển/Xử lý/Đóng gói',
+'allowance.or.charge.shipping.handling.packaging.vat' =>
+	'Thuế GTGT đối với Vận '
+	. 'chuyển/Xử lý/Đóng gói',
+'allowance.or.charge.shipping.handling.packaging.tax' =>
+	'Thuế vận chuyển/xử lý/đóng gói',
+'amount.payment' => 'Số tiền thanh toán phải '
+	. 'trả đầy đủ',
+'calendar' => 'Lịch',
+'continue.with.developersandboxhmrc' => 'Tiếp tục với Developer Gov '
+	. 'Sandbox UK',
+'continue.with.oidc' => 'Tiếp tục với Open Id '
+	. 'Connect',
+'continue.with.openbanking' => 'Tiếp tục với Ngân hàng '
+	. 'mở',
+'converted.to.invoice' => 'Đã chuyển đổi thành hóa '
+	. 'đơn',
+'converted.to.so' => 'Đã chuyển đổi thành Đơn '
+	. 'đặt hàng bán hàng',
+'custom.field.edit' => 'Chỉnh sửa trường tùy chỉnh',
+'delete.quote.single' => 'Có thể xóa báo giá '
+	. 'này vì không có Đơn '
+	. 'đặt hàng hoặc Hóa đơn '
+	. 'nào được liên kết với '
+	. 'nó',
+'delete.quote.derived' => 'Có thể là Đơn đặt '
+	. 'hàng bán hoặc Hóa đơn '
+	. 'được liên kết với Báo '
+	. 'giá này và do đó '
+	. 'không thể xóa được.',
+'extended' => 'Mở rộng',
+'extended.language' => 'Ngôn ngữ mở rộng',
+'file' => 'Tài liệu',
+'grand.fathered' => 'Ông nội',
+'layout.password.otp.6' => 'Mật khẩu OTP (6 chữ '
+	. 'số)',
+'layout.password.otp.6.8' =>
+	'Mật khẩu OTP (6 chữ '
+	. 'số) / Mã khôi phục '
+	. 'dự phòng (8 chữ số)',
+'oauth2.account.locked' => 'Tài khoản bị khóa',
+'oauth2.backup.recovery.codes' => 'Mã khôi phục dự phòng.'
+	. 'Giữ ở nơi an toàn.',
+'oauth2.backup.recovery.codes.regenerate' =>
+	'Tạo lại mã khôi phục '
+	. 'sao lưu',
+'oauth2.consent.required' => 'Cần có sự đồng ý',
+'oauth2.default' => 'Cấu hình oauth2.'
+	. '0 mặc định được sử '
+	. 'dụng',
+'oauth2.invalid.request' => 'Yêu cầu không hợp lệ',
+'oauth2.invalid.client' => 'Khách hàng không hợp lệ',
+'oauth2.invalid.grant' => 'Cấp không hợp lệ',
+'oauth2.login.required' => 'Yêu cầu đăng nhập',
+'oauth2.missing.authentication.code.or.state.parameter' =>
+	'Thiếu mã xác thực hoặc '
+	. 'tham số trạng thái.',
+'oauth2.missing.state.parameter.possible.csrf.attack' =>
+	'Thiếu tham số trạng thái.'
+	. 'Có thể bị tấn công '
+	. 'CSRF',
+'oauth2.server.error' => 'Lỗi máy chủ',
+'oauth2.temporarily.unavailable' => 'Tạm thời không có sẵn',
+'oauth2.test.user.creation.not.allowed.prod.env' =>
+	'Không được phép tạo người '
+	. 'dùng thử nghiệm trong môi '
+	. 'trường sản xuất.',
+'oauth2.unauthorized.client' => 'Khách hàng không được ủy '
+	. 'quyền',
+'oauth2.unsupported.response.type' => 'Loại phản hồi không được '
+	. 'hỗ trợ',
+'oauth2.unsupported.grant.type' => 'Loại tài trợ không được '
+	. 'hỗ trợ',
+'online.payment.apiToken' => 'Mã thông báo API',
+'online.payment.thirdPartyProvider' => 'Nhà cung cấp bên thứ '
+	. 'ba ví dụ như Wonderful',
+'open.banking.pay.with' => 'Thanh toán bằng Open Banking: ',
+'open.banking.not.configured' => 'Open Banking chưa được cấu '
+	. 'hình.'
+	. 'Vui lòng liên hệ bộ '
+	. 'phận hỗ trợ.',
+'radiolist.choice' => 'Lựa chọn danh sách radio',
+'region' => 'Vùng đất',
+'script' => 'Kịch bản',
+'tax.rate.active.not' => 'Cảnh báo:'
+	. 'Không có mức thuế nào '
+	. 'được kích hoạt.'
+	. 'Hãy kích hoạt ít nhất '
+	. 'một mức thuế.'
+	. 'Cài đặt .'
+	. 'Mức thuế',
+'textarea' => 'Khu vực văn bản',
+'two.factor.authentication.invalid.backup.recovery.code' =>
+	'Mã khôi phục sao lưu '
+	. '8 chữ số không hợp '
+	. 'lệ',
+'two.factor.authentication.invalid.totp.code' =>
+	'Mã xác thực một lần '
+	. 'có thời gian 6 chữ '
+	. 'số không hợp lệ',
+'two.factor.authentication.rate.limit.reached' =>
+	'Đã đạt đến giới hạn '
+	. 'tốc độ.'
+	. 'Vui lòng đợi 10 giây.',
+'url' => 'Địa chỉ',
+'variant' => 'Khác nhau',
+'approval.required' => 'Cần phê duyệt',
+'quote.approval.required' => 'Cần phê duyệt báo giá',
+'quote.must.be.approved.first' =>
+	'Báo giá phải được chấp '
+	. 'thuận trước khi chuyển đổi',
 ];
+

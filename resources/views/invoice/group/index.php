@@ -27,7 +27,7 @@ use Yiisoft\Router\CurrentRoute;
  * @var string $csrf
  */
 
-echo $alert;
+echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
@@ -41,27 +41,27 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(Group $model) => Html::encode($model->getId()),
+        content: static fn (Group $model) => Html::encode($model->getId()),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn(Group $model) => Html::encode($model->getName()),
+        content: static fn (Group $model) => Html::encode($model->getName()),
     ),
     new DataColumn(
         'identifier_format',
         header: $translator->translate('identifier.format'),
-        content: static fn(Group $model) => Html::encode($model->getIdentifier_format()),
+        content: static fn (Group $model) => Html::encode($model->getIdentifier_format()),
     ),
     new DataColumn(
         'left_pad',
         header: $translator->translate('left.pad'),
-        content: static fn(Group $model) => Html::encode($model->getLeft_pad()),
+        content: static fn (Group $model) => Html::encode($model->getLeft_pad()),
     ),
     new DataColumn(
         'next_id',
         header: $translator->translate('next.id'),
-        content: static fn(Group $model) => Html::encode($model->getNext_id()),
+        content: static fn (Group $model) => Html::encode($model->getNext_id()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -97,15 +97,15 @@ $columns = [
     ]),
 ];
 
-$toolbarString =
-    Form::tag()->post($urlGenerator->generate('group/index'))->csrf($csrf)->open() .
-    A::tag()
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('group/index'))->csrf($csrf)->open()
+    . A::tag()
     ->href($urlGenerator->generate('group/add'))
     ->addClass('btn btn-info')
     ->content('➕')
-    ->render() .
-    Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-    Form::tag()->close();
+    ->render()
+    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . Form::tag()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

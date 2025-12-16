@@ -92,8 +92,8 @@ if (strlen($clientPhone = $quote->getClient()?->getClient_phone() ?? '') > 0) {
             <tr>
                 <!-- date issued -->
                 <td><?php echo $translator->translate('date.issued') . ':'; ?></td>
-                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDate_created()) ?
-                                               $dateCreated->format('Y-m-d') : ''); ?></td>
+                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDate_created())
+                                               ? $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
             <tr>
                 <td><?php echo $translator->translate('expires') . ': '; ?></td>
@@ -136,7 +136,7 @@ if ($items) {
      * @var App\Invoice\Entity\InvItem $item
      */
     foreach ($items as $item) {
-        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $item->getId());
+        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $item->getId());
         ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>

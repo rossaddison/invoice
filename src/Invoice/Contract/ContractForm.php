@@ -38,17 +38,17 @@ final class ContractForm extends FormModel
         $this->client_id = $contract->getClient_id();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getReference(): string|null
+    public function getReference(): ?string
     {
         return $this->reference;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -63,7 +63,7 @@ final class ContractForm extends FormModel
         return $this->period_end;
     }
 
-    public function getClient_id(): string|null
+    public function getClient_id(): ?string
     {
         return $this->client_id;
     }

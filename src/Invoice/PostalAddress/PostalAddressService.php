@@ -8,7 +8,9 @@ use App\Invoice\Entity\PostalAddress;
 
 final readonly class PostalAddressService
 {
-    public function __construct(private PostalAddressRepository $repository) {}
+    public function __construct(private PostalAddressRepository $repository)
+    {
+    }
 
     /**
      * @param PostalAddress $model

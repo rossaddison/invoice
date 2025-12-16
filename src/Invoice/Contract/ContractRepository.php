@@ -103,7 +103,7 @@ final class ContractRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return Contract|null
      */
-    public function repoContractquery(string $id): Contract|null
+    public function repoContractquery(string $id): ?Contract
     {
         $query = $this->select()
                       ->load('client')

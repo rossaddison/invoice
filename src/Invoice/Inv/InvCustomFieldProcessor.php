@@ -21,7 +21,8 @@ final class InvCustomFieldProcessor implements CustomFieldProcessor
     public function __construct(
         private readonly InvCustomRepository $repository,
         private readonly InvCustomService $service,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function exists(string $entityId, string $customFieldId): bool

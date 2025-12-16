@@ -208,7 +208,7 @@ final class ProfileController extends BaseController
      * @param ProfileRepository $profileRepository
      * @return Profile|null
      */
-    private function profile(CurrentRoute $currentRoute, ProfileRepository $profileRepository): Profile|null
+    private function profile(CurrentRoute $currentRoute, ProfileRepository $profileRepository): ?Profile
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

@@ -30,7 +30,9 @@ class AllowanceCharge
         private int $multiplier_factor_numeric = 0, #[Column(type: 'integer(11)', nullable: false)]
         private int $amount = 0, #[Column(type: 'integer(11)', nullable: false)]
         private int $base_amount = 0, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null) {}
+        private ?int $tax_rate_id = null)
+    {
+    }
 
     public function getId(): string
     {

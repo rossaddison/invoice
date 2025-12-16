@@ -8,7 +8,9 @@ use App\Invoice\Entity\Unit;
 
 final readonly class UnitService
 {
-    public function __construct(private UnitRepository $repository) {}
+    public function __construct(private UnitRepository $repository)
+    {
+    }
 
     /**
      * @param Unit $model

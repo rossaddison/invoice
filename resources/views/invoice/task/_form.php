@@ -90,11 +90,11 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control',
     ])
-    ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable ?
-                         $form->getFinish_date()->format('Y-m-d') : (is_string(
+    ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable
+                         ? $form->getFinish_date()->format('Y-m-d') : (is_string(
                              $form->getFinish_date(),
-                         ) ?
-                         $form->getFinish_date() : '')))
+                         )
+                         ? $form->getFinish_date() : '')))
     ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::tag('br'); ?>
     <?php

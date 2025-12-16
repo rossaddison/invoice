@@ -35,7 +35,7 @@ final class DeliveryForm extends FormModel
         $this->inv_item_id = $delivery->getInv_item_id();
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -80,22 +80,22 @@ final class DeliveryForm extends FormModel
         return $this->end_date;
     }
 
-    public function getDelivery_location_id(): int|null
+    public function getDelivery_location_id(): ?int
     {
         return $this->delivery_location_id;
     }
 
-    public function getDelivery_party_id(): int|null
+    public function getDelivery_party_id(): ?int
     {
         return $this->delivery_party_id;
     }
 
-    public function getInv_id(): int|null
+    public function getInv_id(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getInv_item_id(): int|null
+    public function getInv_item_id(): ?int
     {
         return $this->inv_item_id;
     }

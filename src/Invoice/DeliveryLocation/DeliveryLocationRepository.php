@@ -81,7 +81,7 @@ final class DeliveryLocationRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return DeliveryLocation|null
      */
-    public function repoDeliveryLocationquery(string $id): DeliveryLocation|null
+    public function repoDeliveryLocationquery(string $id): ?DeliveryLocation
     {
         // Delivery Location id defaults to 0 in the Entity Delivery Location
         if ($id > 0) {

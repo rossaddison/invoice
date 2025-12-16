@@ -20,12 +20,12 @@ final class UserClientForm extends FormModel
         $this->user_all_clients = '0';
     }
 
-    public function getUser_id(): int|null
+    public function getUser_id(): ?int
     {
         return $this->user_id;
     }
 
-    public function getClient_id(): int|null
+    public function getClient_id(): ?int
     {
         return $this->client_id;
     }

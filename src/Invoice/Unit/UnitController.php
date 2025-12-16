@@ -180,7 +180,7 @@ final class UnitController extends BaseController
      * @param UnitRepository $unitRepository
      * @return Unit|null
      */
-    private function unit(string $unit_id, UnitRepository $unitRepository): Unit|null
+    private function unit(string $unit_id, UnitRepository $unitRepository): ?Unit
     {
         if ($unit_id) {
             return $unitRepository->repoUnitquery($unit_id);

@@ -28,7 +28,8 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string[]
