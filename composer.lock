@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd0b1598bfa736ec146da5f8acd426bd",
+    "content-hash": "7e1908db5a8e434a552477fbd72a8114",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -2031,16 +2031,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.12.1",
+            "version": "v2.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "935dafc4ac621b544d0ae5fa699f082af87c946f"
+                "reference": "38360e98a05b206caa1a869a3ccebbcc0c4fde76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/935dafc4ac621b544d0ae5fa699f082af87c946f",
-                "reference": "935dafc4ac621b544d0ae5fa699f082af87c946f",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/38360e98a05b206caa1a869a3ccebbcc0c4fde76",
+                "reference": "38360e98a05b206caa1a869a3ccebbcc0c4fde76",
                 "shasum": ""
             },
             "require": {
@@ -2114,7 +2114,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-16T10:18:04+00:00"
+            "time": "2025-12-16T13:30:00+00:00"
         },
         {
             "name": "cycle/schema-builder",
@@ -24781,5 +24781,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
