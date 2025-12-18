@@ -15,6 +15,9 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "                 Invoice SYSTEM MENU (Make targets)"
 	@echo "================================================================================"
 	@echo "make install           - Composer and NPM install (or calls install.bat if found)"
+	@echo "make ext-check         - Check required PHP extensions (pre-install)"
+	@echo "make ext-json          - Check extensions with JSON output"
+	@echo "make ext-silent        - Check extensions silently (exit code only)"
 	@echo "make p                 - Run PHP Psalm"
 	@echo "make pf FILE=src/Foo.php     - Run PHP Psalm on specific file"
 	@echo "make pd DIR=src/           - Run PHP Psalm on directory"
@@ -95,6 +98,34 @@ install: ## Composer and NPM install (or calls install.bat if found)
 		composer install; \
 		npm install; \
 	fi
+endif
+
+#
+# Extension Checker
+#
+
+ifeq ($(PRIMARY_GOAL),ext-check)
+ext-check: ## Check required PHP extensions (based on invoice_build.yml)
+	@echo "================================================================================"
+	@echo "              PHP Extension Checker (Pre-Installation)"
+	@echo "================================================================================"
+	@echo "Checking required PHP extensions for Invoice System..."
+	@echo "Based on invoice_build.yml workflow requirements"
+	@echo ""
+	@php scripts/extension-checker.php
+	@echo ""
+	@echo "[INFO] If extensions are missing, follow the instructions above."
+	@echo "[INFO] You may need to restart WAMP/Apache after making changes."
+endif
+
+ifeq ($(PRIMARY_GOAL),ext-json)
+ext-json: ## Check extensions and output JSON format
+	@php scripts/extension-checker.php --json
+endif
+
+ifeq ($(PRIMARY_GOAL),ext-silent)
+ext-silent: ## Check extensions silently (exit code only)
+	@php scripts/extension-checker.php --silent
 endif
 
 #

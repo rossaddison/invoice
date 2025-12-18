@@ -1,16 +1,18 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { FamilyCommalistComponent } from './family-commalist/family-commalist.component';
+import { InvoiceAmountsComponent } from './invoice-amounts.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FamilyCommalistComponent],
+  imports: [FamilyCommalistComponent, InvoiceAmountsComponent],
   template: `
     <div class="container-fluid">
       <app-family-commalist 
         [initialValue]="initialValue"
         (valueChange)="onValueChange($event)">
       </app-family-commalist>
+      <app-invoice-amounts></app-invoice-amounts>
     </div>
   `,
   styles: [`

@@ -199,6 +199,16 @@ $subMenuPhpInfo = [
         ],
     ],
 ];
+
+$subMenuPrometheus = [
+    0 => [
+        'items' => [
+            'Dashboard' => ['prometheus/dashboard', []],
+            'Raw Metrics' => ['prometheus/metrics', []],
+            'Health Check' => ['prometheus/health', []],
+        ],
+    ],
+];
 $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
     // nav items available in debugMode
@@ -434,6 +444,9 @@ if ((null !== $currentPath) && !$isGuest) {
                 // https://tideways.com/profiler/blog/fine-tune-your-opcache-configuration-to-avoid-caching-suprises
                 DropdownItem::text(PerformanceMetrics::opCacheHealthCheck()),
                 DropdownItem::divider(),
+                DropdownItem::link('Downloaded and loaded php extension for APCu ' . (extension_loaded('apcu') ? '✅' : '❌'),
+                    'https://pecl.php.net/package/APCu/5.1.28/windows'),
+                DropdownItem::divider(),
                 DropdownItem::text(
                     'Left Click Wampserver Icon... Php ... Php Settings ... Memory Limit'),
                 DropdownItem::text(
@@ -448,6 +461,10 @@ if ((null !== $currentPath) && !$isGuest) {
                     'config.params: yiisoft/yii-debug: enabled , disable for improved performance'),
                 DropdownItem::text(
                     'config.params: yiisoft/yii-debug-api: enabled, disable for improved performance'),
+                DropdownItem::divider(),
+                // Prometheus Monitoring Section
+                DropdownItem::text($subMenu->generate('Prometheus Monitoring',
+                    $urlGenerator, $subMenuPrometheus)),
             ),
             // Platform
             Dropdown::widget()
@@ -471,8 +488,9 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link($translator->translate('platform.PhpSupport'),
                     'https://php.net/supported-versions'),
                 DropdownItem::link($translator->translate('platform.update'),
-                    'https://wampserver.aviatechno.net/'),
-                DropdownItem::link('Microsoft Typescript-Go Development Site for Typescript Version 7 (10x faster): Superceding Typescript 5.95', 'https://github.com/microsoft/typescript-go'),    
+                    'https://wampserver.aviatechno.net/'),                
+                DropdownItem::link('Microsoft Typescript-Go Development Site for Typescript Version 7 (10x faster): Superceding Typescript 5.95',
+                    'https://github.com/microsoft/typescript-go'),
                 DropdownItem::link('SonarLint4NetbeansPlugin', 
                     'https://plugins.netbeans.apache.org/catalogue/?id=21'),
                 DropdownItem::link('Eclipse IDE for Php',
@@ -485,7 +503,8 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/'),
                 DropdownItem::link('Html to Markdown',
                     'https://convertsimple.com/convert-html-to-markdown/'),
-                DropdownItem::link('European Invoicing', 
+                DropdownItem::divider(),
+                DropdownItem::link('European Invoicing',
                     'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/Compliance+with+eInvoicing+standard'),
                 DropdownItem::link('European Digital Testing',
                     'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/eInvoicing+Conformance+Testing'),
@@ -517,14 +536,17 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://wtools.io/convert-xml-to-php-array'),
                 DropdownItem::link('Writing XML using Sabre',
                     'https://sabre.io/xml/writing/'),
+                DropdownItem::link('Scotland - e-invoice Template - Lessons Learned',
+                    'https://www.gov.scot/publications/einvoicing-guide/documents/'),    
+                DropdownItem::divider(),
                 DropdownItem::link('Understanding Same Site Cookies',
                     'https://andrewlock.net/understanding-samesite-cookies/#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
+                DropdownItem::divider(),
                 DropdownItem::link('HMRC Developer Hub',
                     'https://developer.service.hmrc.gov.uk/developer/login'),
                 DropdownItem::link('HMRC Developer Hub - Web App Via Server',
                     'https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/'),
-                DropdownItem::link('Scotland - e-invoice Template - Lessons Learned',
-                    'https://www.gov.scot/publications/einvoicing-guide/documents/'),
+                DropdownItem::divider(),
                 DropdownItem::link('German, and Swiss Law Amendments now prioritize Opensource in Public Sector',
                     'https://interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor/news/germanys-ozg-20-favors-open-source-solutions'),
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
@@ -533,7 +555,6 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://wtools.io/convert-json-to-php-array'),
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
                     'https://json-ld.org/playground/'),
-                DropdownItem::link('jQuery UI 1.14.1 (9th March 2025) - Customize download - {keycode; Widgets => datepicker}', 'https://jqueryui.com/download/'),
                 DropdownItem::link('Using ngrok and Wampserver VirtualHosts',
                     'https://ngrok.com/docs/using-ngrok-with/virtualHosts/'),
                 DropdownItem::link('Using ngrok and webhook testing',
@@ -924,6 +945,8 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
         <footer class="container py-4">
                             <?= PerformanceMetrics::widget(); ?>
         </footer>
+
+
         <?php
             echo Html::script('NProgress.done();')->type('module');
 $this->endBody();

@@ -174,6 +174,12 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'onetimepassworderror' => [
                 'onetimePasswordError' => $this->translator->translate('two.factor.authentication.error'),
             ],
+            'onetimepasswordfailure' => [
+                'onetimePasswordFailure' => $this->translator->translate('two.factor.authentication.attempt.failure'),
+            ],
+            'onetimepasswordsuccess' => [
+                'onetimePasswordSuccess' => $this->translator->translate('two.factor.authentication.attempt.success'),
+            ],
             'resetpasswordfailed' => [
                 'resetPasswordFailed' => $this->translator->translate('password.reset.failed'),
             ],

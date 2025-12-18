@@ -64,8 +64,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->liveAdminUserLogin);
-        $I->fillField('#login-password', $this->liveAdminUserPassword);
+        $I->fillField('Login[login]', $this->liveAdminUserLogin);
+        $I->fillField('Login[password]', $this->liveAdminUserPassword);
         $I->checkOption('#login-rememberme');
 
         $I->click('Submit', '#loginForm');
@@ -150,8 +150,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->emptyLogin);
-        $I->fillField('#login-password', $this->emptyPassword);
+        $I->fillField('Login[login]', $this->emptyLogin);
+        $I->fillField('Login[password]', $this->emptyPassword);
 
         $I->click('Submit', '#loginForm');
 
@@ -166,8 +166,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the log in page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->firstUserWrongLogin);
-        $I->fillField('#login-password', $this->firstUserPassword);
+        $I->fillField('Login[login]', $this->firstUserWrongLogin);
+        $I->fillField('Login[password]', $this->firstUserPassword);
         $I->checkOption('#login-rememberme');
 
         $I->click('Submit', '#loginForm');
@@ -182,8 +182,8 @@ final class SignupAndLoginCest
         $I->amGoingTo('go to the login page.');
         $I->amOnPage('/login');
 
-        $I->fillField('#login-login', $this->firstUserLogin);
-        $I->fillField('#login-password', $this->firstUserWrongPassword);
+        $I->fillField('Login[login]', $this->firstUserLogin);
+        $I->fillField('Login[password]', $this->firstUserWrongPassword);
         $I->checkOption('#login-rememberme');
 
         $I->click('Submit', '#loginForm');

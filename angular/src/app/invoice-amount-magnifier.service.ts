@@ -1,0 +1,185 @@
+import { Injectable, OnDestroy } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class InvoiceAmountMagnifierService implements OnDestroy {
+  private magnificationFactor: number = 1.4;
+  private animationDuration: number = 250;
+  private observer?: MutationObserver;
+  private initialized: boolean = false;
+
+  constructor() {
+    this.initializeWhenReady();
+  }
+
+  private initializeWhenReady(): void {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this.initialize());
+    } else {
+      this.initialize();
+    }
+  }
+
+  private initialize(): void {
+    if (!this.initialized) {
+      this.attachMagnifiersToAmounts();
+      this.setupMutationObserver();
+      this.initialized = true;
+    }
+  }
+
+  public reinitialize(): void {
+    this.attachMagnifiersToAmounts();
+  }
+
+  private attachMagnifiersToAmounts(): void {
+    // Target amount elements in invoice table
+    const amountSelectors: string[] = [
+      '.label.label-success', // Total amounts (positive)
+      '.label.label-warning', // Zero amounts  
+      '.label.label-danger'   // Paid amounts (incomplete)
+    ];
+
+    amountSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach((element: Element) => {
+        const htmlElement = element as HTMLElement;
+        
+        if (this.isAmountElement(htmlElement) && !htmlElement.hasAttribute('data-magnifier-initialized')) {
+          this.addMagnificationBehavior(htmlElement);
+          htmlElement.setAttribute('data-magnifier-initialized', 'true');
+        }
+      });
+    });
+  }
+
+  private isAmountElement(element: HTMLElement): boolean {
+    const text = element.textContent?.trim() || '';
+    // Check if content contains numbers with optional decimals and commas
+    const amountPattern = /^[\d,]+\.?\d*$/;
+    return amountPattern.test(text) && text.length > 0;
+  }
+
+  private addMagnificationBehavior(element: HTMLElement): void {
+    // Determine colors based on label type
+    let borderColor = '#007bff';
+    let bgColor = 'rgba(255, 255, 255, 0.95)';
+    
+    if (element.classList.contains('label-success')) {
+      borderColor = '#28a745';
+      bgColor = '#d4edda';
+    } else if (element.classList.contains('label-warning')) {
+      borderColor = '#ffc107';
+      bgColor = '#fff3cd';
+    } else if (element.classList.contains('label-danger')) {
+      borderColor = '#dc3545';
+      bgColor = '#f8d7da';
+    }
+
+    // Store original styles
+    const computedStyle = window.getComputedStyle(element);
+    const originalStyles = {
+      fontSize: computedStyle.fontSize,
+      fontWeight: computedStyle.fontWeight,
+      backgroundColor: computedStyle.backgroundColor,
+      border: computedStyle.border,
+      borderRadius: computedStyle.borderRadius,
+      padding: computedStyle.padding,
+      zIndex: computedStyle.zIndex,
+      position: computedStyle.position,
+      transform: computedStyle.transform,
+      boxShadow: computedStyle.boxShadow
+    };
+
+    // Set base styles
+    element.style.transition = `all ${this.animationDuration}ms ease-in-out`;
+    element.style.cursor = 'pointer';
+    element.classList.add('amount-magnifiable');
+
+    let isHovered = false;
+
+    // Mouse enter event
+    element.addEventListener('mouseenter', () => {
+      if (!isHovered) {
+        isHovered = true;
+        this.applyMagnification(element, originalStyles, borderColor, bgColor);
+      }
+    });
+
+    // Mouse leave event  
+    element.addEventListener('mouseleave', () => {
+      if (isHovered) {
+        isHovered = false;
+        this.removeMagnification(element, originalStyles);
+      }
+    });
+
+    // Click event for mobile/touch devices
+    element.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isHovered) {
+        this.removeMagnification(element, originalStyles);
+        isHovered = false;
+      } else {
+        this.applyMagnification(element, originalStyles, borderColor, bgColor);
+        isHovered = true;
+      }
+    });
+  }
+
+  private applyMagnification(element: HTMLElement, originalStyles: CSSStyleDeclaration, borderColor: string, bgColor: string): void {
+    const currentFontSize = parseFloat(originalStyles.fontSize);
+    const newFontSize = currentFontSize * this.magnificationFactor;
+    
+    element.style.fontSize = `${newFontSize}px`;
+    element.style.fontWeight = 'bold';
+    element.style.backgroundColor = bgColor;
+    element.style.border = `2px solid ${borderColor}`;
+    element.style.borderRadius = '6px';
+    element.style.padding = '8px 12px';
+    element.style.zIndex = '1000';
+    element.style.position = 'relative';
+    element.style.transform = 'scale(1.1)';
+    element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  }
+
+  private removeMagnification(element: HTMLElement, originalStyles: CSSStyleDeclaration): void {
+    const propertiesToRestore = ['fontSize', 'fontWeight', 'backgroundColor', 'border', 'borderRadius', 'padding', 'zIndex', 'position', 'transform', 'boxShadow'];
+    
+    propertiesToRestore.forEach(property => {
+      element.style.setProperty(property, originalStyles.getPropertyValue(property));
+    });
+  }
+
+  private setupMutationObserver(): void {
+    this.observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          // Re-initialize magnification for new elements
+          setTimeout(() => {
+            this.attachMagnifiersToAmounts();
+          }, 100);
+        }
+      });
+    });
+
+    // Observe table container for dynamic content changes
+    const tableContainer = document.querySelector('.table-responsive') || document.body;
+    this.observer.observe(tableContainer, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy();
+  }
+
+  public destroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    this.initialized = false;
+  }
+}

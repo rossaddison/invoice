@@ -144,7 +144,10 @@ $columns = [
         },
         encodeContent: false,
     ),
-    new ActionColumn(buttons: [
+    new ActionColumn(
+        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+        after: Html::closeTag('div'),
+        buttons: [
         new ActionButton(
             content: '🔎',
             url: function (Product $model) use ($urlGenerator): string {
@@ -154,6 +157,7 @@ $columns = [
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('view'),
+                'class' => 'btn btn-outline-primary btn-sm',
             ],
         ),
         new ActionButton(
@@ -165,6 +169,7 @@ $columns = [
             attributes: [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('edit'),
+                'class' => 'btn btn-outline-warning btn-sm',
             ],
         ),
         new ActionButton(
@@ -176,6 +181,7 @@ $columns = [
             attributes: [
                 'title' => $translator->translate('delete'),
                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'class' => 'btn btn-outline-danger btn-sm',
             ],
         ),
     ]),

@@ -62,7 +62,7 @@ echo [4q] Angular: Serve Development                [4r]  Angular: Build Product
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
 echo [5]  Require Checker                           [20]  Exit
 echo [99] System Info / Diagnostics                 [21]  Exit to Current Directory
-echo =================================
+echo =================================                     
 set /p choice="Enter your choice [0-21,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
@@ -186,7 +186,60 @@ pause
 goto menu
 
 :installation_menu
-echo Installation menu...
+cls
+echo ======================================================================================
+echo                            INSTALLATION MENU
+echo ======================================================================================
+echo [0x] Check PHP Extensions (Pre-install)    [3] Full Installation 
+echo [1]  Check System Requirements              [4] Back to Main Menu
+echo [2]  Install Dependencies Only              
+echo ======================================================================================
+set /p install_choice="Enter your choice [0x-4]: "
+
+if "%install_choice%"=="0x" goto check_extensions
+if "%install_choice%"=="1" goto check_requirements  
+if "%install_choice%"=="2" goto install_dependencies
+if "%install_choice%"=="3" goto full_installation
+if "%install_choice%"=="4" goto menu
+echo Invalid choice. Please try again.
+pause
+goto installation_menu
+
+:check_extensions
+cls
+echo ======================================================================================
+echo                     PHP EXTENSION CHECKER (Pre-Installation)
+echo ======================================================================================
+echo Checking required PHP extensions for Invoice System...
+echo Based on invoice_build.yml workflow requirements
+echo.
+php scripts\extension-checker.php
+echo.
+echo [INFO] If extensions are missing, follow the instructions above.
+echo [INFO] You may need to restart WAMP/Apache after making changes.
+pause
+goto installation_menu
+
+:check_requirements
+echo Checking system requirements...
+where php >nul 2>nul || echo [ERROR] PHP not found in PATH
+where composer >nul 2>nul || echo [ERROR] Composer not found in PATH  
+where npm >nul 2>nul || echo [ERROR] npm not found in PATH
+php --version
+composer --version
+npm --version
+pause
+goto installation_menu
+
+:install_dependencies
+echo Installing dependencies only...
+composer install --no-dev --optimize-autoloader
+npm install --production
+pause
+goto installation_menu
+
+:full_installation
+echo Running full installation...
 if exist install.bat (
     call install.bat
 ) else (
@@ -195,7 +248,7 @@ if exist install.bat (
     npm install
 )
 pause
-goto menu
+goto installation_menu
 
 :node_audit
 echo Running npm audit...

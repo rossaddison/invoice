@@ -49,6 +49,7 @@ use App\Invoice\PostalAddress\PostalAddressController;
 use App\Invoice\Product\ProductController;
 use App\Invoice\ProductImage\ProductImageController;
 use App\Invoice\ProductProperty\ProductPropertyController;
+use App\Invoice\Prometheus\PrometheusController;
 use App\Invoice\Profile\ProfileController;
 use App\Invoice\Project\ProjectController;
 use App\Invoice\Quote\QuoteController;
@@ -85,6 +86,23 @@ use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 
 return [
+    // Prometheus monitoring endpoints
+    // This endpoint needs to be publicly accessible for Prometheus server
+    // to scrape it. No authentication middleware needed.
+    Route::get('/metrics')
+        ->action([PrometheusController::class, 'metrics'])
+        ->name('prometheus/metrics'),
+    // Health check endpoint should be accessible for monitoring systems.
+    Route::get('/prometheus/health')
+        ->action([PrometheusController::class, 'health'])
+        ->name('prometheus/health'),
+    // Admin dashboard that can use the existing authentication middleware if needed.
+    Route::get('/prometheus/dashboard')
+        ->middleware(fn (AccessChecker $checker) =>
+            $checker->withPermission(Permissions::EDIT_INV))
+        ->action([PrometheusController::class, 'dashboard'])
+        ->name('prometheus/dashboard'),
+        
     // Lonely pages of site
     Route::get('/')
         ->action([SiteController::class, 'index'])

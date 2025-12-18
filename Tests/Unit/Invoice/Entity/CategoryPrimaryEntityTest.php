@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CategoryPrimaryEntityTest extends TestCase
 {
-    public string $intialCategory = 'Initial Category';
+    public string $initialCategory = 'Initial Category';
     
     public string $updatedCategory = 'Updated Category';
     

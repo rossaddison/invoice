@@ -21,7 +21,7 @@ final class FamilyEntityTest extends Unit
 
     public function testConstructorWithAllParameters(): void
     {
-        $family = new Family('Electronics', 1, 2);
+        $family = new Family('Electronics', 'comma,list', 'prefix', 1, 2);
         
         $this->assertNull($family->getFamily_id());
         $this->assertSame('Electronics', $family->getFamily_name());
@@ -62,12 +62,12 @@ final class FamilyEntityTest extends Unit
 
     public function testCommonFamilyTypes(): void
     {
-        $electronics = new Family('Electronics', 1, 10);
+        $electronics = new Family('Electronics', '', '', 1, 10);
         $this->assertSame('Electronics', $electronics->getFamily_name());
         $this->assertSame('1', $electronics->getCategory_primary_id());
         $this->assertSame('10', $electronics->getCategory_secondary_id());
 
-        $clothing = new Family('Clothing', 2, 20);
+        $clothing = new Family('Clothing', '', '', 2, 20);
         $this->assertSame('Clothing', $clothing->getFamily_name());
         $this->assertSame('2', $clothing->getCategory_primary_id());
         $this->assertSame('20', $clothing->getCategory_secondary_id());
@@ -76,21 +76,21 @@ final class FamilyEntityTest extends Unit
     public function testLongFamilyNames(): void
     {
         $longName = 'Very Long Family Name That Could Potentially Exceed Normal Limits';
-        $family = new Family($longName, 1, 2);
+        $family = new Family($longName, '', '', 1, 2);
         
         $this->assertSame($longName, $family->getFamily_name());
     }
 
     public function testSpecialCharactersInFamilyName(): void
     {
-        $family = new Family('Books & Magazines', 3, 30);
+        $family = new Family('Books & Magazines', '', '', 3, 30);
         
         $this->assertSame('Books & Magazines', $family->getFamily_name());
     }
 
     public function testCompleteFamilySetup(): void
     {
-        $family = new Family('Home & Garden', 4, 40);
+        $family = new Family('Home & Garden', '', '', 4, 40);
         $family->setFamily_name('Home Improvement');
         $family->setCategory_primary_id(5);
         $family->setCategory_secondary_id(50);
@@ -118,7 +118,7 @@ final class FamilyEntityTest extends Unit
 
     public function testZeroCategoryIds(): void
     {
-        $family = new Family('Zero Categories', 0, 0);
+        $family = new Family('Zero Categories', '', '', 0, 0);
         
         $this->assertSame('0', $family->getCategory_primary_id());
         $this->assertSame('0', $family->getCategory_secondary_id());
@@ -126,7 +126,7 @@ final class FamilyEntityTest extends Unit
 
     public function testLargeCategoryIds(): void
     {
-        $family = new Family('Large IDs', 999999, 888888);
+        $family = new Family('Large IDs', '', '', 999999, 888888);
         
         $this->assertSame('999999', $family->getCategory_primary_id());
         $this->assertSame('888888', $family->getCategory_secondary_id());
@@ -146,21 +146,21 @@ final class FamilyEntityTest extends Unit
 
     public function testNullFamilyNameHandling(): void
     {
-        $family = new Family(null, 1, 2);
+        $family = new Family(null, '', '', 1, 2);
         
         $this->assertNull($family->getFamily_name());
     }
 
     public function testUnicodeInFamilyName(): void
     {
-        $family = new Family('Téchnology & Gadgéts 科技', 1, 2);
+        $family = new Family('Téchnology & Gadgéts 科技', '', '', 1, 2);
         
         $this->assertSame('Téchnology & Gadgéts 科技', $family->getFamily_name());
     }
 
     public function testCategoryIdStringConversion(): void
     {
-        $family = new Family('Test', 123, 456);
+        $family = new Family('Test', '', '', 123, 456);
         
         // Verify getters return strings even though setters accept ints
         $this->assertIsString($family->getCategory_primary_id());

@@ -336,7 +336,7 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame('Test State', $deliveryLocation->getState());
         $this->assertSame($this->oneToFive, $deliveryLocation->getZip());
         $this->assertSame($this->testCountry, $deliveryLocation->getCountry());
-        $this->assertSame($this->mainWarehouse, $deliveryLocation->getGlobal_location_number());
+        $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobal_location_number());
         $this->assertSame('GLN', $deliveryLocation->getElectronic_address_scheme());
         $this->assertFalse($deliveryLocation->isNewRecord());
     }

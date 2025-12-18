@@ -2766,5 +2766,102 @@ prior to importing and no existing documents e.g. Invoices.',
   'quote.approval.required' => 'Quote approval required',
   'quote.must.be.approved.first' =>
     'Quote must be approved before conversion',
+  
+  // === ENHANCED TRANSLATION KEYS ===
+  // === VALIDATION MESSAGES ===
+  'validation.invoice.number.required' => 'Invoice number is required',
+  'validation.invoice.date.invalid' => 'Please provide a valid invoice date', 
+  'validation.client.email.format' => 'Client email must be a valid email address',
+  'validation.amount.positive' => 'Amount must be greater than zero',
+  'validation.currency.supported' => 'Currency {currency} is not supported',
+  
+  // === BUSINESS LOGIC ERRORS ===
+  'business.error.invoice.already_paid' => 'Invoice #{invoice_number} is already marked as paid',
+  'business.error.insufficient_stock' => 'Insufficient stock for product {product_name}. Available: {available}, Required: {required}',
+  'business.error.client.credit_limit' => 'Client {client_name} has exceeded credit limit of {limit}',
+  'business.error.payment.gateway_failed' => 'Payment processing failed: {error_message}',
+  
+  // === SUCCESS MESSAGES ===
+  'success.create.invoice' => 'Invoice #{invoice_number} created successfully',
+  'success.update.client' => 'Client {client_name} updated successfully',
+  'success.send.invoice' => 'Invoice #{invoice_number} sent to {client_email}',
+  'success.payment.received' => 'Payment of {amount} received for invoice #{invoice_number}',
+  
+  // === EMAIL TEMPLATES ===
+  'email.invoice.created.subject' => 'New Invoice #{invoice_number} from {company_name}',
+  'email.invoice.reminder.subject' => 'Payment Reminder - Invoice #{invoice_number}',
+  'email.invoice.overdue.subject' => 'OVERDUE: Invoice #{invoice_number} - Immediate Attention Required',
+  
+  'email.invoice.created.body' => '
+        <h2>Dear {client_name},</h2>
+        <p>We have created a new invoice for you:</p>
+        <ul>
+            <li><strong>Invoice Number:</strong> #{invoice_number}</li>
+            <li><strong>Date:</strong> {invoice_date}</li>
+            <li><strong>Due Date:</strong> {due_date}</li>
+            <li><strong>Amount:</strong> {amount}</li>
+        </ul>
+        <p><a href="{view_link}">View Invoice</a> | <a href="{payment_link}">Pay Now</a></p>
+        <p>Payment Terms: {payment_terms}</p>
+        <p>Best regards,<br>{company_name}</p>
+    ',
+  
+  // === DASHBOARD MESSAGES ===
+  'dashboard.overview.title' => 'Financial Overview',
+  'dashboard.total_revenue' => 'Total Revenue This Month',
+  'dashboard.outstanding_invoices' => 'Outstanding Invoices',
+  'dashboard.overdue_amount' => 'Overdue Amount',
+  'dashboard.recent_payments' => 'Recent Payments',
+  
+  // === INVOICE STATUS ===
+  'status.invoice.draft' => 'Draft',
+  'status.invoice.sent' => 'Sent', 
+  'status.invoice.viewed' => 'Viewed',
+  'status.invoice.partial' => 'Partially Paid',
+  'status.invoice.paid' => 'Paid',
+  'status.invoice.overdue' => 'Overdue',
+  'status.invoice.cancelled' => 'Cancelled',
+  
+  // === PAYMENT TERMS ===
+  'payment.terms.immediate' => 'Payment due immediately',
+  'payment.terms.net15' => 'Payment due within 15 days',
+  'payment.terms.net30' => 'Payment due within 30 days',
+  'payment.terms.net60' => 'Payment due within 60 days',
+  
+  // === CURRENCY & NUMBERS ===
+  'currency.symbol.USD' => '$',
+  'currency.symbol.EUR' => '€',
+  'currency.symbol.GBP' => '£',
+  'currency.name.USD' => 'US Dollars',
+  'currency.name.EUR' => 'Euros',
+  'currency.name.GBP' => 'British Pounds',
+  
+  // === TAX MESSAGES ===
+  'tax.vat.rate' => 'VAT Rate: {rate}%',
+  'tax.total.amount' => 'Total Tax: {amount}',
+  'tax.exempt.notice' => 'This transaction is tax-exempt',
+  
+  // === REPORT LABELS ===
+  'report.aging.title' => 'Accounts Receivable Aging Report',
+  'report.revenue.title' => 'Revenue Analysis Report', 
+  'report.client.statement' => 'Client Account Statement',
+  'report.period.from_to' => 'Period: {from_date} to {to_date}',
+  
+  // === API RESPONSES ===
+  'api.error.unauthorized' => 'Authentication required to access this resource',
+  'api.error.forbidden' => 'You do not have permission to access this resource',
+  'api.error.not_found' => 'The requested {resource} was not found',
+  'api.error.validation_failed' => 'Validation failed. Please check your input.',
+  'api.success.created' => '{resource} created successfully',
+  'api.success.updated' => '{resource} updated successfully',
+  'api.success.deleted' => '{resource} deleted successfully',
+  
+  // === PROMETHEUS MONITORING ===
+  'monitoring.health.database' => 'Database Connection',
+  'monitoring.health.cache' => 'Cache System',
+  'monitoring.health.storage' => 'File Storage',
+  'monitoring.metrics.requests' => 'Total Requests',
+  'monitoring.metrics.errors' => 'Error Rate',
+  'monitoring.metrics.response_time' => 'Average Response Time',
 ];
 

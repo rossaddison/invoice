@@ -2059,6 +2059,8 @@ final class InvController extends BaseController
         ?string $queryFilterClientGroup = null,
         #[Query('filterDateCreatedYearMonth')]
         ?string $queryFilterDateCreatedYearMonth = null,
+        #[Query('filterStatus')]
+        ?string $queryFilterStatus = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
@@ -2083,8 +2085,9 @@ final class InvController extends BaseController
             // All, Draft, Sent ... filter governed by routes eg. invoice.myhost/invoice/inv/page/1/status/1 => #[RouteArgument('page')] string $page etc
             $page = $queryPage ?? $page;
             //status 0 => 'all';
-            $status = (int) $status;
-            $invs = $this->invs_status($invRepo, $status);
+            // Use query parameter if provided, otherwise use route parameter
+            $effectiveStatus = isset($queryFilterStatus) && !empty($queryFilterStatus) ? (int) $queryFilterStatus : (int) $status;
+            $invs = $this->invs_status($invRepo, $effectiveStatus);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
             }
@@ -2106,7 +2109,7 @@ final class InvController extends BaseController
                 $invs = $invRepo->filterDateCreatedLike('Y-m', $queryFilterDateCreatedYearMonth);
             }
             $inv_statuses = $invRepo->getStatuses($this->translator);
-            $label = $invRepo->getSpecificStatusArrayLabel((string) $status);
+            $label = $invRepo->getSpecificStatusArrayLabel($status);
             $this->draft_flash($_language);
             $this->mark_sent_flash($_language);
             $parameters = [
@@ -2137,7 +2140,7 @@ final class InvController extends BaseController
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->getSetting('default_list_limit'),
                 'page' => (int) $page > 0 ? (int) $page : 1,
-                'status' => $status,
+                'status' => $effectiveStatus,
                 'qR' => $qR,
                 'dlR' => $dlR,
                 'soR' => $soR,
@@ -2151,6 +2154,7 @@ final class InvController extends BaseController
                 'optionsDataClientGroupDropDownFilter' => $this->optionsDataClientGroupFilter($clientRepo),
                 'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($invRepo),
                 'optionsDataYearMonthDropDownFilter' => $this->optionsDataYearMonthFilter(),
+                'optionsDataStatusDropDownFilter' => $this->optionsDataStatusFilter($invRepo),
                 'modal_add_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString('inv', []),
                 'modal_create_recurring_multiple' => $this->index_modal_create_recurring_multiple($irR),
                 'modal_copy_inv_multiple' => $this->index_modal_copy_inv_multiple(),
@@ -4504,5 +4508,26 @@ final class InvController extends BaseController
             }
         }
         return $optionsDataInvNumbers;
+    }
+
+    /**
+     * Generate status filter options with emojis
+     * @param IR $iR
+     * @return array
+     */
+    public function optionsDataStatusFilter(IR $iR): array
+    {
+        $optionsDataStatus = [];
+        $statuses = $iR->getStatuses($this->translator);
+        
+        /** @var array<int, array<string, string>> $statuses */
+        foreach ($statuses as $statusId => $statusData) {
+            /** @var int $statusId */
+            /** @var array<string, string> $statusData */
+            $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
+            $optionsDataStatus[$statusId] = $emoji;
+        }
+        
+        return $optionsDataStatus;
     }
 }

@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Html\Tag\Span;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
 use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
@@ -71,6 +72,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientsDropdownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientGroupDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataYearMonthDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStatusDropDownFilter
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
@@ -288,134 +290,21 @@ $disabledAddInvoiceButton = A::tag()
         ->id('btn-disabled-invoice-add-button')
         ->render();
 
-$statusBar =  Div::tag()
-    ->content(
-        Div::tag()
-            ->addClass('submenu-row')
-            ->content(
-                Div::tag()
-                    ->addClass('btn-group index-options')
-                    ->content(
-                        Html::a(
-                            $iR->getSpecificStatusArrayEmoji(0) . ' ' . $translator->translate('all'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 0]),
-                            [
-                                'class' => 'btn btn-' . ($status == 0 ? $iR->getSpecificStatusArrayClass(0) : 'btn-default'),
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(1) . ' ' . $translator->translate('draft'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 1]),
-                            [
-                                'class' => 'btn btn-' . ($status == 1 ? $iR->getSpecificStatusArrayClass(1) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(2) . ' ' . $translator->translate('sent'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 2]),
-                            [
-                                'class' => 'btn btn-' . ($status == 2 ? $iR->getSpecificStatusArrayClass(2) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(3) . ' ' . $translator->translate('viewed'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 3]),
-                            [
-                                'class' => 'btn btn-' . ($status == 3 ? $iR->getSpecificStatusArrayClass(3) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(4) . ' ' . $translator->translate('paid'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 4]),
-                            [
-                                'class' => 'btn btn-' . ($status == 4 ? $iR->getSpecificStatusArrayClass(4) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(5) . ' ' . $translator->translate('overdue'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 5]),
-                            [
-                                'class' => 'btn btn-' . ($status == 5 ? $iR->getSpecificStatusArrayClass(5) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(6) . ' ' . $translator->translate('unpaid'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 6]),
-                            [
-                                'class' => 'btn btn-' . ($status == 6 ? $iR->getSpecificStatusArrayClass(6) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(7) . ' ' . $translator->translate('reminder'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 7]),
-                            [
-                                'class' => 'btn btn-' . ($status == 7 ? $iR->getSpecificStatusArrayClass(7) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(8) . ' ' . $translator->translate('letter'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 8]),
-                            [
-                                'class' => 'btn btn-' . ($status == 8 ? $iR->getSpecificStatusArrayClass(8) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(9) . ' ' . $translator->translate('claim'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 9]),
-                            [
-                                'class' => 'btn btn-' . ($status == 9 ? $iR->getSpecificStatusArrayClass(9) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(10) . ' ' . $translator->translate('judgement'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 10]),
-                            [
-                                'class' => 'btn btn-' . ($status == 10 ? $iR->getSpecificStatusArrayClass(10) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(11) . ' ' . $translator->translate('enforcement'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 11]),
-                            [
-                                'class' => 'btn btn-' . ($status == 11 ? $iR->getSpecificStatusArrayClass(11) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(12) . ' ' . $translator->translate('credit.invoice.for.invoice'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 12]),
-                            [
-                                'class' => 'btn btn-' . ($status == 12 ? $iR->getSpecificStatusArrayClass(12) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        )
-                        . Html::a(
-                            $iR->getSpecificStatusArrayEmoji(13) . ' ' . $translator->translate('loss'),
-                            $urlGenerator->generate('inv/index', ['page' => 1, 'status' => 13]),
-                            [
-                                'class' => 'btn btn-' . ($status == 13 ? $iR->getSpecificStatusArrayClass(13) : 'btn-default'),
-                                'style' => 'text-decoration:none',
-                            ],
-                        ),
-                    )
-                    ->encode(false)
-                    ->render(),
-            )
-            ->encode(false)
-            ->render(),
-    )
-    ->encode(false)
-    ->render();
+// Calculate totals for footer
+$totalAmount = 0.0;
+$totalPaid = 0.0;
+$totalBalance = 0.0;
+
+// Get all data for calculations (not just current page)
+
+/**
+ * @var Inv $invoice
+ */
+foreach ($invs as $invoice) {
+    $totalAmount += null!== ($total = $invoice->getInvAmount()->getTotal()) ? $total : 0.00;
+    $totalPaid += null!== ($paid = $invoice->getInvAmount()->getPaid()) ? $paid : 0.00;
+    $totalBalance += null!== ($balance = $invoice->getInvAmount()->getBalance()) ? $balance : 0.00;
+}
 
 /**
  * @var ColumnInterface[] $columns
@@ -446,6 +335,8 @@ $columns = [
     ),
     new ActionColumn(
         header: '',
+        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+        after: Html::closeTag('div'),
         buttons: [
             new ActionButton(
                 // is_read_only false, disable_read_only 0, status draft1 => ✎, not disabled
@@ -542,8 +433,7 @@ $columns = [
                      * @var array $urlMap[$iROString][$dRO]
                      * @var string $urlMap[$iROString][$dRO][$status]
                      */
-                    $url = $urlMap[$iROString][$dRO][$status] ?? '';
-                    return $url;
+                    return $urlMap[$iROString][$dRO][$status] ?? '';
                 },
                 attributes: static function (Inv $inv) use ($s, $translator): array {
                     $iRO = $inv->getIs_read_only();
@@ -557,13 +447,15 @@ $columns = [
                                 /** draft invoices can be edited */
                                 '1' => [
                                     'data-bs-toggle' => 'tooltip',
-                                    'title' => $translator->translate('edit')],
+                                    'title' => $translator->translate('edit'),
+                                    'class' => 'btn btn-outline-warning btn-sm'],
                             ],
                             /** protection is off */
                             '1' => [
                                 '1' => [
                                     'data-bs-toggle' => 'tooltip',
                                     'title' => $translator->translate('security.disable.read.only.true.draft.check.and.mark'),
+                                    'class' => 'btn btn-warning btn-sm',
                                 ],
                             ],
                         ],
@@ -577,6 +469,7 @@ $columns = [
                                     'title' => $translator->translate('sent'),
                                     'disabled' => 'disabled',
                                     'aria-disabled' => 'true',
+                                    'class' => 'btn btn-secondary btn-sm disabled',
                                     'style' => 'pointer-events:none'],
                             ],
                             /** protection is off */
@@ -584,7 +477,8 @@ $columns = [
                                 /** Allow the editing of invoice whilst protection is off */
                                 '2' => [
                                     'data-bs-toggle' => 'tooltip',
-                                    'title' => $translator->translate('security.disable.read.only.true.sent.check.and.mark')],
+                                    'title' => $translator->translate('security.disable.read.only.true.sent.check.and.mark'),
+                                    'class' => 'btn btn-outline-danger btn-sm'],
                             ],
                         ],
                     ];
@@ -627,7 +521,7 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf'),
-                    'class' => 'bi bi-file-pdf',
+                    'class' => 'bi bi-file-pdf btn btn-outline-danger btn-sm dropdown-item',
                 ],
             ),
             new ActionButton(
@@ -638,7 +532,7 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf') . '➡️' . $translator->translate('custom.field'),
-                    'class' => 'bi bi-file-pdf-fill',
+                    'class' => 'bi bi-file-pdf-fill btn btn-danger btn-sm dropdown-item',
                 ],
             ),
             new ActionButton(
@@ -653,18 +547,13 @@ $columns = [
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('email.warning.draft'),
+                    'class' => 'btn btn-outline-primary btn-sm dropdown-item',
                 ],
             ),
         ],
         after: Html::closeTag('div')
                . Html::closeTag('div')
                . Html::closeTag('div'),
-    ),
-    new DataColumn(
-        'id',
-        header: 'id',
-        content: static fn (Inv $model) => (string) $model->getId(),
-        withSorting: true,
     ),                 
     new DataColumn(
         property: 'filterInvNumber',
@@ -694,6 +583,41 @@ $columns = [
                 'class' => 'native-reset',
             ])
             ->optionsData($optionsDataYearMonthDropDownFilter),
+        withSorting: false,
+        visible: $visible,
+    ),
+    new DataColumn(
+        property: 'filterStatus',
+        header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
+                Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 ' . $translator->translate('draft') . '<br/>📨 ' . $translator->translate('sent') . '<br/>👀 ' . $translator->translate('viewed') . '<br/>😀 ' . $translator->translate('paid') . '<br/>🏦 ' . $translator->translate('overdue') . '<br/>📋 ' . $translator->translate('unpaid') . '<br/>📃 ' . $translator->translate('reminder') . '<br/>📄 ' . $translator->translate('letter') . '<br/>⚖️ ' . $translator->translate('claim') . '<br/>🏛️ ' . $translator->translate('judgement') . '<br/>👮 ' . $translator->translate('enforcement') . '<br/>🛑️ ' . $translator->translate('credit.invoice.for.invoice') . '<br/>❎ ' . $translator->translate('loss')) . 
+                '">📊 ' . $translator->translate('status') . '</span>',
+        encodeHeader: false,
+        content: static function (Inv $model) use ($iR, $s, $irR, $translator): string {
+            $statusId = $model->getStatus_id();
+            if ($statusId === null) {
+                return '<span class="label label-default">N/A</span>';
+            }
+            $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
+            $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
+            
+            // Add read-only indicator
+            if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') == '0') {
+                $label .= ' 🚫';
+            }
+            // Add recurring indicator
+            if ($irR->repoCount((string) $model->getId()) > 0) {
+                $label .= ' ' . $translator->translate('recurring') . ' 🔄';
+            }
+            
+            return '<span data-bs-toggle="tooltip" title="' . Html::encode($label) . '" class="label label-' . $iR->getSpecificStatusArrayClass($statusId) . '">' . $emoji . '</span>';
+        },
+        filter: DropdownFilter::widget()
+            ->addAttributes([
+                'name' => 'status',
+                'class' => 'native-reset',
+            ])
+            ->optionsData($optionsDataStatusDropDownFilter),
+        encodeContent: false,
         withSorting: false,
         visible: $visible,
     ),
@@ -792,7 +716,7 @@ $columns = [
             return '0 📧';
         },
         encodeContent: false,
-        visible: $visible,        
+        visible: $visible,
     ),
     // A table of emails specific to the invoice
     new DataColumn(
@@ -827,22 +751,7 @@ $columns = [
         visible: $visibleToggleInvSentLogColumn,
         encodeContent: false,
     ),
-    new DataColumn(
-        'status_id',
-        header: $translator->translate('status'),
-        content: static function (Inv $model) use ($s, $iR, $irR, $translator): Yiisoft\Html\Tag\CustomTag {
-            $label = $iR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
-            if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') == '0') {
-                $label .=  ' 🚫';
-            }
-            if ($irR->repoCount((string) $model->getId()) > 0) {
-                $label .= $translator->translate('recurring') . ' 🔄';
-            }
-            return Html::tag('span', $iR->getSpecificStatusArrayEmoji((int) $model->getStatus_id()) . $label, ['class' => 'label label-' . $iR->getSpecificStatusArrayClass((int) $model->getStatus_id())]);
-        },
-        encodeContent: false,
-        withSorting: true,
-    ),
+
     /**
      * Related logic: see https://github.com/rossaddison/yii-dataview/commit/9e908d87cddd0661b440cb989429e1652e00a9fe
      */
@@ -911,7 +820,7 @@ $columns = [
             }
         },
         encodeContent: false,
-        visible: $visible,        
+        visible: $visible,
     ),
     new DataColumn(
         'date_due',
@@ -945,6 +854,7 @@ $columns = [
                     'class' => 'native-reset',
                 ]),
         withSorting: false,
+        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalAmount, $decimalPlaces))->render(),
     ),
     new DataColumn(
         'id',
@@ -959,6 +869,7 @@ $columns = [
         },
         encodeContent: false,
         withSorting: false,
+        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalPaid, $decimalPlaces))->render(),
     ),
     new DataColumn(
         'id',
@@ -973,6 +884,7 @@ $columns = [
         },
         encodeContent: false,
         withSorting: false,
+        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalBalance, $decimalPlaces))->render(),
     ),
     new DataColumn(
         header: '🚚',
@@ -1053,52 +965,58 @@ $columns = [
         visible: $visible,
         withSorting: false,
     ),
-    new DataColumn(
-        header: $translator->translate('delete'),
-        content: static function (Inv $model) use ($s, $translator, $urlGenerator): A|Label {
-            return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0'
-                    ? A::tag()->content(
-                        Html::tag(
-                            'button',
-                            Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                            [
-                                'type' => 'submit',
-                                'class' => 'dropdown-button',
-                                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                            ],
-                        ),
-                    )->href($urlGenerator->generate('inv/delete', ['id' => $model->getId()]))
-                    : Label::tag()->content('🚫');
-        },
-        encodeContent: false,
+    new ActionColumn(
+        header: '🗑️',
+        before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+        after: Html::closeTag('div'),
+        buttons: [
+            new ActionButton(
+                content: '🗑️',
+                url: static function (Inv $model) use ($s, $urlGenerator): string {
+                    return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0'
+                        ? $urlGenerator->generate('inv/delete', ['id' => $model->getId()])
+                        : '';
+                },
+                attributes: static function (Inv $model) use ($s, $translator): array {
+                    if ($model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0') {
+                        return [
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $translator->translate('delete'),
+                            'class' => 'btn btn-outline-danger btn-sm',
+                            'onclick' => "return confirm('" . $translator->translate('delete.record.warning') . "');"
+                        ];
+                    } else {
+                        return [
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $translator->translate('delete'),
+                            'disabled' => 'disabled',
+                            'aria-disabled' => 'true',
+                            'class' => 'btn btn-secondary btn-sm disabled',
+                            'style' => 'pointer-events:none'
+                        ];
+                    }
+                },
+            ),
+        ],
         visible: $visible,
-        withSorting: false,
     ),
 ];
 
 $toolbarString
     = Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open()
-    . $statusBar
-    . Div::tag()->addClass('float-end m-3')->content($allVisible)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content(Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false))->encode(false)->render()
-    // use the checkboxcolumn to copy multiple invoices accrding to a new date
-    . Div::tag()->addClass('float-end m-3')->content($copyInvoiceMultiple)->encode(false)->render()
-    // use the checkboxcolumn to mark invoices as sent
-    . Div::tag()->addClass('float-end m-3')->content($markAsSent)->encode(false)->render()
-    // use the checkboxcolumn to mark sent invoices as draft
-    . (
-        $s->getSetting('disable_read_only') === (string) 0
-        ? Div::tag()->addClass('float-end m-3')->content($disabledMarkSentAsDraft)->encode(false)->render()
-        : Div::tag()->addClass('float-end m-3')->content($enabledMarkSentAsDraft)->encode(false)->render()
-    )
-    // use the checkboxcolumn to mark invoices as recurring
-    . Div::tag()->addClass('float-end m-3')->content($markAsRecurringMultiple)->encode(false)->render()
-    . (
-        $clientCount == 0
-        ? Div::tag()->addClass('float-end m-3')->content($disabledAddInvoiceButton)->encode(false)->render()
-        : Div::tag()->addClass('float-end m-3')->content($enabledAddInvoiceButton)->encode(false)->render()
-    )
+    . Div::tag()->addClass('float-start')->content(
+        '<h4 class="me-3 d-inline-block">' . $translator->translate('invoice') . '</h4>' 
+        . '<div class="btn-group me-2" role="group">'
+        . $allVisible
+        . $toolbarReset  
+        //. Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false)
+        . $copyInvoiceMultiple
+        . $markAsSent
+        . ($s->getSetting('disable_read_only') === (string) 0 ? $disabledMarkSentAsDraft : $enabledMarkSentAsDraft)
+        . $markAsRecurringMultiple
+        . ($clientCount == 0 ? $disabledAddInvoiceButton : $enabledAddInvoiceButton)
+        . '</div>'
+    )->encode(false)->render()
     . Form::tag()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
@@ -1146,13 +1064,13 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+->footerRowAttributes(['class' => 'card-footer bg-success text-white fw-bold'])
+->enableFooter(true)
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
-->header($translator->translate('invoice'))
 ->id('w3-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
-->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv') . ' ' . $grid_summary)
+->summaryAttributes(['class' => 'mt-3 me-3 summary d-flex justify-content-between align-items-center'])
+->summaryTemplate('<div class="d-flex align-items-center">' . $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv') . ' ' . $grid_summary . '</div>')
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
@@ -1165,3 +1083,174 @@ if ($visible) {
 echo $modal_add_inv;
 echo $modal_create_recurring_multiple;
 echo $modal_copy_inv_multiple;
+
+// Angular Amount Magnifier Integration
+?>
+<div id="angular-amount-magnifier-app">
+    <app-root></app-root>
+</div>
+
+<script>
+// Initialize Angular Amount Magnifier when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Import and initialize the amount magnifier service
+    class InvoiceAmountMagnifier {
+        constructor() {
+            this.magnificationFactor = 1.4;
+            this.animationDuration = 250;
+            this.initialize();
+        }
+
+        initialize() {
+            this.attachMagnifiersToAmounts();
+            this.setupMutationObserver();
+        }
+
+        attachMagnifiersToAmounts() {
+            const amountSelectors = [
+                '.label.label-success',
+                '.label.label-warning', 
+                '.label.label-danger'
+            ];
+
+            amountSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach((element) => {
+                    if (this.isAmountElement(element) && !element.hasAttribute('data-magnifier-initialized')) {
+                        this.addMagnificationBehavior(element);
+                        element.setAttribute('data-magnifier-initialized', 'true');
+                    }
+                });
+            });
+        }
+
+        isAmountElement(element) {
+            const text = element.textContent?.trim() || '';
+            const amountPattern = /^[\d,]+\.?\d*$/;
+            return amountPattern.test(text) && text.length > 0;
+        }
+
+        addMagnificationBehavior(element) {
+            let borderColor = '#007bff';
+            let bgColor = 'rgba(255, 255, 255, 0.95)';
+            
+            if (element.classList.contains('label-success')) {
+                borderColor = '#28a745';
+                bgColor = '#d4edda';
+            } else if (element.classList.contains('label-warning')) {
+                borderColor = '#ffc107';
+                bgColor = '#fff3cd';
+            } else if (element.classList.contains('label-danger')) {
+                borderColor = '#dc3545';
+                bgColor = '#f8d7da';
+            }
+
+            const computedStyle = window.getComputedStyle(element);
+            const originalStyles = {
+                fontSize: computedStyle.fontSize,
+                fontWeight: computedStyle.fontWeight,
+                backgroundColor: computedStyle.backgroundColor,
+                border: computedStyle.border,
+                borderRadius: computedStyle.borderRadius,
+                padding: computedStyle.padding,
+                zIndex: computedStyle.zIndex,
+                position: computedStyle.position,
+                transform: computedStyle.transform,
+                boxShadow: computedStyle.boxShadow
+            };
+
+            element.style.transition = `all ${this.animationDuration}ms ease-in-out`;
+            element.style.cursor = 'pointer';
+            element.classList.add('amount-magnifiable');
+
+            let isHovered = false;
+
+            element.addEventListener('mouseenter', () => {
+                if (!isHovered) {
+                    isHovered = true;
+                    this.applyMagnification(element, originalStyles, borderColor, bgColor);
+                }
+            });
+
+            element.addEventListener('mouseleave', () => {
+                if (isHovered) {
+                    isHovered = false;
+                    this.removeMagnification(element, originalStyles);
+                }
+            });
+
+            element.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (isHovered) {
+                    this.removeMagnification(element, originalStyles);
+                    isHovered = false;
+                } else {
+                    this.applyMagnification(element, originalStyles, borderColor, bgColor);
+                    isHovered = true;
+                }
+            });
+        }
+
+        applyMagnification(element, originalStyles, borderColor, bgColor) {
+            const currentFontSize = parseFloat(originalStyles.fontSize);
+            const newFontSize = currentFontSize * this.magnificationFactor;
+            
+            element.style.fontSize = `${newFontSize}px`;
+            element.style.fontWeight = 'bold';
+            element.style.backgroundColor = bgColor;
+            element.style.border = `2px solid ${borderColor}`;
+            element.style.borderRadius = '6px';
+            element.style.padding = '8px 12px';
+            element.style.zIndex = '1000';
+            element.style.position = 'relative';
+            element.style.transform = 'scale(1.1)';
+            element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        }
+
+        removeMagnification(element, originalStyles) {
+            Object.keys(originalStyles).forEach(property => {
+                element.style[property] = originalStyles[property];
+            });
+        }
+
+        setupMutationObserver() {
+            this.observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        setTimeout(() => {
+                            this.attachMagnifiersToAmounts();
+                        }, 100);
+                    }
+                });
+            });
+
+            const tableContainer = document.querySelector('.table-responsive') || document.body;
+            this.observer.observe(tableContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
+    }
+
+    // Initialize the amount magnifier
+    new InvoiceAmountMagnifier();
+});
+</script>
+
+<style>
+.amount-magnifiable {
+    transition: all 0.25s ease-in-out;
+    display: inline-block;
+}
+
+.amount-magnifiable:hover {
+    cursor: pointer;
+}
+
+/* Ensure magnified elements appear above other content */
+.amount-magnifiable[style*="z-index: 1000"] {
+    z-index: 1000 !important;
+    position: relative !important;
+}
+</style>
+<?php
