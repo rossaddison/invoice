@@ -1,12 +1,16 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { FamilyCommalistComponent } from './family-commalist/family-commalist.component';
 import { InvoiceAmountsComponent } from './invoice-amounts.component';
+import { FlashMessageControlsComponent } from './flash-message-controls/flash-message-controls.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FamilyCommalistComponent, InvoiceAmountsComponent],
+  imports: [FamilyCommalistComponent, InvoiceAmountsComponent, FlashMessageControlsComponent],
   template: `
+    <!-- Flash Message Controls (always present) -->
+    <app-flash-message-controls></app-flash-message-controls>
+    
     <div class="container-fluid">
       <app-family-commalist 
         [initialValue]="initialValue"

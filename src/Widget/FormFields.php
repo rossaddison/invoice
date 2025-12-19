@@ -457,8 +457,7 @@ final readonly class FormFields
             ->addInputAttributes(['class' => 'form-control', 'id' => 'client_language'])
             ->value(strlen($form->getClient_language() ?? '') > 0 ? $form->getClient_language() : $selectedLanguage)
             ->optionsData($languageOptions)
-            ->required(true)
-            ->hint($this->translator->translate('hint.this.field.is.required'))
+            ->required(false)
             ->render();
     }
 
@@ -476,8 +475,7 @@ final readonly class FormFields
             ])
             ->value($form->getClient_country() ?? $selectedCountry)
             ->optionsData($countryOptions)
-            ->required(true)
-            ->hint($this->translator->translate('hint.this.field.is.required'))
+            ->required(false)
             ->render();
     }
 

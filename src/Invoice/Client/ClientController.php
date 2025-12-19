@@ -500,6 +500,7 @@ final class ClientController extends BaseController
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
             'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
             'urlCreator' => $urlCreator,
+            'visible' => $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }

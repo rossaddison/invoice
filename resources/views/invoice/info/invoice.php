@@ -51,6 +51,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>19th December 2025</b></p>
+<p>Reduce the number of required fields on the client index.</p>
+<p>Flash messages can be paused with angular particularly the info/invoice.php file.</p>
+<p>Hide and unhide functionality to columns applied to the product and the client index as well.</p>
 <p><b>14th December 2025</b></p>
 <p>Product Generator created. It uses the family_commalist field and prefixes the 
    family_productprefix field to generate products with their product names. An angular number picker has been

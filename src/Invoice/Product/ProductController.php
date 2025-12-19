@@ -465,6 +465,7 @@ final class ProductController extends BaseController
             /** @var string $query_params['sort'] */
             'sortString' => $query_params['sort'] ?? '-id, -product_sku',
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
+            'visible' => $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }

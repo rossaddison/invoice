@@ -60,6 +60,29 @@ if (empty($flashMessages)) {
     z-index: 1051;
     border: 2px solid white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.countdown-timer:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.countdown-timer.paused {
+    background: rgba(255, 165, 0, 0.8);
+}
+
+.countdown-timer.paused:hover {
+    background: rgba(255, 165, 0, 1);
+}
+
+.pause-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8px;
+    z-index: 1;
 }
 
 .countdown-progress {
@@ -93,7 +116,8 @@ class FlashMessageTimer {
         this.minDuration = 2000; // Minimum 2 seconds
         this.maxDuration = 15000; // Maximum 15 seconds
         this.interval = 100; // Update every 100ms
-        this.timers = new Map();
+        this.timers = new Map(); // Map of alert -> timer data
+        this.paused = new Map(); // Map of alert -> pause state
     }
 
     calculateDuration(text) {
@@ -140,17 +164,27 @@ class FlashMessageTimer {
         const initialSeconds = Math.ceil(duration / 1000);
         const timerElement = document.createElement('div');
         timerElement.className = 'countdown-timer';
+        timerElement.title = 'Click to pause/resume timer';
         timerElement.innerHTML = `
             <div class="countdown-progress"></div>
             <span class="countdown-text">${initialSeconds}</span>
+            <span class="pause-button">⏸️</span>
         `;
         container.appendChild(timerElement);
 
+        // Initialize pause state
+        this.paused.set(alert, false);
+
         let remaining = duration;
-        const startTime = Date.now();
+        let startTime = Date.now();
+        let pausedTime = 0;
 
         const updateTimer = () => {
-            const elapsed = Date.now() - startTime;
+            if (this.paused.get(alert)) {
+                return; // Skip update when paused
+            }
+            
+            const elapsed = Date.now() - startTime - pausedTime;
             remaining = Math.max(0, duration - elapsed);
             
             const seconds = Math.ceil(remaining / 1000);
@@ -158,10 +192,12 @@ class FlashMessageTimer {
             
             const progressElement = timerElement.querySelector('.countdown-progress');
             const textElement = timerElement.querySelector('.countdown-text');
+            const pauseButtonElement = timerElement.querySelector('.pause-button');
             
-            if (progressElement && textElement) {
+            if (progressElement && textElement && pauseButtonElement) {
                 progressElement.style.setProperty('--progress', progress + '%');
                 textElement.textContent = seconds;
+                pauseButtonElement.textContent = this.paused.get(alert) ? '▶️' : '⏸️';
             }
 
             if (remaining <= 0) {
@@ -169,21 +205,70 @@ class FlashMessageTimer {
             }
         };
 
+        // Add pause/resume click handler
+        timerElement.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.togglePause(alert, timerElement);
+        });
+
         // Update immediately and then set interval
         updateTimer();
         const intervalId = setInterval(updateTimer, this.interval);
         
-        // Store timer reference
-        this.timers.set(alert, intervalId);
+        // Store timer reference with additional data
+        this.timers.set(alert, {
+            intervalId: intervalId,
+            startTime: startTime,
+            duration: duration,
+            remaining: remaining,
+            pausedTime: 0,
+            container: container
+        });
 
         // Handle manual close button
         const closeButton = alert.querySelector('.btn-close');
         if (closeButton) {
             closeButton.addEventListener('click', () => {
-                clearInterval(intervalId);
-                this.timers.delete(alert);
+                const timerData = this.timers.get(alert);
+                if (timerData) {
+                    clearInterval(timerData.intervalId);
+                }
+                this.cleanupTimer(alert);
             });
         }
+    }
+
+    togglePause(alert, timerElement) {
+        const isPaused = this.paused.get(alert);
+        const timerData = this.timers.get(alert);
+        
+        if (!timerData) return;
+
+        if (isPaused) {
+            // Resume: add paused duration to total pausedTime
+            timerData.pausedTime += Date.now() - timerData.pauseStartTime;
+            this.paused.set(alert, false);
+            timerElement.classList.remove('paused');
+            timerElement.title = 'Click to pause timer';
+        } else {
+            // Pause: record when we paused
+            timerData.pauseStartTime = Date.now();
+            this.paused.set(alert, true);
+            timerElement.classList.add('paused');
+            timerElement.title = 'Click to resume timer';
+        }
+
+        // Update pause button icon immediately
+        const pauseButtonElement = timerElement.querySelector('.pause-button');
+        if (pauseButtonElement) {
+            pauseButtonElement.textContent = this.paused.get(alert) ? '▶️' : '⏸️';
+        }
+    }
+
+    cleanupTimer(alert) {
+        this.timers.delete(alert);
+        this.paused.delete(alert);
     }
 
     hideAlert(alert, container) {
@@ -193,7 +278,7 @@ class FlashMessageTimer {
             if (container && container.parentNode) {
                 container.parentNode.removeChild(container);
             }
-            this.timers.delete(alert);
+            this.cleanupTimer(alert);
         }, 500); // Match CSS transition duration
     }
 }
@@ -203,6 +288,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing flash timer'); // Debug log
     
     const flashTimer = new FlashMessageTimer();
+    
+    // Expose globally for Angular integration
+    window.flashMessageTimer = flashTimer;
+    window.flashMessageTimerInstance = flashTimer;
     
     // Small delay to ensure all elements are rendered
     setTimeout(() => {

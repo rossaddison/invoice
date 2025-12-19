@@ -40,6 +40,7 @@ use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator as FastRouteGenerator;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -508,29 +509,30 @@ final class SettingController extends BaseController
         return $this->webService->getRedirectResponse('site/index');
     }
 
-    public function visible(): Response
+    public function visible(#[RouteArgument('origin')] string $origin): Response
     {
+        
         $setting = $this->sR->withKey('columns_all_visible');
         if ($setting) {
             if ($setting->getSetting_value() == '0') {
                 $setting->setSetting_value('1');
                 $this->sR->save($setting);
-                return $this->webService->getRedirectResponse('inv/index');
+                return $this->webService->getRedirectResponse($origin . '/index');
             }
             if ($setting->getSetting_value() == '1') {
                 $setting->setSetting_value('0');
                 $this->sR->save($setting);
-                return $this->webService->getRedirectResponse('inv/index');
+                return $this->webService->getRedirectResponse($origin . '/index');
             }
             $setting->setSetting_value('0');
             $this->sR->save($setting);
-            return $this->webService->getRedirectResponse('inv/index');
+            return $this->webService->getRedirectResponse($origin . '/index');
         }
         $new_setting = new Setting();
         $new_setting->setSetting_key('columns_all_visible');
         $this->sR->save($new_setting);
 
-        return $this->webService->getRedirectResponse('inv/index');
+        return $this->webService->getRedirectResponse($origin . '/index');
     }
 
     /**

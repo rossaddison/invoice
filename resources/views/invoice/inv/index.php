@@ -255,7 +255,7 @@ $allVisible = A::tag()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
         ->addClass('btn btn-warning me-1 ajax-loader')
         ->content('↔️')
-        ->href($urlGenerator->generate('setting/visible'))
+        ->href($urlGenerator->generate('setting/visible', ['origin' => 'inv']))
         ->id('btn-all-visible')
         ->render();
 
@@ -491,9 +491,9 @@ $columns = [
                     $attributes = $attributesMap[$iROString][$dRO][$status] ?? [];
                     return $attributes;
                 },
-            ),            
-        ],    
-    ),            
+            ),
+        ],
+    ),
     new ActionColumn(
         header: '',
         before: Html::openTag('div', ['class' => 'dropdown'])
@@ -554,7 +554,7 @@ $columns = [
         after: Html::closeTag('div')
                . Html::closeTag('div')
                . Html::closeTag('div'),
-    ),                 
+    ),
     new DataColumn(
         property: 'filterInvNumber',
         header: $translator->translate('number'),

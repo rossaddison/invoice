@@ -16,6 +16,7 @@ use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
@@ -30,6 +31,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlFastRouteGenerator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
+ * @var bool $visible
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
@@ -41,11 +43,19 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
+$allVisible = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+        ->addClass('btn btn-warning me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/visible', ['origin' => 'product']))
+        ->id('btn-all-visible')
+        ->render();
+
 $toolbarReset = A::tag()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'product/index'))
+    ->href($urlGenerator->generate('product/index'))
     ->id('btn-reset')
     ->render();
 
@@ -72,7 +82,12 @@ $columns = [
         header: $translator->translate('family.name'),
         encodeHeader: true,
         content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
-        filter: (new DropdownFilter())->optionsData($optionsDataFamiliesDropdownFilter),
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'name' => 'family_id',
+                    'class' => 'native-reset',
+                ])
+                ->optionsData($optionsDataFamiliesDropdownFilter),
         visible: true,
         withSorting: true,
     ),
@@ -89,7 +104,12 @@ $columns = [
         header: $translator->translate('product.sku'),
         encodeHeader: true,
         content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
-        filter: (new DropdownFilter())->optionsData($optionsDataProductsDropdownFilter),
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'name' => 'product_sku',
+                    'class' => 'native-reset',
+                ])
+                ->optionsData($optionsDataProductsDropdownFilter),
         visible: true,
         withSorting: false,
     ),
@@ -97,25 +117,33 @@ $columns = [
         property: 'product_description',
         header: $translator->translate('product.description'),
         content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
+        visible: true,
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_price',
         header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
         content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
-        filter: true,
+        filter: TextInputFilter::widget()
+                ->addAttributes([
+                    'style' => 'max-width: 50px',
+                    'class' => 'native-reset',
+                ]),
+        visible: true,
         withSorting: false,
     ),
     new DataColumn(
         property: 'product_price_base_quantity',
         header: $translator->translate('product.price.base.quantity'),
         content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
+        visible: $visible,
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_unit',
         header: $translator->translate('product.unit'),
         content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
+        visible: true,
     ),
     new DataColumn(
         property: 'tax_rate_id',
@@ -123,6 +151,7 @@ $columns = [
         content: static fn (Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
                     ? Html::encode($model->getTaxrate()?->getTaxRateName())
                     : $translator->translate('none'),
+        visible: $visible,
         withSorting: true,
     ),
     new DataColumn(
@@ -143,6 +172,7 @@ $columns = [
             );
         },
         encodeContent: false,
+        visible: $visible,
     ),
     new ActionColumn(
         before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
@@ -208,19 +238,35 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
-    . A::tag()
-    ->href($urlGenerator->generate('product/add'))
-    ->addClass('btn btn-info')
-    ->content('➕')
-    ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+// Add left-aligned wrapper when additional columns are visible to accommodate more columns
+$tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
+
+$toolbarString
+    = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
+    . Div::tag()->addClass('float-start')->content(
+        '<h4 class="me-3 d-inline-block">' . $translator->translate('products') . '</h4>' 
+        . '<div class="btn-group me-2" role="group">'
+        . $allVisible
+        . $toolbarReset
+        . $toolbarFilter
+        . A::tag()
+            ->href($urlGenerator->generate('product/add'))
+            ->addClass('btn btn-info')
+            ->content('➕')
+            ->render()
+        . '</div>'
+    )->encode(false)->render()
     . Form::tag()->close();
+
+echo $toolbarString;
+
+if ($visible) {
+    echo '<div class="text-start">';
+}
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-product'])
+->tableAttributes(['class' => $tableOrTableResponsive . ' table-striped text-center h-75','id' => 'table-product'])
 /** @psalm-suppress InvalidArgument */
 ->columns(...$columns)
 ->dataReader($sortedAndPagedPaginator)
@@ -233,7 +279,6 @@ echo GridView::widget()
 // the down arrow will appear if column values are descending
 ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-->header($translator->translate('products'))
 ->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
@@ -242,5 +287,9 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlFastRouteGenerator, 'product') . ' ' . $grid_summary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
-->noResultsText($translator->translate('no.records'))
-->toolbar($toolbarString);
+->noResultsText($translator->translate('no.records'));
+
+// Close the left-aligned wrapper div when additional columns are visible
+if ($visible) {
+    echo '</div>';
+}

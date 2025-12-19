@@ -8,6 +8,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Span;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
@@ -29,6 +30,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator
  * @var array $invoices
  * @var bool $canEdit
+ * @var bool $visible
  * @var int $active
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
@@ -39,6 +41,14 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
+
+$allVisible = A::tag()
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+        ->addClass('btn btn-warning me-1 ajax-loader')
+        ->content('↔️')
+        ->href($urlGenerator->generate('setting/visible', ['origin' => 'client']))
+        ->id('btn-all-visible')
+        ->render();
 
 $columns = [
     new DataColumn(
@@ -199,7 +209,12 @@ $columns = [
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
-        filter: $optionsDataClientNameDropdownFilter,
+        filter: DropdownFilter::widget()
+            ->addAttributes([
+                'name' => 'number',
+                'class' => 'native-reset',
+            ])
+            ->optionsData($optionsDataClientNameDropdownFilter),
         withSorting: false,
     ),
     new DataColumn(
@@ -212,7 +227,12 @@ $columns = [
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
-        filter: $optionsDataClientSurnameDropdownFilter,
+        filter: DropdownFilter::widget()
+            ->addAttributes([
+                'name' => 'number',
+                'class' => 'native-reset',
+            ])
+            ->optionsData($optionsDataClientSurnameDropdownFilter),
         withSorting: false,
     ),
     new DataColumn(
@@ -269,6 +289,9 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
+// Add left-aligned wrapper when additional columns are visible to accommodate more columns
+$tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
+
 $toolbarString
     = Form::tag()
     ->post($urlGenerator->generate('client/index'))
@@ -277,7 +300,8 @@ $toolbarString
     . Div::tag()
         ->addClass('btn-group')
         ->content(
-            $gridComponents->toolbarReset($urlGenerator)
+            $allVisible
+            . $gridComponents->toolbarReset($urlGenerator)
             . A::tag()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
@@ -302,9 +326,13 @@ $toolbarString
         ->encode(false)->render()
     . Form::tag()->close();
 
+if ($visible) {
+    echo '<div class="text-start">';
+}
+
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-client'])
+->tableAttributes(['class' => $tableOrTableResponsive . ' table-striped text-center h-75','id' => 'table-client'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->urlCreator($urlCreator)
@@ -326,5 +354,10 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
+
+// Close the left-aligned wrapper div when additional columns are visible
+if ($visible) {
+    echo '</div>';
+}
 
 echo $modal_create_client;

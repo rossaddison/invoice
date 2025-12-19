@@ -134,7 +134,7 @@ foreach ($s->locale_language_array() as $language) {
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= $formFields->clientTextField($form, 'client_address_1', 'street.address', true); ?>
+            <?= $formFields->clientTextField($form, 'client_address_1', 'street.address', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::tag('br'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -144,10 +144,10 @@ foreach ($s->locale_language_array() as $language) {
             <?= $formFields->clientTextField($form, 'client_building_number', 'client.building.number', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= $formFields->clientTextField($form, 'client_city', 'city', true); ?>
+            <?= $formFields->clientTextField($form, 'client_city', 'city', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= $formFields->clientTextField($form, 'client_state', 'state', true); ?>
+            <?= $formFields->clientTextField($form, 'client_state', 'state', false); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= $formFields->clientTextField($form, 'client_zip', 'zip', false); ?>
@@ -200,13 +200,12 @@ foreach ($countries as $cldr => $country) {
         if ($postal_address_count > 0 && $origin == 'edit') { ?>
                     <?= Field::select($form, 'postaladdress_id')
             ->label($translator->translate('client.postaladdress.available'))
-            ->required(true)
+            ->required(false)
             ->addInputAttributes([
                 'value' => Html::encode($form->getPostaladdress_id() ?? ''),
                 'class' => 'form-control  alert alert-warning',
             ])
-            ->optionsData($optionsDataPostalAddresses)
-            ->hint($translator->translate('hint.this.field.is.required'));
+            ->optionsData($optionsDataPostalAddresses);
             ?>
                 <?php
         }
@@ -273,13 +272,11 @@ echo Field::date($form, 'client_birthdate')
         'class' => 'form-control',
         'id' => 'client_age',
     ])
-    ->required(true)
+    ->required(false)
     //->min(16) not necessary Related logic: see ClientForm
     // #[Integer(min: 16)]
-    // #[Required]
     // private ?int $client_age = null;
-    ->step(1)
-    ->hint($translator->translate('client.age.hint'))
+    ->step(1);
 ?>
             <?= $formFields->clientTextField($form, 'client_avs', 'sumex.ssn', false); ?>
             <?= $formFields->clientTextField($form, 'client_insurednumber', 'sumex.insurednumber', false); ?>

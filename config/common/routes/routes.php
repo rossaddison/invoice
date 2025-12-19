@@ -1839,7 +1839,7 @@ return [
                 ->name('setting/toggleinvsentlogcolumn')
                 ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([SettingController::class, 'unhideOrHideToggleInvSentLogColumn']),
-            Route::methods([Method::GET, Method::POST], '/setting/visible')
+            Route::methods([Method::GET, Method::POST], '/setting/visible/{origin}')
                 ->name('setting/visible')
                 ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permissions::EDIT_INV))
                 ->action([SettingController::class, 'visible']),
