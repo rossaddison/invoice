@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65ff6aec1a5bec718886d362b5904fa5",
+    "content-hash": "27d2c9ee41461c3f35c4a6a611596e8a",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -13232,28 +13232,29 @@
         },
         {
             "name": "yiisoft/access",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/access.git",
-                "reference": "15bda3b270b99af13fbb735589e133d251d2d126"
+                "reference": "434612e7a26108d0ec97223c882f3c4cafded037"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/access/zipball/15bda3b270b99af13fbb735589e133d251d2d126",
-                "reference": "15bda3b270b99af13fbb735589e133d251d2d126",
+                "url": "https://api.github.com/repos/yiisoft/access/zipball/434612e7a26108d0ec97223c882f3c4cafded037",
+                "reference": "434612e7a26108d0ec97223c882f3c4cafded037",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0"
+                "php": "8.0 - 8.5"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.66",
                 "maglnet/composer-require-checker": "^4.4",
-                "phpunit/phpunit": "^9.6",
-                "rector/rector": "^0.17.0",
+                "phpunit/phpunit": "^9.6.22",
+                "rector/rector": "^2.0.8",
                 "roave/infection-static-analysis-plugin": "^1.25",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.3"
+                "spatie/phpunit-watcher": "^1.23.6",
+                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.5"
             },
             "type": "library",
             "autoload": {
@@ -13276,7 +13277,7 @@
             "support": {
                 "chat": "https://t.me/yii3en",
                 "forum": "https://www.yiiframework.com/forum/",
-                "irc": "irc://irc.freenode.net/yii",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/access/issues?state=open",
                 "source": "https://github.com/yiisoft/access",
                 "wiki": "https://www.yiiframework.com/wiki/"
@@ -13291,7 +13292,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2023-08-07T07:09:40+00:00"
+            "time": "2025-12-13T10:12:01+00:00"
         },
         {
             "name": "yiisoft/active-record",
@@ -13928,22 +13929,22 @@
         },
         {
             "name": "yiisoft/config",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/config.git",
-                "reference": "121d6ce7bb994abf2b998bbf1de646f684812ecd"
+                "reference": "a760058cd3434f057d0ab5b2f841021859b5084b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/config/zipball/121d6ce7bb994abf2b998bbf1de646f684812ecd",
-                "reference": "121d6ce7bb994abf2b998bbf1de646f684812ecd",
+                "url": "https://api.github.com/repos/yiisoft/config/zipball/a760058cd3434f057d0ab5b2f841021859b5084b",
+                "reference": "a760058cd3434f057d0ab5b2f841021859b5084b",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
                 "php": "8.1 - 8.5",
-                "symfony/console": "^5.4.11|^6.0.11|^7",
+                "symfony/console": "^5.4.11 || ^6.0.11 || ^7 || ^8",
                 "yiisoft/arrays": "^3.0",
                 "yiisoft/strings": "^2.0",
                 "yiisoft/var-dumper": "^1.1"
@@ -13952,8 +13953,7 @@
                 "bamarni/composer-bin-plugin": "^1.8.3",
                 "composer/composer": "^2.8.5",
                 "phpunit/phpunit": "^10.5.44",
-                "rector/rector": "^2.0.7",
-                "spatie/phpunit-watcher": "^1.24"
+                "rector/rector": "^2.0.7"
             },
             "type": "composer-plugin",
             "extra": {
@@ -13998,7 +13998,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-01T19:20:16+00:00"
+            "time": "2025-12-19T19:11:23+00:00"
         },
         {
             "name": "yiisoft/cookies",
@@ -16377,21 +16377,21 @@
         },
         {
             "name": "yiisoft/rbac",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/rbac.git",
-                "reference": "396e661cb0f5ce6b63583617e2d01ef391c32356"
+                "reference": "229a47e0af4ede19dfe6da2220af7cabee724dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/rbac/zipball/396e661cb0f5ce6b63583617e2d01ef391c32356",
-                "reference": "396e661cb0f5ce6b63583617e2d01ef391c32356",
+                "url": "https://api.github.com/repos/yiisoft/rbac/zipball/229a47e0af4ede19dfe6da2220af7cabee724dbf",
+                "reference": "229a47e0af4ede19dfe6da2220af7cabee724dbf",
                 "shasum": ""
             },
             "require": {
                 "php": "8.1 - 8.5",
-                "yiisoft/access": "2.0",
+                "yiisoft/access": "^2.0",
                 "yiisoft/friendly-exception": "^1.1"
             },
             "require-dev": {
@@ -16454,7 +16454,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-11T06:59:48+00:00"
+            "time": "2025-12-19T12:14:21+00:00"
         },
         {
             "name": "yiisoft/rbac-php",
@@ -18244,34 +18244,34 @@
         },
         {
             "name": "yiisoft/yii-runner",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-runner.git",
-                "reference": "69d8392ecc0c9e47ac7d5a56c1a8596d5c1ac896"
+                "reference": "8412249e76e58a71903df17b06e69900c705af7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-runner/zipball/69d8392ecc0c9e47ac7d5a56c1a8596d5c1ac896",
-                "reference": "69d8392ecc0c9e47ac7d5a56c1a8596d5c1ac896",
+                "url": "https://api.github.com/repos/yiisoft/yii-runner/zipball/8412249e76e58a71903df17b06e69900c705af7b",
+                "reference": "8412249e76e58a71903df17b06e69900c705af7b",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
-                "psr/container": "^1.0|^2.0",
+                "php": "8.0 - 8.5",
+                "psr/container": "^1.0 || ^2.0",
                 "yiisoft/config": "^1.1",
-                "yiisoft/definitions": "^1.0|^2.0|^3.0",
+                "yiisoft/definitions": "^1.0 || ^2.0 || ^3.0",
                 "yiisoft/di": "^1.0",
                 "yiisoft/yii-event": "^2.0"
             },
             "require-dev": {
-                "maglnet/composer-require-checker": "^4.2",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^1.0.0",
-                "roave/infection-static-analysis-plugin": "^1.20",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.21",
-                "yiisoft/test-support": "^3.0"
+                "maglnet/composer-require-checker": "^4.4",
+                "phpunit/phpunit": "^9.6.22",
+                "rector/rector": "^2.0.11",
+                "roave/infection-static-analysis-plugin": "^1.25",
+                "spatie/phpunit-watcher": "^1.23.6",
+                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.10",
+                "yiisoft/test-support": "^3.0.2"
             },
             "suggest": {
                 "yiisoft/yii-runner-console": "Allows to run console application",
@@ -18302,7 +18302,7 @@
             "support": {
                 "chat": "https://t.me/yii3en",
                 "forum": "https://www.yiiframework.com/forum/",
-                "irc": "irc://irc.freenode.net/yii",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/yii-runner/issues?state=open",
                 "source": "https://github.com/yiisoft/yii-runner",
                 "wiki": "https://www.yiiframework.com/wiki/"
@@ -18317,7 +18317,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-03-09T14:10:08+00:00"
+            "time": "2025-12-19T12:23:49+00:00"
         },
         {
             "name": "yiisoft/yii-runner-console",
@@ -18480,41 +18480,41 @@
         },
         {
             "name": "yiisoft/yii-view-renderer",
-            "version": "7.3.0",
+            "version": "7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-view-renderer.git",
-                "reference": "ba6a6f52e70d60c5b5c821dccff79c9996593afe"
+                "reference": "cf9c16d25a1eb2eee101abbf62ed37087e31a77c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-view-renderer/zipball/ba6a6f52e70d60c5b5c821dccff79c9996593afe",
-                "reference": "ba6a6f52e70d60c5b5c821dccff79c9996593afe",
+                "url": "https://api.github.com/repos/yiisoft/yii-view-renderer/zipball/cf9c16d25a1eb2eee101abbf62ed37087e31a77c",
+                "reference": "cf9c16d25a1eb2eee101abbf62ed37087e31a77c",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
-                "psr/container": "^1.0|^2.0",
-                "yiisoft/aliases": "^2.0|^3.0",
-                "yiisoft/csrf": "^1.2|^2.0",
-                "yiisoft/data-response": "^1.0|^2.0",
+                "php": "8.1 - 8.5",
+                "psr/container": "^1.0 || ^2.0",
+                "yiisoft/aliases": "^2.0 || ^3.0",
+                "yiisoft/csrf": "^1.2 || ^2.0",
+                "yiisoft/data-response": "^1.0 || ^2.0",
                 "yiisoft/friendly-exception": "^1.0",
-                "yiisoft/html": "^2.5|^3.0",
+                "yiisoft/html": "^2.5 || ^3.0",
                 "yiisoft/strings": "^2.0",
                 "yiisoft/view": "^12"
             },
             "require-dev": {
-                "httpsoft/http-message": "^1.0",
-                "maglnet/composer-require-checker": "^4.3",
-                "nyholm/psr7": "^1.5",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^2.0",
-                "roave/infection-static-analysis-plugin": "^1.25",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^4.30|^5.25",
-                "yiisoft/di": "^1.2",
-                "yiisoft/psr-dummy-provider": "^1.0",
-                "yiisoft/test-support": "^3.0",
+                "httpsoft/http-message": "^1.1.6",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "nyholm/psr7": "^1.8.2",
+                "phpunit/phpunit": "^10.5.45",
+                "rector/rector": "^2.0.10",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26.1 || ^6.9.6",
+                "yiisoft/di": "^1.3",
+                "yiisoft/psr-dummy-provider": "^1.0.2",
+                "yiisoft/test-support": "^3.0.2",
                 "yiisoft/yii-debug": "dev-master"
             },
             "type": "library",
@@ -18562,7 +18562,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-12-25T06:38:27+00:00"
+            "time": "2025-12-19T12:26:00+00:00"
         },
         {
             "name": "zircote/swagger-php",
@@ -21972,12 +21972,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f960b7bc5c3bae7e348f7b65736072f74493bc3a"
+                "reference": "a08c38341cd11dc1b1cb4fa87f65913c95908d73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f960b7bc5c3bae7e348f7b65736072f74493bc3a",
-                "reference": "f960b7bc5c3bae7e348f7b65736072f74493bc3a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a08c38341cd11dc1b1cb4fa87f65913c95908d73",
+                "reference": "a08c38341cd11dc1b1cb4fa87f65913c95908d73",
                 "shasum": ""
             },
             "conflict": {
@@ -22969,7 +22969,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-18T19:06:20+00:00"
+            "time": "2025-12-19T16:40:43+00:00"
         },
         {
             "name": "sanmai/di-container",

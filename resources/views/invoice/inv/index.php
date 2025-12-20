@@ -10,12 +10,16 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Button as HtmlButton;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Html\Tag\Option;
+use Yiisoft\Html\Tag\Select;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
@@ -61,6 +65,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
+ * @var string $groupBy
  * @var string $label
  * @var string $modal_add_inv
  * @var string $modal_copy_inv_multiple
@@ -289,6 +294,8 @@ $disabledAddInvoiceButton = A::tag()
         ->href('#modal-add-inv')
         ->id('btn-disabled-invoice-add-button')
         ->render();
+
+$enableGrouping = $groupBy !== 'none';
 
 // Calculate totals for footer
 $totalAmount = 0.0;
@@ -1005,33 +1012,103 @@ $columns = [
 $toolbarString
     = Form::tag()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open()
     . Div::tag()->addClass('float-start')->content(
-        '<h4 class="me-3 d-inline-block">' . $translator->translate('invoice') . '</h4>' 
-        . '<div class="btn-group me-2" role="group">'
+        H4::tag()
+            ->addClass('me-3 d-inline-block')
+            ->content($translator->translate('invoice')) 
+        . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
         . $allVisible
-        . $toolbarReset  
+        . $toolbarReset
         //. Button::ascDesc($urlGenerator, 'client_id', 'warning', $translator->translate('client'), false)
         . $copyInvoiceMultiple
         . $markAsSent
-        . ($s->getSetting('disable_read_only') === (string) 0 ? $disabledMarkSentAsDraft : $enabledMarkSentAsDraft)
+        . ($s->getSetting('disable_read_only') === (string) 0
+            ? $disabledMarkSentAsDraft
+            : $enabledMarkSentAsDraft
+        )
         . $markAsRecurringMultiple
         . ($clientCount == 0 ? $disabledAddInvoiceButton : $enabledAddInvoiceButton)
-        . '</div>'
+        . Html::closeTag('div')
+        . Div::tag()
+            ->addClass('btn-group ms-3')
+            ->addAttributes(['role' => 'group'])
+            ->content(
+                Label::tag()
+                    ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
+                    ->content(' ' . $translator->translate('group.by') . ':')
+                .
+                Select::tag()
+                    ->addClass('form-select')
+                    ->addAttributes([
+                        'style' => 'max-width: 150px;',
+                        'onchange' => 'window.location.href=\''
+                            . $urlGenerator->generate('inv/index')
+                            . '?groupBy=\' + this.value'
+                    ])
+                    ->optionsData([
+                        'none' => $translator->translate('grouping.none'),
+                        'status' => $translator->translate('status'),
+                        'client' => $translator->translate('client'),
+                        'client_group' => $translator->translate('client.group'),
+                        'month' => $translator->translate('month'),
+                        'year' => $translator->translate('year'),
+                        'date' => $translator->translate('date'),
+                        'amount_range' => 'Amount Range'
+                    ])
+                    ->value($groupBy)
+            )
+            ->encode(false)
+            ->render()
+        . ($enableGrouping ? 
+            Div::tag()
+                ->addClass('btn-group ms-2')
+                ->addAttributes(['role' => 'group'])
+                ->content(
+                    HtmlButton::tag()
+                        ->type('button')
+                        ->addClass('btn btn-outline-secondary btn-sm')
+                        ->addAttributes([
+                            'onclick' => 'toggleAllGroups(false)',
+                            'title' => 'Collapse All Groups'
+                        ])
+                        ->content(I::tag()->addClass('bi bi-chevron-up')) .
+                    HtmlButton::tag()
+                        ->type('button')
+                        ->addClass('btn btn-outline-secondary btn-sm')
+                        ->addAttributes([
+                            'onclick' => 'toggleAllGroups(true)',
+                            'title' => 'Expand All Groups'
+                        ])
+                        ->content(I::tag()->addClass('bi bi-chevron-down'))
+                )
+                ->encode(false)
+                ->render() : ''
+        )
     )->encode(false)->render()
     . Form::tag()->close();
 
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
-$sort = Sort::only(['id', 'status_id', 'number', 'date_created', 'date_due', 'client_id'])
-                // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
-                // - => 'desc'  so -id => default descending on id
-                ->withOrderString($sortString);
+$sort = Sort::only([
+    'id', 
+    'status_id', 
+    'number', 
+    'date_created', 
+    'date_due', 
+    'client_id'
+])
+// (Related logic: see vendor\yiisoft\data\src\Reader\Sort
+// - => 'desc'  so -id => default descending on id
+->withOrderString($sortString);
 
 $sortedAndPagedPaginator = (new OffsetPaginator($invs))
-        ->withPageSize($defaultPageSizeOffsetPaginator > 0 ? $defaultPageSizeOffsetPaginator : 1)
-        ->withCurrentPage($page)
-        ->withSort($sort)
-        ->withToken(PageToken::next((string) $page));
+    ->withPageSize(
+        $defaultPageSizeOffsetPaginator > 0 ?
+            $defaultPageSizeOffsetPaginator : 1
+    )
+    ->withCurrentPage($page)
+    ->withSort($sort)
+    ->withToken(PageToken::next((string) $page));
 
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
@@ -1041,19 +1118,121 @@ $grid_summary = $s->grid_summary(
     $label,
 );
 
-// Add left-aligned wrapper when additional columns are visible to accommodate more columns
+// Add left-aligned wrapper when additional
+// columns are visible to accommodate more columns
 $tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
 
 if ($visible) {
     echo '<div class="text-start">';
-
 }
 
-echo GridView::widget()
+// Row Grouping Implementation
+// You can change the grouping field by modifying the
+// getGroupValue function
+$previousGroupValue = '';
+
+// Function to get group value based on selected field
+$getGroupValue = static function (Inv $invoice) use ($groupBy, $iR): string {
+    return match ($groupBy) {
+        'client' => $invoice->getClient()?->getClient_full_name() ?? 'Unknown Client',
+        'status' => $iR->getSpecificStatusArrayLabel((string) $invoice->getStatus_id()),
+        'month' => $invoice->getDate_created()->format('Y-m'),
+        'year' => $invoice->getDate_created()->format('Y'),
+        'date' => $invoice->getDate_created()->format('Y-m-d'),
+        'client_group' => $invoice->getClient()?->getClient_group() ?? 'No Group',
+        'amount_range' => match (true) {
+            ($invoice->getInvAmount()->getTotal() ?? 0) < 100 => '< $100',
+            ($invoice->getInvAmount()->getTotal() ?? 0) < 500 => '$100 - $500',
+            ($invoice->getInvAmount()->getTotal() ?? 0) < 1000 => '$500 - $1000',
+            default => '> $1000'
+        },
+        default => 'No Group'
+    };
+};
+
+// Calculate totals per group (only if grouping is enabled)
+$groupTotals = [];
+if ($enableGrouping) {
+    /**
+     * @var App\Invoice\Entity\Inv $invoice
+     */
+    foreach ($invs as $invoice) {
+        $groupValue = $getGroupValue($invoice);
+        if (!isset($groupTotals[$groupValue])) {
+            $groupTotals[$groupValue] = [
+                'count' => 0,
+                'total' => 0.00,
+                'paid' => 0.00,
+                'balance' => 0.00
+            ];
+        }
+        $groupTotals[$groupValue]['count']++;
+        $groupTotals[$groupValue]['total'] += $invoice->getInvAmount()->getTotal() ?? 0.00;
+        $groupTotals[$groupValue]['paid'] += $invoice->getInvAmount()->getPaid() ?? 0.00;
+        $groupTotals[$groupValue]['balance'] += $invoice->getInvAmount()->getBalance() ?? 0.00;
+    }
+}
+
+$gridView = GridView::widget()
 // unpack the contents within the array using the three dot splat operator
 ->bodyRowAttributes(['class' => 'align-left'])
 ->tableAttributes(['class' => $tableOrTableResponsive . ' table-bordered table-striped h-75', 'id' => 'table-invoice'])
 ->columns(...$columns)
+->columnGrouping(true); // Enable HTML column grouping for better styling
+
+// Apply grouping only if enabled
+if ($enableGrouping) {
+    $gridView = $gridView->beforeRow(static function (array|object $invoice, $key, int $index) use (
+        &$previousGroupValue,
+        $getGroupValue,
+        $groupTotals,
+        $decimalPlaces,
+        $groupBy,
+        $s
+    ): ?\Yiisoft\Html\Tag\Tr {
+        // Ensure the invoice is of the expected type
+        assert($invoice instanceof Inv);
+        $currentGroupValue = $getGroupValue($invoice);
+        
+        if ($previousGroupValue !== $currentGroupValue) {
+            $previousGroupValue = $currentGroupValue;
+            $groupData = $groupTotals[$currentGroupValue];
+            $currencySymbol = $s->getSetting('currency_symbol');
+            
+            // Get column count - count visible columns
+            $columnCount = 15; // Approximate column count, adjust as needed
+            
+            return \Yiisoft\Html\Html::tr()
+                ->addClass('group-header bg-secondary text-white fw-bold group-collapsible')
+                ->addAttributes(['onclick' => 'toggleGroupRows(this)'])
+                ->cells(
+                    \Yiisoft\Html\Html::td()
+                        ->addAttributes(['colspan' => (string) $columnCount])
+                        ->addClass('p-3')
+                        ->content(
+                            '<div class="d-flex justify-content-between align-items-center">' .
+                            '<div>' .
+                            '<i class="bi bi-chevron-down me-2 group-toggle-icon"></i>' .
+                            '<i class="bi bi-folder2-open me-2"></i>' .
+                            '<span class="fs-5">' . Html::encode(ucfirst($groupBy)) . ': ' . Html::encode($currentGroupValue) . '</span>' .
+                            '<span class="badge bg-primary ms-2">' . $groupData['count'] . ' invoice' . ($groupData['count'] === 1 ? '' : 's') . '</span>' .
+                            '</div>' .
+                            '<div class="text-end">' .
+                            '<small class="d-block">Total: <strong>' . number_format($groupData['total'], $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
+                            '<small class="d-block">Paid: <strong>' . number_format($groupData['paid'], $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
+                            '<small class="d-block">Balance: <strong>' . number_format($groupData['balance'], $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
+                            '</div>' .
+                            '</div>'
+                        )
+                        ->encode(false)
+                );
+        }
+        
+        return null;
+    });
+}
+
+echo $gridView
 ->dataReader($sortedAndPagedPaginator)
 ->urlCreator($urlCreator)
 // the up and down symbol will appear at first indicating that the column can be sorted
@@ -1234,6 +1413,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize the amount magnifier
     new InvoiceAmountMagnifier();
+    
+    // Group collapsible functionality
+    window.toggleGroupRows = function(groupHeader) {
+        const toggleIcon = groupHeader.querySelector('.group-toggle-icon');
+        let nextRow = groupHeader.nextElementSibling;
+        let isCollapsing = toggleIcon.classList.contains('bi-chevron-down');
+        
+        // Toggle icon
+        if (isCollapsing) {
+            toggleIcon.classList.remove('bi-chevron-down');
+            toggleIcon.classList.add('bi-chevron-right');
+        } else {
+            toggleIcon.classList.remove('bi-chevron-right');
+            toggleIcon.classList.add('bi-chevron-down');
+        }
+        
+        // Toggle all rows until next group header or end of table
+        while (nextRow && !nextRow.classList.contains('group-header')) {
+            if (isCollapsing) {
+                nextRow.style.display = 'none';
+            } else {
+                nextRow.style.display = '';
+            }
+            nextRow = nextRow.nextElementSibling;
+        }
+    };
+    
+    // Add expand/collapse all functionality
+    window.toggleAllGroups = function(expand = null) {
+        const groupHeaders = document.querySelectorAll('.group-header');
+        groupHeaders.forEach(header => {
+            const toggleIcon = header.querySelector('.group-toggle-icon');
+            const isCurrentlyCollapsed = toggleIcon.classList.contains('bi-chevron-right');
+            
+            if (expand === null) {
+                // Toggle current state
+                window.toggleGroupRows(header);
+            } else if (expand && isCurrentlyCollapsed) {
+                // Expand if currently collapsed
+                window.toggleGroupRows(header);
+            } else if (!expand && !isCurrentlyCollapsed) {
+                // Collapse if currently expanded
+                window.toggleGroupRows(header);
+            }
+        });
+    };
 });
 </script>
 
@@ -1251,6 +1476,86 @@ document.addEventListener('DOMContentLoaded', function() {
 .amount-magnifiable[style*="z-index: 1000"] {
     z-index: 1000 !important;
     position: relative !important;
+}
+
+/* Group Header Styles */
+.group-header {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    border-top: 3px solid #495057 !important;
+    border-bottom: 1px solid #495057 !important;
+}
+
+.group-header td {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.group-header:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%) !important;
+}
+
+/* Grouping controls */
+.btn-group .form-select {
+    border-left: 0;
+    border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.btn-group label.btn {
+    border-right: 0;
+    border-radius: 0.375rem 0 0 0.375rem;
+}
+
+/* Collapsible group rows */
+.group-collapsible {
+    cursor: pointer;
+    user-select: none;
+}
+
+.group-collapsed + tr {
+    display: none;
+}
+
+/* Group toggle icon animation */
+.group-toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.group-toggle-icon.bi-chevron-right {
+    transform: rotate(0deg);
+}
+
+.group-toggle-icon.bi-chevron-down {
+    transform: rotate(0deg);
+}
+
+/* Add subtle indentation for grouped rows */
+.group-header + tr td:first-child {
+    border-left: 4px solid #007bff;
+}
+
+/* Make invoice rows within groups slightly indented visually */
+tbody tr:not(.group-header) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+tbody tr:not(.group-header):hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Sticky group headers when scrolling */
+@media (min-width: 768px) {
+    .group-header td {
+        position: sticky;
+        top: 60px; /* Adjust based on your header height */
+        z-index: 20;
+    }
+}
+
+/* Status column tooltip font size - 2x larger */
+.label[data-bs-toggle="tooltip"] + .tooltip .tooltip-inner,
+.tooltip.show .tooltip-inner {
+    font-size: 2em !important;
 }
 </style>
 <?php

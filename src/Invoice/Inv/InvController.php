@@ -2061,6 +2061,8 @@ final class InvController extends BaseController
         ?string $queryFilterDateCreatedYearMonth = null,
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
+        #[Query('groupBy')]
+        ?string $queryGroupBy = 'none',
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
@@ -2136,6 +2138,7 @@ final class InvController extends BaseController
                             : $this->sR->getSetting('not.set'),
                 // numbered tiles between the arrrows
                 'maxNavLinkCount' => 10,
+                'groupBy' => $queryGroupBy,
                 'invs' => $invs,
                 'inv_statuses' => $inv_statuses,
                 'max' => (int) $this->sR->getSetting('default_list_limit'),

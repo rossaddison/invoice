@@ -940,9 +940,12 @@ return [
   'gridview.title' => 'List of users',
   'group' => 'Group',
   'group.add' => 'Group Add',
+  'group.by' => 'Group by',
   'group.document.number' => 'Document Number Not Generated. Check Groups.',
   'group.form' => 'Group Form',
   'group.history' => 'Group History exists. Cannot delete',
+  'grouping' => 'Grouping',
+  'grouping.none' => 'No Grouping',
   'groups' => 'Groups',
   'guest.account.denied' => 'This account is not configured.'
     . ' Please contact the system administrator.',

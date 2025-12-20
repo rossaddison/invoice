@@ -51,8 +51,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>20th December 2025</b></p>
+<p>Add GroupBy functionality to inv/index.php using before Callback function</p>
 <p><b>19th December 2025</b></p>
-<p>Reduce the number of required fields on the client index.</p>
+<p>Reduce the number of required fields on the client _form.</p>
 <p>Flash messages can be paused with angular particularly the info/invoice.php file.</p>
 <p>Hide and unhide functionality to columns applied to the product and the client index as well.</p>
 <p><b>14th December 2025</b></p>
