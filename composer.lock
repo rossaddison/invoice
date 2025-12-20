@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "27d2c9ee41461c3f35c4a6a611596e8a",
+    "content-hash": "5ae1541180845b97c7fac2e1412d7597",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -16228,20 +16228,20 @@
         },
         {
             "name": "yiisoft/psr-emitter",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/psr-emitter.git",
-                "reference": "2a9a47125fac484c995b0f52f34fe6ef19ed7b2e"
+                "reference": "d09a29d1feec91596491973757f6a112991e29b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/psr-emitter/zipball/2a9a47125fac484c995b0f52f34fe6ef19ed7b2e",
-                "reference": "2a9a47125fac484c995b0f52f34fe6ef19ed7b2e",
+                "url": "https://api.github.com/repos/yiisoft/psr-emitter/zipball/d09a29d1feec91596491973757f6a112991e29b3",
+                "reference": "d09a29d1feec91596491973757f6a112991e29b3",
                 "shasum": ""
             },
             "require": {
-                "php": "8.1 - 8.4",
+                "php": "8.1 - 8.5",
                 "psr/http-message": "^2.0",
                 "yiisoft/friendly-exception": "^1.1"
             },
@@ -16294,7 +16294,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-05-21T06:26:08+00:00"
+            "time": "2025-12-20T05:12:53+00:00"
         },
         {
             "name": "yiisoft/rate-limiter",
@@ -17718,16 +17718,16 @@
         },
         {
             "name": "yiisoft/yii-console",
-            "version": "2.4.1",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-console.git",
-                "reference": "378ae5cf1e3ab4fb8b21e5f2896caf64ce177d50"
+                "reference": "d03e618c542b8908fce91be7f34969040f548506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-console/zipball/378ae5cf1e3ab4fb8b21e5f2896caf64ce177d50",
-                "reference": "378ae5cf1e3ab4fb8b21e5f2896caf64ce177d50",
+                "url": "https://api.github.com/repos/yiisoft/yii-console/zipball/d03e618c542b8908fce91be7f34969040f548506",
+                "reference": "d03e618c542b8908fce91be7f34969040f548506",
                 "shasum": ""
             },
             "require": {
@@ -17735,13 +17735,12 @@
                 "psr/container": "^1.0 || ^2.0",
                 "psr/event-dispatcher": "^1.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/console": "^5.4 || ^6.0 || ^7.0",
+                "symfony/console": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "symfony/event-dispatcher-contracts": "^2.2 || ^3.0",
                 "yiisoft/friendly-exception": "^1.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.3",
-                "maglnet/composer-require-checker": "^4.4",
                 "phpunit/phpunit": "^9.6.22",
                 "rector/rector": "^2.0.11",
                 "yiisoft/config": "^1.5",
@@ -17798,7 +17797,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-02T07:56:47+00:00"
+            "time": "2025-12-20T05:15:30+00:00"
         },
         {
             "name": "yiisoft/yii-cycle",
@@ -18321,36 +18320,40 @@
         },
         {
             "name": "yiisoft/yii-runner-console",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-runner-console.git",
-                "reference": "e92f4e72778508e7c2918f8fc8c3e75b758eb61a"
+                "reference": "16ca4daa1c02ef4c9e2d0db4cf30a194467c6a34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-runner-console/zipball/e92f4e72778508e7c2918f8fc8c3e75b758eb61a",
-                "reference": "e92f4e72778508e7c2918f8fc8c3e75b758eb61a",
+                "url": "https://api.github.com/repos/yiisoft/yii-runner-console/zipball/16ca4daa1c02ef4c9e2d0db4cf30a194467c6a34",
+                "reference": "16ca4daa1c02ef4c9e2d0db4cf30a194467c6a34",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0",
-                "symfony/console": "^5.4|^6.0|^7.0",
+                "php": "8.0 - 8.5",
+                "symfony/console": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "yiisoft/config": "^1.1",
-                "yiisoft/definitions": "^1.0|^2.0|^3.0",
+                "yiisoft/definitions": "^1.0 || ^2.0 || ^3.0",
                 "yiisoft/di": "^1.0",
                 "yiisoft/yii-console": "^2.0",
                 "yiisoft/yii-runner": "^2.2"
             },
             "require-dev": {
-                "codeception/codeception": "^5.0",
-                "codeception/module-cli": "^2.0",
-                "maglnet/composer-require-checker": "^4.2",
-                "rector/rector": "^1.0.0",
-                "vimeo/psalm": "^4.30|^5.2"
+                "bamarni/composer-bin-plugin": "^1.8.3",
+                "codeception/codeception": "^5.1.2",
+                "codeception/module-cli": "^2.0.1",
+                "rector/rector": "^2.0.11"
             },
             "type": "library",
             "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true,
+                    "target-directory": "tools"
+                },
                 "config-plugin-options": {
                     "build-merge-plan": false
                 }
@@ -18374,7 +18377,7 @@
             "support": {
                 "chat": "https://t.me/yii3en",
                 "forum": "https://www.yiiframework.com/forum/",
-                "irc": "irc://irc.freenode.net/yii",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/yii-runner-console/issues?state=open",
                 "source": "https://github.com/yiisoft/yii-runner-console",
                 "wiki": "https://www.yiiframework.com/wiki/"
@@ -18389,24 +18392,24 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-03-10T10:06:34+00:00"
+            "time": "2025-12-20T07:01:24+00:00"
         },
         {
             "name": "yiisoft/yii-runner-http",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-runner-http.git",
-                "reference": "bb2eeb18b3ee2125baf33e30487b5b4902efbd11"
+                "reference": "f80669e1ff9b87ab6f6f4cec926d11dc1d68e7d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-runner-http/zipball/bb2eeb18b3ee2125baf33e30487b5b4902efbd11",
-                "reference": "bb2eeb18b3ee2125baf33e30487b5b4902efbd11",
+                "url": "https://api.github.com/repos/yiisoft/yii-runner-http/zipball/f80669e1ff9b87ab6f6f4cec926d11dc1d68e7d6",
+                "reference": "f80669e1ff9b87ab6f6f4cec926d11dc1d68e7d6",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "8.1 - 8.5",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/log": "^3.0",
@@ -18476,7 +18479,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-06-14T13:40:10+00:00"
+            "time": "2025-12-20T07:04:15+00:00"
         },
         {
             "name": "yiisoft/yii-view-renderer",
@@ -23176,16 +23179,16 @@
         },
         {
             "name": "sanmai/pipeline",
-            "version": "7.5",
+            "version": "7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sanmai/pipeline.git",
-                "reference": "c3b87db671ee0bc286860bd13bdb7cfc108b7d7e"
+                "reference": "f7aeb6e1c9572f366c6035c79d715a2a73eeb1c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/c3b87db671ee0bc286860bd13bdb7cfc108b7d7e",
-                "reference": "c3b87db671ee0bc286860bd13bdb7cfc108b7d7e",
+                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/f7aeb6e1c9572f366c6035c79d715a2a73eeb1c9",
+                "reference": "f7aeb6e1c9572f366c6035c79d715a2a73eeb1c9",
                 "shasum": ""
             },
             "require": {
@@ -23232,7 +23235,7 @@
             "description": "General-purpose collections pipeline",
             "support": {
                 "issues": "https://github.com/sanmai/pipeline/issues",
-                "source": "https://github.com/sanmai/pipeline/tree/7.5"
+                "source": "https://github.com/sanmai/pipeline/tree/7.6"
             },
             "funding": [
                 {
@@ -23240,7 +23243,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-05T10:54:07+00:00"
+            "time": "2025-12-20T07:22:08+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -24833,7 +24836,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.3 - 8.4",
+        "php": "8.3 - 8.5",
         "ext-apcu": "*",
         "ext-curl": "*",
         "ext-dom": "*",
