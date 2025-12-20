@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00bf2e458bc9f0308d222019ee2cb971",
+    "content-hash": "b03310971bd6605cdcab81ebc246e3c8",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -8241,77 +8241,6 @@
             "time": "2025-12-02T15:19:04+00:00"
         },
         {
-            "name": "rossaddison/data-cycle",
-            "version": "dev-invoice",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rossaddison/data-cycle.git",
-                "reference": "d56b1929d3ed23ab413d526bc7fdf5f660c1e2cc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/d56b1929d3ed23ab413d526bc7fdf5f660c1e2cc",
-                "reference": "d56b1929d3ed23ab413d526bc7fdf5f660c1e2cc",
-                "shasum": ""
-            },
-            "require": {
-                "cycle/database": "^2.15",
-                "cycle/orm": "^2.10.1",
-                "ext-mbstring": "*",
-                "php": "8.3 - 8.4",
-                "yiisoft/data": "dev-master",
-                "yiisoft/var-dumper": "^1.7"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.86.0",
-                "maglnet/composer-require-checker": "^4.16.1",
-                "phpunit/phpunit": "^12.3.7",
-                "rector/rector": "^2.1.5",
-                "roave/infection-static-analysis-plugin": ">=1.39",
-                "spatie/phpunit-watcher": ">=1.24.0",
-                "vimeo/psalm": "^6.13.1",
-                "vlucas/phpdotenv": "^5.6.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Data\\Cycle\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Cycle ORM query adapter for yiisoft/data",
-            "homepage": "https://www.yiiframework.com/",
-            "keywords": [
-                "cycle",
-                "data provider",
-                "database",
-                "db",
-                "orm"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/data-cycle/issues?state=open",
-                "source": "https://github.com/yiisoft/data-cycle",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/yiisoft",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/yiisoft",
-                    "type": "opencollective"
-                }
-            ],
-            "time": "2025-09-04T18:48:14+00:00"
-        },
-        {
             "name": "rossaddison/yii-auth-client",
             "version": "dev-invoice",
             "source": {
@@ -14169,16 +14098,16 @@
         },
         {
             "name": "yiisoft/data",
-            "version": "dev-master",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data.git",
-                "reference": "3280c5356055c01ac768540bb62016d9b308db99"
+                "reference": "12c4127fa6c2cd2c144212f841e01ab95c5a7796"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data/zipball/3280c5356055c01ac768540bb62016d9b308db99",
-                "reference": "3280c5356055c01ac768540bb62016d9b308db99",
+                "url": "https://api.github.com/repos/yiisoft/data/zipball/12c4127fa6c2cd2c144212f841e01ab95c5a7796",
+                "reference": "12c4127fa6c2cd2c144212f841e01ab95c5a7796",
                 "shasum": ""
             },
             "require": {
@@ -14194,7 +14123,6 @@
                 "rector/rector": "^2.2.14",
                 "spatie/phpunit-watcher": "^1.24"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "bamarni-bin": {
@@ -14240,7 +14168,95 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-13T15:25:52+00:00"
+            "time": "2025-12-13T15:25:47+00:00"
+        },
+        {
+            "name": "yiisoft/data-cycle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rossaddison/data-cycle.git",
+                "reference": "b16bf23733734b8fb2a2c8d980551f766a29723f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/b16bf23733734b8fb2a2c8d980551f766a29723f",
+                "reference": "b16bf23733734b8fb2a2c8d980551f766a29723f",
+                "shasum": ""
+            },
+            "require": {
+                "cycle/database": "^2.15.1",
+                "cycle/orm": "^2.12.2",
+                "ext-mbstring": "*",
+                "php": "8.1 - 8.4",
+                "yiisoft/data": "^2.0",
+                "yiisoft/var-dumper": "^1.7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.92.3",
+                "maglnet/composer-require-checker": "^4.19.0",
+                "phpunit/phpunit": "^12.5.4",
+                "rector/rector": "^2.2.14",
+                "roave/infection-static-analysis-plugin": ">=1.42",
+                "spatie/phpunit-watcher": ">=1.24.0",
+                "vimeo/psalm": "^6.14.2",
+                "vlucas/phpdotenv": "^5.6.2"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Data\\Cycle\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Yiisoft\\Data\\Cycle\\Tests\\": "tests",
+                    "Yiisoft\\Data\\Tests\\": "vendor/yiisoft/data/tests"
+                },
+                "files": [
+                    "tests/bootstrap.php"
+                ]
+            },
+            "scripts": {
+                "test": [
+                    "phpunit --testdox --no-interaction"
+                ],
+                "test-watch": [
+                    "phpunit-watcher watch"
+                ]
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Cycle ORM query adapter for yiisoft/data",
+            "homepage": "https://www.yiiframework.com/",
+            "keywords": [
+                "cycle",
+                "data provider",
+                "database",
+                "db",
+                "orm"
+            ],
+            "support": {
+                "issues": "https://github.com/yiisoft/data-cycle/issues?state=open",
+                "source": "https://github.com/yiisoft/data-cycle",
+                "forum": "https://www.yiiframework.com/forum/",
+                "wiki": "https://www.yiiframework.com/wiki/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "chat": "https://t.me/yii3en"
+            },
+            "funding": [
+                {
+                    "type": "opencollective",
+                    "url": "https://opencollective.com/yiisoft"
+                },
+                {
+                    "type": "github",
+                    "url": "https://github.com/sponsors/yiisoft"
+                }
+            ],
+            "time": "2025-12-20T12:11:28+00:00"
         },
         {
             "name": "yiisoft/data-response",
@@ -17908,23 +17924,23 @@
         },
         {
             "name": "yiisoft/yii-dataview",
-            "version": "dev-bc",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "fce9ec838f30aa6a548f0231bc30ea619db2cc4c"
+                "reference": "26b978a8702e166ba455910c52481963159b6ee8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/fce9ec838f30aa6a548f0231bc30ea619db2cc4c",
-                "reference": "fce9ec838f30aa6a548f0231bc30ea619db2cc4c",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/26b978a8702e166ba455910c52481963159b6ee8",
+                "reference": "26b978a8702e166ba455910c52481963159b6ee8",
                 "shasum": ""
             },
             "require": {
                 "php": "8.1 - 8.5",
                 "psr/container": "^1.0 || ^2.0",
                 "yiisoft/arrays": "^3.1",
-                "yiisoft/data": "dev-master",
+                "yiisoft/data": "^2.0",
                 "yiisoft/friendly-exception": "^1.0",
                 "yiisoft/html": "^3.11",
                 "yiisoft/injector": "^1.2",
@@ -17951,9 +17967,6 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                },
                 "config-plugin": {
                     "di": "di.php",
                     "params": "params.php",
@@ -17972,7 +17985,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "Yii Framework Data Widgets Package",
+            "description": "Yii data displaying widgets",
             "homepage": "https://www.yiiframework.com/",
             "keywords": [
                 "data",
@@ -18000,7 +18013,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-13T13:41:45+00:00"
+            "time": "2025-12-14T07:01:43+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -24827,9 +24840,8 @@
     "stability-flags": {
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
-        "rossaddison/data-cycle": 20,
         "rossaddison/yii-auth-client": 20,
-        "yiisoft/data": 20,
+        "yiisoft/data-cycle": 20,
         "yiisoft/rate-limiter": 20,
         "yiisoft/requirements": 20
     },
