@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b03310971bd6605cdcab81ebc246e3c8",
+    "content-hash": "cef9b121c166ea7f13df7644cccfdf62",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5702,16 +5702,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.1.0",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "fa1f0b8261ed150447979eb22e373b7b7ad5a8e0"
+                "reference": "c99059c0315591f1a0db7ad6002000288ab8dc72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/fa1f0b8261ed150447979eb22e373b7b7ad5a8e0",
-                "reference": "fa1f0b8261ed150447979eb22e373b7b7ad5a8e0",
+                "url": "https://api.github.com/repos/nette/utils/zipball/c99059c0315591f1a0db7ad6002000288ab8dc72",
+                "reference": "c99059c0315591f1a0db7ad6002000288ab8dc72",
                 "shasum": ""
             },
             "require": {
@@ -5785,9 +5785,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.1.0"
+                "source": "https://github.com/nette/utils/tree/v4.1.1"
             },
-            "time": "2025-12-01T17:49:23+00:00"
+            "time": "2025-12-22T12:14:32+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -6735,16 +6735,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.6.5",
+            "version": "5.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "90614c73d3800e187615e2dd236ad0e2a01bf761"
+                "reference": "5cee1d3dfc2d2aa6599834520911d246f656bcb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/90614c73d3800e187615e2dd236ad0e2a01bf761",
-                "reference": "90614c73d3800e187615e2dd236ad0e2a01bf761",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/5cee1d3dfc2d2aa6599834520911d246f656bcb8",
+                "reference": "5cee1d3dfc2d2aa6599834520911d246f656bcb8",
                 "shasum": ""
             },
             "require": {
@@ -6754,7 +6754,7 @@
                 "phpdocumentor/reflection-common": "^2.2",
                 "phpdocumentor/type-resolver": "^1.7",
                 "phpstan/phpdoc-parser": "^1.7|^2.0",
-                "webmozart/assert": "^1.9.1"
+                "webmozart/assert": "^1.9.1 || ^2"
             },
             "require-dev": {
                 "mockery/mockery": "~1.3.5 || ~1.6.0",
@@ -6793,9 +6793,9 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.5"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.6"
             },
-            "time": "2025-11-27T19:50:05+00:00"
+            "time": "2025-12-22T21:13:58+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -9713,16 +9713,16 @@
         },
         {
             "name": "spomky-labs/pki-framework",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spomky-Labs/pki-framework.git",
-                "reference": "bf6f55a9d9eb25b7781640221cb54f5c727850d7"
+                "reference": "f0e9a548df4e3942886adc9b7830581a46334631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/bf6f55a9d9eb25b7781640221cb54f5c727850d7",
-                "reference": "bf6f55a9d9eb25b7781640221cb54f5c727850d7",
+                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/f0e9a548df4e3942886adc9b7830581a46334631",
+                "reference": "f0e9a548df4e3942886adc9b7830581a46334631",
                 "shasum": ""
             },
             "require": {
@@ -9806,7 +9806,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Spomky-Labs/pki-framework/issues",
-                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.4.0"
+                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.4.1"
             },
             "funding": [
                 {
@@ -9818,7 +9818,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-10-22T08:24:34+00:00"
+            "time": "2025-12-20T12:57:40+00:00"
         },
         {
             "name": "stripe/stripe-php",
@@ -12735,16 +12735,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.14.2",
+            "version": "6.14.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0"
+                "reference": "d0b040a91f280f071c1abcb1b77ce3822058725a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0",
-                "reference": "bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/d0b040a91f280f071c1abcb1b77ce3822058725a",
+                "reference": "d0b040a91f280f071c1abcb1b77ce3822058725a",
                 "shasum": ""
             },
             "require": {
@@ -12770,8 +12770,8 @@
                 "php": "~8.1.31 || ~8.2.27 || ~8.3.16 || ~8.4.3 || ~8.5.0",
                 "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0",
                 "spatie/array-to-xml": "^2.17.0 || ^3.0",
-                "symfony/console": "^6.0 || ^7.0",
-                "symfony/filesystem": "~6.3.12 || ~6.4.3 || ^7.0.3",
+                "symfony/console": "^6.0 || ^7.0 || ^8.0",
+                "symfony/filesystem": "~6.3.12 || ~6.4.3 || ^7.0.3 || ^8.0",
                 "symfony/polyfill-php84": "^1.31.0"
             },
             "provide": {
@@ -12793,7 +12793,7 @@
                 "psalm/plugin-phpunit": "^0.19",
                 "slevomat/coding-standard": "^8.4",
                 "squizlabs/php_codesniffer": "^3.6",
-                "symfony/process": "^6.0 || ^7.0"
+                "symfony/process": "^6.0 || ^7.0 || ^8.0"
             },
             "suggest": {
                 "ext-curl": "In order to send data to shepherd",
@@ -12849,7 +12849,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2025-12-11T08:58:52+00:00"
+            "time": "2025-12-23T15:36:48+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -14176,31 +14176,29 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/data-cycle.git",
-                "reference": "b16bf23733734b8fb2a2c8d980551f766a29723f"
+                "reference": "f117ea4486429d0c66237feaf05336902ce72b03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/b16bf23733734b8fb2a2c8d980551f766a29723f",
-                "reference": "b16bf23733734b8fb2a2c8d980551f766a29723f",
+                "url": "https://api.github.com/repos/rossaddison/data-cycle/zipball/f117ea4486429d0c66237feaf05336902ce72b03",
+                "reference": "f117ea4486429d0c66237feaf05336902ce72b03",
                 "shasum": ""
             },
             "require": {
-                "cycle/database": "^2.15.1",
-                "cycle/orm": "^2.12.2",
+                "cycle/database": "^2.11",
+                "cycle/orm": "^2.9",
                 "ext-mbstring": "*",
-                "php": "8.1 - 8.4",
-                "yiisoft/data": "^2.0",
-                "yiisoft/var-dumper": "^1.7.1"
+                "php": "8.1 - 8.5",
+                "yiisoft/data": "^2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.92.3",
-                "maglnet/composer-require-checker": "^4.19.0",
-                "phpunit/phpunit": "^12.5.4",
-                "rector/rector": "^2.2.14",
-                "roave/infection-static-analysis-plugin": ">=1.42",
-                "spatie/phpunit-watcher": ">=1.24.0",
-                "vimeo/psalm": "^6.14.2",
-                "vlucas/phpdotenv": "^5.6.2"
+                "maglnet/composer-require-checker": "^4.7",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^2.1.5",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.24",
+                "vimeo/psalm": "^5.26.1 || ^6.14.1",
+                "vlucas/phpdotenv": "^5.6"
             },
             "default-branch": true,
             "type": "library",
@@ -14256,7 +14254,7 @@
                     "url": "https://github.com/sponsors/yiisoft"
                 }
             ],
-            "time": "2025-12-20T12:11:28+00:00"
+            "time": "2025-12-20T12:35:51+00:00"
         },
         {
             "name": "yiisoft/data-response",
@@ -14972,20 +14970,20 @@
         },
         {
             "name": "yiisoft/form",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form.git",
-                "reference": "3e6410245af751b237174b819eb0d7d70ea2415c"
+                "reference": "8953fb406522f61f63865de6bd0be09886d75a6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form/zipball/3e6410245af751b237174b819eb0d7d70ea2415c",
-                "reference": "3e6410245af751b237174b819eb0d7d70ea2415c",
+                "url": "https://api.github.com/repos/yiisoft/form/zipball/8953fb406522f61f63865de6bd0be09886d75a6e",
+                "reference": "8953fb406522f61f63865de6bd0be09886d75a6e",
                 "shasum": ""
             },
             "require": {
-                "php": "8.1 - 8.4",
+                "php": "8.1 - 8.5",
                 "yiisoft/friendly-exception": "^1.0",
                 "yiisoft/html": "^3.8",
                 "yiisoft/widget": "^2.2"
@@ -15039,27 +15037,31 @@
                 {
                     "url": "https://opencollective.com/yiisoft",
                     "type": "open_collective"
+                },
+                {
+                    "url": "https://polar.sh/yiisoft",
+                    "type": "polar"
                 }
             ],
-            "time": "2025-11-05T06:03:21+00:00"
+            "time": "2025-12-23T06:13:33+00:00"
         },
         {
             "name": "yiisoft/form-model",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form-model.git",
-                "reference": "9b45c7f8b4fe103f9571e9931291ea3f1155d466"
+                "reference": "af0043e7c51bcdb8b18d099c24c07cb798be1cb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form-model/zipball/9b45c7f8b4fe103f9571e9931291ea3f1155d466",
-                "reference": "9b45c7f8b4fe103f9571e9931291ea3f1155d466",
+                "url": "https://api.github.com/repos/yiisoft/form-model/zipball/af0043e7c51bcdb8b18d099c24c07cb798be1cb5",
+                "reference": "af0043e7c51bcdb8b18d099c24c07cb798be1cb5",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "8.1 - 8.4",
+                "php": "8.1 - 8.5",
                 "psr/http-message": "^1.0 || ^2.0",
                 "yiisoft/form": "^1.0",
                 "yiisoft/html": "^3.3",
@@ -15119,7 +15121,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-07-22T07:51:28+00:00"
+            "time": "2025-12-23T08:24:31+00:00"
         },
         {
             "name": "yiisoft/friendly-exception",
@@ -17315,20 +17317,20 @@
         },
         {
             "name": "yiisoft/user",
-            "version": "2.3.1",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/user.git",
-                "reference": "7eff238111c8f8dde288b55d64b90e26f068d564"
+                "reference": "f982e9faa3acac8a04299968b1c74e5123e4cc14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/user/zipball/7eff238111c8f8dde288b55d64b90e26f068d564",
-                "reference": "7eff238111c8f8dde288b55d64b90e26f068d564",
+                "url": "https://api.github.com/repos/yiisoft/user/zipball/f982e9faa3acac8a04299968b1c74e5123e4cc14",
+                "reference": "f982e9faa3acac8a04299968b1c74e5123e4cc14",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "8.1 - 8.5",
                 "psr/event-dispatcher": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0 || ^2.0",
@@ -17395,7 +17397,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-03-06T06:59:18+00:00"
+            "time": "2025-12-23T06:15:18+00:00"
         },
         {
             "name": "yiisoft/validator",
@@ -19215,21 +19217,21 @@
         },
         {
             "name": "codeception/lib-asserts",
-            "version": "3.0.1",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/lib-asserts.git",
-                "reference": "72fc49aafc0d440032f94393fdbbc3878d4ce481"
+                "reference": "8e161f38a71cdf3dc638c5427df21c0f01f12d13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/lib-asserts/zipball/72fc49aafc0d440032f94393fdbbc3878d4ce481",
-                "reference": "72fc49aafc0d440032f94393fdbbc3878d4ce481",
+                "url": "https://api.github.com/repos/Codeception/lib-asserts/zipball/8e161f38a71cdf3dc638c5427df21c0f01f12d13",
+                "reference": "8e161f38a71cdf3dc638c5427df21c0f01f12d13",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "php": "^8.2 || ^8.3 || ^8.4",
+                "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
                 "phpunit/phpunit": "^11.5 || ^12.0"
             },
             "type": "library",
@@ -19263,9 +19265,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/lib-asserts/issues",
-                "source": "https://github.com/Codeception/lib-asserts/tree/3.0.1"
+                "source": "https://github.com/Codeception/lib-asserts/tree/3.1.0"
             },
-            "time": "2025-10-23T12:59:24+00:00"
+            "time": "2025-12-22T08:25:07+00:00"
         },
         {
             "name": "codeception/lib-innerbrowser",
@@ -21345,16 +21347,16 @@
         },
         {
             "name": "react/child-process",
-            "version": "v0.6.6",
+            "version": "v0.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/child-process.git",
-                "reference": "1721e2b93d89b745664353b9cfc8f155ba8a6159"
+                "reference": "970f0e71945556422ee4570ccbabaedc3cf04ad3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/child-process/zipball/1721e2b93d89b745664353b9cfc8f155ba8a6159",
-                "reference": "1721e2b93d89b745664353b9cfc8f155ba8a6159",
+                "url": "https://api.github.com/repos/reactphp/child-process/zipball/970f0e71945556422ee4570ccbabaedc3cf04ad3",
+                "reference": "970f0e71945556422ee4570ccbabaedc3cf04ad3",
                 "shasum": ""
             },
             "require": {
@@ -21408,7 +21410,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/child-process/issues",
-                "source": "https://github.com/reactphp/child-process/tree/v0.6.6"
+                "source": "https://github.com/reactphp/child-process/tree/v0.6.7"
             },
             "funding": [
                 {
@@ -21416,7 +21418,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-01-01T16:37:48+00:00"
+            "time": "2025-12-23T15:25:20+00:00"
         },
         {
             "name": "react/dns",
@@ -24090,16 +24092,16 @@
         },
         {
             "name": "spatie/phpunit-watcher",
-            "version": "dev-main",
+            "version": "1.24.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/phpunit-watcher.git",
-                "reference": "8eb5a25399d0917c1a5115b72aafaf85e170cb83"
+                "reference": "1cf513e07ff65c4b9e2bc3b649fa281254c2c770"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/phpunit-watcher/zipball/8eb5a25399d0917c1a5115b72aafaf85e170cb83",
-                "reference": "8eb5a25399d0917c1a5115b72aafaf85e170cb83",
+                "url": "https://api.github.com/repos/spatie/phpunit-watcher/zipball/1cf513e07ff65c4b9e2bc3b649fa281254c2c770",
+                "reference": "1cf513e07ff65c4b9e2bc3b649fa281254c2c770",
                 "shasum": ""
             },
             "require": {
@@ -24118,7 +24120,6 @@
                 "phpunit/phpunit": "^10.5.20 | ^11.1.3",
                 "symfony/filesystem": "^6.0 || ^7.0.7 || ^8.0"
             },
-            "default-branch": true,
             "bin": [
                 "phpunit-watcher"
             ],
@@ -24148,7 +24149,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/phpunit-watcher/issues",
-                "source": "https://github.com/spatie/phpunit-watcher/tree/main"
+                "source": "https://github.com/spatie/phpunit-watcher/tree/1.24.2"
             },
             "funding": [
                 {
@@ -24156,7 +24157,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-10T09:15:32+00:00"
+            "time": "2025-12-22T09:39:08+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
