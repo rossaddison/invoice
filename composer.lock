@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b03310971bd6605cdcab81ebc246e3c8",
+    "content-hash": "5face97631aaa82403a8b92f5854dd01",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -14972,20 +14972,20 @@
         },
         {
             "name": "yiisoft/form",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/form.git",
-                "reference": "3e6410245af751b237174b819eb0d7d70ea2415c"
+                "reference": "8953fb406522f61f63865de6bd0be09886d75a6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/form/zipball/3e6410245af751b237174b819eb0d7d70ea2415c",
-                "reference": "3e6410245af751b237174b819eb0d7d70ea2415c",
+                "url": "https://api.github.com/repos/yiisoft/form/zipball/8953fb406522f61f63865de6bd0be09886d75a6e",
+                "reference": "8953fb406522f61f63865de6bd0be09886d75a6e",
                 "shasum": ""
             },
             "require": {
-                "php": "8.1 - 8.4",
+                "php": "8.1 - 8.5",
                 "yiisoft/friendly-exception": "^1.0",
                 "yiisoft/html": "^3.8",
                 "yiisoft/widget": "^2.2"
@@ -15039,9 +15039,13 @@
                 {
                     "url": "https://opencollective.com/yiisoft",
                     "type": "open_collective"
+                },
+                {
+                    "url": "https://polar.sh/yiisoft",
+                    "type": "polar"
                 }
             ],
-            "time": "2025-11-05T06:03:21+00:00"
+            "time": "2025-12-23T06:13:33+00:00"
         },
         {
             "name": "yiisoft/form-model",
@@ -24864,5 +24868,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
