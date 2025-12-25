@@ -147,7 +147,7 @@
     "require-dev": {
         "codeception/c3": "^2.9",
         "codeception/codeception": "^5.3.3",
-        "codeception/module-asserts": "^3.2.1",
+        "codeception/module-asserts": "^3.3.0",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^3.0.2",
         "friendsofphp/php-cs-fixer": "^3.92.3",
