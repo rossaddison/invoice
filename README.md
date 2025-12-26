@@ -17,7 +17,19 @@
 Yii3 Invoice
 
 **Features**
-
+*[VitePress Index.](docs/index.md)
+*[Prometheus Integration.](docs/PROMETHEUS_INTEGRATION.md)
+*[Prometheus Menu Integration.](docs/PROMETHEUS_MENU_INTEGRATION.md)
+*[Sonar Cloud Setup.](docs/SONARCLOUD_SETUP.md)
+*[Netbeans ↔️ Vs Code: Sync Guide.](docs/NETBEANS_SYNC_GUIDE.md) 
+*[Php Product Selection Workflow.](docs/PHP_PRODUCT_SELECTION_WORKFLOW.md)
+*[Security Commands.](docs/SECURITY_COMMANDS.md)
+*[Typescript Build Process.](docs/TYPESCRIPT_BUILD_PROCESS.md)
+*[Typescript ES2023 Modernization.](docs/TYPESCRIPT_ES2023_MODERNIZATION.md)
+*[Typescript ES2024 Modernization.](docs/TYPESCRIPT_ES2024_MODERNIZATION.md)
+*[Typescript Go V7 Compatability Testing Guide.](docs/TYPESCRIPT_GO_V7_COMPATIBILITY_TESTING_GUIDE.md)
+*[Invoice Amount Magnifier using Angular.](docs/INVOICE_AMOUNT_MAGNIFIER.md)
+*[Family Commalist Picker.](docs/FAMILY_COMMALIST_PICKER.md)
 * Cycle ORM Interface using Invoiceplane type database schema. 
 * Generate VAT invoices using mPDF. 
 * Code Generator - Controller to views. 

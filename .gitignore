@@ -38,3 +38,7 @@ php-cs-fixer.cache
 
 # Angular
 .angular/
+
+# VitePress
+/docs/.vitepress/dist
+/docs/.vitepress/cache
