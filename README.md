@@ -17,7 +17,6 @@
 Yii3 Invoice
 
 **Features**
-[VitePress Index.](docs/index.md)
 [Prometheus Integration.](docs/PROMETHEUS_INTEGRATION.md)
 [Prometheus Menu Integration.](docs/PROMETHEUS_MENU_INTEGRATION.md)
 [Sonar Cloud Setup.](docs/SONARCLOUD_SETUP.md)
