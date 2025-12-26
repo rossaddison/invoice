@@ -16,7 +16,9 @@
 # yii3-i's invoice folder 
 Yii3 Invoice
 
-**Features**
+**Recent Implementations**
+
+[VitePress Integration.](https://vitepress.dev/guide/getting-started)
 
 [Prometheus Integration.](docs/PROMETHEUS_INTEGRATION.md)
 
@@ -40,7 +42,9 @@ Yii3 Invoice
 
 [Invoice Amount Magnifier using Angular.](docs/INVOICE_AMOUNT_MAGNIFIER.md)
 
-[Family Commalist Picker.](docs/FAMILY_COMMALIST_PICKER.md)
+[Family Commalist Picker using Angular.](docs/FAMILY_COMMALIST_PICKER.md)
+
+**Features**
 
 * Cycle ORM Interface using Invoiceplane type database schema. 
 * Generate VAT invoices using mPDF. 
